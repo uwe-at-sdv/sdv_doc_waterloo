@@ -25,7 +25,7 @@ from sdv_doc_docitem import (
 	validate_class_method_coverage,
 	)
 
-__version__ = "333.22.1"
+__version__ = "0.1.0"
 
 def _render_bullet(items: List[str]) -> nodes.bullet_list:
 	node_list: nodes.bullet_list = nodes.bullet_list()

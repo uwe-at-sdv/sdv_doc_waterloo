@@ -26,7 +26,7 @@ where = ["."]
 include = ["sdv*"]
 
 [tool.setuptools.dynamic]
-version = { attr = "sdv.doc.waterloo.sdv_doc_docitem_sphinx.__version__" }
+version = { attr = "sdv.doc.waterloo.docitem_sphinx.__version__" }
 
 [tool.setuptools.package-data]
 "sdv.doc.waterloo" = [
