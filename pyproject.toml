@@ -1,0 +1,35 @@
+[build-system]
+requires = ["setuptools>=67", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "sdv_doc_waterloo"
+description = "Parser combinators for CLI grammars (Python port of clql_cpp)"
+readme = "README.md"
+requires-python = ">=3.10"
+authors = [{ name = "Uwe (local workspace)" }]
+license = "BSD-2-Clause"
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Operating System :: OS Independent",
+]
+dynamic = ["version"]
+dependencies = [
+	]
+
+[project.optional-dependencies]
+dev = ["pytest"]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["sdv*"]
+
+[tool.setuptools.dynamic]
+version = { attr = "sdv.doc.waterloo.sdv_doc_docitem_sphinx.__version__" }
+
+[tool.setuptools.package-data]
+"sdv.doc.waterloo" = [
+  "py.typed",
+  "mypy.ini"
+]
