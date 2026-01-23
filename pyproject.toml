@@ -25,7 +25,7 @@ dev = ["pytest"]
 waterlint = "sdv.doc.waterloo.waterlint:main"
 
 [tool.setuptools.packages.find]
-where = ["."]
+where = ["src"]
 include = ["sdv*","waterlint.py"]
 
 [tool.setuptools.dynamic]
