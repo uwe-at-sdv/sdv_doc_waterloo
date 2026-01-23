@@ -56,11 +56,6 @@ extensions = [
 	"sdv.doc.waterloo.docitem_sphinx",
 	]
 
-#try:
-#	from sdv_doc_docitem_sphinx import build_sphinx_nodes_full
-#except ImportError:
-#	from sdv.doc.waterloo.docitem_sphinx import build_sphinx_nodes_full
-
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
 

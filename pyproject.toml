@@ -21,9 +21,12 @@ dependencies = [
 [project.optional-dependencies]
 dev = ["pytest"]
 
+[project.scripts]
+waterlint = "sdv.doc.waterloo.waterlint:main"
+
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["sdv*"]
+include = ["sdv.cod.waterloo*"]
 
 [tool.setuptools.dynamic]
 version = { attr = "sdv.doc.waterloo.docitem_sphinx.__version__" }
