@@ -20,8 +20,16 @@ from typing import Any, Callable, Dict, Generator, Iterable, Iterator, List, Tup
 #
 import os
 import sys
+from pathlib import Path
+
+CONF_DIR = Path(__file__).resolve().parent
+ROOT_DIR = CONF_DIR.parents[1]
+PKG_DIR  = (ROOT_DIR / "package").resolve()
+
+print("Using package dir:", PKG_DIR)
 sys.path.insert(0, os.path.abspath('.'))
-sys.path.insert(0, os.path.abspath('../../package'))
+sys.path.insert(0, str(PKG_DIR))
+
 #from sdv.doc.waterloo.docitem import *
 
 sys.path.insert(0, os.path.abspath('../examples'))
@@ -42,11 +50,16 @@ release = '0'
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
+print("CWD:",os.getcwd())
+print("SYS.PATH:",sys.path)
 extensions = [
 	"sdv.doc.waterloo.docitem_sphinx",
 	]
 
-from sdv.doc.waterloo.docitem_sphinx import build_sphinx_nodes_full
+#try:
+#	from sdv_doc_docitem_sphinx import build_sphinx_nodes_full
+#except ImportError:
+#	from sdv.doc.waterloo.docitem_sphinx import build_sphinx_nodes_full
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
