@@ -26,7 +26,7 @@ waterlint = "sdv.doc.waterloo.waterlint:main"
 
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["sdv.cod.waterloo*"]
+include = ["sdv.doc.waterloo*"]
 
 [tool.setuptools.dynamic]
 version = { attr = "sdv.doc.waterloo.docitem_sphinx.__version__" }
