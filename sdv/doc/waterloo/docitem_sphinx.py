@@ -111,6 +111,7 @@ import inspect
 import importlib
 import sys,os,re
 from docutils import nodes
+from pathlib import Path
 
 from docutils.parsers.rst import roles
 from docutils.parsers.rst import languages
@@ -1675,14 +1676,29 @@ def wtrl_var_type_role(name: str, rawtext: str, text: str, lineno: int, inliner:
 	node += nodes.inline(type_, type_, classes=["wtrl_type"])
 	return [node], []
 
+def _add_static_path(config, path):
+	lst = list(getattr(config, "html_static_path", []) or [])
+	if path not in lst:
+		lst.append(path)
+	config.html_static_path = lst
+
+def _add_css_files(app):
+	app.add_css_file("common_styles.css")
+	app.add_css_file("alabaster_waterloo.css")
+
 def setup(app: Any) -> dict[str, Any]:
+	here = Path(__file__).resolve().parent
+	ext_static = str(here / "_static")
+
 # Official way to configure this extension.
 # conf.py defines "docitem_context_config" and we tell the app instance,
 # We cannot be sure if it exists, but that' how it is named.
 	app.add_config_value("docitem_context_config",None,"env")
 # Add a hook, so that we know when the builder is ready.
-	app.connect("builder-inited", on_builder_inited)
+	app.connect("config-inited", lambda app, config: _add_static_path(config, ext_static))
 	app.connect("config-inited", _inject_wtrl_prolog)
+	app.connect("builder-inited", on_builder_inited)
+	app.connect("builder-inited", _add_css_files)
 
 # new: directives
 	app.add_directive("wtrl_autodoc_module", WtrlAutodocModuleDirective)
@@ -1734,8 +1750,8 @@ def setup(app: Any) -> dict[str, Any]:
 	role_reg = cast(Callable[..., tuple[Sequence[nodes.reference], Sequence[nodes.reference]]], wtrl_var_type_role)
 	roles.register_local_role("wtrl_var_type", role_reg)
 
-	app.add_css_file('common_styles.css')
-	app.add_css_file('alabaster_waterloo.css')
+#	app.add_css_file('common_styles.css')
+#	app.add_css_file('alabaster_waterloo.css')
 
 	return {
 		"version": "0.1",
