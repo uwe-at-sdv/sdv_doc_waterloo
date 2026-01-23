@@ -119,6 +119,9 @@ from docutils.parsers.rst import Directive
 from docutils.parsers.rst.directives.admonitions import BaseAdmonition
 from docutils.parsers.rst.states import Struct as RstStruct  # type: ignore[attr-defined]
 from typing import Sequence, cast, no_type_check
+
+#===== Typechecking ===========================================#
+
 Struct = RstStruct
 
 
@@ -165,16 +168,6 @@ except ImportError:
 	mod_docitem = sdv.doc.waterloo.docitem
 
 __version__ = "0.1.0"
-
-def _render_bullet(items: List[str]) -> nodes.bullet_list:
-	node_list: nodes.bullet_list = nodes.bullet_list()
-	for it in items:
-		node_item: nodes.list_item = nodes.list_item()
-		node_para: nodes.paragraph = nodes.paragraph()
-		node_para += nodes.Text(it)
-		node_item += node_para
-		node_list += node_item
-	return node_list
 
 class context:
 	"""
@@ -253,14 +246,6 @@ def make_context(app: SphinxAppProtocol | Any, parse_inline: Callable[[nodes.Ele
 		ctx.apply_config(configurator)
 	return ctx
 
-def _make_ctx_from_directive(directive: DirectiveLike) -> context:
-	inliner = directive.state.inliner
-	return make_context(
-		directive.state.document.settings.env.app,
-		lambda parent, ln, txt: parse_inline(inliner, parent, ln, txt),
-		directive.lineno,
-	)
-
 # Inline-Parser, der *messages nicht wegwirft*
 def parse_inline(inliner: InlinerProtocol, parent: nodes.Element, ln: int, txt: str) -> List[nodes.Node]:
 	lang = languages.get_language(inliner.document.settings.language_code)
@@ -285,9 +270,6 @@ def parse_inline(inliner: InlinerProtocol, parent: nodes.Element, ln: int, txt: 
 # Signature rendering helpers (role-agnostic; use ctx role formatters)
 _ARG_RE = re.compile(r"\s*([A-Za-z0-9_]+)\s*:\s*(.+)\s*")
 _PROTO_RE = re.compile(r"\s*([A-Za-z0-9_]+)\s*\((.*?)\)\s*(->\s*(.*))?$")
-
-def _split_args(argstr: str) -> List[str]:
-	return [a.strip() for a in argstr.split(",")]
 
 def _signature_for(obj: object) -> inspect.Signature:
 	return inspect.signature(cast(Callable[..., Any], obj))
@@ -1750,9 +1732,6 @@ def setup(app: Any) -> dict[str, Any]:
 	role_reg = cast(Callable[..., tuple[Sequence[nodes.reference], Sequence[nodes.reference]]], wtrl_var_type_role)
 	roles.register_local_role("wtrl_var_type", role_reg)
 
-#	app.add_css_file('common_styles.css')
-#	app.add_css_file('alabaster_waterloo.css')
-
 	return {
 		"version": "0.1",
 		"parallel_read_safe": True,
@@ -1764,9 +1743,6 @@ def setup(app: Any) -> dict[str, Any]:
 if __name__ == "__main__":
 	tr = mod_docitem.tracer()
 	with mod_docitem.traced_section(tr, "__main__"):
-#		tree_cls = mod_docitem.parse_indent_docstring(tr,context.__doc__)
-#		di_cls = mod_docitem.docitem_docstring_class()
-#		di_cls.parse(tr,tree_cls)
 		mod_docitem.validate_docstring(tr,context)
 		mod_docitem.validate_class_coverage(tr,context)
 		mod_docitem.validate_module_coverage(tr,sys.modules[__name__])

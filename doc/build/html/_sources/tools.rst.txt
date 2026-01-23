@@ -1,0 +1,77 @@
+Tools
+=====
+
+This section is normative.
+
+The commandline tool for validating and analyzing docstrings is :wtrl_cmd:`waterlint.py`.
+Here is the normative specification what it is supposed to do:
+
+* |Must| be invocable from the commandline in a terminal with standard streams :wtrl_file:`stdin`, :wtrl_file:`stdout`, :wtrl_file:`stderr`.
+* |Must| accept one of the following subcommands { :wtrl_value:`validate`, :wtrl_value:`coverage`, :wtrl_value:`extract` } as first parameter on the commandline.
+* |Must| accept further options and switches in any order after the subcommand.
+* |Must| accept an option :wtrl_opt:`--out-diag` followed by a path.
+* If option :wtrl_opt:`--out-diag` is present, |must| write warnings and error messages related to validation to the file specified at option :wtrl_opt:`--out-diag`.
+* If option :wtrl_opt:`--out-diag` is not present, |must| write warnings and error messages related to validation to :wtrl_file:`stderr`.
+* |Must| write warnings and error messages which are not related to validation to :wtrl_file:`stderr`.
+
+* |Must| accept an option :wtrl_opt:`--debug`, which |may| cause generation of debugging data.
+* If there are debugging data, the tool |must| write them to :wtrl_file:`stderr`.
+* |Must_not| write anything to :wtrl_file:`stdout` unless specified below.
+* |Must| accept a switch :wtrl_opt:`--fail-on-warning`.
+* |Must| set exit status :wtrl_value:`0` if no error and no warning was issued.
+* |Must| set exit status :wtrl_value:`1` in case of validation error.
+* |Must| set exit status :wtrl_value:`1` in case of a warning if :wtrl_opt:`--fail-on-warning` is enabled.
+* |Must| set exit status :wtrl_value:`2` if the tool has been invoked with undefined parameters or an undefinied combination of parameters.
+* |Must| choose the highest applicable exit status if multiple conditions apply.
+
+For subcommand :wtrl_value:`validate`:
+
+* The command |must| accept options as described in the following list:
+	- |Must| accept an option :wtrl_opt:`--obj` followed by a Qualified Identifier which can be resolved to a Python module, class, function or method.
+	- |Must| accept an option :wtrl_opt:`--in` followed by a path to a readable file.
+	- |Must| make sure that options :wtrl_opt:`--obj` and :wtrl_opt:`--in` exclude each other.
+	- If none of the options { :wtrl_opt:`--obj`, :wtrl_opt:`--in` } is present, |must| read input from :wtrl_file:`stdin` and use this as docstring input data.
+	- If option :wtrl_opt:`--obj` is present, |must| resolve the object and use it as input.
+	- If option :wtrl_opt:`--in` is present, |must| read the specified file's content and use the content as docstring input data.
+	- |Must| accept an option :wtrl_opt:`--ignore` followed by a string which contains a whitespace-separated list of Rule-IDs as specified in :ref:`section_meta`.
+
+* The command |must| then do the following:
+	- If an object is present, |must| validate its docstring by calling :wtrl_func:`validate_docstring`.
+	- If only a docstring is available from option :wtrl_opt:`--in` or from :wtrl_file:`stdin`, |must| parse it and build an Abstract Syntax Tree, by analyzing the profile, creating a :wtrl_type:`docitem_docstring_*` instance and calling method :wtrl_func:`parse`. If this succeeds, validation is considered successful.
+	- |Must| ignore violations of rules specified by option :wtrl_opt:`--ignore` if such a rule would lead to a warning.
+	- |Must_not| ignore violations of rules specified by option :wtrl_opt:`--ignore` if such a rule leads to a error i.e. a contract violation.
+	- |Must| catch any exception of type :wtrl_type:`ValidationError` from validation ro AST-generation and print its content to :wtrl_file:`stderr`.
+	- |Must| print warnings -- collected in a tracer -- from validation to :wtrl_file:`stderr`.
+
+For subcommand :wtrl_value:`coverage`:
+
+* The command |must| accept options as described in the following list:
+	- |Must| accept an option :wtrl_opt:`--obj` followed by a Qualified Identifier which can be resolved to a Python module, class, function or method.
+
+* The command |must| then do the following:
+	- |Must| validate docstring coverage of the object passed at option :wtrl_opt:`--obj`, as described in the following cases:
+	- If :wtrl_opt:`--obj` refers to a module, |must| validate module coverage by calling :wtrl_func:`validate_module_coverage`.
+	- If :wtrl_opt:`--obj` refers to a class, |must| validate class coverage by calling :wtrl_func:`validate_class_coverage`.
+	- If :wtrl_opt:`--obj` refers to a callable, |must| print message to :wtrl_file:`stderr` and set exit code :wtrl_value:`1`.
+	- |Must| print warnings -- collected in a tracer -- from coverage validation to :wtrl_file:`stderr`.
+
+For subcommand :wtrl_value:`extract`:
+
+* The command |must| accept options as described in the following list:
+	- |Must| accept an option :wtrl_opt:`--obj` followed by a Qualified Identifier which can be resolved to a Python module, class, function or method.
+	- |Must| accept an option :wtrl_opt:`--in` followed by a path to a readable file.
+	- |Must| make sure that options :wtrl_opt:`--obj` and :wtrl_opt:`--in` exclude each other.
+
+	- If none of the options { :wtrl_opt:`--obj`, :wtrl_opt:`--in` } is present, |must| read input from :wtrl_file:`stdin` and use this as docstring input data.
+	- If option :wtrl_opt:`--obj` is present, |must| resolve the object, read its docstring and use this as docstring input data.
+	- If option :wtrl_opt:`--in` is present, |must| read the specified file's content and use the content as docstring input data.
+
+	- |Must| accept an option :wtrl_opt:`--section` followed by an Identifier.
+	- If :wtrl_opt:`--section` is present, |must| accept an option :wtrl_opt:`--subsection` followed by a non-empty string. Informative: shell rules apply for quoting and escaping.
+
+* The command |must| then do the following:
+	- |Must| print any string result to :wtrl_file:`stdout`.
+	- |Must| interpret the section/subsection passed verbatim, without any transformation, except for stripping whitespace.
+	- If :wtrl_opt:`--section` is not present, |must| parse the docstring and print the resulting docstring tree to :wtrl_file:`stdout` in docstring format by means of function :wtrl_func:`to_string_tree`. Informative: We use this for idempotence tests.
+	- If :wtrl_opt:`--section` is present while :wtrl_opt:`--subsection` is not, |must| parse the docstring, extract the section subtree by means of function :wtrl_func:`get_tree_of_section` and print the resulting subtree by means of function :wtrl_func:`to_string_tree`.
+	- If :wtrl_opt:`--section` and :wtrl_opt:`--subsection` are present, |must| parse the docstring, extract the subsection subtree by means of function :wtrl_func:`get_tree_of_subsection` and print the resulting subtree by means of function :wtrl_func:`to_string_tree`.
