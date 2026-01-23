@@ -1,0 +1,20 @@
+Waterloo
+========
+
+.. toctree::
+	:maxdepth: 4
+	:caption: Contents:
+	:numbered:
+
+	introduction.rst
+	examples.rst
+	tools.rst
+	format.rst
+	reference.rst
+
+Indices and tables
+==================
+
+* :ref:`genindex`
+* :ref:`modindex`
+* :ref:`search`
