@@ -1,0 +1,528 @@
+
+body
+	{
+	font-family:Helvetica;
+	font-size:12pt;
+	}
+
+@media screen
+	{
+	div.document {
+		width:30cm;
+		}
+/* Trying a little what you see is what you get,
+   so this is around the width of DIN A4 */
+	div.body {
+		width: 21cm;
+		min-width:21cm;
+		max-width:21cm;
+		padding-left:1.5cm;
+		padding-right:1.5cm;
+		}
+	div.footer {
+		width:30cm;
+		padding-left:0cm;
+		padding-right:0cm;
+		}
+	}
+
+div.sphinxsidebar {
+	width: 11cm;
+	font-size: 14px;
+	line-height: 1.5;
+	}
+@media screen {
+	div.document {
+		width: 34cm;
+		}
+	div.body {
+		width: 21cm;
+		min-width: 21cm;
+		max-width: 21cm;
+		padding-left: 5.5cm;
+		padding-right: 1.5cm;
+		}
+	}
+div.warning
+	{
+	background-color: #fec;
+	color: #432;
+	border: 1px #db8 solid;
+	padding-left: 15px;
+	padding-right: 15px;
+	padding-bottom: 5px;
+	padding-top: 5px;
+	margin-left: 0%;
+	margin-right: 0%;
+	margin-top: .5em;
+	margin-bottom: 1em;
+	}
+
+div.warning p.admonition-title::before {
+	content: "";
+	display: inline-block;
+	width: 1.5em;
+	height: 1.5em;
+	background-image: url("wtrl_icon_warning.svg");
+	background-size: contain;
+	background-repeat: no-repeat;
+	margin-right: 0.4em;
+	vertical-align: middle;
+	}
+
+div.warning p.admonition-title::after {
+	content: "";
+	}
+
+div.highlight-bash pre {
+	border: 1px solid #aaa;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	padding-left: 5px;
+	padding-right: 5px;
+	margin-left: 0px;
+	margin-right: 0px;
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+	background-color: #eeeeee;
+	font-size: 80%;
+	}
+
+div.highlight-xml pre {
+	border: 1px solid #aaa;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	padding-left: 5px;
+	padding-right: 5px;
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+	background-color: #eee;
+	color: inherit;
+	font-size: smaller;
+	font-family: monospace;
+	tab-size: 4;
+	}
+
+div.highlight-python div.highlight {
+	background-color: #f4fbf8;
+	border: 1px solid #b7d8b7;
+	}
+div.highlight-python div.highlight pre {
+	background-color: inherit;
+	}
+
+div.code_ansi pre {
+	border: 1px solid #aaa;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	padding-left: 5px;
+	padding-right: 5px;
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+	background-color: #eee;
+	color: inherit;
+	font-size: smaller;
+	font-family: monospace;
+	}
+
+.wtrl-func-box {
+	border: 1px solid #ccd;
+	border-radius: 0.3em;
+	padding-left: 0.5em;
+	padding-top: 0.0em;
+	padding-bottom: 0.0em;
+	margin-left:0.2em;
+	margin-right:0.2em;
+	margin-top: 0.5em;
+	margin-bottom: 0.0em;
+	background-color: #eeeef3;
+	}
+.wtrl-func-box p {
+	padding-bottom: 0.5em;
+	padding-top: 0.5em;
+	margin: 0 0 0 0;
+	}
+
+/* Attribut eines Alements in Markup-Sprachen */
+code.wtrl_attr, .highlight .na
+	{
+	font-family:"Courier New",courier,monospace;
+/* wie xml_styles */
+	color:var(--sdv-variable-color);
+	font-weight:var(--sdv-variable-font-weight);
+	font-style:var(--sdv-variable-font-style);
+
+	background-color:inherit;
+	}
+
+code.wtrl_cmd,span.wtrl_cmd
+	{
+	font-family:monospace;
+
+	color:var(--sdv-cmd-color);
+	font-weight:var(--sdv-cmd-font-weight);
+	font-style:var(--sdv-cmd-font-style);
+	font-size: 90%;
+
+	background-color:inherit;
+	}
+.wtrl-code-ansi pre {
+	padding: 7px 30px;
+	}
+code.wtrl_dfn,span.wtrl_dfn
+	{
+	font-family: inherit;
+	font-style: italic;
+	font-size: 100%;
+	color: inherit;
+
+	background-color:inherit;
+	}
+code.wtrl_file {
+	font-family: "Courier New","Courier",monospace;
+	font-weight: normal;
+	font-size: 95%;
+	color: #35f;;
+
+	background-color:inherit;
+	}
+
+code.wtrl_func,span.wtrl_func
+	{
+	font-family:monospace;
+
+	color:var(--sdv-func-color);
+	font-weight:var(--sdv-func-font-weight);
+	font-style:var(--sdv-func-font-style);
+	font-size: 90%;
+
+	background-color:inherit;
+	}
+
+code.wtrl_mod,span.wtrl_mod
+	{
+	font-family:monospace;
+
+	color:var(--sdv-mod-color);
+	font-weight:var(--sdv-mod-font-weight);
+	font-style:var(--sdv-mod-font-style);
+	font-size: 90%;
+
+	background-color:inherit;
+	}
+code.wtrl_label,span.wtrl_label
+	{
+	font-family:inherit;
+
+	color:inherit;
+	font-weight:normal;
+	font-style:italic;
+	font-size: 100%;
+
+	background-color:inherit;
+	}
+.wtrl_norm
+	{
+	font-family:inherit;
+
+	color:inherit;
+	font-weight:normal;
+	font-style:italic;
+	font-size: 100%;
+
+	background-color:inherit;
+	}
+.wtrl_norm::after
+	{
+	content: " \2696";
+	font-weight:normal;
+	font-style:normal;
+	}
+code.wtrl_op,span.wtrl_op
+	{
+	font-family:monospace;
+
+/*	color:var(--sdv-type-color);
+	font-weight:var(--sdv-type-font-weight);
+	font-style:var(--sdv-type-font-style);*/
+
+	background-color:inherit;
+	}
+code.wtrl_opt
+	{
+	font-family:monospace;
+
+	color:var(--sdv-opt-color);
+	font-weight:var(--sdv-opt-font-weight);
+	font-style:var(--sdv-opt-font-style);
+
+	background-color:inherit;
+	}
+
+code.wtrl_value
+	{
+	font-family:monospace;
+/*	font-weight:bold;*/
+	font-size:90%;
+	color:#040;
+
+	background-color:inherit;
+	}
+code.wtrl_var,span.wtrl_var
+	{
+	font-family: monospace;
+	font-weight: normal;
+	font-size: 90%;
+	color: #a00;
+
+	background-color:inherit;
+	}
+
+code.wtrl_tag
+	{
+	font-family:monospace;
+
+	color:var(--sdv-tag-color);
+	font-weight:var(--sdv-tag-font-weight);
+	font-style:var(--sdv-tag-font-style);
+
+	background-color:inherit;
+	}
+
+code.wtrl_tag:before
+	{
+	content:"<";
+	}
+code.wtrl_tag:after
+	{
+	content:">";
+	}
+code.wtrl_type,span.wtrl_type
+	{
+	font-family:monospace;
+
+	color:var(--sdv-type-color);
+	font-weight:var(--sdv-type-font-weight);
+	font-style:var(--sdv-type-font-style);
+	font-size: 90%;
+
+	background-color:inherit;
+	}
+
+/* Overriding pygments */
+.highlight .s
+	{
+	font-family:monospace;
+	color:var(--sdv-string-literal-color);
+	font-weight:var(--sdv-string-literal-font-weight);
+	font-style:var(--sdv-string-literal-font-style);
+
+	background-color:inherit;
+	}
+.highlight .nt {
+	font-family:monospace;
+	color: var(--sdv-tag-color);
+	font-weight: var(--sdv-tag-font-weight);
+	font-style: var(--sdv-tag-font-style);
+	}
+.highlight .cm {
+	font-family:monospace;
+	color: var(--sdv-comment-color);
+	font-weight: var(--sdv-comment-font-weight);
+	font-style: var(--sdv-comment-font-style);
+	}
+
+div.filelist-block div.highlight pre {
+	background-color:inherit;
+	font-size:80%;
+	line-height:110%;
+	}
+
+code.filelist {
+	color: #1e90ff;
+	background: #f0f8ff;
+	padding: 2px 4px;
+	border-radius: 4px;
+	font-weight: bold;
+	font-family: monospace;
+	}
+
+/* Paths */
+code.file, .literal.path {
+	background-color:inherit;
+	color: #35f;
+	font-weight: normal;
+	}
+
+code.bash {
+	background-color:inherit;
+	color: red;
+	font-weight: normal;
+	}
+
+/* Inline */
+span.path {
+	color: #35f;
+	font-family: monospace;
+	font-weight: bold;
+	}
+
+div.code-block-caption {
+	text-align:center
+	}
+div.code-block-caption span.caption-number {
+	font-style:normal;
+	font-weight:bold;
+	}
+div.code-block-caption span.caption-text {
+	font-style:italic;
+	font-weight:normal;
+	}
+table caption {
+	text-align:center;
+	font-size:80%;
+	margin-bottom:0.5em;
+	}
+table caption span.caption-number {
+	font-style:normal;
+	font-weight:bold;
+	}
+table caption span.caption-text {
+	font-style:italic;
+	font-weight:normal;
+	}
+
+table.docutils
+	{
+	border: 0px;
+	padding: 0px;
+	border-spacing:2px;
+	border-collapse:separate;
+	box-shadow: 0px 0px 0px;
+	}
+table.docutils td, table.docutils th {
+	border: 0px;;
+	}
+/* Das ist dann also die Default-Tabelle. */
+table
+	{
+/* Tabellen sind per-default zentriert. */
+	margin-left:auto;
+	margin-right:auto;
+
+	margin-top:0.5em;
+	margin-bottom:1em;
+	padding:0px;
+	border-spacing:2px;
+	width:100%;
+	}
+table > tbody > tr:nth-child(even)
+	{
+	padding-left:10px;
+	padding-right:10px;
+	background-color:#ddd;
+	}
+table > tbody > tr:nth-child(odd)
+	{
+	background-color:#eee;
+	}
+table > thead > tr > th
+	{
+	font-weight:bold;
+	background-color:#dea;
+	padding-left:10px;
+	padding-right:10px;
+	}
+table > tbody > tr > td
+	{
+	padding-left:10px;
+	padding-right:10px;
+	vertical-align:top;
+	}
+
+/* Grundlayout fuer Definitionslisten */
+dl.py {
+	margin: 1em 0;
+	padding-left: 0.5em;
+	padding-right:0.5em;
+	padding-bottom: 0.5em;
+	background-color: #f9f9fa;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	}
+
+/* Stil fuer die Begriffe (Definition Terms) */
+dt.sig {
+	font-family: monospace;
+	font-weight: bold;
+	margin-top: 0.5em;
+	margin-bottom: 0.2em;
+	}
+
+/* Stil fuer die Beschreibung (Definition Description) */
+dd {
+	margin-left: 1em;
+	font-size: 100%;
+	color: #333;
+	}
+span.descclassname {
+	font-family: monospace;
+	font-weight: normal;
+	font-size: 90%;
+	color: #a00;
+
+	background-color:inherit;
+	}
+span.descname {
+	font-family: monospace;
+	font-weight: normal;
+	font-size: 90%;
+	color: #a00;
+
+	background-color:inherit;
+	}
+
+.wtrl-side-by-side {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 1em;
+	margin: 1.2em 0;
+	padding-top: 0em;
+	margin-top: 0em;
+	}
+
+.wtrl-side-by-side > * {
+	margin: 0;
+	}
+
+.wtrl-side-by-side .literal-block-wrapper {
+	margin-top:0em;
+	margin-bottom:0em;
+	}
+.wtrl-side-by-side .literal-block-wrapper .code-block-caption {
+	margin-top:0em;
+	margin-bottom:0em;
+	}
+.wtrl-side-by-side .code-block-caption {
+	font-size: 90%;
+	}
+table > thead.sdv-meta-head-module > tr > th {
+	background-color: #335522;
+	color:#fff;
+	}
+table > thead.sdv-meta-head-class > tr > th {
+	background-color: #885555;
+	color:#fff;
+	}
+table > thead.sdv-meta-head-method > tr > th {
+	background-color: #7080d3;
+	color:#fff;
+	}
+table > thead.sdv-meta-head-function > tr > th {
+	background-color: #7080d3;
+	color:#fff;
+	}
+table > thead.sdv-meta-head-inherited_method > tr > th {
+	background-color: #90a0d3;
+	color:#fff;
+	}
