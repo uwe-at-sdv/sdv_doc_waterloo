@@ -1,12 +1,16 @@
-sdv-doc-waterloo
-================
+Waterloo
+========
 
 .. toctree::
-	:maxdepth: 3
+	:maxdepth: 4
 	:caption: Contents:
 	:numbered:
 
-	documentation.rst
+	introduction.rst
+	examples.rst
+	tools.rst
+	format.rst
+	reference.rst
 
 Indices and tables
 ==================
