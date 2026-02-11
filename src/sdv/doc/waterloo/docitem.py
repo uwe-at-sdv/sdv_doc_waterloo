@@ -234,8 +234,7 @@ Public_constants:
 # Todo: think about Contract.import_side_fx
 
 import sys,re,pkgutil
-import inspect
-import importlib
+import inspect,importlib
 import builtins
 import typing
 from types import FunctionType, ModuleType
