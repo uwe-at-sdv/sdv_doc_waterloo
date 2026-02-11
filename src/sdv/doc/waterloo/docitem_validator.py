@@ -1,0 +1,2028 @@
+from __future__ import annotations
+from types import FunctionType, ModuleType
+from typing import Any, Callable, Dict, Final, get_type_hints, get_origin, get_args, Generator, Iterable, Iterator, List, NewType, NoReturn, Sequence, Set, Tuple, Type, TypeAlias, TypeGuard, Union, cast
+
+try:
+	from sdv_doc_docitem_docstring import *
+except ImportError:
+	from sdv.doc.waterloo.docitem_docstring import *
+
+#===== Typechecking ===========================================#
+try:
+	from typing import TypeAliasType  # type: ignore
+except Exception:  # pragma: no cover - older Python
+	TypeAliasType = None
+
+def _is_type_alias(value: object, ann: object | None) -> bool:
+	if TypeAliasType is not None and isinstance(value, TypeAliasType):
+		return True
+	if hasattr(value, "__supertype__"):
+		return True
+	if getattr(value, "__module__", "") == "typing":
+		return True
+# Annotation hints: TypeAlias special form may be preserved as annotation
+	if ann is TypeAlias:
+		return True
+	if isinstance(ann, str) and ann == "TypeAlias":
+		return True
+	return False
+
+# DocitemDocstring_t = docitem_docstring_module | docitem_docstring_class | docitem_docstring_method
+
+#===== Get properties from docitem tree =======================#
+
+def get_status(top: docitem_docstring_base) -> str:
+	"""
+Preamble:
+	profile:
+		function
+	normative_sections:
+		Contract, Parameters, Returns, Raises
+	status:
+		experimental
+Contract:
+	general:
+		|Must| check for existence of a node |type|`docitem_status` in the AST passed.
+		If it exists, |must| return its string-valued content.
+		If it does not exist, |must| return "stable".
+Parameters:
+	top:
+		The AST to be examined
+Returns:
+	The documented object status or its default.
+Raises:
+Notes:
+	Status:
+		Function may be renamed soon.
+	"""
+	node_preamble = top.item("Preamble")
+	if "status" not in node_preamble.items():
+		return "stable"
+	node_status = node_preamble.item("status")
+	entries = list(node_status.items())
+	assert len(entries) == 1
+	status = entries[0]
+	return status
+
+def get_profile(top: docitem_docstring_base) -> str:
+	"""
+Preamble:
+	profile:
+		function
+	normative_sections:
+		Contract, Parameters, Returns, Raises
+	status:
+		experimental
+Contract:
+	general:
+		|Must| check for existence of a node |type|`docitem_preamble` in the AST passed.
+		|Must| check for existence of a node |type|`docitem_profile` in the preamble node.
+Parameters:
+	top:
+		The AST to be examined
+Returns:
+	|Must| return the string content of the |type|`docitem_profile` node.
+Raises:
+	SectionNotFoundError:
+		|Must| raise if |var|`top` has not item "Preamble".
+	SubsectionNotFoundError:
+		|Must| raise if the Preamble node has not item "profile".
+Notes:
+	Status:
+		Function may be renamed  soon.
+	"""
+	if not top.has_item("Preamble"):
+		raise SectionNotFoundError(f"Section 'Preamble' not found.")
+	node_preamble = top.item("Preamble")
+	if not node_preamble.has_item("profile"):
+		raise SubsectionNotFoundError(f"Subsection 'profile' not found.")
+	node_profile = cast(docitem_profile, node_preamble.item("profile"))
+	return node_profile.item_by_index(0)
+
+
+def resolve_object(ref: str, current_obj: object) -> tuple[object, str]:
+	"""
+Preamble:
+	profile:
+		function
+	normative_sections:
+		Definitions, Contract, Parameters, Returns, Raises
+Definitions:
+	Identifier:
+		An Identifier is a string matching the regular expression ``[a-zA-Z_][a-zA-Z0-9_]*``.
+	Qualified_Identifier:
+		A Qualified Identifier is a string formed by concatenating one or more Identifiers with "." as separator.
+	Public_object:
+		An object that is importable as a module attribute or as an attribute of an object reachable from an importable module.
+	Resolved_reference:
+		A pair (obj, qname) where qname is a candidate reference string that was successfully resolved and obj is the resulting Python object.
+Contract:
+	general:
+		|Must| attempt to resolve ref (an |term|`Identifier` or |term|`Qualified_Identifier`) to an existing |term|`Public_object`.
+		|Must| return the first successfully resolved candidate together with the exact candidate string that succeeded.
+		|Must| treat a ref containing "." as already qualified and try it directly before any context-derived qualification.
+		|Must| for an unqualified ref, construct resolution candidates from current_obj in the following order where applicable:
+		|Must| (1) <module_of_current_obj>.<ref> if the module of current_obj can be determined,
+		|Must| (2) <current_obj.__module__>.<current_obj.__qualname__>.<ref> if current_obj is a class,
+		|Must| (3) <current_obj.__module__>.<enclosing_qualname_prefix>.<ref> if current_obj is a function nested in a qualname path,
+		|Must| and finally (4) ref as last fallback.
+		|Must| skip duplicate candidate strings while preserving the candidate order.
+		|Must| resolve a candidate by importing the longest importable module prefix of the candidate and then applying getattr for each remaining "."-separated attribute component.
+		|Must| raise ImportError if none of the candidates can be resolved.
+Parameters:
+	ref:
+		Reference string to resolve. It may be an Identifier (unqualified) or a Qualified Identifier (contains ".").
+	current_obj:
+		Context object that determines which qualified candidates are tried for an unqualified ref.
+Returns:
+	|Must| return a |term|`Resolved_reference`.
+Raises:
+	ImportError:
+		|Must| raise if ref cannot be resolved via any candidate derived from current_obj and the fallback candidate ref.
+		|Must| raise if a candidate contains an attribute chain that cannot be traversed (missing attribute) or if no module prefix of the candidate can be imported.
+	AssertionError:
+		|Must| relay from |mod|`importlib` while trying to import the resolved module.
+	IndexError:
+		|Must| relay from |mod|`importlib` while trying to import the resolved module.
+	NameError:
+		|Must| relay from |mod|`importlib` while trying to import the resolved module.
+	NotImplementedError:
+		|Must| relay from |mod|`importlib` while trying to import the resolved module.
+	PermissionError:
+		|Must| relay from |mod|`importlib` while trying to import the resolved module.
+	SyntaxError:
+		|Must| relay from |mod|`importlib` while trying to import the resolved module.
+	"""
+	def _import_chain(qname: str) -> object:
+		parts = qname.split(".")
+		for i in range(len(parts), 0, -1):
+			mod_cand = ".".join(parts[:i])
+# We are testing candidates here like
+# * path
+# * path.to
+# * path.to.my
+# * path.to.my.module
+# If the candidate fails simply because we don't resolve correctly (ImportError/ModuleNotFoundError)
+# we proceed to the next candidate. If we succeed in finding the right candidate
+# there might be other errors (e.g. because the module is under development).
+			try:
+				mod = importlib.import_module(mod_cand)
+			except ModuleNotFoundError as e:
+				continue
+# We have a module, parts [0:i]. Now let's resolve parts[i:]
+# relative to this module, by means of getattr.
+			attr_parts = parts[i:]
+			obj_attr: object = mod
+			for p in attr_parts:
+				obj_attr = getattr(obj_attr, p)
+			return obj_attr
+# None of the candidates worked, now that is really an import error.
+		raise ImportError(f"Could not import any module prefix from {qname} (1)")
+
+	candidates: List[str] = []
+	if "." in ref:
+		candidates.append(ref)
+	if current_obj:
+# This returns the module of the object.
+		mod = inspect.getmodule(current_obj)
+		if mod:
+			candidates.append(f"{mod.__name__}.{ref}")
+		if is_obj_class(current_obj):
+			candidates.append(f"{current_obj.__module__}.{current_obj.__qualname__}.{ref}")
+		elif is_obj_function(current_obj):
+			qual = getattr(current_obj, "__qualname__", "")
+			if "." in qual:
+				prefix = qual.rsplit(".", 1)[0]
+				candidates.append(f"{current_obj.__module__}.{prefix}.{ref}")
+	candidates.append(ref)
+
+	seen: set[str] = set()
+	for cand in candidates:
+		if cand in seen:
+			continue
+		seen.add(cand)
+		try:
+			obj = _import_chain(cand)
+			return obj, cand
+# It's important to *not* abort on AttributeError,
+# but we would like to see other problems from trying to
+# import the module.
+		except (AssertionError,IndexError,NameError,NotImplementedError,PermissionError,SyntaxError):
+			raise
+# We leave this here explicitly, because it is important. An AttributeError
+# is perfectly normal when trying out candidates for object resolution.
+		except AttributeError as e:
+			continue
+		except ImportError as e:
+			continue
+#		except Exception as e:
+#			continue
+	raise ImportError(f"Could not resolve reference '{ref}' from context '{_qualified_object_name(current_obj)}'.")
+
+def validate_docstring_module(tr : tracer, obj: object, top : docitem_docstring_module,node_contract : docitem_map_base,node_normative_sections : docitem_list_base, _seen: Dict[object,docitem_docstring_base] | None = None) -> None:
+	"""
+Preamble:
+	profile:
+		function
+	normative_sections:
+		Contract, Parameters, Returns, Raises
+	scope:
+		extension
+Contract:
+	general:
+		|Must| validate the docitem tree |var|`top` against the module object |var|`obj`.
+		|Must| ensure that |label|`Contract` contains sections |label|`general` and |label|`api`.
+		|Must| ensure that all sections declared as normative exist.
+		|Must| enforce normativity/existence consistency for |label|`Class_overview`, |label|`Function_overview`, |label|`Public_types`, |label|`Public_variables`, |label|`Public_constants`:
+		|Must| collect errors and warnings in the tracer object passed.
+Parameters:
+	tr:
+		Tracer for providing context and collecting warnings.
+	obj:
+		The callable object to validate against.
+	top:
+		The docitem tree to validate.
+	node_contract:
+		The node for section |label|`Contract` already parsed by the caller.
+	node_normative_sections:
+		The node for section |label|`Preamble.normative_sections` already parsed by the caller.
+	_seen:
+		Recording objects already validated in order to avoid recursion divergence and to share parsed trees across references.
+Returns:
+	|Must| return |None|
+Raises:
+	ValidationError:
+		|Must| raise if any of the validation conditions listet in |label|`general` fails.
+		|Must| raise if a section exists but is not listed as normative.
+		|Must| raise if a section is listed as normative but does not exist.
+Notes:
+	Usage:
+		This function is typically not called directly. Please call |func|`validate_docstring` instead.
+	Drift:
+		Last reviewed on 2026-01-23
+	"""
+#===== Preamble ===============================================#
+	with traced_section(tr, "Preamble"):
+# Rule: Preamble must exist. We do not allow purely informative docstrings.
+		if not top.has_item("Preamble"):
+			raise_validation_error(tr,obj,["PRE-001"],"Section 'Preamble' does not exist.")
+#----- status -------------------------------------------------#
+		node_preamble = top.item("Preamble")
+		if node_preamble.has_item("status"):
+			raise_validation_error(tr, obj, ["PRE-016"], f"Subsection 'status' is not allowed for profile 'module'.")
+  
+#..... normative_sections must exist ..........................#
+# checked by caller
+#===== Contract must exist ====================================#
+# checked by caller
+#----- general must exist -------------------------------------#
+	with traced_section(tr, "Contract"):
+		if "general" not in node_contract.items():
+			raise_validation_error(tr,obj,["CON-022"],"Section 'general' does not exist.")
+
+		if "api" in node_contract.items():
+			node_api = node_contract._items["api"]
+			with traced_section(tr, "api"):
+# Rule: each entry in api must refer to a normative section
+				for ref in node_api.items():
+					if ref not in node_normative_sections.items():
+						raise_validation_error(tr,obj,["PRE-011"],f"Section '{ref}' is not listed in section 'Preamble.normative_sections'. We have {node_normative_sections.items()}.")
+# Overviews must never be normative
+	with traced_section(tr, "Preamble"):
+		if "Class_overview" in node_normative_sections.items():
+			raise_validation_error(tr,obj,["MCLO-002"],"Section 'Class_overview' must not be listed as normative.")
+		if "Function_overview" in node_normative_sections.items():
+			raise_validation_error(tr,obj,["MFNO-002"],"Section 'Function_overview' must not be listed as normative.")
+#===== Classes/Functions/Methods/Public_* sections ============#
+	section_normativity = [
+		("Public_classes", "MPCL-002"),
+		("Public_functions", "MPFN-002"),
+		("Public_types", "PTY-002"),
+		("Public_variables", "PVAR-002"),
+		("Public_constants", "PCON-002"),
+		]
+	for sec_name, rule_id in section_normativity:
+		with traced_section(tr, sec_name):
+			if sec_name in top.items() and sec_name not in node_normative_sections.items():
+				raise_validation_error(tr,obj,[rule_id], f"Section '{sec_name}' exists but is not listed as normative.")
+			if sec_name in node_normative_sections.items() and sec_name not in top.items():
+				raise_validation_error(tr,obj,["PRE-012"],f"Section '{sec_name}' is marked normative but does not exist.")
+#===== Existence and type of public objects ===================#
+	def _check_exists(name: str, rule: str) -> object:
+		if not hasattr(obj, name):
+			raise_validation_error(tr, obj, [rule], f"Entry '{name}' does not exist on module.")
+		return getattr(obj, name)
+
+#----- Public classes -----------------------------------------#
+	with traced_section(tr, "Public_classes"):
+		if "Public_classes" in top.items():
+			node_pc = top._items["Public_classes"]
+			for cls_name in node_pc.items():
+				attr = _check_exists(cls_name, "MPCL-004")
+				if not is_obj_class(attr):
+					raise_validation_error(tr, obj, ["MPCL-005"], f"Entry '{cls_name}' is not a class.")
+#----- Public functions ---------------------------------------#
+	with traced_section(tr, "Public_functions"):
+		if "Public_functions" in top.items():
+			node_pf = top._items["Public_functions"]
+			for func_name in node_pf.items():
+				attr = _check_exists(func_name, "MPFN-004")
+				if not is_obj_function(attr):
+					raise_validation_error(tr, obj, ["MPFN-005"], f"Entry '{func_name}' is not a function.")
+
+#----- Class overview -----------------------------------------#
+	with traced_section(tr, "Class_overview"):
+		if "Class_overview" in top.items():
+			if "Public_classes" not in top.items():
+				raise_validation_error(tr, obj, ["MCLO-003"],f"'Class_overview' requires section 'Public_classes'.")
+			node_pc = top._items["Class_overview"]
+			for cls_name in node_pc.items():
+				attr = _check_exists(cls_name, "MCLO-008")
+				if not is_obj_class(attr):
+					raise_validation_error(tr, obj, ["MCLO-009"], f"Entry '{cls_name}' is not a class.")
+#----- ensure SSoT principle ----------------------------------#
+			for cls_name in node_pc.items():
+				cls_node = node_pc.item(cls_name)
+				if cls_node.has_norm_keywords():
+					raise_validation_error(tr, obj, ["MCLO-007"], f"Entry '{cls_name}' in Class_overview must not contain normativity keywords; content is informational only.")
+
+#----- Function overview --------------------------------------#
+	with traced_section(tr, "Function_overview"):
+		if "Function_overview" in top.items():
+			if "Public_functions" not in top.items():
+				raise_validation_error(tr, obj, ["MFNO-003"],f"'Function_overview' requires section 'Public_functions'.")
+			node_pf = top._items["Function_overview"]
+			for fn_name in node_pf.items():
+				attr = _check_exists(fn_name, "MFNO-008")
+				if not is_obj_function(attr):
+					raise_validation_error(tr, obj, ["MFNO-009"], f"Entry '{fn_name}' is not a function.")
+#----- ensure SSoT principle ----------------------------------#
+			for fn_name in node_pf.items():
+				fn_node = node_pf.item(fn_name)
+				if fn_node.has_norm_keywords():
+					raise_validation_error(tr, obj, ["MFNO-007"], f"Entry '{fn_name}' in Function_overview must not contain normativity keywords; content is informational only.")
+
+#----- Public types -------------------------------------------#
+	with traced_section(tr, "Public_types"):
+		if "Public_types" in top.items():
+			node_pt = top._items["Public_types"]
+			for ty_name in node_pt.items():
+				attr = _check_exists(ty_name, "PTY-007")
+				ann = getattr(obj, "__annotations__", {})
+				ann_val = ann.get(ty_name, None) if isinstance(ann, dict) else None
+				if not _is_type_alias(attr, ann_val):
+					raise_validation_error(tr, obj, ["PTY-016"], f"Entry '{ty_name}' is not a TypeAlias/NewType.")
+
+#----- Public variables ---------------------------------------#
+	with traced_section(tr, "Public_variables"):
+		if "Public_variables" in top.items():
+			node_pv = top._items["Public_variables"]
+			for var_name in node_pv.items():
+				attr = _check_exists(var_name, "PVAR-013")
+				if not is_obj_named_value(attr):
+					raise_validation_error(tr, obj, ["PVAR-024"], f"Entry '{var_name}' must refer to a named value, not callable/class.")
+
+#----- Public constants ---------------------------------------#
+	with traced_section(tr, "Public_constants"):
+		if "Public_constants" in top.items():
+			node_pcst = top._items["Public_constants"]
+			for const_name in node_pcst.items():
+				attr = _check_exists(const_name, "PCON-015")
+				if not is_obj_named_value(attr):
+					raise_validation_error(tr, obj, ["PCON-024"], f"Entry '{const_name}' must refer to a named value, not callable/class.")
+				ann = getattr(obj, "__annotations__", {})
+				if const_name in ann and not is_attr_final(cast(ModuleType | type, obj), const_name):
+					raise_validation_error(tr, obj, ["PCON-016"], f"Constant '{const_name}' is annotated but not Final.")
+
+#===== Scope Monotonicity Rules ===============================#
+# Internal references from Public_classes / Public_functions must be compatible.
+	top_scopes = top.scopes()
+#----- Public classes -----------------------------------------#
+	if "Public_classes" in top.items():
+		node_classes = top.item("Public_classes")
+		for ref_name in node_classes.items():
+			try:
+				ref_obj, _ = resolve_object(ref_name, obj)
+			except Exception:
+# Cannot resolve object? Not good, but must be handled elsewhere.
+				continue
+			tr_tmp = tracer()
+			doc = get_obj_docstring(ref_obj)
+			if not doc:
+# Class has no docstring? Do not test scope rule.
+				continue
+			try:
+				tree = parse_indent_docstring(tr_tmp,doc)
+				scopes = get_scopes_of_tree(tr_tmp,tree)
+			except (ParseError, SectionNotFoundError):
+# Cannot extract scope from docstring? Do not test scope rule.
+				continue
+			if not top.is_visible(scopes):
+				raise_validation_error(tr, obj, ["SCP-005"], f"Scope of class '{ref_name}' ({scopes}) is not >= module scope {top_scopes}.")
+#----- Public functions ---------------------------------------#
+	if "Public_functions" in top.items():
+		node_functions = top.item("Public_functions")
+		for ref_name in node_functions.items():
+			try:
+				ref_obj, _ = resolve_object(ref_name, obj)
+			except Exception:
+# Cannot resolve object? Not good, but must be handled elsewhere.
+				continue
+			tr_tmp = tracer()
+			doc = get_obj_docstring(ref_obj)
+			if not doc:
+# Class has no docstring? Do not test scope rule.
+				continue
+			try:
+				tree = parse_indent_docstring(tr_tmp,doc)
+				scopes = get_scopes_of_tree(tr_tmp,tree)
+			except (ParseError, SectionNotFoundError):
+# Cannot extract scope from docstring? Do not test scope rule.
+				continue
+			if not top.is_visible(scopes):
+				raise_validation_error(tr, obj, ["SCP-005"], f"Scope of function '{ref_name}' ({scopes}) is not >= module scope {top_scopes}.")
+
+def validate_docstring_class(tr : tracer, obj: object, top : docitem_docstring_class,node_contract : docitem_map_base,node_normative_sections : docitem_list_base, _seen: Dict[object,docitem_docstring_base] | None = None) -> None:
+	"""
+Preamble:
+	profile:
+		function
+	normative_sections:
+		Contract, Parameters, Returns, Raises
+	scope:
+		extension
+Contract:
+	general:
+		|Must| validate the docitem tree |var|`top` against the class object |var|`obj`.
+		|Must| ensure that sections |label|`general`, |label|`constructor`, |label|`api` exist. 
+		|Must| ensure that each section listed in |label|`api` is normative.
+		|Must| ensure that subsection |label|`traits` -- if exists -- contains only allowed values and no duplicates.
+		|Must| ensure that section |label|`Derived_from` exists if listed in |label|`normative_sections`.
+		|Must| ensure that each entry in |label|`Derived_from` is a base class of |var|`obj`|op|`\\.`|var|`__class__`.
+		|Must| enforce normativity/existence consistency for |label|`Class_overview`, |label|`Method_overview`, |label|`Public_variables`, |label|`Public_constants`:
+		|Must| collect errors and warnings in the tracer object passed.
+Parameters:
+	tr:
+		Tracer for providing context and collecting warnings.
+	obj:
+		The callable object to validate against.
+	top:
+		The docitem tree to validate.
+	node_contract:
+		The node for section |label|`Contract` already parsed by the caller.
+	node_normative_sections:
+		The node for section |label|`Preamble.normative_sections` already parsed by the caller.
+	_seen:
+		Recording objects already validated in order to avoid recursion divergence and to share parsed trees across references.
+Returns:
+	|Must| return |None|
+Raises:
+	ValidationError:
+		|Must| raise if any of the validation conditions listet in |label|`general` fails.
+		|Must| raise if a section exists but is not listed as normative.
+		|Must| raise if a section is listed as normative but does not exist.
+Notes:
+	Usage:
+		This function is typically not called directly. Please call |func|`validate_docstring` instead.
+	Drift:
+		Last reviewed on 2026-01-23
+	"""
+#===== Preamble ===============================================#
+	with traced_section(tr, "Preamble"):
+# Rule: Preamble must exist. We do not allow purely informative docstrings.
+		if not top.has_item("Preamble"):
+			raise_validation_error(tr,obj,["PRE-001"],"Section 'Preamble' does not exist.")
+#----- status -------------------------------------------------#
+		node_preamble = top.item("Preamble")
+		if node_preamble.has_item("status"):
+			raise_validation_error(tr, obj, ["PRE-016"], f"Subsection 'status' is not allowed for profile 'class'.")
+#..... profile must exist .....................................#
+# checked by caller
+#..... normative_sections must exist ..........................#
+# checked by caller
+
+#===== Contract must exist ====================================#
+# checked by caller
+#----- general, constructor must exist ------------------------#
+	with traced_section(tr, "Contract"):
+		if "general" not in node_contract.items():
+			raise_validation_error(tr,obj,["CON-023"],"Section 'general' does not exist.")
+		if "constructor" not in node_contract.items():
+			raise_validation_error(tr,obj,["CON-007"],"Section 'constructor' does not exist.")
+
+		if "api" in node_contract.items():
+			node_api = node_contract._items["api"]
+			with traced_section(tr, "api"):
+# Rule: each entry in api must refer to a normative section
+				for ref in node_api.items():
+					if ref not in node_normative_sections.items():
+						raise_validation_error(tr,obj,["PRE-011"],f"Section '{ref}' is not listed in section 'Preamble.normative_sections'. We have {node_normative_sections.items()}.")
+
+		if "traits" in node_contract.items():
+			node_traits = node_contract._items["traits"]
+			with traced_section(tr, "traits"):
+				traits = list(node_traits.items())
+				if len(traits) != len(set(traits)):
+					raise_validation_error(tr, obj, ["CON-016"], "Trait identifiers must not occur more than once.")
+				allowed_traits = {"final", "abstract"}
+				for tr_name in traits:
+					if tr_name not in allowed_traits:
+						raise_validation_error(tr, obj, ["CON-017"], f"Trait '{tr_name}' is not allowed; allowed: {sorted(allowed_traits)}")
+#===== Derived_from must exist if normative ===================#
+	with traced_section(tr, "Derived_from"):
+		if "Derived_from" in node_normative_sections.items():
+			if "Derived_from" not in top.items():
+				raise_validation_error(tr,obj,["PRE-012"],"Section 'Derived_from' is marked normative but does not exist.")
+# If Derived_from present...
+		if top.has_item("Derived_from"):
+			node_derived = top.item("Derived_from")
+# ...must be normative.
+			if "Derived_from" not in node_normative_sections.items():
+				raise_validation_error(tr,obj,["DER-004"],f"Section 'Derived_from' is not listed in section 'Preamble.normative_sections'. We have {node_normative_sections.items()}.")
+# ...entries must refer to direct base classes
+			base_names = [b.__name__ for b in getattr(obj, "__bases__", ())]
+			for bname in node_derived.items():
+				if bname not in base_names:
+					raise_validation_error(tr,obj,["DER-003"],f"Class '{bname}' is not a direct base; direct bases are {base_names}.")
+#===== Classes/Functions/Methods/Public_* sections ============#
+	section_normativity = [
+		("Public_classes", "CPCL-002"),
+		("Public_methods", "CPMT-002"),
+		("Public_types", "PTY-009"),
+		("Public_variables", "PVAR-008"),
+		("Public_constants", "PCON-009"),
+		]
+	for sec_name, rule_id in section_normativity:
+		with traced_section(tr, sec_name):
+			if sec_name in top.items() and sec_name not in node_normative_sections.items():
+				raise_validation_error(tr,obj,[rule_id], f"Section '{sec_name}' exists but is not listed as normative.")
+			if sec_name in node_normative_sections.items() and sec_name not in top.items():
+				raise_validation_error(tr,obj,["PRE-012"],f"Section '{sec_name}' is marked normative but does not exist.")
+# Overviews must never be normative
+	with traced_section(tr, "Preamble"):
+		if "Class_overview" in node_normative_sections.items():
+			raise_validation_error(tr,obj,["CCLO-002"],"Section 'Class_overview' must not be listed as normative.")
+		if "Method_overview" in node_normative_sections.items():
+			raise_validation_error(tr,obj,["CMTO-002"],"Section 'Method_overview' must not be listed as normative.")
+#===== Existence and type of public objects ===================#
+	def _check_exists(name: str, rule: str) -> object:
+		if not hasattr(obj, name):
+			raise_validation_error(tr, obj, [rule], f"Entry '{name}' does not exist on class.")
+		return getattr(obj, name)
+
+#----- Public classes -----------------------------------------#
+	with traced_section(tr, "Public_classes"):
+		if "Public_classes" in top.items():
+			node_pc = top._items["Public_classes"]
+			for cls_name in node_pc.items():
+				attr = _check_exists(cls_name, "CPCL-004")
+				if not is_obj_class(attr):
+					raise_validation_error(tr, obj, ["CPCL-005"], f"Entry '{cls_name}' is not a class.")
+#----- Public methods -----------------------------------------#
+	with traced_section(tr, "Public_methods"):
+		if "Public_methods" in top.items():
+			node_pm = top._items["Public_methods"]
+			for meth_name in node_pm.items():
+				attr = _check_exists(meth_name, "CPMT-004")
+				if not is_obj_function(attr):
+					raise_validation_error(tr, obj, ["CPMT-005"], f"Entry '{meth_name}' is not a method.")
+
+#----- Class overview -----------------------------------------#
+	with traced_section(tr, "Class_overview"):
+		if "Class_overview" in top.items():
+			if "Public_classes" not in top.items():
+				raise_validation_error(tr, obj, ["CCLO-003"],f"'Class_overview' requires section 'Public_classes'.")
+			node_pc = top._items["Class_overview"]
+			for cls_name in node_pc.items():
+				attr = _check_exists(cls_name, "CCLO-008")
+				if not is_obj_class(attr):
+					raise_validation_error(tr, obj, ["CCLO-009"], f"Entry '{cls_name}' is not a class.")
+#----- ensure SSoT principle ----------------------------------#
+			for cls_name in node_pc.items():
+				cls_node = node_pc.item(cls_name)
+				if cls_node.has_norm_keywords():
+					raise_validation_error(tr, obj, ["CCLO-007"], f"Entry '{cls_name}' in Class_overview must not contain normativity keywords; content is informational only.")
+
+#----- Method overview ----------------------------------------#
+	with traced_section(tr, "Method_overview"):
+		if "Method_overview" in top.items():
+			if "Public_methods" not in top.items():
+				raise_validation_error(tr, obj, ["CMTO-003"],f"'Method_overview' requires section 'Public_methods'.")
+			node_pm = top._items["Method_overview"]
+			for m_name in node_pm.items():
+				attr = _check_exists(m_name, "CMTO-008")
+				if not is_obj_function(attr):
+					raise_validation_error(tr, obj, ["CMTO-009"], f"Entry '{m_name}' is not a method.")
+#----- ensure SSoT principle ----------------------------------#
+			for m_name in node_pm.items():
+				m_node = node_pm.item(m_name)
+				if m_node.has_norm_keywords():
+					raise_validation_error(tr, obj, ["CMTO-007"], f"Entry '{m_name}' in Method_overview must not contain normativity keywords; content is informational only.")
+
+#----- Public types -------------------------------------------#
+	with traced_section(tr, "Public_types"):
+		if "Public_types" in top.items():
+			node_pt = top._items["Public_types"]
+			for ty_name in node_pt.items():
+				attr = _check_exists(ty_name, "PTY-014")
+				ann = getattr(obj, "__annotations__", {})
+				ann_val = ann.get(ty_name, None) if isinstance(ann, dict) else None
+				if not _is_type_alias(attr, ann_val):
+					raise_validation_error(tr, obj, ["PTY-015"], f"Entry '{ty_name}' is not a TypeAlias/NewType.")
+
+#----- Public variables ---------------------------------------#
+	with traced_section(tr, "Public_variables"):
+		if "Public_variables" in top.items():
+			node_pv = top._items["Public_variables"]
+			for var_name in node_pv.items():
+				attr = _check_exists(var_name, "PVAR-021")
+				if not is_obj_named_value(attr):
+					raise_validation_error(tr, obj, ["PVAR-023"], f"Entry '{var_name}' must refer to a named value, not callable/class.")
+
+#----- Public constants ---------------------------------------#
+	with traced_section(tr, "Public_constants"):
+		if "Public_constants" in top.items():
+			node_pcst = top._items["Public_constants"]
+			for const_name in node_pcst.items():
+				attr = _check_exists(const_name, "PCON-021")
+				if not is_obj_named_value(attr):
+					raise_validation_error(tr, obj, ["PCON-023"], f"Entry '{const_name}' must refer to a named value, not callable/class.")
+				ann = getattr(obj, "__annotations__", {})
+				if const_name in ann and not is_attr_final(cast(ModuleType | type, obj), const_name):
+					raise_validation_error(tr, obj, ["PCON-022"], f"Constant '{const_name}' is annotated but not Final.")
+
+
+#===== Scope Monotonicity Rules ===============================#
+	top_scopes = top.scopes()
+#----- Public classes -----------------------------------------#
+	if "Public_classes" in top.items():
+		node_classes = top.item("Public_classes")
+		for ref_name in node_classes.items():
+			try:
+				ref_obj, _ = resolve_object(ref_name, obj)
+			except Exception:
+# Cannot resolve object? Not good, but must be handled elsewhere.
+				continue
+			tr_tmp = tracer()
+			doc = get_obj_docstring(ref_obj)
+			if not doc:
+# Class has no docstring? Do not test scope rule.
+				continue
+			try:
+				tree = parse_indent_docstring(tr_tmp,doc)
+				scopes = get_scopes_of_tree(tr_tmp,tree)
+			except (ParseError, SectionNotFoundError):
+# Cannot extract scope from docstring? Do not test scope rule.
+				continue
+			if not top.is_visible(scopes):
+				raise_validation_error(tr, obj, ["SCP-005"], f"Scope of class '{ref_name}' ({scopes}) is not >= class scope {top_scopes}.")
+#----- Public methods ---------------------------------------#
+	if "Public_methods" in top.items():
+		node_methods = top.item("Public_methods")
+		for ref_name in node_methods.items():
+			try:
+				tr.add_info(f"resolving {ref_name} in {get_obj_name(obj)}.")
+				ref_obj, _ = resolve_object(ref_name, obj)
+				tr.add_info(f"done.")
+			except Exception as e:
+				tr.add_info(f"failed.")
+				print(e)
+# Cannot resolve object? Not good, but must be handled elsewhere.
+				continue
+			tr_tmp = tracer()
+			doc = get_obj_docstring(ref_obj)
+			if not doc:
+# Class has no docstring? Do not test scope rule.
+				continue
+			try:
+				tree = parse_indent_docstring(tr_tmp,doc)
+				scopes = get_scopes_of_tree(tr_tmp,tree)
+			except (ParseError, SectionNotFoundError):
+# Cannot extract scope from docstring? Do not test scope rule.
+				continue
+			if not top.is_visible(scopes):
+				raise_validation_error(tr, obj, ["SCP-005"], f"Scope of method '{ref_name}' ({scopes}) is not >= class scope {top_scopes}.")
+#----- Derived_from -------------------------------------------#
+	drvd_scopes = top_scopes
+	if "Derived_from" in top.items():
+		node_derived_from = top.item("Derived_from")
+		for base_name in node_derived_from.items():
+			try:
+				base_obj, _ = resolve_object(base_name, obj)
+			except Exception:
+# Cannot resolve object? Not good, but must be handled elsewhere.
+				continue
+			tr_tmp = tracer()
+			doc = get_obj_docstring(base_obj)
+			if not doc:
+# Class has no docstring? Do not test scope rule.
+				continue
+			try:
+				tree = parse_indent_docstring(tr_tmp,doc)
+				base_scopes = get_scopes_of_tree(tr_tmp,tree)
+			except (ParseError, SectionNotFoundError):
+# Cannot extract scope from docstring? Do not test scope rule.
+				continue
+			if not top.can_see(base_scopes):
+				raise_validation_error(tr, obj, ["SCP-009"], f"Scope of base class ({base_scopes}) is > scope of derived class {drvd_scopes}.")
+
+def validate_docstring_method(tr : tracer, obj: Callable[..., Any], top : docitem_docstring_method,node_contract : docitem_map_base,node_normative_sections : docitem_list_base, _seen: Dict[object,docitem_docstring_base] | None = None) -> None:
+	"""
+Preamble:
+	profile:
+		function
+	normative_sections:
+		Contract, Parameters, Returns, Raises
+	scope:
+		extension
+Contract:
+	general:
+		|Must| validate the docitem tree |var|`top` against the callable object |var|`obj`.
+		|Must| ensure that |label|`Contract` contains a section |label|`general`.
+		|Must| ensure that all sections declared as normative exist.
+		|Must| ensure that section |label|`Parameters` exists.
+		|Must| ensure that section |label|`Returns` exists.
+		|Must| ensure that section |label|`Raises` exists.
+		|Must| ensure that each parameter mentioned in section |label|`Parameters` is in the callable's signature.
+		|Must| ensure that each parameter in the callable's signature is mentioned in section |label|`Parameters`.
+		|Must| ensure that each exception listed in section |label|`Raises` refers to an existing class.
+		|Must| ensure that each exception listed in section |label|`Raises` is a subclass of |type|`BaseException`.
+		|Must| resolve each exception listed in section |label|`Raises` by importing the longest module prefix and traversing remaining attributes; |must| fall back to the callable's globals, its defining module, and |value|`builtins`.
+		|Must| collect warnings in the tracer object passed.
+Parameters:
+	tr:
+		Tracer for providing context and collecting warnings.
+	obj:
+		The callable object to validate against.
+	top:
+		The docitem tree to validate.
+	node_contract:
+		The node for section |label|`Contract` already parsed by the caller.
+	node_normative_sections:
+		The node for section |label|`Preamble.normative_sections` already parsed by the caller.
+	_seen:
+		Recording objects already validated in order to avoid recursion divergence and to share parsed trees across references.
+Returns:
+	|Must| return |None|
+Raises:
+	ValidationError:
+		|Must| raise if any of the validation conditions listet in |label|`general` fails.
+Notes:
+	Usage:
+		This function is typically not called directly. Please call |func|`validate_docstring` instead.
+	"""
+	with traced_section(tr, "method"):
+#===== Preamble ===============================================#
+		with traced_section(tr, "Preamble"):
+#----- status -------------------------------------------------#
+			with traced_section(tr, "status"):
+				status = get_status(top)
+				allowed_tags = {"experimental", "stable", "frozen", "deprecated", "draft"}
+				if status not in allowed_tags:
+					raise_validation_error(tr, obj, ["STA-004"], f"Status '{status}' is not allowed; allowed: {sorted(allowed_tags)}")
+#===== Contract ===============================================#
+# Contract must have a general section.
+		with traced_section(tr, "Contract"):
+			if "general" not in node_contract.items():
+				raise_validation_error(tr,obj,["CON-024"],"Section 'general' does not exist.")
+# If caller marks other sections normative, ensure they exist.
+			for sec in node_normative_sections.items():
+				if sec == "Contract":
+					continue
+				if sec not in top.items():
+					raise_validation_error(tr,obj,["PRE-012"],f"Section '{sec}' is listed as normative but does not exist.")
+#===== Parameters must exist ==================================#
+		with traced_section(tr, "Parameters"):
+			if "Parameters" not in top.items():
+				raise_validation_error(tr,obj,["PAR-001"],"Section 'Parameters' does not exist.")
+#----- Must be normative --------------------------------------#
+			if "Parameters" not in node_normative_sections.items():
+				raise_validation_error(tr,obj,["PAR-002"],f"Section 'Parameters' is not listed as normative.")
+#----- Must match signature -----------------------------------#
+			with traced_section(tr,get_obj_name(obj)):
+				try:
+					sig = inspect.signature(obj)
+				except (TypeError, ValueError):
+					sig = None
+				if sig is not None:
+					param_names = [p for p in sig.parameters if p not in ("self","cls")]
+					doc_params = list(top.item("Parameters").items())
+					for p in doc_params:
+						if p in ("self","cls"):
+							continue
+						if p not in param_names:
+							raise_validation_error(tr,obj,["PAR-005"],f"Parameter '{p}' documented but not in signature {param_names}.")
+					for p in param_names:
+						if p not in doc_params:
+							raise_validation_error(tr,obj,["PAR-004"],f"Parameter '{p}' in signature but not documented.")
+#===== Returns must exist =====================================#
+		with traced_section(tr, "Returns"):
+			if "Returns" not in top.items():
+				raise_validation_error(tr,obj,["RET-001"],"Section 'Returns' does not exist.")
+#----- Must be normative --------------------------------------#
+			if "Returns" not in node_normative_sections.items():
+				raise_validation_error(tr,obj,["RET-002"],f"Section 'Returns' is not listed as normative.")
+			node_returns = top.item("Returns")
+#----- Must be list of strings --------------------------------#
+# Not likely to trigger since this is captured somewhere else. We leave this here for completenes.
+			if not isinstance(node_returns,docitem_list_base):
+				raise_validation_error(tr,obj,["RET-005"],f"Section 'Returns' must not contain subsections.")
+#----- Must match annotation ----------------------------------#
+# Extract return annotation.
+			ret_ann: object = inspect.Signature.empty
+			try:
+				hints_ret = get_type_hints(obj, include_extras=True)
+				ret_ann = hints_ret.get("return", inspect.Signature.empty)
+			except Exception:
+				try:
+					ret_ann = inspect.signature(obj).return_annotation
+				except Exception:
+					ret_ann = inspect.Signature.empty
+
+			if ret_ann is not inspect.Signature.empty:
+				joined = " ".join(node_returns.items())
+# Rule RET-010 says treat volations as warnings.
+#----- Use tokens for True and False if applicable ------------#
+# Simple test please! Do not dig for bool in complex annonation types.
+				if ret_ann == bool:
+					if "|True|" not in joined and "|False|" not in joined:
+						warn_validation(tr, obj, ["RET-004"], "Returns should mention truthy/falsey outcome using tokens |True| or |False|.")
+#----- Use tokens for self and None if applicable ------------#
+# Rule RET-008 says: test RET-006 only if annotated and seems to contain non-tokens.
+				if get_obj_name(ret_ann) in ("None", "NoneType"):
+					if "None" in joined and "|None|" not in joined:
+						warn_validation(tr, obj, ["RET-006"], "Return value 'None' should be written in tokenized form as |None|.")
+# Rule RET-009 says: test RET-007 only if annotated and seems to contain non-tokens.
+				if get_obj_name(ret_ann) in ("Self",):
+					if ("self" in joined or "Self" in joined) and "|Self|" not in joined:
+						warn_validation(tr, obj, ["RET-007"], "Return value 'self' should be written in tokenized form as |Self|.")
+
+#===== Raises must exist ======================================#
+		with traced_section(tr, "Raises"):
+			if "Raises" not in top.items():
+				raise_validation_error(tr,obj,["RAI-001"],"Section 'Raises' does not exist.")
+#----- Must be normative --------------------------------------#
+			if "Raises" not in node_normative_sections.items():
+				raise_validation_error(tr,obj,["RAI-002"],f"Section 'Raises' is not listed as normative.")
+#----- Must reference existing exception classes --------------#
+			node_raises = top._items["Raises"]
+			assert isinstance(node_raises, docitem_raises)
+			for exc_name in node_raises.items().keys():
+				try:
+					exc_obj, _ = resolve_object(exc_name, obj)
+				except Exception:
+					if hasattr(builtins, exc_name):
+						exc_obj = getattr(builtins, exc_name)
+					else:
+						exc_obj = None
+				exc_cls = exc_obj if is_obj_class(exc_obj) else None
+				if exc_cls is None or not is_obj_class(exc_cls):
+					raise_validation_error(tr,obj,["RAI-004"], f"Exception '{exc_name}' listed in Raises does not refer to an existing class.")
+				if not issubclass(exc_cls, BaseException):
+					raise_validation_error(tr,obj,["RAI-007"], f"Exception '{exc_name}' is not a subclass of BaseException.")
+
+def validate_docstring_inherited_method(tr : tracer, obj: object, top : docitem_docstring_inherited_method,node_contract : docitem_map_base,node_normative_sections : docitem_list_base, _seen: Dict[object,docitem_docstring_base] | None = None) -> None:
+	"""
+Preamble:
+	profile:
+		function
+	normative_sections:
+		Contract, Parameters, Returns, Raises
+	scope:
+		extension
+Contract:
+	general:
+		|Must| validate the docitem tree |var|`top` against the callable object |var|`obj`.
+		|Must| ensure that |label|`Contract` contains a section |label|`general`.
+		|Must| ensure that all sections declared as normative exist.
+		|Must| ensure that each parameter mentioned in section |label|`Parameters` is in the callable's signature.
+		|Must| ensure that each parameter in the callable's signature is mentioned in section |label|`Parameters`.
+		|Must| ensure that each exception listed in section |label|`Raises` refers to an existing class.
+		|Must| ensure that each exception listed in section |label|`Raises` is a subclass of |type|`BaseException`.
+		|Must| resolve each exception listed in section |label|`Raises` by importing the longest module prefix and traversing remaining attributes; |must| fall back to the callable's globals, its defining module, and |value|`builtins`.
+		|Must| collect warnings in the tracer object passed.
+Parameters:
+	tr:
+		Tracer for providing context and collecting warnings.
+	obj:
+		The callable object to validate against.
+	top:
+		The docitem tree to validate.
+	node_contract:
+		The node for section |label|`Contract` already parsed by the caller.
+	node_normative_sections:
+		The node for section |label|`Preamble.normative_sections` already parsed by the caller.
+	_seen:
+		Recording objects already validated in order to avoid recursion divergence and to share parsed trees across references.
+Returns:
+	|Must| return |None|
+Raises:
+	ValidationError:
+		|Must| raise if any of the validation conditions listet in |label|`general` fails.
+Notes:
+	Usage:
+		This function is typically not called directly. Please call |func|`validate_docstring` instead.
+	Drift:
+		Docstring and function are INCOMPLETE!
+	"""
+	with traced_section(tr, "inherited_method"):
+#===== Contract ===============================================@
+# Contract must have a general section.
+		with traced_section(tr, "Contract"):
+			if "general" not in node_contract.items():
+				raise_validation_error(tr,obj,["CON-036"],"Section 'general' does not exist.")
+# If caller marks other sections normative, ensure they exist.
+			for sec in node_normative_sections.items():
+				if sec == "Contract":
+					continue
+				if sec not in top.items():
+					raise_validation_error(tr,obj,["PRE-012"],f"Section '{sec}' is listed as normative but does not exist.")
+# Special for inherited methods.
+			if "base" not in node_contract.items():
+				raise_validation_error(tr,obj,["CON-039"],"Section 'base' does not exist.")
+			with traced_section(tr, "base"):
+				node_base = node_contract.item("base")
+				if not isinstance(node_base, docitem_base_to_inherit_from):
+					raise_validation_error(tr,obj,["CON-040"],"Section 'base' malformed.")
+				base_items = node_base.items()
+				if len(base_items) != 1:
+					raise_validation_error(tr,obj,["CON-040"],"Section 'base' must contain exactly one entry.")
+				base_ref = next(iter(base_items))
+				if not isinstance(base_ref, str) or not RE_QUALIFIED_IDENTIFIER_COMPILED.fullmatch(base_ref):
+					raise_validation_error(tr,obj,["CON-041"],f"Entry '{base_ref}' is not a qualified identifier.")
+				try:
+					base_obj, _ = resolve_object(base_ref, obj)
+				except Exception as exc:
+					raise_validation_error(tr,obj,["CON-042"],f"Base method '{base_ref}' cannot be resolved: {exc}")
+				if not (is_obj_function(base_obj)):
+					raise_validation_error(tr,obj,["CON-042"],f"Base reference '{base_ref}' is not a function or method.")
+# CON-043: base_obj must belong to a base class of the documented class.
+				base_qname = getattr(base_obj, "__qualname__", "")
+				base_owner_name = base_qname.rsplit(".", 1)[0] if "." in base_qname else ""
+				owner_name = getattr(obj, "__qualname__", "")
+				owner_class_name = owner_name.rsplit(".", 1)[0] if "." in owner_name else ""
+				base_owner_cls = None
+				owner_cls = None
+				mod_obj = inspect.getmodule(obj)
+				if base_owner_name and mod_obj:
+					try:
+						base_owner_cls = resolve_object(f"{mod_obj.__name__}.{base_owner_name}", obj)[0]
+					except Exception:
+						base_owner_cls = None
+				if owner_class_name and mod_obj:
+					try:
+						owner_cls = resolve_object(f"{mod_obj.__name__}.{owner_class_name}", obj)[0]
+					except Exception:
+						owner_cls = None
+				if base_owner_cls is None or owner_cls is None or not is_obj_class(base_owner_cls) or not is_obj_class(owner_cls) or not issubclass(owner_cls, base_owner_cls):
+					raise_validation_error(tr,obj,["CON-043"],f"Base method '{base_ref}' is not defined on a base class of '{owner_class_name}'.")
+# CON-044: names must match
+				method_name = getattr(obj, "__name__", None)
+				base_name = getattr(base_obj, "__name__", None)
+				if method_name != base_name:
+					raise_validation_error(tr,obj,["CON-044"],f"Base method name '{base_name}' does not match '{method_name}'.")
+# CON-045: referenced method must have a valid docstring.
+				if base_obj.__doc__ is None:
+					raise_validation_error(tr,obj,["CON-045"],f"Base method name '{base_name}' does not have a docstring.")
+				try:
+					top_base_obj = make_docitem_tree(tr,base_obj.__doc__)
+					validate_docstring(tr,base_obj,top_base_obj)
+				except ParseError:
+					raise_validation_error(tr,obj,["CON-045"],f"Base method '{base_name}': Validation raises a ParseError.")
+				except ValidationError:
+					raise_validation_error(tr,obj,["CON-045"],f"Base method '{base_name}': Validation raises a ValidationError.")
+# CON-046: see what we can do - this won't be perfect.
+				try:
+					base_hints = get_type_hints(base_obj)
+				except Exception:
+					base_hints = None
+				try:
+					obj_hints = get_type_hints(obj)
+				except Exception:
+					obj_hints = None
+				if base_hints and obj_hints:
+					sig_base = inspect.signature(base_obj)
+					sig_obj = inspect.signature(cast(Callable[..., Any], obj))
+# Compare parameter types
+					for name, base_param in sig_base.parameters.items():
+						if name not in sig_obj.parameters:
+							continue
+						obj_param = sig_obj.parameters[name]
+						base_ann = base_param.annotation
+						obj_ann = obj_param.annotation
+						if base_ann is inspect._empty or obj_ann is inspect._empty:
+							continue
+						if base_hints.get(name) != obj_hints.get(name):
+							warn_validation(tr,obj,["CON-046"],f"Type of parameter '{name}' differs between base method and override.")
+# COmpare return types
+					if sig_base.return_annotation is not inspect._empty and sig_obj.return_annotation is not inspect._empty:
+						if base_hints.get("return") != obj_hints.get("return"):
+							warn_validation(tr,obj,["CON-046"],"Return type differs between base method and override.")
+#===== Scope Monotonicity Rules ===============================#
+	top_scopes = top.scopes()
+#----- Contract.base ------------------------------------------#
+	drvd_scopes = top_scopes
+	if "base" in node_contract.items():
+		node_base = node_contract.item("base")
+		for base_name in node_base.items():
+			try:
+				base_obj, _ = resolve_object(base_name, obj)
+			except Exception:
+# Cannot resolve object? Not good, but must be handled elsewhere.
+				continue
+			tr_tmp = tracer()
+			doc = get_obj_docstring(base_obj)
+			if not doc:
+# Class has no docstring? Do not test scope rule.
+				continue
+			try:
+				tree = parse_indent_docstring(tr_tmp,doc)
+				base_scopes = get_scopes_of_tree(tr_tmp,tree)
+			except (ParseError, SectionNotFoundError):
+# Cannot extract scope from docstring? Do not test scope rule.
+				continue
+			if not top.can_see(base_scopes):
+				raise_validation_error(tr, obj, ["SCP-008"], f"Scope of base method '{base_name}' ({base_scopes}) is not >= derived method scope {top_scopes}.")
+
+
+#===== helpers for See_also resolution ========================#
+
+def _qualified_object_name(obj: object) -> str:
+	if is_obj_module(obj):
+		return obj.__name__
+	mod_name = getattr(obj, "__module__", None)
+	qual_name = getattr(obj, "__qualname__", None)
+	if isinstance(mod_name, str) and isinstance(qual_name, str):
+		return f"{mod_name}.{qual_name}"
+	name = getattr(obj, "__name__", None)
+	if isinstance(name, str):
+		return name
+	return str(obj)
+
+def _get_public_section_entries(top: docitem_docstring_base, section_label: str, expected_node_type: Type[docitem_map_base]) -> set[str]:
+	public: set[str] = set()
+	if section_label in top.items():
+		node = top._items[section_label]
+		assert isinstance(node, expected_node_type)
+		public = set(node.items().keys())
+	return public
+def _get_public_section_entries2(top: docitem_docstring_base, section_label: str, expected_node_type: Type[docitem_list_base]) -> set[str]:
+	public: set[str] = set()
+	if section_label in top.items():
+		node = top._items[section_label]
+		assert isinstance(node, expected_node_type)
+		public = set(node.items())
+	return public
+
+r"""
+Collect all occurrences of tokens of the form |term|`Identifier` in a docitem tree.
+"""
+def _collect_term_refs(node: docitem_base) -> set[str]:
+	refs: set[str] = set()
+	if isinstance(node, docitem_list_base):
+		for item in node.items():
+			for m in re.finditer(r"\|term\|\`([A-Za-z_][A-Za-z0-9_]*)\`", item):
+				refs.add(m.group(1))
+	if isinstance(node, docitem_map_base):
+		for child in node.items().values():
+			refs.update(_collect_term_refs(child))
+	return refs
+
+
+def validate_docstring(tr : tracer,obj: object, top : docitem_docstring_base | None = None, _seen: Dict[object,docitem_docstring_base] | None = None) -> docitem_docstring_base:
+	"""
+Preamble:
+	profile:
+		function
+	normative_sections:
+		Contract, Parameters, Returns, Raises, See_also
+	scope:
+		public
+Contract:
+	general:
+		|Must| validate the docitem tree |var|`top` against the object |var|`obj` if |var|`top` is not |None|.
+		|Must| analyze the docstring of |var|`obj` and create a docitem tree if |var|`top` is |None|.
+		|Must| ensure that section |label|`Preamble` exists.
+		|Must| ensure that section |label|`profile` exists in section |label|`Preamble`.
+		|Must| ensure that section |label|`profile` contains exactly one item.
+		|Must| ensure that the item in section |label|`profile` is an identifier.
+		|Must| ensure that the item in section |label|`profile` is one of the allowed profiles.
+		|Must| ensure that section |label|`normative_sections` exists in section |label|`Preamble`.
+		|Must| ensure that each item in section |label|`normative_sections` refers to an existing section.
+		|Must| ensure that no item in section |label|`normative_sections` appears more than once.
+		|Must| ensure that each section which contains at least one of the normativity keywords is listed under |label|`normative_sections`, unless the section is explicitly declared informative by the active profile/template.
+		|Must| ensure that section |label|`Contract` exists.
+		|Must| ensure that section |label|`Contract` is listed in section |label|`normative_sections`.
+
+		|Must| ensure that section |label|`Definitions` --provided it exists-- is listed in section |label|`normative_sections`, regardless of whether it contains normativity keywords.
+		|Must| look for ocurrences of token |lit|`\\|term\\|\\`<Identifier>\\`` in the docitem tree and ensure that the referenced term is defined in section |label|`Definitions`.
+
+		|Must| ensure that section |label|`Terminology` --provided it exists-- is considered informative and NOT listed in section |label|`normative_sections`.
+		|Must| enforce profile related tests depending on the profile and call one of the validators |func|`validate_docstring_*`.
+
+		|Must| examine section |label|`See_also` if it exists.
+		|Must| ensure the existence of each item listed in |label|`See_also`.
+		|Must| ensure that each item listed in |label|`See_also` has a valid docstring.
+Parameters:
+	tr:
+		Tracer for providing context and collecting warnings.
+	obj:
+		The object to validate against (module, class or callable).
+	top:
+		The docitem tree to validate.
+	_seen:
+		Recording objects already validated in order to avoid recursion divergence and to share parsed trees across references.
+Returns:
+	|Must| return |None|
+Raises:
+	ValidationError:
+		|Must| raise if any of the validation conditions listet in |label|`general` fails.
+Notes:
+	Usage:
+		This function should be pretty easy to use, if you leave out parameter |var|`top`.
+		You simply pass the object, the docstring of which you would like to validate.
+		Note, however, that this function only validates for inner consistency of the
+		the docstring, it does not validate for coverage (i.e. check existence and docstrings
+		of all objects inside the class)
+See_also:
+	validate_class_coverage, validate_module_coverage
+	"""
+# validate_docstring is called recursively in coverage validations,
+# therefore we must make sure not to run into infinite recusrsion.
+	if _seen is None:
+		_seen = {}
+	if obj in _seen:
+		return _seen[obj]
+	if top == None:
+		if obj.__doc__ is None:
+			raise_has_no_docstring(tr,["DOC-001"],obj)
+		try:
+			top = make_docitem_tree(tr,obj.__doc__)
+		except Exception as e:
+			raise
+	_seen[obj] = top
+# Log some debug info
+	tr.add_info(f"validating '{get_obj_name(obj)}'")
+  
+	with traced_section(tr, f"{get_obj_name(obj)}"):
+#===== Preamble must exist ====================================#
+# Rule pre-01: Preamble must exist. We do not allow purely informative docstrings.
+		if "Preamble" not in top.items():
+			raise_validation_error(tr,obj,["PRE-001"],"Section 'Preamble' does not exist.")
+		node_preamble = top.item("Preamble")
+		with traced_section(tr, f"Preamble"):
+#..... profile must exist .....................................#
+# Rule pre-02: profile must exist.
+			if not "profile" in node_preamble.items():
+				raise_validation_error(tr,obj,["PRE-003"],"Section 'profile' does not exist.")
+# Here we know it exists.
+			node_profile = node_preamble.item("profile")
+			with traced_section(tr, "profile"):
+				assert isinstance(node_profile,docitem_list_base)
+				if len(node_profile.items()) > 1:
+					raise_validation_error(tr,obj,["PRE-004"],"Only one item allowed")
+				profile : str = get_profile(top)
+				if not RE_IDENTIFIER_COMPILED.fullmatch(profile):
+					raise_validation_error(tr,obj,["PRE-014"],"expected identifier, got '{profile}'.")
+# For the current version we tighten this rule
+				if not profile in ("module","class","function","method","inherited_method"):
+					raise_validation_error(tr,obj,["PRE-005"],f"expected one of {{'module','class','function','method','inherited_method'}}, got '{profile}'.")
+
+# Rule pre-03: normative_sections must exist and be non-empty. Non-emptyness is implied by existence and normativity of Contract.
+			with traced_section(tr, "normative_sections"):
+				if "normative_sections" not in node_preamble.items():
+					raise_validation_error(tr,obj,["PRE-006"],"Section 'normative_sections' does not exist.")
+# Here we know it exists.
+				node_normative_sections =  node_preamble.item("normative_sections")
+# Chill mypy. We know it's a docitem_list_base.
+				assert isinstance(node_normative_sections,docitem_list_base)
+				seen = set()
+				for sec in node_normative_sections.items():
+# Rule pre-05: each entry must point to an existing section.
+					if not sec in top.items():
+						raise_validation_error(tr,obj,["PRE-012"],f"Entry '{sec}' does not refer to an existing section.")
+# Rule pre-xx
+					if sec in seen:
+						raise_validation_error(tr,obj,["PRE-009"],"Entry '{sec}' is duplicate.")
+					seen.add(sec)
+# Rule: Any section containing one of the keywords of normativity
+# must be listed under normative_sections.
+			for label,item in top.items().items():
+				if item.has_norm_keywords():
+					if label not in node_normative_sections.items():
+						raise_validation_error(tr,obj,["PRE-013"],f"Section '{label}' contains a keyword of normativity but is not listed in normative_sections.")
+#===== Contract must exist ====================================#
+		with traced_section(tr, "Contract"):
+			if "Contract" not in top.items():
+				rule = "CON-001"
+				if profile == "class":
+					rule = "CON-004"
+				elif profile in ("method","function"):
+					rule = "CON-019"
+				raise_validation_error(tr,obj,[rule],"Section 'Contract' does not exist.")
+# Rule pre-04: the contract must be listed as normative
+			if not "Contract" in node_normative_sections.items():
+				rule = "CON-002"
+				if profile == "class":
+					rule = "CON-005"
+				elif profile in ("method","function"):
+					rule = "CON-020"
+				raise_validation_error(tr,obj,[rule],"Section 'Contract' must be listed under 'normative_sections'.")
+			node_contract = top._items["Contract"]
+# Chill mypy. We know it's a docitem_map_base.
+			assert isinstance(node_contract,docitem_map_base)
+ 
+#===== If Definitions exists it must be normative =============#
+		with traced_section(tr, "Definitions"):
+			if "Definitions" in top.items():
+				node_definitions = top._items["Definitions"]
+# Chill mypy
+				assert isinstance(node_definitions, docitem_map_base)
+				if not "Definitions" in node_normative_sections.items():
+					raise_validation_error(tr,obj,["DEF-002"],"Section 'Definitions' exists but is not normative.")
+				def_names = set(node_definitions.items().keys())
+# Defitem content should not be empty.
+				for name in def_names:
+					node_defitem = node_definitions.item(name)
+					if node_defitem.empty():
+						warn_validation(tr,obj,["DEF-009"],"Defitem content should not be empty.")
+			else:
+				node_definitions = None
+				def_names = set()
+# Ensure each reference term appears in section `Definitions`.
+			term_refs = _collect_term_refs(top)
+			if term_refs:
+				if node_definitions is None:
+					raise_validation_error(tr,obj,["DEF-007"], "Token |term| is used but section 'Definitions' is missing.")
+				for term in term_refs:
+					if term not in def_names:
+						raise_validation_error(tr,obj,["DEF-008"], f"Token |term|`{term}` references an undefined term.")
+
+#===== If Terminology exists it must NOT be normative =========#
+		with traced_section(tr, "Terminology"):
+			if "Terminology" in top.items():
+				if "Terminology" in node_normative_sections.items():
+					raise_validation_error(tr,obj,["TERM-002"],"Section 'Terminology ' must not be normative.")
+				node_terminology = top.item("Terminology")
+# Defitem content should not be empty.
+				for name in node_terminology.items():
+					node_term = node_terminology.item(name)
+					if node_term.empty():
+						warn_validation(tr,obj,["TERM-008"],"Term content should not be empty.")
+# Cases
+		profile = get_profile(top)
+		if is_obj_module(obj):
+			if profile != "module":
+				raise_validation_error(tr, obj, ["PRE-017"], f"profile is {profile} but '{get_obj_name(obj)}' is a module.")
+		elif is_obj_class(obj):
+			if profile != "class":
+				raise_validation_error(tr, obj, ["PRE-018"], f"profile is {profile} but '{get_obj_name(obj)}' is a class.")
+		else:
+			if profile not in {"function", "method", "inherited_method"}:
+				raise_validation_error(tr, obj, ["PRE-019"], f"profile is {profile} but '{get_obj_name(obj)}' is a function or method.")
+		if profile == "module":
+			assert isinstance(top,docitem_docstring_module)
+			validate_docstring_module(tr,obj,top,node_contract,node_normative_sections)
+		elif profile == "class":
+			assert isinstance(top,docitem_docstring_class)
+			validate_docstring_class(tr,obj,top,node_contract,node_normative_sections)
+		elif profile in ("method","function"):
+			assert isinstance(top,docitem_docstring_method)
+			validate_docstring_method(tr,cast(Callable[..., Any],obj),top,node_contract,node_normative_sections)
+		elif profile == "inherited_method":
+			assert isinstance(top,docitem_docstring_inherited_method)
+			validate_docstring_inherited_method(tr,obj,top,node_contract,node_normative_sections)
+		else:
+			raise_validation_error(tr,obj,["PRE-005"],f"Unknown profile: {profile}")
+#===== If See_also exists, more tests apply ===================#
+		with traced_section(tr, "See_also"):
+# Section may exist, SEE-001.
+			if "See_also" in top.items():
+				node_see_also = top._items["See_also"]
+				for item_see_also in node_see_also.items():
+# Entries must be Qualified Identifiers
+					if not RE_QUALIFIED_IDENTIFIER_COMPILED.fullmatch(item_see_also):
+						raise_validation_error(tr,obj,["SEE-002"], f"See_also reference '{item_see_also}' is not a (Qualified) Identifier.")
+					try:
+						target_obj, target_name = resolve_object(item_see_also, obj)
+					except Exception as e:
+						if "See_also" in node_normative_sections.items():
+							raise_validation_error(tr,obj,["SEE-004"], f"See_also reference '{item_see_also}' cannot be resolved: {e} (error b/c 'See_also' is normative).")
+						else:
+							warn_validation(tr,obj,["SEE-003"], f"See_also reference '{item_see_also}' cannot be resolved: {e} (warning b/c 'See_also' is informative).")
+							continue
+					if target_obj is obj:
+						raise_validation_error(tr,obj,["SEE-005"], f"See_also reference '{item_see_also}' must not refer to the object itself.")
+					if target_obj in _seen:
+						continue
+					doc = get_obj_docstring(target_obj)
+					if not doc:
+# No docstring at all: always warn (SEE-006).
+						warn_validation(tr,obj,["SEE-006"], f"See_also reference '{item_see_also}' has no docstring.")
+# If See_also is normative and the target is a user-defined module/class/function
+# (not a builtin), escalate to SEE-008.
+						is_builtin = inspect.isbuiltin(target_obj) or getattr(target_obj, "__module__", "") == "builtins"
+						if "See_also" in node_normative_sections.items() and (is_obj_module(target_obj) or is_obj_class(target_obj) or is_obj_function(target_obj)) and not is_builtin:
+							raise_validation_error(tr,obj,["SEE-008"], f"See_also reference '{item_see_also}' has no valid docstring (error b/c 'See_also' is normative).")
+					else:
+# Note that we do not validate built-ins!
+						if (is_obj_module(target_obj) or is_obj_class(target_obj) or is_obj_function(target_obj)):
+							is_builtin = inspect.isbuiltin(target_obj) or getattr(target_obj, "__module__", "") == "builtins"
+							if is_builtin:
+								continue
+#===== Scope Monotonicity Rules ===============================#
+# Try to parse the target docstring to obtain its scopes; treat parse failures as "no valid docstring".
+							tr_tmp = tracer()
+							try:
+								tree = parse_indent_docstring(tr_tmp, doc)
+								target_scopes = get_scopes_of_tree(tr_tmp, tree)
+							except (ParseError, SectionNotFoundError):
+								if  "See_also" in node_normative_sections.items():
+									raise_validation_error(tr,obj,["SEE-008"], f"See_also reference '{item_see_also}' has no valid docstring (error b/c 'See_also' is normative).")
+								else:
+									warn_validation(tr,obj,["SEE-007"], f"See_also reference '{item_see_also}' has no valid docstring (warning b/c 'See_also' is informative).")
+								continue
+# Scope monotonicity for See_also references (SCP-006 / SCP-007)
+							if "See_also" in node_normative_sections.items():
+								if not top.can_see(target_scopes):
+									raise_validation_error(tr,obj,["SCP-006"], f"See_also reference '{item_see_also}' has scope {target_scopes} which is less public than {top.scopes()}.")
+							else:
+								if not top.can_see(target_scopes):
+									warn_validation(tr,obj,["SCP-007"], f"See_also reference '{item_see_also}' has scope {target_scopes} which is less public than {top.scopes()}.")
+#===== Scope Monotonicity Rules ===============================#
+# internal references introduced by Classes, Methods, Functions, Public_* and Derived_from / inherited_method
+# are validated in their respective validators; see markers in those functions.
+	return top
+
+def validate_class_class_coverage(tr : tracer,obj: type[object], doc_class: docitem_docstring_class) -> None:
+	"""
+Preamble:
+	profile:
+		function
+	normative_sections:
+		Contract, Parameters, Returns, Raises
+Contract:
+	general:
+		|Must| analyze nested classes documented in |label|`Public_classes`.
+		|Must| ensure that each entry in |label|`Public_classes` resolves to a nested class with a valid docstring.
+		|Should| ensure that each nested class with a valid docstring is listed in section |label|`Public_classes`.
+Parameters:
+	tr:
+		Tracer for providing context and collecting warnings.
+	obj:
+		The class object to be validated.
+	doc_class:
+		Already parsed class docstring tree for |var|`obj`.
+Returns:
+	|Must| return |None|.
+Raises:
+	TypeError:
+		|Must| raise if |var|`obj` is not a class object.
+	ValidationError:
+		|Must| raise if validation fails.
+Notes:
+	Drift:
+		Last reviewed on 2026-02-04
+	"""
+	with traced_section(tr, get_obj_name(obj)):
+		if not is_obj_class(obj):
+			raise TypeError("validate_class_class_coverage expects a class object.")
+		if not isinstance(doc_class, docitem_docstring_class):
+			raise TypeError("doc_class must be a docitem_docstring_class instance")
+# Collect declared public nested classes from class docstring
+		public_classes: set[str] = _get_public_section_entries2(doc_class,"Public_classes",docitem_public_classes)
+# Validate nested class docstrings (defined directly on the class)
+		valid_classes: set[str] = set()
+		classes_with_valid_docstring: set[str] = set()
+# Iterate over referred objects (__dict__)
+		for name_of_member, member in obj.__dict__.items():
+# Ignore members which are not class (like constants, variables, type aliases).
+			if not is_obj_class(member):
+				continue
+# Ignore members from other modules.
+			if getattr(member, "__module__", None) != getattr(obj, "__module__", None):
+				continue
+# Get docstring. Ignore member if there is none.
+			doc = get_obj_docstring(member)
+			if not doc:
+				continue
+# Determine validity for warning purposes
+			try:
+				tmp_tr = tracer()
+				validate_docstring(tmp_tr, member)
+				classes_with_valid_docstring.add(name_of_member)
+			except Exception:
+				pass
+# Validate only if class is listed
+			if name_of_member in public_classes:
+# Push member name_of_member to tracer.
+				with traced_section(tr, name_of_member):
+					try:
+# Validate and collect messages from lower levels
+						validate_class_coverage(tr, member)
+						valid_classes.add(name_of_member)
+					except Exception:
+# Add message from higher level for clarity (should-level rule).
+						warn_validation(tr,obj,["CPCL-007"],f"class '{name_of_member}' listed in Public_classes but has no valid docstring.")
+# Validate entries listed in Public_classes
+		with traced_section(tr, "Public_classes"):
+# Rule: every class with a valid docstring should be listed
+			missing_in_public = classes_with_valid_docstring - public_classes
+			for name in missing_in_public:
+				warn_validation(tr,obj,["CPCL-006"],f"class '{name}' with docstring not listed in Public_classes: {sorted(missing_in_public)}")
+			for name in public_classes:
+				if not hasattr(obj, name):
+					raise_validation_error(tr,obj,["CPCL-004"],f"class '{name}' listed in Public_classes but does not exist.")
+				cls_obj = getattr(obj, name)
+				if not is_obj_class(cls_obj):
+					raise_validation_error(tr,obj,["CPCL-005"],f"member '{name}' listed in Public_classes is not a class.")
+				doc_c2 = cls_obj.__doc__
+				if not isinstance(doc_c2, str):
+					warn_validation(tr,obj,["CPCL-007"],f"class '{name}' listed in Public_classes but has no valid docstring.")
+# Important: Coverage means to descend recursively.
+				validate_class_coverage(tr,cls_obj)
+
+def validate_class_method_coverage(tr : tracer,obj: type[object], doc_class: docitem_docstring_class) -> None:
+	"""
+Preamble:
+	profile:
+		function
+	normative_sections:
+		Contract, Parameters, Returns, Raises
+Contract:
+	general:
+		|Must| analyze methods documented in |label|`Public_methods`.
+		|Must| ensure that each entry in |label|`Public_methods` resolves to a method with a valid docstring.
+		|Should| ensure that each method with a valid docstring is listed in section |label|`Public_methods`.
+Parameters:
+	tr:
+		Tracer for providing context and collecting warnings.
+	obj:
+		The class object to be validated.
+	doc_class:
+		Already parsed class docstring tree for |var|`obj`.
+Returns:
+	|Must| return |None|.
+Raises:
+	TypeError:
+		|Must| raise if |var|`obj` is not a class object.
+		|Must| raise if |var|`doc_class` is not a |type|`docitem_docstring_class`.
+	ValidationError:
+		|Must| raise if validation fails.
+Notes:
+	Drift:
+		Last reviewed on 2026-02-04
+	"""
+	with traced_section(tr, get_obj_name(obj)):
+		if not is_obj_class(obj):
+			raise TypeError("validate_class_method_coverage expects a class object.")
+		if not isinstance(doc_class, docitem_docstring_class):
+			raise TypeError("doc_class must be a docitem_docstring_class instance")
+# Collect declared public methods from class docstring
+		public_methods: set[str] = _get_public_section_entries2(doc_class,"Public_methods",docitem_public_methods)
+# Collect methods defined on the class (not inherited) and validate their docstrings
+		valid_methods: set[str] = set()
+		methods_with_valid_docstring: set[str] = set()
+# Iterate over referred objects (__dict__)
+		for name_of_member, member in obj.__dict__.items():
+			func_obj: Callable[..., Any] | None = get_func_obj_from_callable(member)
+# Ignore members which are not functions.
+			if func_obj is None or not is_obj_function(func_obj):
+				continue
+# Ignore methods not defined here.
+			if getattr(func_obj, "__qualname__", "").split(".")[0] != obj.__name__:
+				continue
+# Get docstring. Ignore member if there is none.
+			doc = get_obj_docstring(func_obj)
+			if not doc:
+				continue
+# Determine validity for warning purposes
+			try:
+				tmp_tr = tracer()
+				validate_docstring(tmp_tr, func_obj)
+				methods_with_valid_docstring.add(name_of_member)
+			except Exception:
+				pass
+# Validate only if method is listed
+			if name_of_member in public_methods:
+# Push member name to tracer.
+				with traced_section(tr, func_obj.__name__):
+					try:
+# Validate and collect messages from lower levels
+						validate_docstring(tr,func_obj, None, None)
+						valid_methods.add(name_of_member)
+					except Exception:
+# Add message from higher level for clarity (should-level rule).
+						warn_validation(tr,obj,["CPMT-007"],f"class {obj.__name__}: method '{name_of_member}' listed in Public_methods but has no valid docstring.")
+
+# Rule: if the class exposes methods with valid docstrings, it should declare Public_methods
+		with traced_section(tr, "Public_methods"):
+# Rule: every method with a valid docstring should be listed
+			missing_in_public = methods_with_valid_docstring - public_methods
+			for name_of_member in missing_in_public:
+				warn_validation(tr,obj,["CPMT-006"],f"class {obj.__name__}: method '{name_of_member}' with docstring not listed in Public_methods.")
+# Rule: every method listed should have a valid docstring (warn)
+			for name_of_member in public_methods:
+				if name_of_member in valid_methods:
+					continue
+# method might be inherited; try to resolve and validate if present
+				if not hasattr(obj, name_of_member):
+					raise_validation_error(tr,obj,["CPMT-004"],f"method '{name_of_member}' listed in Public_methods but does not exist.")
+				meth_obj = getattr(obj, name_of_member)
+				func_obj2: Callable[..., Any] | None = get_func_obj_from_callable(meth_obj)
+				if func_obj2 is None or not is_obj_function(func_obj2):
+					raise_validation_error(tr,obj,["CPMT-005"],f"member '{name_of_member}' listed in Public_methods is not a method.")
+				docm2 = get_obj_docstring(func_obj2)
+				if not docm2:
+					warn_validation(tr,obj,["CPMT-007"],f"method '{name_of_member}' listed in Public_methods but has no valid docstring.")
+					continue
+				validate_docstring(tr,func_obj2, None, None)
+
+def validate_class_type_coverage(tr : tracer,obj: type[object], doc_class: docitem_docstring_class) -> None:
+	"""
+Preamble:
+	profile:
+		function
+	normative_sections:
+		Contract, Parameters, Returns, Raises
+Contract:
+	general:
+		|Must| analyze the docstrings of the class object passed.
+		|Must| ensure that each type listed in the class's |label|`Public_types` section exists in the class.
+Parameters:
+	tr:
+		Tracer for providing context and collecting warnings.
+	obj:
+		The class object to be validated.
+	doc_class:
+		Already parsed class docstring tree for |var|`obj`.
+Returns:
+	|Must| return |None|.
+Raises:
+	ValidationError:
+		|Must| raise if validation fails.
+	"""
+	with traced_section(tr, get_obj_name(obj)):
+		if not isinstance(doc_class, docitem_docstring_class):
+			raise TypeError("doc_class must be a docitem_docstring_class instance")
+# Collect declared public types from class docstring
+		public_types: set[str] = _get_public_section_entries(doc_class,"Public_types",docitem_public_types)
+# Rule: every type listed must exist
+		with traced_section(tr, "Public_types"):
+			for type_name in public_types:
+				if not hasattr(obj, type_name):
+					raise_validation_error(tr,obj,["PTY-014"],f"class {obj.__name__}: type '{type_name}' listed in Public_types but does not exist.")
+
+def validate_class_constant_coverage(tr : tracer,obj: type[object], doc_class: docitem_docstring_class) -> None:
+	"""
+Preamble:
+	profile:
+		function
+	normative_sections:
+		Contract, Parameters, Returns, Raises
+Contract:
+	general:
+		|Must| analyze the docstrings of the class object passed.
+		|Must| ensure that each constant listed in |label|`Public_constants` exists.
+		|Must| ensure that each constant listed in |label|`Public_constants` is annotated as |type|`Final` or not annotated at all.
+Parameters:
+	tr:
+		Tracer for providing context and collecting warnings.
+	obj:
+		The class object to be validated.
+	doc_class:
+		Already parsed class docstring tree for |var|`obj`.
+Returns:
+	|Must| return |None|.
+Raises:
+	TypeError:
+		|Must| raise if |var|`obj` is not a class object.
+	ValidationError:
+		|Must| raise if validation fails.
+	"""
+	with traced_section(tr, get_obj_name(obj)):
+		if not is_obj_class(obj):
+			raise TypeError("validate_class_method_coverage expects a class object.")
+		if not isinstance(doc_class, docitem_docstring_class):
+			raise TypeError("doc_class must be a docitem_docstring_class instance")
+
+# Collect declared public constants from class docstring
+		public_constants: set[str] = set()
+		if "Public_constants" in doc_class.items():
+			pc_node = doc_class._items["Public_constants"]
+			assert isinstance(pc_node, docitem_public_constants)
+			public_constants = set(pc_node.items().keys())
+# Make sure all constants are annotated as Final.
+		for con in public_constants:
+			if is_attr_annotated(obj,con):
+				if not is_attr_final(obj,con):
+					raise_validation_error(tr,obj,["PCON-022"],f"class {obj.__name__}: constant '{con}' listed in Public_constants but is not annotated as 'Final'.")
+
+def validate_class_variable_coverage(tr : tracer,obj: type[object], doc_class: docitem_docstring_class) -> None:
+	"""
+Preamble:
+	profile:
+		function
+	normative_sections:
+		Contract, Parameters, Returns, Raises
+Contract:
+	general:
+		|Must| analyze the docstrings of the class object passed.
+		|Must| ensure that each variable listed in |label|`Public_variables` exists.
+Parameters:
+	tr:
+		Tracer for providing context and collecting warnings.
+	obj:
+		The class object to be validated.
+	doc_class:
+		Already parsed class docstring tree for |var|`obj`.
+Returns:
+	|Must| return |None|.
+Raises:
+	TypeError:
+		|Must| raise if |var|`obj` is not a class object.
+	ValidationError:
+		|Must| raise if validation fails.
+	"""
+	with traced_section(tr, get_obj_name(obj)):
+		if not is_obj_class(obj):
+			raise TypeError("validate_class_method_coverage expects a class object.")
+		if not isinstance(doc_class, docitem_docstring_class):
+			raise TypeError("doc_class must be a docitem_docstring_class instance")
+
+# Collect declared public variables from class docstring
+		public_variables: set[str] = set()
+		if "Public_variables" in doc_class.items():
+			pv_node = doc_class._items["Public_variables"]
+			assert isinstance(pv_node, docitem_public_variables)
+			public_variables = set(pv_node.items().keys())
+# Rule: every variable listed must exist
+		with traced_section(tr, "Public_variables"):
+			for const_name in public_variables:
+				if not hasattr(obj, const_name):
+					raise_validation_error(tr,obj,["PVAR-021"],f"class {obj.__name__}: variable '{const_name}' listed in Public_variables but does not exist.")
+# Make sure all variables are annotated as Final.
+				if is_attr_annotated(obj,const_name):
+					if is_attr_final(obj,const_name):
+						raise_validation_error(tr,obj,["PVAR-022"],f"class {obj.__name__}: variable '{const_name}' listed in Public_variables but is annotated as 'Final'.")
+
+def validate_module_class_coverage(tr : tracer,obj: ModuleType, doc_module: docitem_docstring_module) -> None:
+	"""
+Preamble:
+	profile:
+		function
+	normative_sections:
+		Contract, Parameters, Returns, Raises
+Contract:
+	general:
+		|Must| analyze classes documented in |label|`Public_classes`.
+		|Must| ensure that each entry in |label|`Public_classes` resolves to a class with a valid docstring.
+		|Should| ensure that each class with a valid docstring is listed in section |label|`Public_classes`.
+Parameters:
+	tr:
+		Tracer for providing context and collecting warnings.
+	obj:
+		The module object to be validated.
+	doc_module:
+		Already parsed module docstring tree for |var|`obj`.
+Returns:
+	|Must| return |None|.
+Raises:
+	ValidationError:
+		|Must| raise if validation fails.
+Notes:
+	Drift:
+		Last reviewed on 2026-02-04
+	"""
+	with traced_section(tr, get_obj_name(obj)):
+		if not is_obj_module(obj):
+			raise TypeError("validate_module_class_coverage expects a module object.")
+		if not isinstance(doc_module, docitem_docstring_module):
+			raise TypeError("doc_module must be a docitem_docstring_module instance")
+# Collect declared public classes from module docstring
+		public_classes: set[str] = _get_public_section_entries2(doc_module,"Public_classes",docitem_public_classes)
+# Collect classes defined in the module (not imported) and validate their docstrings
+		valid_classes: set[str] = set()
+		classes_with_valid_docstring: set[str] = set()
+# Iterate over referred objects (__dict__)
+		for name_of_member, member in obj.__dict__.items():
+# Ignore members which are not class (like constants, variables, type aliases).
+			if not is_obj_class(member):
+				continue
+			if getattr(member,"__module__",None) != obj.__name__:
+				continue
+# Get docstring. Ignore member if there is none.
+			doc = get_obj_docstring(member)
+			if not doc:
+				continue
+# Determine validity for warning purposes
+			try:
+				tmp_tr = tracer()
+				validate_docstring(tmp_tr,member)
+				classes_with_valid_docstring.add(name_of_member)
+			except Exception:
+				pass
+# Validate only if class is listed
+			if name_of_member in public_classes:
+# Push member name_of_member to tracer.
+				with traced_section(tr, name_of_member):
+					try:
+# Validate and collect messages from lower levels
+						validate_class_coverage(tr,member)
+						valid_classes.add(name_of_member)
+					except Exception:
+# Add message from higher level for clarity (should-level rule).
+						warn_validation(tr,obj,["MPCL-007"],f"class '{name_of_member}' listed in Public_classes but has no valid docstring.")
+
+# Rule: classes with docstrings should be listed in Public_classes
+		with traced_section(tr, "Public_classes"):
+			missing_in_public = classes_with_valid_docstring - public_classes
+			for name_of_member in missing_in_public:
+				warn_validation(tr,obj,["MPCL-006"],f"class with docstring '{name_of_member}' not listed in Public_classes.")
+# Validate entries listed in Public_classes
+			for name_of_member in public_classes:
+				if not hasattr(obj, name_of_member):
+					raise_validation_error(tr,obj,["MPCL-004"],f"class '{name_of_member}' listed in Public_classes but does not exist.")
+				cls_obj = getattr(obj, name_of_member)
+				if not is_obj_class(cls_obj):
+					raise_validation_error(tr,obj,["MPCL-005"],f"member '{name_of_member}' listed in Public_classes is not a class.")
+				doc_c2 = cls_obj.__doc__
+				if not isinstance(doc_c2, str):
+					warn_validation(tr,obj,["MPCL-007"],f"class '{name_of_member}' listed in Public_classes but has no valid docstring.")
+					continue
+# Important: Coverage means to descend recursively.
+				validate_class_coverage(tr,cls_obj)
+
+def validate_module_function_coverage(tr : tracer,obj: ModuleType, doc_module: docitem_docstring_module) -> None:
+	"""
+Preamble:
+	profile:
+		function
+	normative_sections:
+		Contract, Parameters, Returns, Raises
+Contract:
+	general:
+		|Must| analyze functions documented in |label|`Public_functions`.
+		|Must| ensure that each entry in |label|`Public_functions` resolves to a function with a valid docstring.
+		|Should| ensure that each function with a valid docstring is listed in section |label|`Public_functions`.
+Parameters:
+	tr:
+		Tracer for providing context and collecting warnings.
+	obj:
+		The module object to be validated.
+	doc_module:
+		Already parsed module docstring tree for |var|`obj`.
+Returns:
+	|Must| return |None|.
+Raises:
+	TypeError:
+		|Must| raise if |var|`obj` is not a module object.
+		|Must| raise if |var|`doc_module` is not a |type|`docitem_docstring_module`.
+	ValidationError:
+		|Must| raise if validation fails.
+Notes:
+	Drift:
+		Last reviewed on 2026-02-04
+	"""
+	with traced_section(tr, get_obj_name(obj)):
+		if not is_obj_module(obj):
+			raise TypeError("validate_module_function_coverage expects a module object.")
+		if not isinstance(doc_module, docitem_docstring_module):
+			raise TypeError("doc_module must be a docitem_docstring_module instance")
+# Collect declared public functions from module docstring
+		public_functions: set[str] = _get_public_section_entries2(doc_module,"Public_functions",docitem_public_functions)
+# Collect functions defined in the module (not imported) and validate their docstrings
+		valid_functions: set[str] = set()
+		functions_with_valid_docstring: set[str] = set()
+# Iterate over referred objects (__dict__)
+		for name_of_member, member in obj.__dict__.items():
+# Ignore members which are not functions.
+			if not is_obj_function(member):
+				continue
+			if getattr(member,"__module__",None) != obj.__name__:
+				continue
+# Get docstring. Ignore member if there is none.
+			doc = get_obj_docstring(member)
+			if not doc:
+				continue
+# Determine validity for warning purposes
+			try:
+				tmp_tr = tracer()
+				validate_docstring(tmp_tr,member)
+				functions_with_valid_docstring.add(name_of_member)
+			except Exception:
+				pass
+# Validate only if function is listed
+			if name_of_member in public_functions:
+# Push member name to tracer.
+				with traced_section(tr, name_of_member):
+					try:
+# Validate and collect messages from lower levels
+						validate_docstring(tr,member, None, None)
+						valid_functions.add(name_of_member)
+					except Exception:
+# Add message from higher level for clarity (should-level rule).
+						warn_validation(tr,obj,["MPFN-007"],f"function '{name_of_member}' listed in Public_functions but has no valid docstring.")
+
+		with traced_section(tr, "Public_functions"):
+# Rule: every function with a valid docstring should be listed
+			missing_in_public = functions_with_valid_docstring - public_functions
+			for name_of_member in missing_in_public:
+				warn_validation(tr,obj,["MPFN-006"],f"module {obj.__name__}: function '{name_of_member}' with docstring not listed in Public_functions.")
+# Rule: every function listed should have a valid docstring (warn)
+			for name_of_member in public_functions:
+				if name_of_member in valid_functions:
+					continue
+				if not hasattr(obj, name_of_member):
+					raise_validation_error(tr,obj,["MPFN-004"],f"function '{name_of_member}' listed in Public_functions but does not exist.")
+				func_obj = getattr(obj, name_of_member)
+				if not is_obj_function(func_obj):
+					raise_validation_error(tr,obj,["MPFN-005"],f"member '{name_of_member}' listed in Public_functions is not a function.")
+				doc_f2 = get_obj_docstring(func_obj)
+				if not doc_f2:
+					warn_validation(tr,obj,["MPFN-007"],f"function '{name_of_member}' listed in Public_functions but has no docstring.")
+					continue
+				validate_docstring(tr,func_obj, None, None)
+
+def validate_module_type_coverage(tr : tracer,obj: ModuleType, doc_module: docitem_docstring_module) -> None:
+	"""
+Preamble:
+	profile:
+		function
+	normative_sections:
+		Contract, Parameters, Returns, Raises
+Contract:
+	general:
+		|Must| analyze the docstrings of the module object passed.
+		|Must| ensure that each type listed in the module's |label|`Public_types` section exists in the module.
+Parameters:
+	tr:
+		Tracer for providing context and collecting warnings.
+	obj:
+		The module object to be validated.
+	doc_module:
+		Already parsed module docstring tree for |var|`obj`.
+Returns:
+	|Must| return |None|.
+Raises:
+	ValidationError:
+		|Must| raise if validation fails.
+	"""
+	with traced_section(tr, get_obj_name(obj)):
+		if not isinstance(doc_module, docitem_docstring_module):
+			raise TypeError("doc_module must be a docitem_docstring_module instance")
+# Collect declared public types from module docstring
+		public_types: set[str] = _get_public_section_entries(doc_module,"Public_types",docitem_public_types)
+# Rule: every type listed must exist
+		with traced_section(tr, "Public_types"):
+			for type_name in public_types:
+				if not hasattr(obj, type_name):
+					raise_validation_error(tr,obj,["PTY-007"],f"module {obj.__name__}: type '{type_name}' listed in Public_types but does not exist.")
+
+def validate_module_constant_coverage(tr : tracer,obj: ModuleType, doc_module: docitem_docstring_module) -> None:
+	"""
+Preamble:
+	profile:
+		function
+	normative_sections:
+		Contract, Parameters, Returns, Raises
+Contract:
+	general:
+		|Must| analyze the docstrings of the module object passed.
+		|Must| ensure that each constant listed in the module's |label|`Public_constants` section exists in the module.
+		|Must| ensure that each constant listed in the module's |label|`Public_constants` is either annotated as |type|`Final` or not annotated at all.
+Parameters:
+	tr:
+		Tracer for providing context and collecting warnings.
+	obj:
+		The module object to be validated.
+	doc_module:
+		Already parsed module docstring tree for |var|`obj`.
+Returns:
+	|Must| return |None|.
+Raises:
+	ValidationError:
+		|Must| raise if validation fails.
+	"""
+	with traced_section(tr, get_obj_name(obj)):
+		if not isinstance(doc_module, docitem_docstring_module):
+			raise TypeError("doc_module must be a docitem_docstring_module instance")
+# Collect declared public constants from module docstring
+		public_constants: set[str] = _get_public_section_entries(doc_module,"Public_constants",docitem_public_constants)
+# Rule: every constant listed must exist
+		with traced_section(tr, "Public_constants"):
+			for const_name in public_constants:
+				if not hasattr(obj, const_name):
+					raise_validation_error(tr,obj,["PCON-015"],f"module {obj.__name__}: constant '{const_name}' listed in Public_constants but does not exist.")
+# Make sure all constants are annotated as Final.
+				if is_attr_annotated(obj,const_name):
+					if not is_attr_final(obj,const_name):
+						raise_validation_error(tr,obj,["PCON-016"],f"module {obj.__name__}: constant '{const_name}' listed in Public_constants but is not annotated as 'Final'.")
+
+def validate_module_variable_coverage(tr : tracer,obj: ModuleType, doc_module: docitem_docstring_module) -> None:
+	"""
+Preamble:
+	profile:
+		function
+	normative_sections:
+		Contract, Parameters, Returns, Raises
+Contract:
+	general:
+		|Must| analyze the docstrings of the module object passed.
+		|Must| ensure that each variable listed in the module's |label|`Public_variables` section exists in the module.
+Parameters:
+	tr:
+		Tracer for providing context and collecting warnings.
+	obj:
+		The module object to be validated.
+	doc_module:
+		Already parsed module docstring tree for |var|`obj`.
+Returns:
+	|Must| return |None|.
+Raises:
+	ValidationError:
+		|Must| raise if validation fails.
+	"""
+	with traced_section(tr, get_obj_name(obj)):
+		if not isinstance(doc_module, docitem_docstring_module):
+			raise TypeError("doc_module must be a docitem_docstring_module instance")
+# Collect declared public variables from module docstring
+		public_variables: set[str] = _get_public_section_entries(doc_module,"Public_variables",docitem_public_variables)
+# Rule: every variable listed must exist
+		with traced_section(tr, "Public_variables"):
+			for const_name in public_variables:
+				if not hasattr(obj, const_name):
+					raise_validation_error(tr,obj,["PVAR-013"],f"module {obj.__name__}: variable '{const_name}' listed in Public_variables but does not exist.")
+# Make sure all variables are annotated as Final.
+				if is_attr_annotated(obj,const_name):
+					if is_attr_final(obj,const_name):
+						raise_validation_error(tr,obj,["PVAR-014"],f"module {obj.__name__}: variable '{const_name}' listed in Public_variables but is annotated as 'Final'.")
+
+#===== Coverage Frontend ======================================#
+
+def validate_class_coverage(tr : tracer,obj: type[object]) -> None:
+	"""
+Preamble:
+	profile:
+		function
+	normative_sections:
+		Contract, Parameters, Returns, Raises
+Contract:
+	general:
+		|Must| validate for class, method, type, constant, and variable coverage by calling the specific coverage validators.
+Parameters:
+	tr:
+		Tracer for providing context and collecting warnings.
+	obj:
+		The class object to be validated.
+Returns:
+	|Must| return |None|.
+Raises:
+	ValidationError:
+		|Must| propagate exceptions from subordinate coverage validators.
+Notes:
+	todo:
+		Missing: class-type-coverage.
+	"""
+	with traced_section(tr, get_obj_name(obj)):
+		if not is_obj_class(obj):
+			raise TypeError(f"{obj.__class__.__name__} is not a class object")
+		top = validate_docstring(tr,obj)
+		assert isinstance(top, docitem_docstring_class)
+		validate_class_class_coverage(tr,obj, top)
+		validate_class_method_coverage(tr,obj, top)
+		validate_class_type_coverage(tr,obj, top)
+		validate_class_constant_coverage(tr,obj, top)
+		validate_class_variable_coverage(tr,obj, top)
+
+def validate_module_coverage(tr : tracer,obj: ModuleType) -> None:
+	"""
+Preamble:
+	profile:
+		function
+	normative_sections:
+		Contract, Parameters, Returns, Raises
+Contract:
+	general:
+		|Must| validate for class, function, type, constant, and variable coverage by calling the specific coverage validators.
+Parameters:
+	tr:
+		Tracer for providing context and collecting warnings.
+	obj:
+		The module object to be validated.
+Returns:
+	|Must| return |None|.
+Raises:
+	ValidationError:
+		|Must| raise if validation fails.
+	"""
+	with traced_section(tr, get_obj_name(obj)):
+		if not is_obj_module(obj):
+			raise TypeError(f"{obj.__class__.__name__} is not a module object")
+		top = validate_docstring(tr,obj)
+		assert isinstance(top, docitem_docstring_module)
+		validate_module_class_coverage(tr,obj, top)
+		validate_module_function_coverage(tr,obj, top)
+		validate_module_type_coverage(tr,obj, top)
+		validate_module_constant_coverage(tr,obj, top)
+		validate_module_variable_coverage(tr,obj, top)
