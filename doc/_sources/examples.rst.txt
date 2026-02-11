@@ -1,0 +1,93 @@
+Examples
+########
+
+This section covers cases which are not contained in the reference documentation,
+such as
+
+* properties
+* classes within classes
+* constants in classes
+* maybe types in classes
+
+Properties
+----------
+
+The following example shows how properties can be documented.
+A property is conceptually a member variable of a class and therefore
+it is listed under :wtrl_label:`Public_variables`.
+
+Internally, the accessor methods :wtrl_func:`fget`, :wtrl_func:`fset`,
+and :wtrl_func:`fdel` are extracted from the property object and rendered
+as regular methods. Their docstrings provide the normative specification
+of the property's behavior, while the property itself defines the public API surface.
+
+.. wtrl_autodoc_class_full:: test_docitem_method_property.X
+
+
+
+A display cabinet of sections
+-----------------------------
+
+The following example shows the docstring of one of Waterloo's built-in functions, :wtrl_func:`get_num_indent`.
+The function has the following signature:
+
+.. wtrl_function_signature_block:: sdv.doc.waterloo.docitem.get_num_indent
+
+and the docstring reads:
+
+.. code:: rst
+
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Definitions, Contract, Parameters, Returns, Raises
+	Definitions:
+		TAB:
+			A scheme that demands indentation by means of an integer number of tab characters (ASCII :wtrl_value:`0x09`).
+			For this scheme, :wtrl_var:`INDENT_UNIT` is a single tab character.
+		SPC4:
+			A scheme that demands indentation by means of an integer multiple of four space characters (ASCII :wtrl_value:`0x20`).
+			For this scheme, :wtrl_var:`INDENT_UNIT` consists of four space characters.
+	Contract:
+		general:
+			|Must| accept a single line string and an indentation scheme.
+			|Must| count the number of leading indentations of the input according to the scheme passed.
+			|Must| accept an empty string.
+	Parameters:
+		tr:
+			Tracer for better error messages
+		line:
+			A single line string.
+		indent_scheme:
+			A symbolic value representing one of the two possible indentation schemes TAB or SPC4.
+	Returns:
+		|Must| return the number of indentations found at the beginning of the string in units as decribed by the indentation scheme passed.
+	Raises:
+		RuntimeError:
+			|Must| raise if prefix contains a mix not representable as :wtrl_var:`n` repetitions of :wtrl_var:`INDENT_UNIT`.
+			|Must| raise if the white space characters (greedy match of tab or space) at the beginning of the line cannot be described by the indentation scheme passed.
+
+Note that we have a section here called :wtrl_label:`Definitions`, which significantly
+reduces the load on the normative sections :wtrl_label:`Parameters` and :wtrl_label:`Raises`.
+:wtrl_label:`Definitions` is normative because we list it under :wtrl_label:`Preamble.normative_sections`,
+although it does not contain a normativity keyword. Yet the definitions given there are binding
+for the entire documentation box rendered from this docstring.
+
+Another example
+---------------
+
+.. wtrl_autodoc_function:: test_docitem_invariants_requires_ensures.normalize_identifier
+
+Class within class
+------------------
+
+.. wtrl_push_current_module:: test_docitem_class_class
+
+.. literalinclude:: ../examples/test_docitem_class_class.py
+	:language: python
+
+.. wtrl_autodoc_class_full:: X
+.. wtrl_autodoc_class_full:: X.Y
+
+.. wtrl_pop_current_module:: test_docitem_class_class
