@@ -1,0 +1,399 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Waterloo &#8212; Waterloo Docstrings 0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
+    <link rel="stylesheet" type="text/css" href="_static/common_styles.css" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster_waterloo.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="1. Introduction" href="introduction.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="waterloo">
+<h1>Waterloo<a class="headerlink" href="#waterloo" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">1. Introduction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="introduction.html#about-waterloo-docstrings">1.1. About Waterloo Docstrings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="introduction.html#why-normative-documentation">1.2. Why normative documentation?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="introduction.html#normativity-keywords-and-their-scope">1.3. Normativity keywords and their scope</a></li>
+<li class="toctree-l2"><a class="reference internal" href="introduction.html#recipients-and-output-formats">1.4. Recipients and output formats</a></li>
+<li class="toctree-l2"><a class="reference internal" href="introduction.html#basic-principles-of-waterloo-docstrings">1.5. Basic principles of Waterloo Docstrings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="introduction.html#project-status">1.6. Project status</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="introduction.html#static-typechecking">1.6.1. Static typechecking</a></li>
+<li class="toctree-l3"><a class="reference internal" href="introduction.html#pytest">1.6.2. Pytest</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="introduction.html#dependencies">1.7. Dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="introduction.html#how-to-use">1.8. How to use</a></li>
+<li class="toctree-l2"><a class="reference internal" href="introduction.html#introductory-examples">1.9. Introductory examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="introduction.html#module">1.9.1. Module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="introduction.html#module-and-class">1.9.2. Module and class</a></li>
+<li class="toctree-l3"><a class="reference internal" href="introduction.html#module-class-and-method">1.9.3. Module, class and method</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="introduction.html#convenience-module-and-class-stack">1.10. Convenience: module and class stack</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="examples_minimax.html">2. Docstrings - minimal and full examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="examples_minimax.html#module-docstrings-minimal-example">2.1. Module docstrings – minimal example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples_minimax.html#module-docstrings-full-example">2.2. Module docstrings – full example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples_minimax.html#class-docstrings-minimal-example">2.3. Class docstrings – minimal example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples_minimax.html#class-docstrings-full-example">2.4. Class docstrings – full example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples_minimax.html#function-docstrings-minimal-example">2.5. Function docstrings – minimal example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples_minimax.html#function-and-method-docstrings-intermediate-example">2.6. Function and method docstrings – intermediate example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples_minimax.html#interlude-docstring-for-inherited-methods">2.7. Interlude – Docstring for inherited methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples_minimax.html#function-docstrings-full-example">2.8. Function docstrings – full example</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">3. Examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#properties">3.1. Properties</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#a-display-cabinet-of-sections">3.2. A display cabinet of sections</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#another-example">3.3. Another example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#class-within-class">3.4. Class within class</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tools.html">4. Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="format.html">5. Docstring format</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="format.html#definitions">5.1. Definitions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="format.html#terminology">5.2. Terminology</a></li>
+<li class="toctree-l2"><a class="reference internal" href="format.html#meta">5.3. Meta</a></li>
+<li class="toctree-l2"><a class="reference internal" href="format.html#the-structure-of-waterloo-docstrings">5.4. The structure of Waterloo docstrings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="format.html#conventions">5.5. Conventions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="format.html#building-the-ast">5.6. Building the AST</a></li>
+<li class="toctree-l2"><a class="reference internal" href="format.html#inline-markup-in-free-form-content">5.7. Inline markup in free-form content</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="format.html#tokens">5.7.1. Tokens</a></li>
+<li class="toctree-l3"><a class="reference internal" href="format.html#examples-informative">5.7.2. Examples (informative)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="format.html#rules-not-bound-to-a-particular-section">5.8. Rules not bound to a particular section</a></li>
+<li class="toctree-l2"><a class="reference internal" href="format.html#common-sections-for-all-profiles">5.9. Common sections for all profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="format.html#sections-for-module-docstrings">5.10. Sections for module docstrings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="format.html#sections-for-class-docstrings">5.11. Sections for class docstrings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="format.html#sections-for-function-method-docstrings">5.12. Sections for function/method docstrings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="format.html#sections-for-inherited-method-docstrings">5.13. Sections for inherited method docstrings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="format.html#coverage-rules-and-intended-workflow">5.14. Coverage rules and intended workflow</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="format.html#module-level-coverage">5.14.1. Module-level coverage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="format.html#class-level-coverage">5.14.2. Class-level coverage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="format.html#practical-consequence">5.14.3. Practical consequence</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="format.html#scopes-and-visibility">5.15. Scopes and visibility</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="format.html#conceptual-model">5.15.1. Conceptual model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="format.html#scope-values">5.15.2. Scope values</a></li>
+<li class="toctree-l3"><a class="reference internal" href="format.html#scope-sets">5.15.3. Scope sets</a></li>
+<li class="toctree-l3"><a class="reference internal" href="format.html#visibility">5.15.4. Visibility</a></li>
+<li class="toctree-l3"><a class="reference internal" href="format.html#scope-monotonicity-rule">5.15.5. Scope Monotonicity rule</a></li>
+<li class="toctree-l3"><a class="reference internal" href="format.html#rendering-and-validation">5.15.6. Rendering and validation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="format.html#rationale-ssot-for-normative-statements">5.16. Rationale: SSoT for Normative Statements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="format.html#distinction-description-vs-notes">5.17. Distinction <code class="wtrl_label docutils literal notranslate"><span class="pre">Description</span></code> vs <code class="wtrl_label docutils literal notranslate"><span class="pre">Notes</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="format.html#distinction-general-vs-invariants">5.18. Distinction <code class="wtrl_label docutils literal notranslate"><span class="pre">general</span></code> vs <code class="wtrl_label docutils literal notranslate"><span class="pre">invariants</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="format.html#distinction-ensures-vs-invariants">5.19. Distinction <code class="wtrl_label docutils literal notranslate"><span class="pre">ensures</span></code> vs <code class="wtrl_label docutils literal notranslate"><span class="pre">invariants</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="reference.html">6. Reference - Core View</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="reference.html#module-docitem">6.1. Module <code class="wtrl_type docutils literal notranslate"><span class="pre">docitem</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="reference.html#fundamental-helpers">6.1.1. Fundamental helpers</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="reference.html#get-obj-name">6.1.1.1. <code class="wtrl_func docutils literal notranslate"><span class="pre">get_obj_name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference.html#get-obj-path">6.1.1.2. <code class="wtrl_func docutils literal notranslate"><span class="pre">get_obj_path</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference.html#get-obj-docstring">6.1.1.3. <code class="wtrl_func docutils literal notranslate"><span class="pre">get_obj_docstring</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference.html#is-obj-module">6.1.1.4. <code class="wtrl_func docutils literal notranslate"><span class="pre">is_obj_module</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference.html#is-obj-class">6.1.1.5. <code class="wtrl_func docutils literal notranslate"><span class="pre">is_obj_class</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference.html#is-obj-function">6.1.1.6. <code class="wtrl_func docutils literal notranslate"><span class="pre">is_obj_function</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference.html#is-obj-named-value">6.1.1.7. <code class="wtrl_func docutils literal notranslate"><span class="pre">is_obj_named_value</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference.html#get-func-obj-from-callable">6.1.1.8. <code class="wtrl_func docutils literal notranslate"><span class="pre">get_func_obj_from_callable</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="reference.html#typechecking-helpers">6.1.2. Typechecking helpers</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="reference.html#is-attr-annotated">6.1.2.1. <code class="wtrl_func docutils literal notranslate"><span class="pre">is_attr_annotated</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference.html#is-attr-final">6.1.2.2. <code class="wtrl_func docutils literal notranslate"><span class="pre">is_attr_final</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="reference.html#tokenizer-functions">6.1.3. Tokenizer functions</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="reference.html#get-num-indent">6.1.3.1. <code class="wtrl_func docutils literal notranslate"><span class="pre">get_num_indent</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference.html#parse-indent-docstring">6.1.3.2. <code class="wtrl_func docutils literal notranslate"><span class="pre">parse_indent_docstring</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference.html#resolve-object">6.1.3.3. <code class="wtrl_func docutils literal notranslate"><span class="pre">resolve_object</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="reference.html#ast-properties">6.1.4. AST properties</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="reference.html#get-status">6.1.4.1. <code class="wtrl_func docutils literal notranslate"><span class="pre">get_status</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="reference.html#per-object-validators">6.1.5. Per-object validators</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="reference.html#validate-docstring-method">6.1.5.1. <code class="wtrl_func docutils literal notranslate"><span class="pre">validate_docstring_method</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference.html#validate-docstring-class">6.1.5.2. <code class="wtrl_func docutils literal notranslate"><span class="pre">validate_docstring_class</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference.html#validate-docstring-module">6.1.5.3. <code class="wtrl_func docutils literal notranslate"><span class="pre">validate_docstring_module</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference.html#validate-docstring">6.1.5.4. <code class="wtrl_func docutils literal notranslate"><span class="pre">validate_docstring</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="reference.html#coverage-validators">6.1.6. Coverage validators</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="reference.html#validate-class-class-coverage">6.1.6.1. <code class="wtrl_func docutils literal notranslate"><span class="pre">validate_class_class_coverage</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference.html#validate-class-method-coverage">6.1.6.2. <code class="wtrl_func docutils literal notranslate"><span class="pre">validate_class_method_coverage</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference.html#validate-class-constant-coverage">6.1.6.3. <code class="wtrl_func docutils literal notranslate"><span class="pre">validate_class_constant_coverage</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference.html#validate-class-coverage">6.1.6.4. <code class="wtrl_func docutils literal notranslate"><span class="pre">validate_class_coverage</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference.html#validate-module-class-coverage">6.1.6.5. <code class="wtrl_func docutils literal notranslate"><span class="pre">validate_module_class_coverage</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference.html#validate-module-function-coverage">6.1.6.6. <code class="wtrl_func docutils literal notranslate"><span class="pre">validate_module_function_coverage</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference.html#validate-module-type-coverage">6.1.6.7. <code class="wtrl_func docutils literal notranslate"><span class="pre">validate_module_type_coverage</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference.html#validate-module-constant-coverage">6.1.6.8. <code class="wtrl_func docutils literal notranslate"><span class="pre">validate_module_constant_coverage</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference.html#validate-module-variable-coverage">6.1.6.9. <code class="wtrl_func docutils literal notranslate"><span class="pre">validate_module_variable_coverage</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference.html#validate-module-coverage">6.1.6.10. <code class="wtrl_func docutils literal notranslate"><span class="pre">validate_module_coverage</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="reference.html#additional-helpers">6.1.7. Additional helpers</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="reference.html#gen-documentable-objects">6.1.7.1. <code class="wtrl_func docutils literal notranslate"><span class="pre">gen_documentable_objects</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference.html#get-tree-of-section">6.1.7.2. <code class="wtrl_func docutils literal notranslate"><span class="pre">get_tree_of_section</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference.html#get-tree-of-subsection">6.1.7.3. <code class="wtrl_func docutils literal notranslate"><span class="pre">get_tree_of_subsection</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference.html#get-scopes-of-tree">6.1.7.4. <code class="wtrl_func docutils literal notranslate"><span class="pre">get_scopes_of_tree</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference.html#to-string-tree">6.1.7.5. <code class="wtrl_func docutils literal notranslate"><span class="pre">to_string_tree</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="reference.html#enum-classes">6.1.8. Enum classes</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="reference.html#sdv-doc-waterloo-docitem-helper-flavour">6.1.8.1. <code class="wtrl_type docutils literal notranslate"><span class="pre">sdv.doc.waterloo.docitem_helper.Flavour</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference.html#sdv-doc-waterloo-docitem-helper-format">6.1.8.2. <code class="wtrl_type docutils literal notranslate"><span class="pre">sdv.doc.waterloo.docitem_helper.Format</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="reference.html#helper-classes">6.1.9. Helper classes</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="reference.html#tracer">6.1.9.1. <code class="wtrl_type docutils literal notranslate"><span class="pre">tracer</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference.html#configtraversal">6.1.9.2. <code class="wtrl_type docutils literal notranslate"><span class="pre">ConfigTraversal</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="reference.html#base-classes">6.1.10. Base classes</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="reference.html#docitem-base">6.1.10.1. <code class="wtrl_type docutils literal notranslate"><span class="pre">docitem_base</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference.html#docitem-list-base">6.1.10.2. <code class="wtrl_type docutils literal notranslate"><span class="pre">docitem_list_base</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference.html#docitem-map-base">6.1.10.3. <code class="wtrl_type docutils literal notranslate"><span class="pre">docitem_map_base</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference.html#docitem-docstring-base">6.1.10.4. <code class="wtrl_type docutils literal notranslate"><span class="pre">docitem_docstring_base</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference.html#docitem-free-text-entry-base">6.1.10.5. <code class="wtrl_type docutils literal notranslate"><span class="pre">docitem_free_text_entry_base</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference.html#docitem-list-of-symbols-base">6.1.10.6. <code class="wtrl_type docutils literal notranslate"><span class="pre">docitem_list_of_symbols_base</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="reference.html#preamble-node-classes">6.1.11. Preamble node classes</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="reference.html#docitem-profile">6.1.11.1. <code class="wtrl_type docutils literal notranslate"><span class="pre">docitem_profile</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference.html#docitem-normative-sections">6.1.11.2. <code class="wtrl_type docutils literal notranslate"><span class="pre">docitem_normative_sections</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference.html#docitem-status">6.1.11.3. <code class="wtrl_type docutils literal notranslate"><span class="pre">docitem_status</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference.html#docitem-scope">6.1.11.4. <code class="wtrl_type docutils literal notranslate"><span class="pre">docitem_scope</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference.html#docitem-preamble">6.1.11.5. <code class="wtrl_type docutils literal notranslate"><span class="pre">docitem_preamble</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="reference.html#contract-node-classes">6.1.12. Contract node classes</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="reference.html#docitem-constructor">6.1.12.1. <code class="wtrl_type docutils literal notranslate"><span class="pre">docitem_constructor</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference.html#docitem-general">6.1.12.2. <code class="wtrl_type docutils literal notranslate"><span class="pre">docitem_general</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference.html#docitem-invariants">6.1.12.3. <code class="wtrl_type docutils literal notranslate"><span class="pre">docitem_invariants</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference.html#docitem-requires">6.1.12.4. <code class="wtrl_type docutils literal notranslate"><span class="pre">docitem_requires</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference.html#docitem-ensures">6.1.12.5. <code class="wtrl_type docutils literal notranslate"><span class="pre">docitem_ensures</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference.html#docitem-api">6.1.12.6. <code class="wtrl_type docutils literal notranslate"><span class="pre">docitem_api</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference.html#docitem-traits">6.1.12.7. <code class="wtrl_type docutils literal notranslate"><span class="pre">docitem_traits</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference.html#docitem-contract-module">6.1.12.8. <code class="wtrl_type docutils literal notranslate"><span class="pre">docitem_contract_module</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference.html#docitem-contract-class">6.1.12.9. <code class="wtrl_type docutils literal notranslate"><span class="pre">docitem_contract_class</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference.html#docitem-contract-method">6.1.12.10. <code class="wtrl_type docutils literal notranslate"><span class="pre">docitem_contract_method</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference.html#docitem-class-overview-entry">6.1.12.11. <code class="wtrl_type docutils literal notranslate"><span class="pre">docitem_class_overview_entry</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="reference.html#related-objects-node-classes">6.1.13. Related objects node classes</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="reference.html#docitem-class-overview">6.1.13.1. <code class="wtrl_type docutils literal notranslate"><span class="pre">docitem_class_overview</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference.html#docitem-public-classes">6.1.13.2. <code class="wtrl_type docutils literal notranslate"><span class="pre">docitem_public_classes</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference.html#docitem-public-functions">6.1.13.3. <code class="wtrl_type docutils literal notranslate"><span class="pre">docitem_public_functions</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference.html#docitem-public-methods">6.1.13.4. <code class="wtrl_type docutils literal notranslate"><span class="pre">docitem_public_methods</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference.html#docitem-public-types-entry">6.1.13.5. <code class="wtrl_type docutils literal notranslate"><span class="pre">docitem_public_types_entry</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference.html#docitem-public-types">6.1.13.6. <code class="wtrl_type docutils literal notranslate"><span class="pre">docitem_public_types</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference.html#docitem-public-assignables-entry">6.1.13.7. <code class="wtrl_type docutils literal notranslate"><span class="pre">docitem_public_assignables_entry</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference.html#docitem-public-assignables-base">6.1.13.8. <code class="wtrl_type docutils literal notranslate"><span class="pre">docitem_public_assignables_base</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference.html#docitem-method-overview-entry">6.1.13.9. <code class="wtrl_type docutils literal notranslate"><span class="pre">docitem_method_overview_entry</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference.html#docitem-method-overview">6.1.13.10. <code class="wtrl_type docutils literal notranslate"><span class="pre">docitem_method_overview</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference.html#docitem-function-overview-entry">6.1.13.11. <code class="wtrl_type docutils literal notranslate"><span class="pre">docitem_function_overview_entry</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference.html#docitem-function-overview">6.1.13.12. <code class="wtrl_type docutils literal notranslate"><span class="pre">docitem_function_overview</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="reference.html#other-sections-node-classes">6.1.14. Other sections node classes</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="reference.html#docitem-returns">6.1.14.1. <code class="wtrl_type docutils literal notranslate"><span class="pre">docitem_returns</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference.html#docitem-parameters-entry">6.1.14.2. <code class="wtrl_type docutils literal notranslate"><span class="pre">docitem_parameters_entry</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference.html#docitem-parameters">6.1.14.3. <code class="wtrl_type docutils literal notranslate"><span class="pre">docitem_parameters</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference.html#docitem-raises-entry">6.1.14.4. <code class="wtrl_type docutils literal notranslate"><span class="pre">docitem_raises_entry</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference.html#docitem-raises">6.1.14.5. <code class="wtrl_type docutils literal notranslate"><span class="pre">docitem_raises</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference.html#docitem-derived-from">6.1.14.6. <code class="wtrl_type docutils literal notranslate"><span class="pre">docitem_derived_from</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference.html#docitem-factory-functions">6.1.14.7. <code class="wtrl_type docutils literal notranslate"><span class="pre">docitem_factory_functions</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference.html#docitem-factory">6.1.14.8. <code class="wtrl_type docutils literal notranslate"><span class="pre">docitem_factory</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference.html#docitem-definitions-entry">6.1.14.9. <code class="wtrl_type docutils literal notranslate"><span class="pre">docitem_definitions_entry</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference.html#docitem-definitions">6.1.14.10. <code class="wtrl_type docutils literal notranslate"><span class="pre">docitem_definitions</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference.html#docitem-terminology-entry">6.1.14.11. <code class="wtrl_type docutils literal notranslate"><span class="pre">docitem_terminology_entry</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference.html#docitem-terminology">6.1.14.12. <code class="wtrl_type docutils literal notranslate"><span class="pre">docitem_terminology</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference.html#docitem-description">6.1.14.13. <code class="wtrl_type docutils literal notranslate"><span class="pre">docitem_description</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference.html#docitem-notes-entry">6.1.14.14. <code class="wtrl_type docutils literal notranslate"><span class="pre">docitem_notes_entry</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference.html#docitem-notes">6.1.14.15. <code class="wtrl_type docutils literal notranslate"><span class="pre">docitem_notes</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference.html#docitem-see-also">6.1.14.16. <code class="wtrl_type docutils literal notranslate"><span class="pre">docitem_see_also</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="reference.html#top-level-node-classes">6.1.15. Top-level node classes</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="reference.html#docitem-docstring-module">6.1.15.1. <code class="wtrl_type docutils literal notranslate"><span class="pre">docitem_docstring_module</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference.html#docitem-docstring-class">6.1.15.2. <code class="wtrl_type docutils literal notranslate"><span class="pre">docitem_docstring_class</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference.html#docitem-docstring-method">6.1.15.3. <code class="wtrl_type docutils literal notranslate"><span class="pre">docitem_docstring_method</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference.html#docitem-docstring-inherited-method">6.1.15.4. <code class="wtrl_type docutils literal notranslate"><span class="pre">docitem_docstring_inherited_method</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="reference.html#factories">6.1.16. Factories</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="reference.html#make-docitem-tree">6.1.16.1. <code class="wtrl_func docutils literal notranslate"><span class="pre">make_docitem_tree</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="reference.html#module-docitem-sphinx">6.2. Module <code class="wtrl_type docutils literal notranslate"><span class="pre">docitem_sphinx</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="reference.html#functions">6.2.1. Functions</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="reference.html#build-sphinx-nodes">6.2.1.1. <code class="wtrl_func docutils literal notranslate"><span class="pre">build_sphinx_nodes</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference.html#build-sphinx-nodes-full">6.2.1.2. <code class="wtrl_func docutils literal notranslate"><span class="pre">build_sphinx_nodes_full</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference.html#resolve-qualified-name">6.2.1.3. <code class="wtrl_func docutils literal notranslate"><span class="pre">resolve_qualified_name</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="reference.html#directives-for-docstring-rendering">6.2.2. Directives for docstring rendering</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="reference.html#wtrl-build-autodoc-module-nodes">6.2.2.1. <code class="wtrl_func docutils literal notranslate"><span class="pre">wtrl_build_autodoc_module_nodes</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference.html#wtrl-build-autodoc-function-nodes">6.2.2.2. <code class="wtrl_func docutils literal notranslate"><span class="pre">wtrl_build_autodoc_function_nodes</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference.html#wtrl-build-autodoc-class-full-nodes">6.2.2.3. <code class="wtrl_func docutils literal notranslate"><span class="pre">wtrl_build_autodoc_class_full_nodes</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference.html#wtrl-build-autodoc-class-nodes">6.2.2.4. <code class="wtrl_func docutils literal notranslate"><span class="pre">wtrl_build_autodoc_class_nodes</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="reference.html#directives-for-setting-default-module-and-class">6.2.3. Directives for setting default module and class</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="reference.html#wtrl-build-push-current-module-nodes">6.2.3.1. <code class="wtrl_func docutils literal notranslate"><span class="pre">wtrl_build_push_current_module_nodes</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference.html#wtrl-build-push-current-class-nodes">6.2.3.2. <code class="wtrl_func docutils literal notranslate"><span class="pre">wtrl_build_push_current_class_nodes</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference.html#wtrl-build-push-current-scope-nodes">6.2.3.3. <code class="wtrl_func docutils literal notranslate"><span class="pre">wtrl_build_push_current_scope_nodes</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference.html#wtrl-build-pop-current-module-nodes">6.2.3.4. <code class="wtrl_func docutils literal notranslate"><span class="pre">wtrl_build_pop_current_module_nodes</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference.html#wtrl-build-pop-current-class-nodes">6.2.3.5. <code class="wtrl_func docutils literal notranslate"><span class="pre">wtrl_build_pop_current_class_nodes</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference.html#wtrl-build-pop-current-scope-nodes">6.2.3.6. <code class="wtrl_func docutils literal notranslate"><span class="pre">wtrl_build_pop_current_scope_nodes</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="reference.html#directives-for-expanding-callable-signatures">6.2.4. Directives for expanding callable signatures</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="reference.html#wtrl-build-method-signature-nodes">6.2.4.1. <code class="wtrl_func docutils literal notranslate"><span class="pre">wtrl_build_method_signature_nodes</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference.html#wtrl-build-function-signature-nodes">6.2.4.2. <code class="wtrl_func docutils literal notranslate"><span class="pre">wtrl_build_function_signature_nodes</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference.html#wtrl-build-method-signature-block-nodes">6.2.4.3. <code class="wtrl_func docutils literal notranslate"><span class="pre">wtrl_build_method_signature_block_nodes</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference.html#wtrl-build-function-signature-block-nodes">6.2.4.4. <code class="wtrl_func docutils literal notranslate"><span class="pre">wtrl_build_function_signature_block_nodes</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="reference.html#module-docitem-convert">6.3. Module <code class="wtrl_type docutils literal notranslate"><span class="pre">docitem_convert</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="reference.html#converter-functions">6.3.1. Converter functions</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="reference.html#to-node-legend-json">6.3.1.1. <code class="wtrl_func docutils literal notranslate"><span class="pre">to_node_legend_json</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference.html#to-node-docstring-tree-json">6.3.1.2. <code class="wtrl_func docutils literal notranslate"><span class="pre">to_node_docstring_tree_json</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference.html#to-node-signature-json">6.3.1.3. <code class="wtrl_func docutils literal notranslate"><span class="pre">to_node_signature_json</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference.html#build-node-json">6.3.1.4. <code class="wtrl_func docutils literal notranslate"><span class="pre">build_node_json</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference.html#to-string-legend-yaml">6.3.1.5. <code class="wtrl_func docutils literal notranslate"><span class="pre">to_string_legend_yaml</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference.html#to-string-yaml">6.3.1.6. <code class="wtrl_func docutils literal notranslate"><span class="pre">to_string_yaml</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference.html#to-string-signature-yaml">6.3.1.7. <code class="wtrl_func docutils literal notranslate"><span class="pre">to_string_signature_yaml</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference.html#to-string-md">6.3.1.8. <code class="wtrl_func docutils literal notranslate"><span class="pre">to_string_md</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+<section id="indices-and-tables">
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
+<li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
+<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
+</ul>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="#">Waterloo Docstrings</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">1. Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples_minimax.html">2. Docstrings - minimal and full examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">3. Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tools.html">4. Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="format.html">5. Docstring format</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reference.html">6. Reference - Core View</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="#">Documentation overview</a><ul>
+      <li>Next: <a href="introduction.html" title="next chapter"><span class="section-number">1. </span>Introduction</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2026, Uwe.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.3.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/index.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
