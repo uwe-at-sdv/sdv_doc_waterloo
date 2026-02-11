@@ -1,4 +1,0 @@
-sdv_doc_docitem_sphinx.py:1678: error: Function is missing a type annotation  [no-untyped-def]
-sdv_doc_docitem_sphinx.py:1684: error: Function is missing a type annotation  [no-untyped-def]
-sdv_doc_docitem_sphinx.py:1689: error: Name "Path" is not defined  [name-defined]
-Found 3 errors in 1 file (checked 4 source files)
