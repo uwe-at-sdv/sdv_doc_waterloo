@@ -386,11 +386,6 @@ Contract node classes
 
 .. wtrl_autodoc_class_full:: docitem_ensures
 
-:wtrl_type:`docitem_api`
-.............................
-
-.. wtrl_autodoc_class_full:: docitem_api
-
 :wtrl_type:`docitem_traits`
 ...........................
 

@@ -506,15 +506,15 @@ a module docstring |must| have the following structure:
 * :wtrl_label:`Contract:`
 	- [CON-001] -- The section |must| exist.
 	- [CON-002] -- The section |must| be listed as normative in :wtrl_label:`Preamble.normative_sections`.
-	- [CON-028] -- |Must_not| have subsections other than { :wtrl_label:`general`, :wtrl_label:`api` }.
+	- [CON-028] -- |Must_not| have subsections other than { :wtrl_label:`general` }.
 	- :wtrl_label:`general:`
 		* [CON-022] -- The subsection |must| exist.
 		* [CON-003] -- |Must| contain an explanation of the purpose of the module sufficient to decide
 		  whether the module is applicable to a given use case.
-	- :wtrl_label:`api:`
-		* [CON-029] -- The subsection |may| exist. If it exists:
-		* [CON-030] -- |Must| list all sections whose contents define the public method set. The union of these sections defines the public API.
-		* [CON-031] -- By default, the API is defined by the sections named "Public_*" listed in :wtrl_label:`Preamble.normative_sections`. An existing subsection :wtrl_label:`api:` overrides the default behaviour.
+	- Obsolete rules:
+		* [CON-029] -- obsolete
+		* [CON-030] -- obsolete
+		* [CON-031] -- obsolete
 * :wtrl_label:`Public_classes:`
 	- [MPCL-001] -- The section |may| exist.
 	- [MPCL-002] -- If it exists, it |must| be listed as normative in :wtrl_label:`Preamble.normative_sections`.
