@@ -5,16 +5,16 @@
 #### Branch main
 
 * Machine-readable documentation
-  * ``sdv/doc/waterloo/doc-json/docitem.wtrl.json``
-  * ``sdv/doc/waterloo/doc-json/docitem_sphinx.wtrl.json``
+  * ``src/sdv/doc/waterloo/doc-json/docitem.wtrl.json``
+  * ``src/sdv/doc/waterloo/doc-json/docitem_sphinx.wtrl.json``
 
 * JSON-Schema
-  * ``sdv/doc/waterloo/schema/wtrl-json-*.*.*.schema.json``
+  * ``src/sdv/doc/waterloo/schema/wtrl-json-*.*.*.schema.json``
 
 * Public modules:
-  * ``sdv/doc/waterloo/docitem.py``
-  * ``sdv/doc/waterloo/docitem_convert.py``
-  * ``sdv/doc/waterloo/docitem_sphinx.py``
+  * ``src/sdv/doc/waterloo/docitem.py``
+  * ``src/sdv/doc/waterloo/docitem_convert.py``
+  * ``src/sdv/doc/waterloo/docitem_sphinx.py``
 
 
 #### Branch gh-pages
