@@ -38,11 +38,6 @@ dependencies = [
 sphinx = ["sphinx"]
 dev = ["pytest"]
 
-
-
-[project.optional-dependencies]
-dev = ["pytest"]
-
 # Console script entry points.
 # Installs a command-line executable that invokes the given
 # function inside the package.

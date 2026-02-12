@@ -11,16 +11,23 @@ import ast
 import contextlib
 import io
 import importlib.util
-import sys,inspect
+import importlib.resources as importlib_resources
+import sys,inspect,os
 from datetime import datetime
 from pathlib import Path
 from types import ModuleType
-from typing import Any, Callable, Optional, Tuple, cast
+from typing import Any, Callable, Dict, Optional, Tuple, cast
 
 import json
 
 from jsonpointer import JsonPointerException, resolve_pointer
 from jsonschema import Draft202012Validator
+
+__version__ = "0.2.2"
+# - 0.2.2 [2026-02-12]	Subcommand version: prints only the waterlint version string.
+# - 0.2.1 [2026-02-12]	Subcommand validate-json: --schema is now optional; automatic detection applies.
+# - 0.2.0 [2026-02-12]	Subcommand list-schemas
+# - 0.1.0 [2026-02-12]	Versioning starts. Subcommands are "validate", "coverage", "extract", "validate-json", "render-json"
 
 _debug = False
 
@@ -58,7 +65,7 @@ with contextlib.redirect_stdout(sys.stderr):
 
 #----- Add subcommands here -----------------------------------#
 WTRL_JSON_SCHEMA_VERSION = "0.0.1"
-SUBCOMMANDS = ("validate","coverage","extract","validate-json","render-json")
+SUBCOMMANDS = ("validate","coverage","extract","validate-json","render-json","list-schemas","version")
 
 #===== Helper =================================================#
 
@@ -369,8 +376,22 @@ def _extract_command(args: argparse.Namespace) -> int:
 def _validate_json_command(args: argparse.Namespace) -> int:
 	tr = tracer()
 	try:
-		doc = _load_json(getattr(args, "input_file", None))
-		_validate_json_against_schema(tr, doc, args.schema)
+		doc: Dict[str,cvrt.WtrlJsonNode_t] = cast(Dict[str,cvrt.WtrlJsonNode_t],_load_json(getattr(args, "input_file", None)))
+# Try schema path from argparse.
+		schema_path = args.schema
+		if not schema_path:
+			try:
+# Determine schema version from JSON.
+				version_obj_raw = doc["__WTRL_VERSION__"]
+				if not isinstance(version_obj_raw, dict) or "schema" not in version_obj_raw:
+					raise KeyError
+				schema_version = str(version_obj_raw["schema"])
+				schema_path = Path(__file__).resolve().parent / "schema" / f"wtrl-json-{schema_version}.schema.json"
+			except Exception:
+				tr.add_error(["JSCH-000"], "Cannot infer schema path; __WTRL_VERSION__.schema missing or malformed.")
+				_emit_tracer(tr, args.out_diag)
+				return _final_exit_code(1, tr, args.fail_on_warning)
+		_validate_json_against_schema(tr, doc, str(schema_path))
 		_check_toc_pointers_json(tr, doc, "__WTRL_TOC_MODULES__", "JPTR-001")
 		_check_toc_pointers_json(tr, doc, "__WTRL_TOC_CLASSES__", "JPTR-002")
 		_check_toc_pointers_json(tr, doc, "__WTRL_TOC_CALLABLES__", "JPTR-003")
@@ -404,6 +425,8 @@ def _render_json_command(args: argparse.Namespace) -> int:
 	try:
 		flavour_str = args.flavour
 		flavour = cvrt.flavour_tag_map.get(flavour_str)
+		if flavour is None:
+			flavour = cvrt.Flavour.RFC_2119
 
 		if not args.obj:
 			print("Error: --obj is required for render-json.", file=sys.stderr)
@@ -429,7 +452,8 @@ def _render_json_command(args: argparse.Namespace) -> int:
 			objs.extend(docitem.gen_documentable_objects(mod, config))
 # Use from argparse if available, otherwise fall back to "core" (maximimum output).
 		scope_str: str = args.scope
-		scope_filter = SCOPE_TAG_MAP.get(scope_str)
+		scope_val = SCOPE_TAG_MAP.get(scope_str, SCOPE_TAG_MAP["core"])
+		scopes_filter = set([scope_val])
 
 #----- Build version, legend and table of contents ------------#
 		tree_full: dict[str, Any] = {}
@@ -487,16 +511,21 @@ def _render_json_command(args: argparse.Namespace) -> int:
 #----- Iterate over scope-filtered objects --------------------#
 		for o in objs:
 			doc_txt = docitem.get_obj_docstring(o)
+			name_key = cvrt.get_obj_name(o)
+			if getattr(o, "__module__", None):
+				name_key = f"{o.__module__}.{name_key}"
 			if not doc_txt or not str(doc_txt).strip():
-# No docstring or empty docstring
-				if cvrt.is_obj_module(o):
-					num_modules_skipped_no_doc += 1
-				elif cvrt.is_obj_class(o):
-					num_classes_skipped_no_doc += 1
-				elif cvrt.is_obj_function(o):
-					num_callables_skipped_no_doc += 1
-				else:
-					num_unknown_skipped_no_doc += 1
+# No docstring or empty docstring. Count safely.
+				if name_key not in objects_counted:
+					if cvrt.is_obj_module(o):
+						num_modules_skipped_no_doc += 1
+					elif cvrt.is_obj_class(o):
+						num_classes_skipped_no_doc += 1
+					elif cvrt.is_obj_function(o):
+						num_callables_skipped_no_doc += 1
+					else:
+						num_unknown_skipped_no_doc += 1
+					objects_counted.add(name_key)
 				continue
 			tr_obj = tracer()
 			try:
@@ -504,22 +533,22 @@ def _render_json_command(args: argparse.Namespace) -> int:
 				tree_parsed = docitem.parse_indent_docstring(tr_obj, doc_txt)
 				tree = docitem.make_docitem_tree_from_docstring_tree(tr_obj, tree_parsed)
 			except docitem.ParseError:
-# Invalid docstring -> skip
-				if cvrt.is_obj_module(o):
-					num_modules_skipped_invalid += 1
-				elif cvrt.is_obj_class(o):
-					num_classes_skipped_invalid += 1
-				elif cvrt.is_obj_function(o):
-					num_callables_skipped_invalid += 1
-				else:
-					num_unknown_skipped_invalid += 1
+# Invalid docstring -> skip. Count safely.
+				if name_key not in objects_counted:
+					if cvrt.is_obj_module(o):
+						num_modules_skipped_invalid += 1
+					elif cvrt.is_obj_class(o):
+						num_classes_skipped_invalid += 1
+					elif cvrt.is_obj_function(o):
+						num_callables_skipped_invalid += 1
+					else:
+						num_unknown_skipped_invalid += 1
+					objects_counted.add(name_key)
 				continue
-			if not cast(Any, tree).is_visible(set([scope_filter])):
+			if not cast(Any, tree).is_visible(scopes_filter):
 				continue
 # All entries are based on the qualified name, which is delivered by our helper.
-			qname = docitem.get_obj_name(o)
-			if getattr(o, "__module__", None):
-				qname = f"{o.__module__}.{qname}"
+			qname = name_key
 # Collect nonaggregate public members for this object (module or class).
 			for sec_label,toc_label in nonaggregate_member_sections:
 				for mem_name in _collect_public_members(tree,sec_label):
@@ -546,16 +575,20 @@ def _render_json_command(args: argparse.Namespace) -> int:
 							for obj_prop_meth,qname_prop_meth in objs_meth_prop:
 								doc_prop_meth = docitem.get_obj_docstring(obj_prop_meth)
 								if not doc_prop_meth or not str(doc_prop_meth).strip():
-# No docstring or empty docstring
-									num_callables_skipped_no_doc += 1
+# No docstring or empty docstring. Count safely.
+									if qname_prop_meth not in objects_counted:
+										num_callables_skipped_no_doc += 1
+										objects_counted.add(qname_prop_meth)
 								tr_prop_meth_obj = tracer()
 								try:
 # Build docstring tree from docstring.
 									tree_prop_meth = docitem.parse_indent_docstring(tr_prop_meth_obj, doc_prop_meth)
 									node_prop_meth = docitem.make_docitem_tree_from_docstring_tree(tr_prop_meth_obj, tree_parsed)
 								except docitem.ParseError:
-# Invalid docstring -> skip
-									num_callables_skipped_invalid += 1
+# Invalid docstring -> skip. Count safely.
+									if qname_prop_meth not in objects_counted:
+										num_callables_skipped_invalid += 1
+										objects_counted.add(qname_prop_meth)
 									continue
 
 								tree_full["__WTRL_TOC_CALLABLES__"][qname_prop_meth] = f"/__WTRL_OBJECTS__/{qname_prop_meth}"
@@ -620,13 +653,13 @@ def _render_json_command(args: argparse.Namespace) -> int:
 					jsnode_toc_modules[modname] = f"/__WTRL_OBJECTS__/{modname}"
 # Add referred module name to __WTRL_OBJECTS__, with empty "doc" node.
 				if modname not in tree_full["__WTRL_OBJECTS__"]:
-					entry: dict[str, cvrt.WtrlJsonNode_t] = {}
+					entry_stub: dict[str, cvrt.WtrlJsonNode_t] = {}
 # We already know the path to the module.
 					if args.allow_local_paths:
-						entry["path"] = docitem.get_obj_path(sys.modules.get(modname))
+						entry_stub["path"] = docitem.get_obj_path(sys.modules.get(modname))
 # Leave empty, fill later after AST analysis.
-					entry["doc"] = {}
-					tree_full["__WTRL_OBJECTS__"][modname] = entry
+					entry_stub["doc"] = {}
+					tree_full["__WTRL_OBJECTS__"][modname] = entry_stub
 #----- end modules referred to by objects from traversal ------#
 # End of object loop.
 
@@ -651,7 +684,7 @@ def _render_json_command(args: argparse.Namespace) -> int:
 						mod_tree_parsed = docitem.parse_indent_docstring(tr_tmp, mod_doc)
 						mod_tree = docitem.make_docitem_tree_from_docstring_tree(tr_tmp, mod_tree_parsed)
 # Render module docstring if the module is visible for the given scope; otherwise render stub.
-						if cast(Any, mod_tree).is_visible(set([scope_filter])):
+						if cast(Any, mod_tree).is_visible(scopes_filter):
 							entry2["doc"] = cvrt.to_node_docstring_tree_json(mod_tree_parsed, flavour)
 						else:
 							entry2["doc"] = {}
@@ -669,7 +702,8 @@ def _render_json_command(args: argparse.Namespace) -> int:
 								mem_qname = f"{modname}.{mem_name}"
 								if mem_qname not in public_members_rendered:
 									public_members_rendered.add(mem_qname)
-									tree_full[toc_label][mem_qname] = f"/__WTRL_OBJECTS__/{mem_name}"
+									toc_map = cast(dict[str, Any], tree_full[toc_label])
+									toc_map[mem_qname] = f"/__WTRL_OBJECTS__/{mem_qname}"
 # The docstring subsection of a type is an array of logical lines. We render them as a list in JSON.
 									mem_doc = mod_tree.item(sec_label).item(mem_name).items()
 									tree_full["__WTRL_OBJECTS__"].setdefault(mem_qname, {"doc": mem_doc})
@@ -725,6 +759,12 @@ def _help_validate_json() -> None:
 def _help_render_json() -> None:
 	print("Render Waterloo objects (module) to Waterloo JSON.")
 
+def _help_list_schemas() -> None:
+	print("List available Waterloo JSON Schema files.")
+
+def _help_version() -> None:
+	print("Print waterlint version string only, e.g. 1.2.3.")
+
 def _help_topic_command(args: argparse.Namespace) -> int:
 	global parser
 	assert parser._subparsers is not None
@@ -745,9 +785,50 @@ def _help_topic_command(args: argparse.Namespace) -> int:
 						_help_validate_json()
 					if cmd == "render-json":
 						_help_render_json()
+					if cmd == "list-schemas":
+						_help_list_schemas()
+					if cmd == "version":
+						_help_version()
 					exit(0)
 			allowed = "'" + "', '".join(SUBCOMMANDS) + "'"
 			print(f"Command '{args.topic}' not found. Try one of {allowed}.",file=sys.stderr)
+	return 0
+
+#===== List schemas ==========================================#
+
+def _list_schemas_command(args: argparse.Namespace) -> int:
+	"""List available Waterloo JSON Schemas."""
+	schema_dirs: list[Path] = []
+	# 1) schema directory next to this script
+	schema_dirs.append(Path(__file__).resolve().parent / "schema")
+	# 2) installed package resource directory
+	try:
+		pkg_schema = importlib_resources.files("sdv.doc.waterloo") / "schema"
+		schema_dirs.append(Path(str(pkg_schema)))
+	except Exception:
+		pass
+
+	seen: set[Path] = set()
+	for sdir in schema_dirs:
+		sdir = sdir.resolve()
+		if sdir in seen:
+			continue
+		seen.add(sdir)
+		print(f"Schemas in {sdir}:")
+		if not sdir.exists():
+			print("  (directory not found)")
+			continue
+		files = sorted(p.name for p in sdir.glob("wtrl*.json") if p.is_file())
+		if not files:
+			print("  (none matching wtrl*.json)")
+		else:
+			for fname in files:
+				print(f"  {fname}")
+	return 0
+
+def _version_command(args: argparse.Namespace) -> int:
+	"""Print only the waterlint version string."""
+	print(__version__)
 	return 0
 
 parser: argparse.ArgumentParser
@@ -829,7 +910,12 @@ def _build_parser() -> argparse.ArgumentParser:
 #----- validate-json ------------------------------------------#
 	validate_json = subparsers.add_parser("validate-json", help="Validate Waterloo JSON output", parents=[global_opts])
 	validate_json.add_argument("--in", dest="input_file", metavar="FILE", help="Read JSON from file (default: stdin)")
-	validate_json.add_argument("--schema", required=True, metavar="FILE", help="Path to JSON Schema file.")
+	validate_json.add_argument(
+		"--schema",
+		required=False,
+		metavar="FILE",
+		help="Path to JSON Schema file. If omitted, waterlint uses schema/wtrl-json-<version>.schema.json from __WTRL_VERSION__.schema.",
+	)
 	validate_json.add_argument("--debug", action="store_true", help="Emit debugging data to stderr (reserved)")
 
 #----- render-json --------------------------------------------#
@@ -855,6 +941,14 @@ def _build_parser() -> argparse.ArgumentParser:
 	render_json.add_argument("--allow-local-paths", dest="allow_local_paths", action="store_true", default=True, help="Include filesystem paths in JSON (default).")
 	render_json.add_argument("--no-allow-local-paths", dest="allow_local_paths", action="store_false", help="Omit filesystem paths in JSON.")
 	render_json.add_argument("--debug", action="store_true", help="Emit debugging data to stderr (reserved)")
+
+#----- list-schemas -------------------------------------------#
+	list_schemas = subparsers.add_parser("list-schemas", help="List available Waterloo JSON Schemas", parents=[global_opts])
+	list_schemas.add_argument("--debug", action="store_true", help="Emit debugging data to stderr (reserved)")
+
+#----- version ------------------------------------------------#
+	version = subparsers.add_parser("version", help="Print waterlint version string", parents=[global_opts])
+	version.add_argument("--debug", action="store_true", help="Emit debugging data to stderr (reserved)")
 
 	return parser
 
@@ -888,6 +982,10 @@ def main(argv: Optional[list[str]] = None) -> int:
 		return _validate_json_command(args)
 	if args.command == "render-json":
 		return _render_json_command(args)
+	if args.command == "list-schemas":
+		return _list_schemas_command(args)
+	if args.command == "version":
+		return _version_command(args)
 	if args.command == "help":
 		return _help_topic_command(args)
 	return 1

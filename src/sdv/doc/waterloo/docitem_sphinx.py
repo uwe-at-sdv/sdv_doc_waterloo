@@ -113,18 +113,6 @@ from __future__ import annotations
 from types import FunctionType, ModuleType
 from typing import Any, Callable, Dict, Final, get_type_hints, get_origin, get_args, Generator, Iterable, Iterator, List, Mapping, NewType, NoReturn, Protocol, Sequence, Set, Tuple, Type, TypeAlias, TypeGuard, Union, cast
 
-#Terminology:
-#	Docutils node:
-#		An element of the Docutils abstract syntax tree (AST), such as :wtrl_type:`paragraph`, :wtrl_type:`section`, or :wtrl_type:`literal`.
-#	Docutils role:
-#		An inline markup construct of the form ``:role:`content``` implemented
-#		using the Docutils role API. Custom roles provided by this module are
-#		registered via Sphinx but conceptually belong to Docutils.
-#	Sphinx extension:
-#		A Python module loaded by Sphinx to extend its parsing, transformation,
-#		or rendering behavior. This module is implemented as a Sphinx extension
-#		but operates primarily on Docutils data structures.
-
 import inspect
 import re
 import importlib
