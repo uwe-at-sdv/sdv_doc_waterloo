@@ -88,7 +88,7 @@ Public_classes:
 	docitem_base, docitem_list_base, docitem_map_base, docitem_free_text_entry_base
 	docitem_list_of_symbols_base, docitem_profile, docitem_normative_sections, docitem_status
 	docitem_preamble, docitem_constructor, docitem_general, docitem_invariants, docitem_requires
-	docitem_ensures, docitem_base_to_inherit_from, docitem_api, docitem_traits, docitem_contract_module
+	docitem_ensures, docitem_base_to_inherit_from, docitem_traits, docitem_contract_module
 	docitem_contract_class, docitem_contract_method, docitem_contract_inherited_method
 	docitem_derived_from, docitem_factory_functions, docitem_factory, docitem_class_overview_entry
 	docitem_class_overview, docitem_public_types_entry, docitem_public_types
@@ -132,8 +132,6 @@ Class_overview:
 		Node class for subsection |label|`ensures`
 	docitem_base_to_inherit_from:
 		Node class for subsection |label|`base`
-	docitem_api:
-		Node class for subsection |label|`api`
 	docitem_traits:
 		Node class for subsection |label|`traits`
 	docitem_contract_module:
@@ -250,7 +248,7 @@ try:
 except ImportError:
 	from sdv.doc.waterloo.docitem_validator import *
 
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 
 def gen_documentable_objects(obj: Documentable_t,config: ConfigTraversal = ConfigTraversal()) -> Generator[Documentable_t,None,None]:
 	"""

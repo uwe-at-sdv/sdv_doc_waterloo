@@ -366,72 +366,6 @@ Raises:
 	def __str__(self) -> str:
 		return " {" + ", ".join([entry for entry in self._items]) + "}"
 
-#----- docitem class api --------------------------------------#
-
-class docitem_api(docitem_list_base):
-	"""
-Preamble:
-	profile:
-		class
-	normative_sections:
-		Contract, Derived_from, Public_methods
-Contract:
-	general:
-		|Must| represent the |label|`api` section, subsection of |label|`Contract`.
-		|Must| be able to hold a list of strings.
-	constructor:
-		|Must| be default-constructible.
-Derived_from:
-	docitem_list_base
-Public_methods:
-	parse
-Method_overview:
-	parse:
-		Parse a |label|`api` section.
-	"""
-	def __init__(self) -> None:
-		super().__init__()
-	def label(self) -> str:
-		return "api"
-	def parse(self,tr : tracer,refs : docstring_subtree) -> None:
-		"""
-Preamble:
-	profile:
-		method
-	normative_sections:
-		Contract, Parameters, Returns, Raises
-Contract:
-	general:
-		|Must| parse the content of an |label|`api` section.
-Parameters:
-	tr:
-		The tracer for collecting diagnostics.
-	refs:
-		The docstring subtree to parse, a list of identifiers.
-Returns:
-	|Must| return |None|.
-Raises:
-	RuntimeError:
-		|Must| raise if the items are not identifiers.
-		"""
-		# CON-010: api entries must list sections (identifiers).
-		with rules_on_fail(tr, ["CON-010"]):
-# api requires a list of strings
-			if not is_list_of_str(refs):
-				raise_parsing_error_expected_but_got(tr,tr.get_rules_on_fail(),'list', f'{refs}')
-# Validate
-			for ref in refs:
-# Only string are allowed (not list of something)
-				if not isinstance(ref,str):
-					raise_parsing_error_expected_but_got(tr,tr.get_rules_on_fail(),'str', f'{ref}')
-# Only identifiers are allowed.
-				assert isinstance(ref,str)
-				if not RE_IDENTIFIER_COMPILED.fullmatch(ref):
-					raise_parsing_error_expected_but_got(tr,tr.get_rules_on_fail(),'identifier',f'{ref}')
-			assert is_list_of_str(refs)
-			self.set_items(refs)
-	def __str__(self) -> str:
-		return " {" + ",".join(self._items) + "}"
 
 #----- docitem class traits -----------------------------------#
 
@@ -528,7 +462,6 @@ Raises:
 		pos = 0
 		dispatch_map = {
 		 "general:":docitem_general,
-		 "api:":docitem_api,
 		 }
 		while pos < len(subtree):
 			lb = subtree[pos]
@@ -594,7 +527,6 @@ Raises:
 		dispatch_map = {
 		 "general:":docitem_general,
 		 "constructor:":docitem_constructor,
-		 "api:":docitem_api,
 		 "traits:":docitem_traits,
 		 }
 		while pos < len(subtree):
