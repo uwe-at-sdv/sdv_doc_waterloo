@@ -63,5 +63,6 @@ version = { attr = "sdv.doc.waterloo.docitem.__version__" }
 "sdv.doc.waterloo" = [
 	"py.typed",
 	"_static/*.css",
+	"doc-json/*.json"
 	"schema/*.json"
 	]

@@ -502,7 +502,11 @@ def _render_json_command(args: argparse.Namespace) -> int:
 		num_modules_rendered = 0
 		num_classes_rendered = 0
 		num_callables_rendered = 0
-
+		num_nonaggregate_rendered: Dict[str,int] = {
+			"__WTRL_TOC_TYPES__":0,
+			"__WTRL_TOC_VARIABLES__":0,
+			"__WTRL_TOC_CONSTANTS__":0
+			}
 #----- Seen, counted, visited ---------------------------------#
 		objects_counted: set[str] = set()
 		modules_used: set[str] = set()
@@ -557,6 +561,10 @@ def _render_json_command(args: argparse.Namespace) -> int:
 					if mem_qname not in public_members_rendered:
 						public_members_rendered.add(mem_qname)
 						tree_full[toc_label][mem_qname] = f"/__WTRL_OBJECTS__/{mem_qname}"
+# Count nonaggregate safely.
+						if mem_qname not in objects_counted:
+							num_nonaggregate_rendered[toc_label] += 1
+							objects_counted.add(mem_qname)
 # The docstring subsection of a type is an array of logical lines. We render them as a list in JSON.
 						mem_doc = tree.item(sec_label).item(mem_name).items()
 						tree_full["__WTRL_OBJECTS__"].setdefault(mem_qname, {"doc": mem_doc})
@@ -705,6 +713,10 @@ def _render_json_command(args: argparse.Namespace) -> int:
 									public_members_rendered.add(mem_qname)
 									toc_map = cast(dict[str, Any], tree_full[toc_label])
 									toc_map[mem_qname] = f"/__WTRL_OBJECTS__/{mem_qname}"
+# Count nonaggregate safely.
+									if mem_qname not in objects_counted:
+										num_nonaggregate_rendered[toc_label] += 1
+										objects_counted.add(mem_qname)
 # The docstring subsection of a type is an array of logical lines. We render them as a list in JSON.
 									mem_doc = mod_tree.item(sec_label).item(mem_name).items()
 									tree_full["__WTRL_OBJECTS__"].setdefault(mem_qname, {"doc": mem_doc})
@@ -723,6 +735,9 @@ def _render_json_command(args: argparse.Namespace) -> int:
 		tr.add_info(f"Num modules rendered  : {num_modules_rendered}.")
 		tr.add_info(f"Num classes rendered  : {num_classes_rendered}.")
 		tr.add_info(f"Num callables rendered: {num_callables_rendered}.")
+		tr.add_info(f"Num types rendered    : {num_nonaggregate_rendered['__WTRL_TOC_TYPES__']}.")
+		tr.add_info(f"Num variables rendered: {num_nonaggregate_rendered['__WTRL_TOC_VARIABLES__']}.")
+		tr.add_info(f"Num constants rendered: {num_nonaggregate_rendered['__WTRL_TOC_CONSTANTS__']}.")
 
 #----- Dump JSON result ---------------------------------------#
 		if args.out_file:
