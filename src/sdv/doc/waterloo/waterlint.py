@@ -23,7 +23,8 @@ import json
 from jsonpointer import JsonPointerException, resolve_pointer
 from jsonschema import Draft202012Validator
 
-__version__ = "0.2.2"
+__version__ = "0.2.3"
+# - 0.2.3 [2026-02-12]	Subcommand version-json: prints only the JSON-schema version string.
 # - 0.2.2 [2026-02-12]	Subcommand version: prints only the waterlint version string.
 # - 0.2.1 [2026-02-12]	Subcommand validate-json: --schema is now optional; automatic detection applies.
 # - 0.2.0 [2026-02-12]	Subcommand list-schemas
