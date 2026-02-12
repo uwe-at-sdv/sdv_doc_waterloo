@@ -65,7 +65,7 @@ with contextlib.redirect_stdout(sys.stderr):
 
 #----- Add subcommands here -----------------------------------#
 WTRL_JSON_SCHEMA_VERSION = "0.0.1"
-SUBCOMMANDS = ("validate","coverage","extract","validate-json","render-json","list-schemas","version")
+SUBCOMMANDS = ("validate","coverage","extract","validate-json","render-json","list-schemas","version","version-json")
 
 #===== Helper =================================================#
 
@@ -763,7 +763,10 @@ def _help_list_schemas() -> None:
 	print("List available Waterloo JSON Schema files.")
 
 def _help_version() -> None:
-	print("Print waterlint version string only, e.g. 1.2.3.")
+	print(f"Print waterlint version string only, e.g. {__version__}.")
+
+def _help_version_json() -> None:
+	print(f"Print JSON schema version string only, e.g. {WTRL_JSON_SCHEMA_VERSION}.")
 
 def _help_topic_command(args: argparse.Namespace) -> int:
 	global parser
@@ -789,6 +792,8 @@ def _help_topic_command(args: argparse.Namespace) -> int:
 						_help_list_schemas()
 					if cmd == "version":
 						_help_version()
+					if cmd == "version-json":
+						_help_version_json()
 					exit(0)
 			allowed = "'" + "', '".join(SUBCOMMANDS) + "'"
 			print(f"Command '{args.topic}' not found. Try one of {allowed}.",file=sys.stderr)
@@ -829,6 +834,11 @@ def _list_schemas_command(args: argparse.Namespace) -> int:
 def _version_command(args: argparse.Namespace) -> int:
 	"""Print only the waterlint version string."""
 	print(__version__)
+	return 0
+
+def _version_json_command(args: argparse.Namespace) -> int:
+	"""Print only the JSON schema version string."""
+	print(WTRL_JSON_SCHEMA_VERSION)
 	return 0
 
 parser: argparse.ArgumentParser
@@ -950,6 +960,10 @@ def _build_parser() -> argparse.ArgumentParser:
 	version = subparsers.add_parser("version", help="Print waterlint version string", parents=[global_opts])
 	version.add_argument("--debug", action="store_true", help="Emit debugging data to stderr (reserved)")
 
+#----- version-json -------------------------------------------#
+	version = subparsers.add_parser("version-json", help="Print JSON schema version string", parents=[global_opts])
+	version.add_argument("--debug", action="store_true", help="Emit debugging data to stderr (reserved)")
+
 	return parser
 
 
@@ -986,6 +1000,8 @@ def main(argv: Optional[list[str]] = None) -> int:
 		return _list_schemas_command(args)
 	if args.command == "version":
 		return _version_command(args)
+	if args.command == "version-json":
+		return _version_json_command(args)
 	if args.command == "help":
 		return _help_topic_command(args)
 	return 1
