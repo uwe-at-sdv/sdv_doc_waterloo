@@ -801,6 +801,7 @@ def _help_topic_command(args: argparse.Namespace) -> int:
 
 #===== List schemas ==========================================#
 
+
 def _list_schemas_command(args: argparse.Namespace) -> int:
 	"""List available Waterloo JSON Schemas."""
 	schema_dirs: list[Path] = []
