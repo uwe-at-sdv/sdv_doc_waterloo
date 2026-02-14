@@ -115,7 +115,7 @@ Validators must map violations to diagnostic severities based on the keyword cla
 For example:
 
 * A violated |Must| / |Must_not| requirement results in an error.
-* A violated |Should| recommendation results in a warning.
+* A violated |Should| / |Should_not| recommendation results in a warning.
 
 This mapping is defined by the Waterloo specification and is not expressed via
 natural-language compositions such as "only if", "unless", or similar constructs.
@@ -310,33 +310,11 @@ Dependencies
 * :wtrl_mod:`jsonpointer` -- ``python3 -m pip install jsonpointer``
 * :wtrl_mod:`docutils` -- ``python3 -m pip install docutils``
 
-How to use
-----------
+Possible future enhancements
+----------------------------
 
-By the time you get interested in this project you most likely
-already have installed Sphinx. So let us proceed with
-
-.. rubric:: Set up a sphinx documentation project
-
-The file :wtrl_file:`conf.py` consists of various sections. In "Path setup"
-add the paths required for importing the modules you would like to
-write a documentation for.
-
-In section "General configuration" add the path to your module:
-
-.. code:: python
-
-	sys.path.insert(0, os.path.abspath('/path/to/my/moduledir'))
-
-Also in section "General configuration" add the Waterloo Sphinx extension to the list of extensions:
-
-.. code:: python
-
-	extensions = [
-		...
-		"sdv.doc.waterloo.docitem_sphinx",
-		]
-
+* JSON-Output
+	- In functions and methods, a trait :wtrl_attr:`generator` for generators would be nice.
 
 Introductory examples
 ---------------------

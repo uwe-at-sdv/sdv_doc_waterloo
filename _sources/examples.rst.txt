@@ -1,3 +1,5 @@
+.. _chapter_examples:
+
 Examples
 ########
 
@@ -5,6 +7,8 @@ This section covers cases which are not contained in the reference documentation
 such as
 
 * properties
+* decorators
+* coroutines
 * classes within classes
 * constants in classes
 * maybe types in classes
@@ -23,7 +27,100 @@ of the property's behavior, while the property itself defines the public API sur
 
 .. wtrl_autodoc_class_full:: test_docitem_method_property.X
 
+Decorators
+----------
 
+.. wtrl_push_current_module:: test_docitem_method_decorator
+
+In this section we test the graphi representation of method signatures
+in presence of decorators, such as :wtrl_attr:`@classmethod` and :wtrl_attr:`@staticmethod`.
+Consider the following test snippet:
+
+.. literalinclude:: ../examples/test_docitem_method_decorator.py
+	:language: python
+
+In the document source we have:
+
+.. code:: rst
+
+	.. wtrl_method_signature:: X.f_method
+
+	.. wtrl_method_signature_block:: X.f_method
+
+	.. wtrl_method_signature:: X.f_classmethod
+
+	.. wtrl_method_signature_block:: X.f_classmethod
+
+	.. wtrl_method_signature:: X.f_staticmethod
+
+	.. wtrl_method_signature_block:: X.f_staticmethod
+
+The output for methods without decorator is:
+
+.. wtrl_method_signature:: X.f_method
+
+.. wtrl_method_signature_block:: X.f_method
+
+For class method we have:
+
+.. wtrl_method_signature:: X.f_classmethod
+
+.. wtrl_method_signature_block:: X.f_classmethod
+
+And for static methods:
+
+.. wtrl_method_signature:: X.f_staticmethod
+
+.. wtrl_method_signature_block:: X.f_staticmethod
+
+An example with more than one decorator. The inline representation is
+not really helpful, and we recommend to switch to the block representation.
+
+.. wtrl_method_signature:: fib
+
+.. wtrl_method_signature_block:: fib
+
+
+.. wtrl_pop_current_module:: test_docitem_method_decorator
+
+Coroutines
+----------
+
+Let's take a look at how coroutines are rendered. The important keyword is
+:wtrl_attr:`async`. The inline signature looks like this:
+
+.. wtrl_function_signature:: test_docitem_coroutine.make_coffee
+
+In the block representation, we get:
+
+.. wtrl_function_signature_block:: test_docitem_coroutine.make_coffee
+
+Apart from that, coroutines behave like other methods and functions in terms of documentation.
+The code segment
+
+.. literalinclude:: ../examples/test_docitem_coroutine.py
+	:language: python
+	:start-after: #-----8<-----1
+	:end-before: #----->8-----1
+
+is rendered as:
+
+.. wtrl_autodoc_function:: test_docitem_coroutine.make_coffee
+
+For generators we get:
+
+.. wtrl_function_signature:: test_docitem_coroutine.get_marmalade
+
+and
+
+.. wtrl_function_signature_block:: test_docitem_coroutine.get_marmalade
+
+from source code:
+
+.. literalinclude:: ../examples/test_docitem_coroutine.py
+	:language: python
+	:start-after: #-----8<-----2
+	:end-before: #----->8-----2
 
 A display cabinet of sections
 -----------------------------
@@ -35,24 +132,30 @@ The function has the following signature:
 
 and the docstring reads:
 
-.. code:: rst
+.. code:: python
 
+	r"""
 	Preamble:
 		profile:
 			function
 		normative_sections:
 			Definitions, Contract, Parameters, Returns, Raises
+		status:
+			stable
 	Definitions:
 		TAB:
-			A scheme that demands indentation by means of an integer number of tab characters (ASCII :wtrl_value:`0x09`).
-			For this scheme, :wtrl_var:`INDENT_UNIT` is a single tab character.
+			A scheme that demands indentation by means of an integer number\
+			of tab characters (ASCII |value|`0x09`).\
+			For this scheme, |var|`INDENT_UNIT` is a single tab character.
 		SPC4:
-			A scheme that demands indentation by means of an integer multiple of four space characters (ASCII :wtrl_value:`0x20`).
-			For this scheme, :wtrl_var:`INDENT_UNIT` consists of four space characters.
+			A scheme that demands indentation by means of an integer multiple\
+			of four space characters (ASCII |value|`0x20`).
+			For this scheme, |var|`INDENT_UNIT` consists of four space characters.
 	Contract:
 		general:
 			|Must| accept a single line string and an indentation scheme.
-			|Must| count the number of leading indentations of the input according to the scheme passed.
+			|Must| count the number of leading indentations of the input according\
+			to the scheme passed.
 			|Must| accept an empty string.
 	Parameters:
 		tr:
@@ -60,13 +163,19 @@ and the docstring reads:
 		line:
 			A single line string.
 		indent_scheme:
-			A symbolic value representing one of the two possible indentation schemes TAB or SPC4.
+			A symbolic value representing one of the two possible indentation\
+			schemes |term|`TAB` or |term|`SPC4`.
 	Returns:
-		|Must| return the number of indentations found at the beginning of the string in units as decribed by the indentation scheme passed.
+		|Must| return the number of indentations found at the beginning of the string\
+		in units as decribed by the indentation scheme passed.
 	Raises:
 		RuntimeError:
-			|Must| raise if prefix contains a mix not representable as :wtrl_var:`n` repetitions of :wtrl_var:`INDENT_UNIT`.
-			|Must| raise if the white space characters (greedy match of tab or space) at the beginning of the line cannot be described by the indentation scheme passed.
+			|Must| raise if prefix contains a mix not representable\
+			as |var|`n` repetitions of |var|`INDENT_UNIT`.
+			|Must| raise if the white space characters (greedy match of\
+			tab or space) at the beginning of the line\
+			cannot be described by the indentation scheme passed.
+	"""
 
 Note that we have a section here called :wtrl_label:`Definitions`, which significantly
 reduces the load on the normative sections :wtrl_label:`Parameters` and :wtrl_label:`Raises`.
@@ -74,8 +183,33 @@ reduces the load on the normative sections :wtrl_label:`Parameters` and :wtrl_la
 although it does not contain a normativity keyword. Yet the definitions given there are binding
 for the entire documentation box rendered from this docstring.
 
-Another example
----------------
+Subections :wtrl_label:`requires`, :wtrl_label:`ensures`, and :wtrl_label:`invariants` 
+---------------------------------------------------------------------------------------
+
+This example illustrates the use of the subsections :wtrl_label:`requires`, 
+:wtrl_label:`ensures`, and :wtrl_label:`invariants`.
+These labels follow the classic Design-by-Contract distinction between
+preconditions, postconditions, and invariants:
+
+- :wtrl_label:`requires` specifies obligations of the caller.  
+  If a requirement is violated, the function's behaviour is undefined 
+  within the normative model.
+
+- :wtrl_label:`ensures` specifies guarantees provided by the function 
+  upon successful completion, assuming all requirements were met.
+
+- :wtrl_label:`invariants` specifies properties that must hold 
+  independently of a particular call. They typically express structural,
+  semantic, or algebraic constraints that characterize the function itself
+  (e.g. idempotence, determinism, monotonicity).
+
+Syntactically, these subsections are not treated differently from 
+:wtrl_label:`general`. Their purpose is semantic refinement: they allow
+normative statements to be grouped according to their logical role within
+the contract. This separation improves clarity for both human readers and automated tooling,
+as normative statements can be classified according to their contractual role.
+
+.. wtrl_function_signature_block:: test_docitem_invariants_requires_ensures.normalize_identifier
 
 .. wtrl_autodoc_function:: test_docitem_invariants_requires_ensures.normalize_identifier
 
@@ -84,10 +218,21 @@ Class within class
 
 .. wtrl_push_current_module:: test_docitem_class_class
 
+The following example of a class :wtrl_type:`Y` nested in another class :wtrl_type:`X`,
+both equipped with a method, can be rendered by a single command
+
+.. code:: rst
+
+	.. wtrl_autodoc_class_full:: X
+
+This directive recusrsively iterates over the class hierarchy and ramifies to the other
+member, like e.g. methods. The source code is:
+
 .. literalinclude:: ../examples/test_docitem_class_class.py
 	:language: python
 
+And the result is:
+
 .. wtrl_autodoc_class_full:: X
-.. wtrl_autodoc_class_full:: X.Y
 
 .. wtrl_pop_current_module:: test_docitem_class_class

@@ -17,7 +17,7 @@
     <script src="_static/doctools.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="2. Docstrings - minimal and full examples" href="examples_minimax.html" />
+    <link rel="next" title="2. Getting Started" href="getting_started.html" />
     <link rel="prev" title="Waterloo" href="index.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
@@ -125,7 +125,7 @@ Validators must map violations to diagnostic severities based on the keyword cla
 <p>For example:</p>
 <ul class="simple">
 <li><p>A violated <code class="wtrl_norm docutils literal notranslate"><span class="pre">Must</span></code> / <code class="wtrl_norm docutils literal notranslate"><span class="pre">Must</span> <span class="pre">not</span></code> requirement results in an error.</p></li>
-<li><p>A violated <code class="wtrl_norm docutils literal notranslate"><span class="pre">Should</span></code> recommendation results in a warning.</p></li>
+<li><p>A violated <code class="wtrl_norm docutils literal notranslate"><span class="pre">Should</span></code> / <code class="wtrl_norm docutils literal notranslate"><span class="pre">Should</span> <span class="pre">not</span></code> recommendation results in a warning.</p></li>
 </ul>
 <p>This mapping is defined by the Waterloo specification and is not expressed via
 natural-language compositions such as “only if”, “unless”, or similar constructs.</p>
@@ -328,25 +328,17 @@ be released if all test run green.</p>
 <li><p><code class="wtrl_mod docutils literal notranslate"><span class="pre">docutils</span></code> – <code class="docutils literal notranslate"><span class="pre">python3</span> <span class="pre">-m</span> <span class="pre">pip</span> <span class="pre">install</span> <span class="pre">docutils</span></code></p></li>
 </ul>
 </section>
-<section id="how-to-use">
-<h2><span class="section-number">1.8. </span>How to use<a class="headerlink" href="#how-to-use" title="Permalink to this headline">¶</a></h2>
-<p>By the time you get interested in this project you most likely
-already have installed Sphinx. So let us proceed with</p>
-<p class="rubric">Set up a sphinx documentation project</p>
-<p>The file <code class="wtrl_file docutils literal notranslate"><span class="pre">conf.py</span></code> consists of various sections. In “Path setup”
-add the paths required for importing the modules you would like to
-write a documentation for.</p>
-<p>In section “General configuration” add the path to your module:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="s1">&#39;/path/to/my/moduledir&#39;</span><span class="p">))</span>
-</pre></div>
-</div>
-<p>Also in section “General configuration” add the Waterloo Sphinx extension to the list of extensions:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">extensions</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="o">...</span>
-        <span class="s2">&quot;sdv.doc.waterloo.docitem_sphinx&quot;</span><span class="p">,</span>
-        <span class="p">]</span>
-</pre></div>
-</div>
+<section id="possible-future-enhancements">
+<h2><span class="section-number">1.8. </span>Possible future enhancements<a class="headerlink" href="#possible-future-enhancements" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><dl class="simple">
+<dt>JSON-Output</dt><dd><ul>
+<li><p>In functions and methods, a trait <code class="wtrl_attr docutils literal notranslate"><span class="pre">generator</span></code> for generators would be nice.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
 </section>
 <section id="introductory-examples">
 <h2><span class="section-number">1.9. </span>Introductory examples<a class="headerlink" href="#introductory-examples" title="Permalink to this headline">¶</a></h2>
@@ -375,13 +367,13 @@ On module level this is equipped with a basic Waterloo docstring:</p>
 </pre></div>
 </div>
 <p>at the position in the document where the docstring is supposed to be rendered, and get:</p>
-<table class="sdv-meta docutils align-default">
+<table class="wtrl-box docutils align-default">
 <colgroup>
 <col style="width: 18%" />
 <col style="width: 82%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Preamble</span></code></p></td>
+<tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Preamble</span></code></p></td>
 <td><ul class="simple">
 <li><p><code class="wtrl_label docutils literal notranslate"><span class="pre">normative</span> <span class="pre">sections</span></code></p>
 <ul>
@@ -391,7 +383,7 @@ On module level this is equipped with a basic Waterloo docstring:</p>
 </ul>
 </td>
 </tr>
-<tr class="row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Contract</span></code></p></td>
+<tr class="wtrl-section row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Contract</span></code></p></td>
 <td><ul class="simple">
 <li><p><code class="wtrl_label docutils literal notranslate"><span class="pre">general</span></code></p>
 <ul>
@@ -402,7 +394,7 @@ On module level this is equipped with a basic Waterloo docstring:</p>
 </td>
 </tr>
 </tbody>
-<thead class="sdv-meta-head-module">
+<thead class="wtrl-box-head-module">
 <tr class="row-odd"><th class="head"><code class="wtrl_label docutils literal notranslate"><span class="pre">Module</span></code></th>
 <th class="head"><p>test_docitem_module</p></th>
 </tr>
@@ -482,13 +474,13 @@ part of the public API of the module:</p>
 </pre></div>
 </div>
 <p>The result is:</p>
-<table class="sdv-meta docutils align-default">
+<table class="wtrl-box docutils align-default">
 <colgroup>
 <col style="width: 18%" />
 <col style="width: 82%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Preamble</span></code></p></td>
+<tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Preamble</span></code></p></td>
 <td><ul class="simple">
 <li><p><code class="wtrl_label docutils literal notranslate"><span class="pre">normative</span> <span class="pre">sections</span></code></p>
 <ul>
@@ -498,7 +490,7 @@ part of the public API of the module:</p>
 </ul>
 </td>
 </tr>
-<tr class="row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Contract</span></code></p></td>
+<tr class="wtrl-section row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Contract</span></code></p></td>
 <td><ul class="simple">
 <li><p><code class="wtrl_label docutils literal notranslate"><span class="pre">general</span></code></p>
 <ul>
@@ -508,10 +500,10 @@ part of the public API of the module:</p>
 </ul>
 </td>
 </tr>
-<tr class="row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Public</span> <span class="pre">classes</span></code></p></td>
+<tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Public</span> <span class="pre">classes</span></code></p></td>
 <td><p><code class="wtrl_var docutils literal notranslate"><span class="pre">MyClass</span></code></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Class</span> <span class="pre">overview</span></code></p></td>
+<tr class="wtrl-section row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Class</span> <span class="pre">overview</span></code></p></td>
 <td><ul class="simple">
 <li><p><code class="wtrl_type docutils literal notranslate"><span class="pre">MyClass</span></code><ul>
 <li><p>An empty class</p></li>
@@ -521,19 +513,19 @@ part of the public API of the module:</p>
 </td>
 </tr>
 </tbody>
-<thead class="sdv-meta-head-module">
+<thead class="wtrl-box-head-module">
 <tr class="row-odd"><th class="head"><code class="wtrl_label docutils literal notranslate"><span class="pre">Module</span></code></th>
 <th class="head"><p>test_docitem_module_2</p></th>
 </tr>
 </thead>
 </table>
-<table class="sdv-meta docutils align-default">
+<table class="wtrl-box docutils align-default">
 <colgroup>
 <col style="width: 18%" />
 <col style="width: 82%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Preamble</span></code></p></td>
+<tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Preamble</span></code></p></td>
 <td><ul class="simple">
 <li><p><code class="wtrl_label docutils literal notranslate"><span class="pre">normative</span> <span class="pre">sections</span></code></p>
 <ul>
@@ -543,7 +535,7 @@ part of the public API of the module:</p>
 </ul>
 </td>
 </tr>
-<tr class="row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Contract</span></code></p></td>
+<tr class="wtrl-section row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Contract</span></code></p></td>
 <td><ul class="simple">
 <li><p><code class="wtrl_label docutils literal notranslate"><span class="pre">general</span></code></p>
 <ul>
@@ -559,9 +551,9 @@ part of the public API of the module:</p>
 </td>
 </tr>
 </tbody>
-<thead class="sdv-meta-head-class">
+<thead class="wtrl-box-head-class">
 <tr class="row-odd"><th class="head"><code class="wtrl_label docutils literal notranslate"><span class="pre">Class</span></code></th>
-<th class="head"><p>test_docitem_module_2.MyClass</p></th>
+<th class="head"><p>MyClass</p></th>
 </tr>
 </thead>
 </table>
@@ -631,13 +623,13 @@ part of the public API of the module:</p>
 </pre></div>
 </div>
 <p>and the result is:</p>
-<table class="sdv-meta docutils align-default">
+<table class="wtrl-box docutils align-default">
 <colgroup>
 <col style="width: 18%" />
 <col style="width: 82%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Preamble</span></code></p></td>
+<tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Preamble</span></code></p></td>
 <td><ul class="simple">
 <li><p><code class="wtrl_label docutils literal notranslate"><span class="pre">normative</span> <span class="pre">sections</span></code></p>
 <ul>
@@ -647,7 +639,7 @@ part of the public API of the module:</p>
 </ul>
 </td>
 </tr>
-<tr class="row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Contract</span></code></p></td>
+<tr class="wtrl-section row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Contract</span></code></p></td>
 <td><ul class="simple">
 <li><p><code class="wtrl_label docutils literal notranslate"><span class="pre">general</span></code></p>
 <ul>
@@ -657,10 +649,10 @@ part of the public API of the module:</p>
 </ul>
 </td>
 </tr>
-<tr class="row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Public</span> <span class="pre">classes</span></code></p></td>
+<tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Public</span> <span class="pre">classes</span></code></p></td>
 <td><p><code class="wtrl_var docutils literal notranslate"><span class="pre">MyClass</span></code></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Class</span> <span class="pre">overview</span></code></p></td>
+<tr class="wtrl-section row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Class</span> <span class="pre">overview</span></code></p></td>
 <td><ul class="simple">
 <li><p><code class="wtrl_type docutils literal notranslate"><span class="pre">MyClass</span></code><ul>
 <li><p>An empty class</p></li>
@@ -670,19 +662,19 @@ part of the public API of the module:</p>
 </td>
 </tr>
 </tbody>
-<thead class="sdv-meta-head-module">
+<thead class="wtrl-box-head-module">
 <tr class="row-odd"><th class="head"><code class="wtrl_label docutils literal notranslate"><span class="pre">Module</span></code></th>
 <th class="head"><p>test_docitem_module_3</p></th>
 </tr>
 </thead>
 </table>
-<table class="sdv-meta docutils align-default">
+<table class="wtrl-box docutils align-default">
 <colgroup>
 <col style="width: 18%" />
 <col style="width: 82%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Preamble</span></code></p></td>
+<tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Preamble</span></code></p></td>
 <td><ul class="simple">
 <li><p><code class="wtrl_label docutils literal notranslate"><span class="pre">normative</span> <span class="pre">sections</span></code></p>
 <ul>
@@ -692,7 +684,7 @@ part of the public API of the module:</p>
 </ul>
 </td>
 </tr>
-<tr class="row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Contract</span></code></p></td>
+<tr class="wtrl-section row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Contract</span></code></p></td>
 <td><ul class="simple">
 <li><p><code class="wtrl_label docutils literal notranslate"><span class="pre">general</span></code></p>
 <ul>
@@ -707,10 +699,10 @@ part of the public API of the module:</p>
 </ul>
 </td>
 </tr>
-<tr class="row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Public</span> <span class="pre">methods</span></code></p></td>
+<tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Public</span> <span class="pre">methods</span></code></p></td>
 <td><p><code class="wtrl_func docutils literal notranslate"><span class="pre">greeting</span></code></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Method</span> <span class="pre">overview</span></code></p></td>
+<tr class="wtrl-section row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Method</span> <span class="pre">overview</span></code></p></td>
 <td><ul class="simple">
 <li><p><code class="wtrl_func docutils literal notranslate"><span class="pre">greeting</span></code><ul>
 <li><p>Function which prints a greeting.</p></li>
@@ -720,19 +712,24 @@ part of the public API of the module:</p>
 </td>
 </tr>
 </tbody>
-<thead class="sdv-meta-head-class">
+<thead class="wtrl-box-head-class">
 <tr class="row-odd"><th class="head"><code class="wtrl_label docutils literal notranslate"><span class="pre">Class</span></code></th>
-<th class="head"><p>test_docitem_module_3.MyClass</p></th>
+<th class="head"><p>MyClass</p></th>
 </tr>
 </thead>
 </table>
-<table class="sdv-meta docutils align-default">
+<table class="wtrl-box docutils align-default">
 <colgroup>
 <col style="width: 18%" />
 <col style="width: 82%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Preamble</span></code></p></td>
+<tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Signature</span></code></p></td>
+<td><div class="wtrl-signature-head line"><span class="wtrl_mod">test_docitem_module_3</span><span class="wtrl_op">.</span><span class="wtrl_type">MyClass</span><span class="wtrl_op">.</span><span class="wtrl_func">greeting</span><span class="wtrl_op">(</span></div>
+<div class="wtrl-signature-ret line"><span class="wtrl_op">)</span><span class="wtrl_op"> -&gt; </span><span class="wtrl_type">None</span></div>
+</td>
+</tr>
+<tr class="wtrl-section row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Preamble</span></code></p></td>
 <td><ul class="simple">
 <li><p><code class="wtrl_label docutils literal notranslate"><span class="pre">normative</span> <span class="pre">sections</span></code></p>
 <ul>
@@ -742,7 +739,7 @@ part of the public API of the module:</p>
 </ul>
 </td>
 </tr>
-<tr class="row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Contract</span></code></p></td>
+<tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Contract</span></code></p></td>
 <td><ul class="simple">
 <li><p><code class="wtrl_label docutils literal notranslate"><span class="pre">general</span></code></p>
 <ul>
@@ -752,19 +749,19 @@ part of the public API of the module:</p>
 </ul>
 </td>
 </tr>
-<tr class="row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Parameters</span></code></p></td>
+<tr class="wtrl-section row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Parameters</span></code></p></td>
 <td><code class="wtrl_value docutils literal notranslate"><span class="pre">&lt;empty&gt;</span></code></td>
 </tr>
-<tr class="row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Returns</span></code></p></td>
+<tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Returns</span></code></p></td>
 <td><p><code class="wtrl_norm docutils literal notranslate"><span class="pre">Must</span></code> return <code class="wtrl_value docutils literal notranslate"><span class="pre">None</span></code></p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Raises</span></code></p></td>
+<tr class="wtrl-section row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Raises</span></code></p></td>
 <td><code class="wtrl_value docutils literal notranslate"><span class="pre">&lt;empty&gt;</span></code></td>
 </tr>
 </tbody>
-<thead class="sdv-meta-head-method">
-<tr class="row-even"><th class="head"><code class="wtrl_label docutils literal notranslate"><span class="pre">Method</span></code></th>
-<th class="head"><p>greeting</p></th>
+<thead class="wtrl-box-head-method">
+<tr class="row-odd"><th class="head"><code class="wtrl_label docutils literal notranslate"><span class="pre">Method</span></code></th>
+<th class="head"><p>MyClass.greeting</p></th>
 </tr>
 </thead>
 </table>
@@ -842,7 +839,7 @@ Default class qualifier <code class="wtrl_var docutils literal notranslate"><spa
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#dependencies">1.7. Dependencies</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#how-to-use">1.8. How to use</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#possible-future-enhancements">1.8. Possible future enhancements</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#introductory-examples">1.9. Introductory examples</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#module">1.9.1. Module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-and-class">1.9.2. Module and class</a></li>
@@ -852,11 +849,12 @@ Default class qualifier <code class="wtrl_var docutils literal notranslate"><spa
 <li class="toctree-l2"><a class="reference internal" href="#convenience-module-and-class-stack">1.10. Convenience: module and class stack</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="examples_minimax.html">2. Docstrings - minimal and full examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="examples.html">3. Examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tools.html">4. Tools</a></li>
-<li class="toctree-l1"><a class="reference internal" href="format.html">5. Docstring format</a></li>
-<li class="toctree-l1"><a class="reference internal" href="reference.html">6. Reference - Core View</a></li>
+<li class="toctree-l1"><a class="reference internal" href="getting_started.html">2. Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples_minimax.html">3. Docstrings - minimal and full examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">4. Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tools.html">5. Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="format.html">6. Docstring format</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reference.html">7. Reference - Core View</a></li>
 </ul>
 
 <div class="relations">
@@ -864,7 +862,7 @@ Default class qualifier <code class="wtrl_var docutils literal notranslate"><spa
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
       <li>Previous: <a href="index.html" title="previous chapter">Waterloo</a></li>
-      <li>Next: <a href="examples_minimax.html" title="next chapter"><span class="section-number">2. </span>Docstrings - minimal and full examples</a></li>
+      <li>Next: <a href="getting_started.html" title="next chapter"><span class="section-number">2. </span>Getting Started</a></li>
   </ul></li>
 </ul>
 </div>

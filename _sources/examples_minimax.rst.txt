@@ -1,3 +1,5 @@
+.. _chapter_examples_minimax:
+
 Docstrings - minimal and full examples
 --------------------------------------
 

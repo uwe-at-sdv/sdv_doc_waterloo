@@ -66,7 +66,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 .highlight .sb { color: #4E9A06 } /* Literal.String.Backtick */
 .highlight .sc { color: #4E9A06 } /* Literal.String.Char */
 .highlight .dl { color: #4E9A06 } /* Literal.String.Delimiter */
-.highlight .sd { color: #8F5902; font-style: italic } /* Literal.String.Doc */
+.highlight .sd { color: #000033; font-style: italic; } /* Literal.String.Doc */
 .highlight .s2 { color: #4E9A06 } /* Literal.String.Double */
 .highlight .se { color: #4E9A06 } /* Literal.String.Escape */
 .highlight .sh { color: #4E9A06 } /* Literal.String.Heredoc */
