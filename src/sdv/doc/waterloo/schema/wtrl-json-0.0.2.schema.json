@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://sci-d-vis.com/schema/wtrl-json-0.0.1.schema.json",
-  "title": "Waterloo JSON export (schema 0.0.1, provisional)",
+  "$id": "https://sci-d-vis.com/schema/wtrl-json-0.0.2.schema.json",
+  "title": "Waterloo JSON export (schema 0.0.2, provisional)",
   "type": "object",
   "required": [
     "$schema",
@@ -58,6 +58,14 @@
   },
 
   "$defs": {
+    "identifier": {
+      "type": "string",
+      "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"
+    },
+    "qualified_identifier": {
+      "type": "string",
+      "pattern": "^[A-Za-z_][A-Za-z0-9_]*(\\.[A-Za-z_][A-Za-z0-9_]*)*$"
+    },
     "jsonPointer": {
       "type": "string",
       "pattern": "^(#)?(/([^~]|~[01])*)*$"
@@ -77,7 +85,21 @@
 		"type": ["string","null"]
 		},
         "signature": { "$ref": "#/$defs/signature" },
-        "doc": {
+	"decorators":
+	   {
+	   "$comment": "This is an array of strings representing the decorators of a callable.",
+	   "type": "array",
+	   "minItems": 0,
+	   "items": { "type": "string" }
+	   },
+	"traits":
+	   {
+	   "$comment": "This is an array of identifiers like e.g.'coroutine'.",
+	   "type": "array",
+	   "minItems": 0,
+	   "items": { "$ref": "#/$defs/identifier" }
+	   },
+	"doc": {
 	  "oneOf": [
 	   {
 	     "type": "object",

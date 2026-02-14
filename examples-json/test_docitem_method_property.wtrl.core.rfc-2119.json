@@ -1,0 +1,160 @@
+{
+    "$schema": "https://sci-d-vis.com/schema/wtrl-json-0.0.2.schema.json",
+    "$id": "urn:waterlint:0.2.4:render-json:core:rfc-2119:52a35d5158fc2bc0a04f3924d9f5d28e",
+    "__WTRL_VERSION__": {
+        "waterloo": "0.1.2",
+        "schema": "0.0.2"
+    },
+    "__WTRL_META__": {
+        "generated_at": "2026-02-14T21:47:46+01:00",
+        "generator": "waterlint",
+        "scope": "core",
+        "flavour": "rfc-2119"
+    },
+    "__WTRL_ROLES__": {
+        "attr": "Attribute name",
+        "cmd": "Shell or CLI command",
+        "dfn": "Definition of a term",
+        "file": "File or path",
+        "func": "Function or callable",
+        "label": "Section/Subsection label",
+        "lit": "Literal text or code",
+        "mod": "Module name",
+        "norm": "Normativity keyword",
+        "op": "Operator symbol",
+        "opt": "Command-line option or flag",
+        "tag": "Tag or marker",
+        "term": "Domain-specific term",
+        "type": "Type name or annotation",
+        "value": "Concrete value",
+        "var": "Variable name",
+        "var_type": "Variable and type, like 'var:type'"
+    },
+    "__WTRL_TOC_MODULES__": {
+        "test_docitem_method_property": "/__WTRL_OBJECTS__/test_docitem_method_property"
+    },
+    "__WTRL_TOC_CLASSES__": {
+        "test_docitem_method_property.X": "/__WTRL_OBJECTS__/test_docitem_method_property.X"
+    },
+    "__WTRL_TOC_CALLABLES__": {
+        "test_docitem_method_property.X.value.fget": "/__WTRL_OBJECTS__/test_docitem_method_property.X.value.fget",
+        "test_docitem_method_property.X.value.fset": "/__WTRL_OBJECTS__/test_docitem_method_property.X.value.fset"
+    },
+    "__WTRL_TOC_TYPES__": {},
+    "__WTRL_TOC_VARIABLES__": {
+        "test_docitem_method_property.X.value": "/__WTRL_OBJECTS__/test_docitem_method_property.X.value"
+    },
+    "__WTRL_TOC_CONSTANTS__": {},
+    "__WTRL_OBJECTS__": {
+        "test_docitem_method_property.X.value": {
+            "doc": [
+                "A property object providing controlled access to an internal value."
+            ]
+        },
+        "test_docitem_method_property.X.value.fget": {
+            "signature": {
+                "text": "X.value(self) -> int",
+                "parameters": [],
+                "returns": "int"
+            },
+            "decorators": [
+                "@property"
+            ],
+            "doc": {
+                "Preamble": {
+                    "profile": "method",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST provide the implementation of the getter of property |var|`self.value`."
+                    ]
+                },
+                "Parameters": {},
+                "Returns": [
+                    "MUST return the current value of the property."
+                ],
+                "Raises": {}
+            }
+        },
+        "test_docitem_method_property.X.value.fset": {
+            "signature": {
+                "text": "X.value(self, v: int) -> None",
+                "parameters": [
+                    {
+                        "name": "v",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "int",
+                        "default": null
+                    }
+                ],
+                "returns": "None"
+            },
+            "decorators": [
+                "@value.setter"
+            ],
+            "doc": {
+                "Preamble": {
+                    "profile": "method",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST provide the implementation of the setter of property |var|`self.value`."
+                    ]
+                },
+                "Parameters": {
+                    "v": [
+                        "Value to set."
+                    ]
+                },
+                "Returns": [
+                    "|None|"
+                ],
+                "Raises": {}
+            }
+        },
+        "test_docitem_method_property.X": {
+            "signature": {
+                "text": "X.__init__(self)",
+                "parameters": [],
+                "returns": null
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "class",
+                    "normative_sections": [
+                        "Contract",
+                        "Public_variables"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST provide a property for demonstration purposes."
+                    ],
+                    "constructor": [
+                        "default"
+                    ]
+                },
+                "Public_variables": {
+                    "value": [
+                        "A property object providing controlled access to an internal value."
+                    ]
+                }
+            }
+        },
+        "test_docitem_method_property": {
+            "doc": {}
+        }
+    }
+}

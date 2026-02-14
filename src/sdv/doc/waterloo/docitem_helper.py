@@ -551,6 +551,13 @@ def get_obj_docstring(obj: object) -> str:
 		return ""
 	return _walk(obj)
 
+def get_decorators(obj: object) -> List[str]:
+	try:
+		code = inspect.getsource(cast(Callable[...,Any],obj))
+		return [line.strip() for line in code.splitlines() if line.strip().startswith('@')]
+	except:
+		return []
+
 #===== Tracing ================================================#
 class tracer:
 	"""

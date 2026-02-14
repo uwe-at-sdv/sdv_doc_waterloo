@@ -248,7 +248,9 @@ try:
 except ImportError:
 	from sdv.doc.waterloo.docitem_validator import *
 
-__version__ = "0.1.1"
+__version__ = "0.1.2"
+# - 0.1.2 [2026-02-14]	Moved Waterloo specific stuff away from docitem_sphinx.py
+# - 0.1.1 [2026-02-13]	Commented versioning starts
 
 def gen_documentable_objects(obj: Documentable_t,config: ConfigTraversal = ConfigTraversal()) -> Generator[Documentable_t,None,None]:
 	"""

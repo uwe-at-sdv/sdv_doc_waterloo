@@ -9,6 +9,7 @@ from __future__ import annotations
 import argparse
 import ast
 import contextlib
+import hashlib
 import io
 import importlib.util
 import importlib.resources as importlib_resources
@@ -23,7 +24,8 @@ import json
 from jsonpointer import JsonPointerException, resolve_pointer
 from jsonschema import Draft202012Validator
 
-__version__ = "0.2.3"
+__version__ = "0.2.4"
+# - 0.2.3 [2026-02-12]	Subcommand render-json: traits, decorators, default output filename.
 # - 0.2.3 [2026-02-12]	Subcommand version-json: prints only the JSON-schema version string.
 # - 0.2.2 [2026-02-12]	Subcommand version: prints only the waterlint version string.
 # - 0.2.1 [2026-02-12]	Subcommand validate-json: --schema is now optional; automatic detection applies.
@@ -65,7 +67,7 @@ with contextlib.redirect_stdout(sys.stderr):
 #===== Constants ==============================================#
 
 #----- Add subcommands here -----------------------------------#
-WTRL_JSON_SCHEMA_VERSION = "0.0.1"
+WTRL_JSON_SCHEMA_VERSION = "0.0.2"
 SUBCOMMANDS = ("validate","coverage","extract","validate-json","render-json","list-schemas","version","version-json")
 
 #===== Helper =================================================#
@@ -419,6 +421,29 @@ def _render_json_command(args: argparse.Namespace) -> int:
 			return items
 		except Exception as e:
 			return []
+
+	def _collect_traits_for_callable(obj: object) -> list[cvrt.WtrlJsonNode_t]:
+		"""Collect machine-readable traits for callable-like objects."""
+		traits: list[cvrt.WtrlJsonNode_t] = []
+		try:
+			if inspect.iscoroutinefunction(obj):
+				traits.append("coroutine")
+		except Exception:
+			pass
+		# Special decorators but not property.
+		decorator_lines = docitem.get_decorators(obj)
+		for line in decorator_lines:
+			if line in ("@staticmethod","@classmethod"):
+				traits.append(line.strip()[1:])
+		if any(line in ("@abstractmethod", "@abc.abstractmethod") for line in decorator_lines):
+			traits.append("abstractmethod")
+		elif bool(getattr(obj, "__isabstractmethod__", False)):
+			traits.append("abstractmethod")
+		return traits
+
+	def _collect_decorators_for_callable(obj: object) -> list[cvrt.WtrlJsonNode_t]:
+		return cast(list[cvrt.WtrlJsonNode_t],docitem.get_decorators(obj))
+
 	tr = tracer()
 #----- Security note: local paths -----------------------------#
 	if getattr(args, "allow_local_paths", True):
@@ -429,12 +454,19 @@ def _render_json_command(args: argparse.Namespace) -> int:
 		if flavour is None:
 			flavour = cvrt.Flavour.RFC_2119
 
-		if not args.obj:
+		obj_qnames: list[str] = []
+		if args.obj:
+			for grp in args.obj:
+				if isinstance(grp, list):
+					obj_qnames.extend(grp)
+				else:
+					obj_qnames.append(str(grp))
+		if not obj_qnames:
 			print("Error: --obj is required for render-json.", file=sys.stderr)
 			return 2
 
 		modules: list[ModuleType] = []
-		for qname in args.obj:
+		for qname in obj_qnames:
 			_apply_basedir(getattr(args, "basedir", None), qname)
 			mod_obj = _resolve_object(qname)
 			if not isinstance(mod_obj, ModuleType):
@@ -458,8 +490,8 @@ def _render_json_command(args: argparse.Namespace) -> int:
 
 #----- Build version, legend and table of contents ------------#
 		tree_full: dict[str, Any] = {}
-		tree_full["$schema"] = "https://json-schema.org/draft/2020-12/schema"
-		tree_full["$id"] = f"https://sci-d-vis.com/schema/wtrl-json-{WTRL_JSON_SCHEMA_VERSION}.schema.json"
+		tree_full["$schema"] = f"https://sci-d-vis.com/schema/wtrl-json-{WTRL_JSON_SCHEMA_VERSION}.schema.json"
+		tree_full["$id"] = ""
 		
 #..... VERSION ................................................#
 		tree_full["__WTRL_VERSION__"] = {
@@ -602,19 +634,32 @@ def _render_json_command(args: argparse.Namespace) -> int:
 
 								tree_full["__WTRL_TOC_CALLABLES__"][qname_prop_meth] = f"/__WTRL_OBJECTS__/{qname_prop_meth}"
 								tree_sig_prop_meth = cvrt.to_node_signature_json(obj_prop_meth)
+# Traits
+								traits_prop_meth = _collect_traits_for_callable(obj_prop_meth)
+# Decorators
+								decorators_prop_meth = _collect_decorators_for_callable(obj_prop_meth)
 # Count callable safely as rendered.
 								if qname_prop_meth not in objects_counted:
 									num_callables_rendered += 1
 									objects_counted.add(qname_prop_meth)
 # Docstring handling: same for modules, classes, and callables.
 								tree_doc = cvrt.to_node_docstring_tree_json(tree_prop_meth, flavour)
-								entry_prop_meth = tree_sig_prop_meth | {"doc": tree_doc}
+								entry_prop_meth = dict(tree_sig_prop_meth)
+# Traits
+								if traits_prop_meth:
+									entry_prop_meth["traits"] = traits_prop_meth
+# Decorators
+								if decorators_prop_meth:
+									entry_prop_meth["decorators"] = decorators_prop_meth
+								entry_prop_meth["doc"] = tree_doc
 								tree_full["__WTRL_OBJECTS__"][qname_prop_meth] = entry_prop_meth
 #..... end properties .........................................#
 
 
 			# toc + signature
 			tree_sig: dict[str, cvrt.WtrlJsonNode_t] = {}
+			tree_traits: list[cvrt.WtrlJsonNode_t] = []
+			tree_decorators: list[cvrt.WtrlJsonNode_t] = []
 # Regular cases for the object from traversal
 			if cvrt.is_obj_module(o):
 				modules_used.add(docitem.get_obj_name(o))
@@ -632,6 +677,10 @@ def _render_json_command(args: argparse.Namespace) -> int:
 				ctor = getattr(o, "__init__", None)
 				if callable(ctor):
 					tree_sig = cvrt.to_node_signature_json(cast(Callable[..., Any], ctor))
+# Traits
+					tree_traits = _collect_traits_for_callable(ctor)
+# Decorators
+					tree_decorators = _collect_decorators_for_callable(ctor)
 # Count class safely as rendered.
 				if qname not in objects_counted:
 					num_classes_rendered += 1
@@ -639,13 +688,25 @@ def _render_json_command(args: argparse.Namespace) -> int:
 			elif cvrt.is_obj_function(o):
 				tree_full["__WTRL_TOC_CALLABLES__"][qname] = f"/__WTRL_OBJECTS__/{qname}"
 				tree_sig = cvrt.to_node_signature_json(o)
+# Traits
+				tree_traits = _collect_traits_for_callable(o)
+# Decorators
+				tree_decorators = _collect_decorators_for_callable(o)
 # Count callable safely as rendered.
 				if qname not in objects_counted:
 					num_callables_rendered += 1
 					objects_counted.add(qname)
 # Docstring handling: same for modules, classes, and callables.
 			tree_doc = cvrt.to_node_docstring_tree_json(tree_parsed, flavour)
-			entry = tree_sig | {"doc": tree_doc}
+			entry = dict(tree_sig)
+# Traits
+			if tree_traits:
+				entry["traits"] = tree_traits
+# Decorators
+			if tree_decorators:
+				entry["decorators"] = tree_decorators
+			entry["doc"] = tree_doc
+# Path
 			if args.allow_local_paths and isinstance(o, ModuleType):
 				entry = {"path": docitem.get_obj_path(o)} | entry
 			tree_full["__WTRL_OBJECTS__"][qname] = entry
@@ -727,6 +788,12 @@ def _render_json_command(args: argparse.Namespace) -> int:
 				tree_full["__WTRL_OBJECTS__"][modname] = entry2
 #----- end modules referred to by objects from traversal ------#
 
+#----- Build deterministic document id ------------------------#
+		qnames_rendered = sorted(cast(dict[str, Any], tree_full["__WTRL_OBJECTS__"]).keys())
+		qnames_blob = "\n".join(qnames_rendered).encode("utf-8")
+		render_hash = hashlib.md5(qnames_blob).hexdigest()
+		tree_full["$id"] = f"urn:waterlint:{__version__}:render-json:{scope_str}:{flavour_str}:{render_hash}"
+
 #----- Store diagnostics. Don't change without updating pytest #
 		tr.add_info(f"Num modules skipped (no docstring / invalid)  : {num_modules_skipped_no_doc} / {num_modules_skipped_invalid}.")
 		tr.add_info(f"Num classes skipped (no docstring / invalid)  : {num_classes_skipped_no_doc} / {num_classes_skipped_invalid}.")
@@ -740,8 +807,26 @@ def _render_json_command(args: argparse.Namespace) -> int:
 		tr.add_info(f"Num constants rendered: {num_nonaggregate_rendered['__WTRL_TOC_CONSTANTS__']}.")
 
 #----- Dump JSON result ---------------------------------------#
+		if getattr(args, "out_prefix", None) and not getattr(args, "out_dir", None):
+			raise RuntimeError("--out-prefix requires --out-dir.")
 		if args.out_file:
 			with open(args.out_file, "w", encoding="utf-8") as fh:
+				json.dump(tree_full, fh, indent=4)
+		elif getattr(args, "out_dir", None):
+			out_dir = Path(args.out_dir)
+			if not out_dir.exists():
+				raise RuntimeError(f"output directory does not exist: {args.out_dir}")
+			if not out_dir.is_dir():
+				raise RuntimeError(f"output path is not a directory: {args.out_dir}")
+			if len(obj_qnames) > 1 and not getattr(args, "out_prefix", None):
+				raise RuntimeError("--out-prefix is required with --out-dir when multiple --obj are given.")
+			if getattr(args, "out_prefix", None):
+				base_name = str(args.out_prefix)
+			else:
+				base_name = str(obj_qnames[0])
+			out_name = f"{base_name}.wtrl.{scope_str}.{flavour_str}.json"
+			out_path = out_dir / out_name
+			with open(out_path, "w", encoding="utf-8") as fh:
 				json.dump(tree_full, fh, indent=4)
 		else:
 			json.dump(tree_full, sys.stdout, indent=4)
@@ -950,11 +1035,15 @@ def _build_parser() -> argparse.ArgumentParser:
 		"--obj",
 		required=True,
 		nargs="+",
+		action="append",
 		metavar="MODULE",
-		help="One or more qualified module names to render (merged).",
+		help="One or more qualified module names to render (merged). Option may be repeated.",
 	)
 	render_json.add_argument("--basedir", metavar="DIR", help="Base directory for resolving --obj.")
-	render_json.add_argument("--out", dest="out_file", metavar="FILE", help="Write JSON to FILE instead of stdout.")
+	rg_out = render_json.add_mutually_exclusive_group()
+	rg_out.add_argument("--out", dest="out_file", metavar="FILE", help="Write JSON to FILE instead of stdout.")
+	rg_out.add_argument("--out-dir", dest="out_dir", metavar="DIR", help="Write JSON into DIR using a generated filename.")
+	render_json.add_argument("--out-prefix", dest="out_prefix", metavar="PREFIX", help="Filename prefix used with --out-dir, required when multiple --obj are given.")
 	render_json.add_argument("--flavour", choices=["raw","rfc-2119","markdown"], default="rfc-2119", help="Normativity keyword flavour (default: rfc-2119).")
 	render_json.add_argument(
 		"--scope",

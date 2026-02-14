@@ -1,12 +1,12 @@
 {
-    "$schema": "https://sci-d-vis.com/schema/wtrl-json-0.0.2.schema.json",
-    "$id": "urn:waterlint:0.2.4:render-json:core:rfc-2119:1fdc8942ce2b64446652c83706d950c9",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://sci-d-vis.com/schema/wtrl-json-0.0.1.schema.json",
     "__WTRL_VERSION__": {
-        "waterloo": "0.1.2",
-        "schema": "0.0.2"
+        "waterloo": "0.1.1",
+        "schema": "0.0.1"
     },
     "__WTRL_META__": {
-        "generated_at": "2026-02-14T21:47:45+01:00",
+        "generated_at": "2026-02-12T17:02:33+01:00",
         "generator": "waterlint",
         "scope": "core",
         "flavour": "rfc-2119"
@@ -8068,7 +8068,7 @@
         },
         "sdv.doc.waterloo.docitem.gen_documentable_objects": {
             "signature": {
-                "text": "gen_documentable_objects(obj: Union[module, type[object], Callable[..., Any]], config: sdv_doc_docitem_helper.ConfigTraversal = <sdv_doc_docitem_helper.ConfigTraversal object at 0x7f133e894850>) -> Generator[Union[module, type[object], Callable[..., Any]], NoneType, NoneType]",
+                "text": "gen_documentable_objects(obj: Union[module, type[object], Callable[..., Any]], config: sdv_doc_docitem_helper.ConfigTraversal = <sdv_doc_docitem_helper.ConfigTraversal object at 0x7f22f382c6d0>) -> Generator[Union[module, type[object], Callable[..., Any]], NoneType, NoneType]",
                 "parameters": [
                     {
                         "name": "obj",
@@ -8080,7 +8080,7 @@
                         "name": "config",
                         "kind": "POSITIONAL_OR_KEYWORD",
                         "annotation": "ConfigTraversal",
-                        "default": "<sdv_doc_docitem_helper.ConfigTraversal object at 0x7f133e894850>"
+                        "default": "<sdv_doc_docitem_helper.ConfigTraversal object at 0x7f22f382c6d0>"
                     }
                 ],
                 "returns": "Generator"
@@ -8160,7 +8160,7 @@
         },
         "sdv_doc_docitem.gen_documentable_objects": {
             "signature": {
-                "text": "gen_documentable_objects(obj: Union[module, type[object], Callable[..., Any]], config: sdv_doc_docitem_helper.ConfigTraversal = <sdv_doc_docitem_helper.ConfigTraversal object at 0x7f133e80fcd0>) -> Generator[Union[module, type[object], Callable[..., Any]], NoneType, NoneType]",
+                "text": "gen_documentable_objects(obj: Union[module, type[object], Callable[..., Any]], config: sdv_doc_docitem_helper.ConfigTraversal = <sdv_doc_docitem_helper.ConfigTraversal object at 0x7f22f39d7460>) -> Generator[Union[module, type[object], Callable[..., Any]], NoneType, NoneType]",
                 "parameters": [
                     {
                         "name": "obj",
@@ -8172,7 +8172,7 @@
                         "name": "config",
                         "kind": "POSITIONAL_OR_KEYWORD",
                         "annotation": "ConfigTraversal",
-                        "default": "<sdv_doc_docitem_helper.ConfigTraversal object at 0x7f133e80fcd0>"
+                        "default": "<sdv_doc_docitem_helper.ConfigTraversal object at 0x7f22f39d7460>"
                     }
                 ],
                 "returns": "Generator"
@@ -8921,13 +8921,13 @@
         },
         "sdv.doc.waterloo.docitem_convert.to_string_legend_yaml": {
             "signature": {
-                "text": "to_string_legend_yaml(config: 'YamlConfig' = <sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f133e649660>) -> 'str'",
+                "text": "to_string_legend_yaml(config: 'YamlConfig' = <sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f22f38640d0>) -> 'str'",
                 "parameters": [
                     {
                         "name": "config",
                         "kind": "POSITIONAL_OR_KEYWORD",
                         "annotation": "YamlConfig",
-                        "default": "<sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f133e649660>"
+                        "default": "<sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f22f38640d0>"
                     }
                 ],
                 "returns": "str"
@@ -8964,7 +8964,7 @@
         },
         "sdv.doc.waterloo.docitem_convert.to_string_signature_yaml": {
             "signature": {
-                "text": "to_string_signature_yaml(obj: 'object', config: 'YamlConfig' = <sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f133e649570>) -> 'str'",
+                "text": "to_string_signature_yaml(obj: 'object', config: 'YamlConfig' = <sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f22f3864070>) -> 'str'",
                 "parameters": [
                     {
                         "name": "obj",
@@ -8976,7 +8976,7 @@
                         "name": "config",
                         "kind": "POSITIONAL_OR_KEYWORD",
                         "annotation": "YamlConfig",
-                        "default": "<sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f133e649570>"
+                        "default": "<sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f22f3864070>"
                     }
                 ],
                 "returns": "str"
@@ -9046,7 +9046,7 @@
         },
         "sdv.doc.waterloo.docitem_convert.to_string_yaml": {
             "signature": {
-                "text": "to_string_yaml(tree: 'docstring_tree', flavour: 'Flavour', config: 'YamlConfig' = <sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f133e649480>) -> 'str'",
+                "text": "to_string_yaml(tree: 'docstring_tree', flavour: 'Flavour', config: 'YamlConfig' = <sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f22f3864040>) -> 'str'",
                 "parameters": [
                     {
                         "name": "tree",
@@ -9064,7 +9064,7 @@
                         "name": "config",
                         "kind": "POSITIONAL_OR_KEYWORD",
                         "annotation": "YamlConfig",
-                        "default": "<sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f133e649480>"
+                        "default": "<sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f22f3864040>"
                     }
                 ],
                 "returns": "str"

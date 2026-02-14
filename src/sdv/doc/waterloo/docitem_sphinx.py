@@ -179,6 +179,11 @@ class DirectiveLike(Protocol):
 # Common role handler signature used by Docutils/Sphinx roles
 RoleHandler: TypeAlias = Callable[..., tuple[Sequence[nodes.reference], Sequence[nodes.reference]]]
 
+#===== Constants ==============================================#
+
+
+
+
 class context:
 	"""
 Preamble:
@@ -315,10 +320,6 @@ def parse_inline(inliner: InlinerProtocol, parent: nodes.Element, ln: int, txt: 
 	return result
 
 
-# Signature rendering helpers (role-agnostic; use ctx role formatters)
-_ARG_RE = re.compile(r"\s*([A-Za-z0-9_]+)\s*:\s*(.+)\s*")
-_PROTO_RE = re.compile(r"\s*([A-Za-z0-9_]+)\s*\((.*?)\)\s*(->\s*(.*))?$")
-
 def _signature_for(obj: object) -> inspect.Signature:
 	return inspect.signature(cast(Callable[..., Any], obj))
 
@@ -347,6 +348,7 @@ def format_default(val: object) -> str:
 
 #===== State controlled by document input =====================#
 
+#----- Globale variables --------------------------------------#
 # The are fallback variables in case of testing from outside
 # the Sphinx context. In nomal usage the stacks are locaced
 # in some appropriate place within Sphinx.
@@ -354,6 +356,7 @@ _global_current_module: List[str] = []
 _global_current_class: List[str] = []
 _global_current_scope: List[mod_docitem.Scope] = [mod_docitem.Scope.PUBLIC]
 
+#----- Helpers ------------------------------------------------#
 def _get_module_stack(env: Any | None) -> List[str]:
 	attr = "_docitem_module_stack"
 	if env is not None and hasattr(env, attr):
@@ -381,6 +384,9 @@ def _get_scope_stack(env: Any | None) -> List[mod_docitem.Scope]:
 		return cast(List[mod_docitem.Scope], getattr(env, attr))
 	return _global_current_scope
 
+#----- API ----------------------------------------------------@
+
+# Stack ops for current module
 def push_current_module(qualified_module_name : str, env: Any | None = None) -> None:
 	stack = _get_module_stack(env)
 	stack.append(qualified_module_name)
@@ -392,6 +398,7 @@ def get_current_module(env: Any | None = None) -> str:
 def has_current_module(env: Any | None = None) -> bool:
 	return len(_get_module_stack(env)) > 0
 
+# Stack ops for current class
 def push_current_class(qualified_class_name : str, env: Any | None = None) -> None:
 	stack = _get_class_stack(env)
 	stack.append(qualified_class_name)
@@ -404,6 +411,7 @@ def get_current_class(env: Any | None = None) -> str:
 def has_current_class(env: Any | None = None) -> bool:
 	return len(_get_class_stack(env)) > 0
 
+# Stack ops for current scope.
 def push_current_scope(scope_tag : str, env: Any | None = None) -> None:
 	if scope_tag not in mod_docitem.SCOPE_TAG_MAP:
 		raise RuntimeError(f"Unknown scope '{scope_tag}'. Expected one of {list(mod_docitem.SCOPE_TAG_MAP.keys())}.")
@@ -434,7 +442,7 @@ def resolve_markup(text : str) -> str:
 	s =  mod_docitem.RE_WTRL_MARKUP_BACKTICK_COMPILED.sub(_repl, text)
 	return s
 
-def build_sphinx_nodes(ctx : context,objname : str,doc: mod_docitem.docitem_docstring_base) -> List[nodes.Node]:
+def build_sphinx_nodes(ctx : context,obj: object,doc: mod_docitem.docitem_docstring_base) -> List[nodes.Node]:
 	"""
 Preamble:
 	profile:
@@ -452,8 +460,8 @@ Contract:
 Parameters:
 	ctx:
 		Rendering context providing inline parser and role-formatters.
-	objname:
-		Name of the documented object (module, class or method) used in headings.
+	obj:
+		The documented object (module, class or method).
 	doc:
 		Parsed docstring tree (representing one of the defined profiles).
 Returns:
@@ -470,8 +478,10 @@ Notes:
 	def parse_text(parent: nodes.Element, text: str) -> List[nodes.Node]:
 		return ctx.parse(parent, 0, resolve_markup(text))
 
+	objname = mod_docitem.get_obj_name(obj)
+
 # Build table
-	node_table = nodes.table(classes=["sdv-meta"])
+	node_table = nodes.table(classes=["wtrl-box"])
 	node_tgroup = nodes.tgroup(cols=2)
 	node_tgroup += nodes.colspec(colwidth=18)
 	node_tgroup += nodes.colspec(colwidth=82)
@@ -480,7 +490,7 @@ Notes:
 
 	doc_items = cast(dict[str, Any], doc.items())
 	profile = cast(str, cast(Any, doc_items["Preamble"]).items()["profile"].items()[0])
-	node_thead = nodes.thead(classes=["sdv-meta-head-" + profile])
+	node_thead = nodes.thead(classes=["wtrl-box-head-" + profile])
 	node_hrow = nodes.row()
 	node1_entry = nodes.entry()
 	node1_entry += ctx.parse(node1_entry,0,ctx.add_role_label(profile.capitalize()))
@@ -493,9 +503,34 @@ Notes:
 
 	node_table += node_tgroup
 
+# The purpose of this segment is to render the function or methos signature
+# inside the documentation box (instead of adding it overneath by hand).
+# This is closer to the LoIO principle (Locality of Information Output),
+# and it's easier for the user because rendering a function requires only
+# a single directive.
+	if mod_docitem.is_obj_function(obj):
+# We achieve this by adding a (pseudo) section.
+# Create a table row:
+		node_row = nodes.row(classes=["wtrl-section"])
+# Left column
+		node_entry = nodes.entry()
+		node_paragraph = nodes.paragraph()
+		node_paragraph.extend(ctx.parse(node_paragraph,0,ctx.add_role_label("Signature")))
+		node_entry += node_paragraph
+		node_row += node_entry
+# Right column
+		node_entry = nodes.entry()
+# Callable module, classes, head in multicolor.
+		node_entry += render_head_of_callable(ctx,obj)
+# drop_self=True only removes self,cls,mcls, so most likely we can leave as True. Not 100% sure though.
+		node_entry += render_params_and_return_of_callable(ctx,obj,drop_self = True)
+		node_row += node_entry
+# Add table row to table body.
+		node_tbody += node_row
+
 	for label,item_section in doc_items.items():
 # New table row per section
-		node_row = nodes.row()
+		node_row = nodes.row(classes=["wtrl-section"])
 
 		node_entry = nodes.entry()
 		node_paragraph = nodes.paragraph()
@@ -562,25 +597,8 @@ Notes:
 				node_bullet_list += node_list_item
 
 			node_entry += node_bullet_list
-		elif label in ("Definitions",):
-			dl = nodes.definition_list(classes=["wtrl-dfn-list"])
-			for term, item_subsection in item_section.items().items():
-				dli = nodes.definition_list_item()
-# Term
-				dt = nodes.term()
-				dt.extend(ctx.parse(dt, 0, ctx.add_role_dfn(term)))
-				dli += dt
-# Definition
-				dd = nodes.definition()
-				p = nodes.paragraph()
-# Content
-				p.extend(parse_text(p, " ".join([content for content in item_subsection.items()])))
-				dd += p
 
-				dli += dd
-				dl += dli
-			node_entry += dl
-		elif label in ("Terminology",):
+		elif label in ("Definitions","Terminology"):
 			dl = nodes.definition_list(classes=["wtrl-dfn-list"])
 			for term, item_subsection in item_section.items().items():
 				dli = nodes.definition_list_item()
@@ -898,7 +916,7 @@ Raises:
 		mod_docitem.validate_docstring(tr,class_obj,di_cls)
 
 # Render class block
-		nodes_out.extend(build_sphinx_nodes(ctx, class_obj.__name__, di_cls))
+		nodes_out.extend(build_sphinx_nodes(ctx, class_obj, di_cls))
 
 # Render public classes
 		if "Public_classes" in di_cls.items():
@@ -913,47 +931,43 @@ Raises:
 				if not hasattr(class_obj, cls_name):
 					continue
 				cls_obj = getattr(class_obj, cls_name)
-				if not isinstance(cls_obj.__doc__, str):
-					continue
-				tree_cls = mod_docitem.parse_indent_docstring(tr,cls_obj.__doc__)
+# Recusrive call
+				nodes_out.extend(build_sphinx_nodes_full(ctx,cls_obj))
 
-				profile = mod_docitem.get_profile_of_tree(tr,tree_cls)
-				di_nested_cls = mod_docitem.docitem_docstring_class()
-				di_nested_cls.parse(tr,tree_cls)
-				mod_docitem.validate_docstring(tr,cls_obj,di_nested_cls)
-#				nodes_out.extend(ctx.build_prolog_method_block(ctx, None, class_obj, cls_obj))
-				nodes_out.extend(build_sphinx_nodes(ctx, cls_name, di_cls))
 
 # Render public methods
 		if "Public_methods" in di_cls.items():
-			pm_node = di_cls._items["Public_methods"]
-			assert isinstance(pm_node, mod_docitem.docitem_public_methods)
-			if len(pm_node.items()) > 0:
-				rubric = nodes.rubric()
-				rubric += ctx.parse(rubric, ctx.i_line, f"Public Methods in class {ctx.add_role_type(class_obj.__name__)}")
-				nodes_out.append(rubric)
-			for meth_name in pm_node.items():
-				if not hasattr(class_obj, meth_name):
-					continue
-				meth_obj = getattr(class_obj, meth_name)
-				func_obj = mod_docitem.get_func_obj_from_callable(meth_obj)
-				if not func_obj:
-					continue
-				if not isinstance(func_obj.__doc__, str):
-					continue
-				tree_m = mod_docitem.parse_indent_docstring(tr,func_obj.__doc__)
+			try:
+				pm_node = di_cls._items["Public_methods"]
+				assert isinstance(pm_node, mod_docitem.docitem_public_methods)
+				if len(pm_node.items()) > 0:
+					rubric = nodes.rubric()
+					rubric += ctx.parse(rubric, ctx.i_line, f"Public Methods in class {ctx.add_role_type(mod_docitem.get_obj_name(class_obj))}")
+					nodes_out.append(rubric)
+				for meth_name in pm_node.items():
+					if not hasattr(class_obj, meth_name):
+						continue
+					meth_obj = getattr(class_obj, meth_name)
+					func_obj = mod_docitem.get_func_obj_from_callable(meth_obj)
+					if not func_obj:
+						continue
+					if not isinstance(func_obj.__doc__, str):
+						continue
+					tree_m = mod_docitem.parse_indent_docstring(tr,func_obj.__doc__)
 
-				profile = mod_docitem.get_profile_of_tree(tr,tree_m)
-				di_m :  mod_docitem.docitem_base
-				if profile == "inherited_method":
-					di_m = mod_docitem.docitem_docstring_inherited_method()
-				else:
-					di_m = mod_docitem.docitem_docstring_method()
-    
-				di_m.parse(tr,tree_m)
-				mod_docitem.validate_docstring(tr,func_obj,di_m)
-				nodes_out.extend(ctx.build_prolog_method_block(ctx, None, class_obj, func_obj))
-				nodes_out.extend(build_sphinx_nodes(ctx, meth_name, di_m))
+					profile = mod_docitem.get_profile_of_tree(tr,tree_m)
+					di_m :  mod_docitem.docitem_base
+					if profile == "inherited_method":
+						di_m = mod_docitem.docitem_docstring_inherited_method()
+					else:
+						di_m = mod_docitem.docitem_docstring_method()
+
+					di_m.parse(tr,tree_m)
+					mod_docitem.validate_docstring(tr,func_obj,di_m)
+					nodes_out.extend(ctx.build_prolog_method_block(ctx, None, class_obj, func_obj))
+					nodes_out.extend(build_sphinx_nodes(ctx, func_obj, di_m))
+			except:
+				pass
 # Render properties.
 		if "Public_variables" in di_cls.items():
 			node_methods = di_cls._items["Public_variables"]
@@ -988,7 +1002,7 @@ Raises:
 					di_prop_meth.parse(tr,tree_m)
 					mod_docitem.validate_docstring(tr,func_obj,di_prop_meth)
 #					nodes_out.extend(ctx.build_prolog_method_block(ctx, None, prop_obj, func_obj))
-					nodes_out.extend(build_sphinx_nodes(ctx, func_name, di_prop_meth))
+					nodes_out.extend(build_sphinx_nodes(ctx, func_obj, di_prop_meth))
 		return nodes_out
 
 #===== Sphinx extension stuff =================================#
@@ -1086,11 +1100,18 @@ def import_by_path(path: str) -> Any:
 
 #----- begin Sphinx nodes for function signatures -------------#
 
-def get_signature_tokens(ctx: context, func_qname: str, *, drop_self: bool = True, display_scope: bool = False) -> List[nodes.Node]:
+def render_signature_tokens_inline(ctx: context, func_qname: str, *, drop_self: bool = True, display_scope: bool = False) -> List[nodes.Node]:
 	obj, modname, head_name, tail = resolve_qualified_name(ctx, func_qname)
 
 	display_mod = ".".join([modname] + tail[:-1])
 	display_name = head_name
+
+# detect decorators
+	decorator_lines = mod_docitem.get_decorators(obj)
+# detect async
+	coroutine_marker = ""
+	if inspect.iscoroutinefunction(obj) or inspect.isasyncgenfunction(obj):
+		coroutine_marker = "async "
 
 	sig = _signature_for(obj)
 	sig = _maybe_drop_first_param(sig, drop=drop_self)
@@ -1104,6 +1125,16 @@ def get_signature_tokens(ctx: context, func_qname: str, *, drop_self: bool = Tru
 		return [nodes.inline(markup, markup)]
 
 	tokens: List[nodes.Node] = []
+
+# decorators - does not look good in practice because it's inline.
+# Better use the block representation.
+	if decorator_lines:
+		for decorator_line in decorator_lines:
+			tokens.extend(_tkn(ctx.add_role_attr, decorator_line + " "))
+# coroutine
+	if coroutine_marker:
+		tokens.extend(_tkn(ctx.add_role_attr, coroutine_marker))
+
 	if display_scope:
 		tokens.extend(_tkn(ctx.add_role_func, display_mod))
 		tokens.extend(_tkn(ctx.add_role_op, "."))
@@ -1138,6 +1169,14 @@ def get_signature_tokens(ctx: context, func_qname: str, *, drop_self: bool = Tru
 	tokens.extend(_tkn(ctx.add_role_type, format_type(sig.return_annotation)))
 	return tokens
 
+def _tkn(role_fn: Callable[[str], str], text: str) -> List[nodes.Node]:
+	markup = role_fn(text)
+	m = re.match(r":([A-Za-z0-9_]+):`(.+)`", markup)
+	if m:
+		role_name, body = m.group(1), m.group(2)
+		return [nodes.inline(body, body, classes=[role_name])]
+	return [nodes.inline(markup, markup)]
+
 # Multiline variant: one parameter per line, hanging indent.
 def render_signature_tokens_multiline(ctx: context, func_qname: str, *, drop_self: bool = True, display_scope: bool = True) -> List[nodes.Node]:
 	obj, modname, head_name, tail = resolve_qualified_name(ctx, func_qname)
@@ -1145,28 +1184,94 @@ def render_signature_tokens_multiline(ctx: context, func_qname: str, *, drop_sel
 	display_mod = ".".join([modname] + tail[:-1])
 	display_name = head_name
 
-	sig = _signature_for(obj)
-	sig = _maybe_drop_first_param(sig, drop=drop_self)
+# detect decorators
+	decorator_lines = mod_docitem.get_decorators(obj)
 
-	def _tkn(role_fn: Callable[[str], str], text: str) -> List[nodes.Node]:
-		markup = role_fn(text)
-		m = re.match(r":([A-Za-z0-9_]+):`(.+)`", markup)
-		if m:
-			role_name, body = m.group(1), m.group(2)
-			return [nodes.inline(body, body, classes=[role_name])]
-		return [nodes.inline(markup, markup)]
+# detect async
+	coroutine_marker = ""
+	if inspect.iscoroutinefunction(obj) or inspect.isasyncgenfunction(obj):
+		coroutine_marker = "async "
 
 	lines: List[nodes.line] = []
 	# header line
 	header = nodes.line(classes=["wtrl-signature-head"])
+# decorator
+	decorator = nodes.line(classes=["wtrl-signature-decorator"])
+	if decorator_lines:
+		for decorator_line in decorator_lines:
+			node_deco = nodes.line()
+			node_deco += _tkn(ctx.add_role_attr, decorator_line)
+			decorator.append(node_deco)
+# coroutine
+	if coroutine_marker:
+		header += _tkn(ctx.add_role_attr, coroutine_marker)
+# [qualified] function name
 	if display_scope:
 		header += _tkn(ctx.add_role_func, display_mod)
 		header += _tkn(ctx.add_role_op, ".")
 	header += _tkn(ctx.add_role_func, display_name)
 	header += _tkn(ctx.add_role_op, "(")
+
+# Prepend decorators if there are any, one per line as in the source code.
+	if(decorator_lines):
+		lines.append(decorator)
+
 	lines.append(header)
 
-	# parameter lines
+	lines += render_params_and_return_of_callable(ctx,obj,drop_self)
+	
+	# Wrap in a line_block so that Docutils renders each line separately
+	line_block = nodes.line_block(classes=["wtrl-signature", "wtrl-signature-multiline"])
+	for ln in lines:
+		line_block += ln
+	return [line_block]
+
+def render_head_of_callable(ctx: context, obj: object, display_scope: bool = True) -> List[nodes.line]:
+	lines: List[nodes.line] = []
+	objname = mod_docitem.get_obj_name(obj)
+	objname_segments = objname.split(".")
+# detect decorators
+	decorator_lines = mod_docitem.get_decorators(obj)
+# detect async
+	coroutine_marker = ""
+	if inspect.iscoroutinefunction(obj) or inspect.isasyncgenfunction(obj):
+		coroutine_marker = "async "
+# find module
+	mod = obj.__module__
+# decorator
+	decorator = nodes.line(classes=["wtrl-signature-decorator"])
+	if decorator_lines:
+		for decorator_line in decorator_lines:
+			node_deco = nodes.line()
+			node_deco += _tkn(ctx.add_role_attr, decorator_line)
+			decorator.append(node_deco)
+		lines.append(decorator)
+# Header: Coroutine marker, module, class hierarchy and function name.
+	header = nodes.line(classes=["wtrl-signature-head"])
+# coroutine
+	if coroutine_marker:
+		header += _tkn(ctx.add_role_attr, coroutine_marker)
+	if display_scope:
+# module name
+		header += _tkn(ctx.add_role_mod, mod_docitem.get_obj_name(mod))
+		header += _tkn(ctx.add_role_op, ".")
+# qualified function name: class segments
+	for i_seg in range(len(objname_segments) - 1):
+# Class and nested classes
+		header += _tkn(ctx.add_role_type, objname_segments[i_seg])
+		header += _tkn(ctx.add_role_op, ".")
+# Unqualified function name.
+	header += _tkn(ctx.add_role_func, objname_segments[-1])
+	header += _tkn(ctx.add_role_op, "(")
+	lines.append(header)
+	return lines
+
+def render_params_and_return_of_callable(ctx: context, obj: object,drop_self: bool = True) -> List[nodes.line]:
+	lines: List[nodes.line] = []
+	sig = _signature_for(obj)
+	sig = _maybe_drop_first_param(sig, drop=drop_self)
+
+# parameter lines
 	for pname, p in sig.parameters.items():
 # Important: build a style in order to shape indentation for parameters.
 		line = nodes.line(classes=["wtrl-signature-param"])
@@ -1199,12 +1304,8 @@ def render_signature_tokens_multiline(ctx: context, func_qname: str, *, drop_sel
 	closing += _tkn(ctx.add_role_op, " -> ")
 	closing += _tkn(ctx.add_role_type, format_type(sig.return_annotation))
 	lines.append(closing)
+	return lines
 
-	# Wrap in a line_block so that Docutils renders each line separately
-	line_block = nodes.line_block(classes=["wtrl-signature", "wtrl-signature-multiline"])
-	for ln in lines:
-		line_block += ln
-	return [line_block]
 
 #----- end Sphinx nodes for function signatures ---------------#
 
@@ -1336,7 +1437,7 @@ Raises:
 		di_mod = mod_docitem.docitem_docstring_module()
 		di_mod.parse(tr,tree_mod)
 		mod_docitem.validate_docstring(tr,module_obj, di_mod)
-		return build_sphinx_nodes(ctx, module_obj.__name__, di_mod)
+		return build_sphinx_nodes(ctx, module_obj, di_mod)
 
 def wtrl_build_autodoc_function_nodes(app: SphinxAppProtocol | Any, inliner: InlinerProtocol, lineno: int, qname: str) -> list[nodes.Node]:
 	"""
@@ -1384,18 +1485,17 @@ Raises:
 		if not isinstance(function_obj.__doc__, str):
 			raise RuntimeError(f"{qname} has no docstring.")
 
-		tree_meth = mod_docitem.parse_indent_docstring(tr,function_obj.__doc__)
-		loc_name = getattr(function_obj, "__name__", qname)
+		tree_meth = mod_docitem.parse_indent_docstring(tr,mod_docitem.get_obj_docstring(function_obj))
 		if mod_docitem.get_profile_of_tree(mod_docitem.tracer(),tree_meth) in ("function","method"):
 			di_meth = mod_docitem.docitem_docstring_method()
 			di_meth.parse(tr,tree_meth)
 			mod_docitem.validate_docstring(tr,function_obj, di_meth)
-			return build_sphinx_nodes(ctx, loc_name, di_meth)
+			return build_sphinx_nodes(ctx, function_obj, di_meth)
 		else:
 			di_inhmeth = mod_docitem.docitem_docstring_inherited_method()
 			di_inhmeth.parse(tr,tree_meth)
 			mod_docitem.validate_docstring(tr,function_obj, di_inhmeth)
-			return build_sphinx_nodes(ctx, loc_name, di_inhmeth)
+			return build_sphinx_nodes(ctx, function_obj, di_inhmeth)
 
 def wtrl_build_autodoc_class_nodes(app: SphinxAppProtocol | Any, inliner: InlinerProtocol, lineno: int, qname: str) -> list[nodes.Node]:
 	"""
@@ -1446,7 +1546,7 @@ Raises:
 		di_node = mod_docitem.docitem_docstring_class()
 		di_node.parse(tr,tree_mod)
 		mod_docitem.validate_docstring(tr,obj, di_node)
-		return build_sphinx_nodes(ctx, qname,di_node)
+		return build_sphinx_nodes(ctx, obj,di_node)
 
 def wtrl_build_autodoc_class_full_nodes(app: SphinxAppProtocol | Any, inliner: InlinerProtocol, lineno: int, qname: str) -> list[nodes.Node]:
 	"""
@@ -1829,7 +1929,7 @@ Notes:
 		Last reviewed on 2026-02-04
 	"""
 	ctx = make_context(app, lambda parent, ln, txt: parse_inline(inliner, parent, ln, txt), lineno)
-	return get_signature_tokens(ctx, qname)
+	return render_signature_tokens_inline(ctx, qname)
 
 def wtrl_build_function_signature_nodes(app: SphinxAppProtocol | Any, inliner: InlinerProtocol, lineno: int, qname: str) -> list[nodes.Node]:
 	"""
@@ -1862,7 +1962,7 @@ Notes:
 		Last reviewed on 2026-02-04
 	"""
 	ctx = make_context(app, lambda parent, ln, txt: parse_inline(inliner, parent, ln, txt), lineno)
-	return get_signature_tokens(ctx, qname, drop_self=False)
+	return render_signature_tokens_inline(ctx, qname, drop_self=False)
 
 def wtrl_build_method_signature_block_nodes(app: SphinxAppProtocol | Any, inliner: InlinerProtocol, lineno: int, qname: str) -> list[nodes.Node]:
 	"""
@@ -1956,14 +2056,6 @@ WTRL_PROLOG = r"""
 .. |True| replace:: :wtrl_value:`True`
 .. |False| replace:: :wtrl_value:`False`
 .. |empty| replace:: :wtrl_value:`<empty>`
-.. |LoII| replace:: :ref:`LoII <principles>`
-.. |LoIO| replace:: :ref:`LoIO <principles>`
-.. |SSoT| replace:: :ref:`SSoT <principles>`
-.. |BinNorm| replace:: :ref:`BinNorm <principles>`
-.. |SoSaC| replace:: :ref:`SoSaC <principles>`
-.. |SCaA| replace:: :ref:`SCaA <principles>`
-.. |DrPrv| replace:: :ref:`DrPrv <principles>`
-.. |MVAuth| replace:: :ref:`MVAuth <principles>`
 """
 
 MARKUP_WHITELIST = frozenset({
@@ -1994,7 +2086,7 @@ def build_prolog_method_overview(ctx: context,class_name : str) -> List[nodes.No
 def build_prolog_method_block(ctx: context,parent : nodes.Element | None,class_obj: type[object],meth_obj : Callable[..., Any]) -> List[nodes.Node]:
 # Render the signature directly (multiline variant) instead of parsing a directive string.
 # Use fully-qualified name so resolution works even for nested classes.
-	qname = f"{class_obj.__module__}.{class_obj.__name__}.{meth_obj.__name__}"
+	qname = f"{class_obj.__module__}.{mod_docitem.get_obj_name(meth_obj)}"
 	return render_signature_tokens_multiline(ctx, qname, drop_self=True, display_scope=True)
 
 def wtrl_attr_role(name: str, rawtext: str, text: str, lineno: int, inliner: InlinerProtocol, options: Mapping[str,Any] | None=None, content: list[str] | None=None) -> tuple[List[nodes.Node], list[nodes.Node]]:
@@ -2114,23 +2206,27 @@ def setup(app: Any) -> dict[str, Any]:
 	app.connect("builder-inited", _add_css_files)
 #	app.connect("source-read", on_source_read)
 
-# new: directives
+# Render documentation boxes.
 	app.add_directive("wtrl_autodoc_module", WtrlAutodocModuleDirective)
 	app.add_directive("wtrl_autodoc_function", WtrlAutodocFunctionDirective)
 	app.add_directive("wtrl_autodoc_method", WtrlAutodocFunctionDirective)
 	app.add_directive("wtrl_autodoc_class", WtrlAutodocClassDirective)
+# Render box for class and all member classes and methods, recursively.
 	app.add_directive("wtrl_autodoc_class_full", WtrlAutodocClassFullDirective)
+# Current module
 	app.add_directive("wtrl_push_current_module", WtrlPushCurrentModuleDirective)
-	app.add_directive("wtrl_push_current_class", WtrlPushCurrentClassDirective)
 	app.add_directive("wtrl_pop_current_module", WtrlPopCurrentModuleDirective)
+# Current class
+	app.add_directive("wtrl_push_current_class", WtrlPushCurrentClassDirective)
 	app.add_directive("wtrl_pop_current_class", WtrlPopCurrentClassDirective)
+# Current scope
 	app.add_directive("wtrl_push_current_scope", WtrlPushCurrentScopeDirective)
 	app.add_directive("wtrl_pop_current_scope", WtrlPopCurrentScopeDirective)
-# only experimental - most likely roles are more appropriate here.
+# Method signature
 	app.add_directive("wtrl_method_signature", WtrlMethodSignatureDirective)
-	app.add_directive("wtrl_function_signature", WtrlFunctionSignatureDirective)
-# New. These must be directives since they create a block, not inline text
 	app.add_directive("wtrl_method_signature_block", WtrlMethodSignatureBlockDirective)
+# Function signature
+	app.add_directive("wtrl_function_signature", WtrlFunctionSignatureDirective)
 	app.add_directive("wtrl_function_signature_block", WtrlFunctionSignatureBlockDirective)
 
 	role_map = {

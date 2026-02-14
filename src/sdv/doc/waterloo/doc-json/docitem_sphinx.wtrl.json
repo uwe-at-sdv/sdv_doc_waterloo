@@ -1,12 +1,12 @@
 {
-    "$schema": "https://sci-d-vis.com/schema/wtrl-json-0.0.2.schema.json",
-    "$id": "urn:waterlint:0.2.4:render-json:core:rfc-2119:1fdc8942ce2b64446652c83706d950c9",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://sci-d-vis.com/schema/wtrl-json-0.0.1.schema.json",
     "__WTRL_VERSION__": {
-        "waterloo": "0.1.2",
-        "schema": "0.0.2"
+        "waterloo": "0.1.1",
+        "schema": "0.0.1"
     },
     "__WTRL_META__": {
-        "generated_at": "2026-02-14T21:47:45+01:00",
+        "generated_at": "2026-02-12T17:02:34+01:00",
         "generator": "waterlint",
         "scope": "core",
         "flavour": "rfc-2119"
@@ -31,7 +31,8 @@
         "var_type": "Variable and type, like 'var:type'"
     },
     "__WTRL_TOC_MODULES__": {
-        "sdv.doc.waterloo.docitem": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem",
+        "sdv.doc.waterloo.docitem_sphinx": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_sphinx",
+        "sdv_doc_docitem": "/__WTRL_OBJECTS__/sdv_doc_docitem",
         "sdv_doc_docitem_helper": "/__WTRL_OBJECTS__/sdv_doc_docitem_helper",
         "sdv_doc_docitem_tokenizer": "/__WTRL_OBJECTS__/sdv_doc_docitem_tokenizer",
         "sdv_doc_docitem_base": "/__WTRL_OBJECTS__/sdv_doc_docitem_base",
@@ -39,9 +40,7 @@
         "sdv_doc_docitem_preamble": "/__WTRL_OBJECTS__/sdv_doc_docitem_preamble",
         "sdv_doc_docitem_contract": "/__WTRL_OBJECTS__/sdv_doc_docitem_contract",
         "sdv_doc_docitem_docstring": "/__WTRL_OBJECTS__/sdv_doc_docitem_docstring",
-        "sdv_doc_docitem_validator": "/__WTRL_OBJECTS__/sdv_doc_docitem_validator",
-        "sdv.doc.waterloo.docitem_convert": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_convert",
-        "sdv_doc_docitem": "/__WTRL_OBJECTS__/sdv_doc_docitem"
+        "sdv_doc_docitem_validator": "/__WTRL_OBJECTS__/sdv_doc_docitem_validator"
     },
     "__WTRL_TOC_CLASSES__": {
         "sdv_doc_docitem_helper.Scope": "/__WTRL_OBJECTS__/sdv_doc_docitem_helper.Scope",
@@ -104,7 +103,8 @@
         "sdv_doc_docitem_docstring.docitem_docstring_module": "/__WTRL_OBJECTS__/sdv_doc_docitem_docstring.docitem_docstring_module",
         "sdv_doc_docitem_docstring.docitem_docstring_class": "/__WTRL_OBJECTS__/sdv_doc_docitem_docstring.docitem_docstring_class",
         "sdv_doc_docitem_docstring.docitem_docstring_method": "/__WTRL_OBJECTS__/sdv_doc_docitem_docstring.docitem_docstring_method",
-        "sdv_doc_docitem_docstring.docitem_docstring_inherited_method": "/__WTRL_OBJECTS__/sdv_doc_docitem_docstring.docitem_docstring_inherited_method"
+        "sdv_doc_docitem_docstring.docitem_docstring_inherited_method": "/__WTRL_OBJECTS__/sdv_doc_docitem_docstring.docitem_docstring_inherited_method",
+        "sdv.doc.waterloo.docitem_sphinx.context": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_sphinx.context"
     },
     "__WTRL_TOC_CALLABLES__": {
         "sdv_doc_docitem_helper.is_attr_annotated": "/__WTRL_OBJECTS__/sdv_doc_docitem_helper.is_attr_annotated",
@@ -194,35 +194,39 @@
         "sdv_doc_docitem_validator.validate_module_variable_coverage": "/__WTRL_OBJECTS__/sdv_doc_docitem_validator.validate_module_variable_coverage",
         "sdv_doc_docitem_validator.validate_class_coverage": "/__WTRL_OBJECTS__/sdv_doc_docitem_validator.validate_class_coverage",
         "sdv_doc_docitem_validator.validate_module_coverage": "/__WTRL_OBJECTS__/sdv_doc_docitem_validator.validate_module_coverage",
-        "sdv.doc.waterloo.docitem.gen_documentable_objects": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem.gen_documentable_objects",
         "sdv_doc_docitem.gen_documentable_objects": "/__WTRL_OBJECTS__/sdv_doc_docitem.gen_documentable_objects",
-        "sdv.doc.waterloo.docitem_convert.to_node_signature_json": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_convert.to_node_signature_json",
-        "sdv.doc.waterloo.docitem_convert.build_node_json": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_convert.build_node_json",
-        "sdv.doc.waterloo.docitem_convert.to_node_docstring_tree_json": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_convert.to_node_docstring_tree_json",
-        "sdv.doc.waterloo.docitem_convert.to_node_legend_json": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_convert.to_node_legend_json",
-        "sdv.doc.waterloo.docitem_convert.to_string_md": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_convert.to_string_md",
-        "sdv.doc.waterloo.docitem_convert.to_string_legend_yaml": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_convert.to_string_legend_yaml",
-        "sdv.doc.waterloo.docitem_convert.to_string_signature_yaml": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_convert.to_string_signature_yaml",
-        "sdv.doc.waterloo.docitem_convert.to_string_yaml": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_convert.to_string_yaml"
+        "sdv.doc.waterloo.docitem_sphinx.build_sphinx_nodes": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_sphinx.build_sphinx_nodes",
+        "sdv.doc.waterloo.docitem_sphinx.build_sphinx_nodes_full": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_sphinx.build_sphinx_nodes_full",
+        "sdv.doc.waterloo.docitem_sphinx.resolve_qualified_name": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_sphinx.resolve_qualified_name",
+        "sdv.doc.waterloo.docitem_sphinx.wtrl_build_autodoc_module_nodes": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_sphinx.wtrl_build_autodoc_module_nodes",
+        "sdv.doc.waterloo.docitem_sphinx.wtrl_build_autodoc_function_nodes": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_sphinx.wtrl_build_autodoc_function_nodes",
+        "sdv.doc.waterloo.docitem_sphinx.wtrl_build_autodoc_class_nodes": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_sphinx.wtrl_build_autodoc_class_nodes",
+        "sdv.doc.waterloo.docitem_sphinx.wtrl_build_autodoc_class_full_nodes": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_sphinx.wtrl_build_autodoc_class_full_nodes",
+        "sdv.doc.waterloo.docitem_sphinx.wtrl_build_push_current_module_nodes": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_sphinx.wtrl_build_push_current_module_nodes",
+        "sdv.doc.waterloo.docitem_sphinx.wtrl_build_push_current_class_nodes": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_sphinx.wtrl_build_push_current_class_nodes",
+        "sdv.doc.waterloo.docitem_sphinx.wtrl_build_push_current_scope_nodes": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_sphinx.wtrl_build_push_current_scope_nodes",
+        "sdv.doc.waterloo.docitem_sphinx.wtrl_build_pop_current_module_nodes": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_sphinx.wtrl_build_pop_current_module_nodes",
+        "sdv.doc.waterloo.docitem_sphinx.wtrl_build_pop_current_class_nodes": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_sphinx.wtrl_build_pop_current_class_nodes",
+        "sdv.doc.waterloo.docitem_sphinx.wtrl_build_pop_current_scope_nodes": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_sphinx.wtrl_build_pop_current_scope_nodes",
+        "sdv.doc.waterloo.docitem_sphinx.wtrl_build_method_signature_nodes": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_sphinx.wtrl_build_method_signature_nodes",
+        "sdv.doc.waterloo.docitem_sphinx.wtrl_build_function_signature_nodes": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_sphinx.wtrl_build_function_signature_nodes",
+        "sdv.doc.waterloo.docitem_sphinx.wtrl_build_method_signature_block_nodes": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_sphinx.wtrl_build_method_signature_block_nodes",
+        "sdv.doc.waterloo.docitem_sphinx.wtrl_build_function_signature_block_nodes": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_sphinx.wtrl_build_function_signature_block_nodes"
     },
     "__WTRL_TOC_TYPES__": {
-        "sdv.doc.waterloo.docitem.docstring_tree": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem.docstring_tree",
-        "sdv.doc.waterloo.docitem.Documentable_t": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem.Documentable_t",
-        "sdv.doc.waterloo.docitem.Scopes_t": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem.Scopes_t",
-        "sdv.doc.waterloo.docitem_convert.WtrlJsonNode_t": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_convert.WtrlJsonNode_t",
         "sdv_doc_docitem.docstring_tree": "/__WTRL_OBJECTS__/sdv_doc_docitem.docstring_tree",
         "sdv_doc_docitem.Documentable_t": "/__WTRL_OBJECTS__/sdv_doc_docitem.Documentable_t",
         "sdv_doc_docitem.Scopes_t": "/__WTRL_OBJECTS__/sdv_doc_docitem.Scopes_t"
     },
     "__WTRL_TOC_VARIABLES__": {},
     "__WTRL_TOC_CONSTANTS__": {
-        "sdv.doc.waterloo.docitem.RE_IDENTIFIER": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem.RE_IDENTIFIER",
-        "sdv.doc.waterloo.docitem.RE_QUALIFIED_IDENTIFIER": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem.RE_QUALIFIED_IDENTIFIER",
-        "sdv.doc.waterloo.docitem.KEYWORDS_OF_NORMATIVITY": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem.KEYWORDS_OF_NORMATIVITY",
-        "sdv.doc.waterloo.docitem.CANONICAL_ORDER_OF_SECTIONS": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem.CANONICAL_ORDER_OF_SECTIONS",
-        "sdv.doc.waterloo.docitem.SCOPE_TAG_MAP": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem.SCOPE_TAG_MAP",
-        "sdv.doc.waterloo.docitem.FLAVOUR_TAG_MAP": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem.FLAVOUR_TAG_MAP",
-        "sdv.doc.waterloo.docitem.FORMAT_TAG_MAP": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem.FORMAT_TAG_MAP",
+        "sdv_doc_docitem.RE_IDENTIFIER": "/__WTRL_OBJECTS__/sdv_doc_docitem.RE_IDENTIFIER",
+        "sdv_doc_docitem.RE_QUALIFIED_IDENTIFIER": "/__WTRL_OBJECTS__/sdv_doc_docitem.RE_QUALIFIED_IDENTIFIER",
+        "sdv_doc_docitem.KEYWORDS_OF_NORMATIVITY": "/__WTRL_OBJECTS__/sdv_doc_docitem.KEYWORDS_OF_NORMATIVITY",
+        "sdv_doc_docitem.CANONICAL_ORDER_OF_SECTIONS": "/__WTRL_OBJECTS__/sdv_doc_docitem.CANONICAL_ORDER_OF_SECTIONS",
+        "sdv_doc_docitem.SCOPE_TAG_MAP": "/__WTRL_OBJECTS__/sdv_doc_docitem.SCOPE_TAG_MAP",
+        "sdv_doc_docitem.FLAVOUR_TAG_MAP": "/__WTRL_OBJECTS__/sdv_doc_docitem.FLAVOUR_TAG_MAP",
+        "sdv_doc_docitem.FORMAT_TAG_MAP": "/__WTRL_OBJECTS__/sdv_doc_docitem.FORMAT_TAG_MAP",
         "sdv_doc_docitem_helper.Scope.PUBLIC": "/__WTRL_OBJECTS__/sdv_doc_docitem_helper.Scope.PUBLIC",
         "sdv_doc_docitem_helper.Scope.EXTENSION": "/__WTRL_OBJECTS__/sdv_doc_docitem_helper.Scope.EXTENSION",
         "sdv_doc_docitem_helper.Scope.CORE": "/__WTRL_OBJECTS__/sdv_doc_docitem_helper.Scope.CORE",
@@ -233,67 +237,196 @@
         "sdv_doc_docitem_helper.Format.YAML": "/__WTRL_OBJECTS__/sdv_doc_docitem_helper.Format.YAML",
         "sdv_doc_docitem_helper.Format.MD": "/__WTRL_OBJECTS__/sdv_doc_docitem_helper.Format.MD",
         "sdv_doc_docitem_base.docitem_list_of_symbols_base.ValuePattern.IDENTIFIER": "/__WTRL_OBJECTS__/sdv_doc_docitem_base.docitem_list_of_symbols_base.ValuePattern.IDENTIFIER",
-        "sdv_doc_docitem_base.docitem_list_of_symbols_base.ValuePattern.QUALIFIED_IDENTIFIER": "/__WTRL_OBJECTS__/sdv_doc_docitem_base.docitem_list_of_symbols_base.ValuePattern.QUALIFIED_IDENTIFIER",
-        "sdv_doc_docitem.RE_IDENTIFIER": "/__WTRL_OBJECTS__/sdv_doc_docitem.RE_IDENTIFIER",
-        "sdv_doc_docitem.RE_QUALIFIED_IDENTIFIER": "/__WTRL_OBJECTS__/sdv_doc_docitem.RE_QUALIFIED_IDENTIFIER",
-        "sdv_doc_docitem.KEYWORDS_OF_NORMATIVITY": "/__WTRL_OBJECTS__/sdv_doc_docitem.KEYWORDS_OF_NORMATIVITY",
-        "sdv_doc_docitem.CANONICAL_ORDER_OF_SECTIONS": "/__WTRL_OBJECTS__/sdv_doc_docitem.CANONICAL_ORDER_OF_SECTIONS",
-        "sdv_doc_docitem.SCOPE_TAG_MAP": "/__WTRL_OBJECTS__/sdv_doc_docitem.SCOPE_TAG_MAP",
-        "sdv_doc_docitem.FLAVOUR_TAG_MAP": "/__WTRL_OBJECTS__/sdv_doc_docitem.FLAVOUR_TAG_MAP",
-        "sdv_doc_docitem.FORMAT_TAG_MAP": "/__WTRL_OBJECTS__/sdv_doc_docitem.FORMAT_TAG_MAP"
+        "sdv_doc_docitem_base.docitem_list_of_symbols_base.ValuePattern.QUALIFIED_IDENTIFIER": "/__WTRL_OBJECTS__/sdv_doc_docitem_base.docitem_list_of_symbols_base.ValuePattern.QUALIFIED_IDENTIFIER"
     },
     "__WTRL_OBJECTS__": {
-        "sdv.doc.waterloo.docitem.docstring_tree": {
+        "sdv.doc.waterloo.docitem_sphinx": {
+            "doc": {
+                "Preamble": {
+                    "profile": "module",
+                    "normative_sections": [
+                        "Contract",
+                        "Public_classes",
+                        "Public_functions"
+                    ]
+                },
+                "Description": [
+                    "This module provides the Sphinx integration layer for the Waterloo documentation system.",
+                    "|",
+                    "The implementation operates directly on Docutils nodes and defines custom Docutils roles",
+                    "to generate structured documentation output from Waterloo-style docstrings.",
+                    "|",
+                    "Sphinx is used as the execution and rendering framework, but the internal data model is based",
+                    "on the Docutils abstract syntax tree (AST). All document structure, including sections,",
+                    "tables, lists, rubrics, and inline markup, is represented using Docutils node classes.",
+                    "|",
+                    "The module introduces a configurable |type|`context` object which encapsulates all",
+                    "project-specific presentation logic, including role expansion, symbol rendering, and",
+                    "HTML layout decisions. This context is configured by the target project via its",
+                    "|file|`conf.py` and is intentionally decoupled from the core implementation.",
+                    "|",
+                    "To support concise and unambiguous normative documentation, the module maintains explicit",
+                    "scope stacks with the semantics \"current module\" and \"current class\". These scopes define",
+                    "the implicit ownership of subsequently documented functions and methods and are modified",
+                    "using dedicated Docutils roles or directives.",
+                    "|",
+                    "The primary goal of this module is correctness, completeness, and reproducibility of",
+                    "normative documentation. Readability and visual presentation are considered secondary",
+                    "and are handled through configurable rendering layers."
+                ],
+                "Terminology": {
+                    "Docutils node": [
+                        "An element of the Docutils abstract syntax tree (AST),",
+                        "such as |type|`paragraph`, |type|`section`, or |type|`literal`."
+                    ],
+                    "Docutils role": [
+                        "An inline markup construct of the form ``:role:`content``` implemented",
+                        "using the Docutils role API. Custom roles provided by this module are",
+                        "registered via Sphinx but conceptually belong to Docutils."
+                    ],
+                    "Sphinx extension": [
+                        "A Python module loaded by Sphinx to extend its parsing, transformation,",
+                        "or rendering behavior. This module is implemented as a Sphinx extension",
+                        "but operates primarily on Docutils data structures."
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST provide classes and functions for buidling Docutils nodes from docstring trees.",
+                        "MUST provide a default layout for HTML output from Sphinx.",
+                        "MUST provide a class |type|`context` which provides abstract roles to be configured by the target project's |file|`conf.py`.",
+                        "MUST provide a function for building Docutils nodes from a module docstring in waterloo format.",
+                        "MUST provide a function for building Docutils nodes from a function docstring in waterloo format.",
+                        "MUST provide a function for building Docutils nodes from a class docstring in waterloo format.",
+                        "MUST provide a function for building Docutils nodes from a class docstring and the class' method docstrings in waterloo format.",
+                        "MUST provide a Docutils role for rendering a function prototype.",
+                        "MUST provide a Docutils role for rendering a method prototype.",
+                        "MUST maintain a stack with semantics \"current module\" and |func|`push`-, |func|`pop`-, |func|`get`-methods.",
+                        "MUST maintain a stack with semantics \"current class\" and |func|`push`-, |func|`pop`-, |func|`get`-methods.",
+                        "MUST provide Docutils roles or directives for modifying these stacks."
+                    ]
+                },
+                "Public_classes": [
+                    "context"
+                ],
+                "Class_overview": {
+                    "context": [
+                        "Internal class, please ignore"
+                    ]
+                },
+                "Public_functions": [
+                    "build_sphinx_nodes",
+                    "build_sphinx_nodes_full",
+                    "resolve_qualified_name",
+                    "wtrl_build_autodoc_module_nodes",
+                    "wtrl_build_autodoc_function_nodes",
+                    "wtrl_build_autodoc_class_nodes",
+                    "wtrl_build_autodoc_class_full_nodes",
+                    "wtrl_build_push_current_module_nodes",
+                    "wtrl_build_push_current_class_nodes",
+                    "wtrl_build_push_current_scope_nodes",
+                    "wtrl_build_pop_current_module_nodes",
+                    "wtrl_build_pop_current_class_nodes",
+                    "wtrl_build_pop_current_scope_nodes",
+                    "wtrl_build_method_signature_nodes",
+                    "wtrl_build_function_signature_nodes",
+                    "wtrl_build_method_signature_block_nodes",
+                    "wtrl_build_function_signature_block_nodes"
+                ],
+                "Function_overview": {
+                    "build_sphinx_nodes": [
+                        "Build a list of Docutils nodes from a docstring tree."
+                    ],
+                    "build_sphinx_nodes_full": [
+                        "Build a list of Docutils nodes of a class object and its member functions from a docstring tree."
+                    ],
+                    "resolve_qualified_name": [
+                        "Analyze a qualified name and return the object it refers to plus resolved name components."
+                    ],
+                    "wtrl_build_autodoc_module_nodes": [
+                        "Implementation of role |attr|`.. wtrl_autodoc_module::`"
+                    ],
+                    "wtrl_build_autodoc_function_nodes": [
+                        "Implementation of role |attr|`.. wtrl_autodoc_function::`"
+                    ],
+                    "wtrl_build_autodoc_class_nodes": [
+                        "Implementation of role |attr|`.. wtrl_autodoc_class::`"
+                    ],
+                    "wtrl_build_autodoc_class_full_nodes": [
+                        "Implementation of role |attr|`.. wtrl_autodoc_class_full::`"
+                    ],
+                    "wtrl_build_push_current_module_nodes": [
+                        "Implementation of directive |attr|`.. wtrl_push_current_module::`"
+                    ],
+                    "wtrl_build_push_current_class_nodes": [
+                        "Implementation of directive |attr|`.. wtrl_push_current_class::`"
+                    ],
+                    "wtrl_build_push_current_scope_nodes": [
+                        "Implementation of directive |attr|`.. wtrl_push_current_scope::`"
+                    ],
+                    "wtrl_build_pop_current_module_nodes": [
+                        "Implementation of directive |attr|`.. wtrl_pop_current_module::`"
+                    ],
+                    "wtrl_build_pop_current_class_nodes": [
+                        "Implementation of directive |attr|`.. wtrl_pop_current_class::`"
+                    ],
+                    "wtrl_build_pop_current_scope_nodes": [
+                        "Implementation of directive |attr|`.. wtrl_pop_current_scope::`"
+                    ]
+                }
+            }
+        },
+        "sdv_doc_docitem.docstring_tree": {
             "doc": [
                 "The type alias for docstring trees."
             ]
         },
-        "sdv.doc.waterloo.docitem.Documentable_t": {
+        "sdv_doc_docitem.Documentable_t": {
             "doc": [
                 "Type for objects that can have a docstring."
             ]
         },
-        "sdv.doc.waterloo.docitem.Scopes_t": {
+        "sdv_doc_docitem.Scopes_t": {
             "doc": [
                 "Type alias for a set of scopes."
             ]
         },
-        "sdv.doc.waterloo.docitem.RE_IDENTIFIER": {
+        "sdv_doc_docitem.RE_IDENTIFIER": {
             "doc": [
                 "Regular expression for identifiers: ``[A-Za-z_][A-Za-z0-9_]*``"
             ]
         },
-        "sdv.doc.waterloo.docitem.RE_QUALIFIED_IDENTIFIER": {
+        "sdv_doc_docitem.RE_QUALIFIED_IDENTIFIER": {
             "doc": [
                 "Regular expression for qualified identifiers: ``[A-Za-z_.][A-Za-z0-9_.]*``"
             ]
         },
-        "sdv.doc.waterloo.docitem.KEYWORDS_OF_NORMATIVITY": {
+        "sdv_doc_docitem.KEYWORDS_OF_NORMATIVITY": {
             "doc": [
                 "The set of normative keywords."
             ]
         },
-        "sdv.doc.waterloo.docitem.CANONICAL_ORDER_OF_SECTIONS": {
+        "sdv_doc_docitem.CANONICAL_ORDER_OF_SECTIONS": {
             "doc": [
                 "A canonical order for sections and subsection in order to reduce permutative noise for LLMs."
             ]
         },
-        "sdv.doc.waterloo.docitem.SCOPE_TAG_MAP": {
+        "sdv_doc_docitem.SCOPE_TAG_MAP": {
             "doc": [
                 "Map string representations of scopes to symbolic/numeric values."
             ]
         },
-        "sdv.doc.waterloo.docitem.FLAVOUR_TAG_MAP": {
+        "sdv_doc_docitem.FLAVOUR_TAG_MAP": {
             "doc": [
                 "Map string representations of flavours to symbolic/numeric values."
             ]
         },
-        "sdv.doc.waterloo.docitem.FORMAT_TAG_MAP": {
+        "sdv_doc_docitem.FORMAT_TAG_MAP": {
             "doc": [
                 "Map string representations of output formats to symbolic/numeric values."
             ]
         },
-        "sdv.doc.waterloo.docitem": {
+        "sdv_doc_docitem": {
             "doc": {
                 "Preamble": {
                     "profile": "module",
@@ -8066,101 +8199,9 @@
                 }
             }
         },
-        "sdv.doc.waterloo.docitem.gen_documentable_objects": {
-            "signature": {
-                "text": "gen_documentable_objects(obj: Union[module, type[object], Callable[..., Any]], config: sdv_doc_docitem_helper.ConfigTraversal = <sdv_doc_docitem_helper.ConfigTraversal object at 0x7f133e894850>) -> Generator[Union[module, type[object], Callable[..., Any]], NoneType, NoneType]",
-                "parameters": [
-                    {
-                        "name": "obj",
-                        "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "Union",
-                        "default": null
-                    },
-                    {
-                        "name": "config",
-                        "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "ConfigTraversal",
-                        "default": "<sdv_doc_docitem_helper.ConfigTraversal object at 0x7f133e894850>"
-                    }
-                ],
-                "returns": "Generator"
-            },
-            "doc": {
-                "Preamble": {
-                    "profile": "function",
-                    "normative_sections": [
-                        "Contract",
-                        "Parameters",
-                        "Returns",
-                        "Raises"
-                    ],
-                    "scope": [
-                        "public"
-                    ]
-                },
-                "Contract": {
-                    "general": [
-                        "MUST create a generator object which allows depth-first tree traversal of objects in |var|`obj`.",
-                        "MUST first yield object |var|`obj` itself.",
-                        "MUST yield all objects and only objects which can have a docstring."
-                    ]
-                },
-                "Parameters": {
-                    "obj": [
-                        "The object (module, class, function, method) to examine."
-                    ],
-                    "config": [
-                        "Controls acceptance or refusal of objects during traversal."
-                    ]
-                },
-                "Returns": [
-                    "MUST return a Generator which yields objects from tree traversal of |var|`obj`"
-                ],
-                "Raises": {}
-            }
-        },
-        "sdv.doc.waterloo.docitem_convert.WtrlJsonNode_t": {
-            "doc": [
-                "Type for JSON nodes. This type |must| be public because |func|`to_node_docstring_tree_json` and |func|`to_node_signature_json` are."
-            ]
-        },
-        "sdv.doc.waterloo.docitem_convert": {
-            "doc": {
-                "Preamble": {
-                    "profile": "module",
-                    "normative_sections": [
-                        "Contract",
-                        "Public_functions",
-                        "Public_types"
-                    ],
-                    "scope": [
-                        "public"
-                    ]
-                },
-                "Contract": {
-                    "general": [
-                        "MUST provide converter functions for all flavours and formats in |mod|`sdv.doc.waterloo.helper`."
-                    ]
-                },
-                "Public_functions": [
-                    "to_node_legend_json",
-                    "to_node_docstring_tree_json",
-                    "to_node_signature_json",
-                    "to_string_legend_yaml",
-                    "to_string_yaml",
-                    "to_string_signature_yaml",
-                    "to_string_md"
-                ],
-                "Public_types": {
-                    "WtrlJsonNode_t": [
-                        "Type for JSON nodes. This type MUST be public because |func|`to_node_docstring_tree_json` and |func|`to_node_signature_json` are."
-                    ]
-                }
-            }
-        },
         "sdv_doc_docitem.gen_documentable_objects": {
             "signature": {
-                "text": "gen_documentable_objects(obj: Union[module, type[object], Callable[..., Any]], config: sdv_doc_docitem_helper.ConfigTraversal = <sdv_doc_docitem_helper.ConfigTraversal object at 0x7f133e80fcd0>) -> Generator[Union[module, type[object], Callable[..., Any]], NoneType, NoneType]",
+                "text": "gen_documentable_objects(obj: Union[module, type[object], Callable[..., Any]], config: sdv_doc_docitem_helper.ConfigTraversal = <sdv_doc_docitem_helper.ConfigTraversal object at 0x7f45b392c400>) -> Generator[Union[module, type[object], Callable[..., Any]], NoneType, NoneType]",
                 "parameters": [
                     {
                         "name": "obj",
@@ -8172,7 +8213,7 @@
                         "name": "config",
                         "kind": "POSITIONAL_OR_KEYWORD",
                         "annotation": "ConfigTraversal",
-                        "default": "<sdv_doc_docitem_helper.ConfigTraversal object at 0x7f133e80fcd0>"
+                        "default": "<sdv_doc_docitem_helper.ConfigTraversal object at 0x7f45b392c400>"
                     }
                 ],
                 "returns": "Generator"
@@ -8211,484 +8252,69 @@
                 "Raises": {}
             }
         },
-        "sdv_doc_docitem": {
-            "doc": {
-                "Preamble": {
-                    "profile": "module",
-                    "normative_sections": [
-                        "Contract",
-                        "Public_classes",
-                        "Public_functions",
-                        "Public_types",
-                        "Public_constants"
-                    ]
-                },
-                "Contract": {
-                    "general": [
-                        "MUST provide node classes and parsing/validation utilities for Waterloo docstrings. In detail:",
-                        "MUST provide a node class for each type of section and subsection in a Waterloo docstring.",
-                        "MUST provide an appropriate base class hierarchy with a single base class as root of this hierarchy.",
-                        "MUST be able to represent any valid docstring by a single node which is the root of a tree of nodes.",
-                        "MUST provide validator functions for docstrings for modules, classes and callables.",
-                        "MUST provide functions for verifying coverage where applicable."
-                    ]
-                },
-                "Public_functions": [
-                    "is_attr_annotated",
-                    "is_attr_final",
-                    "get_obj_name",
-                    "get_obj_path",
-                    "resolve_object",
-                    "get_status",
-                    "get_profile",
-                    "get_num_indent",
-                    "parse_indent_docstring",
-                    "get_tree_of_section",
-                    "get_tree_of_subsection",
-                    "to_string_tree",
-                    "validate_docstring_method",
-                    "validate_docstring_inherited_method",
-                    "validate_docstring_class",
-                    "validate_docstring_module",
-                    "validate_docstring",
-                    "validate_class_class_coverage",
-                    "validate_class_method_coverage",
-                    "validate_class_constant_coverage",
-                    "validate_class_variable_coverage",
-                    "validate_class_coverage",
-                    "validate_module_class_coverage",
-                    "validate_module_function_coverage",
-                    "validate_module_type_coverage",
-                    "validate_module_constant_coverage",
-                    "validate_module_variable_coverage",
-                    "validate_module_coverage",
-                    "gen_documentable_objects",
-                    "make_docitem_tree"
-                ],
-                "Function_overview": {
-                    "is_attr_annotated": [
-                        "Find out if an attribute of a class or module is annotated."
-                    ],
-                    "is_attr_final": [
-                        "Find out if an attribute of a class or module is annotated as 'Final'."
-                    ],
-                    "resolve_object": [
-                        "Resolve an object by its qualified identifier"
-                    ],
-                    "get_status": [
-                        "Extract documented object status from docitem tree"
-                    ],
-                    "get_profile": [
-                        "Extract documented profile from docitem tree"
-                    ],
-                    "get_num_indent": [
-                        "Count number of leading indent units of a string."
-                    ],
-                    "parse_indent_docstring": [
-                        "The fundamental parsing function which creates docstring trees from Waterloo docstrings."
-                    ],
-                    "get_tree_of_section": [
-                        "Get tree assigned to a section label from a docstring tree."
-                    ],
-                    "get_tree_of_subsection": [
-                        "Get tree assigned to a subsection label from a docstring tree."
-                    ],
-                    "to_string_tree": [
-                        "Render docstring to string"
-                    ],
-                    "validate_docstring_method": [
-                        "Validator for method and function docstrings"
-                    ],
-                    "validate_docstring_inherited_method": [
-                        "Validator for inherited method docstrings"
-                    ],
-                    "validate_docstring_class": [
-                        "Validator for class docstrings"
-                    ],
-                    "validate_docstring_module": [
-                        "Validator for module docstrings"
-                    ],
-                    "validate_docstring": [
-                        "Validator for docstrings for generic objects."
-                    ],
-                    "validate_class_class_coverage": [
-                        "Validate mutual coverage of nested classes and class docstring entries."
-                    ],
-                    "validate_class_method_coverage": [
-                        "Validate mutual coverage of methods and class docstring entries."
-                    ],
-                    "validate_class_constant_coverage": [
-                        "Verify constant existence and 'Final' annotation."
-                    ],
-                    "validate_class_variable_coverage": [
-                        "Verify variable existence."
-                    ],
-                    "validate_class_coverage": [
-                        "Verify existence (and mutual coverage were applicable) of methods mentioned in the class docstring."
-                    ],
-                    "validate_module_class_coverage": [
-                        "Validate mutual coverage of classes and module docstring entries."
-                    ],
-                    "validate_module_function_coverage": [
-                        "Validate mutual coverage of functions and module docstring entries."
-                    ],
-                    "validate_module_type_coverage": [
-                        "Verify existence of types mentioned in the module docstring."
-                    ],
-                    "validate_module_constant_coverage": [
-                        "Verify constant existence and 'Final' annotation."
-                    ],
-                    "validate_module_variable_coverage": [
-                        "Verify variable existence."
-                    ],
-                    "validate_module_coverage": [
-                        "Verify existence (and mutual coverage were applicable) of classes, functions, types, constants mentioned in the module docstring."
-                    ],
-                    "gen_documentable_objects": [
-                        "Iterate over objects which may have a docstring."
-                    ],
-                    "make_docitem_tree": [
-                        "Generate a docitem tree from a docstring."
-                    ]
-                },
-                "Public_classes": [
-                    "tracer",
-                    "docitem_base",
-                    "docitem_list_base",
-                    "docitem_map_base",
-                    "docitem_free_text_entry_base",
-                    "docitem_list_of_symbols_base",
-                    "docitem_profile",
-                    "docitem_normative_sections",
-                    "docitem_status",
-                    "docitem_preamble",
-                    "docitem_constructor",
-                    "docitem_general",
-                    "docitem_invariants",
-                    "docitem_requires",
-                    "docitem_ensures",
-                    "docitem_base_to_inherit_from",
-                    "docitem_traits",
-                    "docitem_contract_module",
-                    "docitem_contract_class",
-                    "docitem_contract_method",
-                    "docitem_contract_inherited_method",
-                    "docitem_derived_from",
-                    "docitem_factory_functions",
-                    "docitem_factory",
-                    "docitem_class_overview_entry",
-                    "docitem_class_overview",
-                    "docitem_public_types_entry",
-                    "docitem_public_types",
-                    "docitem_public_assignables_entry",
-                    "docitem_public_assignables_base",
-                    "docitem_method_overview_entry",
-                    "docitem_method_overview",
-                    "docitem_function_overview_entry",
-                    "docitem_function_overview",
-                    "docitem_returns",
-                    "docitem_parameters_entry",
-                    "docitem_parameters",
-                    "docitem_raises_entry",
-                    "docitem_raises",
-                    "docitem_definitions_entry",
-                    "docitem_definitions",
-                    "docitem_terminology_entry",
-                    "docitem_terminology",
-                    "docitem_notes_entry",
-                    "docitem_notes",
-                    "docitem_description",
-                    "docitem_see_also",
-                    "docitem_docstring_base",
-                    "docitem_docstring_module",
-                    "docitem_docstring_class",
-                    "docitem_docstring_method",
-                    "docitem_docstring_inherited_method",
-                    "Scope",
-                    "Flavour",
-                    "Format"
-                ],
-                "Class_overview": {
-                    "tracer": [
-                        "Context and helper for exceptions and warnings."
-                    ],
-                    "docitem_base": [
-                        "The base class for all docitem classes which form the docstring tree."
-                    ],
-                    "docitem_list_base": [
-                        "The base class for docitem classes managing a list of strings."
-                    ],
-                    "docitem_map_base": [
-                        "The base class for docitem classes managing a map from strings to docitem nodes"
-                    ],
-                    "docitem_free_text_entry_base": [
-                        "The base class for nodes which consist of free-text string."
-                    ],
-                    "docitem_list_of_symbols_base": [
-                        "The base class for nodes which contein a list of identifiers."
-                    ],
-                    "docitem_profile": [
-                        "Node class for section |label|`profile`"
-                    ],
-                    "docitem_normative_sections": [
-                        "Node class for subsection |label|`normative_sections`"
-                    ],
-                    "docitem_status": [
-                        "Node class for subsection |label|`status`"
-                    ],
-                    "docitem_preamble": [
-                        "Node class for section |label|`Preamble`"
-                    ],
-                    "docitem_constructor": [
-                        "Node class for subsection |label|`constructor`"
-                    ],
-                    "docitem_general": [
-                        "Node class for subsection |label|`general`"
-                    ],
-                    "docitem_invariants": [
-                        "Node class for subsection |label|`invariants`"
-                    ],
-                    "docitem_requires": [
-                        "Node class for subsection |label|`requires`"
-                    ],
-                    "docitem_ensures": [
-                        "Node class for subsection |label|`ensures`"
-                    ],
-                    "docitem_base_to_inherit_from": [
-                        "Node class for subsection |label|`base`"
-                    ],
-                    "docitem_traits": [
-                        "Node class for subsection |label|`traits`"
-                    ],
-                    "docitem_contract_module": [
-                        "Node class for section |label|`Contract`, profile |value|`module`."
-                    ],
-                    "docitem_contract_class": [
-                        "Node class for section |label|`Contract`, profile |value|`class`."
-                    ],
-                    "docitem_contract_method": [
-                        "Node class for section |label|`Contract`, profile |value|`method` or |value|`function`."
-                    ],
-                    "docitem_contract_inherited_method": [
-                        "Node class for section |label|`Contract`, profile |value|`inherited_method`."
-                    ],
-                    "docitem_derived_from": [
-                        "Node class for section |label|`Derived_from`."
-                    ],
-                    "docitem_factory_functions": [
-                        "Node class for entries in section |label|`Factory`."
-                    ],
-                    "docitem_factory": [
-                        "Node class for section |label|`Factory`."
-                    ],
-                    "docitem_class_overview_entry": [
-                        "Node class for entries in section |label|`Class_overview`."
-                    ],
-                    "docitem_class_overview": [
-                        "Node class for section |label|`Class_overview`."
-                    ],
-                    "docitem_public_types_entry": [
-                        "Node class for entries in section |label|`Public_types`."
-                    ],
-                    "docitem_public_types": [
-                        "Node class for section |label|`Public_types`."
-                    ],
-                    "docitem_public_assignables_entry": [
-                        "Node class for entries in section |label|`Public_constants` and |label|`Public_variables`."
-                    ],
-                    "docitem_public_assignables_base": [
-                        "Node base class for sections |label|`Public_constants` and |label|`Public_variables`."
-                    ],
-                    "docitem_method_overview_entry": [
-                        "Node class for entries in section |label|`Method_overview`."
-                    ],
-                    "docitem_method_overview": [
-                        "Node class for section |label|`Method_overview`."
-                    ],
-                    "docitem_function_overview_entry": [
-                        "Node class for entries in section |label|`Function_overview`."
-                    ],
-                    "docitem_function_overview": [
-                        "Node class for section |label|`Function_overview`."
-                    ],
-                    "docitem_returns": [
-                        "Node class for section |label|`Returns`."
-                    ],
-                    "docitem_parameters_entry": [
-                        "Node class for a parameter description"
-                    ],
-                    "docitem_parameters": [
-                        "Node class for section |label|`Parameters`"
-                    ],
-                    "docitem_raises_entry": [
-                        "Node class for entries in section |label|`Raises`."
-                    ],
-                    "docitem_raises": [
-                        "Node class for section |label|`Raises`"
-                    ],
-                    "docitem_definitions_entry": [
-                        "Node class for entries in section |label|`Definitions`."
-                    ],
-                    "docitem_definitions": [
-                        "Node class for section |label|`Definitions`"
-                    ],
-                    "docitem_terminology_entry": [
-                        "Node class for entries in section |label|`Terminology`."
-                    ],
-                    "docitem_terminology": [
-                        "Node class for section |label|`Terminology`"
-                    ],
-                    "docitem_notes_entry": [
-                        "Node class for entries in section |label|`Notes`."
-                    ],
-                    "docitem_notes": [
-                        "Node class for section |label|`Notes`"
-                    ],
-                    "docitem_description": [
-                        "Node class for section |label|`Description`."
-                    ],
-                    "docitem_see_also": [
-                        "Node class for section |label|`See_also`"
-                    ],
-                    "docitem_docstring_base": [
-                        "Base class for docstring nodes"
-                    ],
-                    "docitem_docstring_module": [
-                        "Node class for a module docstring"
-                    ],
-                    "docitem_docstring_class": [
-                        "Node class for a class docstring"
-                    ],
-                    "docitem_docstring_method": [
-                        "Node class for a function or method docstring"
-                    ],
-                    "docitem_docstring_inherited_method": [
-                        "Node class for an inherited method docstring"
-                    ]
-                },
-                "Public_types": {
-                    "docstring_tree": [
-                        "The type alias for docstring trees."
-                    ],
-                    "Documentable_t": [
-                        "Type for objects that can have a docstring."
-                    ],
-                    "Scopes_t": [
-                        "Type alias for a set of scopes."
-                    ]
-                },
-                "Public_constants": {
-                    "RE_IDENTIFIER": [
-                        "Regular expression for identifiers: ``[A-Za-z_][A-Za-z0-9_]*``"
-                    ],
-                    "RE_QUALIFIED_IDENTIFIER": [
-                        "Regular expression for qualified identifiers: ``[A-Za-z_.][A-Za-z0-9_.]*``"
-                    ],
-                    "KEYWORDS_OF_NORMATIVITY": [
-                        "The set of normative keywords."
-                    ],
-                    "CANONICAL_ORDER_OF_SECTIONS": [
-                        "A canonical order for sections and subsection in order to reduce permutative noise for LLMs."
-                    ],
-                    "SCOPE_TAG_MAP": [
-                        "Map string representations of scopes to symbolic/numeric values."
-                    ],
-                    "FLAVOUR_TAG_MAP": [
-                        "Map string representations of flavours to symbolic/numeric values."
-                    ],
-                    "FORMAT_TAG_MAP": [
-                        "Map string representations of output formats to symbolic/numeric values."
-                    ]
-                }
-            }
-        },
-        "sdv.doc.waterloo.docitem_convert.to_node_signature_json": {
+        "sdv.doc.waterloo.docitem_sphinx.context": {
             "signature": {
-                "text": "to_node_signature_json(obj: 'object') -> 'dict[str, WtrlJsonNode_t]'",
+                "text": "context.__init__(self, parse_inline: 'Callable[[nodes.Element, int, str], List[nodes.Node]]', lineno: 'int') -> 'None'",
                 "parameters": [
                     {
-                        "name": "obj",
+                        "name": "parse_inline",
                         "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "object",
-                        "default": null
-                    }
-                ],
-                "returns": "dict[str, WtrlJsonNode_t]"
-            },
-            "doc": {
-                "Preamble": {
-                    "profile": "function",
-                    "normative_sections": [
-                        "Contract",
-                        "Parameters",
-                        "Returns",
-                        "Raises"
-                    ],
-                    "scope": [
-                        "public"
-                    ],
-                    "status": "experimental"
-                },
-                "Contract": {
-                    "general": [
-                        "MUST render a JSON object as configured in |var|`config`, representing the signature of the callable |var|`obj`.",
-                        "The root **property** MUST be |attr|`signature`.",
-                        "This object MUST contain the **keys** |attr|`text`, |attr|`parameters`, and |attr|`returns`.",
-                        "|attr|`text` MUST be a string representation of the signature.",
-                        "|attr|`parameters` MUST be an **array** of objects, each containing:",
-                        "|attr|`name`: The parameter identifier string.",
-                        "|attr|`kind`: The Python parameter mode as a string constant.",
-                        "|attr|`annotation`: The type hint string or |value|`null`.",
-                        "|attr|`default`: The default value as a string or |value|`null`.",
-                        "The **key** |attr|`returns` MUST represent the return type."
-                    ]
-                },
-                "Parameters": {
-                    "obj": [
-                        "The callable whose signature is to be inspected and rendered."
-                    ]
-                },
-                "Returns": [
-                    "The generated JSON node"
-                ],
-                "Raises": {
-                    "TypeError": [
-                        "MUST be raised if |var|`obj` is not callable or if the signature",
-                        "cannot be inspected."
-                    ],
-                    "ValueError": [
-                        "MAY be raised if the signature includes parameter kinds that",
-                        "cannot be serialized."
-                    ],
-                    "Exception": [
-                        "MAY propagate exceptions from |func|`inspect.signature` or |func|`repr` during default value rendering; callers should treat these as unexpected errors."
-                    ]
-                },
-                "Notes": {
-                    "Standard values for \"kind\"": [
-                        "Derived from |type|`inspect.Parameter`: |value|`POSITIONAL_ONLY`, |value|`POSITIONAL_OR_KEYWORD`, |value|`VAR_POSITIONAL`, |value|`KEYWORD_ONLY`, |value|`VAR_KEYWORD`"
-                    ]
-                }
-            }
-        },
-        "sdv.doc.waterloo.docitem_convert.build_node_json": {
-            "signature": {
-                "text": "build_node_json(node_docstring: 'docitem_docstring_base', flavour: 'Flavour') -> 'WtrlJsonNode_t'",
-                "parameters": [
-                    {
-                        "name": "node_docstring",
-                        "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "docitem_docstring_base",
+                        "annotation": "Callable[[nodes.Element, int, str], List[nodes.Node]]",
                         "default": null
                     },
                     {
-                        "name": "flavour",
+                        "name": "lineno",
                         "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "Flavour",
+                        "annotation": "int",
                         "default": null
                     }
                 ],
-                "returns": "WtrlJsonNode_t"
+                "returns": "None"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "class",
+                    "normative_sections": [
+                        "Contract"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST be able to hold data from both the Sphinx environment and the user-defined configuration in |file|`conf.py`.",
+                        "MUST provide a method which allows configuration by means of a simple, documented data structure.",
+                        "MUST provide access to role decorator functions which map plain text to decorated text.",
+                        "MUST provide setters to specify these role decorator functions."
+                    ],
+                    "constructor": [
+                        "Internal class, TBD later, complicated sphinx stuff."
+                    ]
+                }
+            }
+        },
+        "sdv.doc.waterloo.docitem_sphinx.build_sphinx_nodes": {
+            "signature": {
+                "text": "build_sphinx_nodes(ctx: 'context', objname: 'str', doc: 'mod_docitem.docitem_docstring_base') -> 'List[nodes.Node]'",
+                "parameters": [
+                    {
+                        "name": "ctx",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "context",
+                        "default": null
+                    },
+                    {
+                        "name": "objname",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    },
+                    {
+                        "name": "doc",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "mod_docitem.docitem_docstring_base",
+                        "default": null
+                    }
+                ],
+                "returns": "List[nodes.Node]"
             },
             "doc": {
                 "Preamble": {
@@ -8698,124 +8324,121 @@
                         "Parameters",
                         "Returns",
                         "Raises"
-                    ],
-                    "scope": [
-                        "public"
-                    ],
-                    "status": "experimental"
+                    ]
                 },
                 "Contract": {
                     "general": [
-                        "MUST build a JSON node from the Abstract Syntax Tree |var|`node_docstring`.",
-                        "MUST convert Normativity Keywords in free-form text according to the given flavour."
-                    ],
-                    "requires": [
-                        "|var|`node_docstring` MUST be a formatlly correct AST node representing the docstring item of a module, class, function, method, or inherited method."
+                        "MUST convert a parsed |type|`docitem_docstring_module`, |type|`docitem_docstring_class` or |type|`docitem_docstring_method` into a list of docutils nodes.",
+                        "MUST render section/key/value content into a two-column table with section labels on the left and content on the right.",
+                        "MUST apply role-formatters provided by |type|`context` (labels, types, vars, funcs, methods)."
                     ]
                 },
                 "Parameters": {
-                    "node_docstring": [
-                        "The AST node"
+                    "ctx": [
+                        "Rendering context providing inline parser and role-formatters."
                     ],
-                    "flavour": [
-                        "Normativity Keyword style."
+                    "objname": [
+                        "Name of the documented object (module, class or method) used in headings."
+                    ],
+                    "doc": [
+                        "Parsed docstring tree (representing one of the defined profiles)."
                     ]
                 },
                 "Returns": [
-                    "The JSON node, a |type|`dict` in our case, which represents the AST node."
+                    "List of |type|`docutils.nodes.Node` representing the rendered documentation table."
                 ],
                 "Raises": {
-                    "NotImplementedError": [
-                        "MAY raise in case |var|`node_docstring` has some unexpected type."
+                    "RuntimeError": [
+                        "MAY raise if unexpected section structure is encountered."
+                    ]
+                },
+                "Notes": {
+                    "Usage": [
+                        "This function is typically not called directly. It is called",
+                        "by the various |func|`autodoc` functions."
+                    ]
+                }
+            }
+        },
+        "sdv.doc.waterloo.docitem_sphinx.build_sphinx_nodes_full": {
+            "signature": {
+                "text": "build_sphinx_nodes_full(ctx: 'context', class_obj: 'Any') -> 'List[nodes.Node]'",
+                "parameters": [
+                    {
+                        "name": "ctx",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "context",
+                        "default": null
+                    },
+                    {
+                        "name": "class_obj",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "Any",
+                        "default": null
+                    }
+                ],
+                "returns": "List[nodes.Node]"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST analyze the docstring and methods of the class object.",
+                        "MUST create a list of sphinx nodes, with elements as specified in the following and have the order as indicated:",
+                        "The list MUST contain nodes representing the class' docstring.",
+                        "The list MUST contain nodes produced by |func|`ctx.build_prolog_method_overview`.",
+                        "For each public method as indicated by the class' normative docstring:",
+                        "1. The list MUST contain nodes produced by |func|`ctx.build_prolog_method_block`.",
+                        "2. The list MUST contain nodes representing the class' public method's docstring."
+                    ]
+                },
+                "Parameters": {
+                    "ctx": [
+                        "The context"
+                    ],
+                    "class_obj": [
+                        "The class object to generate a sphinx documentation node list from."
+                    ]
+                },
+                "Returns": [
+                    "A list of sphinx nodes representing the class and public member documentation."
+                ],
+                "Raises": {
+                    "RuntimeError": [
+                        "MUST raise if something goes wrong parsing a docstring."
                     ],
                     "BaseException": [
-                        "MAY propagate from underlying modules such as |mod|`re`."
+                        "MUST forward exceptions from Sphinx"
                     ]
                 }
             }
         },
-        "sdv.doc.waterloo.docitem_convert.to_node_docstring_tree_json": {
+        "sdv.doc.waterloo.docitem_sphinx.resolve_qualified_name": {
             "signature": {
-                "text": "to_node_docstring_tree_json(tree: 'docstring_tree', flavour: 'Flavour') -> 'WtrlJsonNode_t'",
+                "text": "resolve_qualified_name(ctx: 'context | None', qname: 'str') -> 'tuple[object, str, str, list[str]]'",
                 "parameters": [
                     {
-                        "name": "tree",
+                        "name": "ctx",
                         "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "docstring_tree",
+                        "annotation": "context | None",
                         "default": null
                     },
                     {
-                        "name": "flavour",
+                        "name": "qname",
                         "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "Flavour",
+                        "annotation": "str",
                         "default": null
                     }
                 ],
-                "returns": "WtrlJsonNode_t"
-            },
-            "doc": {
-                "Preamble": {
-                    "profile": "function",
-                    "normative_sections": [
-                        "Contract",
-                        "Parameters",
-                        "Returns",
-                        "Raises",
-                        "See_also"
-                    ],
-                    "scope": [
-                        "public"
-                    ],
-                    "status": "experimental"
-                },
-                "Contract": {
-                    "general": [
-                        "MUST render the tree as JSON-Node using the given flavour.",
-                        "MUST reproduce the tree structure by appropriate subobjects in JSON.",
-                        "In RFC_2199 flavour, Normativity Keywords MUST be capitalized and the pipe delimiters MUST be dropped.",
-                        "In RAW flavour, Normativity Keywords MUST be rendered without modification, i.e. including pipe delimiters.",
-                        "In MARKUP flavour, Normativity Keywords MUST be rendered with double asterisk |lit|`**...**` instead of pipe delimiters."
-                    ],
-                    "requires": [
-                        "|var|`tree` MUST be a formally correct docstring tree."
-                    ]
-                },
-                "Notes": {
-                    "Details": [
-                        "The docstring tree is rendered exactly as nested JSON arrays; no additional restructuring is performed."
-                    ]
-                },
-                "Parameters": {
-                    "tree": [
-                        "The tree to render as string."
-                    ],
-                    "flavour": [
-                        "The style to render Normativity Keywords in"
-                    ]
-                },
-                "Returns": [
-                    "The JSON node"
-                ],
-                "Raises": {
-                    "ParseError": [
-                        "MUST propagate from |func|`make_docitem_tree_from_docstring_tree`."
-                    ],
-                    "BaseException": [
-                        "MAY propagate from |func|`make_docitem_tree_from_docstring_tree`.",
-                        "MAY propagate from nested function calls."
-                    ]
-                },
-                "See_also": [
-                    "sdv.doc.waterloo.docitem.Flavour",
-                    "sdv.doc.waterloo.docitem.Format"
-                ]
-            }
-        },
-        "sdv.doc.waterloo.docitem_convert.to_node_legend_json": {
-            "signature": {
-                "text": "to_node_legend_json() -> 'Dict[str, WtrlJsonNode_t]'",
-                "parameters": [],
-                "returns": "Dict[str, WtrlJsonNode_t]"
+                "returns": "tuple[object, str, str, list[str]]"
             },
             "doc": {
                 "Preamble": {
@@ -8825,249 +8448,72 @@
                         "Parameters",
                         "Returns",
                         "Raises"
-                    ],
-                    "scope": [
-                        "public"
-                    ],
-                    "status": "stable"
-                },
-                "Contract": {
-                    "general": [
-                        "MUST return a JSON-serializable mapping from Waterloo role names to short descriptions."
                     ]
                 },
-                "Parameters": {},
-                "Returns": [
-                    "Mapping of role-name -> human-readable description."
-                ],
-                "Raises": {}
-            }
-        },
-        "sdv.doc.waterloo.docitem_convert.to_string_md": {
-            "signature": {
-                "text": "to_string_md(tree: 'docstring_tree', flavour: 'Flavour' = <Flavour.MARKDOWN: 2>, headings: 'bool' = True) -> 'str'",
-                "parameters": [
-                    {
-                        "name": "tree",
-                        "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "docstring_tree",
-                        "default": null
-                    },
-                    {
-                        "name": "flavour",
-                        "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "Flavour",
-                        "default": "<Flavour.MARKDOWN: 2>"
-                    },
-                    {
-                        "name": "headings",
-                        "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "bool",
-                        "default": "True"
-                    }
-                ],
-                "returns": "str"
-            },
-            "doc": {
-                "Preamble": {
-                    "profile": "function",
-                    "normative_sections": [
-                        "Contract",
-                        "Parameters",
-                        "Returns",
-                        "Raises",
-                        "See_also"
-                    ],
-                    "scope": [
-                        "public"
-                    ],
-                    "status": "draft"
-                },
                 "Contract": {
                     "general": [
-                        "MUST render the tree as Markdown using the given flavour (default: MARKDOWN).",
-                        "MUST preserve the sequence structure as nested unordered lists.",
-                        "MUST render normativity tokens according to |var|`flavour` (e.g. **MUST** for MARKDOWN)."
-                    ],
-                    "requires": [
-                        "|var|`tree` MUST be a formally correct docstring tree."
+                        "MUST resolve the qualified name |var|`qname` using current module/class context in |var|`ctx` when present.",
+                        "MUST try to import the resolved object as criterion that resolution succeeded (see section |label|`Raises`)",
+                        "MUST try fully qualified forms in this order: current module + current class + |var|`qname`, current module + |var|`qname`, then |var|`qname` as given."
                     ]
                 },
                 "Parameters": {
-                    "tree": [
-                        "The docstring tree to render."
+                    "ctx": [
+                        "The context which provides current module and current class."
                     ],
-                    "flavour": [
-                        "The formatting style for normativity tokens."
-                    ],
-                    "headings": [
-                        "If |True|, section-like items (strings ending with ':' that precede a list)",
-                        "are rendered as Markdown headings instead of plain bullets."
+                    "qname": [
+                        "The qualified name to resolve."
                     ]
                 },
                 "Returns": [
-                    "A Markdown string."
+                    "MUST return a tuple |type|`(obj, module_name, head_name, tail_parts)` where",
+                    "|var|`obj` is the resolved object, |var|`module_name` is the imported module name,",
+                    "|var|`head_name` is the last attribute component, and |var|`tail_parts`",
+                    "is the attribute chain after the module components."
                 ],
                 "Raises": {
-                    "TypeError": [
-                        "MUST raise if |var|`tree` is not a sequence made only of strings and lists, or if |var|`flavour` is not a |type|`Flavour`."
-                    ]
-                },
-                "See_also": [
-                    "sdv.doc.waterloo.docitem.Flavour",
-                    "sdv.doc.waterloo.docitem.Format"
-                ]
-            }
-        },
-        "sdv.doc.waterloo.docitem_convert.to_string_legend_yaml": {
-            "signature": {
-                "text": "to_string_legend_yaml(config: 'YamlConfig' = <sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f133e649660>) -> 'str'",
-                "parameters": [
-                    {
-                        "name": "config",
-                        "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "YamlConfig",
-                        "default": "<sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f133e649660>"
-                    }
-                ],
-                "returns": "str"
-            },
-            "doc": {
-                "Preamble": {
-                    "profile": "function",
-                    "normative_sections": [
-                        "Contract",
-                        "Parameters",
-                        "Returns",
-                        "Raises"
-                    ],
-                    "scope": [
-                        "public"
-                    ],
-                    "status": "stable"
-                },
-                "Contract": {
-                    "general": [
-                        "MUST render the Waterloo roles legend as YAML using the existing emitter."
-                    ]
-                },
-                "Parameters": {
-                    "config": [
-                        "How to render the YAML code."
-                    ]
-                },
-                "Returns": [
-                    "The YAML string containing the legend."
-                ],
-                "Raises": {}
-            }
-        },
-        "sdv.doc.waterloo.docitem_convert.to_string_signature_yaml": {
-            "signature": {
-                "text": "to_string_signature_yaml(obj: 'object', config: 'YamlConfig' = <sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f133e649570>) -> 'str'",
-                "parameters": [
-                    {
-                        "name": "obj",
-                        "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "object",
-                        "default": null
-                    },
-                    {
-                        "name": "config",
-                        "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "YamlConfig",
-                        "default": "<sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f133e649570>"
-                    }
-                ],
-                "returns": "str"
-            },
-            "doc": {
-                "Preamble": {
-                    "profile": "function",
-                    "normative_sections": [
-                        "Contract",
-                        "Parameters",
-                        "Returns",
-                        "Raises"
-                    ],
-                    "scope": [
-                        "public"
-                    ],
-                    "status": "draft"
-                },
-                "Contract": {
-                    "general": [
-                        "MUST render a YAML snippet as defined by |var|`config`, representing the",
-                        "signature of the callable |var|`obj`.",
-                        "The root key MUST be |attr|`signature`, containing the subkeys",
-                        "|attr|`text`, |attr|`parameters`, and |attr|`returns`.",
-                        "|attr|`text` MUST provide an inline-style representation of the signature.",
-                        "|attr|`parameters` MUST contain a sequence of elements, each providing:",
-                        "|attr|`name`: The parameter identifier.",
-                        "|attr|`kind`: The slot-filling strategy (e.g., positional-only, keyword-only,",
-                        "or variadic) as defined by the Python |func|`inspect` semantics.",
-                        "|attr|`annotation`: The parameter's type hint or annotation.",
-                        "|attr|`default`: |value|`null` if no default value is defined; otherwise,",
-                        "a string representation of the default value.",
-                        "The subkey |attr|`returns` MUST represent the return type of the callable."
-                    ]
-                },
-                "Parameters": {
-                    "obj": [
-                        "The callable whose signature is to be inspected and rendered."
-                    ],
-                    "config": [
-                        "Configuration object controlling indentation, line folding, and",
-                        "the embedding of the emitted YAML."
-                    ]
-                },
-                "Returns": [
-                    "The generated YAML string."
-                ],
-                "Raises": {
-                    "TypeError": [
-                        "MUST be raised if |var|`obj` is not callable or if the signature",
-                        "cannot be inspected."
+                    "ImportError": [
+                        "MUST raise if the module of the qualified name cannot be resolved."
                     ],
                     "ValueError": [
-                        "MAY be raised if the signature includes parameter kinds that",
-                        "cannot be serialized."
+                        "MUST raise if no attribute is specified after a resolved module name."
                     ],
-                    "Exception": [
-                        "MAY propagate exceptions from |func|`inspect.signature` or |func|`repr` during default value rendering; callers should treat these as unexpected errors."
-                    ]
-                },
-                "Notes": {
-                    "Standard values for \"kind\"": [
-                        "Derived from |type|`inspect.Parameter`: |value|`POSITIONAL_ONLY`, |value|`POSITIONAL_OR_KEYWORD`, |value|`VAR_POSITIONAL`, |value|`KEYWORD_ONLY`, |value|`VAR_KEYWORD`"
+                    "BaseException": [
+                        "MUST propagate exceptions from the module import."
                     ]
                 }
             }
         },
-        "sdv.doc.waterloo.docitem_convert.to_string_yaml": {
+        "sdv.doc.waterloo.docitem_sphinx.wtrl_build_autodoc_module_nodes": {
             "signature": {
-                "text": "to_string_yaml(tree: 'docstring_tree', flavour: 'Flavour', config: 'YamlConfig' = <sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f133e649480>) -> 'str'",
+                "text": "wtrl_build_autodoc_module_nodes(app: 'SphinxAppProtocol | Any', inliner: 'InlinerProtocol', lineno: 'int', qname: 'str') -> 'list[nodes.Node]'",
                 "parameters": [
                     {
-                        "name": "tree",
+                        "name": "app",
                         "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "docstring_tree",
+                        "annotation": "SphinxAppProtocol | Any",
                         "default": null
                     },
                     {
-                        "name": "flavour",
+                        "name": "inliner",
                         "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "Flavour",
+                        "annotation": "InlinerProtocol",
                         "default": null
                     },
                     {
-                        "name": "config",
+                        "name": "lineno",
                         "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "YamlConfig",
-                        "default": "<sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f133e649480>"
+                        "annotation": "int",
+                        "default": null
+                    },
+                    {
+                        "name": "qname",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
                     }
                 ],
-                "returns": "str"
+                "returns": "list[nodes.Node]"
             },
             "doc": {
                 "Preamble": {
@@ -9076,108 +8522,1112 @@
                         "Contract",
                         "Parameters",
                         "Returns",
-                        "Raises",
-                        "See_also"
-                    ],
-                    "scope": [
-                        "public"
-                    ],
-                    "status": "draft"
+                        "Raises"
+                    ]
                 },
                 "Contract": {
                     "general": [
-                        "MUST render the tree as YAML-string using the given flavour.",
-                        "MUST reproduce the tree structure by indentation in YAML.",
-                        "In RFC_2199 flavour, Normativity Keywords MUST be capitalized and the pipe delimiters MUST be dropped.",
-                        "In RAW flavour, Normativity Keywords MUST be rendered without modification, i.e. including pipe delimiters.",
-                        "In MARKUP flavour, Normativity Keywords MUST be rendered with double asterisk |lit|`**...**` instead of pipe delimiters."
-                    ],
-                    "requires": [
-                        "|var|`tree` MUST be a formally correct docstring tree."
+                        "MUST resolve the dotted module name |var|`text` to a Python module object taking into account the current module state.",
+                        "MUST parse and validate the module's Waterloo docstring.",
+                        "MUST render the parsed docstring into Docutils nodes using the configured context."
                     ]
                 },
-                "Notes": {
-                    "Details": [
-                        "Each list element becomes a YAML sequence item (\\\"-\\\"), preserving the original nesting of the docstring tree. Long scalars are emitted as folded blocks (>-) to keep line lengths reasonable for linters."
-                    ]
-                },
+                "Description": [
+                    "Implementation of role |attr|`:wtrl_autodoc_module:`."
+                ],
                 "Parameters": {
-                    "tree": [
-                        "The tree to render as string."
+                    "app": [
+                        "The Sphinx application instance that carries configuration and environment state."
                     ],
-                    "flavour": [
-                        "The style to render Normativity Keywords in."
+                    "inliner": [
+                        "The Docutils inliner used to parse inline markup into nodes."
                     ],
-                    "config": [
-                        "How to render the YAML code."
+                    "lineno": [
+                        "Line number in the source document."
+                    ],
+                    "qname": [
+                        "The qualified module name to build nodes for."
                     ]
                 },
                 "Returns": [
-                    "The YAML string"
+                    "The list of generated |type|`docutils.nodes.Node` representing the module doumentation."
                 ],
                 "Raises": {
-                    "ParseError": [
-                        "MUST propagate if the docstring tree cannot be turned into a docitem AST."
+                    "RuntimeError": [
+                        "MUST raise if the qualified name cannot be resolved",
+                        "MUST raise if parsing the docstring fails.",
+                        "MUST raise if validating the docstring tree fails"
                     ],
-                    "TypeError": [
-                        "MUST raise if |var|`flavour` is not a |type|`Flavour`."
+                    "BaseException": [
+                        "MAY raise if building the list of Docutils nodes fails."
                     ]
-                },
-                "See_also": [
-                    "sdv.doc.waterloo.docitem.Flavour",
-                    "sdv.doc.waterloo.docitem.Format"
-                ]
+                }
             }
         },
-        "sdv_doc_docitem.docstring_tree": {
-            "doc": [
-                "The type alias for docstring trees."
-            ]
+        "sdv.doc.waterloo.docitem_sphinx.wtrl_build_autodoc_function_nodes": {
+            "signature": {
+                "text": "wtrl_build_autodoc_function_nodes(app: 'SphinxAppProtocol | Any', inliner: 'InlinerProtocol', lineno: 'int', qname: 'str') -> 'list[nodes.Node]'",
+                "parameters": [
+                    {
+                        "name": "app",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "SphinxAppProtocol | Any",
+                        "default": null
+                    },
+                    {
+                        "name": "inliner",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "InlinerProtocol",
+                        "default": null
+                    },
+                    {
+                        "name": "lineno",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "int",
+                        "default": null
+                    },
+                    {
+                        "name": "qname",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    }
+                ],
+                "returns": "list[nodes.Node]"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST resolve the dotted function name |var|`qname` to a callable taking into account the current module/class state.",
+                        "MUST parse and validate the function's Waterloo docstring.",
+                        "MUST render the parsed docstring into Docutils nodes using the configured context."
+                    ]
+                },
+                "Description": [
+                    "Implementation of directive |attr|`.. wtrl_autodoc_function::`."
+                ],
+                "Parameters": {
+                    "app": [
+                        "The Sphinx application instance that carries configuration and environment state."
+                    ],
+                    "inliner": [
+                        "The Docutils inliner used to parse inline markup into nodes."
+                    ],
+                    "lineno": [
+                        "Line number in the source document."
+                    ],
+                    "qname": [
+                        "The qualified function name to document."
+                    ]
+                },
+                "Returns": [
+                    "List of generated |type|`docutils.nodes.Node`."
+                ],
+                "Raises": {
+                    "RuntimeError": [
+                        "MUST raise if the qualified name cannot be resolved.",
+                        "MUST raise if parsing the docstring fails.",
+                        "MUST raise if validating the docstring tree fails."
+                    ],
+                    "BaseException": [
+                        "MAY raise if building the list of Docutils nodes fails."
+                    ]
+                }
+            }
         },
-        "sdv_doc_docitem.Documentable_t": {
-            "doc": [
-                "Type for objects that can have a docstring."
-            ]
+        "sdv.doc.waterloo.docitem_sphinx.wtrl_build_autodoc_class_nodes": {
+            "signature": {
+                "text": "wtrl_build_autodoc_class_nodes(app: 'SphinxAppProtocol | Any', inliner: 'InlinerProtocol', lineno: 'int', qname: 'str') -> 'list[nodes.Node]'",
+                "parameters": [
+                    {
+                        "name": "app",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "SphinxAppProtocol | Any",
+                        "default": null
+                    },
+                    {
+                        "name": "inliner",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "InlinerProtocol",
+                        "default": null
+                    },
+                    {
+                        "name": "lineno",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "int",
+                        "default": null
+                    },
+                    {
+                        "name": "qname",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    }
+                ],
+                "returns": "list[nodes.Node]"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST resolve the dotted class name |var|`qname` to a class taking into account the current module/class state.",
+                        "MUST parse and validate the class' Waterloo docstring.",
+                        "MUST render the parsed docstring into Docutils nodes using the configured context."
+                    ]
+                },
+                "Description": [
+                    "Implementation of directive |attr|`.. wtrl_autodoc_class::`."
+                ],
+                "Parameters": {
+                    "app": [
+                        "The Sphinx application instance that carries configuration and environment state."
+                    ],
+                    "inliner": [
+                        "The Docutils inliner used to parse inline markup into nodes."
+                    ],
+                    "lineno": [
+                        "Line number in the source document."
+                    ],
+                    "qname": [
+                        "The qualified class name to document."
+                    ]
+                },
+                "Returns": [
+                    "List of generated |type|`docutils.nodes.Node`."
+                ],
+                "Raises": {
+                    "RuntimeError": [
+                        "MUST raise if the qualified name cannot be resolved.",
+                        "MUST raise if parsing the docstring fails.",
+                        "MUST raise if validating the docstring tree fails."
+                    ],
+                    "BaseException": [
+                        "MAY raise if building the list of Docutils nodes fails."
+                    ]
+                }
+            }
         },
-        "sdv_doc_docitem.Scopes_t": {
-            "doc": [
-                "Type alias for a set of scopes."
-            ]
+        "sdv.doc.waterloo.docitem_sphinx.wtrl_build_autodoc_class_full_nodes": {
+            "signature": {
+                "text": "wtrl_build_autodoc_class_full_nodes(app: 'SphinxAppProtocol | Any', inliner: 'InlinerProtocol', lineno: 'int', qname: 'str') -> 'list[nodes.Node]'",
+                "parameters": [
+                    {
+                        "name": "app",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "SphinxAppProtocol | Any",
+                        "default": null
+                    },
+                    {
+                        "name": "inliner",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "InlinerProtocol",
+                        "default": null
+                    },
+                    {
+                        "name": "lineno",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "int",
+                        "default": null
+                    },
+                    {
+                        "name": "qname",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    }
+                ],
+                "returns": "list[nodes.Node]"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST parse the class's docstring and create a docstring tree.",
+                        "MUST parse the class methods' docstrings and create docstring trees.",
+                        "MUST validate the docstring trees.",
+                        "MUST convert the docstring trees into a list of Docutils nodes that represent the docstrings."
+                    ]
+                },
+                "Description": [
+                    "Implementation of directive |attr|`.. wtrl_autodoc_class_full::`."
+                ],
+                "Parameters": {
+                    "app": [
+                        "The Sphinx application instance that carries configuration and environment state."
+                    ],
+                    "inliner": [
+                        "The Docutils inliner used to parse inline markup into nodes."
+                    ],
+                    "lineno": [
+                        "Line number in the source document."
+                    ],
+                    "qname": [
+                        "The qualified name of the class to be documented."
+                    ]
+                },
+                "Returns": [
+                    "List of generated |type|`docutils.nodes.Node`."
+                ],
+                "Raises": {
+                    "RuntimeError": [
+                        "MUST raise if the qualified name cannot be resolved.",
+                        "MUST raise if parsing of any of the docstrings fails.",
+                        "MUST raise if validating the docstring tree fails."
+                    ],
+                    "BaseException": [
+                        "MAY raise if building the list of Docutils nodes fails."
+                    ]
+                }
+            }
         },
-        "sdv_doc_docitem.RE_IDENTIFIER": {
-            "doc": [
-                "Regular expression for identifiers: ``[A-Za-z_][A-Za-z0-9_]*``"
-            ]
+        "sdv.doc.waterloo.docitem_sphinx.wtrl_build_push_current_module_nodes": {
+            "signature": {
+                "text": "wtrl_build_push_current_module_nodes(app: 'SphinxAppProtocol | Any', inliner: 'InlinerProtocol', lineno: 'int', qname: 'str') -> 'list[nodes.Node]'",
+                "parameters": [
+                    {
+                        "name": "app",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "SphinxAppProtocol | Any",
+                        "default": null
+                    },
+                    {
+                        "name": "inliner",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "InlinerProtocol",
+                        "default": null
+                    },
+                    {
+                        "name": "lineno",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "int",
+                        "default": null
+                    },
+                    {
+                        "name": "qname",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    }
+                ],
+                "returns": "list[nodes.Node]"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST push the qualified module name in |var|`text` to the module stack, which makes it the new current module.",
+                        "MUST resolve |var|`qname`.",
+                        "MUST build a list of Docutils nodes which represent a message about the changed state in the document.",
+                        "MAY write a log message to |file|`stdout`."
+                    ]
+                },
+                "Description": [
+                    "Implementation of directive |attr|`.. wtrl_push_current_module::`."
+                ],
+                "Parameters": {
+                    "app": [
+                        "The Sphinx application instance that carries configuration and environment state."
+                    ],
+                    "inliner": [
+                        "The Docutils inliner used to parse inline markup into nodes."
+                    ],
+                    "lineno": [
+                        "Line number in the source document."
+                    ],
+                    "qname": [
+                        "The qualified module name to push onto the stack."
+                    ]
+                },
+                "Returns": [
+                    "The list of generated |type|`docutils.nodes.Node` describing the resulting default module state."
+                ],
+                "Raises": {
+                    "RuntimeError": [
+                        "MUST raise if |var|`qname` does not resolve to a module."
+                    ],
+                    "BaseException": [
+                        "MAY propagate exceptions from |func|`resolve_qualified_name`.",
+                        "MAY propagate exceptions from within Sphinx or Docutils."
+                    ]
+                },
+                "Notes": {
+                    "Drift": [
+                        "Last reviewed on 2026-02-04"
+                    ]
+                }
+            }
         },
-        "sdv_doc_docitem.RE_QUALIFIED_IDENTIFIER": {
-            "doc": [
-                "Regular expression for qualified identifiers: ``[A-Za-z_.][A-Za-z0-9_.]*``"
-            ]
+        "sdv.doc.waterloo.docitem_sphinx.wtrl_build_push_current_class_nodes": {
+            "signature": {
+                "text": "wtrl_build_push_current_class_nodes(app: 'SphinxAppProtocol | Any', inliner: 'InlinerProtocol', lineno: 'int', qname: 'str') -> 'list[nodes.Node]'",
+                "parameters": [
+                    {
+                        "name": "app",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "SphinxAppProtocol | Any",
+                        "default": null
+                    },
+                    {
+                        "name": "inliner",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "InlinerProtocol",
+                        "default": null
+                    },
+                    {
+                        "name": "lineno",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "int",
+                        "default": null
+                    },
+                    {
+                        "name": "qname",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    }
+                ],
+                "returns": "list[nodes.Node]"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST push the qualified class name in |var|`text` to the class stack, which makes it the new current class.",
+                        "MUST resolve |var|`qname`.",
+                        "MUST build a list of Docutils nodes which represent a message about the changed state in the document.",
+                        "MAY write a log message to |file|`stdout`."
+                    ]
+                },
+                "Description": [
+                    "Implementation of directive |attr|`.. wtrl_push_current_class::`."
+                ],
+                "Parameters": {
+                    "app": [
+                        "The Sphinx application instance that carries configuration and environment state."
+                    ],
+                    "inliner": [
+                        "The Docutils inliner used to parse inline markup into nodes."
+                    ],
+                    "lineno": [
+                        "Line number in the source document."
+                    ],
+                    "qname": [
+                        "The qualified class name to push onto the stack."
+                    ]
+                },
+                "Returns": [
+                    "The list of generated |type|`docutils.nodes.Node` describing the resulting default module state."
+                ],
+                "Raises": {
+                    "RuntimeError": [
+                        "MUST raise if |var|`qname` does not resolve to a class."
+                    ],
+                    "BaseException": [
+                        "MAY propagate exceptions from |func|`resolve_qualified_name`.",
+                        "MAY propagate exceptions from within Sphinx or Docutils."
+                    ]
+                },
+                "Notes": {
+                    "Drift": [
+                        "Last reviewed on 2026-02-04"
+                    ]
+                }
+            }
         },
-        "sdv_doc_docitem.KEYWORDS_OF_NORMATIVITY": {
-            "doc": [
-                "The set of normative keywords."
-            ]
+        "sdv.doc.waterloo.docitem_sphinx.wtrl_build_push_current_scope_nodes": {
+            "signature": {
+                "text": "wtrl_build_push_current_scope_nodes(app: 'SphinxAppProtocol | Any', inliner: 'InlinerProtocol', lineno: 'int', scope_tag: 'str') -> 'list[nodes.Node]'",
+                "parameters": [
+                    {
+                        "name": "app",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "SphinxAppProtocol | Any",
+                        "default": null
+                    },
+                    {
+                        "name": "inliner",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "InlinerProtocol",
+                        "default": null
+                    },
+                    {
+                        "name": "lineno",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "int",
+                        "default": null
+                    },
+                    {
+                        "name": "scope_tag",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    }
+                ],
+                "returns": "list[nodes.Node]"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST push the scope identifier in |var|`scope_tag` to the scope stack, which makes it the new current scope.",
+                        "MUST build a list of Docutils nodes which represent a message about the changed state in the document.",
+                        "MAY write a log message to |file|`stdout`."
+                    ]
+                },
+                "Description": [
+                    "Implementation of directive |attr|`.. wtrl_push_current_scope::`."
+                ],
+                "Parameters": {
+                    "app": [
+                        "The Sphinx application instance that carries configuration and environment state."
+                    ],
+                    "inliner": [
+                        "The Docutils inliner used to parse inline markup into nodes."
+                    ],
+                    "lineno": [
+                        "Line number in the source document."
+                    ],
+                    "scope_tag": [
+                        "The scope identifier to push onto the stack."
+                    ]
+                },
+                "Returns": [
+                    "The list of generated |type|`docutils.nodes.Node` describing the resulting default scope state."
+                ],
+                "Raises": {
+                    "RuntimeError": [
+                        "MUST raise if |var|`scope_tag` is unknown."
+                    ],
+                    "BaseException": [
+                        "MAY propagate exceptions from within Sphinx or Docutils."
+                    ]
+                },
+                "Notes": {
+                    "Drift": [
+                        "Last reviewed on 2026-02-04"
+                    ]
+                }
+            }
         },
-        "sdv_doc_docitem.CANONICAL_ORDER_OF_SECTIONS": {
-            "doc": [
-                "A canonical order for sections and subsection in order to reduce permutative noise for LLMs."
-            ]
+        "sdv.doc.waterloo.docitem_sphinx.wtrl_build_pop_current_module_nodes": {
+            "signature": {
+                "text": "wtrl_build_pop_current_module_nodes(app: 'SphinxAppProtocol | Any', inliner: 'InlinerProtocol', lineno: 'int', qname: 'str') -> 'list[nodes.Node]'",
+                "parameters": [
+                    {
+                        "name": "app",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "SphinxAppProtocol | Any",
+                        "default": null
+                    },
+                    {
+                        "name": "inliner",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "InlinerProtocol",
+                        "default": null
+                    },
+                    {
+                        "name": "lineno",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "int",
+                        "default": null
+                    },
+                    {
+                        "name": "qname",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    }
+                ],
+                "returns": "list[nodes.Node]"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST compare the qualified module name in |var|`qname` to the top of the module stack and raise an exception in case of mismatch.",
+                        "MUST resolve |var|`qname` against the current module/class context.",
+                        "MUST pop one element from the module stack.",
+                        "MUST build a list of Docutils nodes which represent a message about the changed state in the document.",
+                        "MAY write a log message to |file|`stdout`."
+                    ]
+                },
+                "Description": [
+                    "Implementation of directive |attr|`.. wtrl_pop_current_module::`."
+                ],
+                "Parameters": {
+                    "app": [
+                        "The Sphinx application instance that carries configuration and environment state."
+                    ],
+                    "inliner": [
+                        "The Docutils inliner used to parse inline markup into nodes."
+                    ],
+                    "lineno": [
+                        "Line number in the source document."
+                    ],
+                    "qname": [
+                        "The qualified module name to compare and pop from the stack."
+                    ]
+                },
+                "Returns": [
+                    "The list of generated |type|`docutils.nodes.Node` describing the resulting default module state."
+                ],
+                "Raises": {
+                    "RuntimeError": [
+                        "MUST raise on the attempt to access an element from an empty stack.",
+                        "MUST raise if |var|`qname` does not resolve to a module."
+                    ],
+                    "BaseException": [
+                        "MAY propagate exceptions from |func|`resolve_qualified_name`.",
+                        "MAY propagate exceptions from within Sphinx or Docutils."
+                    ]
+                },
+                "Notes": {
+                    "Drift": [
+                        "Last reviewed on 2026-02-04"
+                    ]
+                }
+            }
         },
-        "sdv_doc_docitem.SCOPE_TAG_MAP": {
-            "doc": [
-                "Map string representations of scopes to symbolic/numeric values."
-            ]
+        "sdv.doc.waterloo.docitem_sphinx.wtrl_build_pop_current_class_nodes": {
+            "signature": {
+                "text": "wtrl_build_pop_current_class_nodes(app: 'SphinxAppProtocol | Any', inliner: 'InlinerProtocol', lineno: 'int', qname: 'str') -> 'list[nodes.Node]'",
+                "parameters": [
+                    {
+                        "name": "app",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "SphinxAppProtocol | Any",
+                        "default": null
+                    },
+                    {
+                        "name": "inliner",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "InlinerProtocol",
+                        "default": null
+                    },
+                    {
+                        "name": "lineno",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "int",
+                        "default": null
+                    },
+                    {
+                        "name": "qname",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    }
+                ],
+                "returns": "list[nodes.Node]"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST compare the qualified class name in |var|`qname` to the top of the class stack and raise an exception in case of mismatch.",
+                        "MUST resolve |var|`qname` against the current module/class context.",
+                        "MUST pop one element from the class stack.",
+                        "MUST build a list of Docutils nodes which represent a message about the changed state in the document.",
+                        "MAY write a log message to |file|`stdout`."
+                    ]
+                },
+                "Description": [
+                    "Implementation of directive |attr|`.. wtrl_pop_current_class::`."
+                ],
+                "Parameters": {
+                    "app": [
+                        "The Sphinx application instance that carries configuration and environment state."
+                    ],
+                    "inliner": [
+                        "The Docutils inliner used to parse inline markup into nodes."
+                    ],
+                    "lineno": [
+                        "Line number in the source document."
+                    ],
+                    "qname": [
+                        "The qualified class name to compare and pop from the stack."
+                    ]
+                },
+                "Returns": [
+                    "The list of generated |type|`docutils.nodes.Node` describing the resulting default class state."
+                ],
+                "Raises": {
+                    "RuntimeError": [
+                        "MUST raise on the attempt to access an element from an empty stack.",
+                        "MUST raise if |var|`qname` does not resolve to a class."
+                    ],
+                    "BaseException": [
+                        "MAY propagate exceptions from |func|`resolve_qualified_name`.",
+                        "MAY propagate exceptions from within Sphinx or Docutils."
+                    ]
+                },
+                "Notes": {
+                    "Drift": [
+                        "Last reviewed on 2026-02-04"
+                    ]
+                }
+            }
         },
-        "sdv_doc_docitem.FLAVOUR_TAG_MAP": {
-            "doc": [
-                "Map string representations of flavours to symbolic/numeric values."
-            ]
+        "sdv.doc.waterloo.docitem_sphinx.wtrl_build_pop_current_scope_nodes": {
+            "signature": {
+                "text": "wtrl_build_pop_current_scope_nodes(app: 'SphinxAppProtocol | Any', inliner: 'InlinerProtocol', lineno: 'int', scope_tag: 'str') -> 'list[nodes.Node]'",
+                "parameters": [
+                    {
+                        "name": "app",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "SphinxAppProtocol | Any",
+                        "default": null
+                    },
+                    {
+                        "name": "inliner",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "InlinerProtocol",
+                        "default": null
+                    },
+                    {
+                        "name": "lineno",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "int",
+                        "default": null
+                    },
+                    {
+                        "name": "scope_tag",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    }
+                ],
+                "returns": "list[nodes.Node]"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST compare the scope identifier name in |var|`qname` to the top of the scope stack and raise an exception in case of mismatch.",
+                        "MUST pop one element from the scope stack.",
+                        "MUST build a list of Docutils nodes which represent a message about the changed state in the document.",
+                        "MAY write a log message to |file|`stdout`."
+                    ]
+                },
+                "Description": [
+                    "Implementation of directive |attr|`.. wtrl_pop_current_scope::`."
+                ],
+                "Parameters": {
+                    "app": [
+                        "The Sphinx application instance that carries configuration and environment state."
+                    ],
+                    "inliner": [
+                        "The Docutils inliner used to parse inline markup into nodes."
+                    ],
+                    "lineno": [
+                        "Line number in the source document."
+                    ],
+                    "scope_tag": [
+                        "The scope identifier to compare and pop from the stack."
+                    ]
+                },
+                "Returns": [
+                    "The list of generated |type|`docutils.nodes.Node` describing the resulting default scope state."
+                ],
+                "Raises": {
+                    "RuntimeError": [
+                        "MUST raise on the attempt to access an element from an empty stack.",
+                        "MUST raise if |var|`scope_tag` is unknown or mismatches the stack top."
+                    ],
+                    "BaseException": [
+                        "MAY propagate exceptions from within Sphinx or Docutils."
+                    ]
+                },
+                "Notes": {
+                    "Drift": [
+                        "Last reviewed on 2026-02-04"
+                    ]
+                }
+            }
         },
-        "sdv_doc_docitem.FORMAT_TAG_MAP": {
-            "doc": [
-                "Map string representations of output formats to symbolic/numeric values."
-            ]
+        "sdv.doc.waterloo.docitem_sphinx.wtrl_build_method_signature_nodes": {
+            "signature": {
+                "text": "wtrl_build_method_signature_nodes(app: 'SphinxAppProtocol | Any', inliner: 'InlinerProtocol', lineno: 'int', qname: 'str') -> 'list[nodes.Node]'",
+                "parameters": [
+                    {
+                        "name": "app",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "SphinxAppProtocol | Any",
+                        "default": null
+                    },
+                    {
+                        "name": "inliner",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "InlinerProtocol",
+                        "default": null
+                    },
+                    {
+                        "name": "lineno",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "int",
+                        "default": null
+                    },
+                    {
+                        "name": "qname",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    }
+                ],
+                "returns": "list[nodes.Node]"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ],
+                    "scope": [
+                        "core"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST create a list of |type|`docutil`-nodes representing the method signature as inline text."
+                    ]
+                },
+                "Parameters": {
+                    "app": [
+                        "The Sphinx application instance that carries configuration and environment state."
+                    ],
+                    "inliner": [
+                        "The Docutils inliner used to parse inline markup into nodes."
+                    ],
+                    "lineno": [
+                        "Line number in the source document."
+                    ],
+                    "qname": [
+                        "Qualified name of method to render."
+                    ]
+                },
+                "Returns": [
+                    "The list of generated |type|`docutils.nodes.Node` describing the method signature."
+                ],
+                "Raises": {
+                    "BaseException": [
+                        "MAY propagate exceptions from |type|`docutils`."
+                    ]
+                },
+                "Notes": {
+                    "Drift": [
+                        "Last reviewed on 2026-02-04"
+                    ]
+                }
+            }
+        },
+        "sdv.doc.waterloo.docitem_sphinx.wtrl_build_function_signature_nodes": {
+            "signature": {
+                "text": "wtrl_build_function_signature_nodes(app: 'SphinxAppProtocol | Any', inliner: 'InlinerProtocol', lineno: 'int', qname: 'str') -> 'list[nodes.Node]'",
+                "parameters": [
+                    {
+                        "name": "app",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "SphinxAppProtocol | Any",
+                        "default": null
+                    },
+                    {
+                        "name": "inliner",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "InlinerProtocol",
+                        "default": null
+                    },
+                    {
+                        "name": "lineno",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "int",
+                        "default": null
+                    },
+                    {
+                        "name": "qname",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    }
+                ],
+                "returns": "list[nodes.Node]"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ],
+                    "scope": [
+                        "core"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST create a list of |type|`docutil`-nodes representing the function signature as inline text."
+                    ]
+                },
+                "Parameters": {
+                    "app": [
+                        "The Sphinx application instance that carries configuration and environment state."
+                    ],
+                    "inliner": [
+                        "The Docutils inliner used to parse inline markup into nodes."
+                    ],
+                    "lineno": [
+                        "Line number in the source document."
+                    ],
+                    "qname": [
+                        "Qualified name of method to render."
+                    ]
+                },
+                "Returns": [
+                    "The list of generated |type|`docutils.nodes.Node` describing the function signature."
+                ],
+                "Raises": {
+                    "BaseException": [
+                        "MAY propagate exceptions from |type|`docutils`."
+                    ]
+                },
+                "Notes": {
+                    "Drift": [
+                        "Last reviewed on 2026-02-04"
+                    ]
+                }
+            }
+        },
+        "sdv.doc.waterloo.docitem_sphinx.wtrl_build_method_signature_block_nodes": {
+            "signature": {
+                "text": "wtrl_build_method_signature_block_nodes(app: 'SphinxAppProtocol | Any', inliner: 'InlinerProtocol', lineno: 'int', qname: 'str') -> 'list[nodes.Node]'",
+                "parameters": [
+                    {
+                        "name": "app",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "SphinxAppProtocol | Any",
+                        "default": null
+                    },
+                    {
+                        "name": "inliner",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "InlinerProtocol",
+                        "default": null
+                    },
+                    {
+                        "name": "lineno",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "int",
+                        "default": null
+                    },
+                    {
+                        "name": "qname",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    }
+                ],
+                "returns": "list[nodes.Node]"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ],
+                    "scope": [
+                        "core"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST create a list of |type|`docutil`-nodes representing the method signature as paragraph with one parameter per line."
+                    ]
+                },
+                "Parameters": {
+                    "app": [
+                        "The Sphinx application instance that carries configuration and environment state."
+                    ],
+                    "inliner": [
+                        "The Docutils inliner used to parse inline markup into nodes."
+                    ],
+                    "lineno": [
+                        "Line number in the source document."
+                    ],
+                    "qname": [
+                        "Qualified name of method to render."
+                    ]
+                },
+                "Returns": [
+                    "The list of generated |type|`docutils.nodes.Node` describing the method signature."
+                ],
+                "Raises": {
+                    "BaseException": [
+                        "MAY propagate exceptions from |type|`docutils`."
+                    ]
+                },
+                "Notes": {
+                    "Drift": [
+                        "Last reviewed on 2026-02-04"
+                    ]
+                }
+            }
+        },
+        "sdv.doc.waterloo.docitem_sphinx.wtrl_build_function_signature_block_nodes": {
+            "signature": {
+                "text": "wtrl_build_function_signature_block_nodes(app: 'SphinxAppProtocol | Any', inliner: 'InlinerProtocol', lineno: 'int', qname: 'str') -> 'list[nodes.Node]'",
+                "parameters": [
+                    {
+                        "name": "app",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "SphinxAppProtocol | Any",
+                        "default": null
+                    },
+                    {
+                        "name": "inliner",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "InlinerProtocol",
+                        "default": null
+                    },
+                    {
+                        "name": "lineno",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "int",
+                        "default": null
+                    },
+                    {
+                        "name": "qname",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    }
+                ],
+                "returns": "list[nodes.Node]"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ],
+                    "scope": [
+                        "core"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST create a list of |type|`docutil`-nodes representing the function signature as paragraph with one parameter per line."
+                    ]
+                },
+                "Parameters": {
+                    "app": [
+                        "The Sphinx application instance that carries configuration and environment state."
+                    ],
+                    "inliner": [
+                        "The Docutils inliner used to parse inline markup into nodes."
+                    ],
+                    "lineno": [
+                        "Line number in the source document."
+                    ],
+                    "qname": [
+                        "Qualified name of method to render."
+                    ]
+                },
+                "Returns": [
+                    "The list of generated |type|`docutils.nodes.Node` describing the function signature."
+                ],
+                "Raises": {
+                    "BaseException": [
+                        "MAY propagate exceptions from |type|`docutils`."
+                    ]
+                },
+                "Notes": {
+                    "Drift": [
+                        "Last reviewed on 2026-02-04"
+                    ]
+                }
+            }
         }
     }
 }

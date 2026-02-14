@@ -5,8 +5,8 @@
 #### Branch main
 
 * Machine-readable documentation
-  * ``src/sdv/doc/waterloo/doc-json/docitem.wtrl.json``
-  * ``src/sdv/doc/waterloo/doc-json/docitem_sphinx.wtrl.json``
+  * ``src/sdv/doc/waterloo/doc-json/docitem.wtrl.*.*.json``
+  * ``src/sdv/doc/waterloo/doc-json/docitem_sphinx.wtrl.*.*.json``
 
 * JSON-Schema
   * ``src/sdv/doc/waterloo/schema/wtrl-json-*.*.*.schema.json``

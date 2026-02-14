@@ -1,12 +1,12 @@
 {
-    "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "https://sci-d-vis.com/schema/wtrl-json-0.0.1.schema.json",
+    "$schema": "https://sci-d-vis.com/schema/wtrl-json-0.0.2.schema.json",
+    "$id": "urn:waterlint:0.2.4:render-json:core:rfc-2119:bab2df7bca7847d1962ea3c5d118f277",
     "__WTRL_VERSION__": {
-        "waterloo": "0.1.1",
-        "schema": "0.0.1"
+        "waterloo": "0.1.2",
+        "schema": "0.0.2"
     },
     "__WTRL_META__": {
-        "generated_at": "2026-02-12T17:29:33+01:00",
+        "generated_at": "2026-02-14T21:47:46+01:00",
         "generator": "waterlint",
         "scope": "core",
         "flavour": "rfc-2119"
@@ -8201,7 +8201,7 @@
         },
         "sdv_doc_docitem.gen_documentable_objects": {
             "signature": {
-                "text": "gen_documentable_objects(obj: Union[module, type[object], Callable[..., Any]], config: sdv_doc_docitem_helper.ConfigTraversal = <sdv_doc_docitem_helper.ConfigTraversal object at 0x7fc68df43400>) -> Generator[Union[module, type[object], Callable[..., Any]], NoneType, NoneType]",
+                "text": "gen_documentable_objects(obj: Union[module, type[object], Callable[..., Any]], config: sdv_doc_docitem_helper.ConfigTraversal = <sdv_doc_docitem_helper.ConfigTraversal object at 0x7fc63659fcd0>) -> Generator[Union[module, type[object], Callable[..., Any]], NoneType, NoneType]",
                 "parameters": [
                     {
                         "name": "obj",
@@ -8213,7 +8213,7 @@
                         "name": "config",
                         "kind": "POSITIONAL_OR_KEYWORD",
                         "annotation": "ConfigTraversal",
-                        "default": "<sdv_doc_docitem_helper.ConfigTraversal object at 0x7fc68df43400>"
+                        "default": "<sdv_doc_docitem_helper.ConfigTraversal object at 0x7fc63659fcd0>"
                     }
                 ],
                 "returns": "Generator"
@@ -8293,7 +8293,7 @@
         },
         "sdv.doc.waterloo.docitem_sphinx.build_sphinx_nodes": {
             "signature": {
-                "text": "build_sphinx_nodes(ctx: 'context', objname: 'str', doc: 'mod_docitem.docitem_docstring_base') -> 'List[nodes.Node]'",
+                "text": "build_sphinx_nodes(ctx: 'context', obj: 'object', doc: 'mod_docitem.docitem_docstring_base') -> 'List[nodes.Node]'",
                 "parameters": [
                     {
                         "name": "ctx",
@@ -8302,9 +8302,9 @@
                         "default": null
                     },
                     {
-                        "name": "objname",
+                        "name": "obj",
                         "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "str",
+                        "annotation": "object",
                         "default": null
                     },
                     {
@@ -8337,8 +8337,8 @@
                     "ctx": [
                         "Rendering context providing inline parser and role-formatters."
                     ],
-                    "objname": [
-                        "Name of the documented object (module, class or method) used in headings."
+                    "obj": [
+                        "The documented object (module, class or method)."
                     ],
                     "doc": [
                         "Parsed docstring tree (representing one of the defined profiles)."

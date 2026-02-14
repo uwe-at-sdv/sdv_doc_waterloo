@@ -1,0 +1,181 @@
+{
+    "$schema": "https://sci-d-vis.com/schema/wtrl-json-0.0.2.schema.json",
+    "$id": "urn:waterlint:0.2.4:render-json:core:rfc-2119:c992279d4887f9389c95e0e4a1d3efc3",
+    "__WTRL_VERSION__": {
+        "waterloo": "0.1.2",
+        "schema": "0.0.2"
+    },
+    "__WTRL_META__": {
+        "generated_at": "2026-02-14T21:47:46+01:00",
+        "generator": "waterlint",
+        "scope": "core",
+        "flavour": "rfc-2119"
+    },
+    "__WTRL_ROLES__": {
+        "attr": "Attribute name",
+        "cmd": "Shell or CLI command",
+        "dfn": "Definition of a term",
+        "file": "File or path",
+        "func": "Function or callable",
+        "label": "Section/Subsection label",
+        "lit": "Literal text or code",
+        "mod": "Module name",
+        "norm": "Normativity keyword",
+        "op": "Operator symbol",
+        "opt": "Command-line option or flag",
+        "tag": "Tag or marker",
+        "term": "Domain-specific term",
+        "type": "Type name or annotation",
+        "value": "Concrete value",
+        "var": "Variable name",
+        "var_type": "Variable and type, like 'var:type'"
+    },
+    "__WTRL_TOC_MODULES__": {
+        "test_docitem_method_decorator": "/__WTRL_OBJECTS__/test_docitem_method_decorator"
+    },
+    "__WTRL_TOC_CLASSES__": {},
+    "__WTRL_TOC_CALLABLES__": {
+        "test_docitem_method_decorator.B.f_abstractmethod": "/__WTRL_OBJECTS__/test_docitem_method_decorator.B.f_abstractmethod",
+        "test_docitem_method_decorator.X.f_staticmethod": "/__WTRL_OBJECTS__/test_docitem_method_decorator.X.f_staticmethod",
+        "test_docitem_method_decorator.fib": "/__WTRL_OBJECTS__/test_docitem_method_decorator.fib"
+    },
+    "__WTRL_TOC_TYPES__": {},
+    "__WTRL_TOC_VARIABLES__": {},
+    "__WTRL_TOC_CONSTANTS__": {},
+    "__WTRL_OBJECTS__": {
+        "test_docitem_method_decorator.B.f_abstractmethod": {
+            "signature": {
+                "text": "B.f_abstractmethod(self) -> 'NoReturn'",
+                "parameters": [],
+                "returns": "NoReturn"
+            },
+            "traits": [
+                "abstractmethod"
+            ],
+            "decorators": [
+                "@abstractmethod"
+            ],
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST always raise an exception because\t\t\t\tit is an abstract method."
+                    ]
+                },
+                "Parameters": {},
+                "Returns": [
+                    "Does not return."
+                ],
+                "Raises": {
+                    "NotImplementedError": [
+                        "MUST always raise. Method MUST be\t\t\t\timplemented by derived class."
+                    ]
+                }
+            }
+        },
+        "test_docitem_method_decorator": {
+            "doc": {}
+        },
+        "test_docitem_method_decorator.X.f_staticmethod": {
+            "signature": {
+                "text": "X.f_staticmethod(q: 'bool') -> 'None'",
+                "parameters": [
+                    {
+                        "name": "q",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "bool",
+                        "default": null
+                    }
+                ],
+                "returns": "None"
+            },
+            "traits": [
+                "staticmethod"
+            ],
+            "decorators": [
+                "@staticmethod"
+            ],
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST print its name"
+                    ]
+                },
+                "Parameters": {
+                    "q": [
+                        "A dummy parameter."
+                    ]
+                },
+                "Returns": [
+                    "|None|"
+                ],
+                "Raises": {}
+            }
+        },
+        "test_docitem_method_decorator.fib": {
+            "signature": {
+                "text": "fib(n: 'int') -> 'int'",
+                "parameters": [
+                    {
+                        "name": "n",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "int",
+                        "default": null
+                    }
+                ],
+                "returns": "int"
+            },
+            "decorators": [
+                "@trace",
+                "@functools.lru_cache(maxsize=128)"
+            ],
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST compute the |var|`n`-th Fibonacci number.",
+                        "MUST cache intermediate results."
+                    ]
+                },
+                "Parameters": {
+                    "n": [
+                        "The |var|`n` in \"compute the |var|`n`-th Fibonacci number\"."
+                    ]
+                },
+                "Returns": [
+                    "The Fibonacci number"
+                ],
+                "Raises": {
+                    "BaseException": [
+                        "MAY propagate from |mod| functools."
+                    ]
+                }
+            }
+        }
+    }
+}
