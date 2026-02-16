@@ -2,6 +2,11 @@
 
 ### Sitemap
 
+#### Branch gh-pages
+
+* Human-readable documentation
+  * ``https://...``
+
 #### Branch main
 
 * Machine-readable documentation
@@ -16,8 +21,8 @@
   * ``src/sdv/doc/waterloo/docitem_convert.py``
   * ``src/sdv/doc/waterloo/docitem_sphinx.py``
 
+* Change logs:
+  * ``src/sdv/doc/waterloo/docitem.py`` following the definition of ``__version__``
+  * ``src/sdv/doc/waterloo/waterlint.py`` following the definition of ``__version__``
 
-#### Branch gh-pages
 
-* Human-readable documentation
-  * ``https://...``
