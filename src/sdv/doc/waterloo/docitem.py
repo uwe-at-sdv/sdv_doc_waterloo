@@ -248,7 +248,9 @@ try:
 except ImportError:
 	from sdv.doc.waterloo.docitem_validator import *
 
-__version__ = "0.1.2"
+__version__ = "0.2.0"
+# - 0.2.0 [2026-02-15]	Sphinx: Clickable references in Public_*, *_overview, See_also, and Derived_from;
+#			JSON: trait `generator`.
 # - 0.1.2 [2026-02-14]	Moved Waterloo specific stuff away from docitem_sphinx.py
 # - 0.1.1 [2026-02-13]	Commented versioning starts
 

@@ -1,12 +1,12 @@
 {
     "$schema": "https://sci-d-vis.com/schema/wtrl-json-0.0.2.schema.json",
-    "$id": "urn:waterlint:0.2.4:render-json:core:rfc-2119:1fdc8942ce2b64446652c83706d950c9",
+    "$id": "urn:waterlint:0.2.4:render-json:core:rfc-2119:f073fe52f4facb2177b7d3ded86ba2c6",
     "__WTRL_VERSION__": {
-        "waterloo": "0.1.2",
+        "waterloo": "0.2.0",
         "schema": "0.0.2"
     },
     "__WTRL_META__": {
-        "generated_at": "2026-02-14T21:47:45+01:00",
+        "generated_at": "2026-02-16T08:13:33+01:00",
         "generator": "waterlint",
         "scope": "core",
         "flavour": "rfc-2119"
@@ -114,6 +114,8 @@
         "sdv_doc_docitem_helper.is_obj_function": "/__WTRL_OBJECTS__/sdv_doc_docitem_helper.is_obj_function",
         "sdv_doc_docitem_helper.is_obj_named_value": "/__WTRL_OBJECTS__/sdv_doc_docitem_helper.is_obj_named_value",
         "sdv_doc_docitem_helper.get_obj_name": "/__WTRL_OBJECTS__/sdv_doc_docitem_helper.get_obj_name",
+        "sdv_doc_docitem_helper.get_obj_fully_qualified_name": "/__WTRL_OBJECTS__/sdv_doc_docitem_helper.get_obj_fully_qualified_name",
+        "sdv_doc_docitem_helper.build_anchor": "/__WTRL_OBJECTS__/sdv_doc_docitem_helper.build_anchor",
         "sdv_doc_docitem_helper.get_obj_path": "/__WTRL_OBJECTS__/sdv_doc_docitem_helper.get_obj_path",
         "sdv_doc_docitem_helper.get_func_obj_from_callable": "/__WTRL_OBJECTS__/sdv_doc_docitem_helper.get_func_obj_from_callable",
         "sdv_doc_docitem_helper.get_obj_docstring": "/__WTRL_OBJECTS__/sdv_doc_docitem_helper.get_obj_docstring",
@@ -1267,6 +1269,101 @@
                         "Last reviewed on 2026-02-04"
                     ]
                 }
+            }
+        },
+        "sdv_doc_docitem_helper.get_obj_fully_qualified_name": {
+            "signature": {
+                "text": "get_obj_fully_qualified_name(obj: 'object') -> 'str'",
+                "parameters": [
+                    {
+                        "name": "obj",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "object",
+                        "default": null
+                    }
+                ],
+                "returns": "str"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST return a fully qualified object name where possible.",
+                        "MUST return module objects as their module name.",
+                        "MUST return callable/class/object names as |mod|`<module>` . |lit|`<qualname>` when both parts are available.",
+                        "MUST fall back to |func|`get_obj_name` if no module prefix can be determined.",
+                        "MUST return input strings unchanged."
+                    ]
+                },
+                "Parameters": {
+                    "obj": [
+                        "The object to inspect."
+                    ]
+                },
+                "Returns": [
+                    "Best-effort fully qualified object name."
+                ],
+                "Raises": {}
+            }
+        },
+        "sdv_doc_docitem_helper.build_anchor": {
+            "signature": {
+                "text": "build_anchor(obj: 'object', kind: 'str | None' = None) -> 'str'",
+                "parameters": [
+                    {
+                        "name": "obj",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "object",
+                        "default": null
+                    },
+                    {
+                        "name": "kind",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str | None",
+                        "default": "None"
+                    }
+                ],
+                "returns": "str"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST build a deterministic anchor string from an object.",
+                        "MUST use the fully qualified name as source.",
+                        "MUST encode each qualified-name segment as ``<len>:<segment>``.",
+                        "MUST prefix the anchor by ``wtrl-<kind>-``.",
+                        "MUST infer kind as one of ``mod``, ``cls``, ``func``, ``obj`` if not passed explicitly."
+                    ]
+                },
+                "Parameters": {
+                    "obj": [
+                        "Object for which the anchor shall be generated."
+                    ],
+                    "kind": [
+                        "Optional explicit kind tag."
+                    ]
+                },
+                "Returns": [
+                    "Deterministic anchor string suitable for doc-internal links."
+                ],
+                "Raises": {}
             }
         },
         "sdv_doc_docitem_helper.get_obj_path": {
@@ -8068,7 +8165,7 @@
         },
         "sdv.doc.waterloo.docitem.gen_documentable_objects": {
             "signature": {
-                "text": "gen_documentable_objects(obj: Union[module, type[object], Callable[..., Any]], config: sdv_doc_docitem_helper.ConfigTraversal = <sdv_doc_docitem_helper.ConfigTraversal object at 0x7f133e894850>) -> Generator[Union[module, type[object], Callable[..., Any]], NoneType, NoneType]",
+                "text": "gen_documentable_objects(obj: Union[module, type[object], Callable[..., Any]], config: sdv_doc_docitem_helper.ConfigTraversal = <sdv_doc_docitem_helper.ConfigTraversal object at 0x7f27fa516830>) -> Generator[Union[module, type[object], Callable[..., Any]], NoneType, NoneType]",
                 "parameters": [
                     {
                         "name": "obj",
@@ -8080,11 +8177,14 @@
                         "name": "config",
                         "kind": "POSITIONAL_OR_KEYWORD",
                         "annotation": "ConfigTraversal",
-                        "default": "<sdv_doc_docitem_helper.ConfigTraversal object at 0x7f133e894850>"
+                        "default": "<sdv_doc_docitem_helper.ConfigTraversal object at 0x7f27fa516830>"
                     }
                 ],
                 "returns": "Generator"
             },
+            "traits": [
+                "generator"
+            ],
             "doc": {
                 "Preamble": {
                     "profile": "function",
@@ -8160,7 +8260,7 @@
         },
         "sdv_doc_docitem.gen_documentable_objects": {
             "signature": {
-                "text": "gen_documentable_objects(obj: Union[module, type[object], Callable[..., Any]], config: sdv_doc_docitem_helper.ConfigTraversal = <sdv_doc_docitem_helper.ConfigTraversal object at 0x7f133e80fcd0>) -> Generator[Union[module, type[object], Callable[..., Any]], NoneType, NoneType]",
+                "text": "gen_documentable_objects(obj: Union[module, type[object], Callable[..., Any]], config: sdv_doc_docitem_helper.ConfigTraversal = <sdv_doc_docitem_helper.ConfigTraversal object at 0x7f27fa9133d0>) -> Generator[Union[module, type[object], Callable[..., Any]], NoneType, NoneType]",
                 "parameters": [
                     {
                         "name": "obj",
@@ -8172,11 +8272,14 @@
                         "name": "config",
                         "kind": "POSITIONAL_OR_KEYWORD",
                         "annotation": "ConfigTraversal",
-                        "default": "<sdv_doc_docitem_helper.ConfigTraversal object at 0x7f133e80fcd0>"
+                        "default": "<sdv_doc_docitem_helper.ConfigTraversal object at 0x7f27fa9133d0>"
                     }
                 ],
                 "returns": "Generator"
             },
+            "traits": [
+                "generator"
+            ],
             "doc": {
                 "Preamble": {
                     "profile": "function",
@@ -8921,13 +9024,13 @@
         },
         "sdv.doc.waterloo.docitem_convert.to_string_legend_yaml": {
             "signature": {
-                "text": "to_string_legend_yaml(config: 'YamlConfig' = <sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f133e649660>) -> 'str'",
+                "text": "to_string_legend_yaml(config: 'YamlConfig' = <sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f27fa516200>) -> 'str'",
                 "parameters": [
                     {
                         "name": "config",
                         "kind": "POSITIONAL_OR_KEYWORD",
                         "annotation": "YamlConfig",
-                        "default": "<sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f133e649660>"
+                        "default": "<sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f27fa516200>"
                     }
                 ],
                 "returns": "str"
@@ -8964,7 +9067,7 @@
         },
         "sdv.doc.waterloo.docitem_convert.to_string_signature_yaml": {
             "signature": {
-                "text": "to_string_signature_yaml(obj: 'object', config: 'YamlConfig' = <sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f133e649570>) -> 'str'",
+                "text": "to_string_signature_yaml(obj: 'object', config: 'YamlConfig' = <sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f27fa516320>) -> 'str'",
                 "parameters": [
                     {
                         "name": "obj",
@@ -8976,7 +9079,7 @@
                         "name": "config",
                         "kind": "POSITIONAL_OR_KEYWORD",
                         "annotation": "YamlConfig",
-                        "default": "<sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f133e649570>"
+                        "default": "<sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f27fa516320>"
                     }
                 ],
                 "returns": "str"
@@ -9046,7 +9149,7 @@
         },
         "sdv.doc.waterloo.docitem_convert.to_string_yaml": {
             "signature": {
-                "text": "to_string_yaml(tree: 'docstring_tree', flavour: 'Flavour', config: 'YamlConfig' = <sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f133e649480>) -> 'str'",
+                "text": "to_string_yaml(tree: 'docstring_tree', flavour: 'Flavour', config: 'YamlConfig' = <sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f27fa516170>) -> 'str'",
                 "parameters": [
                     {
                         "name": "tree",
@@ -9064,7 +9167,7 @@
                         "name": "config",
                         "kind": "POSITIONAL_OR_KEYWORD",
                         "annotation": "YamlConfig",
-                        "default": "<sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f133e649480>"
+                        "default": "<sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f27fa516170>"
                     }
                 ],
                 "returns": "str"

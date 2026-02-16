@@ -401,6 +401,78 @@ def get_obj_name(obj: object) -> str:
 # Resolve instance to class name, or use global fallback
 	return getattr(type(obj), "__name__", str(obj))
 
+def get_obj_fully_qualified_name(obj: object) -> str:
+	"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+	Contract:
+		general:
+			|Must| return a fully qualified object name where possible.
+			|Must| return module objects as their module name.
+			|Must| return callable/class/object names as |mod|`<module>` . |lit|`<qualname>` when both parts are available.
+			|Must| fall back to |func|`get_obj_name` if no module prefix can be determined.
+			|Must| return input strings unchanged.
+	Parameters:
+		obj:
+			The object to inspect.
+	Returns:
+		Best-effort fully qualified object name.
+	Raises:
+	"""
+	if isinstance(obj, str):
+		return obj
+	if is_obj_module(obj):
+		mod_name = getattr(obj, "__name__", None)
+		if isinstance(mod_name, str) and mod_name:
+			return mod_name
+	name = get_obj_name(obj)
+	mod_name = getattr(obj, "__module__", None)
+	if isinstance(mod_name, str) and mod_name:
+		return f"{mod_name}.{name}"
+	return name
+
+def build_anchor(obj: object, kind: str | None = None) -> str:
+	"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+	Contract:
+		general:
+			|Must| build a deterministic anchor string from an object.
+			|Must| use the fully qualified name as source.
+			|Must| encode each qualified-name segment as ``<len>:<segment>``.
+			|Must| prefix the anchor by ``wtrl-<kind>-``.
+			|Must| infer kind as one of ``mod``, ``cls``, ``func``, ``obj`` if not passed explicitly.
+	Parameters:
+		obj:
+			Object for which the anchor shall be generated.
+		kind:
+			Optional explicit kind tag.
+	Returns:
+		Deterministic anchor string suitable for doc-internal links.
+	Raises:
+	"""
+	if kind is None:
+		if is_obj_module(obj):
+			kind = "mod"
+		elif is_obj_class(obj):
+			kind = "cls"
+		elif is_obj_function(obj):
+			kind = "func"
+		else:
+			kind = "obj"
+	fqn = get_obj_fully_qualified_name(obj)
+	segs = [s for s in fqn.split(".") if s]
+	if not segs:
+		return f"wtrl-{kind}"
+	enc = "-".join(f"{len(s)}:{s}" for s in segs)
+	return f"wtrl-{kind}-{enc}"
+
 def get_obj_path(obj: object) -> str | None:
 	"""
 	Preamble:

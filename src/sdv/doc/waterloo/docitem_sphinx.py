@@ -117,6 +117,8 @@ import inspect
 import re
 import importlib
 import sys,os,re
+import warnings
+import builtins
 from docutils import nodes
 from pathlib import Path
 
@@ -444,44 +446,198 @@ def resolve_markup(text : str) -> str:
 
 def build_sphinx_nodes(ctx : context,obj: object,doc: mod_docitem.docitem_docstring_base) -> List[nodes.Node]:
 	"""
-Preamble:
-	profile:
-		function
-	normative_sections:
-		Contract
-		Parameters
-		Returns
-		Raises
-Contract:
-	general:
-		|Must| convert a parsed |type|`docitem_docstring_module`, |type|`docitem_docstring_class` or |type|`docitem_docstring_method` into a list of docutils nodes.
-		|Must| render section/key/value content into a two-column table with section labels on the left and content on the right.
-		|Must| apply role-formatters provided by |type|`context` (labels, types, vars, funcs, methods).
-Parameters:
-	ctx:
-		Rendering context providing inline parser and role-formatters.
-	obj:
-		The documented object (module, class or method).
-	doc:
-		Parsed docstring tree (representing one of the defined profiles).
-Returns:
-	List of |type|`docutils.nodes.Node` representing the rendered documentation table.
-Raises:
-	RuntimeError:
-		|May| raise if unexpected section structure is encountered.
-Notes:
-	Usage:
-		This function is typically not called directly. It is called
-		by the various |func|`autodoc` functions.
-	"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract
+			Parameters
+			Returns
+			Raises
+	Contract:
+		general:
+			|Must| convert a parsed |type|`docitem_docstring_module`, |type|`docitem_docstring_class` or |type|`docitem_docstring_method` into a list of docutils nodes.
+			|Must| render section/key/value content into a two-column table with section labels on the left and content on the right.
+			|Must| apply role-formatters provided by |type|`context` (labels, types, vars, funcs, methods).
+			|Must| assign a deterministic anchor id to the rendered table.
+			|Must| render selected reference-like entries as internal links where targets can be resolved.
+			|Must| keep unresolved reference entries visible as plain text fallback.
+			|Must| emit runtime warnings for unresolved entries in sections where linkability is expected.
+			|Must| not raise hard validation errors for unresolved references; semantic enforcement belongs to the validator.
+	Parameters:
+		ctx:
+			Rendering context providing inline parser and role-formatters.
+		obj:
+			The documented object (module, class or method).
+		doc:
+			Parsed docstring tree (representing one of the defined profiles).
+	Returns:
+		List of |type|`docutils.nodes.Node` representing the rendered documentation table.
+	Raises:
+		RuntimeError:
+			|May| raise if unexpected section structure is encountered.
+		RuntimeWarning:
+			|May| emit warnings for unresolved link targets (for example in |label|`Public_*`, |label|`Derived_from`, or normative |label|`See_also`).
+	Notes:
+		Usage:
+			This function is typically not called directly. It is called
+			by the various |func|`autodoc` functions.
+		Linking:
+			Internal links are created using anchor ids from |func|`build_anchor`.
+			Built-in exceptions in section |label|`Raises` are intentionally rendered as plain text without internal links.
+		Drift:
+			Last reviewed on 2026-02-15
+		"""
 	node_root: List[nodes.Node] = []
 	def parse_text(parent: nodes.Element, text: str) -> List[nodes.Node]:
 		return ctx.parse(parent, 0, resolve_markup(text))
 
+	def is_normative_section(section_label: str) -> bool:
+		try:
+			node_preamble = cast(Any, doc_items["Preamble"])
+			if not node_preamble.has_item("normative_sections"):
+				return False
+			node_norm = node_preamble.item("normative_sections")
+			return section_label in {str(x) for x in node_norm.items()}
+		except Exception:
+			return False
+
+	def render_linked_public_entry(
+		parent: nodes.paragraph,
+		entry: str,
+		resolver_prefix: str,
+		css_class: str,
+		role_fn: Callable[[str], str],
+		warn_label: str,
+	) -> None:
+		try:
+			target_obj, _, _, _ = resolve_qualified_name(ctx, resolver_prefix + "." + entry)
+			target_anchor = mod_docitem.build_anchor(target_obj)
+			node_ref = nodes.reference(entry, entry, refid=target_anchor)
+			node_ref["classes"].append(css_class)
+			parent += node_ref
+		except Exception as exc:
+			warnings.warn(
+				f"{warn_label} entry '{entry}' cannot be resolved for linking: {exc}",
+				RuntimeWarning,
+			)
+			parent.extend(ctx.parse(parent,0,role_fn(entry)))
+
+	def render_linked_public_entries(
+		parent: nodes.paragraph,
+		entries: Sequence[str],
+		resolver_prefix: str,
+		css_class: str,
+		role_fn: Callable[[str], str],
+		warn_label: str,
+	) -> None:
+		for i_item, content in enumerate(entries):
+			content_s = str(content)
+			if i_item > 0:
+				parent += nodes.Text(", ")
+			render_linked_public_entry(parent,content_s,resolver_prefix,css_class,role_fn,warn_label)
+
+	def render_linked_derived_from_entries(
+		parent: nodes.paragraph,
+		entries: Sequence[str],
+		css_class: str,
+		role_fn: Callable[[str], str],
+	) -> None:
+		base_by_name: Dict[str, object] = {}
+		if mod_docitem.is_obj_class(obj):
+			for b in cast(tuple[type[Any], ...], getattr(obj, "__bases__", ())):
+				base_by_name[mod_docitem.get_obj_name(b)] = b
+				base_by_name[mod_docitem.get_obj_fully_qualified_name(b)] = b
+				nm = getattr(b, "__name__", None)
+				if isinstance(nm, str):
+					base_by_name[nm] = b
+				qn = getattr(b, "__qualname__", None)
+				if isinstance(qn, str):
+					base_by_name[qn] = b
+		for i_item, content in enumerate(entries):
+			content_s = str(content)
+			if i_item > 0:
+				parent += nodes.Text(", ")
+			base_obj = base_by_name.get(content_s)
+			if base_obj is not None:
+				target_anchor = mod_docitem.build_anchor(base_obj)
+				node_ref = nodes.reference(content_s, content_s, refid=target_anchor)
+				node_ref["classes"].append(css_class)
+				parent += node_ref
+			else:
+				warnings.warn(
+					f"Derived_from entry '{content_s}' is not a direct base class of '{objname}'.",
+					RuntimeWarning,
+				)
+				parent.extend(ctx.parse(parent,0,role_fn(content_s)))
+
+	def render_linked_see_also_entries(
+		parent: nodes.paragraph,
+		entries: Sequence[str],
+		is_normative: bool,
+	) -> None:
+		for i_item, content in enumerate(entries):
+			content_s = str(content)
+			if i_item > 0:
+				parent += nodes.Text(", ")
+			try:
+				target_obj, _, _, _ = resolve_qualified_name(ctx, content_s)
+				target_anchor = mod_docitem.build_anchor(target_obj)
+				node_ref = nodes.reference(content_s, content_s, refid=target_anchor)
+				node_ref["classes"].append("wtrl_var")
+				parent += node_ref
+			except Exception as exc:
+				if is_normative:
+					warnings.warn(
+						f"See_also entry '{content_s}' cannot be resolved for linking: {exc}",
+						RuntimeWarning,
+					)
+				parent.extend(ctx.parse(parent,0,ctx.add_role_var(content_s)))
+
+	def render_linked_raises_entry_label(parent: nodes.paragraph, exc_name: str) -> None:
+		exc_obj: object | None = None
+		last_exc: Exception | None = None
+		for cand in (exc_name, objname + "." + exc_name):
+			try:
+				exc_obj, _, _, _ = resolve_qualified_name(ctx, cand)
+				break
+			except Exception as exc:
+				last_exc = exc
+				continue
+		if exc_obj is None:
+			# Built-in exceptions are valid and expected, but typically not part of local anchors.
+			bi = getattr(builtins, exc_name, None)
+			if isinstance(bi, type) and issubclass(bi, BaseException):
+				parent.extend(ctx.parse(parent,0,ctx.add_role_type(exc_name)))
+				return
+			warnings.warn(
+				f"Raises entry '{exc_name}' cannot be resolved: {last_exc}",
+				RuntimeWarning,
+			)
+			parent.extend(ctx.parse(parent,0,ctx.add_role_type(exc_name)))
+			return
+		if not isinstance(exc_obj, type) or not issubclass(exc_obj, BaseException):
+			warnings.warn(
+				f"Raises entry '{exc_name}' resolves to non-exception object.",
+				RuntimeWarning,
+			)
+			parent.extend(ctx.parse(parent,0,ctx.add_role_type(exc_name)))
+			return
+		# For builtins we keep plain styled text (usually no local anchor target).
+		if getattr(exc_obj, "__module__", "") == "builtins":
+			parent.extend(ctx.parse(parent,0,ctx.add_role_type(exc_name)))
+			return
+		target_anchor = mod_docitem.build_anchor(exc_obj)
+		node_ref = nodes.reference(exc_name, exc_name, refid=target_anchor)
+		node_ref["classes"].append("wtrl_type")
+		parent += node_ref
+
 	objname = mod_docitem.get_obj_name(obj)
+	anchor = mod_docitem.build_anchor(obj)
 
 # Build table
 	node_table = nodes.table(classes=["wtrl-box"])
+	node_table["ids"] = [anchor]
 	node_tgroup = nodes.tgroup(cols=2)
 	node_tgroup += nodes.colspec(colwidth=18)
 	node_tgroup += nodes.colspec(colwidth=82)
@@ -658,8 +814,7 @@ Notes:
 			for label1,item_subsection in item_section.items().items():
 				node_list_item = nodes.list_item()
 				node1_paragraph = nodes.paragraph()
-				node1_paragraph.extend(ctx.parse(node1_paragraph,0,ctx.add_role_func(label1)))
-
+				render_linked_public_entry(node1_paragraph,label1,objname,"wtrl_func",ctx.add_role_func,"Method_overview")
 				node2_bullet_list = nodes.bullet_list()
 # Content
 				for content in item_subsection.items():
@@ -681,8 +836,7 @@ Notes:
 			for label1,item_subsection in item_section.items().items():
 				node_list_item = nodes.list_item()
 				node1_paragraph = nodes.paragraph()
-				node1_paragraph.extend(ctx.parse(node1_paragraph,0,ctx.add_role_func(label1)))
-
+				render_linked_public_entry(node1_paragraph,label1,objname,"wtrl_func",ctx.add_role_func,"Function_overview")
 				node2_bullet_list = nodes.bullet_list()
 # Content
 				for content in item_subsection.items():
@@ -704,8 +858,7 @@ Notes:
 			for label1,item_subsection in item_section.items().items():
 				node_list_item = nodes.list_item()
 				node1_paragraph = nodes.paragraph()
-				node1_paragraph.extend(ctx.parse(node1_paragraph,0,ctx.add_role_type(label1)))
-
+				render_linked_public_entry(node1_paragraph,label1,objname,"wtrl_type",ctx.add_role_type,"Class_overview")
 				node2_bullet_list = nodes.bullet_list()
 # Content
 				for content in item_subsection.items():
@@ -806,7 +959,7 @@ Notes:
 				for label1,item_subsection in item_section.items().items():
 					node_list_item = nodes.list_item()
 					node1_paragraph = nodes.paragraph()
-					node1_paragraph.extend(ctx.parse(node1_paragraph,0,ctx.add_role_type(label1)))
+					render_linked_raises_entry_label(node1_paragraph, str(label1))
 
 					node2_bullet_list = nodes.bullet_list()
 # Content
@@ -845,18 +998,42 @@ Notes:
 			node_entry += node1_paragraph
 		elif label in ("Derived_from"):
 			node1_paragraph = nodes.paragraph()
-# Content
-			node1_paragraph.extend(ctx.parse(node1_paragraph,0,", ".join([ctx.add_role_type(content) for content in item_section.items()])))
+			render_linked_derived_from_entries(
+				node1_paragraph,
+				cast(Sequence[str], item_section.items()),
+				"wtrl_type",
+				ctx.add_role_type,
+			)
 			node_entry += node1_paragraph
-		elif label in ("See_also","Public_classes"):
+		elif label in ("See_also",):
 			node1_paragraph = nodes.paragraph()
-# Content
-			node1_paragraph.extend(ctx.parse(node1_paragraph,0,", ".join([ctx.add_role_var(content) for content in item_section.items()])))
+			render_linked_see_also_entries(
+				node1_paragraph,
+				cast(Sequence[str], item_section.items()),
+				is_normative_section("See_also"),
+			)
+			node_entry += node1_paragraph
+		elif label in ("Public_classes",):
+			node1_paragraph = nodes.paragraph()
+			render_linked_public_entries(
+				node1_paragraph,
+				cast(Sequence[str], item_section.items()),
+				objname,
+				"wtrl_type",
+				ctx.add_role_type,
+				"Public_classes",
+			)
 			node_entry += node1_paragraph
 		elif label in ("Public_functions","Public_methods"):
 			node1_paragraph = nodes.paragraph()
-# Content
-			node1_paragraph.extend(ctx.parse(node1_paragraph,0,", ".join([ctx.add_role_func(content) for content in item_section.items()])))
+			render_linked_public_entries(
+				node1_paragraph,
+				cast(Sequence[str], item_section.items()),
+				objname,
+				"wtrl_func",
+				ctx.add_role_func,
+				label,
+			)
 			node_entry += node1_paragraph
 		else:
 			node_paragraph = nodes.paragraph(text="TBD")
@@ -2086,7 +2263,7 @@ def build_prolog_method_overview(ctx: context,class_name : str) -> List[nodes.No
 def build_prolog_method_block(ctx: context,parent : nodes.Element | None,class_obj: type[object],meth_obj : Callable[..., Any]) -> List[nodes.Node]:
 # Render the signature directly (multiline variant) instead of parsing a directive string.
 # Use fully-qualified name so resolution works even for nested classes.
-	qname = f"{class_obj.__module__}.{mod_docitem.get_obj_name(meth_obj)}"
+	qname = mod_docitem.get_obj_fully_qualified_name(meth_obj)
 	return render_signature_tokens_multiline(ctx, qname, drop_self=True, display_scope=True)
 
 def wtrl_attr_role(name: str, rawtext: str, text: str, lineno: int, inliner: InlinerProtocol, options: Mapping[str,Any] | None=None, content: list[str] | None=None) -> tuple[List[nodes.Node], list[nodes.Node]]:

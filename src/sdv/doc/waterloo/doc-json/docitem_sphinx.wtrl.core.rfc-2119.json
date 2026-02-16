@@ -1,12 +1,12 @@
 {
     "$schema": "https://sci-d-vis.com/schema/wtrl-json-0.0.2.schema.json",
-    "$id": "urn:waterlint:0.2.4:render-json:core:rfc-2119:bab2df7bca7847d1962ea3c5d118f277",
+    "$id": "urn:waterlint:0.2.4:render-json:core:rfc-2119:400ecbaaf15710beafee6a135d3bfaf2",
     "__WTRL_VERSION__": {
-        "waterloo": "0.1.2",
+        "waterloo": "0.2.0",
         "schema": "0.0.2"
     },
     "__WTRL_META__": {
-        "generated_at": "2026-02-14T21:47:46+01:00",
+        "generated_at": "2026-02-16T08:13:33+01:00",
         "generator": "waterlint",
         "scope": "core",
         "flavour": "rfc-2119"
@@ -114,6 +114,8 @@
         "sdv_doc_docitem_helper.is_obj_function": "/__WTRL_OBJECTS__/sdv_doc_docitem_helper.is_obj_function",
         "sdv_doc_docitem_helper.is_obj_named_value": "/__WTRL_OBJECTS__/sdv_doc_docitem_helper.is_obj_named_value",
         "sdv_doc_docitem_helper.get_obj_name": "/__WTRL_OBJECTS__/sdv_doc_docitem_helper.get_obj_name",
+        "sdv_doc_docitem_helper.get_obj_fully_qualified_name": "/__WTRL_OBJECTS__/sdv_doc_docitem_helper.get_obj_fully_qualified_name",
+        "sdv_doc_docitem_helper.build_anchor": "/__WTRL_OBJECTS__/sdv_doc_docitem_helper.build_anchor",
         "sdv_doc_docitem_helper.get_obj_path": "/__WTRL_OBJECTS__/sdv_doc_docitem_helper.get_obj_path",
         "sdv_doc_docitem_helper.get_func_obj_from_callable": "/__WTRL_OBJECTS__/sdv_doc_docitem_helper.get_func_obj_from_callable",
         "sdv_doc_docitem_helper.get_obj_docstring": "/__WTRL_OBJECTS__/sdv_doc_docitem_helper.get_obj_docstring",
@@ -1400,6 +1402,101 @@
                         "Last reviewed on 2026-02-04"
                     ]
                 }
+            }
+        },
+        "sdv_doc_docitem_helper.get_obj_fully_qualified_name": {
+            "signature": {
+                "text": "get_obj_fully_qualified_name(obj: 'object') -> 'str'",
+                "parameters": [
+                    {
+                        "name": "obj",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "object",
+                        "default": null
+                    }
+                ],
+                "returns": "str"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST return a fully qualified object name where possible.",
+                        "MUST return module objects as their module name.",
+                        "MUST return callable/class/object names as |mod|`<module>` . |lit|`<qualname>` when both parts are available.",
+                        "MUST fall back to |func|`get_obj_name` if no module prefix can be determined.",
+                        "MUST return input strings unchanged."
+                    ]
+                },
+                "Parameters": {
+                    "obj": [
+                        "The object to inspect."
+                    ]
+                },
+                "Returns": [
+                    "Best-effort fully qualified object name."
+                ],
+                "Raises": {}
+            }
+        },
+        "sdv_doc_docitem_helper.build_anchor": {
+            "signature": {
+                "text": "build_anchor(obj: 'object', kind: 'str | None' = None) -> 'str'",
+                "parameters": [
+                    {
+                        "name": "obj",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "object",
+                        "default": null
+                    },
+                    {
+                        "name": "kind",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str | None",
+                        "default": "None"
+                    }
+                ],
+                "returns": "str"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST build a deterministic anchor string from an object.",
+                        "MUST use the fully qualified name as source.",
+                        "MUST encode each qualified-name segment as ``<len>:<segment>``.",
+                        "MUST prefix the anchor by ``wtrl-<kind>-``.",
+                        "MUST infer kind as one of ``mod``, ``cls``, ``func``, ``obj`` if not passed explicitly."
+                    ]
+                },
+                "Parameters": {
+                    "obj": [
+                        "Object for which the anchor shall be generated."
+                    ],
+                    "kind": [
+                        "Optional explicit kind tag."
+                    ]
+                },
+                "Returns": [
+                    "Deterministic anchor string suitable for doc-internal links."
+                ],
+                "Raises": {}
             }
         },
         "sdv_doc_docitem_helper.get_obj_path": {
@@ -8201,7 +8298,7 @@
         },
         "sdv_doc_docitem.gen_documentable_objects": {
             "signature": {
-                "text": "gen_documentable_objects(obj: Union[module, type[object], Callable[..., Any]], config: sdv_doc_docitem_helper.ConfigTraversal = <sdv_doc_docitem_helper.ConfigTraversal object at 0x7fc63659fcd0>) -> Generator[Union[module, type[object], Callable[..., Any]], NoneType, NoneType]",
+                "text": "gen_documentable_objects(obj: Union[module, type[object], Callable[..., Any]], config: sdv_doc_docitem_helper.ConfigTraversal = <sdv_doc_docitem_helper.ConfigTraversal object at 0x7f0f82ee75e0>) -> Generator[Union[module, type[object], Callable[..., Any]], NoneType, NoneType]",
                 "parameters": [
                     {
                         "name": "obj",
@@ -8213,11 +8310,14 @@
                         "name": "config",
                         "kind": "POSITIONAL_OR_KEYWORD",
                         "annotation": "ConfigTraversal",
-                        "default": "<sdv_doc_docitem_helper.ConfigTraversal object at 0x7fc63659fcd0>"
+                        "default": "<sdv_doc_docitem_helper.ConfigTraversal object at 0x7f0f82ee75e0>"
                     }
                 ],
                 "returns": "Generator"
             },
+            "traits": [
+                "generator"
+            ],
             "doc": {
                 "Preamble": {
                     "profile": "function",
@@ -8330,7 +8430,12 @@
                     "general": [
                         "MUST convert a parsed |type|`docitem_docstring_module`, |type|`docitem_docstring_class` or |type|`docitem_docstring_method` into a list of docutils nodes.",
                         "MUST render section/key/value content into a two-column table with section labels on the left and content on the right.",
-                        "MUST apply role-formatters provided by |type|`context` (labels, types, vars, funcs, methods)."
+                        "MUST apply role-formatters provided by |type|`context` (labels, types, vars, funcs, methods).",
+                        "MUST assign a deterministic anchor id to the rendered table.",
+                        "MUST render selected reference-like entries as internal links where targets can be resolved.",
+                        "MUST keep unresolved reference entries visible as plain text fallback.",
+                        "MUST emit runtime warnings for unresolved entries in sections where linkability is expected.",
+                        "MUST not raise hard validation errors for unresolved references; semantic enforcement belongs to the validator."
                     ]
                 },
                 "Parameters": {
@@ -8350,12 +8455,22 @@
                 "Raises": {
                     "RuntimeError": [
                         "MAY raise if unexpected section structure is encountered."
+                    ],
+                    "RuntimeWarning": [
+                        "MAY emit warnings for unresolved link targets (for example in |label|`Public_*`, |label|`Derived_from`, or normative |label|`See_also`)."
                     ]
                 },
                 "Notes": {
                     "Usage": [
                         "This function is typically not called directly. It is called",
                         "by the various |func|`autodoc` functions."
+                    ],
+                    "Linking": [
+                        "Internal links are created using anchor ids from |func|`build_anchor`.",
+                        "Built-in exceptions in section |label|`Raises` are intentionally rendered as plain text without internal links."
+                    ],
+                    "Drift": [
+                        "Last reviewed on 2026-02-15"
                     ]
                 }
             }

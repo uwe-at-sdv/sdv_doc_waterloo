@@ -44,6 +44,7 @@ with contextlib.redirect_stdout(sys.stderr):
 		from sdv_doc_docitem_helper import (
 			tracer,
 			get_obj_name,
+			get_obj_fully_qualified_name,
 			ValidationError,
 			ParseError,
 			SectionNotFoundError,
@@ -57,6 +58,7 @@ with contextlib.redirect_stdout(sys.stderr):
 		from sdv.doc.waterloo.docitem_helper import (		# type: ignore[no-redef]
 			tracer,
 			get_obj_name,
+			get_obj_fully_qualified_name,
 			ValidationError,
 			ParseError,
 			SectionNotFoundError,
@@ -67,7 +69,7 @@ with contextlib.redirect_stdout(sys.stderr):
 #===== Constants ==============================================#
 
 #----- Add subcommands here -----------------------------------#
-WTRL_JSON_SCHEMA_VERSION = "0.0.2"
+WTRL_JSON_SCHEMA_VERSION = "0.0.3"
 SUBCOMMANDS = ("validate","coverage","extract","validate-json","render-json","list-schemas","version","version-json")
 
 #===== Helper =================================================#
@@ -430,7 +432,12 @@ def _render_json_command(args: argparse.Namespace) -> int:
 				traits.append("coroutine")
 		except Exception:
 			pass
-		# Special decorators but not property.
+		try:
+			if inspect.isgeneratorfunction(obj) or inspect.isasyncgenfunction(obj):
+				traits.append("generator")
+		except Exception:
+			pass
+# Special decorators but not property.
 		decorator_lines = docitem.get_decorators(obj)
 		for line in decorator_lines:
 			if line in ("@staticmethod","@classmethod"):
@@ -548,9 +555,7 @@ def _render_json_command(args: argparse.Namespace) -> int:
 #----- Iterate over scope-filtered objects --------------------#
 		for o in objs:
 			doc_txt = docitem.get_obj_docstring(o)
-			name_key = cvrt.get_obj_name(o)
-			if getattr(o, "__module__", None):
-				name_key = f"{o.__module__}.{name_key}"
+			name_key = get_obj_fully_qualified_name(o)
 			if not doc_txt or not str(doc_txt).strip():
 # No docstring or empty docstring. Count safely.
 				if name_key not in objects_counted:
