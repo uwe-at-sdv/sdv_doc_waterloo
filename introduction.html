@@ -307,7 +307,7 @@ an executable contract.</p></li>
 </div>
 <p>Exceptions from typechecking are:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>sdv_doc_docitem_convert.py:630 # pragma: no cover - defensive
-sdv_doc_docitem_sphinx.py:127 # type: ignore[attr-defined]
+sdv_doc_docitem_sphinx.py:129 # type: ignore[attr-defined]
 sdv_doc_docitem_validator.py:12 # type: ignore
 sdv_doc_docitem_validator.py:13 # pragma: no cover - older Python
 </pre></div>
@@ -330,15 +330,6 @@ be released if all test run green.</p>
 </section>
 <section id="possible-future-enhancements">
 <h2><span class="section-number">1.8. </span>Possible future enhancements<a class="headerlink" href="#possible-future-enhancements" title="Permalink to this headline">¶</a></h2>
-<ul class="simple">
-<li><dl class="simple">
-<dt>JSON-Output</dt><dd><ul>
-<li><p>In functions and methods, a trait <code class="wtrl_attr docutils literal notranslate"><span class="pre">generator</span></code> for generators would be nice.</p></li>
-</ul>
-</dd>
-</dl>
-</li>
-</ul>
 </section>
 <section id="introductory-examples">
 <h2><span class="section-number">1.9. </span>Introductory examples<a class="headerlink" href="#introductory-examples" title="Permalink to this headline">¶</a></h2>
@@ -367,7 +358,7 @@ On module level this is equipped with a basic Waterloo docstring:</p>
 </pre></div>
 </div>
 <p>at the position in the document where the docstring is supposed to be rendered, and get:</p>
-<table class="wtrl-box docutils align-default">
+<table class="wtrl-box docutils align-default" id="wtrl-mod-19:test_docitem_module">
 <colgroup>
 <col style="width: 18%" />
 <col style="width: 82%" />
@@ -474,7 +465,7 @@ part of the public API of the module:</p>
 </pre></div>
 </div>
 <p>The result is:</p>
-<table class="wtrl-box docutils align-default">
+<table class="wtrl-box docutils align-default" id="wtrl-mod-21:test_docitem_module_2">
 <colgroup>
 <col style="width: 18%" />
 <col style="width: 82%" />
@@ -501,11 +492,11 @@ part of the public API of the module:</p>
 </td>
 </tr>
 <tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Public</span> <span class="pre">classes</span></code></p></td>
-<td><p><code class="wtrl_var docutils literal notranslate"><span class="pre">MyClass</span></code></p></td>
+<td><p><a class="wtrl_type reference internal" href="#wtrl-cls-21:test_docitem_module_2-7:MyClass">MyClass</a></p></td>
 </tr>
 <tr class="wtrl-section row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Class</span> <span class="pre">overview</span></code></p></td>
 <td><ul class="simple">
-<li><p><code class="wtrl_type docutils literal notranslate"><span class="pre">MyClass</span></code><ul>
+<li><p><a class="wtrl_type reference internal" href="#wtrl-cls-21:test_docitem_module_2-7:MyClass">MyClass</a><ul>
 <li><p>An empty class</p></li>
 </ul>
 </p></li>
@@ -519,7 +510,7 @@ part of the public API of the module:</p>
 </tr>
 </thead>
 </table>
-<table class="wtrl-box docutils align-default">
+<table class="wtrl-box docutils align-default" id="wtrl-cls-21:test_docitem_module_2-7:MyClass">
 <colgroup>
 <col style="width: 18%" />
 <col style="width: 82%" />
@@ -623,7 +614,7 @@ part of the public API of the module:</p>
 </pre></div>
 </div>
 <p>and the result is:</p>
-<table class="wtrl-box docutils align-default">
+<table class="wtrl-box docutils align-default" id="wtrl-mod-21:test_docitem_module_3">
 <colgroup>
 <col style="width: 18%" />
 <col style="width: 82%" />
@@ -650,11 +641,11 @@ part of the public API of the module:</p>
 </td>
 </tr>
 <tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Public</span> <span class="pre">classes</span></code></p></td>
-<td><p><code class="wtrl_var docutils literal notranslate"><span class="pre">MyClass</span></code></p></td>
+<td><p><a class="wtrl_type reference internal" href="#wtrl-cls-21:test_docitem_module_3-7:MyClass">MyClass</a></p></td>
 </tr>
 <tr class="wtrl-section row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Class</span> <span class="pre">overview</span></code></p></td>
 <td><ul class="simple">
-<li><p><code class="wtrl_type docutils literal notranslate"><span class="pre">MyClass</span></code><ul>
+<li><p><a class="wtrl_type reference internal" href="#wtrl-cls-21:test_docitem_module_3-7:MyClass">MyClass</a><ul>
 <li><p>An empty class</p></li>
 </ul>
 </p></li>
@@ -668,7 +659,7 @@ part of the public API of the module:</p>
 </tr>
 </thead>
 </table>
-<table class="wtrl-box docutils align-default">
+<table class="wtrl-box docutils align-default" id="wtrl-cls-21:test_docitem_module_3-7:MyClass">
 <colgroup>
 <col style="width: 18%" />
 <col style="width: 82%" />
@@ -718,7 +709,7 @@ part of the public API of the module:</p>
 </tr>
 </thead>
 </table>
-<table class="wtrl-box docutils align-default">
+<table class="wtrl-box docutils align-default" id="wtrl-func-21:test_docitem_module_3-7:MyClass-8:greeting">
 <colgroup>
 <col style="width: 18%" />
 <col style="width: 82%" />

@@ -45,9 +45,9 @@ Make sure you are in your project directory, then run:
 
 .. code-block:: bash
 
-    python3 -m venv wtrl_venv
+    python3 -m venv venv_wtrl
 
-This creates a directory :wtrl_file:`wtrl_venv`
+This creates a directory :wtrl_file:`venv_wtrl`
 containing a standard Python installation.
 
 Activate the Environment
@@ -65,22 +65,22 @@ Run the activation command appropriate for your operating system and shell.
 	  - Command
 	* - **Unix** / **macOS**
 	  - Bash / Zsh
-	  - :wtrl_lit:`source wtrl_venv/bin/activate`
+	  - :wtrl_lit:`source venv_wtrl/bin/activate`
 	* - 
 	  - Fish
-	  - :wtrl_lit:`source wtrl_venv/bin/activate.fish`
+	  - :wtrl_lit:`source venv_wtrl/bin/activate.fish`
 	* -
 	  - csh/tcsh
-	  - :wtrl_lit:`source wtrl_venv/bin/activate.csh`
+	  - :wtrl_lit:`source venv_wtrl/bin/activate.csh`
 	* - **Windows**
 	  - PowerShell
-	  - :wtrl_lit:`./wtrl_venv/Scripts/Activate.ps1`
+	  - :wtrl_lit:`./venv_wtrl/Scripts/Activate.ps1`
 	* - 
 	  - Command Prompt
-	  - :wtrl_lit:`wtrl_venv/Scripts/activate.bat`
+	  - :wtrl_lit:`venv_wtrl/Scripts/activate.bat`
 	* - 
 	  - Git Bash
-	  - :wtrl_lit:`source wtrl_venv/Scripts/activate`
+	  - :wtrl_lit:`source venv_wtrl/Scripts/activate`
 
 .. note::
 	**Windows / PowerShell:**  
@@ -163,11 +163,11 @@ If you have not done so already, update :wtrl_lit:`pip`:
 
 	pip install --upgrade pip
 
-Install Waterloo from your project root directory:
+Install Waterloo from :wtrl_file:`github.com`:
 
 .. code-block:: bash
 
-	pip install .
+	pip install git+ssh://git@github.com:22/uwe-at-sdv/sdv_doc_waterloo.git
 
 Add the extension to :wtrl_file:`${ROOT}/doc/source/conf.py`:
 
@@ -262,7 +262,8 @@ established JSON schema mechanisms.
 Create a directory for the JSON output. Since Waterloo Docstrings
 is a relatively new project (2026), no established best practice
 exists yet. We recommend naming the directory "doc-json" so that
-AI agents can locate it easily.
+AI agents can locate it easily. Navigate back to your project
+directory and run:
 
 .. code-block:: bash
 

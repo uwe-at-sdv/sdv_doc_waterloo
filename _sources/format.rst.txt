@@ -795,7 +795,8 @@ a function or method docstring |must| have the following structure:
 		* [RAI-004] -- Any number of subsections |may| exist provided :wtrl_label:`<Exception>` can be resolved to an existing (exception) class.
 		* [RAI-005] -- The content |may| consist of any number of lines.
 		* [RAI-006] -- The content |must| explain the circumstances which must or may lead to raising the exception addressed by :wtrl_label:`<Exception>`.
-		* [RAI-007] -- Each exception listed |must| be a subclass of :wtrl_type:`BaseException`.
+		* [RAI-009] -- Each entry listed |must| be resolvable to a class.
+		* [RAI-007] -- Each entry listed |must| represent a subclass of :wtrl_type:`BaseException`.
 
 Sections for inherited method docstrings
 ----------------------------------------

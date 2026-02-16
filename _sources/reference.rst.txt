@@ -22,6 +22,13 @@ Fundamental helpers
 
 .. wtrl_autodoc_function:: get_obj_name
 
+:wtrl_func:`get_obj_fully_qualified_name`
+.........................................
+
+.. wtrl_function_signature_block:: get_obj_fully_qualified_name
+
+.. wtrl_autodoc_function:: get_obj_fully_qualified_name
+
 :wtrl_func:`get_obj_path`
 ...........................
 

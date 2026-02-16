@@ -67,10 +67,10 @@ be desirable.</p>
 but since it is straightforward to use, we briefly summarize
 the basic steps here.</p>
 <p>Make sure you are in your project directory, then run:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>wtrl_venv
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>venv_wtrl
 </pre></div>
 </div>
-<p>This creates a directory <code class="wtrl_file docutils literal notranslate"><span class="pre">wtrl_venv</span></code>
+<p>This creates a directory <code class="wtrl_file docutils literal notranslate"><span class="pre">venv_wtrl</span></code>
 containing a standard Python installation.</p>
 </section>
 <section id="activate-the-environment">
@@ -92,27 +92,27 @@ containing a standard Python installation.</p>
 <tbody>
 <tr class="row-even"><td><p><strong>Unix</strong> / <strong>macOS</strong></p></td>
 <td><p>Bash / Zsh</p></td>
-<td><p><code class="wtrl_lit docutils literal notranslate"><span class="pre">source</span> <span class="pre">wtrl_venv/bin/activate</span></code></p></td>
+<td><p><code class="wtrl_lit docutils literal notranslate"><span class="pre">source</span> <span class="pre">venv_wtrl/bin/activate</span></code></p></td>
 </tr>
 <tr class="row-odd"><td></td>
 <td><p>Fish</p></td>
-<td><p><code class="wtrl_lit docutils literal notranslate"><span class="pre">source</span> <span class="pre">wtrl_venv/bin/activate.fish</span></code></p></td>
+<td><p><code class="wtrl_lit docutils literal notranslate"><span class="pre">source</span> <span class="pre">venv_wtrl/bin/activate.fish</span></code></p></td>
 </tr>
 <tr class="row-even"><td></td>
 <td><p>csh/tcsh</p></td>
-<td><p><code class="wtrl_lit docutils literal notranslate"><span class="pre">source</span> <span class="pre">wtrl_venv/bin/activate.csh</span></code></p></td>
+<td><p><code class="wtrl_lit docutils literal notranslate"><span class="pre">source</span> <span class="pre">venv_wtrl/bin/activate.csh</span></code></p></td>
 </tr>
 <tr class="row-odd"><td><p><strong>Windows</strong></p></td>
 <td><p>PowerShell</p></td>
-<td><p><code class="wtrl_lit docutils literal notranslate"><span class="pre">./wtrl_venv/Scripts/Activate.ps1</span></code></p></td>
+<td><p><code class="wtrl_lit docutils literal notranslate"><span class="pre">./venv_wtrl/Scripts/Activate.ps1</span></code></p></td>
 </tr>
 <tr class="row-even"><td></td>
 <td><p>Command Prompt</p></td>
-<td><p><code class="wtrl_lit docutils literal notranslate"><span class="pre">wtrl_venv/Scripts/activate.bat</span></code></p></td>
+<td><p><code class="wtrl_lit docutils literal notranslate"><span class="pre">venv_wtrl/Scripts/activate.bat</span></code></p></td>
 </tr>
 <tr class="row-odd"><td></td>
 <td><p>Git Bash</p></td>
-<td><p><code class="wtrl_lit docutils literal notranslate"><span class="pre">source</span> <span class="pre">wtrl_venv/Scripts/activate</span></code></p></td>
+<td><p><code class="wtrl_lit docutils literal notranslate"><span class="pre">source</span> <span class="pre">venv_wtrl/Scripts/activate</span></code></p></td>
 </tr>
 </tbody>
 </table>
@@ -175,8 +175,8 @@ Create a directory for the human-readable documentation:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>--upgrade<span class="w"> </span>pip
 </pre></div>
 </div>
-<p>Install Waterloo from your project root directory:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>.
+<p>Install Waterloo from <code class="wtrl_file docutils literal notranslate"><span class="pre">github.com</span></code>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>git+ssh://git@github.com:22/uwe-at-sdv/sdv_doc_waterloo.git
 </pre></div>
 </div>
 <p>Add the extension to <code class="wtrl_file docutils literal notranslate"><span class="pre">${ROOT}/doc/source/conf.py</span></code>:</p>
@@ -253,7 +253,8 @@ established JSON schema mechanisms.</p>
 <p>Create a directory for the JSON output. Since Waterloo Docstrings
 is a relatively new project (2026), no established best practice
 exists yet. We recommend naming the directory “doc-json” so that
-AI agents can locate it easily.</p>
+AI agents can locate it easily. Navigate back to your project
+directory and run:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mkdir<span class="w"> </span>doc-json
 </pre></div>
 </div>

@@ -313,9 +313,6 @@ Dependencies
 Possible future enhancements
 ----------------------------
 
-* JSON-Output
-	- In functions and methods, a trait :wtrl_attr:`generator` for generators would be nice.
-
 Introductory examples
 ---------------------
 
