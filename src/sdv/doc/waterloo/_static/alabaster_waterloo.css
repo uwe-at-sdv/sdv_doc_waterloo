@@ -273,6 +273,16 @@ span.descname {
 	background-color:inherit;
 	}
 
+/* For sections "Notes" which contains a rubric elements.*/
+tr.wtrl-section p.rubric {
+	margin-top:0em;
+	margin-bottom:0.5em;
+	}
+tr.wtrl-section p.wtrl-note-content {
+	margin-top:0em;
+	margin-bottom:1em;
+	}
+
 .wtrl-side-by-side {
 	display: grid;
 	grid-template-columns: 1fr 1fr;

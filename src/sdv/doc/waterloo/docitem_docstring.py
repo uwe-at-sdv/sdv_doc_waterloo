@@ -89,7 +89,7 @@ Method_overview:
 		node_scope = node_preamble.item("scope")
 		return set([SCOPE_TAG_MAP[s] for s in node_scope.items()])
 	def is_visible(self,sc_query: Scopes_t) -> bool:
-		"""
+		r"""
 		Preamble:
 			profile:
 				method
@@ -118,7 +118,7 @@ Method_overview:
 		scopes_obj = self.scopes()
 		return any(s_obj <= s_query for s_query in sc_query for s_obj in scopes_obj)
 	def can_see(self,sc_query: Scopes_t) -> bool:
-		"""
+		r"""
 		Preamble:
 			profile:
 				method
@@ -146,7 +146,7 @@ Method_overview:
 		scopes_obj = self.scopes()
 		return any(s_query <= s_obj for s_query in sc_query for s_obj in scopes_obj)
 	def is_scope_compatible(self,obj_trg : docitem_docstring_base) -> bool:
-		"""
+		r"""
 		Preamble:
 			profile:
 				method

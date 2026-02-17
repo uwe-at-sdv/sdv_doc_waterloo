@@ -17,6 +17,7 @@ Public_functions:
 	to_string_yaml
 	to_string_signature_yaml
 	to_string_md
+	build_node_json
 Public_types:
 	WtrlJsonNode_t:
 		Type for JSON nodes. This type |must| be public because |func|`to_node_docstring_tree_json` and |func|`to_node_signature_json` are.

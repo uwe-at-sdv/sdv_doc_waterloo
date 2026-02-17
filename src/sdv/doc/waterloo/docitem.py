@@ -231,7 +231,7 @@ Public_constants:
 
 # Todo: think about Contract.import_side_fx
 
-import sys,re,pkgutil
+import sys,re
 import inspect,importlib
 import builtins
 import typing
@@ -254,79 +254,6 @@ __version__ = "0.2.0"
 # - 0.1.2 [2026-02-14]	Moved Waterloo specific stuff away from docitem_sphinx.py
 # - 0.1.1 [2026-02-13]	Commented versioning starts
 
-def gen_documentable_objects(obj: Documentable_t,config: ConfigTraversal = ConfigTraversal()) -> Generator[Documentable_t,None,None]:
-	"""
-Preamble:
-	profile:
-		function
-	normative_sections:
-		Contract, Parameters, Returns, Raises
-	scope:
-		public
-Contract:
-	general:
-		|Must| create a generator object which allows depth-first tree traversal of objects in |var|`obj`.
-		|Must| first yield object |var|`obj` itself.
-		|Must| yield all objects and only objects which can have a docstring.
-Parameters:
-	obj:
-		The object (module, class, function, method) to examine.
-	config:
-		Controls acceptance or refusal of objects during traversal.
-Returns:
-	|Must| return a Generator which yields objects from tree traversal of |var|`obj`
-Raises:
-	"""
-	_seen: Set[Documentable_t] = set()
-	def _iter(o: Documentable_t,seen: Set[Documentable_t]) -> Generator[Documentable_t,None,None]:
-		if o in seen:
-			return
-# With the seen-mechanisms each direct yield must be paired with updating `seen`.
-		seen.add(o)
-		yield o
-		if isinstance(o, ModuleType):
-			# We're in a module. There might be classes and functions:
-			for name, member in list(o.__dict__.items()):
-				if isinstance(member, ModuleType):
-					# descend into submodules
-					if not config.accept_imported_module(o,member):
-						continue
-					yield from _iter(member, seen)
-				elif isinstance(member, type):
-					# class
-					if not config.accept_member_of_module(o,member):
-						continue
-					yield from _iter(member, seen)
-				elif isinstance(member, FunctionType):
-					# function
-					if not config.accept_member_of_module(o,member):
-						continue
-					yield from _iter(member, seen)
-				else:
-					continue
-			# Optionally walk package submodules on disk
-			if config.include_imported() and config.walk_packages() and hasattr(o, "__path__"):
-				for finder, mod_name, is_pkg in pkgutil.iter_modules(o.__path__, o.__name__ + "."):
-					try:
-						submod = importlib.import_module(mod_name)
-					except Exception:
-						continue
-					yield from _iter(submod, seen)
-		elif isinstance(o, type):
-			# We're in a class. There might be classes, static functions, class methods and "normal" methods:
-			for name, member in list(o.__dict__.items()):
-				if isinstance(member, type):
-					yield from _iter(member, seen)
-				else:
-					func_obj = get_func_obj_from_callable(member)
-					if func_obj is None:
-						continue
-					yield from _iter(func_obj, seen)
-		elif callable(o):
-# Functions/methods are leaves for our traversal
-			return
-	yield from _iter(obj,_seen)
-  
 if __name__ == "__main__":
 	tr = tracer()
 	validate_module_coverage(tr,sys.modules[__name__])

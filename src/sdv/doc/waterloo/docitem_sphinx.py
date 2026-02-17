@@ -440,6 +440,8 @@ def resolve_markup(text : str) -> str:
 	def _repl(m: re.Match[str]) -> str:
 		role = m.group(1)
 		body = m.group(2)
+		if role == "ref":
+			return f":ref:`{body}`"
 		return f":wtrl_{role}:`{body}`"
 	s =  mod_docitem.RE_WTRL_MARKUP_BACKTICK_COMPILED.sub(_repl, text)
 	return s
@@ -1339,7 +1341,7 @@ def render_signature_tokens_inline(ctx: context, func_qname: str, *, drop_self: 
 		dflt = format_default(p.default)
 		if dflt:
 			tokens.extend(_tkn(ctx.add_role_op, " = "))
-			tokens.extend(_tkn(ctx.add_role_label, dflt))
+			tokens.extend(_tkn(ctx.add_role_lit, dflt))
 
 	tokens.extend(_tkn(ctx.add_role_op, ")"))
 	tokens.extend(_tkn(ctx.add_role_op, " -> "))
@@ -1471,7 +1473,7 @@ def render_params_and_return_of_callable(ctx: context, obj: object,drop_self: bo
 		dflt = format_default(p.default)
 		if dflt:
 			line += _tkn(ctx.add_role_op, " = ")
-			line += _tkn(ctx.add_role_label, dflt)
+			line += _tkn(ctx.add_role_lit, dflt)
 
 		lines.append(line)
 

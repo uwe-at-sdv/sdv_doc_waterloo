@@ -1,12 +1,12 @@
 {
-    "$schema": "https://sci-d-vis.com/schema/wtrl-json-0.0.2.schema.json",
-    "$id": "urn:waterlint:0.2.4:render-json:core:rfc-2119:f073fe52f4facb2177b7d3ded86ba2c6",
+    "$schema": "https://sci-d-vis.com/schema/wtrl-json-0.0.4.schema.json",
+    "$id": "urn:waterlint:0.2.4:render-json:core:rfc-2119:4142548aa4e8b1d57feecc01a740adcf",
     "__WTRL_VERSION__": {
         "waterloo": "0.2.0",
-        "schema": "0.0.2"
+        "schema": "0.0.4"
     },
     "__WTRL_META__": {
-        "generated_at": "2026-02-16T08:13:33+01:00",
+        "generated_at": "2026-02-17T11:48:30+01:00",
         "generator": "waterlint",
         "scope": "core",
         "flavour": "rfc-2119"
@@ -32,172 +32,170 @@
     },
     "__WTRL_TOC_MODULES__": {
         "sdv.doc.waterloo.docitem": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem",
-        "sdv_doc_docitem_helper": "/__WTRL_OBJECTS__/sdv_doc_docitem_helper",
-        "sdv_doc_docitem_tokenizer": "/__WTRL_OBJECTS__/sdv_doc_docitem_tokenizer",
-        "sdv_doc_docitem_base": "/__WTRL_OBJECTS__/sdv_doc_docitem_base",
-        "sdv_doc_docitem_sections": "/__WTRL_OBJECTS__/sdv_doc_docitem_sections",
-        "sdv_doc_docitem_preamble": "/__WTRL_OBJECTS__/sdv_doc_docitem_preamble",
-        "sdv_doc_docitem_contract": "/__WTRL_OBJECTS__/sdv_doc_docitem_contract",
-        "sdv_doc_docitem_docstring": "/__WTRL_OBJECTS__/sdv_doc_docitem_docstring",
-        "sdv_doc_docitem_validator": "/__WTRL_OBJECTS__/sdv_doc_docitem_validator",
-        "sdv.doc.waterloo.docitem_convert": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_convert",
-        "sdv_doc_docitem": "/__WTRL_OBJECTS__/sdv_doc_docitem"
+        "sdv.doc.waterloo.docitem_helper": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper",
+        "sdv.doc.waterloo.docitem_tokenizer": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_tokenizer",
+        "sdv.doc.waterloo.docitem_base": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_base",
+        "sdv.doc.waterloo.docitem_sections": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_sections",
+        "sdv.doc.waterloo.docitem_preamble": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_preamble",
+        "sdv.doc.waterloo.docitem_contract": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_contract",
+        "sdv.doc.waterloo.docitem_docstring": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_docstring",
+        "sdv.doc.waterloo.docitem_validator": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_validator",
+        "sdv.doc.waterloo.docitem_convert": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_convert"
     },
     "__WTRL_TOC_CLASSES__": {
-        "sdv_doc_docitem_helper.Scope": "/__WTRL_OBJECTS__/sdv_doc_docitem_helper.Scope",
-        "sdv_doc_docitem_helper.Flavour": "/__WTRL_OBJECTS__/sdv_doc_docitem_helper.Flavour",
-        "sdv_doc_docitem_helper.Format": "/__WTRL_OBJECTS__/sdv_doc_docitem_helper.Format",
-        "sdv_doc_docitem_helper.tracer": "/__WTRL_OBJECTS__/sdv_doc_docitem_helper.tracer",
-        "sdv_doc_docitem_helper.ConfigTraversal": "/__WTRL_OBJECTS__/sdv_doc_docitem_helper.ConfigTraversal",
-        "sdv_doc_docitem_base.docitem_base": "/__WTRL_OBJECTS__/sdv_doc_docitem_base.docitem_base",
-        "sdv_doc_docitem_base.docitem_list_base": "/__WTRL_OBJECTS__/sdv_doc_docitem_base.docitem_list_base",
-        "sdv_doc_docitem_base.docitem_map_base": "/__WTRL_OBJECTS__/sdv_doc_docitem_base.docitem_map_base",
-        "sdv_doc_docitem_base.docitem_list_of_symbols_base": "/__WTRL_OBJECTS__/sdv_doc_docitem_base.docitem_list_of_symbols_base",
-        "sdv_doc_docitem_base.docitem_list_of_symbols_base.ValuePattern": "/__WTRL_OBJECTS__/sdv_doc_docitem_base.docitem_list_of_symbols_base.ValuePattern",
-        "sdv_doc_docitem_sections.docitem_derived_from": "/__WTRL_OBJECTS__/sdv_doc_docitem_sections.docitem_derived_from",
-        "sdv_doc_docitem_sections.docitem_see_also": "/__WTRL_OBJECTS__/sdv_doc_docitem_sections.docitem_see_also",
-        "sdv_doc_docitem_sections.docitem_public_classes": "/__WTRL_OBJECTS__/sdv_doc_docitem_sections.docitem_public_classes",
-        "sdv_doc_docitem_sections.docitem_public_methods": "/__WTRL_OBJECTS__/sdv_doc_docitem_sections.docitem_public_methods",
-        "sdv_doc_docitem_sections.docitem_public_functions": "/__WTRL_OBJECTS__/sdv_doc_docitem_sections.docitem_public_functions",
-        "sdv_doc_docitem_sections.docitem_factory_functions": "/__WTRL_OBJECTS__/sdv_doc_docitem_sections.docitem_factory_functions",
-        "sdv_doc_docitem_sections.docitem_factory": "/__WTRL_OBJECTS__/sdv_doc_docitem_sections.docitem_factory",
-        "sdv_doc_docitem_sections.docitem_free_text_entry_base": "/__WTRL_OBJECTS__/sdv_doc_docitem_sections.docitem_free_text_entry_base",
-        "sdv_doc_docitem_sections.docitem_class_overview_entry": "/__WTRL_OBJECTS__/sdv_doc_docitem_sections.docitem_class_overview_entry",
-        "sdv_doc_docitem_sections.docitem_class_overview": "/__WTRL_OBJECTS__/sdv_doc_docitem_sections.docitem_class_overview",
-        "sdv_doc_docitem_sections.docitem_public_types_entry": "/__WTRL_OBJECTS__/sdv_doc_docitem_sections.docitem_public_types_entry",
-        "sdv_doc_docitem_sections.docitem_public_types": "/__WTRL_OBJECTS__/sdv_doc_docitem_sections.docitem_public_types",
-        "sdv_doc_docitem_sections.docitem_public_assignables_entry": "/__WTRL_OBJECTS__/sdv_doc_docitem_sections.docitem_public_assignables_entry",
-        "sdv_doc_docitem_sections.docitem_public_assignables_base": "/__WTRL_OBJECTS__/sdv_doc_docitem_sections.docitem_public_assignables_base",
-        "sdv_doc_docitem_sections.docitem_method_overview_entry": "/__WTRL_OBJECTS__/sdv_doc_docitem_sections.docitem_method_overview_entry",
-        "sdv_doc_docitem_sections.docitem_method_overview": "/__WTRL_OBJECTS__/sdv_doc_docitem_sections.docitem_method_overview",
-        "sdv_doc_docitem_sections.docitem_function_overview_entry": "/__WTRL_OBJECTS__/sdv_doc_docitem_sections.docitem_function_overview_entry",
-        "sdv_doc_docitem_sections.docitem_function_overview": "/__WTRL_OBJECTS__/sdv_doc_docitem_sections.docitem_function_overview",
-        "sdv_doc_docitem_sections.docitem_returns": "/__WTRL_OBJECTS__/sdv_doc_docitem_sections.docitem_returns",
-        "sdv_doc_docitem_sections.docitem_description": "/__WTRL_OBJECTS__/sdv_doc_docitem_sections.docitem_description",
-        "sdv_doc_docitem_sections.docitem_parameters_entry": "/__WTRL_OBJECTS__/sdv_doc_docitem_sections.docitem_parameters_entry",
-        "sdv_doc_docitem_sections.docitem_parameters": "/__WTRL_OBJECTS__/sdv_doc_docitem_sections.docitem_parameters",
-        "sdv_doc_docitem_sections.docitem_raises_entry": "/__WTRL_OBJECTS__/sdv_doc_docitem_sections.docitem_raises_entry",
-        "sdv_doc_docitem_sections.docitem_raises": "/__WTRL_OBJECTS__/sdv_doc_docitem_sections.docitem_raises",
-        "sdv_doc_docitem_sections.docitem_definitions_entry": "/__WTRL_OBJECTS__/sdv_doc_docitem_sections.docitem_definitions_entry",
-        "sdv_doc_docitem_sections.docitem_definitions": "/__WTRL_OBJECTS__/sdv_doc_docitem_sections.docitem_definitions",
-        "sdv_doc_docitem_sections.docitem_terminology_entry": "/__WTRL_OBJECTS__/sdv_doc_docitem_sections.docitem_terminology_entry",
-        "sdv_doc_docitem_sections.docitem_terminology": "/__WTRL_OBJECTS__/sdv_doc_docitem_sections.docitem_terminology",
-        "sdv_doc_docitem_sections.docitem_notes_entry": "/__WTRL_OBJECTS__/sdv_doc_docitem_sections.docitem_notes_entry",
-        "sdv_doc_docitem_sections.docitem_notes": "/__WTRL_OBJECTS__/sdv_doc_docitem_sections.docitem_notes",
-        "sdv_doc_docitem_preamble.docitem_profile": "/__WTRL_OBJECTS__/sdv_doc_docitem_preamble.docitem_profile",
-        "sdv_doc_docitem_preamble.docitem_normative_sections": "/__WTRL_OBJECTS__/sdv_doc_docitem_preamble.docitem_normative_sections",
-        "sdv_doc_docitem_preamble.docitem_status": "/__WTRL_OBJECTS__/sdv_doc_docitem_preamble.docitem_status",
-        "sdv_doc_docitem_preamble.docitem_scope": "/__WTRL_OBJECTS__/sdv_doc_docitem_preamble.docitem_scope",
-        "sdv_doc_docitem_preamble.docitem_preamble": "/__WTRL_OBJECTS__/sdv_doc_docitem_preamble.docitem_preamble",
-        "sdv_doc_docitem_contract.docitem_constructor": "/__WTRL_OBJECTS__/sdv_doc_docitem_contract.docitem_constructor",
-        "sdv_doc_docitem_contract.docitem_general": "/__WTRL_OBJECTS__/sdv_doc_docitem_contract.docitem_general",
-        "sdv_doc_docitem_contract.docitem_invariants": "/__WTRL_OBJECTS__/sdv_doc_docitem_contract.docitem_invariants",
-        "sdv_doc_docitem_contract.docitem_requires": "/__WTRL_OBJECTS__/sdv_doc_docitem_contract.docitem_requires",
-        "sdv_doc_docitem_contract.docitem_ensures": "/__WTRL_OBJECTS__/sdv_doc_docitem_contract.docitem_ensures",
-        "sdv_doc_docitem_contract.docitem_base_to_inherit_from": "/__WTRL_OBJECTS__/sdv_doc_docitem_contract.docitem_base_to_inherit_from",
-        "sdv_doc_docitem_contract.docitem_traits": "/__WTRL_OBJECTS__/sdv_doc_docitem_contract.docitem_traits",
-        "sdv_doc_docitem_contract.docitem_contract_module": "/__WTRL_OBJECTS__/sdv_doc_docitem_contract.docitem_contract_module",
-        "sdv_doc_docitem_contract.docitem_contract_class": "/__WTRL_OBJECTS__/sdv_doc_docitem_contract.docitem_contract_class",
-        "sdv_doc_docitem_contract.docitem_contract_method": "/__WTRL_OBJECTS__/sdv_doc_docitem_contract.docitem_contract_method",
-        "sdv_doc_docitem_contract.docitem_contract_inherited_method": "/__WTRL_OBJECTS__/sdv_doc_docitem_contract.docitem_contract_inherited_method",
-        "sdv_doc_docitem_docstring.docitem_docstring_base": "/__WTRL_OBJECTS__/sdv_doc_docitem_docstring.docitem_docstring_base",
-        "sdv_doc_docitem_docstring.docitem_docstring_module": "/__WTRL_OBJECTS__/sdv_doc_docitem_docstring.docitem_docstring_module",
-        "sdv_doc_docitem_docstring.docitem_docstring_class": "/__WTRL_OBJECTS__/sdv_doc_docitem_docstring.docitem_docstring_class",
-        "sdv_doc_docitem_docstring.docitem_docstring_method": "/__WTRL_OBJECTS__/sdv_doc_docitem_docstring.docitem_docstring_method",
-        "sdv_doc_docitem_docstring.docitem_docstring_inherited_method": "/__WTRL_OBJECTS__/sdv_doc_docitem_docstring.docitem_docstring_inherited_method"
+        "sdv.doc.waterloo.docitem_helper.Scope": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.Scope",
+        "sdv.doc.waterloo.docitem_helper.Flavour": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.Flavour",
+        "sdv.doc.waterloo.docitem_helper.Format": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.Format",
+        "sdv.doc.waterloo.docitem_helper.ConfigTraversal": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.ConfigTraversal",
+        "sdv.doc.waterloo.docitem_helper.tracer": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.tracer",
+        "sdv.doc.waterloo.docitem_base.docitem_base": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_base.docitem_base",
+        "sdv.doc.waterloo.docitem_base.docitem_list_base": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_base.docitem_list_base",
+        "sdv.doc.waterloo.docitem_base.docitem_map_base": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_base.docitem_map_base",
+        "sdv.doc.waterloo.docitem_base.docitem_list_of_symbols_base": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_base.docitem_list_of_symbols_base",
+        "sdv.doc.waterloo.docitem_base.docitem_list_of_symbols_base.ValuePattern": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_base.docitem_list_of_symbols_base.ValuePattern",
+        "sdv.doc.waterloo.docitem_sections.docitem_derived_from": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_sections.docitem_derived_from",
+        "sdv.doc.waterloo.docitem_sections.docitem_see_also": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_sections.docitem_see_also",
+        "sdv.doc.waterloo.docitem_sections.docitem_public_classes": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_sections.docitem_public_classes",
+        "sdv.doc.waterloo.docitem_sections.docitem_public_methods": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_sections.docitem_public_methods",
+        "sdv.doc.waterloo.docitem_sections.docitem_public_functions": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_sections.docitem_public_functions",
+        "sdv.doc.waterloo.docitem_sections.docitem_factory_functions": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_sections.docitem_factory_functions",
+        "sdv.doc.waterloo.docitem_sections.docitem_factory": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_sections.docitem_factory",
+        "sdv.doc.waterloo.docitem_sections.docitem_free_text_entry_base": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_sections.docitem_free_text_entry_base",
+        "sdv.doc.waterloo.docitem_sections.docitem_class_overview_entry": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_sections.docitem_class_overview_entry",
+        "sdv.doc.waterloo.docitem_sections.docitem_class_overview": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_sections.docitem_class_overview",
+        "sdv.doc.waterloo.docitem_sections.docitem_public_types_entry": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_sections.docitem_public_types_entry",
+        "sdv.doc.waterloo.docitem_sections.docitem_public_types": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_sections.docitem_public_types",
+        "sdv.doc.waterloo.docitem_sections.docitem_public_assignables_entry": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_sections.docitem_public_assignables_entry",
+        "sdv.doc.waterloo.docitem_sections.docitem_public_assignables_base": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_sections.docitem_public_assignables_base",
+        "sdv.doc.waterloo.docitem_sections.docitem_method_overview_entry": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_sections.docitem_method_overview_entry",
+        "sdv.doc.waterloo.docitem_sections.docitem_method_overview": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_sections.docitem_method_overview",
+        "sdv.doc.waterloo.docitem_sections.docitem_function_overview_entry": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_sections.docitem_function_overview_entry",
+        "sdv.doc.waterloo.docitem_sections.docitem_function_overview": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_sections.docitem_function_overview",
+        "sdv.doc.waterloo.docitem_sections.docitem_returns": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_sections.docitem_returns",
+        "sdv.doc.waterloo.docitem_sections.docitem_description": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_sections.docitem_description",
+        "sdv.doc.waterloo.docitem_sections.docitem_parameters_entry": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_sections.docitem_parameters_entry",
+        "sdv.doc.waterloo.docitem_sections.docitem_parameters": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_sections.docitem_parameters",
+        "sdv.doc.waterloo.docitem_sections.docitem_raises_entry": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_sections.docitem_raises_entry",
+        "sdv.doc.waterloo.docitem_sections.docitem_raises": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_sections.docitem_raises",
+        "sdv.doc.waterloo.docitem_sections.docitem_definitions_entry": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_sections.docitem_definitions_entry",
+        "sdv.doc.waterloo.docitem_sections.docitem_definitions": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_sections.docitem_definitions",
+        "sdv.doc.waterloo.docitem_sections.docitem_terminology_entry": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_sections.docitem_terminology_entry",
+        "sdv.doc.waterloo.docitem_sections.docitem_terminology": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_sections.docitem_terminology",
+        "sdv.doc.waterloo.docitem_sections.docitem_notes_entry": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_sections.docitem_notes_entry",
+        "sdv.doc.waterloo.docitem_sections.docitem_notes": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_sections.docitem_notes",
+        "sdv.doc.waterloo.docitem_preamble.docitem_profile": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_preamble.docitem_profile",
+        "sdv.doc.waterloo.docitem_preamble.docitem_normative_sections": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_preamble.docitem_normative_sections",
+        "sdv.doc.waterloo.docitem_preamble.docitem_status": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_preamble.docitem_status",
+        "sdv.doc.waterloo.docitem_preamble.docitem_scope": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_preamble.docitem_scope",
+        "sdv.doc.waterloo.docitem_preamble.docitem_preamble": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_preamble.docitem_preamble",
+        "sdv.doc.waterloo.docitem_contract.docitem_constructor": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_contract.docitem_constructor",
+        "sdv.doc.waterloo.docitem_contract.docitem_general": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_contract.docitem_general",
+        "sdv.doc.waterloo.docitem_contract.docitem_invariants": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_contract.docitem_invariants",
+        "sdv.doc.waterloo.docitem_contract.docitem_requires": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_contract.docitem_requires",
+        "sdv.doc.waterloo.docitem_contract.docitem_ensures": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_contract.docitem_ensures",
+        "sdv.doc.waterloo.docitem_contract.docitem_base_to_inherit_from": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_contract.docitem_base_to_inherit_from",
+        "sdv.doc.waterloo.docitem_contract.docitem_traits": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_contract.docitem_traits",
+        "sdv.doc.waterloo.docitem_contract.docitem_contract_module": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_contract.docitem_contract_module",
+        "sdv.doc.waterloo.docitem_contract.docitem_contract_class": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_contract.docitem_contract_class",
+        "sdv.doc.waterloo.docitem_contract.docitem_contract_method": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_contract.docitem_contract_method",
+        "sdv.doc.waterloo.docitem_contract.docitem_contract_inherited_method": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_contract.docitem_contract_inherited_method",
+        "sdv.doc.waterloo.docitem_docstring.docitem_docstring_base": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_docstring.docitem_docstring_base",
+        "sdv.doc.waterloo.docitem_docstring.docitem_docstring_module": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_docstring.docitem_docstring_module",
+        "sdv.doc.waterloo.docitem_docstring.docitem_docstring_class": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_docstring.docitem_docstring_class",
+        "sdv.doc.waterloo.docitem_docstring.docitem_docstring_method": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_docstring.docitem_docstring_method",
+        "sdv.doc.waterloo.docitem_docstring.docitem_docstring_inherited_method": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_docstring.docitem_docstring_inherited_method"
     },
     "__WTRL_TOC_CALLABLES__": {
-        "sdv_doc_docitem_helper.is_attr_annotated": "/__WTRL_OBJECTS__/sdv_doc_docitem_helper.is_attr_annotated",
-        "sdv_doc_docitem_helper.is_attr_final": "/__WTRL_OBJECTS__/sdv_doc_docitem_helper.is_attr_final",
-        "sdv_doc_docitem_helper.is_obj_module": "/__WTRL_OBJECTS__/sdv_doc_docitem_helper.is_obj_module",
-        "sdv_doc_docitem_helper.is_obj_class": "/__WTRL_OBJECTS__/sdv_doc_docitem_helper.is_obj_class",
-        "sdv_doc_docitem_helper.is_obj_function": "/__WTRL_OBJECTS__/sdv_doc_docitem_helper.is_obj_function",
-        "sdv_doc_docitem_helper.is_obj_named_value": "/__WTRL_OBJECTS__/sdv_doc_docitem_helper.is_obj_named_value",
-        "sdv_doc_docitem_helper.get_obj_name": "/__WTRL_OBJECTS__/sdv_doc_docitem_helper.get_obj_name",
-        "sdv_doc_docitem_helper.get_obj_fully_qualified_name": "/__WTRL_OBJECTS__/sdv_doc_docitem_helper.get_obj_fully_qualified_name",
-        "sdv_doc_docitem_helper.build_anchor": "/__WTRL_OBJECTS__/sdv_doc_docitem_helper.build_anchor",
-        "sdv_doc_docitem_helper.get_obj_path": "/__WTRL_OBJECTS__/sdv_doc_docitem_helper.get_obj_path",
-        "sdv_doc_docitem_helper.get_func_obj_from_callable": "/__WTRL_OBJECTS__/sdv_doc_docitem_helper.get_func_obj_from_callable",
-        "sdv_doc_docitem_helper.get_obj_docstring": "/__WTRL_OBJECTS__/sdv_doc_docitem_helper.get_obj_docstring",
-        "sdv_doc_docitem_tokenizer.get_num_indent": "/__WTRL_OBJECTS__/sdv_doc_docitem_tokenizer.get_num_indent",
-        "sdv_doc_docitem_tokenizer.parse_indent_docstring": "/__WTRL_OBJECTS__/sdv_doc_docitem_tokenizer.parse_indent_docstring",
-        "sdv_doc_docitem_tokenizer.get_tree_of_section": "/__WTRL_OBJECTS__/sdv_doc_docitem_tokenizer.get_tree_of_section",
-        "sdv_doc_docitem_tokenizer.get_tree_of_subsection": "/__WTRL_OBJECTS__/sdv_doc_docitem_tokenizer.get_tree_of_subsection",
-        "sdv_doc_docitem_tokenizer.get_scopes_of_tree": "/__WTRL_OBJECTS__/sdv_doc_docitem_tokenizer.get_scopes_of_tree",
-        "sdv_doc_docitem_tokenizer.to_string_tree": "/__WTRL_OBJECTS__/sdv_doc_docitem_tokenizer.to_string_tree",
-        "sdv_doc_docitem_base.docitem_base.parse": "/__WTRL_OBJECTS__/sdv_doc_docitem_base.docitem_base.parse",
-        "sdv_doc_docitem_base.docitem_base.items": "/__WTRL_OBJECTS__/sdv_doc_docitem_base.docitem_base.items",
-        "sdv_doc_docitem_base.docitem_list_base.items": "/__WTRL_OBJECTS__/sdv_doc_docitem_base.docitem_list_base.items",
-        "sdv_doc_docitem_base.docitem_map_base.items": "/__WTRL_OBJECTS__/sdv_doc_docitem_base.docitem_map_base.items",
-        "sdv_doc_docitem_base.docitem_list_of_symbols_base._parse": "/__WTRL_OBJECTS__/sdv_doc_docitem_base.docitem_list_of_symbols_base._parse",
-        "sdv_doc_docitem_sections.docitem_derived_from.parse": "/__WTRL_OBJECTS__/sdv_doc_docitem_sections.docitem_derived_from.parse",
-        "sdv_doc_docitem_sections.docitem_see_also.parse": "/__WTRL_OBJECTS__/sdv_doc_docitem_sections.docitem_see_also.parse",
-        "sdv_doc_docitem_sections.docitem_public_classes.parse": "/__WTRL_OBJECTS__/sdv_doc_docitem_sections.docitem_public_classes.parse",
-        "sdv_doc_docitem_sections.docitem_public_methods.parse": "/__WTRL_OBJECTS__/sdv_doc_docitem_sections.docitem_public_methods.parse",
-        "sdv_doc_docitem_sections.docitem_public_functions.parse": "/__WTRL_OBJECTS__/sdv_doc_docitem_sections.docitem_public_functions.parse",
-        "sdv_doc_docitem_sections.docitem_factory_functions.parse": "/__WTRL_OBJECTS__/sdv_doc_docitem_sections.docitem_factory_functions.parse",
-        "sdv_doc_docitem_sections.docitem_factory.parse": "/__WTRL_OBJECTS__/sdv_doc_docitem_sections.docitem_factory.parse",
-        "sdv_doc_docitem_sections.docitem_free_text_entry_base.parse": "/__WTRL_OBJECTS__/sdv_doc_docitem_sections.docitem_free_text_entry_base.parse",
-        "sdv_doc_docitem_sections.docitem_class_overview.parse": "/__WTRL_OBJECTS__/sdv_doc_docitem_sections.docitem_class_overview.parse",
-        "sdv_doc_docitem_sections.docitem_public_types.parse": "/__WTRL_OBJECTS__/sdv_doc_docitem_sections.docitem_public_types.parse",
-        "sdv_doc_docitem_sections.docitem_public_assignables_base.parse": "/__WTRL_OBJECTS__/sdv_doc_docitem_sections.docitem_public_assignables_base.parse",
-        "sdv_doc_docitem_sections.docitem_method_overview.parse": "/__WTRL_OBJECTS__/sdv_doc_docitem_sections.docitem_method_overview.parse",
-        "sdv_doc_docitem_sections.docitem_function_overview.parse": "/__WTRL_OBJECTS__/sdv_doc_docitem_sections.docitem_function_overview.parse",
-        "sdv_doc_docitem_sections.docitem_returns.parse": "/__WTRL_OBJECTS__/sdv_doc_docitem_sections.docitem_returns.parse",
-        "sdv_doc_docitem_sections.docitem_description.parse": "/__WTRL_OBJECTS__/sdv_doc_docitem_sections.docitem_description.parse",
-        "sdv_doc_docitem_sections.docitem_parameters.parse": "/__WTRL_OBJECTS__/sdv_doc_docitem_sections.docitem_parameters.parse",
-        "sdv_doc_docitem_sections.docitem_raises.parse": "/__WTRL_OBJECTS__/sdv_doc_docitem_sections.docitem_raises.parse",
-        "sdv_doc_docitem_sections.docitem_definitions.parse": "/__WTRL_OBJECTS__/sdv_doc_docitem_sections.docitem_definitions.parse",
-        "sdv_doc_docitem_sections.docitem_terminology.parse": "/__WTRL_OBJECTS__/sdv_doc_docitem_sections.docitem_terminology.parse",
-        "sdv_doc_docitem_sections.docitem_notes.parse": "/__WTRL_OBJECTS__/sdv_doc_docitem_sections.docitem_notes.parse",
-        "sdv_doc_docitem_preamble.docitem_profile.parse": "/__WTRL_OBJECTS__/sdv_doc_docitem_preamble.docitem_profile.parse",
-        "sdv_doc_docitem_preamble.docitem_normative_sections.parse": "/__WTRL_OBJECTS__/sdv_doc_docitem_preamble.docitem_normative_sections.parse",
-        "sdv_doc_docitem_preamble.docitem_status.parse": "/__WTRL_OBJECTS__/sdv_doc_docitem_preamble.docitem_status.parse",
-        "sdv_doc_docitem_preamble.docitem_scope.parse": "/__WTRL_OBJECTS__/sdv_doc_docitem_preamble.docitem_scope.parse",
-        "sdv_doc_docitem_preamble.docitem_preamble.parse": "/__WTRL_OBJECTS__/sdv_doc_docitem_preamble.docitem_preamble.parse",
-        "sdv_doc_docitem_contract.docitem_constructor.parse": "/__WTRL_OBJECTS__/sdv_doc_docitem_contract.docitem_constructor.parse",
-        "sdv_doc_docitem_contract.docitem_general.parse": "/__WTRL_OBJECTS__/sdv_doc_docitem_contract.docitem_general.parse",
-        "sdv_doc_docitem_contract.docitem_invariants.parse": "/__WTRL_OBJECTS__/sdv_doc_docitem_contract.docitem_invariants.parse",
-        "sdv_doc_docitem_contract.docitem_requires.parse": "/__WTRL_OBJECTS__/sdv_doc_docitem_contract.docitem_requires.parse",
-        "sdv_doc_docitem_contract.docitem_ensures.parse": "/__WTRL_OBJECTS__/sdv_doc_docitem_contract.docitem_ensures.parse",
-        "sdv_doc_docitem_contract.docitem_base_to_inherit_from.parse": "/__WTRL_OBJECTS__/sdv_doc_docitem_contract.docitem_base_to_inherit_from.parse",
-        "sdv_doc_docitem_contract.docitem_traits.parse": "/__WTRL_OBJECTS__/sdv_doc_docitem_contract.docitem_traits.parse",
-        "sdv_doc_docitem_contract.docitem_contract_module.parse": "/__WTRL_OBJECTS__/sdv_doc_docitem_contract.docitem_contract_module.parse",
-        "sdv_doc_docitem_contract.docitem_contract_class.parse": "/__WTRL_OBJECTS__/sdv_doc_docitem_contract.docitem_contract_class.parse",
-        "sdv_doc_docitem_contract.docitem_contract_method.parse": "/__WTRL_OBJECTS__/sdv_doc_docitem_contract.docitem_contract_method.parse",
-        "sdv_doc_docitem_contract.docitem_contract_inherited_method.parse": "/__WTRL_OBJECTS__/sdv_doc_docitem_contract.docitem_contract_inherited_method.parse",
-        "sdv_doc_docitem_docstring.docitem_docstring_base.scopes": "/__WTRL_OBJECTS__/sdv_doc_docitem_docstring.docitem_docstring_base.scopes",
-        "sdv_doc_docitem_docstring.docitem_docstring_base.is_visible": "/__WTRL_OBJECTS__/sdv_doc_docitem_docstring.docitem_docstring_base.is_visible",
-        "sdv_doc_docitem_docstring.docitem_docstring_base.can_see": "/__WTRL_OBJECTS__/sdv_doc_docitem_docstring.docitem_docstring_base.can_see",
-        "sdv_doc_docitem_docstring.docitem_docstring_base.is_scope_compatible": "/__WTRL_OBJECTS__/sdv_doc_docitem_docstring.docitem_docstring_base.is_scope_compatible",
-        "sdv_doc_docitem_docstring.docitem_docstring_base.parse": "/__WTRL_OBJECTS__/sdv_doc_docitem_docstring.docitem_docstring_base.parse",
-        "sdv_doc_docitem_docstring.docitem_docstring_module.dispatch_map": "/__WTRL_OBJECTS__/sdv_doc_docitem_docstring.docitem_docstring_module.dispatch_map",
-        "sdv_doc_docitem_docstring.docitem_docstring_class.dispatch_map": "/__WTRL_OBJECTS__/sdv_doc_docitem_docstring.docitem_docstring_class.dispatch_map",
-        "sdv_doc_docitem_docstring.docitem_docstring_method.dispatch_map": "/__WTRL_OBJECTS__/sdv_doc_docitem_docstring.docitem_docstring_method.dispatch_map",
-        "sdv_doc_docitem_docstring.docitem_docstring_inherited_method.dispatch_map": "/__WTRL_OBJECTS__/sdv_doc_docitem_docstring.docitem_docstring_inherited_method.dispatch_map",
-        "sdv_doc_docitem_docstring.make_docitem_tree": "/__WTRL_OBJECTS__/sdv_doc_docitem_docstring.make_docitem_tree",
-        "sdv_doc_docitem_validator.get_status": "/__WTRL_OBJECTS__/sdv_doc_docitem_validator.get_status",
-        "sdv_doc_docitem_validator.get_profile": "/__WTRL_OBJECTS__/sdv_doc_docitem_validator.get_profile",
-        "sdv_doc_docitem_validator.resolve_object": "/__WTRL_OBJECTS__/sdv_doc_docitem_validator.resolve_object",
-        "sdv_doc_docitem_validator.validate_docstring_module": "/__WTRL_OBJECTS__/sdv_doc_docitem_validator.validate_docstring_module",
-        "sdv_doc_docitem_validator.validate_docstring_class": "/__WTRL_OBJECTS__/sdv_doc_docitem_validator.validate_docstring_class",
-        "sdv_doc_docitem_validator.validate_docstring_method": "/__WTRL_OBJECTS__/sdv_doc_docitem_validator.validate_docstring_method",
-        "sdv_doc_docitem_validator.validate_docstring_inherited_method": "/__WTRL_OBJECTS__/sdv_doc_docitem_validator.validate_docstring_inherited_method",
-        "sdv_doc_docitem_validator.validate_docstring": "/__WTRL_OBJECTS__/sdv_doc_docitem_validator.validate_docstring",
-        "sdv_doc_docitem_validator.validate_class_class_coverage": "/__WTRL_OBJECTS__/sdv_doc_docitem_validator.validate_class_class_coverage",
-        "sdv_doc_docitem_validator.validate_class_method_coverage": "/__WTRL_OBJECTS__/sdv_doc_docitem_validator.validate_class_method_coverage",
-        "sdv_doc_docitem_validator.validate_class_type_coverage": "/__WTRL_OBJECTS__/sdv_doc_docitem_validator.validate_class_type_coverage",
-        "sdv_doc_docitem_validator.validate_class_constant_coverage": "/__WTRL_OBJECTS__/sdv_doc_docitem_validator.validate_class_constant_coverage",
-        "sdv_doc_docitem_validator.validate_class_variable_coverage": "/__WTRL_OBJECTS__/sdv_doc_docitem_validator.validate_class_variable_coverage",
-        "sdv_doc_docitem_validator.validate_module_class_coverage": "/__WTRL_OBJECTS__/sdv_doc_docitem_validator.validate_module_class_coverage",
-        "sdv_doc_docitem_validator.validate_module_function_coverage": "/__WTRL_OBJECTS__/sdv_doc_docitem_validator.validate_module_function_coverage",
-        "sdv_doc_docitem_validator.validate_module_type_coverage": "/__WTRL_OBJECTS__/sdv_doc_docitem_validator.validate_module_type_coverage",
-        "sdv_doc_docitem_validator.validate_module_constant_coverage": "/__WTRL_OBJECTS__/sdv_doc_docitem_validator.validate_module_constant_coverage",
-        "sdv_doc_docitem_validator.validate_module_variable_coverage": "/__WTRL_OBJECTS__/sdv_doc_docitem_validator.validate_module_variable_coverage",
-        "sdv_doc_docitem_validator.validate_class_coverage": "/__WTRL_OBJECTS__/sdv_doc_docitem_validator.validate_class_coverage",
-        "sdv_doc_docitem_validator.validate_module_coverage": "/__WTRL_OBJECTS__/sdv_doc_docitem_validator.validate_module_coverage",
-        "sdv.doc.waterloo.docitem.gen_documentable_objects": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem.gen_documentable_objects",
-        "sdv_doc_docitem.gen_documentable_objects": "/__WTRL_OBJECTS__/sdv_doc_docitem.gen_documentable_objects",
+        "sdv.doc.waterloo.docitem_helper.is_attr_annotated": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.is_attr_annotated",
+        "sdv.doc.waterloo.docitem_helper.is_attr_final": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.is_attr_final",
+        "sdv.doc.waterloo.docitem_helper.is_obj_module": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.is_obj_module",
+        "sdv.doc.waterloo.docitem_helper.is_obj_class": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.is_obj_class",
+        "sdv.doc.waterloo.docitem_helper.is_obj_function": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.is_obj_function",
+        "sdv.doc.waterloo.docitem_helper.is_obj_named_value": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.is_obj_named_value",
+        "sdv.doc.waterloo.docitem_helper.get_obj_name": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.get_obj_name",
+        "sdv.doc.waterloo.docitem_helper.get_obj_fully_qualified_name": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.get_obj_fully_qualified_name",
+        "sdv.doc.waterloo.docitem_helper.get_obj_path": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.get_obj_path",
+        "sdv.doc.waterloo.docitem_helper.build_anchor": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.build_anchor",
+        "sdv.doc.waterloo.docitem_helper.get_func_obj_from_callable": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.get_func_obj_from_callable",
+        "sdv.doc.waterloo.docitem_helper.get_obj_docstring": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.get_obj_docstring",
+        "sdv.doc.waterloo.docitem_helper.gen_documentable_objects": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.gen_documentable_objects",
+        "sdv.doc.waterloo.docitem_tokenizer.get_num_indent": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_tokenizer.get_num_indent",
+        "sdv.doc.waterloo.docitem_tokenizer.parse_indent_docstring": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_tokenizer.parse_indent_docstring",
+        "sdv.doc.waterloo.docitem_tokenizer.get_tree_of_section": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_tokenizer.get_tree_of_section",
+        "sdv.doc.waterloo.docitem_tokenizer.get_tree_of_subsection": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_tokenizer.get_tree_of_subsection",
+        "sdv.doc.waterloo.docitem_tokenizer.get_scopes_of_tree": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_tokenizer.get_scopes_of_tree",
+        "sdv.doc.waterloo.docitem_tokenizer.to_string_tree": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_tokenizer.to_string_tree",
+        "sdv.doc.waterloo.docitem_base.docitem_base.parse": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_base.docitem_base.parse",
+        "sdv.doc.waterloo.docitem_base.docitem_base.items": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_base.docitem_base.items",
+        "sdv.doc.waterloo.docitem_base.docitem_list_base.items": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_base.docitem_list_base.items",
+        "sdv.doc.waterloo.docitem_base.docitem_map_base.items": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_base.docitem_map_base.items",
+        "sdv.doc.waterloo.docitem_base.docitem_list_of_symbols_base._parse": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_base.docitem_list_of_symbols_base._parse",
+        "sdv.doc.waterloo.docitem_sections.docitem_derived_from.parse": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_sections.docitem_derived_from.parse",
+        "sdv.doc.waterloo.docitem_sections.docitem_see_also.parse": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_sections.docitem_see_also.parse",
+        "sdv.doc.waterloo.docitem_sections.docitem_public_classes.parse": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_sections.docitem_public_classes.parse",
+        "sdv.doc.waterloo.docitem_sections.docitem_public_methods.parse": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_sections.docitem_public_methods.parse",
+        "sdv.doc.waterloo.docitem_sections.docitem_public_functions.parse": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_sections.docitem_public_functions.parse",
+        "sdv.doc.waterloo.docitem_sections.docitem_factory_functions.parse": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_sections.docitem_factory_functions.parse",
+        "sdv.doc.waterloo.docitem_sections.docitem_factory.parse": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_sections.docitem_factory.parse",
+        "sdv.doc.waterloo.docitem_sections.docitem_free_text_entry_base.parse": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_sections.docitem_free_text_entry_base.parse",
+        "sdv.doc.waterloo.docitem_sections.docitem_class_overview.parse": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_sections.docitem_class_overview.parse",
+        "sdv.doc.waterloo.docitem_sections.docitem_public_types.parse": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_sections.docitem_public_types.parse",
+        "sdv.doc.waterloo.docitem_sections.docitem_public_assignables_base.parse": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_sections.docitem_public_assignables_base.parse",
+        "sdv.doc.waterloo.docitem_sections.docitem_method_overview.parse": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_sections.docitem_method_overview.parse",
+        "sdv.doc.waterloo.docitem_sections.docitem_function_overview.parse": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_sections.docitem_function_overview.parse",
+        "sdv.doc.waterloo.docitem_sections.docitem_returns.parse": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_sections.docitem_returns.parse",
+        "sdv.doc.waterloo.docitem_sections.docitem_description.parse": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_sections.docitem_description.parse",
+        "sdv.doc.waterloo.docitem_sections.docitem_parameters.parse": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_sections.docitem_parameters.parse",
+        "sdv.doc.waterloo.docitem_sections.docitem_raises.parse": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_sections.docitem_raises.parse",
+        "sdv.doc.waterloo.docitem_sections.docitem_definitions.parse": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_sections.docitem_definitions.parse",
+        "sdv.doc.waterloo.docitem_sections.docitem_terminology.parse": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_sections.docitem_terminology.parse",
+        "sdv.doc.waterloo.docitem_sections.docitem_notes.parse": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_sections.docitem_notes.parse",
+        "sdv.doc.waterloo.docitem_preamble.docitem_profile.parse": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_preamble.docitem_profile.parse",
+        "sdv.doc.waterloo.docitem_preamble.docitem_normative_sections.parse": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_preamble.docitem_normative_sections.parse",
+        "sdv.doc.waterloo.docitem_preamble.docitem_status.parse": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_preamble.docitem_status.parse",
+        "sdv.doc.waterloo.docitem_preamble.docitem_scope.parse": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_preamble.docitem_scope.parse",
+        "sdv.doc.waterloo.docitem_preamble.docitem_preamble.parse": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_preamble.docitem_preamble.parse",
+        "sdv.doc.waterloo.docitem_contract.docitem_constructor.parse": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_contract.docitem_constructor.parse",
+        "sdv.doc.waterloo.docitem_contract.docitem_general.parse": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_contract.docitem_general.parse",
+        "sdv.doc.waterloo.docitem_contract.docitem_invariants.parse": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_contract.docitem_invariants.parse",
+        "sdv.doc.waterloo.docitem_contract.docitem_requires.parse": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_contract.docitem_requires.parse",
+        "sdv.doc.waterloo.docitem_contract.docitem_ensures.parse": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_contract.docitem_ensures.parse",
+        "sdv.doc.waterloo.docitem_contract.docitem_base_to_inherit_from.parse": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_contract.docitem_base_to_inherit_from.parse",
+        "sdv.doc.waterloo.docitem_contract.docitem_traits.parse": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_contract.docitem_traits.parse",
+        "sdv.doc.waterloo.docitem_contract.docitem_contract_module.parse": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_contract.docitem_contract_module.parse",
+        "sdv.doc.waterloo.docitem_contract.docitem_contract_class.parse": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_contract.docitem_contract_class.parse",
+        "sdv.doc.waterloo.docitem_contract.docitem_contract_method.parse": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_contract.docitem_contract_method.parse",
+        "sdv.doc.waterloo.docitem_contract.docitem_contract_inherited_method.parse": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_contract.docitem_contract_inherited_method.parse",
+        "sdv.doc.waterloo.docitem_docstring.docitem_docstring_base.scopes": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_docstring.docitem_docstring_base.scopes",
+        "sdv.doc.waterloo.docitem_docstring.docitem_docstring_base.is_visible": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_docstring.docitem_docstring_base.is_visible",
+        "sdv.doc.waterloo.docitem_docstring.docitem_docstring_base.can_see": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_docstring.docitem_docstring_base.can_see",
+        "sdv.doc.waterloo.docitem_docstring.docitem_docstring_base.is_scope_compatible": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_docstring.docitem_docstring_base.is_scope_compatible",
+        "sdv.doc.waterloo.docitem_docstring.docitem_docstring_base.parse": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_docstring.docitem_docstring_base.parse",
+        "sdv.doc.waterloo.docitem_docstring.docitem_docstring_module.dispatch_map": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_docstring.docitem_docstring_module.dispatch_map",
+        "sdv.doc.waterloo.docitem_docstring.docitem_docstring_class.dispatch_map": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_docstring.docitem_docstring_class.dispatch_map",
+        "sdv.doc.waterloo.docitem_docstring.docitem_docstring_method.dispatch_map": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_docstring.docitem_docstring_method.dispatch_map",
+        "sdv.doc.waterloo.docitem_docstring.docitem_docstring_inherited_method.dispatch_map": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_docstring.docitem_docstring_inherited_method.dispatch_map",
+        "sdv.doc.waterloo.docitem_docstring.make_docitem_tree": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_docstring.make_docitem_tree",
+        "sdv.doc.waterloo.docitem_validator.get_status": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_validator.get_status",
+        "sdv.doc.waterloo.docitem_validator.get_profile": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_validator.get_profile",
+        "sdv.doc.waterloo.docitem_validator.resolve_object": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_validator.resolve_object",
+        "sdv.doc.waterloo.docitem_validator.validate_docstring_module": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_validator.validate_docstring_module",
+        "sdv.doc.waterloo.docitem_validator.validate_docstring_class": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_validator.validate_docstring_class",
+        "sdv.doc.waterloo.docitem_validator.validate_docstring_method": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_validator.validate_docstring_method",
+        "sdv.doc.waterloo.docitem_validator.validate_docstring_inherited_method": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_validator.validate_docstring_inherited_method",
+        "sdv.doc.waterloo.docitem_validator.validate_docstring": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_validator.validate_docstring",
+        "sdv.doc.waterloo.docitem_validator.validate_class_class_coverage": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_validator.validate_class_class_coverage",
+        "sdv.doc.waterloo.docitem_validator.validate_class_method_coverage": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_validator.validate_class_method_coverage",
+        "sdv.doc.waterloo.docitem_validator.validate_class_type_coverage": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_validator.validate_class_type_coverage",
+        "sdv.doc.waterloo.docitem_validator.validate_class_constant_coverage": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_validator.validate_class_constant_coverage",
+        "sdv.doc.waterloo.docitem_validator.validate_class_variable_coverage": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_validator.validate_class_variable_coverage",
+        "sdv.doc.waterloo.docitem_validator.validate_module_class_coverage": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_validator.validate_module_class_coverage",
+        "sdv.doc.waterloo.docitem_validator.validate_module_function_coverage": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_validator.validate_module_function_coverage",
+        "sdv.doc.waterloo.docitem_validator.validate_module_type_coverage": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_validator.validate_module_type_coverage",
+        "sdv.doc.waterloo.docitem_validator.validate_module_constant_coverage": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_validator.validate_module_constant_coverage",
+        "sdv.doc.waterloo.docitem_validator.validate_module_variable_coverage": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_validator.validate_module_variable_coverage",
+        "sdv.doc.waterloo.docitem_validator.validate_class_coverage": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_validator.validate_class_coverage",
+        "sdv.doc.waterloo.docitem_validator.validate_module_coverage": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_validator.validate_module_coverage",
         "sdv.doc.waterloo.docitem_convert.to_node_signature_json": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_convert.to_node_signature_json",
         "sdv.doc.waterloo.docitem_convert.build_node_json": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_convert.build_node_json",
         "sdv.doc.waterloo.docitem_convert.to_node_docstring_tree_json": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_convert.to_node_docstring_tree_json",
@@ -211,10 +209,7 @@
         "sdv.doc.waterloo.docitem.docstring_tree": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem.docstring_tree",
         "sdv.doc.waterloo.docitem.Documentable_t": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem.Documentable_t",
         "sdv.doc.waterloo.docitem.Scopes_t": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem.Scopes_t",
-        "sdv.doc.waterloo.docitem_convert.WtrlJsonNode_t": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_convert.WtrlJsonNode_t",
-        "sdv_doc_docitem.docstring_tree": "/__WTRL_OBJECTS__/sdv_doc_docitem.docstring_tree",
-        "sdv_doc_docitem.Documentable_t": "/__WTRL_OBJECTS__/sdv_doc_docitem.Documentable_t",
-        "sdv_doc_docitem.Scopes_t": "/__WTRL_OBJECTS__/sdv_doc_docitem.Scopes_t"
+        "sdv.doc.waterloo.docitem_convert.WtrlJsonNode_t": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_convert.WtrlJsonNode_t"
     },
     "__WTRL_TOC_VARIABLES__": {},
     "__WTRL_TOC_CONSTANTS__": {
@@ -225,73 +220,76 @@
         "sdv.doc.waterloo.docitem.SCOPE_TAG_MAP": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem.SCOPE_TAG_MAP",
         "sdv.doc.waterloo.docitem.FLAVOUR_TAG_MAP": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem.FLAVOUR_TAG_MAP",
         "sdv.doc.waterloo.docitem.FORMAT_TAG_MAP": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem.FORMAT_TAG_MAP",
-        "sdv_doc_docitem_helper.Scope.PUBLIC": "/__WTRL_OBJECTS__/sdv_doc_docitem_helper.Scope.PUBLIC",
-        "sdv_doc_docitem_helper.Scope.EXTENSION": "/__WTRL_OBJECTS__/sdv_doc_docitem_helper.Scope.EXTENSION",
-        "sdv_doc_docitem_helper.Scope.CORE": "/__WTRL_OBJECTS__/sdv_doc_docitem_helper.Scope.CORE",
-        "sdv_doc_docitem_helper.Flavour.RAW": "/__WTRL_OBJECTS__/sdv_doc_docitem_helper.Flavour.RAW",
-        "sdv_doc_docitem_helper.Flavour.RFC_2119": "/__WTRL_OBJECTS__/sdv_doc_docitem_helper.Flavour.RFC_2119",
-        "sdv_doc_docitem_helper.Flavour.MARKDOWN": "/__WTRL_OBJECTS__/sdv_doc_docitem_helper.Flavour.MARKDOWN",
-        "sdv_doc_docitem_helper.Format.JSON": "/__WTRL_OBJECTS__/sdv_doc_docitem_helper.Format.JSON",
-        "sdv_doc_docitem_helper.Format.YAML": "/__WTRL_OBJECTS__/sdv_doc_docitem_helper.Format.YAML",
-        "sdv_doc_docitem_helper.Format.MD": "/__WTRL_OBJECTS__/sdv_doc_docitem_helper.Format.MD",
-        "sdv_doc_docitem_base.docitem_list_of_symbols_base.ValuePattern.IDENTIFIER": "/__WTRL_OBJECTS__/sdv_doc_docitem_base.docitem_list_of_symbols_base.ValuePattern.IDENTIFIER",
-        "sdv_doc_docitem_base.docitem_list_of_symbols_base.ValuePattern.QUALIFIED_IDENTIFIER": "/__WTRL_OBJECTS__/sdv_doc_docitem_base.docitem_list_of_symbols_base.ValuePattern.QUALIFIED_IDENTIFIER",
-        "sdv_doc_docitem.RE_IDENTIFIER": "/__WTRL_OBJECTS__/sdv_doc_docitem.RE_IDENTIFIER",
-        "sdv_doc_docitem.RE_QUALIFIED_IDENTIFIER": "/__WTRL_OBJECTS__/sdv_doc_docitem.RE_QUALIFIED_IDENTIFIER",
-        "sdv_doc_docitem.KEYWORDS_OF_NORMATIVITY": "/__WTRL_OBJECTS__/sdv_doc_docitem.KEYWORDS_OF_NORMATIVITY",
-        "sdv_doc_docitem.CANONICAL_ORDER_OF_SECTIONS": "/__WTRL_OBJECTS__/sdv_doc_docitem.CANONICAL_ORDER_OF_SECTIONS",
-        "sdv_doc_docitem.SCOPE_TAG_MAP": "/__WTRL_OBJECTS__/sdv_doc_docitem.SCOPE_TAG_MAP",
-        "sdv_doc_docitem.FLAVOUR_TAG_MAP": "/__WTRL_OBJECTS__/sdv_doc_docitem.FLAVOUR_TAG_MAP",
-        "sdv_doc_docitem.FORMAT_TAG_MAP": "/__WTRL_OBJECTS__/sdv_doc_docitem.FORMAT_TAG_MAP"
+        "sdv.doc.waterloo.docitem_helper.Scope.PUBLIC": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.Scope.PUBLIC",
+        "sdv.doc.waterloo.docitem_helper.Scope.EXTENSION": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.Scope.EXTENSION",
+        "sdv.doc.waterloo.docitem_helper.Scope.CORE": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.Scope.CORE",
+        "sdv.doc.waterloo.docitem_helper.Flavour.RAW": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.Flavour.RAW",
+        "sdv.doc.waterloo.docitem_helper.Flavour.RFC_2119": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.Flavour.RFC_2119",
+        "sdv.doc.waterloo.docitem_helper.Flavour.MARKDOWN": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.Flavour.MARKDOWN",
+        "sdv.doc.waterloo.docitem_helper.Format.JSON": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.Format.JSON",
+        "sdv.doc.waterloo.docitem_helper.Format.YAML": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.Format.YAML",
+        "sdv.doc.waterloo.docitem_helper.Format.MD": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.Format.MD",
+        "sdv.doc.waterloo.docitem_base.docitem_list_of_symbols_base.ValuePattern.IDENTIFIER": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_base.docitem_list_of_symbols_base.ValuePattern.IDENTIFIER",
+        "sdv.doc.waterloo.docitem_base.docitem_list_of_symbols_base.ValuePattern.QUALIFIED_IDENTIFIER": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_base.docitem_list_of_symbols_base.ValuePattern.QUALIFIED_IDENTIFIER"
     },
     "__WTRL_OBJECTS__": {
         "sdv.doc.waterloo.docitem.docstring_tree": {
-            "doc": [
+            "doc": {},
+            "doc_lines": [
                 "The type alias for docstring trees."
             ]
         },
         "sdv.doc.waterloo.docitem.Documentable_t": {
-            "doc": [
+            "doc": {},
+            "doc_lines": [
                 "Type for objects that can have a docstring."
             ]
         },
         "sdv.doc.waterloo.docitem.Scopes_t": {
-            "doc": [
+            "doc": {},
+            "doc_lines": [
                 "Type alias for a set of scopes."
             ]
         },
         "sdv.doc.waterloo.docitem.RE_IDENTIFIER": {
-            "doc": [
+            "doc": {},
+            "doc_lines": [
                 "Regular expression for identifiers: ``[A-Za-z_][A-Za-z0-9_]*``"
             ]
         },
         "sdv.doc.waterloo.docitem.RE_QUALIFIED_IDENTIFIER": {
-            "doc": [
+            "doc": {},
+            "doc_lines": [
                 "Regular expression for qualified identifiers: ``[A-Za-z_.][A-Za-z0-9_.]*``"
             ]
         },
         "sdv.doc.waterloo.docitem.KEYWORDS_OF_NORMATIVITY": {
-            "doc": [
+            "doc": {},
+            "doc_lines": [
                 "The set of normative keywords."
             ]
         },
         "sdv.doc.waterloo.docitem.CANONICAL_ORDER_OF_SECTIONS": {
-            "doc": [
+            "doc": {},
+            "doc_lines": [
                 "A canonical order for sections and subsection in order to reduce permutative noise for LLMs."
             ]
         },
         "sdv.doc.waterloo.docitem.SCOPE_TAG_MAP": {
-            "doc": [
+            "doc": {},
+            "doc_lines": [
                 "Map string representations of scopes to symbolic/numeric values."
             ]
         },
         "sdv.doc.waterloo.docitem.FLAVOUR_TAG_MAP": {
-            "doc": [
+            "doc": {},
+            "doc_lines": [
                 "Map string representations of flavours to symbolic/numeric values."
             ]
         },
         "sdv.doc.waterloo.docitem.FORMAT_TAG_MAP": {
-            "doc": [
+            "doc": {},
+            "doc_lines": [
                 "Map string representations of output formats to symbolic/numeric values."
             ]
         },
@@ -686,22 +684,25 @@
                 }
             }
         },
-        "sdv_doc_docitem_helper.Scope.PUBLIC": {
-            "doc": [
+        "sdv.doc.waterloo.docitem_helper.Scope.PUBLIC": {
+            "doc": {},
+            "doc_lines": [
                 "Selects the public API."
             ]
         },
-        "sdv_doc_docitem_helper.Scope.EXTENSION": {
-            "doc": [
+        "sdv.doc.waterloo.docitem_helper.Scope.EXTENSION": {
+            "doc": {},
+            "doc_lines": [
                 "Selects the API for developers of plugin and extensions."
             ]
         },
-        "sdv_doc_docitem_helper.Scope.CORE": {
-            "doc": [
+        "sdv.doc.waterloo.docitem_helper.Scope.CORE": {
+            "doc": {},
+            "doc_lines": [
                 "Selects the API for core developers."
             ]
         },
-        "sdv_doc_docitem_helper.Scope": {
+        "sdv.doc.waterloo.docitem_helper.Scope": {
             "signature": {
                 "text": "object.__init__(self, /, *args, **kwargs)",
                 "parameters": [
@@ -761,25 +762,28 @@
                 }
             }
         },
-        "sdv_doc_docitem_helper": {
+        "sdv.doc.waterloo.docitem_helper": {
             "doc": {}
         },
-        "sdv_doc_docitem_helper.Flavour.RAW": {
-            "doc": [
+        "sdv.doc.waterloo.docitem_helper.Flavour.RAW": {
+            "doc": {},
+            "doc_lines": [
                 "Example: \\|Must\\|"
             ]
         },
-        "sdv_doc_docitem_helper.Flavour.RFC_2119": {
-            "doc": [
+        "sdv.doc.waterloo.docitem_helper.Flavour.RFC_2119": {
+            "doc": {},
+            "doc_lines": [
                 "Example: |lit|`MUST`"
             ]
         },
-        "sdv_doc_docitem_helper.Flavour.MARKDOWN": {
-            "doc": [
+        "sdv.doc.waterloo.docitem_helper.Flavour.MARKDOWN": {
+            "doc": {},
+            "doc_lines": [
                 "Example: |lit|`**MUST**`"
             ]
         },
-        "sdv_doc_docitem_helper.Flavour": {
+        "sdv.doc.waterloo.docitem_helper.Flavour": {
             "signature": {
                 "text": "object.__init__(self, /, *args, **kwargs)",
                 "parameters": [
@@ -830,22 +834,25 @@
                 }
             }
         },
-        "sdv_doc_docitem_helper.Format.JSON": {
-            "doc": [
+        "sdv.doc.waterloo.docitem_helper.Format.JSON": {
+            "doc": {},
+            "doc_lines": [
                 "Javascript Object Notation"
             ]
         },
-        "sdv_doc_docitem_helper.Format.YAML": {
-            "doc": [
+        "sdv.doc.waterloo.docitem_helper.Format.YAML": {
+            "doc": {},
+            "doc_lines": [
                 "YAML Ain't Markup Language"
             ]
         },
-        "sdv_doc_docitem_helper.Format.MD": {
-            "doc": [
+        "sdv.doc.waterloo.docitem_helper.Format.MD": {
+            "doc": {},
+            "doc_lines": [
                 "Markdown."
             ]
         },
-        "sdv_doc_docitem_helper.Format": {
+        "sdv.doc.waterloo.docitem_helper.Format": {
             "signature": {
                 "text": "object.__init__(self, /, *args, **kwargs)",
                 "parameters": [
@@ -896,7 +903,48 @@
                 }
             }
         },
-        "sdv_doc_docitem_helper.is_attr_annotated": {
+        "sdv.doc.waterloo.docitem_helper.ConfigTraversal": {
+            "signature": {
+                "text": "ConfigTraversal.__init__(self) -> 'None'",
+                "parameters": [],
+                "returns": "None"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "class",
+                    "normative_sections": [
+                        "Contract"
+                    ],
+                    "scope": [
+                        "public"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST provide public methods to configure object traversal for functions like |func|`gen_documentable_objects`.",
+                        "MUST provide (internal) boolean methods which accept or refuse traversal at a given node in the object tree."
+                    ],
+                    "constructor": [
+                        "MUST be default-constructible"
+                    ]
+                },
+                "Notes": {
+                    "Experimental": [
+                        "This class will likely be expanded in the future, and we are postponing the normative documentation for now."
+                    ],
+                    "Configure": [
+                        "Use |func|`enable_include_imported` to allow descending into imported modules."
+                    ],
+                    "Future": [
+                        "Possible extensions include acceptance/refusal by regular expressions."
+                    ],
+                    "Example": [
+                        "|ref|`gen_documentable_objects <example_gen_documentable_objects>`"
+                    ]
+                }
+            }
+        },
+        "sdv.doc.waterloo.docitem_helper.is_attr_annotated": {
             "signature": {
                 "text": "is_attr_annotated(obj: 'AnnotatedObject_t', attr: 'str') -> 'bool'",
                 "parameters": [
@@ -956,7 +1004,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_helper.is_attr_final": {
+        "sdv.doc.waterloo.docitem_helper.is_attr_final": {
             "signature": {
                 "text": "is_attr_final(obj: 'AnnotatedObject_t', attr: 'str') -> 'bool'",
                 "parameters": [
@@ -1016,7 +1064,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_helper.is_obj_module": {
+        "sdv.doc.waterloo.docitem_helper.is_obj_module": {
             "signature": {
                 "text": "is_obj_module(obj: 'object') -> 'TypeIs[ModuleType]'",
                 "parameters": [
@@ -1067,7 +1115,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_helper.is_obj_class": {
+        "sdv.doc.waterloo.docitem_helper.is_obj_class": {
             "signature": {
                 "text": "is_obj_class(obj: 'object') -> 'TypeIs[type[object]]'",
                 "parameters": [
@@ -1118,7 +1166,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_helper.is_obj_function": {
+        "sdv.doc.waterloo.docitem_helper.is_obj_function": {
             "signature": {
                 "text": "is_obj_function(obj: 'object') -> 'TypeIs[Callable[..., Any]]'",
                 "parameters": [
@@ -1169,7 +1217,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_helper.is_obj_named_value": {
+        "sdv.doc.waterloo.docitem_helper.is_obj_named_value": {
             "signature": {
                 "text": "is_obj_named_value(obj: 'object') -> 'TypeIs[Callable[..., Any]]'",
                 "parameters": [
@@ -1223,7 +1271,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_helper.get_obj_name": {
+        "sdv.doc.waterloo.docitem_helper.get_obj_name": {
             "signature": {
                 "text": "get_obj_name(obj: 'object') -> 'str'",
                 "parameters": [
@@ -1271,7 +1319,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_helper.get_obj_fully_qualified_name": {
+        "sdv.doc.waterloo.docitem_helper.get_obj_fully_qualified_name": {
             "signature": {
                 "text": "get_obj_fully_qualified_name(obj: 'object') -> 'str'",
                 "parameters": [
@@ -1314,59 +1362,7 @@
                 "Raises": {}
             }
         },
-        "sdv_doc_docitem_helper.build_anchor": {
-            "signature": {
-                "text": "build_anchor(obj: 'object', kind: 'str | None' = None) -> 'str'",
-                "parameters": [
-                    {
-                        "name": "obj",
-                        "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "object",
-                        "default": null
-                    },
-                    {
-                        "name": "kind",
-                        "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "str | None",
-                        "default": "None"
-                    }
-                ],
-                "returns": "str"
-            },
-            "doc": {
-                "Preamble": {
-                    "profile": "function",
-                    "normative_sections": [
-                        "Contract",
-                        "Parameters",
-                        "Returns",
-                        "Raises"
-                    ]
-                },
-                "Contract": {
-                    "general": [
-                        "MUST build a deterministic anchor string from an object.",
-                        "MUST use the fully qualified name as source.",
-                        "MUST encode each qualified-name segment as ``<len>:<segment>``.",
-                        "MUST prefix the anchor by ``wtrl-<kind>-``.",
-                        "MUST infer kind as one of ``mod``, ``cls``, ``func``, ``obj`` if not passed explicitly."
-                    ]
-                },
-                "Parameters": {
-                    "obj": [
-                        "Object for which the anchor shall be generated."
-                    ],
-                    "kind": [
-                        "Optional explicit kind tag."
-                    ]
-                },
-                "Returns": [
-                    "Deterministic anchor string suitable for doc-internal links."
-                ],
-                "Raises": {}
-            }
-        },
-        "sdv_doc_docitem_helper.get_obj_path": {
+        "sdv.doc.waterloo.docitem_helper.get_obj_path": {
             "signature": {
                 "text": "get_obj_path(obj: 'object') -> 'str | None'",
                 "parameters": [
@@ -1411,7 +1407,62 @@
                 }
             }
         },
-        "sdv_doc_docitem_helper.get_func_obj_from_callable": {
+        "sdv.doc.waterloo.docitem_helper.build_anchor": {
+            "signature": {
+                "text": "build_anchor(obj: 'object', kind: 'str | None' = None) -> 'str'",
+                "parameters": [
+                    {
+                        "name": "obj",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "object",
+                        "default": null
+                    },
+                    {
+                        "name": "kind",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str | None",
+                        "default": "None"
+                    }
+                ],
+                "returns": "str"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ],
+                    "scope": [
+                        "extension"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST build a deterministic anchor string from an object.",
+                        "MUST use the fully qualified name as source.",
+                        "MUST encode each qualified-name segment as ``<len>:<segment>``.",
+                        "MUST prefix the anchor by |lit|`wtrl-<kind>-`.",
+                        "MUST infer kind as one of ``mod``, ``cls``, ``func``, ``obj`` if not passed explicitly."
+                    ]
+                },
+                "Parameters": {
+                    "obj": [
+                        "Object for which the anchor shall be generated."
+                    ],
+                    "kind": [
+                        "Optional explicit kind tag."
+                    ]
+                },
+                "Returns": [
+                    "Deterministic anchor string suitable for doc-internal links."
+                ],
+                "Raises": {}
+            }
+        },
+        "sdv.doc.waterloo.docitem_helper.get_func_obj_from_callable": {
             "signature": {
                 "text": "get_func_obj_from_callable(obj: 'object') -> 'Callable[..., Any] | None'",
                 "parameters": [
@@ -1467,7 +1518,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_helper.get_obj_docstring": {
+        "sdv.doc.waterloo.docitem_helper.get_obj_docstring": {
             "signature": {
                 "text": "get_obj_docstring(obj: 'object') -> 'str'",
                 "parameters": [
@@ -1514,7 +1565,63 @@
                 }
             }
         },
-        "sdv_doc_docitem_helper.tracer": {
+        "sdv.doc.waterloo.docitem_helper.gen_documentable_objects": {
+            "signature": {
+                "text": "gen_documentable_objects(obj: 'Documentable_t', config: 'ConfigTraversal' = ConfigTraversal()) -> 'Generator[Documentable_t, None, None]'",
+                "parameters": [
+                    {
+                        "name": "obj",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "Documentable_t",
+                        "default": null
+                    },
+                    {
+                        "name": "config",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "ConfigTraversal",
+                        "default": "ConfigTraversal()"
+                    }
+                ],
+                "returns": "Generator[Documentable_t, None, None]"
+            },
+            "traits": [
+                "generator"
+            ],
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ],
+                    "scope": [
+                        "public"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST create a generator object which allows depth-first tree traversal of objects in |var|`obj`.",
+                        "MUST first yield object |var|`obj` itself.",
+                        "MUST yield all objects and only objects which can have a docstring."
+                    ]
+                },
+                "Parameters": {
+                    "obj": [
+                        "The object (module, class, function, method) to examine."
+                    ],
+                    "config": [
+                        "Controls acceptance or refusal of objects during traversal."
+                    ]
+                },
+                "Returns": [
+                    "MUST return a Generator which yields objects from tree traversal of |var|`obj`"
+                ],
+                "Raises": {}
+            }
+        },
+        "sdv.doc.waterloo.docitem_helper.tracer": {
             "signature": {
                 "text": "tracer.__init__(self) -> 'None'",
                 "parameters": [],
@@ -1569,45 +1676,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_helper.ConfigTraversal": {
-            "signature": {
-                "text": "ConfigTraversal.__init__(self) -> 'None'",
-                "parameters": [],
-                "returns": "None"
-            },
-            "doc": {
-                "Preamble": {
-                    "profile": "class",
-                    "normative_sections": [
-                        "Contract"
-                    ],
-                    "scope": [
-                        "public"
-                    ]
-                },
-                "Contract": {
-                    "general": [
-                        "MUST provide public methods to configure object traversal for functions like |func|`gen_documentable_objects`.",
-                        "MUST provide (internal) boolean methods which accept or refuse traversal at a given node in the object tree."
-                    ],
-                    "constructor": [
-                        "MUST be default-constructible"
-                    ]
-                },
-                "Notes": {
-                    "Experimental": [
-                        "This class will likely be expanded in the future, and we are postponing the normative documentation for now."
-                    ],
-                    "Configure": [
-                        "Use |func|`enable_include_imported` to allow descending into imported modules."
-                    ],
-                    "Future": [
-                        "Possible extensions include acceptance/refusal by regular expressions."
-                    ]
-                }
-            }
-        },
-        "sdv_doc_docitem_tokenizer.get_num_indent": {
+        "sdv.doc.waterloo.docitem_tokenizer.get_num_indent": {
             "signature": {
                 "text": "get_num_indent(tr: 'tracer', line: 'str', indent_scheme: 'int') -> 'int'",
                 "parameters": [
@@ -1683,10 +1752,10 @@
                 }
             }
         },
-        "sdv_doc_docitem_tokenizer": {
+        "sdv.doc.waterloo.docitem_tokenizer": {
             "doc": {}
         },
-        "sdv_doc_docitem_tokenizer.parse_indent_docstring": {
+        "sdv.doc.waterloo.docitem_tokenizer.parse_indent_docstring": {
             "signature": {
                 "text": "parse_indent_docstring(tr: 'tracer', text: 'str') -> 'docstring_tree'",
                 "parameters": [
@@ -1769,7 +1838,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_tokenizer.get_tree_of_section": {
+        "sdv.doc.waterloo.docitem_tokenizer.get_tree_of_section": {
             "signature": {
                 "text": "get_tree_of_section(tr: 'tracer', tree: 'docstring_tree', sec: 'str') -> 'docstring_subtree'",
                 "parameters": [
@@ -1835,7 +1904,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_tokenizer.get_tree_of_subsection": {
+        "sdv.doc.waterloo.docitem_tokenizer.get_tree_of_subsection": {
             "signature": {
                 "text": "get_tree_of_subsection(tr: 'tracer', tree: 'docstring_tree', sec: 'str', subsec: 'str') -> 'docstring_subtree'",
                 "parameters": [
@@ -1915,7 +1984,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_tokenizer.get_scopes_of_tree": {
+        "sdv.doc.waterloo.docitem_tokenizer.get_scopes_of_tree": {
             "signature": {
                 "text": "get_scopes_of_tree(tr: 'tracer', tree: 'docstring_tree') -> 'Scopes_t'",
                 "parameters": [
@@ -1969,7 +2038,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_tokenizer.to_string_tree": {
+        "sdv.doc.waterloo.docitem_tokenizer.to_string_tree": {
             "signature": {
                 "text": "to_string_tree(tree: 'docstring_subtree', indent_scheme: 'int' = 0, indent: 'int' = 0) -> 'str'",
                 "parameters": [
@@ -2030,7 +2099,7 @@
                 ]
             }
         },
-        "sdv_doc_docitem_base.docitem_base": {
+        "sdv.doc.waterloo.docitem_base.docitem_base": {
             "signature": {
                 "text": "object.__init__(self, /, *args, **kwargs)",
                 "parameters": [
@@ -2090,7 +2159,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_base": {
+        "sdv.doc.waterloo.docitem_base": {
             "doc": {
                 "Preamble": {
                     "profile": "module",
@@ -2106,7 +2175,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_base.docitem_base.parse": {
+        "sdv.doc.waterloo.docitem_base.docitem_base.parse": {
             "signature": {
                 "text": "docitem_base.parse(self, tr: 'tracer', subtree: 'docstring_subtree') -> 'None'",
                 "parameters": [
@@ -2146,7 +2215,7 @@
                         "MUST parse a docstring subtree and create the related child items."
                     ],
                     "requires": [
-                        "|var|`subtree` MUST be a formally correct docstring subtree\t\t\t\tfrom a Waterloo docstring; otherwise parsing will fail."
+                        "|var|`subtree` MUST be a formally correct docstring subtree from a Waterloo docstring; otherwise parsing will fail."
                     ]
                 },
                 "Parameters": {
@@ -2170,7 +2239,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_base.docitem_base.items": {
+        "sdv.doc.waterloo.docitem_base.docitem_base.items": {
             "signature": {
                 "text": "docitem_base.items(self) -> 'Iterable[str]'",
                 "parameters": [],
@@ -2203,7 +2272,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_base.docitem_list_base": {
+        "sdv.doc.waterloo.docitem_base.docitem_list_base": {
             "signature": {
                 "text": "docitem_list_base.__init__(self) -> 'None'",
                 "parameters": [],
@@ -2242,7 +2311,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_base.docitem_list_base.items": {
+        "sdv.doc.waterloo.docitem_base.docitem_list_base.items": {
             "signature": {
                 "text": "docitem_list_base.items(self) -> 'List[str]'",
                 "parameters": [],
@@ -2271,7 +2340,7 @@
                 "Description": []
             }
         },
-        "sdv_doc_docitem_base.docitem_map_base": {
+        "sdv.doc.waterloo.docitem_base.docitem_map_base": {
             "signature": {
                 "text": "docitem_map_base.__init__(self) -> 'None'",
                 "parameters": [],
@@ -2310,7 +2379,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_base.docitem_map_base.items": {
+        "sdv.doc.waterloo.docitem_base.docitem_map_base.items": {
             "signature": {
                 "text": "docitem_map_base.items(self) -> 'Dict[str, docitem_base]'",
                 "parameters": [],
@@ -2338,7 +2407,7 @@
                 "Raises": {}
             }
         },
-        "sdv_doc_docitem_base.docitem_list_of_symbols_base": {
+        "sdv.doc.waterloo.docitem_base.docitem_list_of_symbols_base": {
             "signature": {
                 "text": "docitem_list_base.__init__(self) -> 'None'",
                 "parameters": [],
@@ -2382,17 +2451,19 @@
                 }
             }
         },
-        "sdv_doc_docitem_base.docitem_list_of_symbols_base.ValuePattern.IDENTIFIER": {
-            "doc": [
+        "sdv.doc.waterloo.docitem_base.docitem_list_of_symbols_base.ValuePattern.IDENTIFIER": {
+            "doc": {},
+            "doc_lines": [
                 "|Must| represent the pattern of an Identifier."
             ]
         },
-        "sdv_doc_docitem_base.docitem_list_of_symbols_base.ValuePattern.QUALIFIED_IDENTIFIER": {
-            "doc": [
+        "sdv.doc.waterloo.docitem_base.docitem_list_of_symbols_base.ValuePattern.QUALIFIED_IDENTIFIER": {
+            "doc": {},
+            "doc_lines": [
                 "|Must| represent the pattern of a Qualified Identifier."
             ]
         },
-        "sdv_doc_docitem_base.docitem_list_of_symbols_base.ValuePattern": {
+        "sdv.doc.waterloo.docitem_base.docitem_list_of_symbols_base.ValuePattern": {
             "signature": {
                 "text": "object.__init__(self, /, *args, **kwargs)",
                 "parameters": [
@@ -2438,7 +2509,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_base.docitem_list_of_symbols_base._parse": {
+        "sdv.doc.waterloo.docitem_base.docitem_list_of_symbols_base._parse": {
             "signature": {
                 "text": "docitem_list_of_symbols_base._parse(self, tr: 'tracer', refs: 'docstring_subtree', pattern: 'ValuePattern') -> 'None'",
                 "parameters": [
@@ -2506,7 +2577,7 @@
                 ]
             }
         },
-        "sdv_doc_docitem_sections.docitem_derived_from": {
+        "sdv.doc.waterloo.docitem_sections.docitem_derived_from": {
             "signature": {
                 "text": "docitem_derived_from.__init__(self) -> 'None'",
                 "parameters": [],
@@ -2543,10 +2614,10 @@
                 }
             }
         },
-        "sdv_doc_docitem_sections": {
+        "sdv.doc.waterloo.docitem_sections": {
             "doc": {}
         },
-        "sdv_doc_docitem_sections.docitem_derived_from.parse": {
+        "sdv.doc.waterloo.docitem_sections.docitem_derived_from.parse": {
             "signature": {
                 "text": "docitem_derived_from.parse(self, tr: 'tracer', bases: 'docstring_subtree') -> 'None'",
                 "parameters": [
@@ -2582,7 +2653,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_sections.docitem_see_also": {
+        "sdv.doc.waterloo.docitem_sections.docitem_see_also": {
             "signature": {
                 "text": "docitem_see_also.__init__(self) -> 'None'",
                 "parameters": [],
@@ -2619,7 +2690,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_sections.docitem_see_also.parse": {
+        "sdv.doc.waterloo.docitem_sections.docitem_see_also.parse": {
             "signature": {
                 "text": "docitem_see_also.parse(self, tr: 'tracer', refs: 'docstring_subtree') -> 'None'",
                 "parameters": [
@@ -2655,7 +2726,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_sections.docitem_public_classes": {
+        "sdv.doc.waterloo.docitem_sections.docitem_public_classes": {
             "signature": {
                 "text": "docitem_public_classes.__init__(self) -> 'None'",
                 "parameters": [],
@@ -2692,7 +2763,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_sections.docitem_public_classes.parse": {
+        "sdv.doc.waterloo.docitem_sections.docitem_public_classes.parse": {
             "signature": {
                 "text": "docitem_public_classes.parse(self, tr: 'tracer', refs: 'docstring_subtree') -> 'None'",
                 "parameters": [
@@ -2728,7 +2799,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_sections.docitem_public_methods": {
+        "sdv.doc.waterloo.docitem_sections.docitem_public_methods": {
             "signature": {
                 "text": "docitem_public_methods.__init__(self) -> 'None'",
                 "parameters": [],
@@ -2765,7 +2836,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_sections.docitem_public_methods.parse": {
+        "sdv.doc.waterloo.docitem_sections.docitem_public_methods.parse": {
             "signature": {
                 "text": "docitem_public_methods.parse(self, tr: 'tracer', refs: 'docstring_subtree') -> 'None'",
                 "parameters": [
@@ -2801,7 +2872,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_sections.docitem_public_functions": {
+        "sdv.doc.waterloo.docitem_sections.docitem_public_functions": {
             "signature": {
                 "text": "docitem_public_functions.__init__(self) -> 'None'",
                 "parameters": [],
@@ -2838,7 +2909,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_sections.docitem_public_functions.parse": {
+        "sdv.doc.waterloo.docitem_sections.docitem_public_functions.parse": {
             "signature": {
                 "text": "docitem_public_functions.parse(self, tr: 'tracer', refs: 'docstring_subtree') -> 'None'",
                 "parameters": [
@@ -2874,7 +2945,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_sections.docitem_factory_functions": {
+        "sdv.doc.waterloo.docitem_sections.docitem_factory_functions": {
             "signature": {
                 "text": "docitem_factory_functions.__init__(self) -> 'None'",
                 "parameters": [],
@@ -2911,7 +2982,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_sections.docitem_factory_functions.parse": {
+        "sdv.doc.waterloo.docitem_sections.docitem_factory_functions.parse": {
             "signature": {
                 "text": "docitem_factory_functions.parse(self, tr: 'tracer', factory_functions: 'docstring_subtree') -> 'None'",
                 "parameters": [
@@ -2963,7 +3034,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_sections.docitem_factory": {
+        "sdv.doc.waterloo.docitem_sections.docitem_factory": {
             "signature": {
                 "text": "docitem_factory.__init__(self) -> 'None'",
                 "parameters": [],
@@ -3000,7 +3071,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_sections.docitem_factory.parse": {
+        "sdv.doc.waterloo.docitem_sections.docitem_factory.parse": {
             "signature": {
                 "text": "docitem_factory.parse(self, tr: 'tracer', functions: 'docstring_subtree') -> 'None'",
                 "parameters": [
@@ -3053,7 +3124,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_sections.docitem_free_text_entry_base": {
+        "sdv.doc.waterloo.docitem_sections.docitem_free_text_entry_base": {
             "signature": {
                 "text": "docitem_list_base.__init__(self) -> 'None'",
                 "parameters": [],
@@ -3092,7 +3163,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_sections.docitem_free_text_entry_base.parse": {
+        "sdv.doc.waterloo.docitem_sections.docitem_free_text_entry_base.parse": {
             "signature": {
                 "text": "docitem_free_text_entry_base.parse(self, tr: 'tracer', lines: 'docstring_subtree') -> 'None'",
                 "parameters": [
@@ -3144,7 +3215,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_sections.docitem_class_overview_entry": {
+        "sdv.doc.waterloo.docitem_sections.docitem_class_overview_entry": {
             "signature": {
                 "text": "docitem_class_overview_entry.__init__(self) -> 'None'",
                 "parameters": [],
@@ -3181,7 +3252,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_sections.docitem_class_overview": {
+        "sdv.doc.waterloo.docitem_sections.docitem_class_overview": {
             "signature": {
                 "text": "docitem_class_overview.__init__(self) -> 'None'",
                 "parameters": [],
@@ -3218,7 +3289,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_sections.docitem_class_overview.parse": {
+        "sdv.doc.waterloo.docitem_sections.docitem_class_overview.parse": {
             "signature": {
                 "text": "docitem_class_overview.parse(self, tr: 'tracer', entries: 'docstring_subtree') -> 'None'",
                 "parameters": [
@@ -3271,7 +3342,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_sections.docitem_public_types_entry": {
+        "sdv.doc.waterloo.docitem_sections.docitem_public_types_entry": {
             "signature": {
                 "text": "docitem_public_types_entry.__init__(self) -> 'None'",
                 "parameters": [],
@@ -3308,7 +3379,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_sections.docitem_public_types": {
+        "sdv.doc.waterloo.docitem_sections.docitem_public_types": {
             "signature": {
                 "text": "docitem_public_types.__init__(self) -> 'None'",
                 "parameters": [],
@@ -3345,7 +3416,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_sections.docitem_public_types.parse": {
+        "sdv.doc.waterloo.docitem_sections.docitem_public_types.parse": {
             "signature": {
                 "text": "docitem_public_types.parse(self, tr: 'tracer', entries: 'docstring_subtree') -> 'None'",
                 "parameters": [
@@ -3398,7 +3469,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_sections.docitem_public_assignables_entry": {
+        "sdv.doc.waterloo.docitem_sections.docitem_public_assignables_entry": {
             "signature": {
                 "text": "docitem_public_assignables_entry.__init__(self) -> 'None'",
                 "parameters": [],
@@ -3435,7 +3506,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_sections.docitem_public_assignables_base": {
+        "sdv.doc.waterloo.docitem_sections.docitem_public_assignables_base": {
             "signature": {
                 "text": "docitem_public_assignables_base.__init__(self) -> 'None'",
                 "parameters": [],
@@ -3472,7 +3543,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_sections.docitem_public_assignables_base.parse": {
+        "sdv.doc.waterloo.docitem_sections.docitem_public_assignables_base.parse": {
             "signature": {
                 "text": "docitem_public_assignables_base.parse(self, tr: 'tracer', entries: 'docstring_subtree') -> 'None'",
                 "parameters": [
@@ -3525,7 +3596,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_sections.docitem_method_overview_entry": {
+        "sdv.doc.waterloo.docitem_sections.docitem_method_overview_entry": {
             "signature": {
                 "text": "docitem_method_overview_entry.__init__(self) -> 'None'",
                 "parameters": [],
@@ -3562,7 +3633,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_sections.docitem_method_overview": {
+        "sdv.doc.waterloo.docitem_sections.docitem_method_overview": {
             "signature": {
                 "text": "docitem_method_overview.__init__(self) -> 'None'",
                 "parameters": [],
@@ -3599,7 +3670,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_sections.docitem_method_overview.parse": {
+        "sdv.doc.waterloo.docitem_sections.docitem_method_overview.parse": {
             "signature": {
                 "text": "docitem_method_overview.parse(self, tr: 'tracer', entries: 'docstring_subtree') -> 'None'",
                 "parameters": [
@@ -3652,7 +3723,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_sections.docitem_function_overview_entry": {
+        "sdv.doc.waterloo.docitem_sections.docitem_function_overview_entry": {
             "signature": {
                 "text": "docitem_function_overview_entry.__init__(self) -> 'None'",
                 "parameters": [],
@@ -3689,7 +3760,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_sections.docitem_function_overview": {
+        "sdv.doc.waterloo.docitem_sections.docitem_function_overview": {
             "signature": {
                 "text": "docitem_function_overview.__init__(self) -> 'None'",
                 "parameters": [],
@@ -3726,7 +3797,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_sections.docitem_function_overview.parse": {
+        "sdv.doc.waterloo.docitem_sections.docitem_function_overview.parse": {
             "signature": {
                 "text": "docitem_function_overview.parse(self, tr: 'tracer', entries: 'docstring_subtree') -> 'None'",
                 "parameters": [
@@ -3779,7 +3850,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_sections.docitem_returns": {
+        "sdv.doc.waterloo.docitem_sections.docitem_returns": {
             "signature": {
                 "text": "docitem_returns.__init__(self) -> 'None'",
                 "parameters": [],
@@ -3811,7 +3882,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_sections.docitem_returns.parse": {
+        "sdv.doc.waterloo.docitem_sections.docitem_returns.parse": {
             "signature": {
                 "text": "docitem_returns.parse(self, tr: 'tracer', lines: 'docstring_subtree') -> 'None'",
                 "parameters": [
@@ -3864,7 +3935,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_sections.docitem_description": {
+        "sdv.doc.waterloo.docitem_sections.docitem_description": {
             "signature": {
                 "text": "docitem_description.__init__(self) -> 'None'",
                 "parameters": [],
@@ -3905,7 +3976,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_sections.docitem_description.parse": {
+        "sdv.doc.waterloo.docitem_sections.docitem_description.parse": {
             "signature": {
                 "text": "docitem_description.parse(self, tr: 'tracer', lines: 'docstring_subtree') -> 'None'",
                 "parameters": [
@@ -3958,7 +4029,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_sections.docitem_parameters_entry": {
+        "sdv.doc.waterloo.docitem_sections.docitem_parameters_entry": {
             "signature": {
                 "text": "docitem_parameters_entry.__init__(self) -> 'None'",
                 "parameters": [],
@@ -3995,7 +4066,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_sections.docitem_parameters": {
+        "sdv.doc.waterloo.docitem_sections.docitem_parameters": {
             "signature": {
                 "text": "docitem_parameters.__init__(self) -> 'None'",
                 "parameters": [],
@@ -4032,7 +4103,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_sections.docitem_parameters.parse": {
+        "sdv.doc.waterloo.docitem_sections.docitem_parameters.parse": {
             "signature": {
                 "text": "docitem_parameters.parse(self, tr: 'tracer', entries: 'docstring_subtree') -> 'None'",
                 "parameters": [
@@ -4090,7 +4161,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_sections.docitem_raises_entry": {
+        "sdv.doc.waterloo.docitem_sections.docitem_raises_entry": {
             "signature": {
                 "text": "docitem_raises_entry.__init__(self) -> 'None'",
                 "parameters": [],
@@ -4127,7 +4198,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_sections.docitem_raises": {
+        "sdv.doc.waterloo.docitem_sections.docitem_raises": {
             "signature": {
                 "text": "docitem_raises.__init__(self) -> 'None'",
                 "parameters": [],
@@ -4164,7 +4235,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_sections.docitem_raises.parse": {
+        "sdv.doc.waterloo.docitem_sections.docitem_raises.parse": {
             "signature": {
                 "text": "docitem_raises.parse(self, tr: 'tracer', entries: 'docstring_subtree') -> 'None'",
                 "parameters": [
@@ -4222,7 +4293,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_sections.docitem_definitions_entry": {
+        "sdv.doc.waterloo.docitem_sections.docitem_definitions_entry": {
             "signature": {
                 "text": "docitem_definitions_entry.__init__(self) -> 'None'",
                 "parameters": [],
@@ -4259,7 +4330,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_sections.docitem_definitions": {
+        "sdv.doc.waterloo.docitem_sections.docitem_definitions": {
             "signature": {
                 "text": "docitem_definitions.__init__(self) -> 'None'",
                 "parameters": [],
@@ -4292,7 +4363,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_sections.docitem_definitions.parse": {
+        "sdv.doc.waterloo.docitem_sections.docitem_definitions.parse": {
             "signature": {
                 "text": "docitem_definitions.parse(self, tr: 'tracer', entries: 'docstring_subtree') -> 'None'",
                 "parameters": [
@@ -4344,7 +4415,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_sections.docitem_terminology_entry": {
+        "sdv.doc.waterloo.docitem_sections.docitem_terminology_entry": {
             "signature": {
                 "text": "docitem_terminology_entry.__init__(self) -> 'None'",
                 "parameters": [],
@@ -4387,7 +4458,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_sections.docitem_terminology": {
+        "sdv.doc.waterloo.docitem_sections.docitem_terminology": {
             "signature": {
                 "text": "docitem_terminology.__init__(self) -> 'None'",
                 "parameters": [],
@@ -4425,7 +4496,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_sections.docitem_terminology.parse": {
+        "sdv.doc.waterloo.docitem_sections.docitem_terminology.parse": {
             "signature": {
                 "text": "docitem_terminology.parse(self, tr: 'tracer', entries: 'docstring_subtree') -> 'None'",
                 "parameters": [
@@ -4477,7 +4548,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_sections.docitem_notes_entry": {
+        "sdv.doc.waterloo.docitem_sections.docitem_notes_entry": {
             "signature": {
                 "text": "docitem_notes_entry.__init__(self) -> 'None'",
                 "parameters": [],
@@ -4514,7 +4585,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_sections.docitem_notes": {
+        "sdv.doc.waterloo.docitem_sections.docitem_notes": {
             "signature": {
                 "text": "docitem_notes.__init__(self) -> 'None'",
                 "parameters": [],
@@ -4551,7 +4622,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_sections.docitem_notes.parse": {
+        "sdv.doc.waterloo.docitem_sections.docitem_notes.parse": {
             "signature": {
                 "text": "docitem_notes.parse(self, tr: 'tracer', entries: 'docstring_subtree') -> 'None'",
                 "parameters": [
@@ -4609,7 +4680,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_preamble.docitem_profile": {
+        "sdv.doc.waterloo.docitem_preamble.docitem_profile": {
             "signature": {
                 "text": "docitem_profile.__init__(self) -> 'None'",
                 "parameters": [],
@@ -4646,10 +4717,10 @@
                 }
             }
         },
-        "sdv_doc_docitem_preamble": {
+        "sdv.doc.waterloo.docitem_preamble": {
             "doc": {}
         },
-        "sdv_doc_docitem_preamble.docitem_profile.parse": {
+        "sdv.doc.waterloo.docitem_preamble.docitem_profile.parse": {
             "signature": {
                 "text": "docitem_profile.parse(self, tr: 'tracer', refs: 'docstring_subtree') -> 'None'",
                 "parameters": [
@@ -4703,7 +4774,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_preamble.docitem_normative_sections": {
+        "sdv.doc.waterloo.docitem_preamble.docitem_normative_sections": {
             "signature": {
                 "text": "docitem_normative_sections.__init__(self) -> 'None'",
                 "parameters": [],
@@ -4740,7 +4811,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_preamble.docitem_normative_sections.parse": {
+        "sdv.doc.waterloo.docitem_preamble.docitem_normative_sections.parse": {
             "signature": {
                 "text": "docitem_normative_sections.parse(self, tr: 'tracer', refs: 'docstring_subtree') -> 'None'",
                 "parameters": [
@@ -4776,7 +4847,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_preamble.docitem_status": {
+        "sdv.doc.waterloo.docitem_preamble.docitem_status": {
             "signature": {
                 "text": "docitem_status.__init__(self) -> 'None'",
                 "parameters": [],
@@ -4813,7 +4884,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_preamble.docitem_status.parse": {
+        "sdv.doc.waterloo.docitem_preamble.docitem_status.parse": {
             "signature": {
                 "text": "docitem_status.parse(self, tr: 'tracer', refs: 'docstring_subtree') -> 'None'",
                 "parameters": [
@@ -4867,7 +4938,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_preamble.docitem_scope": {
+        "sdv.doc.waterloo.docitem_preamble.docitem_scope": {
             "signature": {
                 "text": "docitem_scope.__init__(self) -> 'None'",
                 "parameters": [],
@@ -4904,7 +4975,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_preamble.docitem_scope.parse": {
+        "sdv.doc.waterloo.docitem_preamble.docitem_scope.parse": {
             "signature": {
                 "text": "docitem_scope.parse(self, tr: 'tracer', refs: 'docstring_subtree') -> 'None'",
                 "parameters": [
@@ -4940,7 +5011,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_preamble.docitem_preamble": {
+        "sdv.doc.waterloo.docitem_preamble.docitem_preamble": {
             "signature": {
                 "text": "docitem_preamble.__init__(self) -> 'None'",
                 "parameters": [],
@@ -4977,7 +5048,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_preamble.docitem_preamble.parse": {
+        "sdv.doc.waterloo.docitem_preamble.docitem_preamble.parse": {
             "signature": {
                 "text": "docitem_preamble.parse(self, tr: 'tracer', subtree: 'docstring_subtree') -> 'None'",
                 "parameters": [
@@ -5029,7 +5100,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_contract.docitem_constructor": {
+        "sdv.doc.waterloo.docitem_contract.docitem_constructor": {
             "signature": {
                 "text": "docitem_constructor.__init__(self) -> 'None'",
                 "parameters": [],
@@ -5066,10 +5137,10 @@
                 }
             }
         },
-        "sdv_doc_docitem_contract": {
+        "sdv.doc.waterloo.docitem_contract": {
             "doc": {}
         },
-        "sdv_doc_docitem_contract.docitem_constructor.parse": {
+        "sdv.doc.waterloo.docitem_contract.docitem_constructor.parse": {
             "signature": {
                 "text": "docitem_constructor.parse(self, tr: 'tracer', subtree: 'docstring_subtree') -> 'None'",
                 "parameters": [
@@ -5122,7 +5193,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_contract.docitem_general": {
+        "sdv.doc.waterloo.docitem_contract.docitem_general": {
             "signature": {
                 "text": "docitem_general.__init__(self) -> 'None'",
                 "parameters": [],
@@ -5159,7 +5230,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_contract.docitem_general.parse": {
+        "sdv.doc.waterloo.docitem_contract.docitem_general.parse": {
             "signature": {
                 "text": "docitem_general.parse(self, tr: 'tracer', subtree: 'docstring_subtree') -> 'None'",
                 "parameters": [
@@ -5211,7 +5282,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_contract.docitem_invariants": {
+        "sdv.doc.waterloo.docitem_contract.docitem_invariants": {
             "signature": {
                 "text": "docitem_invariants.__init__(self) -> 'None'",
                 "parameters": [],
@@ -5248,7 +5319,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_contract.docitem_invariants.parse": {
+        "sdv.doc.waterloo.docitem_contract.docitem_invariants.parse": {
             "signature": {
                 "text": "docitem_invariants.parse(self, tr: 'tracer', subtree: 'docstring_subtree') -> 'None'",
                 "parameters": [
@@ -5300,7 +5371,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_contract.docitem_requires": {
+        "sdv.doc.waterloo.docitem_contract.docitem_requires": {
             "signature": {
                 "text": "docitem_requires.__init__(self) -> 'None'",
                 "parameters": [],
@@ -5342,7 +5413,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_contract.docitem_requires.parse": {
+        "sdv.doc.waterloo.docitem_contract.docitem_requires.parse": {
             "signature": {
                 "text": "docitem_requires.parse(self, tr: 'tracer', subtree: 'docstring_subtree') -> 'None'",
                 "parameters": [
@@ -5394,7 +5465,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_contract.docitem_ensures": {
+        "sdv.doc.waterloo.docitem_contract.docitem_ensures": {
             "signature": {
                 "text": "docitem_ensures.__init__(self) -> 'None'",
                 "parameters": [],
@@ -5436,7 +5507,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_contract.docitem_ensures.parse": {
+        "sdv.doc.waterloo.docitem_contract.docitem_ensures.parse": {
             "signature": {
                 "text": "docitem_ensures.parse(self, tr: 'tracer', subtree: 'docstring_subtree') -> 'None'",
                 "parameters": [
@@ -5488,7 +5559,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_contract.docitem_base_to_inherit_from": {
+        "sdv.doc.waterloo.docitem_contract.docitem_base_to_inherit_from": {
             "signature": {
                 "text": "docitem_base_to_inherit_from.__init__(self) -> 'None'",
                 "parameters": [],
@@ -5525,7 +5596,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_contract.docitem_base_to_inherit_from.parse": {
+        "sdv.doc.waterloo.docitem_contract.docitem_base_to_inherit_from.parse": {
             "signature": {
                 "text": "docitem_base_to_inherit_from.parse(self, tr: 'tracer', bases: 'docstring_subtree') -> 'None'",
                 "parameters": [
@@ -5578,7 +5649,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_contract.docitem_traits": {
+        "sdv.doc.waterloo.docitem_contract.docitem_traits": {
             "signature": {
                 "text": "docitem_traits.__init__(self) -> 'None'",
                 "parameters": [],
@@ -5615,7 +5686,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_contract.docitem_traits.parse": {
+        "sdv.doc.waterloo.docitem_contract.docitem_traits.parse": {
             "signature": {
                 "text": "docitem_traits.parse(self, tr: 'tracer', refs: 'docstring_subtree') -> 'None'",
                 "parameters": [
@@ -5651,7 +5722,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_contract.docitem_contract_module": {
+        "sdv.doc.waterloo.docitem_contract.docitem_contract_module": {
             "signature": {
                 "text": "docitem_contract_module.__init__(self) -> 'None'",
                 "parameters": [],
@@ -5688,7 +5759,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_contract.docitem_contract_module.parse": {
+        "sdv.doc.waterloo.docitem_contract.docitem_contract_module.parse": {
             "signature": {
                 "text": "docitem_contract_module.parse(self, tr: 'tracer', subtree: 'docstring_subtree') -> 'None'",
                 "parameters": [
@@ -5740,7 +5811,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_contract.docitem_contract_class": {
+        "sdv.doc.waterloo.docitem_contract.docitem_contract_class": {
             "signature": {
                 "text": "docitem_contract_class.__init__(self) -> 'None'",
                 "parameters": [],
@@ -5777,7 +5848,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_contract.docitem_contract_class.parse": {
+        "sdv.doc.waterloo.docitem_contract.docitem_contract_class.parse": {
             "signature": {
                 "text": "docitem_contract_class.parse(self, tr: 'tracer', subtree: 'docstring_subtree') -> 'None'",
                 "parameters": [
@@ -5829,7 +5900,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_contract.docitem_contract_method": {
+        "sdv.doc.waterloo.docitem_contract.docitem_contract_method": {
             "signature": {
                 "text": "docitem_contract_method.__init__(self) -> 'None'",
                 "parameters": [],
@@ -5866,7 +5937,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_contract.docitem_contract_method.parse": {
+        "sdv.doc.waterloo.docitem_contract.docitem_contract_method.parse": {
             "signature": {
                 "text": "docitem_contract_method.parse(self, tr: 'tracer', subtree: 'docstring_subtree') -> 'None'",
                 "parameters": [
@@ -5918,7 +5989,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_contract.docitem_contract_inherited_method": {
+        "sdv.doc.waterloo.docitem_contract.docitem_contract_inherited_method": {
             "signature": {
                 "text": "docitem_contract_inherited_method.__init__(self) -> 'None'",
                 "parameters": [],
@@ -5955,7 +6026,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_contract.docitem_contract_inherited_method.parse": {
+        "sdv.doc.waterloo.docitem_contract.docitem_contract_inherited_method.parse": {
             "signature": {
                 "text": "docitem_contract_inherited_method.parse(self, tr: 'tracer', subtree: 'docstring_subtree') -> 'None'",
                 "parameters": [
@@ -6007,7 +6078,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_docstring.docitem_docstring_base": {
+        "sdv.doc.waterloo.docitem_docstring.docitem_docstring_base": {
             "signature": {
                 "text": "docitem_docstring_base.__init__(self) -> 'None'",
                 "parameters": [],
@@ -6054,10 +6125,10 @@
                 }
             }
         },
-        "sdv_doc_docitem_docstring": {
+        "sdv.doc.waterloo.docitem_docstring": {
             "doc": {}
         },
-        "sdv_doc_docitem_docstring.docitem_docstring_base.scopes": {
+        "sdv.doc.waterloo.docitem_docstring.docitem_docstring_base.scopes": {
             "signature": {
                 "text": "docitem_docstring_base.scopes(self) -> 'Scopes_t'",
                 "parameters": [],
@@ -6097,7 +6168,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_docstring.docitem_docstring_base.is_visible": {
+        "sdv.doc.waterloo.docitem_docstring.docitem_docstring_base.is_visible": {
             "signature": {
                 "text": "docitem_docstring_base.is_visible(self, sc_query: 'Scopes_t') -> 'bool'",
                 "parameters": [
@@ -6125,7 +6196,7 @@
                 },
                 "Contract": {
                     "general": [
-                        "MUST test visibility of the documented object against a set of scopes passed.\t\t\t\tVisibility is given if the object has a scope with a value less than at least one\t\t\t\tscope in the set passed."
+                        "MUST test visibility of the documented object against a set of scopes passed. Visibility is given if the object has a scope with a value less than at least one scope in the set passed."
                     ],
                     "requires": [
                         "Requirements of method |func|`scopes` apply."
@@ -6137,7 +6208,7 @@
                     ]
                 },
                 "Returns": [
-                    "MUST return |True| iff there exists s_obj in the object's scope set and\t\t\ts_query in |var|`sc_query` such that s_obj <= s_query."
+                    "MUST return |True| iff there exists s_obj in the object's scope set and s_query in |var|`sc_query` such that s_obj <= s_query."
                 ],
                 "Raises": {
                     "SectionNotFoundError": [
@@ -6146,7 +6217,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_docstring.docitem_docstring_base.can_see": {
+        "sdv.doc.waterloo.docitem_docstring.docitem_docstring_base.can_see": {
             "signature": {
                 "text": "docitem_docstring_base.can_see(self, sc_query: 'Scopes_t') -> 'bool'",
                 "parameters": [
@@ -6174,7 +6245,7 @@
                 },
                 "Contract": {
                     "general": [
-                        "MUST test whether the scope set of |self| is at least as restrictive as\t\t\t\tone of the scopes in |var|`sc_query`. This is used for upward references\t\t\t\t(e.g. derived -> base), where the referenced object must not be _more_ public."
+                        "MUST test whether the scope set of |self| is at least as restrictive as one of the scopes in |var|`sc_query`. This is used for upward references (e.g. derived -> base), where the referenced object must not be _more_ public."
                     ],
                     "requires": [
                         "Requirements of method |func|`scopes` apply."
@@ -6186,7 +6257,7 @@
                     ]
                 },
                 "Returns": [
-                    "|True| if there exists s_obj in |self|.scopes() and s_query in |var|`sc_query`\t\t\tsuch that s_query <= s_obj; otherwise |false|."
+                    "|True| if there exists s_obj in |self|.scopes() and s_query in |var|`sc_query` such that s_query <= s_obj; otherwise |false|."
                 ],
                 "Raises": {
                     "SectionNotFoundError": [
@@ -6195,7 +6266,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_docstring.docitem_docstring_base.is_scope_compatible": {
+        "sdv.doc.waterloo.docitem_docstring.docitem_docstring_base.is_scope_compatible": {
             "signature": {
                 "text": "docitem_docstring_base.is_scope_compatible(self, obj_trg: 'docitem_docstring_base') -> 'bool'",
                 "parameters": [
@@ -6223,10 +6294,10 @@
                 },
                 "Contract": {
                     "general": [
-                        "MUST test compatibility of the scopes of |self|\t\t\t\twith the scopes of |var|`obj_trg`. Compatibility is\t\t\t\tgiven if at least one scope in |self| is less than or equal to\t\t\t\tat least one scope in the referenced object."
+                        "MUST test compatibility of the scopes of |self| with the scopes of |var|`obj_trg`. Compatibility is given if at least one scope in |self| is less than or equal to at least one scope in the referenced object."
                     ],
                     "requires": [
-                        "Requirements of method |func|`scopes` apply,\t\t\t\tfor both |self| and |var|`obj_trg`."
+                        "Requirements of method |func|`scopes` apply, for both |self| and |var|`obj_trg`."
                     ]
                 },
                 "Parameters": {
@@ -6244,7 +6315,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_docstring.docitem_docstring_base.parse": {
+        "sdv.doc.waterloo.docitem_docstring.docitem_docstring_base.parse": {
             "signature": {
                 "text": "docitem_docstring_base.parse(self, tr: 'tracer', tree: 'docstring_subtree') -> 'None'",
                 "parameters": [
@@ -6301,7 +6372,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_docstring.docitem_docstring_module": {
+        "sdv.doc.waterloo.docitem_docstring.docitem_docstring_module": {
             "signature": {
                 "text": "docitem_docstring_module.__init__(self) -> 'None'",
                 "parameters": [],
@@ -6344,7 +6415,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_docstring.docitem_docstring_module.dispatch_map": {
+        "sdv.doc.waterloo.docitem_docstring.docitem_docstring_module.dispatch_map": {
             "signature": {
                 "text": "docitem_docstring_module.dispatch_map(self) -> 'Dict[str, Type[docitem_base]]'",
                 "parameters": [],
@@ -6373,7 +6444,7 @@
                 "Raises": {}
             }
         },
-        "sdv_doc_docitem_docstring.docitem_docstring_class": {
+        "sdv.doc.waterloo.docitem_docstring.docitem_docstring_class": {
             "signature": {
                 "text": "docitem_docstring_class.__init__(self) -> 'None'",
                 "parameters": [],
@@ -6416,7 +6487,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_docstring.docitem_docstring_class.dispatch_map": {
+        "sdv.doc.waterloo.docitem_docstring.docitem_docstring_class.dispatch_map": {
             "signature": {
                 "text": "docitem_docstring_class.dispatch_map(self) -> 'Dict[str, Type[docitem_base]]'",
                 "parameters": [],
@@ -6445,7 +6516,7 @@
                 "Raises": {}
             }
         },
-        "sdv_doc_docitem_docstring.docitem_docstring_method": {
+        "sdv.doc.waterloo.docitem_docstring.docitem_docstring_method": {
             "signature": {
                 "text": "docitem_docstring_method.__init__(self) -> 'None'",
                 "parameters": [],
@@ -6488,7 +6559,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_docstring.docitem_docstring_method.dispatch_map": {
+        "sdv.doc.waterloo.docitem_docstring.docitem_docstring_method.dispatch_map": {
             "signature": {
                 "text": "docitem_docstring_method.dispatch_map(self) -> 'Dict[str, Type[docitem_base]]'",
                 "parameters": [],
@@ -6517,7 +6588,7 @@
                 "Raises": {}
             }
         },
-        "sdv_doc_docitem_docstring.docitem_docstring_inherited_method": {
+        "sdv.doc.waterloo.docitem_docstring.docitem_docstring_inherited_method": {
             "signature": {
                 "text": "docitem_docstring_inherited_method.__init__(self) -> 'None'",
                 "parameters": [],
@@ -6560,7 +6631,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_docstring.docitem_docstring_inherited_method.dispatch_map": {
+        "sdv.doc.waterloo.docitem_docstring.docitem_docstring_inherited_method.dispatch_map": {
             "signature": {
                 "text": "docitem_docstring_inherited_method.dispatch_map(self) -> 'Dict[str, Type[docitem_base]]'",
                 "parameters": [],
@@ -6589,7 +6660,7 @@
                 "Raises": {}
             }
         },
-        "sdv_doc_docitem_docstring.make_docitem_tree": {
+        "sdv.doc.waterloo.docitem_docstring.make_docitem_tree": {
             "signature": {
                 "text": "make_docitem_tree(tr: 'tracer', doc_txt: 'str') -> 'docitem_docstring_base'",
                 "parameters": [
@@ -6659,7 +6730,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_validator.get_status": {
+        "sdv.doc.waterloo.docitem_validator.get_status": {
             "signature": {
                 "text": "get_status(top: 'docitem_docstring_base') -> 'str'",
                 "parameters": [
@@ -6706,10 +6777,10 @@
                 }
             }
         },
-        "sdv_doc_docitem_validator": {
+        "sdv.doc.waterloo.docitem_validator": {
             "doc": {}
         },
-        "sdv_doc_docitem_validator.get_profile": {
+        "sdv.doc.waterloo.docitem_validator.get_profile": {
             "signature": {
                 "text": "get_profile(top: 'docitem_docstring_base') -> 'str'",
                 "parameters": [
@@ -6762,7 +6833,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_validator.resolve_object": {
+        "sdv.doc.waterloo.docitem_validator.resolve_object": {
             "signature": {
                 "text": "resolve_object(ref: 'str', current_obj: 'object') -> 'tuple[object, str]'",
                 "parameters": [
@@ -6858,7 +6929,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_validator.validate_docstring_module": {
+        "sdv.doc.waterloo.docitem_validator.validate_docstring_module": {
             "signature": {
                 "text": "validate_docstring_module(tr: 'tracer', obj: 'object', top: 'docitem_docstring_module', node_contract: 'docitem_map_base', node_normative_sections: 'docitem_list_base', _seen: 'Dict[object, docitem_docstring_base] | None' = None) -> 'None'",
                 "parameters": [
@@ -6963,7 +7034,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_validator.validate_docstring_class": {
+        "sdv.doc.waterloo.docitem_validator.validate_docstring_class": {
             "signature": {
                 "text": "validate_docstring_class(tr: 'tracer', obj: 'object', top: 'docitem_docstring_class', node_contract: 'docitem_map_base', node_normative_sections: 'docitem_list_base', _seen: 'Dict[object, docitem_docstring_base] | None' = None) -> 'None'",
                 "parameters": [
@@ -7071,7 +7142,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_validator.validate_docstring_method": {
+        "sdv.doc.waterloo.docitem_validator.validate_docstring_method": {
             "signature": {
                 "text": "validate_docstring_method(tr: 'tracer', obj: 'Callable[..., Any]', top: 'docitem_docstring_method', node_contract: 'docitem_map_base', node_normative_sections: 'docitem_list_base', _seen: 'Dict[object, docitem_docstring_base] | None' = None) -> 'None'",
                 "parameters": [
@@ -7178,7 +7249,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_validator.validate_docstring_inherited_method": {
+        "sdv.doc.waterloo.docitem_validator.validate_docstring_inherited_method": {
             "signature": {
                 "text": "validate_docstring_inherited_method(tr: 'tracer', obj: 'object', top: 'docitem_docstring_inherited_method', node_contract: 'docitem_map_base', node_normative_sections: 'docitem_list_base', _seen: 'Dict[object, docitem_docstring_base] | None' = None) -> 'None'",
                 "parameters": [
@@ -7285,7 +7356,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_validator.validate_docstring": {
+        "sdv.doc.waterloo.docitem_validator.validate_docstring": {
             "signature": {
                 "text": "validate_docstring(tr: 'tracer', obj: 'object', top: 'docitem_docstring_base | None' = None, _seen: 'Dict[object, docitem_docstring_base] | None' = None) -> 'docitem_docstring_base'",
                 "parameters": [
@@ -7391,7 +7462,7 @@
                 ]
             }
         },
-        "sdv_doc_docitem_validator.validate_class_class_coverage": {
+        "sdv.doc.waterloo.docitem_validator.validate_class_class_coverage": {
             "signature": {
                 "text": "validate_class_class_coverage(tr: 'tracer', obj: 'type[object]', doc_class: 'docitem_docstring_class') -> 'None'",
                 "parameters": [
@@ -7462,7 +7533,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_validator.validate_class_method_coverage": {
+        "sdv.doc.waterloo.docitem_validator.validate_class_method_coverage": {
             "signature": {
                 "text": "validate_class_method_coverage(tr: 'tracer', obj: 'type[object]', doc_class: 'docitem_docstring_class') -> 'None'",
                 "parameters": [
@@ -7534,7 +7605,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_validator.validate_class_type_coverage": {
+        "sdv.doc.waterloo.docitem_validator.validate_class_type_coverage": {
             "signature": {
                 "text": "validate_class_type_coverage(tr: 'tracer', obj: 'type[object]', doc_class: 'docitem_docstring_class') -> 'None'",
                 "parameters": [
@@ -7596,7 +7667,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_validator.validate_class_constant_coverage": {
+        "sdv.doc.waterloo.docitem_validator.validate_class_constant_coverage": {
             "signature": {
                 "text": "validate_class_constant_coverage(tr: 'tracer', obj: 'type[object]', doc_class: 'docitem_docstring_class') -> 'None'",
                 "parameters": [
@@ -7662,7 +7733,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_validator.validate_class_variable_coverage": {
+        "sdv.doc.waterloo.docitem_validator.validate_class_variable_coverage": {
             "signature": {
                 "text": "validate_class_variable_coverage(tr: 'tracer', obj: 'type[object]', doc_class: 'docitem_docstring_class') -> 'None'",
                 "parameters": [
@@ -7727,7 +7798,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_validator.validate_module_class_coverage": {
+        "sdv.doc.waterloo.docitem_validator.validate_module_class_coverage": {
             "signature": {
                 "text": "validate_module_class_coverage(tr: 'tracer', obj: 'ModuleType', doc_module: 'docitem_docstring_module') -> 'None'",
                 "parameters": [
@@ -7795,7 +7866,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_validator.validate_module_function_coverage": {
+        "sdv.doc.waterloo.docitem_validator.validate_module_function_coverage": {
             "signature": {
                 "text": "validate_module_function_coverage(tr: 'tracer', obj: 'ModuleType', doc_module: 'docitem_docstring_module') -> 'None'",
                 "parameters": [
@@ -7867,7 +7938,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_validator.validate_module_type_coverage": {
+        "sdv.doc.waterloo.docitem_validator.validate_module_type_coverage": {
             "signature": {
                 "text": "validate_module_type_coverage(tr: 'tracer', obj: 'ModuleType', doc_module: 'docitem_docstring_module') -> 'None'",
                 "parameters": [
@@ -7929,7 +8000,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_validator.validate_module_constant_coverage": {
+        "sdv.doc.waterloo.docitem_validator.validate_module_constant_coverage": {
             "signature": {
                 "text": "validate_module_constant_coverage(tr: 'tracer', obj: 'ModuleType', doc_module: 'docitem_docstring_module') -> 'None'",
                 "parameters": [
@@ -7992,7 +8063,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_validator.validate_module_variable_coverage": {
+        "sdv.doc.waterloo.docitem_validator.validate_module_variable_coverage": {
             "signature": {
                 "text": "validate_module_variable_coverage(tr: 'tracer', obj: 'ModuleType', doc_module: 'docitem_docstring_module') -> 'None'",
                 "parameters": [
@@ -8054,7 +8125,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_validator.validate_class_coverage": {
+        "sdv.doc.waterloo.docitem_validator.validate_class_coverage": {
             "signature": {
                 "text": "validate_class_coverage(tr: 'tracer', obj: 'type[object]') -> 'None'",
                 "parameters": [
@@ -8111,7 +8182,7 @@
                 }
             }
         },
-        "sdv_doc_docitem_validator.validate_module_coverage": {
+        "sdv.doc.waterloo.docitem_validator.validate_module_coverage": {
             "signature": {
                 "text": "validate_module_coverage(tr: 'tracer', obj: 'ModuleType') -> 'None'",
                 "parameters": [
@@ -8163,64 +8234,9 @@
                 }
             }
         },
-        "sdv.doc.waterloo.docitem.gen_documentable_objects": {
-            "signature": {
-                "text": "gen_documentable_objects(obj: Union[module, type[object], Callable[..., Any]], config: sdv_doc_docitem_helper.ConfigTraversal = <sdv_doc_docitem_helper.ConfigTraversal object at 0x7f27fa516830>) -> Generator[Union[module, type[object], Callable[..., Any]], NoneType, NoneType]",
-                "parameters": [
-                    {
-                        "name": "obj",
-                        "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "Union",
-                        "default": null
-                    },
-                    {
-                        "name": "config",
-                        "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "ConfigTraversal",
-                        "default": "<sdv_doc_docitem_helper.ConfigTraversal object at 0x7f27fa516830>"
-                    }
-                ],
-                "returns": "Generator"
-            },
-            "traits": [
-                "generator"
-            ],
-            "doc": {
-                "Preamble": {
-                    "profile": "function",
-                    "normative_sections": [
-                        "Contract",
-                        "Parameters",
-                        "Returns",
-                        "Raises"
-                    ],
-                    "scope": [
-                        "public"
-                    ]
-                },
-                "Contract": {
-                    "general": [
-                        "MUST create a generator object which allows depth-first tree traversal of objects in |var|`obj`.",
-                        "MUST first yield object |var|`obj` itself.",
-                        "MUST yield all objects and only objects which can have a docstring."
-                    ]
-                },
-                "Parameters": {
-                    "obj": [
-                        "The object (module, class, function, method) to examine."
-                    ],
-                    "config": [
-                        "Controls acceptance or refusal of objects during traversal."
-                    ]
-                },
-                "Returns": [
-                    "MUST return a Generator which yields objects from tree traversal of |var|`obj`"
-                ],
-                "Raises": {}
-            }
-        },
         "sdv.doc.waterloo.docitem_convert.WtrlJsonNode_t": {
-            "doc": [
+            "doc": {},
+            "doc_lines": [
                 "Type for JSON nodes. This type |must| be public because |func|`to_node_docstring_tree_json` and |func|`to_node_signature_json` are."
             ]
         },
@@ -8249,458 +8265,12 @@
                     "to_string_legend_yaml",
                     "to_string_yaml",
                     "to_string_signature_yaml",
-                    "to_string_md"
+                    "to_string_md",
+                    "build_node_json"
                 ],
                 "Public_types": {
                     "WtrlJsonNode_t": [
                         "Type for JSON nodes. This type MUST be public because |func|`to_node_docstring_tree_json` and |func|`to_node_signature_json` are."
-                    ]
-                }
-            }
-        },
-        "sdv_doc_docitem.gen_documentable_objects": {
-            "signature": {
-                "text": "gen_documentable_objects(obj: Union[module, type[object], Callable[..., Any]], config: sdv_doc_docitem_helper.ConfigTraversal = <sdv_doc_docitem_helper.ConfigTraversal object at 0x7f27fa9133d0>) -> Generator[Union[module, type[object], Callable[..., Any]], NoneType, NoneType]",
-                "parameters": [
-                    {
-                        "name": "obj",
-                        "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "Union",
-                        "default": null
-                    },
-                    {
-                        "name": "config",
-                        "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "ConfigTraversal",
-                        "default": "<sdv_doc_docitem_helper.ConfigTraversal object at 0x7f27fa9133d0>"
-                    }
-                ],
-                "returns": "Generator"
-            },
-            "traits": [
-                "generator"
-            ],
-            "doc": {
-                "Preamble": {
-                    "profile": "function",
-                    "normative_sections": [
-                        "Contract",
-                        "Parameters",
-                        "Returns",
-                        "Raises"
-                    ],
-                    "scope": [
-                        "public"
-                    ]
-                },
-                "Contract": {
-                    "general": [
-                        "MUST create a generator object which allows depth-first tree traversal of objects in |var|`obj`.",
-                        "MUST first yield object |var|`obj` itself.",
-                        "MUST yield all objects and only objects which can have a docstring."
-                    ]
-                },
-                "Parameters": {
-                    "obj": [
-                        "The object (module, class, function, method) to examine."
-                    ],
-                    "config": [
-                        "Controls acceptance or refusal of objects during traversal."
-                    ]
-                },
-                "Returns": [
-                    "MUST return a Generator which yields objects from tree traversal of |var|`obj`"
-                ],
-                "Raises": {}
-            }
-        },
-        "sdv_doc_docitem": {
-            "doc": {
-                "Preamble": {
-                    "profile": "module",
-                    "normative_sections": [
-                        "Contract",
-                        "Public_classes",
-                        "Public_functions",
-                        "Public_types",
-                        "Public_constants"
-                    ]
-                },
-                "Contract": {
-                    "general": [
-                        "MUST provide node classes and parsing/validation utilities for Waterloo docstrings. In detail:",
-                        "MUST provide a node class for each type of section and subsection in a Waterloo docstring.",
-                        "MUST provide an appropriate base class hierarchy with a single base class as root of this hierarchy.",
-                        "MUST be able to represent any valid docstring by a single node which is the root of a tree of nodes.",
-                        "MUST provide validator functions for docstrings for modules, classes and callables.",
-                        "MUST provide functions for verifying coverage where applicable."
-                    ]
-                },
-                "Public_functions": [
-                    "is_attr_annotated",
-                    "is_attr_final",
-                    "get_obj_name",
-                    "get_obj_path",
-                    "resolve_object",
-                    "get_status",
-                    "get_profile",
-                    "get_num_indent",
-                    "parse_indent_docstring",
-                    "get_tree_of_section",
-                    "get_tree_of_subsection",
-                    "to_string_tree",
-                    "validate_docstring_method",
-                    "validate_docstring_inherited_method",
-                    "validate_docstring_class",
-                    "validate_docstring_module",
-                    "validate_docstring",
-                    "validate_class_class_coverage",
-                    "validate_class_method_coverage",
-                    "validate_class_constant_coverage",
-                    "validate_class_variable_coverage",
-                    "validate_class_coverage",
-                    "validate_module_class_coverage",
-                    "validate_module_function_coverage",
-                    "validate_module_type_coverage",
-                    "validate_module_constant_coverage",
-                    "validate_module_variable_coverage",
-                    "validate_module_coverage",
-                    "gen_documentable_objects",
-                    "make_docitem_tree"
-                ],
-                "Function_overview": {
-                    "is_attr_annotated": [
-                        "Find out if an attribute of a class or module is annotated."
-                    ],
-                    "is_attr_final": [
-                        "Find out if an attribute of a class or module is annotated as 'Final'."
-                    ],
-                    "resolve_object": [
-                        "Resolve an object by its qualified identifier"
-                    ],
-                    "get_status": [
-                        "Extract documented object status from docitem tree"
-                    ],
-                    "get_profile": [
-                        "Extract documented profile from docitem tree"
-                    ],
-                    "get_num_indent": [
-                        "Count number of leading indent units of a string."
-                    ],
-                    "parse_indent_docstring": [
-                        "The fundamental parsing function which creates docstring trees from Waterloo docstrings."
-                    ],
-                    "get_tree_of_section": [
-                        "Get tree assigned to a section label from a docstring tree."
-                    ],
-                    "get_tree_of_subsection": [
-                        "Get tree assigned to a subsection label from a docstring tree."
-                    ],
-                    "to_string_tree": [
-                        "Render docstring to string"
-                    ],
-                    "validate_docstring_method": [
-                        "Validator for method and function docstrings"
-                    ],
-                    "validate_docstring_inherited_method": [
-                        "Validator for inherited method docstrings"
-                    ],
-                    "validate_docstring_class": [
-                        "Validator for class docstrings"
-                    ],
-                    "validate_docstring_module": [
-                        "Validator for module docstrings"
-                    ],
-                    "validate_docstring": [
-                        "Validator for docstrings for generic objects."
-                    ],
-                    "validate_class_class_coverage": [
-                        "Validate mutual coverage of nested classes and class docstring entries."
-                    ],
-                    "validate_class_method_coverage": [
-                        "Validate mutual coverage of methods and class docstring entries."
-                    ],
-                    "validate_class_constant_coverage": [
-                        "Verify constant existence and 'Final' annotation."
-                    ],
-                    "validate_class_variable_coverage": [
-                        "Verify variable existence."
-                    ],
-                    "validate_class_coverage": [
-                        "Verify existence (and mutual coverage were applicable) of methods mentioned in the class docstring."
-                    ],
-                    "validate_module_class_coverage": [
-                        "Validate mutual coverage of classes and module docstring entries."
-                    ],
-                    "validate_module_function_coverage": [
-                        "Validate mutual coverage of functions and module docstring entries."
-                    ],
-                    "validate_module_type_coverage": [
-                        "Verify existence of types mentioned in the module docstring."
-                    ],
-                    "validate_module_constant_coverage": [
-                        "Verify constant existence and 'Final' annotation."
-                    ],
-                    "validate_module_variable_coverage": [
-                        "Verify variable existence."
-                    ],
-                    "validate_module_coverage": [
-                        "Verify existence (and mutual coverage were applicable) of classes, functions, types, constants mentioned in the module docstring."
-                    ],
-                    "gen_documentable_objects": [
-                        "Iterate over objects which may have a docstring."
-                    ],
-                    "make_docitem_tree": [
-                        "Generate a docitem tree from a docstring."
-                    ]
-                },
-                "Public_classes": [
-                    "tracer",
-                    "docitem_base",
-                    "docitem_list_base",
-                    "docitem_map_base",
-                    "docitem_free_text_entry_base",
-                    "docitem_list_of_symbols_base",
-                    "docitem_profile",
-                    "docitem_normative_sections",
-                    "docitem_status",
-                    "docitem_preamble",
-                    "docitem_constructor",
-                    "docitem_general",
-                    "docitem_invariants",
-                    "docitem_requires",
-                    "docitem_ensures",
-                    "docitem_base_to_inherit_from",
-                    "docitem_traits",
-                    "docitem_contract_module",
-                    "docitem_contract_class",
-                    "docitem_contract_method",
-                    "docitem_contract_inherited_method",
-                    "docitem_derived_from",
-                    "docitem_factory_functions",
-                    "docitem_factory",
-                    "docitem_class_overview_entry",
-                    "docitem_class_overview",
-                    "docitem_public_types_entry",
-                    "docitem_public_types",
-                    "docitem_public_assignables_entry",
-                    "docitem_public_assignables_base",
-                    "docitem_method_overview_entry",
-                    "docitem_method_overview",
-                    "docitem_function_overview_entry",
-                    "docitem_function_overview",
-                    "docitem_returns",
-                    "docitem_parameters_entry",
-                    "docitem_parameters",
-                    "docitem_raises_entry",
-                    "docitem_raises",
-                    "docitem_definitions_entry",
-                    "docitem_definitions",
-                    "docitem_terminology_entry",
-                    "docitem_terminology",
-                    "docitem_notes_entry",
-                    "docitem_notes",
-                    "docitem_description",
-                    "docitem_see_also",
-                    "docitem_docstring_base",
-                    "docitem_docstring_module",
-                    "docitem_docstring_class",
-                    "docitem_docstring_method",
-                    "docitem_docstring_inherited_method",
-                    "Scope",
-                    "Flavour",
-                    "Format"
-                ],
-                "Class_overview": {
-                    "tracer": [
-                        "Context and helper for exceptions and warnings."
-                    ],
-                    "docitem_base": [
-                        "The base class for all docitem classes which form the docstring tree."
-                    ],
-                    "docitem_list_base": [
-                        "The base class for docitem classes managing a list of strings."
-                    ],
-                    "docitem_map_base": [
-                        "The base class for docitem classes managing a map from strings to docitem nodes"
-                    ],
-                    "docitem_free_text_entry_base": [
-                        "The base class for nodes which consist of free-text string."
-                    ],
-                    "docitem_list_of_symbols_base": [
-                        "The base class for nodes which contein a list of identifiers."
-                    ],
-                    "docitem_profile": [
-                        "Node class for section |label|`profile`"
-                    ],
-                    "docitem_normative_sections": [
-                        "Node class for subsection |label|`normative_sections`"
-                    ],
-                    "docitem_status": [
-                        "Node class for subsection |label|`status`"
-                    ],
-                    "docitem_preamble": [
-                        "Node class for section |label|`Preamble`"
-                    ],
-                    "docitem_constructor": [
-                        "Node class for subsection |label|`constructor`"
-                    ],
-                    "docitem_general": [
-                        "Node class for subsection |label|`general`"
-                    ],
-                    "docitem_invariants": [
-                        "Node class for subsection |label|`invariants`"
-                    ],
-                    "docitem_requires": [
-                        "Node class for subsection |label|`requires`"
-                    ],
-                    "docitem_ensures": [
-                        "Node class for subsection |label|`ensures`"
-                    ],
-                    "docitem_base_to_inherit_from": [
-                        "Node class for subsection |label|`base`"
-                    ],
-                    "docitem_traits": [
-                        "Node class for subsection |label|`traits`"
-                    ],
-                    "docitem_contract_module": [
-                        "Node class for section |label|`Contract`, profile |value|`module`."
-                    ],
-                    "docitem_contract_class": [
-                        "Node class for section |label|`Contract`, profile |value|`class`."
-                    ],
-                    "docitem_contract_method": [
-                        "Node class for section |label|`Contract`, profile |value|`method` or |value|`function`."
-                    ],
-                    "docitem_contract_inherited_method": [
-                        "Node class for section |label|`Contract`, profile |value|`inherited_method`."
-                    ],
-                    "docitem_derived_from": [
-                        "Node class for section |label|`Derived_from`."
-                    ],
-                    "docitem_factory_functions": [
-                        "Node class for entries in section |label|`Factory`."
-                    ],
-                    "docitem_factory": [
-                        "Node class for section |label|`Factory`."
-                    ],
-                    "docitem_class_overview_entry": [
-                        "Node class for entries in section |label|`Class_overview`."
-                    ],
-                    "docitem_class_overview": [
-                        "Node class for section |label|`Class_overview`."
-                    ],
-                    "docitem_public_types_entry": [
-                        "Node class for entries in section |label|`Public_types`."
-                    ],
-                    "docitem_public_types": [
-                        "Node class for section |label|`Public_types`."
-                    ],
-                    "docitem_public_assignables_entry": [
-                        "Node class for entries in section |label|`Public_constants` and |label|`Public_variables`."
-                    ],
-                    "docitem_public_assignables_base": [
-                        "Node base class for sections |label|`Public_constants` and |label|`Public_variables`."
-                    ],
-                    "docitem_method_overview_entry": [
-                        "Node class for entries in section |label|`Method_overview`."
-                    ],
-                    "docitem_method_overview": [
-                        "Node class for section |label|`Method_overview`."
-                    ],
-                    "docitem_function_overview_entry": [
-                        "Node class for entries in section |label|`Function_overview`."
-                    ],
-                    "docitem_function_overview": [
-                        "Node class for section |label|`Function_overview`."
-                    ],
-                    "docitem_returns": [
-                        "Node class for section |label|`Returns`."
-                    ],
-                    "docitem_parameters_entry": [
-                        "Node class for a parameter description"
-                    ],
-                    "docitem_parameters": [
-                        "Node class for section |label|`Parameters`"
-                    ],
-                    "docitem_raises_entry": [
-                        "Node class for entries in section |label|`Raises`."
-                    ],
-                    "docitem_raises": [
-                        "Node class for section |label|`Raises`"
-                    ],
-                    "docitem_definitions_entry": [
-                        "Node class for entries in section |label|`Definitions`."
-                    ],
-                    "docitem_definitions": [
-                        "Node class for section |label|`Definitions`"
-                    ],
-                    "docitem_terminology_entry": [
-                        "Node class for entries in section |label|`Terminology`."
-                    ],
-                    "docitem_terminology": [
-                        "Node class for section |label|`Terminology`"
-                    ],
-                    "docitem_notes_entry": [
-                        "Node class for entries in section |label|`Notes`."
-                    ],
-                    "docitem_notes": [
-                        "Node class for section |label|`Notes`"
-                    ],
-                    "docitem_description": [
-                        "Node class for section |label|`Description`."
-                    ],
-                    "docitem_see_also": [
-                        "Node class for section |label|`See_also`"
-                    ],
-                    "docitem_docstring_base": [
-                        "Base class for docstring nodes"
-                    ],
-                    "docitem_docstring_module": [
-                        "Node class for a module docstring"
-                    ],
-                    "docitem_docstring_class": [
-                        "Node class for a class docstring"
-                    ],
-                    "docitem_docstring_method": [
-                        "Node class for a function or method docstring"
-                    ],
-                    "docitem_docstring_inherited_method": [
-                        "Node class for an inherited method docstring"
-                    ]
-                },
-                "Public_types": {
-                    "docstring_tree": [
-                        "The type alias for docstring trees."
-                    ],
-                    "Documentable_t": [
-                        "Type for objects that can have a docstring."
-                    ],
-                    "Scopes_t": [
-                        "Type alias for a set of scopes."
-                    ]
-                },
-                "Public_constants": {
-                    "RE_IDENTIFIER": [
-                        "Regular expression for identifiers: ``[A-Za-z_][A-Za-z0-9_]*``"
-                    ],
-                    "RE_QUALIFIED_IDENTIFIER": [
-                        "Regular expression for qualified identifiers: ``[A-Za-z_.][A-Za-z0-9_.]*``"
-                    ],
-                    "KEYWORDS_OF_NORMATIVITY": [
-                        "The set of normative keywords."
-                    ],
-                    "CANONICAL_ORDER_OF_SECTIONS": [
-                        "A canonical order for sections and subsection in order to reduce permutative noise for LLMs."
-                    ],
-                    "SCOPE_TAG_MAP": [
-                        "Map string representations of scopes to symbolic/numeric values."
-                    ],
-                    "FLAVOUR_TAG_MAP": [
-                        "Map string representations of flavours to symbolic/numeric values."
-                    ],
-                    "FORMAT_TAG_MAP": [
-                        "Map string representations of output formats to symbolic/numeric values."
                     ]
                 }
             }
@@ -9024,13 +8594,13 @@
         },
         "sdv.doc.waterloo.docitem_convert.to_string_legend_yaml": {
             "signature": {
-                "text": "to_string_legend_yaml(config: 'YamlConfig' = <sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f27fa516200>) -> 'str'",
+                "text": "to_string_legend_yaml(config: 'YamlConfig' = <sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7fd10eb9add0>) -> 'str'",
                 "parameters": [
                     {
                         "name": "config",
                         "kind": "POSITIONAL_OR_KEYWORD",
                         "annotation": "YamlConfig",
-                        "default": "<sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f27fa516200>"
+                        "default": "<sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7fd10eb9add0>"
                     }
                 ],
                 "returns": "str"
@@ -9067,7 +8637,7 @@
         },
         "sdv.doc.waterloo.docitem_convert.to_string_signature_yaml": {
             "signature": {
-                "text": "to_string_signature_yaml(obj: 'object', config: 'YamlConfig' = <sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f27fa516320>) -> 'str'",
+                "text": "to_string_signature_yaml(obj: 'object', config: 'YamlConfig' = <sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7fd10eb9b700>) -> 'str'",
                 "parameters": [
                     {
                         "name": "obj",
@@ -9079,7 +8649,7 @@
                         "name": "config",
                         "kind": "POSITIONAL_OR_KEYWORD",
                         "annotation": "YamlConfig",
-                        "default": "<sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f27fa516320>"
+                        "default": "<sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7fd10eb9b700>"
                     }
                 ],
                 "returns": "str"
@@ -9149,7 +8719,7 @@
         },
         "sdv.doc.waterloo.docitem_convert.to_string_yaml": {
             "signature": {
-                "text": "to_string_yaml(tree: 'docstring_tree', flavour: 'Flavour', config: 'YamlConfig' = <sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f27fa516170>) -> 'str'",
+                "text": "to_string_yaml(tree: 'docstring_tree', flavour: 'Flavour', config: 'YamlConfig' = <sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7fd10eb9b730>) -> 'str'",
                 "parameters": [
                     {
                         "name": "tree",
@@ -9167,7 +8737,7 @@
                         "name": "config",
                         "kind": "POSITIONAL_OR_KEYWORD",
                         "annotation": "YamlConfig",
-                        "default": "<sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f27fa516170>"
+                        "default": "<sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7fd10eb9b730>"
                     }
                 ],
                 "returns": "str"
@@ -9231,56 +8801,6 @@
                     "sdv.doc.waterloo.docitem.Format"
                 ]
             }
-        },
-        "sdv_doc_docitem.docstring_tree": {
-            "doc": [
-                "The type alias for docstring trees."
-            ]
-        },
-        "sdv_doc_docitem.Documentable_t": {
-            "doc": [
-                "Type for objects that can have a docstring."
-            ]
-        },
-        "sdv_doc_docitem.Scopes_t": {
-            "doc": [
-                "Type alias for a set of scopes."
-            ]
-        },
-        "sdv_doc_docitem.RE_IDENTIFIER": {
-            "doc": [
-                "Regular expression for identifiers: ``[A-Za-z_][A-Za-z0-9_]*``"
-            ]
-        },
-        "sdv_doc_docitem.RE_QUALIFIED_IDENTIFIER": {
-            "doc": [
-                "Regular expression for qualified identifiers: ``[A-Za-z_.][A-Za-z0-9_.]*``"
-            ]
-        },
-        "sdv_doc_docitem.KEYWORDS_OF_NORMATIVITY": {
-            "doc": [
-                "The set of normative keywords."
-            ]
-        },
-        "sdv_doc_docitem.CANONICAL_ORDER_OF_SECTIONS": {
-            "doc": [
-                "A canonical order for sections and subsection in order to reduce permutative noise for LLMs."
-            ]
-        },
-        "sdv_doc_docitem.SCOPE_TAG_MAP": {
-            "doc": [
-                "Map string representations of scopes to symbolic/numeric values."
-            ]
-        },
-        "sdv_doc_docitem.FLAVOUR_TAG_MAP": {
-            "doc": [
-                "Map string representations of flavours to symbolic/numeric values."
-            ]
-        },
-        "sdv_doc_docitem.FORMAT_TAG_MAP": {
-            "doc": [
-                "Map string representations of output formats to symbolic/numeric values."
-            ]
         }
     }
 }

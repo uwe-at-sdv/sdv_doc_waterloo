@@ -5,8 +5,7 @@ from typing_extensions import Self, TypeIs
 from typing import Any, Callable, Dict, Final, get_type_hints, get_origin, get_args, Generator, Iterable, Iterator, List, NewType, NoReturn, Sequence, Set, Tuple, Type, TypeAlias, TypeGuard, Union, cast
 
 import sys,re,os
-import inspect
-import importlib
+import pkgutil,inspect,importlib
 import builtins
 from contextlib import contextmanager
 
@@ -25,7 +24,7 @@ RE_LABEL : Final[str] = RE_QUALIFIED_IDENTIFIER + ":"
 RE_LABEL_COMPILED : Final[re.Pattern[str]] = re.compile(RE_LABEL)
 
 # Markup tokens for Waterloo roles, e.g. |type|`int` -> :wtrl_type:`int`
-WTRL_MARKUP_ROLES: Final[str] = r"(attr|cmd|dfn|file|func|label|lit|mod|norm|op|opt|tag|term|type|value|var|var_type)"
+WTRL_MARKUP_ROLES: Final[str] = r"(attr|cmd|dfn|file|func|label|lit|mod|norm|op|opt|ref|tag|term|type|value|var|var_type)"
 RE_WTRL_MARKUP_BACKTICK: Final[str] = rf"\|{WTRL_MARKUP_ROLES}\|`([^`]+)`"
 RE_WTRL_MARKUP_BACKTICK_COMPILED: Final[re.Pattern[str]] = re.compile(RE_WTRL_MARKUP_BACKTICK)
 
@@ -170,6 +169,62 @@ format_tag_map = {
 	"md":		Format.MD
 	}
 FORMAT_TAG_MAP = MappingProxyType(format_tag_map)	
+
+#===== Config =================================================#
+
+class ConfigTraversal:
+	r"""
+	Preamble:
+		profile:
+			class
+		normative_sections:
+			Contract
+		scope:
+			public
+	Contract:
+		general:
+			|Must| provide public methods to configure object traversal for functions like |func|`gen_documentable_objects`.
+			|Must| provide (internal) boolean methods which accept or refuse traversal at a given node in the object tree.
+		constructor:
+			|Must| be default-constructible
+	Notes:
+		Experimental:
+			This class will likely be expanded in the future,\
+			and we are postponing the normative documentation for now.
+		Configure:
+			Use |func|`enable_include_imported` to allow descending into imported modules.
+		Future:
+			Possible extensions include acceptance/refusal by regular expressions.
+		Example:
+			|ref|`gen_documentable_objects <example_gen_documentable_objects>`
+	"""
+	def __init__(self) -> None:
+		self._include_imported = False
+		self._walk_packages = False
+	def __repr__(self) -> str:
+		return "ConfigTraversal()"
+	def enable_include_imported(self) -> Self:
+		self._include_imported = True
+		return self
+	def include_imported(self) -> bool:
+		return self._include_imported
+	def enable_walk_packages(self) -> Self:
+		self._walk_packages = True
+		return self
+	def disable_walk_packages(self) -> Self:
+		self._walk_packages = False
+		return self
+	def walk_packages(self) -> bool:
+		return self._walk_packages
+	def is_member_in_module(self,obj_parent: ModuleType | None,member: Documentable_t) -> bool:
+		if obj_parent == None:
+			return True
+		return getattr(member, "__module__", None) == obj_parent.__name__
+# False means: keep traversal within the module's own namespace
+	def accept_imported_module(self,obj_parent: ModuleType,member: ModuleType) -> bool:
+		return self.include_imported() or member.__name__.startswith(obj_parent.__name__ + ".")
+	def accept_member_of_module(self,obj_parent: ModuleType,member: Documentable_t) -> bool:
+		return self.include_imported() or self.is_member_in_module(obj_parent,member)
 
 #===== Typechecking ===========================================#
 
@@ -434,45 +489,6 @@ def get_obj_fully_qualified_name(obj: object) -> str:
 		return f"{mod_name}.{name}"
 	return name
 
-def build_anchor(obj: object, kind: str | None = None) -> str:
-	"""
-	Preamble:
-		profile:
-			function
-		normative_sections:
-			Contract, Parameters, Returns, Raises
-	Contract:
-		general:
-			|Must| build a deterministic anchor string from an object.
-			|Must| use the fully qualified name as source.
-			|Must| encode each qualified-name segment as ``<len>:<segment>``.
-			|Must| prefix the anchor by ``wtrl-<kind>-``.
-			|Must| infer kind as one of ``mod``, ``cls``, ``func``, ``obj`` if not passed explicitly.
-	Parameters:
-		obj:
-			Object for which the anchor shall be generated.
-		kind:
-			Optional explicit kind tag.
-	Returns:
-		Deterministic anchor string suitable for doc-internal links.
-	Raises:
-	"""
-	if kind is None:
-		if is_obj_module(obj):
-			kind = "mod"
-		elif is_obj_class(obj):
-			kind = "cls"
-		elif is_obj_function(obj):
-			kind = "func"
-		else:
-			kind = "obj"
-	fqn = get_obj_fully_qualified_name(obj)
-	segs = [s for s in fqn.split(".") if s]
-	if not segs:
-		return f"wtrl-{kind}"
-	enc = "-".join(f"{len(s)}:{s}" for s in segs)
-	return f"wtrl-{kind}-{enc}"
-
 def get_obj_path(obj: object) -> str | None:
 	"""
 	Preamble:
@@ -504,6 +520,47 @@ def get_obj_path(obj: object) -> str | None:
 		return os.path.abspath(str(path_any))
 	except Exception:
 		return None
+
+def build_anchor(obj: object, kind: str | None = None) -> str:
+	"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+		scope:
+			extension
+	Contract:
+		general:
+			|Must| build a deterministic anchor string from an object.
+			|Must| use the fully qualified name as source.
+			|Must| encode each qualified-name segment as ``<len>:<segment>``.
+			|Must| prefix the anchor by |lit|`wtrl-<kind>-`.
+			|Must| infer kind as one of ``mod``, ``cls``, ``func``, ``obj`` if not passed explicitly.
+	Parameters:
+		obj:
+			Object for which the anchor shall be generated.
+		kind:
+			Optional explicit kind tag.
+	Returns:
+		Deterministic anchor string suitable for doc-internal links.
+	Raises:
+	"""
+	if kind is None:
+		if is_obj_module(obj):
+			kind = "mod"
+		elif is_obj_class(obj):
+			kind = "cls"
+		elif is_obj_function(obj):
+			kind = "func"
+		else:
+			kind = "obj"
+	fqn = get_obj_fully_qualified_name(obj)
+	segs = [s for s in fqn.split(".") if s]
+	if not segs:
+		return f"wtrl-{kind}"
+	enc = "-".join(f"{len(s)}:{s}" for s in segs)
+	return f"wtrl-{kind}-{enc}"
 
 def get_func_obj_from_callable(obj : object) -> Callable[..., Any] | None:
 	"""
@@ -630,6 +687,79 @@ def get_decorators(obj: object) -> List[str]:
 	except:
 		return []
 
+def gen_documentable_objects(obj: Documentable_t,config: ConfigTraversal = ConfigTraversal()) -> Generator[Documentable_t,None,None]:
+	"""
+Preamble:
+	profile:
+		function
+	normative_sections:
+		Contract, Parameters, Returns, Raises
+	scope:
+		public
+Contract:
+	general:
+		|Must| create a generator object which allows depth-first tree traversal of objects in |var|`obj`.
+		|Must| first yield object |var|`obj` itself.
+		|Must| yield all objects and only objects which can have a docstring.
+Parameters:
+	obj:
+		The object (module, class, function, method) to examine.
+	config:
+		Controls acceptance or refusal of objects during traversal.
+Returns:
+	|Must| return a Generator which yields objects from tree traversal of |var|`obj`
+Raises:
+	"""
+	_seen: Set[Documentable_t] = set()
+	def _iter(o: Documentable_t,seen: Set[Documentable_t]) -> Generator[Documentable_t,None,None]:
+		if o in seen:
+			return
+# With the seen-mechanisms each direct yield must be paired with updating `seen`.
+		seen.add(o)
+		yield o
+		if isinstance(o, ModuleType):
+			# We're in a module. There might be classes and functions:
+			for name, member in list(o.__dict__.items()):
+				if isinstance(member, ModuleType):
+					# descend into submodules
+					if not config.accept_imported_module(o,member):
+						continue
+					yield from _iter(member, seen)
+				elif isinstance(member, type):
+					# class
+					if not config.accept_member_of_module(o,member):
+						continue
+					yield from _iter(member, seen)
+				elif isinstance(member, FunctionType):
+					# function
+					if not config.accept_member_of_module(o,member):
+						continue
+					yield from _iter(member, seen)
+				else:
+					continue
+			# Optionally walk package submodules on disk
+			if config.include_imported() and config.walk_packages() and hasattr(o, "__path__"):
+				for finder, mod_name, is_pkg in pkgutil.iter_modules(o.__path__, o.__name__ + "."):
+					try:
+						submod = importlib.import_module(mod_name)
+					except Exception:
+						continue
+					yield from _iter(submod, seen)
+		elif isinstance(o, type):
+			# We're in a class. There might be classes, static functions, class methods and "normal" methods:
+			for name, member in list(o.__dict__.items()):
+				if isinstance(member, type):
+					yield from _iter(member, seen)
+				else:
+					func_obj = get_func_obj_from_callable(member)
+					if func_obj is None:
+						continue
+					yield from _iter(func_obj, seen)
+		elif callable(o):
+# Functions/methods are leaves for our traversal
+			return
+	yield from _iter(obj,_seen)
+  
 #===== Tracing ================================================#
 class tracer:
 	"""
@@ -886,58 +1016,6 @@ def warn_validation(tr: tracer, obj: object, rule_ids: Sequence[str], msg: str) 
 	if rule_ids:
 		rule_txt = f"[Rules: {', '.join(rule_ids)}] "
 	tr.add_warning(rule_ids, f"from '{tr.to_string()}': In object '{name}': {msg}")
-
-#===== Config =================================================#
-
-class ConfigTraversal:
-	r"""
-	Preamble:
-		profile:
-			class
-		normative_sections:
-			Contract
-		scope:
-			public
-	Contract:
-		general:
-			|Must| provide public methods to configure object traversal for functions like |func|`gen_documentable_objects`.
-			|Must| provide (internal) boolean methods which accept or refuse traversal at a given node in the object tree.
-		constructor:
-			|Must| be default-constructible
-	Notes:
-		Experimental:
-			This class will likely be expanded in the future,\
-			and we are postponing the normative documentation for now.
-		Configure:
-			Use |func|`enable_include_imported` to allow descending into imported modules.
-		Future:
-			Possible extensions include acceptance/refusal by regular expressions.
-	"""
-	def __init__(self) -> None:
-		self._include_imported = False
-		self._walk_packages = False
-	def enable_include_imported(self) -> Self:
-		self._include_imported = True
-		return self
-	def include_imported(self) -> bool:
-		return self._include_imported
-	def enable_walk_packages(self) -> Self:
-		self._walk_packages = True
-		return self
-	def disable_walk_packages(self) -> Self:
-		self._walk_packages = False
-		return self
-	def walk_packages(self) -> bool:
-		return self._walk_packages
-	def is_member_in_module(self,obj_parent: ModuleType | None,member: Documentable_t) -> bool:
-		if obj_parent == None:
-			return True
-		return getattr(member, "__module__", None) == obj_parent.__name__
-# False means: keep traversal within the module's own namespace
-	def accept_imported_module(self,obj_parent: ModuleType,member: ModuleType) -> bool:
-		return self.include_imported() or member.__name__.startswith(obj_parent.__name__ + ".")
-	def accept_member_of_module(self,obj_parent: ModuleType,member: Documentable_t) -> bool:
-		return self.include_imported() or self.is_member_in_module(obj_parent,member)
 
 #===== Self-test ==============================================#
 

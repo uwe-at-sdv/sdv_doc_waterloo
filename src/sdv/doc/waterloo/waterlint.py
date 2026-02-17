@@ -69,7 +69,7 @@ with contextlib.redirect_stdout(sys.stderr):
 #===== Constants ==============================================#
 
 #----- Add subcommands here -----------------------------------#
-WTRL_JSON_SCHEMA_VERSION = "0.0.3"
+WTRL_JSON_SCHEMA_VERSION = "0.0.4"
 SUBCOMMANDS = ("validate","coverage","extract","validate-json","render-json","list-schemas","version","version-json")
 
 #===== Helper =================================================#
@@ -604,7 +604,9 @@ def _render_json_command(args: argparse.Namespace) -> int:
 							objects_counted.add(mem_qname)
 # The docstring subsection of a type is an array of logical lines. We render them as a list in JSON.
 						mem_doc = tree.item(sec_label).item(mem_name).items()
-						tree_full["__WTRL_OBJECTS__"].setdefault(mem_qname, {"doc": mem_doc})
+						mem_entry = cast(dict[str, Any], tree_full["__WTRL_OBJECTS__"].setdefault(mem_qname, {"doc": {}}))
+						mem_entry["doc"] = {}
+						mem_entry["doc_lines"] = mem_doc
 #..... begin properties .......................................#
 # We're still in the nonaggregate case! Properties fall in this category.
 # Extract and check if it is a property
@@ -785,7 +787,9 @@ def _render_json_command(args: argparse.Namespace) -> int:
 										objects_counted.add(mem_qname)
 # The docstring subsection of a type is an array of logical lines. We render them as a list in JSON.
 									mem_doc = mod_tree.item(sec_label).item(mem_name).items()
-									tree_full["__WTRL_OBJECTS__"].setdefault(mem_qname, {"doc": mem_doc})
+									mem_entry = cast(dict[str, Any], tree_full["__WTRL_OBJECTS__"].setdefault(mem_qname, {"doc": {}}))
+									mem_entry["doc"] = {}
+									mem_entry["doc_lines"] = mem_doc
 					except Exception:
 						entry2["doc"] = {}
 				else:

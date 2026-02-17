@@ -212,7 +212,7 @@ Raises:
 			assert isinstance(last_line,str)
 			stack[cur_indent][-1] = last_line[:-1].rstrip() + " " + content
 		if "\t" in content:
-			warn_parsing(tr,["TKN-999"],'Line contains inner TABs. Please connect lines with escaped \\ or use a raw string notation like r"""..."""')
+			warn_parsing(tr,["TKN-009"],'Line contains inner TABs. Please connect lines with escaped \\ or use a raw string notation like r"""..."""')
 	return target
 
 def expect_list(tr : tracer,subtree : docstring_subtree,pos : int) -> Tuple[docstring_subtree,int]:

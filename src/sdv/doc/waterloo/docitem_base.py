@@ -71,7 +71,7 @@ Method_overview:
 		Return an iterable over the child items.
 	"""
 	def parse(self,tr : tracer,subtree : docstring_subtree) -> None:
-		"""
+		r"""
 		Preamble:
 			profile:
 				method
