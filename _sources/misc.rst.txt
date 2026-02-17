@@ -34,7 +34,10 @@ shipped with this package.
 
 		jq -r '.__WTRL_TOC_MODULES__[]'	${PATH}
 
-* Extract the qualified identifiers of all classes (look for :wtrl_label:`profile` :wtrl_value:`class`)
+* Extract the qualified identifiers of all classes (look for :wtrl_label:`profile` :wtrl_value:`class`).
+  Filter :wtrl_func:`to_entries[]` produces key-value pairs, the constituents of which are addressed
+  by :wtrl_var:`.key` and :wtrl_var:`.value`. Filter :wtrl_func:`select` relays all objects
+  which fulfill the condition specified.
 
 	.. code-block:: bash
 

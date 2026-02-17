@@ -72,7 +72,10 @@ shipped with this package.</p>
 </div>
 </div></blockquote>
 </li>
-<li><p>Extract the qualified identifiers of all classes (look for <code class="wtrl_label docutils literal notranslate"><span class="pre">profile</span></code> <code class="wtrl_value docutils literal notranslate"><span class="pre">class</span></code>)</p>
+<li><p>Extract the qualified identifiers of all classes (look for <code class="wtrl_label docutils literal notranslate"><span class="pre">profile</span></code> <code class="wtrl_value docutils literal notranslate"><span class="pre">class</span></code>).
+Filter <code class="wtrl_func docutils literal notranslate"><span class="pre">to_entries[]</span></code> produces key-value pairs, the constituents of which are addressed
+by <code class="wtrl_var docutils literal notranslate"><span class="pre">.key</span></code> and <code class="wtrl_var docutils literal notranslate"><span class="pre">.value</span></code>. Filter <code class="wtrl_func docutils literal notranslate"><span class="pre">select</span></code> relays all objects
+which fulfill the condition specified.</p>
 <blockquote>
 <div><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.__WTRL_OBJECTS__        | to_entries[]</span>
 <span class="s1">                                | select(.value.doc.Preamble.profile == &quot;class&quot;)</span>
