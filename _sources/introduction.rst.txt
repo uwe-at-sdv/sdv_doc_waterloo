@@ -306,9 +306,25 @@ be released if all test run green.
 Dependencies
 ------------
 
+.. rubric:: Requires packages (will be installed by Pip)
+
 * :wtrl_mod:`jsonschema` -- ``python3 -m pip install jsonschema``
 * :wtrl_mod:`jsonpointer` -- ``python3 -m pip install jsonpointer``
-* :wtrl_mod:`docutils` -- ``python3 -m pip install docutils``
+
+.. rubric:: Recommended additional software
+
+* :wtrl_cmd:`jq` -- Command-line JSON processor
+  (Created by Stephen Dolan and the `jq community <https://jqlang.github.io>`_).
+  
+  Available via:
+  
+  * **Official Website:** `jqlang.github.io/jq <https://jqlang.github.io>`_
+  * **Source:** `GitHub Repository <https://github.com>`_
+  * **Installation:** Most package managers (e.g., ``sudo apt install jq``, ``brew install jq``, or ``choco install jq``).
+
+  Using :wtrl_cmd:`jq`, you can inspect machine-readable JSON documentation,
+  for example to identify documented modules or objects, and to query associated metadata.
+
 
 Possible future enhancements
 ----------------------------

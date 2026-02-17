@@ -242,9 +242,14 @@ Additional helpers
 :wtrl_func:`gen_documentable_objects`
 .....................................
 
-.. wtrl_function_signature_block:: gen_documentable_objects
-
 .. wtrl_autodoc_function:: gen_documentable_objects
+
+.. _example_gen_documentable_objects:
+
+.. rubric:: Example
+
+.. literalinclude:: ../examples/test_ref_gen_documentable_objects.py
+	:language: python
 
 :wtrl_func:`get_tree_of_section`
 .....................................
@@ -273,6 +278,11 @@ Additional helpers
 .. wtrl_function_signature_block:: to_string_tree
 
 .. wtrl_autodoc_function:: to_string_tree
+
+:wtrl_func:`build_anchor`
+.....................................
+
+.. wtrl_autodoc_function:: build_anchor
 
 .. wtrl_pop_current_module:: sdv.doc.waterloo.docitem
 

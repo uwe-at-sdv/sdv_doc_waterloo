@@ -10,7 +10,7 @@ Waterloo
 	getting_started.rst
 	examples_minimax.rst
 	examples.rst
-	tools.rst
+	misc.rst
 	format.rst
 	reference.rst
 

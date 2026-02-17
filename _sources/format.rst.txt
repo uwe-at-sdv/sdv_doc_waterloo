@@ -210,15 +210,22 @@ The normative rules derived from this grammar are:
 
 	* [TKN-001] -- The indentation scheme |must| be consistent within a docstring.
 	* [TKN-002] -- In indentation scheme SPC4, indentation |must| be a multiple of 4.
-	* [TKN-003] -- The indentation schema |must| be either TAB or SPC4.
+	* [TKN-003] -- The indentation scheme |must| be either TAB or SPC4.
 	* [TKN-004] -- Indentation from one line to the next |must_not| increase by more than one unit.
 	* [TKN-005] -- A physical content line |may| be continued on the next physical line by placing a backslash (ASCII 92)
-	  as the last non-whitespace character of the line. Tools |must| join the lines by removing the backslash and newline
+	  as the last non-whitespace character of the line.
+	* [TKN-008] -- Tools |must| join the lines by removing the backslash and newline
 	  and inserting a single ASCII space character at the join position.
+	* [TKN-009] -- Tools |must| emit a warning if a trailing backslash used for line
+	  continuation is not escaped, or if the enclosing Python
+	  string literal is not declared as a raw string.
 	* [TKN-006] -- Line continuation according to TKN-005 |must| only join lines at the same indentation level.
 	* [TKN-007] -- A physical content line that ends with a backslash according to TKN-005 |should_not|
 	  be the last physical line within an indentation block.
-	* [TKN-999] -- Implementation |must| be correct. Informative: This rule is a catch-all for unspecified tokenizer errors. Should never occur in practice.
+	* [TKN-999] -- The tokenizer implementation |must| not produce undefined behavior.
+	  Informative: This rule serves as a catch-all for unspecified tokenizer errors.
+	  It should never occur in practice.
+
 
 In order to describe the tokenizer we define a type (in Python for practical reasons):
 
@@ -348,6 +355,7 @@ The semantic roles are:
 	* :wtrl_lit:`|mod|` -- A :wtrl_mod:`module`. Rarely used.
 	* :wtrl_lit:`|op|` -- An operator like :wtrl_op:`+` or :wtrl_op:`*`.
 	* :wtrl_lit:`|opt|` -- An option to a CLI command, like :wtrl_opt:`--obj`.
+	* :wtrl_lit:`|ref|` -- A reference to a :wtrl_mod:`docutils` label, like :wtrl_lit:`|ref|\`Name <Label>\``.
 	* :wtrl_lit:`|tag|` -- Some :wtrl_tag:`tag` in angle brackets, like in XML. Not yet relevant for Waterloo.
 	* :wtrl_lit:`|type|` -- A type like :wtrl_type:`float`.
 	* :wtrl_lit:`|value|` -- A value or literal like :wtrl_value:`42` or :wtrl_value:`done`.

@@ -1,0 +1,53 @@
+Miscellaneous
+=============
+
+Inspecting JSON documents with :wtrl_cmd:`jq`
+---------------------------------------------
+
+In the following, we list a couple of examples for using the JSON command-line processor :wtrl_cmd:`jq`
+in connection with Waterloo JSON files. You may want to apply this, for instance,
+to the accompanying document :wtrl_var:`PATH`=:wtrl_file:`sdv/doc/waterloo/doc-json/docitem.wtrl.core.rfc-2119.json`
+shipped with this package.
+
+
+* Extract a JSON node, in this case the list of documented modules:
+
+	.. code-block:: bash
+	
+		jq .__WTRL_TOC_MODULES__ ${PATH}
+
+* Extract a selected entry of a JSON object:
+
+	.. code-block:: bash
+
+		jq '.__WTRL_TOC_MODULES__["sdv.doc.waterloo.docitem"]' ${PATH}
+
+* Extract the values (without keys) as JSON strings:
+
+	.. code-block:: bash
+ 
+		jq '.__WTRL_TOC_MODULES__[]'	${PATH}
+ 
+* Extract the values (without keys) as raw strings:
+
+	.. code-block:: bash
+
+		jq -r '.__WTRL_TOC_MODULES__[]'	${PATH}
+
+* Extract the qualified identifiers of all classes (look for :wtrl_label:`profile` :wtrl_value:`class`)
+
+	.. code-block:: bash
+
+		jq -r '.__WTRL_OBJECTS__	| to_entries[]
+						| select(.value.doc.Preamble.profile == "class")
+						| .key'	${PATH}
+
+* Find the keys of all functions that are marked with the trait "generator":
+
+	.. code-block:: bash
+
+		jq -r '.__WTRL_OBJECTS__	| to_entries[]
+						| select(.value.doc.Preamble.profile == "function")
+						| select(.value.traits | any(. == "generator")?)
+						| .key' ${PATH}
+

@@ -18,7 +18,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="7. Reference - Core View" href="reference.html" />
-    <link rel="prev" title="5. Tools" href="tools.html" />
+    <link rel="prev" title="5. Miscellaneous" href="misc.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
@@ -203,15 +203,21 @@ indent_token    = ? current indentation string, a multiple of indent_unit ? ;
 <div><ul class="simple">
 <li><p>[TKN-001] – The indentation scheme <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span></code> be consistent within a docstring.</p></li>
 <li><p>[TKN-002] – In indentation scheme SPC4, indentation <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span></code> be a multiple of 4.</p></li>
-<li><p>[TKN-003] – The indentation schema <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span></code> be either TAB or SPC4.</p></li>
+<li><p>[TKN-003] – The indentation scheme <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span></code> be either TAB or SPC4.</p></li>
 <li><p>[TKN-004] – Indentation from one line to the next <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span> <span class="pre">not</span></code> increase by more than one unit.</p></li>
 <li><p>[TKN-005] – A physical content line <code class="wtrl_norm docutils literal notranslate"><span class="pre">may</span></code> be continued on the next physical line by placing a backslash (ASCII 92)
-as the last non-whitespace character of the line. Tools <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span></code> join the lines by removing the backslash and newline
+as the last non-whitespace character of the line.</p></li>
+<li><p>[TKN-008] – Tools <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span></code> join the lines by removing the backslash and newline
 and inserting a single ASCII space character at the join position.</p></li>
+<li><p>[TKN-009] – Tools <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span></code> emit a warning if a trailing backslash used for line
+continuation is not escaped, or if the enclosing Python
+string literal is not declared as a raw string.</p></li>
 <li><p>[TKN-006] – Line continuation according to TKN-005 <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span></code> only join lines at the same indentation level.</p></li>
 <li><p>[TKN-007] – A physical content line that ends with a backslash according to TKN-005 <code class="wtrl_norm docutils literal notranslate"><span class="pre">should</span> <span class="pre">not</span></code>
 be the last physical line within an indentation block.</p></li>
-<li><p>[TKN-999] – Implementation <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span></code> be correct. Informative: This rule is a catch-all for unspecified tokenizer errors. Should never occur in practice.</p></li>
+<li><p>[TKN-999] – The tokenizer implementation <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span></code> not produce undefined behavior.
+Informative: This rule serves as a catch-all for unspecified tokenizer errors.
+It should never occur in practice.</p></li>
 </ul>
 </div></blockquote>
 <p>In order to describe the tokenizer we define a type (in Python for practical reasons):</p>
@@ -370,6 +376,7 @@ subsection labels, or identifier list entries).</p>
 <li><p><code class="wtrl_lit docutils literal notranslate"><span class="pre">|mod|</span></code> – A <code class="wtrl_mod docutils literal notranslate"><span class="pre">module</span></code>. Rarely used.</p></li>
 <li><p><code class="wtrl_lit docutils literal notranslate"><span class="pre">|op|</span></code> – An operator like <code class="wtrl_op docutils literal notranslate"><span class="pre">+</span></code> or <code class="wtrl_op docutils literal notranslate"><span class="pre">*</span></code>.</p></li>
 <li><p><code class="wtrl_lit docutils literal notranslate"><span class="pre">|opt|</span></code> – An option to a CLI command, like <code class="wtrl_opt docutils literal notranslate"><span class="pre">--obj</span></code>.</p></li>
+<li><p><code class="wtrl_lit docutils literal notranslate"><span class="pre">|ref|</span></code> – A reference to a <code class="wtrl_mod docutils literal notranslate"><span class="pre">docutils</span></code> label, like <code class="wtrl_lit docutils literal notranslate"><span class="pre">|ref|`Name</span> <span class="pre">&lt;Label&gt;`</span></code>.</p></li>
 <li><p><code class="wtrl_lit docutils literal notranslate"><span class="pre">|tag|</span></code> – Some <code class="wtrl_tag docutils literal notranslate"><span class="pre">tag</span></code> in angle brackets, like in XML. Not yet relevant for Waterloo.</p></li>
 <li><p><code class="wtrl_lit docutils literal notranslate"><span class="pre">|type|</span></code> – A type like <code class="wtrl_type docutils literal notranslate"><span class="pre">float</span></code>.</p></li>
 <li><p><code class="wtrl_lit docutils literal notranslate"><span class="pre">|value|</span></code> – A value or literal like <code class="wtrl_value docutils literal notranslate"><span class="pre">42</span></code> or <code class="wtrl_value docutils literal notranslate"><span class="pre">done</span></code>.</p></li>
@@ -1444,7 +1451,7 @@ for automated testing, such as idempotence, non-mutation of inputs, or round-tri
 <li class="toctree-l1"><a class="reference internal" href="getting_started.html">2. Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples_minimax.html">3. Docstrings - minimal and full examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples.html">4. Examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tools.html">5. Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="misc.html">5. Miscellaneous</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">6. Docstring format</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#definitions">6.1. Definitions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#terminology">6.2. Terminology</a></li>
@@ -1491,7 +1498,7 @@ for automated testing, such as idempotence, non-mutation of inputs, or round-tri
 <h3>Related Topics</h3>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="tools.html" title="previous chapter"><span class="section-number">5. </span>Tools</a></li>
+      <li>Previous: <a href="misc.html" title="previous chapter"><span class="section-number">5. </span>Miscellaneous</a></li>
       <li>Next: <a href="reference.html" title="next chapter"><span class="section-number">7. </span>Reference - Core View</a></li>
   </ul></li>
 </ul>
