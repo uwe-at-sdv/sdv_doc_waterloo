@@ -1,12 +1,33 @@
 {
-	"description": "Waterloo JSON export schema. Keep changelog metadata in x-changelog and validate edits (for example with jsonlint-php).",
+	"description": "Waterloo JSON export schema. Keep changelog in x-changelog and validate edits (for example with jsonlint-php).",
 	"x-published": "2026-02-17",
 	"x-changelog": [
-		"0.0.4: In non-aggregate categories (Types, Variables, Constants) use doc_lines for plain line arrays to simplify filtering.",
-		"0.0.4: In non-aggregate categories, 'doc' is deprecated. Will be forbidden at 0.1.0.",
-		"0.0.4: Machine-readable metadata in schema (x-changelog, x-published).",
-		"0.0.3: Validate structural envelope; detailed doc subtree semantics are governed by the normative Waterloo docstring rules.",
-		"0.0.3: More regular naming scheme for keys."
+		{
+			"version": "0.0.4",
+			"date": "2026-02-17",
+			"changes": [
+				{
+					"type": "change",
+					"summary": "Use doc_lines for plain line arrays to simplify filtering."
+				},
+				{
+					"type": "deprecation",
+					"summary": "'doc' is deprecated; will be forbidden in 0.1.0."
+				},
+				{
+					"type": "meta",
+					"summary": "Add machine-readable metadata in schema (x-changelog, x-published)."
+				}
+			]
+		},
+		{
+			"version": "0.0.3",
+			"date": "2026-02-16",
+			"changes": [
+				{ "type": "change", "summary": "Validate structural envelope; doc subtree semantics follow normative rules." },
+				{ "type": "change", "summary": "More regular naming scheme for keys." }
+			]
+		}
 	],
 	"$schema": "https://json-schema.org/draft/2020-12/schema",
 	"$id": "https://sci-d-vis.com/schema/wtrl-json-0.0.4.schema.json",
