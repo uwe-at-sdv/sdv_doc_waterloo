@@ -264,10 +264,92 @@ implementation matches the normative claims, treating documentation as
 an executable contract.</p></li>
 </ul>
 </section>
+<section id="scope-and-limits-of-the-principles">
+<h2><span class="section-number">1.6. </span>Scope and limits of the principles<a class="headerlink" href="#scope-and-limits-of-the-principles" title="Permalink to this headline">¶</a></h2>
+<p>The principles stated above describe the architectural intent of Waterloo Docstrings.
+They guide the design and usage of the format, but they are not themselves normative rules.
+Their applicability must be interpreted within practical and technical constraints.</p>
+<p>Waterloo distinguishes strictly between <strong>normative rules</strong> (which are formally enforced)
+and <strong>design principles</strong> (which describe structural goals).
+The latter admit contextual limitations, as outlined below.</p>
+<p class="rubric">LoII – Locality of Information (Input)</p>
+<p>LoII requires that normative definitions reside directly within the docstring
+of the object to which they apply.
+In practice, complex systems may require supplementary material such as
+diagrams, tables, or multimedia resources.
+Such material may reside outside the docstring without violating the structural
+integrity of Waterloo.
+LoII applies to normative textual definitions.
+Explanatory or illustrative resources may be external.</p>
+<p class="rubric">LoIO – Locality of Information (Output)</p>
+<p>LoIO encourages that rendered documentation preserves the structural bundling
+of normative content.
+However, presentation-layer decisions (such as separating extensive examples
+or cross-cutting demonstrations) may lead to selective redistribution of content
+in rendered form.
+LoIO governs structural coherence, not pedagogical layout.</p>
+<p class="rubric">SSoT – Single Source of Truth</p>
+<p>SSoT is a foundational principle of Waterloo and admits no practical limitation.
+Normative requirements must not be duplicated or contradicted elsewhere.
+References to a normative rule are permitted, but independent restatements
+of the same requirement are not. If a conflict arises, SSoT has priority.
+Normative requirements must never be duplicated, even at the expense
+of strict locality.</p>
+<p class="rubric">BinNorm – Binary Normativity</p>
+<p>The distinction between normative and informative content is structural and
+absolute within Waterloo.
+This principle is inherent to the format definition and does not admit
+contextual relaxation.</p>
+<p class="rubric">SoSaC – Separation of Structure and Content</p>
+<p>SoSaC is intrinsic to the design of Waterloo Docstrings.
+The structural schema is strictly defined and machine-validated.
+Natural-language content remains flexible within that structure.
+No practical limitation of this principle is foreseen.</p>
+<p class="rubric">SCaA – Self-Consistency and Autarky</p>
+<p>SCaA requires that each documented object be structurally interpretable on its own.
+This principle applies to structural completeness, not to total informational isolation.
+External references may provide additional explanation or context.
+However, the <strong>structural</strong> understanding of a docstring must not depend
+on external material.</p>
+<p>A practical sanity check for structural autarky is the following:</p>
+<p>Present an isolated Waterloo docstring – without surrounding source code
+or tooling context – to a general-purpose language model and request
+an assessment of its structure and meaning.</p>
+<p>Even without prior knowledge of Waterloo, such models typically:</p>
+<ul class="simple">
+<li><p>recognize the presence of a strict structural schema,</p></li>
+<li><p>distinguish normative from informative content,</p></li>
+<li><p>identify binding requirements expressed via standardized keywords,</p></li>
+<li><p>and interpret the document as a specification rather than informal prose.</p></li>
+</ul>
+<p>This observation is not used as a formal proof of correctness.
+However, it provides empirical evidence that Waterloo docstrings
+are self-describing at the structural level.
+Structural autarky is achieved when the format communicates
+its constraints through its own organization,
+without requiring external documentation
+to interpret its normative structure.</p>
+<p class="rubric">DrPrv – Drift Prevention</p>
+<p>Drift prevention is a design objective rather than a binary property.
+The degree to which documentation drift is prevented depends on:</p>
+<ul class="simple">
+<li><p>the strictness of tooling,</p></li>
+<li><p>integration into development workflows,</p></li>
+<li><p>adherence by maintainers.</p></li>
+</ul>
+<p>Waterloo provides mechanisms to reduce drift, but it cannot eliminate
+it categorically.</p>
+<p class="rubric">MVAuth – Machine-Verifiable Authority</p>
+<p>Machine-verifiable authority is an aspirational principle.
+The extent to which implementation can be automatically verified against
+documentation depends on tooling, type information, and test coverage.
+Waterloo enables machine-verifiable contracts but does not guarantee
+complete verification in all contexts.</p>
+</section>
 <section id="project-status">
-<h2><span class="section-number">1.6. </span>Project status<a class="headerlink" href="#project-status" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">1.7. </span>Project status<a class="headerlink" href="#project-status" title="Permalink to this headline">¶</a></h2>
 <section id="static-typechecking">
-<h3><span class="section-number">1.6.1. </span>Static typechecking<a class="headerlink" href="#static-typechecking" title="Permalink to this headline">¶</a></h3>
+<h3><span class="section-number">1.7.1. </span>Static typechecking<a class="headerlink" href="#static-typechecking" title="Permalink to this headline">¶</a></h3>
 <p>We use <code class="wtrl_lit docutils literal notranslate"><span class="pre">mypy</span></code> for static typechecking. The modules</p>
 <ul class="simple">
 <li><p><code class="wtrl_file docutils literal notranslate"><span class="pre">sdv.doc.docitem</span></code></p></li>
@@ -314,14 +396,14 @@ sdv_doc_docitem_validator.py:13 # pragma: no cover - older Python
 </div>
 </section>
 <section id="pytest">
-<h3><span class="section-number">1.6.2. </span>Pytest<a class="headerlink" href="#pytest" title="Permalink to this headline">¶</a></h3>
+<h3><span class="section-number">1.7.2. </span>Pytest<a class="headerlink" href="#pytest" title="Permalink to this headline">¶</a></h3>
 <p>File <code class="wtrl_file docutils literal notranslate"><span class="pre">test_docitem_pytest.py</span></code> contains a growing number of tests
 for the rules listed in section <a class="reference internal" href="format.html#chapter-format"><span class="std std-ref">Docstring format</span></a>. A new version will only
 be released if all test run green.</p>
 </section>
 </section>
 <section id="dependencies">
-<h2><span class="section-number">1.7. </span>Dependencies<a class="headerlink" href="#dependencies" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">1.8. </span>Dependencies<a class="headerlink" href="#dependencies" title="Permalink to this headline">¶</a></h2>
 <p class="rubric">Requires packages (will be installed by Pip)</p>
 <ul class="simple">
 <li><p><code class="wtrl_mod docutils literal notranslate"><span class="pre">jsonschema</span></code> – <code class="docutils literal notranslate"><span class="pre">python3</span> <span class="pre">-m</span> <span class="pre">pip</span> <span class="pre">install</span> <span class="pre">jsonschema</span></code></p></li>
@@ -343,13 +425,13 @@ for example to identify documented modules or objects, and to query associated m
 </ul>
 </section>
 <section id="possible-future-enhancements">
-<h2><span class="section-number">1.8. </span>Possible future enhancements<a class="headerlink" href="#possible-future-enhancements" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">1.9. </span>Possible future enhancements<a class="headerlink" href="#possible-future-enhancements" title="Permalink to this headline">¶</a></h2>
 </section>
 <section id="introductory-examples">
-<h2><span class="section-number">1.9. </span>Introductory examples<a class="headerlink" href="#introductory-examples" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">1.10. </span>Introductory examples<a class="headerlink" href="#introductory-examples" title="Permalink to this headline">¶</a></h2>
 <p>This section is informative.</p>
 <section id="module">
-<h3><span class="section-number">1.9.1. </span>Module<a class="headerlink" href="#module" title="Permalink to this headline">¶</a></h3>
+<h3><span class="section-number">1.10.1. </span>Module<a class="headerlink" href="#module" title="Permalink to this headline">¶</a></h3>
 <p>Let us do an example: In directory <code class="wtrl_file docutils literal notranslate"><span class="pre">doc/examples</span></code> you see a file <code class="wtrl_file docutils literal notranslate"><span class="pre">test_docitem_module.py</span></code>.
 On module level this is equipped with a basic Waterloo docstring:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;</span>
@@ -434,7 +516,7 @@ and it must be declared normative.</p></li>
 </div></blockquote>
 </section>
 <section id="module-and-class">
-<h3><span class="section-number">1.9.2. </span>Module and class<a class="headerlink" href="#module-and-class" title="Permalink to this headline">¶</a></h3>
+<h3><span class="section-number">1.10.2. </span>Module and class<a class="headerlink" href="#module-and-class" title="Permalink to this headline">¶</a></h3>
 <p>In the next example we have a module and a class docstring, and we consider the class as
 part of the public API of the module:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;</span>
@@ -564,7 +646,7 @@ part of the public API of the module:</p>
 </table>
 </section>
 <section id="module-class-and-method">
-<h3><span class="section-number">1.9.3. </span>Module, class and method<a class="headerlink" href="#module-class-and-method" title="Permalink to this headline">¶</a></h3>
+<h3><span class="section-number">1.10.3. </span>Module, class and method<a class="headerlink" href="#module-class-and-method" title="Permalink to this headline">¶</a></h3>
 <p>Finally, let us add a method to the class and attach a docstring.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Preamble:</span>
@@ -773,7 +855,7 @@ part of the public API of the module:</p>
 </section>
 </section>
 <section id="convenience-module-and-class-stack">
-<h2><span class="section-number">1.10. </span>Convenience: module and class stack<a class="headerlink" href="#convenience-module-and-class-stack" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">1.11. </span>Convenience: module and class stack<a class="headerlink" href="#convenience-module-and-class-stack" title="Permalink to this headline">¶</a></h2>
 <p>Repeating the module and the class each time a function, method, type or constant
 is addressed by means of qualified identifier (dot notation) can become a little annoying.
 Therefore the extension is equipped with state stacks for modules and classes.</p>
@@ -838,20 +920,21 @@ Default class qualifier <code class="wtrl_var docutils literal notranslate"><spa
 <li class="toctree-l2"><a class="reference internal" href="#normativity-keywords-and-their-scope">1.3. Normativity keywords and their scope</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#recipients-and-output-formats">1.4. Recipients and output formats</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#basic-principles-of-waterloo-docstrings">1.5. Basic principles of Waterloo Docstrings</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#project-status">1.6. Project status</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#static-typechecking">1.6.1. Static typechecking</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pytest">1.6.2. Pytest</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#scope-and-limits-of-the-principles">1.6. Scope and limits of the principles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#project-status">1.7. Project status</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#static-typechecking">1.7.1. Static typechecking</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pytest">1.7.2. Pytest</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#dependencies">1.7. Dependencies</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#possible-future-enhancements">1.8. Possible future enhancements</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#introductory-examples">1.9. Introductory examples</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#module">1.9.1. Module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#module-and-class">1.9.2. Module and class</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#module-class-and-method">1.9.3. Module, class and method</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#dependencies">1.8. Dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#possible-future-enhancements">1.9. Possible future enhancements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#introductory-examples">1.10. Introductory examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#module">1.10.1. Module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-and-class">1.10.2. Module and class</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-class-and-method">1.10.3. Module, class and method</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#convenience-module-and-class-stack">1.10. Convenience: module and class stack</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#convenience-module-and-class-stack">1.11. Convenience: module and class stack</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="getting_started.html">2. Getting Started</a></li>
@@ -859,7 +942,8 @@ Default class qualifier <code class="wtrl_var docutils literal notranslate"><spa
 <li class="toctree-l1"><a class="reference internal" href="examples.html">4. Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="misc.html">5. Miscellaneous</a></li>
 <li class="toctree-l1"><a class="reference internal" href="format.html">6. Docstring format</a></li>
-<li class="toctree-l1"><a class="reference internal" href="reference.html">7. Reference - Core View</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tools.html">7. Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reference.html">8. Reference - Core View</a></li>
 </ul>
 
 <div class="relations">

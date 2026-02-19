@@ -820,10 +820,10 @@ optional.</p>
 <span class="k">class</span><span class="w"> </span><span class="nc">tracer</span><span class="p">:</span>
 	<span class="k">pass</span>
 
-<span class="n">docstring_subtree</span><span class="p">:</span> <span class="n">TypeAlias</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="s2">&quot;docstring_subtree&quot;</span><span class="p">]]</span>
+<span class="n">DocstringSubtree</span><span class="p">:</span> <span class="n">TypeAlias</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="s2">&quot;DocstringSubtree&quot;</span><span class="p">]]</span>
 
 <span class="k">class</span><span class="w"> </span><span class="nc">docitem_base</span><span class="p">:</span>
-	<span class="k">def</span><span class="w"> </span><span class="nf">parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">tr</span> <span class="p">:</span> <span class="n">tracer</span><span class="p">,</span><span class="n">subtree</span> <span class="p">:</span> <span class="n">docstring_subtree</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+	<span class="k">def</span><span class="w"> </span><span class="nf">parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">tr</span> <span class="p">:</span> <span class="n">tracer</span><span class="p">,</span><span class="n">subtree</span> <span class="p">:</span> <span class="n">DocstringSubtree</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">		Preamble:</span>
 <span class="sd">			profile:</span>
@@ -871,7 +871,7 @@ the rendered documentation. This can be achieved using the directive</p>
 <div class="highlight-rst notranslate"><div class="highlight"><pre><span></span><span class="p">..</span> <span class="ow">wtrl_function_signature</span><span class="p">::</span> test_docitem_function_medium.docitem_base.parse
 </pre></div>
 </div>
-<span class="wtrl_func">parse</span><span class="wtrl_op">(</span><span class="wtrl_var">tr</span><span class="wtrl_op">: </span><span class="wtrl_type">tracer</span><span class="wtrl_op">, </span><span class="wtrl_var">subtree</span><span class="wtrl_op">: </span><span class="wtrl_type">typing.Union[str, typing.List[ForwardRef(‘docstring_subtree’)]]</span><span class="wtrl_op">)</span><span class="wtrl_op"> -&gt; </span><span class="wtrl_type">None</span><p>For more complex type annotations, the directive</p>
+<span class="wtrl_func">parse</span><span class="wtrl_op">(</span><span class="wtrl_var">tr</span><span class="wtrl_op">: </span><span class="wtrl_type">tracer</span><span class="wtrl_op">, </span><span class="wtrl_var">subtree</span><span class="wtrl_op">: </span><span class="wtrl_type">typing.Union[str, typing.List[ForwardRef(‘DocstringSubtree’)]]</span><span class="wtrl_op">)</span><span class="wtrl_op"> -&gt; </span><span class="wtrl_type">None</span><p>For more complex type annotations, the directive</p>
 <div class="highlight-rst notranslate"><div class="highlight"><pre><span></span><span class="p">..</span> <span class="ow">wtrl_function_signature_block</span><span class="p">::</span> test_docitem_function_medium.docitem_base.parse
 </pre></div>
 </div>
@@ -879,7 +879,7 @@ the rendered documentation. This can be achieved using the directive</p>
 <div class="wtrl-signature wtrl-signature-multiline line-block">
 <div class="wtrl-signature-head line"><span class="wtrl_func">test_docitem_function_medium.docitem_base</span><span class="wtrl_op">.</span><span class="wtrl_func">parse</span><span class="wtrl_op">(</span></div>
 <div class="wtrl-signature-param line"><span class="wtrl_var">tr</span><span class="wtrl_op">: </span><span class="wtrl_type">tracer</span></div>
-<div class="wtrl-signature-param line"><span class="wtrl_var">subtree</span><span class="wtrl_op">: </span><span class="wtrl_type">typing.Union[str, typing.List[ForwardRef(‘docstring_subtree’)]]</span></div>
+<div class="wtrl-signature-param line"><span class="wtrl_var">subtree</span><span class="wtrl_op">: </span><span class="wtrl_type">typing.Union[str, typing.List[ForwardRef(‘DocstringSubtree’)]]</span></div>
 <div class="wtrl-signature-ret line"><span class="wtrl_op">)</span><span class="wtrl_op"> -&gt; </span><span class="wtrl_type">None</span></div>
 </div>
 <p>While there is some flexibility in how the signature is presented, it
@@ -893,7 +893,7 @@ must be included in order to make the documentation complete.</p>
 <tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Signature</span></code></p></td>
 <td><div class="wtrl-signature-head line"><span class="wtrl_mod">test_docitem_function_medium</span><span class="wtrl_op">.</span><span class="wtrl_type">docitem_base</span><span class="wtrl_op">.</span><span class="wtrl_func">parse</span><span class="wtrl_op">(</span></div>
 <div class="wtrl-signature-param line"><span class="wtrl_var">tr</span><span class="wtrl_op">: </span><span class="wtrl_type">tracer</span></div>
-<div class="wtrl-signature-param line"><span class="wtrl_var">subtree</span><span class="wtrl_op">: </span><span class="wtrl_type">typing.Union[str, typing.List[ForwardRef(‘docstring_subtree’)]]</span></div>
+<div class="wtrl-signature-param line"><span class="wtrl_var">subtree</span><span class="wtrl_op">: </span><span class="wtrl_type">typing.Union[str, typing.List[ForwardRef(‘DocstringSubtree’)]]</span></div>
 <div class="wtrl-signature-ret line"><span class="wtrl_op">)</span><span class="wtrl_op"> -&gt; </span><span class="wtrl_type">None</span></div>
 </td>
 </tr>
@@ -973,13 +973,13 @@ base method. In section <code class="wtrl_label docutils literal notranslate"><s
 is explicitly referenced using the mandatory subsection <code class="wtrl_label docutils literal notranslate"><span class="pre">base</span></code>.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span>
 <span class="k">class</span><span class="w"> </span><span class="nc">docitem_list_of_symbols_base</span><span class="p">(</span><span class="n">docitem_base</span><span class="p">):</span>
-	<span class="k">def</span><span class="w"> </span><span class="nf">_parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tr</span><span class="p">:</span> <span class="n">tracer</span><span class="p">,</span> <span class="n">refs</span><span class="p">:</span> <span class="n">docstring_subtree</span><span class="p">,</span> <span class="n">pattern</span> <span class="o">=</span> <span class="nb">str</span><span class="p">):</span>
+	<span class="k">def</span><span class="w"> </span><span class="nf">_parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tr</span><span class="p">:</span> <span class="n">tracer</span><span class="p">,</span> <span class="n">refs</span><span class="p">:</span> <span class="n">DocstringSubtree</span><span class="p">,</span> <span class="n">pattern</span> <span class="o">=</span> <span class="nb">str</span><span class="p">):</span>
 <span class="c1"># Some implementation here...</span>
 <span class="c1">#		...</span>
 		<span class="k">pass</span>
 
 <span class="k">class</span><span class="w"> </span><span class="nc">docitem_traits</span><span class="p">(</span><span class="n">docitem_list_of_symbols_base</span><span class="p">):</span>
-	<span class="k">def</span><span class="w"> </span><span class="nf">parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tr</span><span class="p">:</span> <span class="n">tracer</span><span class="p">,</span> <span class="n">refs</span><span class="p">:</span> <span class="n">docstring_subtree</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+	<span class="k">def</span><span class="w"> </span><span class="nf">parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tr</span><span class="p">:</span> <span class="n">tracer</span><span class="p">,</span> <span class="n">refs</span><span class="p">:</span> <span class="n">DocstringSubtree</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">		Preamble:</span>
 <span class="sd">			profile:</span>
@@ -1002,7 +1002,7 @@ is explicitly referenced using the mandatory subsection <code class="wtrl_label 
 <div class="wtrl-signature wtrl-signature-multiline line-block">
 <div class="wtrl-signature-head line"><span class="wtrl_func">test_docitem_function_medium.docitem_traits</span><span class="wtrl_op">.</span><span class="wtrl_func">parse</span><span class="wtrl_op">(</span></div>
 <div class="wtrl-signature-param line"><span class="wtrl_var">tr</span><span class="wtrl_op">: </span><span class="wtrl_type">tracer</span></div>
-<div class="wtrl-signature-param line"><span class="wtrl_var">refs</span><span class="wtrl_op">: </span><span class="wtrl_type">typing.Union[str, typing.List[ForwardRef(‘docstring_subtree’)]]</span></div>
+<div class="wtrl-signature-param line"><span class="wtrl_var">refs</span><span class="wtrl_op">: </span><span class="wtrl_type">typing.Union[str, typing.List[ForwardRef(‘DocstringSubtree’)]]</span></div>
 <div class="wtrl-signature-ret line"><span class="wtrl_op">)</span><span class="wtrl_op"> -&gt; </span><span class="wtrl_type">None</span></div>
 </div>
 <table class="wtrl-box docutils align-default" id="wtrl-func-28:test_docitem_function_medium-14:docitem_traits-5:parse">
@@ -1014,7 +1014,7 @@ is explicitly referenced using the mandatory subsection <code class="wtrl_label 
 <tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Signature</span></code></p></td>
 <td><div class="wtrl-signature-head line"><span class="wtrl_mod">test_docitem_function_medium</span><span class="wtrl_op">.</span><span class="wtrl_type">docitem_traits</span><span class="wtrl_op">.</span><span class="wtrl_func">parse</span><span class="wtrl_op">(</span></div>
 <div class="wtrl-signature-param line"><span class="wtrl_var">tr</span><span class="wtrl_op">: </span><span class="wtrl_type">tracer</span></div>
-<div class="wtrl-signature-param line"><span class="wtrl_var">refs</span><span class="wtrl_op">: </span><span class="wtrl_type">typing.Union[str, typing.List[ForwardRef(‘docstring_subtree’)]]</span></div>
+<div class="wtrl-signature-param line"><span class="wtrl_var">refs</span><span class="wtrl_op">: </span><span class="wtrl_type">typing.Union[str, typing.List[ForwardRef(‘DocstringSubtree’)]]</span></div>
 <div class="wtrl-signature-ret line"><span class="wtrl_op">)</span><span class="wtrl_op"> -&gt; </span><span class="wtrl_type">None</span></div>
 </td>
 </tr>
@@ -1322,7 +1322,8 @@ the base preconditions, unless they are explicitly permitted by the base contrac
 <li class="toctree-l1"><a class="reference internal" href="examples.html">4. Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="misc.html">5. Miscellaneous</a></li>
 <li class="toctree-l1"><a class="reference internal" href="format.html">6. Docstring format</a></li>
-<li class="toctree-l1"><a class="reference internal" href="reference.html">7. Reference - Core View</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tools.html">7. Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reference.html">8. Reference - Core View</a></li>
 </ul>
 
 <div class="relations">

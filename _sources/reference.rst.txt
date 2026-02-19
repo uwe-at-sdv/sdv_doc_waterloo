@@ -18,63 +18,50 @@ Fundamental helpers
 :wtrl_func:`get_obj_name`
 ...........................
 
-.. wtrl_function_signature_block:: get_obj_name
-
 .. wtrl_autodoc_function:: get_obj_name
 
 :wtrl_func:`get_obj_fully_qualified_name`
 .........................................
-
-.. wtrl_function_signature_block:: get_obj_fully_qualified_name
 
 .. wtrl_autodoc_function:: get_obj_fully_qualified_name
 
 :wtrl_func:`get_obj_path`
 ...........................
 
-.. wtrl_function_signature_block:: get_obj_path
-
 .. wtrl_autodoc_function:: get_obj_path
 
 :wtrl_func:`get_obj_docstring`
 ..............................
 
-.. wtrl_function_signature_block:: get_obj_docstring
-
 .. wtrl_autodoc_function:: get_obj_docstring
+
+:wtrl_func:`get_obj_annotations`
+................................
+
+.. wtrl_autodoc_function:: get_obj_annotations
 
 :wtrl_func:`is_obj_module`
 ............................................
-
-.. wtrl_function_signature_block:: is_obj_module
 
 .. wtrl_autodoc_function:: is_obj_module
 
 :wtrl_func:`is_obj_class`
 ............................................
 
-.. wtrl_function_signature_block:: is_obj_class
-
 .. wtrl_autodoc_function:: is_obj_class
 
 :wtrl_func:`is_obj_function`
 ............................................
-
-.. wtrl_function_signature_block:: is_obj_function
 
 .. wtrl_autodoc_function:: is_obj_function
 
 :wtrl_func:`is_obj_named_value`
 ............................................
 
-.. wtrl_function_signature_block:: is_obj_named_value
-
 .. wtrl_autodoc_function:: is_obj_named_value
 
 :wtrl_func:`get_func_obj_from_callable`
 ............................................
-
-.. wtrl_function_signature_block:: get_func_obj_from_callable
 
 .. wtrl_autodoc_function:: get_func_obj_from_callable
 
@@ -84,14 +71,10 @@ Typechecking helpers
 :wtrl_func:`is_attr_annotated`
 ..............................
 
-.. wtrl_function_signature_block:: is_attr_annotated
-
 .. wtrl_autodoc_function:: is_attr_annotated
 
 :wtrl_func:`is_attr_final`
 ..............................
-
-.. wtrl_function_signature_block:: is_attr_final
 
 .. wtrl_autodoc_function:: is_attr_final
 
@@ -102,21 +85,15 @@ Tokenizer functions
 :wtrl_func:`get_num_indent`
 ...........................
 
-.. wtrl_function_signature_block:: get_num_indent
-
 .. wtrl_autodoc_function:: get_num_indent
 
 :wtrl_func:`parse_indent_docstring`
 ...................................
 
-.. wtrl_function_signature_block:: parse_indent_docstring
-
 .. wtrl_autodoc_function:: parse_indent_docstring
 
 :wtrl_func:`resolve_object`
 ...................................
-
-.. wtrl_function_signature_block:: resolve_object
 
 .. wtrl_autodoc_function:: resolve_object
 

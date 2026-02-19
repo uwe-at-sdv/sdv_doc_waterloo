@@ -262,6 +262,120 @@ they are not intended to mirror existing standard acronyms.
   implementation matches the normative claims, treating documentation as 
   an executable contract.
 
+
+Scope and limits of the principles
+----------------------------------
+
+The principles stated above describe the architectural intent of Waterloo Docstrings.
+They guide the design and usage of the format, but they are not themselves normative rules.
+Their applicability must be interpreted within practical and technical constraints.
+
+Waterloo distinguishes strictly between **normative rules** (which are formally enforced)
+and **design principles** (which describe structural goals).
+The latter admit contextual limitations, as outlined below.
+
+
+.. rubric:: LoII -- Locality of Information (Input)
+
+LoII requires that normative definitions reside directly within the docstring
+of the object to which they apply.
+In practice, complex systems may require supplementary material such as
+diagrams, tables, or multimedia resources.
+Such material may reside outside the docstring without violating the structural
+integrity of Waterloo.
+LoII applies to normative textual definitions.
+Explanatory or illustrative resources may be external.
+
+
+.. rubric:: LoIO -- Locality of Information (Output)
+
+LoIO encourages that rendered documentation preserves the structural bundling
+of normative content.
+However, presentation-layer decisions (such as separating extensive examples
+or cross-cutting demonstrations) may lead to selective redistribution of content
+in rendered form.
+LoIO governs structural coherence, not pedagogical layout.
+
+
+.. rubric:: SSoT -- Single Source of Truth
+
+
+SSoT is a foundational principle of Waterloo and admits no practical limitation.
+Normative requirements must not be duplicated or contradicted elsewhere.
+References to a normative rule are permitted, but independent restatements
+of the same requirement are not. If a conflict arises, SSoT has priority.
+Normative requirements must never be duplicated, even at the expense
+of strict locality.
+
+
+.. rubric:: BinNorm -- Binary Normativity
+
+The distinction between normative and informative content is structural and
+absolute within Waterloo.
+This principle is inherent to the format definition and does not admit
+contextual relaxation.
+
+
+.. rubric:: SoSaC -- Separation of Structure and Content
+
+
+SoSaC is intrinsic to the design of Waterloo Docstrings.
+The structural schema is strictly defined and machine-validated.
+Natural-language content remains flexible within that structure.
+No practical limitation of this principle is foreseen.
+
+
+.. rubric:: SCaA -- Self-Consistency and Autarky
+
+SCaA requires that each documented object be structurally interpretable on its own.
+This principle applies to structural completeness, not to total informational isolation.
+External references may provide additional explanation or context.
+However, the **structural** understanding of a docstring must not depend
+on external material.
+
+A practical sanity check for structural autarky is the following:
+
+Present an isolated Waterloo docstring -- without surrounding source code
+or tooling context -- to a general-purpose language model and request
+an assessment of its structure and meaning.
+
+Even without prior knowledge of Waterloo, such models typically:
+
+* recognize the presence of a strict structural schema,
+* distinguish normative from informative content,
+* identify binding requirements expressed via standardized keywords,
+* and interpret the document as a specification rather than informal prose.
+
+This observation is not used as a formal proof of correctness.
+However, it provides empirical evidence that Waterloo docstrings
+are self-describing at the structural level.
+Structural autarky is achieved when the format communicates
+its constraints through its own organization,
+without requiring external documentation
+to interpret its normative structure.
+
+.. rubric:: DrPrv -- Drift Prevention
+
+Drift prevention is a design objective rather than a binary property.
+The degree to which documentation drift is prevented depends on:
+
+* the strictness of tooling,
+* integration into development workflows,
+* adherence by maintainers.
+
+Waterloo provides mechanisms to reduce drift, but it cannot eliminate
+it categorically.
+
+
+.. rubric:: MVAuth -- Machine-Verifiable Authority
+
+Machine-verifiable authority is an aspirational principle.
+The extent to which implementation can be automatically verified against
+documentation depends on tooling, type information, and test coverage.
+Waterloo enables machine-verifiable contracts but does not guarantee
+complete verification in all contexts.
+
+
 Project status
 --------------
 

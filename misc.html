@@ -39,10 +39,11 @@
 <h1><span class="section-number">5. </span>Miscellaneous<a class="headerlink" href="#miscellaneous" title="Permalink to this headline">¶</a></h1>
 <section id="inspecting-json-documents-with-jq">
 <h2><span class="section-number">5.1. </span>Inspecting JSON documents with <code class="wtrl_cmd docutils literal notranslate"><span class="pre">jq</span></code><a class="headerlink" href="#inspecting-json-documents-with-jq" title="Permalink to this headline">¶</a></h2>
-<p>In the following, we list a couple of examples for using the JSON command-line processor <code class="wtrl_cmd docutils literal notranslate"><span class="pre">jq</span></code>
-in connection with Waterloo JSON files. You may want to apply this, for instance,
-to the accompanying document <code class="wtrl_var docutils literal notranslate"><span class="pre">PATH`=:wtrl_file:`sdv/doc/waterloo/doc-json/docitem.wtrl.core.rfc-2119.json</span></code>
-shipped with this package.</p>
+<p>In this section, we present a few examples of using the JSON
+command-line processor <code class="wtrl_cmd docutils literal notranslate"><span class="pre">jq</span></code> with Waterloo JSON files.
+You can try these examples with the accompanying file
+<code class="wtrl_var docutils literal notranslate"><span class="pre">PATH</span></code> = <code class="wtrl_file docutils literal notranslate"><span class="pre">sdv/doc/waterloo/doc-json/docitem.wtrl.core.rfc-2119.json</span></code>,
+which is shipped with this package.</p>
 <ul>
 <li><p>Extract a JSON node, in this case the list of documented modules:</p>
 <blockquote>
@@ -58,7 +59,9 @@ shipped with this package.</p>
 </div>
 </div></blockquote>
 </li>
-<li><p>Extract the values (without keys) as JSON strings:</p>
+<li><p>Extract the values (without keys) as JSON strings.
+When applied to an array, <code class="wtrl_op docutils literal notranslate"><span class="pre">[]</span></code> emits each element.
+When applied to an object, it emits each value.</p>
 <blockquote>
 <div><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>jq<span class="w"> </span><span class="s1">&#39;.__WTRL_TOC_MODULES__[]&#39;</span><span class="w">    </span><span class="si">${</span><span class="nv">PATH</span><span class="si">}</span>
 </pre></div>
@@ -73,9 +76,10 @@ shipped with this package.</p>
 </div></blockquote>
 </li>
 <li><p>Extract the qualified identifiers of all classes (look for <code class="wtrl_label docutils literal notranslate"><span class="pre">profile</span></code> <code class="wtrl_value docutils literal notranslate"><span class="pre">class</span></code>).
-Filter <code class="wtrl_func docutils literal notranslate"><span class="pre">to_entries[]</span></code> produces key-value pairs, the constituents of which are addressed
-by <code class="wtrl_var docutils literal notranslate"><span class="pre">.key</span></code> and <code class="wtrl_var docutils literal notranslate"><span class="pre">.value</span></code>. Filter <code class="wtrl_func docutils literal notranslate"><span class="pre">select</span></code> relays all objects
-which fulfill the condition specified.</p>
+The filter <code class="wtrl_func docutils literal notranslate"><span class="pre">to_entries[]</span></code> converts the object into key-value pairs,
+which can then be accessed via <code class="wtrl_var docutils literal notranslate"><span class="pre">.key</span></code> and <code class="wtrl_var docutils literal notranslate"><span class="pre">.value</span></code>.
+The filter <code class="wtrl_func docutils literal notranslate"><span class="pre">select</span></code> passes through only those entries
+that satisfy the specified condition.</p>
 <blockquote>
 <div><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.__WTRL_OBJECTS__        | to_entries[]</span>
 <span class="s1">                                | select(.value.doc.Preamble.profile == &quot;class&quot;)</span>
@@ -84,7 +88,7 @@ which fulfill the condition specified.</p>
 </div>
 </div></blockquote>
 </li>
-<li><p>Find the keys of all functions that are marked with the trait “generator”:</p>
+<li><p>Find the keys of all functions that are marked with the trait <code class="wtrl_value docutils literal notranslate"><span class="pre">generator</span></code>:</p>
 <blockquote>
 <div><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.__WTRL_OBJECTS__        | to_entries[]</span>
 <span class="s1">                                | select(.value.doc.Preamble.profile == &quot;function&quot;)</span>
@@ -95,6 +99,9 @@ which fulfill the condition specified.</p>
 </div></blockquote>
 </li>
 </ul>
+<p>The examples above illustrate only a small subset of what can be achieved
+with <code class="wtrl_cmd docutils literal notranslate"><span class="pre">jq</span></code>. For a comprehensive reference, consult the official
+jq documentation at <a class="reference external" href="https://jqlang.github.io">jqlang.github.io/jq</a>.</p>
 </section>
 </section>
 
@@ -126,7 +133,8 @@ which fulfill the condition specified.</p>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="format.html">6. Docstring format</a></li>
-<li class="toctree-l1"><a class="reference internal" href="reference.html">7. Reference - Core View</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tools.html">7. Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reference.html">8. Reference - Core View</a></li>
 </ul>
 
 <div class="relations">

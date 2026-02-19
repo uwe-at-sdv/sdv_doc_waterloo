@@ -100,6 +100,55 @@ We do this by the following set of rules.
   Informative: In this document which is written in reST, we insert a space (ASCII 32), a double-hyphen (en-dash),
   and another space (ASCII 32) between the braced Rule ID and the rule free-form text.
 
+Rule taxonomy
+-------------
+
+The prefixes of rule IDs have a mnemonic function.
+The following list explains the mnemonic prefixes and their semantics.
+
+.. rubric:: Meta
+
+* META: Meta: rules defining the concept of rules
+
+.. rubric:: Parsing and validation
+
+* DOC: Docstrings in general
+* PNB: Partial Normativity Bugs
+* PRSR: Parser
+* TKN: Tokenizer
+
+.. rubric:: Helper ruleset
+
+* LQID: List of [Qualified] Identifiers
+
+.. rubric:: Sections and subsections
+
+* CCLO: Profile :wtrl_value:`class`: Section :wtrl_label:`Class_overview`
+* CMTO: Profile :wtrl_value:`class`: Section :wtrl_label:`Method_overview`
+* CON: All profiles: Section :wtrl_label:`Contract`
+* CPCL: Profile :wtrl_value:`class`: Section :wtrl_label:`Public_classes`
+* CPMT: Profile :wtrl_value:`class`: Section :wtrl_label:`Public_methods`
+* DEF: All profiles: Section :wtrl_label:`Definitions`
+* DER: Profile :wtrl_value:`class`: Section :wtrl_label:`Derived_from`
+* DESC: All profiles: Section :wtrl_label:`Description`
+* FAC: Profile :wtrl_value:`class`: Section :wtrl_label:`Factory`
+* MCLO: Module: Section :wtrl_label:`Class_overview`
+* MFNO: Module: Section :wtrl_label:`Function_overview`
+* MPCL: Module: Section :wtrl_label:`Public_classes`
+* MPFN: Module: Section :wtrl_label:`Public_functions`
+* NOTE: All profiles: Section :wtrl_label:`Notes`
+* PAR: Profiles :wtrl_value:`function`, :wtrl_value:`method`: Section :wtrl_label:`Parameters`
+* PCON: Profiles :wtrl_value:`module`, :wtrl_value:`class`: Section :wtrl_label:`Public_constants`
+* PRE: All profiles: Section :wtrl_label:`Preamble`
+* PTY: Profiles :wtrl_value:`module`, :wtrl_value:`class`: Section :wtrl_label:`Public_types`
+* PVAR: Profiles :wtrl_value:`module`, :wtrl_value:`class`: Section :wtrl_label:`Public_variables`
+* RAI: Profiles :wtrl_value:`function`, :wtrl_value:`method`: Section :wtrl_label:`Raises`
+* RET: Profiles :wtrl_value:`function`, :wtrl_value:`method`: Section :wtrl_label:`Returns`
+* SCP: All profiles: Subsection :wtrl_label:`scope`
+* SEE: All profiles: Section :wtrl_label:`See_also`
+* STA: All profiles: Subsection :wtrl_label:`status`
+* TERM: All profiles: Section :wtrl_label:`Terminology`
+
 The structure of Waterloo docstrings
 ------------------------------------
 
@@ -216,9 +265,9 @@ The normative rules derived from this grammar are:
 	  as the last non-whitespace character of the line.
 	* [TKN-008] -- Tools |must| join the lines by removing the backslash and newline
 	  and inserting a single ASCII space character at the join position.
-	* [TKN-009] -- Tools |must| emit a warning if a trailing backslash used for line
-	  continuation is not escaped, or if the enclosing Python
-	  string literal is not declared as a raw string.
+	* [TKN-009] -- Tools |must| emit a warning if
+		- **either** a trailing backslash used for line continuation is not escaped,
+		- **or** the enclosing Python string literal is not declared as a raw string.
 	* [TKN-006] -- Line continuation according to TKN-005 |must| only join lines at the same indentation level.
 	* [TKN-007] -- A physical content line that ends with a backslash according to TKN-005 |should_not|
 	  be the last physical line within an indentation block.
@@ -231,7 +280,7 @@ In order to describe the tokenizer we define a type (in Python for practical rea
 
 .. code:: python
 
-	docstring_tree = List[ Union[ str, "docstring_tree"]]
+	DocstringTree = List[ Union[ str, "DocstringTree"]]
 
 A :wtrl_dfn:`DocstringTree` is a value of this type.
 
@@ -239,7 +288,7 @@ The tokenizer manages a state engine, which consists of the following components
 
 	1. A DocstringTree (initial state: :wtrl_value:`[]`), given by a variable e.g. :wtrl_var:`target`.
 	2. A stack the elements of which point to :wtrl_var:`target` or any subtree thereof
-	   (see recursive definition of :wtrl_type:`docstring_tree`; initial state is :wtrl_value:`[target]`),
+	   (see recursive definition of :wtrl_type:`DocstringTree`; initial state is :wtrl_value:`[target]`),
 	   represented by a variable :wtrl_var:`stack`.
 	3. An integer variable :wtrl_var:`cur_indent` which represents the current level
 	   of indendation during line parsing. The initial value results from analyzing
@@ -330,7 +379,7 @@ The set of tokens currently available is:
 		- Renderers |should| translate this token to a suitable representation in the target format.
 		- Tools |must| preserve the token text if no translation is available.
 
-	* Tokens :wtrl_lit:`|attr|`, :wtrl_lit:`|cmd|`, :wtrl_lit:`|dfn|`, :wtrl_lit:`|file|`, :wtrl_lit:`|func|`, :wtrl_lit:`|label|`, :wtrl_lit:`|lit|`, :wtrl_lit:`|mod|`, :wtrl_lit:`|op|`, :wtrl_lit:`|opt|`, :wtrl_lit:`|tag|`, :wtrl_lit:`|type|`, :wtrl_lit:`|value|`, :wtrl_lit:`|var|`, :wtrl_lit:`|var_type|`
+	* Tokens :wtrl_lit:`|attr|`, :wtrl_lit:`|cmd|`, :wtrl_lit:`|dfn|`, :wtrl_lit:`|file|`, :wtrl_lit:`|func|`, :wtrl_lit:`|label|`, :wtrl_lit:`|lit|`, :wtrl_lit:`|mod|`, :wtrl_lit:`|op|`, :wtrl_lit:`|opt|`, :wtrl_lit:`|ref|`, :wtrl_lit:`|tag|`, :wtrl_lit:`|type|`, :wtrl_lit:`|value|`, :wtrl_lit:`|var|`, :wtrl_lit:`|var_type|`
 		- Usage: Tools |must| accept the following form: :wtrl_lit:`|role|\`content\``, where :wtrl_lit:`role` is one of the above, and :wtrl_lit:`content` is a non-empty string not containing backticks.
 		- The role token |must| only be used in Waterloo docstrings. Using them in the accompanying text in reST-documents |may| trigger a warning or error from the Sphinx builder.
 		- These token represent semantic roles. When building the Abstract Syntax Tree, tool |must| propagate these tokens without modifikation.
@@ -392,6 +441,29 @@ state whether it applies to Identifiers or to Qualified Identifiers.
 * [LQID-003] -- Whitespace surrounding each [Qualified] Identifier |must| be stripped by tools.
 * [LQID-004] -- Each [Qualified] Identifier |must| occur at most once in the resulting list.
 * [LQID-005] -- Tools |must| treat the result as a flat list of [Qualified] Identifiers, without preserving line structure or grouping.
+
+Normativity keyword handling
+----------------------------
+
+The following rules apply to free-form textual content
+within normative sections. They ensure that normativity
+keywords are used in a machine-detectable and unambiguous way.
+In the following rules "WS" stands for one or more whitespace characters.
+
+* [PNB-001] -- Tools |must| detect the token sequences
+  :wtrl_value:`|must|/|Must|` + WS +  :wtrl_value:`not/NOT`, :wtrl_value:`|should|/|Should|` + WS + :wtrl_value:`not/NOT`, and :wtrl_value:`|may|/|May|` + WS + :wtrl_value:`not/NOT`
+  when they occur within a single logical content line.
+
+* [PNB-002] -- If :wtrl_value:`|must|/|Must|` + WS +  :wtrl_value:`not/NOT` or :wtrl_value:`|should|/|Should|` + WS +  :wtrl_value:`not/NOT` is detected,
+  tools |must| emit at least a warning.
+  Informative: Use :wtrl_value:`|must_not|/|Must_not|` or :wtrl_value:`|should_not|/|Should_not|` instead.
+
+* [PNB-003] -- If the token sequence :wtrl_value:`|may|/|May|` + WS +  :wtrl_value:`not/NOT` is detected,
+  tools |must| emit at least a warning.
+  Informative: The phrase "may not" is ambiguous in English
+  and |should| be avoided in normative text.
+
+
 
 .. _common_sections:
 
@@ -954,7 +1026,7 @@ Any tool |must| recognize and dispatch the following scope identifiers:
 * :wtrl_value:`extension`
 * :wtrl_value:`core`
 
-with the the following semantics::
+with the the following semantics:
 
 * :wtrl_value:`public` -- stable API intended for general external users.
 * :wtrl_value:`extension` -- API intended for extension, plugin, or application developers.

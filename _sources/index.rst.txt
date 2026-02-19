@@ -12,6 +12,7 @@ Waterloo
 	examples.rst
 	misc.rst
 	format.rst
+	tools.rst
 	reference.rst
 
 Indices and tables
