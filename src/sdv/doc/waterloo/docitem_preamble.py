@@ -42,7 +42,7 @@ Method_overview:
 		super().__init__()
 	def label(self) -> str:
 		return "profile"
-	def parse(self,tr : tracer,refs : docstring_subtree) -> None:
+	def parse(self,tr : tracer,refs : DocstringSubtree) -> None:
 		"""
 Preamble:
 	profile:
@@ -67,13 +67,13 @@ Raises:
 		"""
 # Validate
 		if not is_list_of_str(refs):
-			raise_parsing_error_expected_but_got(tr,["PRE-014"],'str','list')
+			raise_parsing_error_expected_but_got(tr,"PRE-014",'str','list')
 # Only exactly one item is allowed
 		if len(refs) != 1:
-			raise_parsing_error_expected_but_got(tr,["PRE-004"],'exactly one item',f'{refs}')
+			raise_parsing_error_expected_but_got(tr,"PRE-004",'exactly one item',f'{refs}')
 # No need to set a default rule. _parse in the base class is
 # a complete implementation of rules LQID-001 to LQID-005.
-		super()._parse(tr, cast(docstring_subtree,refs), docitem_list_of_symbols_base.ValuePattern.IDENTIFIER)
+		super()._parse(tr, cast(DocstringSubtree,refs), docitem_list_of_symbols_base.ValuePattern.IDENTIFIER)
 	def __str__(self) -> str:
 		return " {" + ",".join(self._items) + "}"
 
@@ -104,7 +104,7 @@ Method_overview:
 		super().__init__()
 	def label(self) -> str:
 		return "normative_sections"
-	def parse(self, tr: tracer, refs: docstring_subtree) -> None:
+	def parse(self, tr: tracer, refs: DocstringSubtree) -> None:
 		"""
 Preamble:
 	profile:
@@ -147,7 +147,7 @@ Method_overview:
 		super().__init__()
 	def label(self) -> str:
 		return "status"
-	def parse(self,tr : tracer,refs : docstring_subtree) -> None:
+	def parse(self,tr : tracer,refs : DocstringSubtree) -> None:
 		"""
 Preamble:
 	profile:
@@ -172,13 +172,13 @@ Raises:
 		"""
 # Validate
 		if not is_list_of_str(refs):
-			raise_parsing_error_expected_but_got(tr,["STA-002"],'str','list')
+			raise_parsing_error_expected_but_got(tr,"STA-002",'str','list')
 # Only exactly one item is allowed
 		if len(refs) != 1:
-			raise_parsing_error_expected_but_got(tr,["STA-002"],'exactly one item',f'{refs}')
+			raise_parsing_error_expected_but_got(tr,"STA-002",'exactly one item',f'{refs}')
 # No need to set a default rule. _parse in the base class is
 # a complete implementation of rules LQID-001 to LQID-005.
-		super()._parse(tr, cast(docstring_subtree,refs), docitem_list_of_symbols_base.ValuePattern.IDENTIFIER)
+		super()._parse(tr, cast(DocstringSubtree,refs), docitem_list_of_symbols_base.ValuePattern.IDENTIFIER)
 
 	def __str__(self) -> str:
 		return " {" + ",".join(self._items) + "}"
@@ -210,7 +210,7 @@ Method_overview:
 		super().__init__()
 	def label(self) -> str:
 		return "scope"
-	def parse(self, tr: tracer, refs: docstring_subtree) -> None:
+	def parse(self, tr: tracer, refs: DocstringSubtree) -> None:
 		"""
 Preamble:
 	profile:
@@ -254,7 +254,7 @@ Method_overview:
 		super().__init__()
 	def label(self) -> str:
 		return "Preamble"
-	def parse(self,tr : tracer,subtree : docstring_subtree) -> None:
+	def parse(self,tr : tracer,subtree : DocstringSubtree) -> None:
 		"""
 Preamble:
 	profile:
@@ -283,10 +283,10 @@ Raises:
 			"scope":docitem_scope,
 			}
 		while pos < len(subtree):
-			with rules_on_fail(tr, ["PRE-015"]):
+			with rule_on_fail(tr, "PRE-015"):
 				label,pos = expect_label_identifier(tr,subtree,pos)
 			if label not in dispatch_map:
-				raise_parsing_error_invalid_label(tr,["PRE-015"],label,dispatch_map)
+				raise_parsing_error_invalid_label(tr,"PRE-015",label,dispatch_map)
 			items,pos = expect_list(tr,subtree,pos)
 			self.add_child(tr,label, dispatch_map[label], items)
 	def __str__(self) -> str:

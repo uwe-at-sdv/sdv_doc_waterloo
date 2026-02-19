@@ -2,9 +2,9 @@ from __future__ import annotations
 from enum import IntEnum
 from types import FunctionType, MappingProxyType, ModuleType
 from typing_extensions import Self, TypeIs
-from typing import Any, Callable, Dict, Final, get_type_hints, get_origin, get_args, Generator, Iterable, Iterator, List, NewType, NoReturn, Sequence, Set, Tuple, Type, TypeAlias, TypeGuard, Union, cast
+from typing import Any, Callable, Dict, Final, get_type_hints, get_origin, get_args, Generator, Iterable, Iterator, List, Literal, NewType, NoReturn, Sequence, Set, Tuple, Type, TypeAlias, TypeGuard, Union, cast
 
-import sys,re,os
+import sys,re,os,copy
 import pkgutil,inspect,importlib
 import builtins
 from contextlib import contextmanager
@@ -216,29 +216,38 @@ class ConfigTraversal:
 		return self
 	def walk_packages(self) -> bool:
 		return self._walk_packages
-	def is_member_in_module(self,obj_parent: ModuleType | None,member: Documentable_t) -> bool:
+	def is_member_in_module(self,obj_parent: ModuleType | None,member: Documentable) -> bool:
 		if obj_parent == None:
 			return True
 		return getattr(member, "__module__", None) == obj_parent.__name__
 # False means: keep traversal within the module's own namespace
 	def accept_imported_module(self,obj_parent: ModuleType,member: ModuleType) -> bool:
 		return self.include_imported() or member.__name__.startswith(obj_parent.__name__ + ".")
-	def accept_member_of_module(self,obj_parent: ModuleType,member: Documentable_t) -> bool:
+	def accept_member_of_module(self,obj_parent: ModuleType,member: Documentable) -> bool:
 		return self.include_imported() or self.is_member_in_module(obj_parent,member)
 
 #===== Typechecking ===========================================#
 
-docstring_tree: TypeAlias = List[Union[str , "docstring_tree"]]
-docstring_subtree: TypeAlias = Union[str, List["docstring_subtree"]]
+# A single string can be a docstring subtree.
+DocstringSubtree: TypeAlias = Union[str, List["DocstringSubtree"]]
 
-AnnotatedObject_t = Union[type, ModuleType]
-RuleSet = Sequence[str]
+# A docstring tree is always a list.
+DocstringTree: TypeAlias = List[DocstringSubtree]
 
-Scopes_t : TypeAlias = Set[int]
+AnnotatableObject: TypeAlias = Union[type, ModuleType, FunctionType]
 
-Documentable_t = ModuleType | type[object] | Callable[..., Any]
+RuleId: TypeAlias = str
+Origin: TypeAlias = Literal["parsing", "validation", "tool"]
+Details: TypeAlias = Dict[str,Any]
 
-def is_attr_annotated(obj : AnnotatedObject_t, attr: str) -> bool:
+Scopes: TypeAlias = Set[int]
+
+Documentable: TypeAlias = ModuleType | type[object] | Callable[..., Any]
+
+def is_annotatable(obj: Any) -> TypeGuard[AnnotatableObject]:
+	return isinstance(obj, (type, ModuleType, FunctionType))
+
+def is_attr_annotated(obj : AnnotatableObject, attr: str) -> bool:
 	"""
 	Preamble:
 		profile:
@@ -264,10 +273,9 @@ def is_attr_annotated(obj : AnnotatedObject_t, attr: str) -> bool:
 		Drift:
 			Last reviewed on 2026-02-04
 	"""
-	local_annotations = getattr(obj, "__annotations__", {})
-	return attr in local_annotations
+	return attr in get_obj_annotations(obj)
 
-def is_attr_final(obj : AnnotatedObject_t, attr: str) -> bool:
+def is_attr_final(obj : AnnotatableObject, attr: str) -> bool:
 	"""
 	Preamble:
 		profile:
@@ -429,6 +437,8 @@ def get_obj_name(obj: object) -> str:
 			function
 		normative_sections:
 			Contract, Parameters, Returns, Raises
+		scope:
+			public
 	Contract:
 		general:
 			|Must| employ reasonable heuristics to extract a representative name.
@@ -463,6 +473,8 @@ def get_obj_fully_qualified_name(obj: object) -> str:
 			function
 		normative_sections:
 			Contract, Parameters, Returns, Raises
+		scope:
+			public
 	Contract:
 		general:
 			|Must| return a fully qualified object name where possible.
@@ -680,14 +692,55 @@ def get_obj_docstring(obj: object) -> str:
 		return ""
 	return _walk(obj)
 
-def get_decorators(obj: object) -> List[str]:
+import inspect
+from typing import Any
+from types import ModuleType
+
+def get_obj_annotations(obj: object) -> dict[str, Any]:
+	r"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+	Contract:
+		general:
+			|Must| build a |type|`dict` (the |dfn|`result`) as follows:
+			|Must| analyse the object's annotations by means of |mod|`inspect`.
+			On success, |must| add the annotations to the result.
+			|Must| check for an attribute |value|`__type_params__` in the object.
+			If it exists (as of Python 3.12), |must| iterate over the\
+			|type|`tuple` |var|`obj.__type_params__` and add pairs\
+			consisting of |var|`param.__name__` and |value|`type(param)` to the result.
+	Parameters:
+		obj:
+			The object to be inspected.
+	Returns:
+		A |type|`dict` representing the object's annotations.
+	Raises:
+		BaseException:
+			|May| propagate exceptions other than |type|`TypeError` and |type|`ValueError` from module |mod|`inspect`.
+	"""
+# 1. Classic annotations (variables, methods, etc.)
+	try:
+		results = dict(inspect.get_annotations(obj, eval_str=False)) if is_annotatable(obj) else {}
+	except (TypeError, ValueError):
+		results = {}
+# 2. Python 3.12+ Type Aliases (PEP 695)
+	if hasattr(obj, "__type_params__"):
+		for param in obj.__type_params__:
+			results[param.__name__] = type(param)
+	return results
+
+
+def get_obj_decorators(obj: object) -> List[str]:
 	try:
 		code = inspect.getsource(cast(Callable[...,Any],obj))
 		return [line.strip() for line in code.splitlines() if line.strip().startswith('@')]
 	except:
 		return []
 
-def gen_documentable_objects(obj: Documentable_t,config: ConfigTraversal = ConfigTraversal()) -> Generator[Documentable_t,None,None]:
+def gen_documentable_objects(obj: Documentable,config: ConfigTraversal = ConfigTraversal()) -> Generator[Documentable,None,None]:
 	"""
 Preamble:
 	profile:
@@ -710,8 +763,8 @@ Returns:
 	|Must| return a Generator which yields objects from tree traversal of |var|`obj`
 Raises:
 	"""
-	_seen: Set[Documentable_t] = set()
-	def _iter(o: Documentable_t,seen: Set[Documentable_t]) -> Generator[Documentable_t,None,None]:
+	_seen: Set[Documentable] = set()
+	def _iter(o: Documentable,seen: Set[Documentable]) -> Generator[Documentable,None,None]:
 		if o in seen:
 			return
 # With the seen-mechanisms each direct yield must be paired with updating `seen`.
@@ -762,12 +815,12 @@ Raises:
   
 #===== Tracing ================================================#
 class tracer:
-	"""
+	r"""
 Preamble:
 	profile:
 		class
 	normative_sections:
-		Contract
+		Contract, Public_types
 Terminology:
 	rules on fail:
 		Low-level functions may find a parsing or validation warning or error,
@@ -786,14 +839,14 @@ Contract:
 		|Must| provide a method for rendering the list of infos as a string.
 		|Must| provide a generator which allows iterating over the list of infos.
 
-		|Must| maintain a list of warnings, where each entry is a tuple consisting of list of Rule-IDs and a free-form message.
+		|Must| maintain a list of warnings, where each entry is a tuple consisting of one Rule-ID and a free-form message.
 		|Must| provide a method for adding such a warning entry.
 		|Must| allow to query if warnings have been added.
 		|Must| provide a method for clearing the list of warnings.
 		|Must| provide a method for rendering the list of warnings as a string.
 		|Must| provide a generator which allows iterating over the list of warnings.
 
-		|Must| maintain a list of errors, where each entry is a tuple consisting of list of Rule-IDs and a free-form message.
+		|Must| maintain a list of errors, where each entry is a tuple consisting of one Rule-ID and a free-form message.
 		|Must| provide a method for adding such a error entry.
 		|Must| allow to query if errors have been added.
 		|Must| provide a method for clearing the list of errors.
@@ -802,32 +855,41 @@ Contract:
 
 		|Must| manage a set of ignore-rule instructions
 
-		|Must| provide a stack containing the current set of |dfn|`rules on fail` being validated against.
-		|Must| provide an api like |func|`push...`, |func|`pop...`, |func|`get...` for the |dfn|`rules on fail` stack.
+		|Must| provide a stack containing the current |dfn|`rule on fail` being validated against.
+		|Must| provide an api like |func|`push...`, |func|`pop...`, |func|`get...` for the |dfn|`rule on fail` stack.
 
 		|Must| provide a stack containing the current set of |dfn|`scopes` being validated against.
 		|Must| provide an api like |func|`push...`, |func|`pop...`, |func|`get...` for the |dfn|`scopes` stack.
 	constructor:
 		|Must| be default-constructible.
+Public_types:
+	Context:
+		A list of strings built per context manager during parsing and validation.\
+		Entries can be module, class or function names, or labels.
 	"""
+	Context: TypeAlias = List[str]
+
 	def __init__(self) -> None:
 		self._names : List[str] = []
-# Infos are for debugging
-		self._infos : List[str] = []
-# This is a list of warnings, where each entry consists of a list of RuleIDs and a free-form text.
-		self._warnings : List[Tuple[Sequence[str],str]] = []
-		self._errors : List[Tuple[Sequence[str],str]] = []
+# Debugging notes
+		self._debug : List[Tuple[tracer.Context,Origin,str]] = []
+# Infos
+		self._infos : List[Tuple[tracer.Context,Origin,str]] = []
+# This is a list of warnings, where each entry consists of a RuleID and a free-form text.
+		self._warnings : List[Tuple[tracer.Context,RuleId,Origin,str,Details]] = []
+		self._errors : List[Tuple[tracer.Context,RuleId,Origin,str,Details]] = []
 # Rules to ignore
 		self._ignrules : Set[str] = set()
-# Rules in case a low-level function fails. We make sure there is always a set of rules
+# Rule in case a low-level function fails. We make sure there is always a rule
 # so nothing will crash, but of course we don't want to see this one.
-		self._rules_on_fail : List[RuleSet] = [["YYY-999"]]
+		self._rule_on_fail : List[RuleId] = ["YYY-999"]
 # The scopes for validation. Successful validation requires that rules
 # SCP-### are fulfilled. The default is a set with a single element CORE
-		self._scopes : List[Scopes_t] = [set([Scope.CORE])]
+		self._scopes : List[Scopes] = [set([Scope.CORE])]
 
 	def __str__(self) -> str:
 		t = ""
+		t += "Debug:\n" + self.to_string_debug_notes() + "\n"
 		t += "Infos:\n" + self.to_string_infos() + "\n"
 		t += "Warnings:\n" + self.to_string_warnings() + "\n"
 		t += "Error:\n" + self.to_string_errors() + "\n"
@@ -843,45 +905,58 @@ Contract:
 		return self._names[-1] == name if len(self._names) > 0 else False
 	def to_string(self) -> str:
 		return "->".join(self._names)
+#----- Debug --------------------------------------------------#
+	def clear_debug_notes(self) -> None:
+		self._debug = []
+	def has_debug_notes(self) -> bool:
+		return len(self._debug) > 0
+	def add_debug_note(self,msg : str,origin: Origin = "tool") -> None:
+		self._debug.append((copy.copy(self._names),origin,msg))
+	def to_string_debug_notes(self) -> str:
+		return "\n".join([f"[{origin}] {msg}" for context,origin,msg in self._debug])
+# Implement your own pretty printing.
+	def gen_debug_notes(self) -> Generator[Tuple[tracer.Context,Origin,str],None,None]:
+		for context,origin,msg in self._debug:
+			yield context,origin,msg
 #----- Infos --------------------------------------------------#
 	def clear_infos(self) -> None:
 		self._infos = []
 	def has_infos(self) -> bool:
 		return len(self._infos) > 0
-	def add_info(self,msg : str) -> None:
-		self._infos.append(msg)
+	def add_info(self,msg : str,origin: Origin = "tool") -> None:
+		self._infos.append((copy.copy(self._names),origin,msg))
 	def to_string_infos(self) -> str:
-		return "\n".join([f"{msg}" for msg in self._infos])
+		return "\n".join([f"[{origin}] {msg}" for context,origin,msg in self._infos])
 # Implement your own pretty printing.
-	def gen_infos(self) -> Generator[str,None,None]:
-		for msg in self._infos:
-			yield msg
+	def gen_infos(self) -> Generator[Tuple[tracer.Context,Origin,str],None,None]:
+		for context,origin,msg in self._infos:
+			yield context,origin,msg
 #----- Warnings -----------------------------------------------#
 	def clear_warnings(self) -> None:
 		self._warnings = []
 	def has_warnings(self) -> bool:
 		return len(self._warnings) > 0
-	def add_warning(self,rule_ids : Sequence[str], msg : str) -> None:
-		self._warnings.append((rule_ids,msg))
+	def add_warning(self,rule_id : RuleId, origin: Origin, msg : str,/,details: Details | None = None) -> None:
+		self._warnings.append((copy.copy(self._names),rule_id,origin,msg,details or {}))
 	def to_string_warnings(self) -> str:
-		return "\n".join([f"[Rule {','.join(rid)}] {msg}"  for rid,msg in self._warnings])
+		return "\n".join([f"[Rule {rid}] [{origin}] {msg}"  for context,rid,origin,msg,details in self._warnings])
 # Implement your own pretty printing.
-	def gen_warnings(self) -> Generator[Tuple[Sequence[str],str],None,None]:
-		for rids,msg in self._warnings:
-			yield rids,msg
+	def gen_warnings(self) -> Generator[Tuple[tracer.Context,RuleId,Origin,str,Details],None,None]:
+		for context,rid,origin,msg,details in self._warnings:
+			yield context,rid,origin,msg,details
 #----- Errors -------------------------------------------------#
 	def clear_errors(self) -> None:
 		self._errors = []
 	def has_errors(self) -> bool:
 		return len(self._errors) > 0
-	def add_error(self,rule_ids : Sequence[str], msg : str) -> None:
-		self._errors.append((rule_ids,msg))
+	def add_error(self,rule_id : RuleId, origin: Origin, msg : str,/,details: Details | None = None) -> None:
+		self._errors.append((copy.copy(self._names),rule_id,origin,msg,details or {}))
 	def to_string_errors(self) -> str:
-		return "\n".join([f"[Rule {','.join(rid)}] {msg}"  for rid,msg in self._errors])
+		return "\n".join([f"[Rule {rid}] [{origin}] {msg}"  for context,rid,origin,msg,details in self._errors])
 # Implement your own pretty printing.
-	def gen_errors(self) -> Generator[Tuple[Sequence[str],str],None,None]:
-		for rids,msg in self._errors:
-			yield rids,msg
+	def gen_errors(self) -> Generator[Tuple[tracer.Context,RuleId,Origin,str,Details],None,None]:
+		for context,rid,origin,msg,details in self._errors:
+			yield context,rid,origin,msg,details
 #----- Ignores ------------------------------------------------#
 	def clear_ignored(self) -> None:
 		self._ignrules = set()
@@ -895,22 +970,22 @@ Contract:
 		for rule in self._ignrules:
 			yield rule
 #----- Rules on fail ------------------------------------------#
-	def clear_rules_on_fail(self) -> None:
-		self._rules_on_fail = [["YYY-999"]]
-	def push_rules_on_fail(self,rule_ids : RuleSet) -> None:
-		self._rules_on_fail.append(rule_ids)
-	def pop_rules_on_fail(self) -> None:
-		del self._rules_on_fail[-1]
-	def get_rules_on_fail(self) -> RuleSet:
-		return self._rules_on_fail[-1]
+	def clear_rule_on_fail(self) -> None:
+		self._rule_on_fail = ["YYY-999"]
+	def push_rule_on_fail(self,rule_id : RuleId) -> None:
+		self._rule_on_fail.append(rule_id)
+	def pop_rule_on_fail(self) -> None:
+		del self._rule_on_fail[-1]
+	def get_rule_on_fail(self) -> RuleId:
+		return self._rule_on_fail[-1]
 #----- Scopes -------------------------------------------------#
 	def clear_scopes(self) -> None:
 		self._scopes = []
-	def push_scopes(self,scopes : Scopes_t) -> None:
+	def push_scopes(self,scopes : Scopes) -> None:
 		self._scopes.append(scopes)
 	def pop_scopes(self) -> None:
 		del self._scopes[-1]
-	def get_scopes(self) -> Scopes_t:
+	def get_scopes(self) -> Scopes:
 		return self._scopes[-1]
 
 @contextmanager
@@ -925,12 +1000,12 @@ def traced_section(tr: tracer, name: str) -> Generator[None, None, None]:
 		if something_pushed:
 			tr.pop()
 @contextmanager
-def rules_on_fail(tr: tracer, rule_ids: RuleSet) -> Generator[None, None, None]:
-	tr.push_rules_on_fail(rule_ids)
+def rule_on_fail(tr: tracer, rule_id: RuleId) -> Generator[None, None, None]:
+	tr.push_rule_on_fail(rule_id)
 	try:
 		yield
 	finally:
-		tr.pop_rules_on_fail()
+		tr.pop_rule_on_fail()
 
 #===== Exceptions =============================================#
 
@@ -950,7 +1025,7 @@ class NoContentError(RuntimeError):
 	def __init__(self,msg : str) -> None:
 		super().__init__(msg)
 
-def raise_has_no_docstring(tr : tracer, rule_ids: Sequence[str], obj : object) -> NoReturn:
+def raise_has_no_docstring(tr : tracer, rule_id: RuleId, obj : object) -> NoReturn:
 	if is_obj_module(obj):
 		categ = "module"
 #		name = obj.__name__
@@ -963,59 +1038,51 @@ def raise_has_no_docstring(tr : tracer, rule_ids: Sequence[str], obj : object) -
 	else:
 		categ = "object"
 #		name = "unknown"
-	msg = f"[Parsing] from '{tr.to_string()}': {categ} has no docstring"
-	tr.add_error(rule_ids, msg)
+	msg = f"{categ} has no docstring"
+	tr.add_error(rule_id, "parsing", msg)
 	raise ParseError(msg)
 
-def raise_parsing_error(tr : tracer, rule_ids: Sequence[str], msg : str) -> NoReturn:
-	out = f"[Parsing] from '{tr.to_string()}': {msg}"
-	tr.add_error(rule_ids, out)
+def raise_parsing_error(tr : tracer, rule_id: RuleId, msg : str) -> NoReturn:
+	out = msg
+	tr.add_error(rule_id, "parsing", out)
 	raise ParseError(out)
 
-def raise_parsing_error_expected_but_got(tr : tracer, rule_ids: Sequence[str], expected : str, got : str) -> NoReturn:
-	out = f"[Parsing] from '{tr.to_string()}': expected {expected}, but got {got}"
-	tr.add_error(rule_ids, out)
+def raise_parsing_error_expected_but_got(tr : tracer, rule_id: RuleId, expected : str, got : str) -> NoReturn:
+	out = f"expected {expected}, but got {got}"
+	tr.add_error(rule_id, "parsing", out)
 	raise ParseError(out)
 
-def raise_parsing_error_invalid_label(tr : tracer, rule_ids: Sequence[str],found : str,allowed : Iterable[str]) -> NoReturn:
+def raise_parsing_error_invalid_label(tr : tracer, rule_id: RuleId,found : str,allowed : Iterable[str]) -> NoReturn:
 	details : str = ""
 	if found[-1] != ":":
 		details = " (the colon seems to be missing)"
-	out = f"[Parsing] from '{tr.to_string()}': '{found}' is not a valid label, allowed: {{{', '.join(allowed)}}}{details}"
-	tr.add_error(rule_ids, out)
+	out = f"'{found}' is not a valid label, allowed: {{{', '.join(allowed)}}}{details}"
+	tr.add_error(rule_id, "parsing", out)
 	raise ParseError(out)
 
-def raise_validation_error(tr : tracer,obj: object, rule_ids: Sequence[str], msg : str) -> NoReturn:
-	out = f"[Validation] from '{tr.to_string()}': {msg}"
-	tr.add_error(rule_ids, out)
+def raise_validation_error(tr : tracer,obj: object, rule_id: RuleId, msg : str) -> NoReturn:
+	out = msg
+	tr.add_error(rule_id, "validation", out)
 	raise ValidationError(out)
 
-def raise_validation_error_expected_but_got(tr : tracer,obj: object, rule_ids: Sequence[str], expected : str, got : str) -> NoReturn:
-	out = f"[Validation] from '{tr.to_string()}': expected {expected}, but got {got}"
-	tr.add_error(rule_ids, out)
+def raise_validation_error_expected_but_got(tr : tracer,obj: object, rule_id: RuleId, expected : str, got : str) -> NoReturn:
+	out = f"expected {expected}, but got {got}"
+	tr.add_error(rule_id, "validation", out)
 	raise ParseError(out)
 
 
-def warn_parsing(tr : tracer, rule_ids: Sequence[str], msg : str) -> None:
-	if rule_ids and all(tr.should_ignore_rule(rid) for rid in rule_ids):
+def warn_parsing(tr : tracer, rule_id: RuleId, msg : str) -> None:
+	if tr.should_ignore_rule(rule_id):
 		return
-	rule_txt = ""
-	if rule_ids:
-		rule_txt = f"[Rules: {', '.join(rule_ids)}] "
-	tr.add_warning(rule_ids, f"from '{tr.to_string()}': {msg}")
+	tr.add_warning(rule_id,"parsing",msg)
 
 """
 Record a validation warning without raising.
 """
-def warn_validation(tr: tracer, obj: object, rule_ids: Sequence[str], msg: str) -> None:
-# If all rule_ids are ignored, skip recording the warning.
-	if rule_ids and all(tr.should_ignore_rule(rid) for rid in rule_ids):
+def warn_validation(tr: tracer, obj: object, rule_id: RuleId, msg: str) -> None:
+	if tr.should_ignore_rule(rule_id):
 		return
-	name = get_obj_name(obj)
-	rule_txt = ""
-	if rule_ids:
-		rule_txt = f"[Rules: {', '.join(rule_ids)}] "
-	tr.add_warning(rule_ids, f"from '{tr.to_string()}': In object '{name}': {msg}")
+	tr.add_warning(rule_id, "validation", msg)
 
 #===== Self-test ==============================================#
 

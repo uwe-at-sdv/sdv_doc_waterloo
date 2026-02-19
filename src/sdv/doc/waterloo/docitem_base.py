@@ -24,23 +24,30 @@ except ImportError:
 # By Sequence we make sure that nothing can be appended
 # or removed. With List this would not be guaranteed.
 # Another interesting variant would be frozenset.
-KEYWORDS_OF_NORMATIVITY : Final[Sequence[str]] = (
- "|must|",
- "|Must|",
- "|must_not|",
- "|Must_not|",
- "|should|",
- "|Should|",
- "|should_not|",
- "|Should_not|",
- "|may|",
- "|May|",
+KEYWORDS_OF_NORMATIVITY: Final[Sequence[str]] = (
+	"|must|",
+	"|Must|",
+	"|must_not|",
+	"|Must_not|",
+	"|should|",
+	"|Should|",
+	"|should_not|",
+	"|Should_not|",
+	"|may|",
+	"|May|",
 # Some documentation guidelines allow these and we should not
 # deliberately restrict their use, even if we don't use them ourselves.
- "|may_not|",
- "|May_not|",
- )
+	"|may_not|",
+	"|May_not|",
+	)
 
+RE_PARTIAL_NORMATIVITY_PATTERN_A_COMPILED: Final[Sequence[re.Pattern[str]]] = (
+	re.compile(r"\|[Mm]ust\|\s+not\b"),
+	re.compile(r"\|[Ss]hould\|\s+not\b"),
+	)
+RE_PARTIAL_NORMATIVITY_PATTERN_B_COMPILED: Final[Sequence[re.Pattern[str]]] = (
+	re.compile(r"\|[Mm]ay\|\s+not\b"),
+	)
 #===== begin base classes =====================================#
 
 class docitem_base:
@@ -70,7 +77,25 @@ Method_overview:
 	items:
 		Return an iterable over the child items.
 	"""
-	def parse(self,tr : tracer,subtree : docstring_subtree) -> None:
+	def __init__(self) -> None:
+		self._parent: docitem_base | None = None
+	def label(self) -> str:
+		return "<Unspecified>"
+	def set_parent(self,p: docitem_base) -> None:
+		self._parent = p
+	def parent(self) -> docitem_base | None:
+		return self._parent
+# Identity. At some point isinstance is not convenient because
+# this would require cyclic imports, which we do not want.
+# This is a pragmatic workaround.
+	@classmethod
+	def is_docstring_module(cls) -> bool:
+		return False
+	@classmethod
+	def is_docstring_class(cls) -> bool:
+		return False
+
+	def parse(self,tr : tracer,subtree : DocstringSubtree) -> None:
 		r"""
 		Preamble:
 			profile:
@@ -133,6 +158,8 @@ Method_overview:
 		raise NotImplementedError
 	def has_token(self,token : str) -> bool:
 		raise NotImplementedError
+	def detect_partial_normativity(self,tr: tracer) -> bool:
+		raise NotImplementedError
 
 class docitem_list_base(docitem_base):
 	"""
@@ -192,6 +219,26 @@ Description:
 			if token in item:
 				return True
 		return False
+	def detect_partial_normativity(self,tr: tracer) -> bool:
+		ok: bool = True
+		with traced_section(tr,self.label()):
+			for p in RE_PARTIAL_NORMATIVITY_PATTERN_A_COMPILED:
+				i = 0
+				for item in self.items():
+					with traced_section(tr,f"[{i}]"):
+						if p.search(item):
+							warn_parsing(tr,"PNB-002","Bad normativity pattern detected: one of {|must| not, |should| not}.")
+							ok = False
+					i += 1
+			for p in RE_PARTIAL_NORMATIVITY_PATTERN_B_COMPILED:
+				i = 0
+				for item in self.items():
+					with traced_section(tr,f"[{i}]"):
+						if p.search(item):
+							warn_parsing(tr,"PNB-003","Bad normativity pattern detected: |may| not.")
+							ok = False
+					i += 1
+		return ok
 
 class docitem_map_base(docitem_base):
 	"""
@@ -217,12 +264,16 @@ Method_overview:
 	"""
 	def __init__(self) -> None:
 		self._items : Dict[str,docitem_base] = {}
-	def add_child(self, tr : tracer, label: str, cls: Type[docitem_base], items: docstring_subtree) -> None:
+	def add_child(self, tr : tracer, label: str, cls: Type[docitem_base], items: DocstringSubtree) -> None:
 # This is the parent label. We need to know.
 		with traced_section(tr, label):
 			if label in self._items:
-				raise_parsing_error(tr,["PRSR-002"],f"Label '{label}' appears more than once.")
+				raise_parsing_error(tr,"PRSR-002",f"Label '{label}' appears more than once.")
+# This is the only point where we create a node and add it as a child.
+# All node classes which may have node-like children must be derived
+# from this class.
 			child = cls()
+			child.set_parent(self)
 			child.parse(tr,items)
 			self._items[label] = child
 	def items(self) -> Dict[str,docitem_base]:
@@ -255,6 +306,13 @@ Raises:
 			if item.has_token(token):
 				return True
 		return False
+	def detect_partial_normativity(self,tr: tracer) -> bool:
+		ok: bool = True
+		with traced_section(tr,self.label()):
+			for label,item in self.items().items():
+				with traced_section(tr,f"'{label}'"):
+					ok &= item.detect_partial_normativity(tr)
+		return ok
 
 class docitem_list_of_symbols_base(docitem_list_base):
 	"""
@@ -302,7 +360,7 @@ class docitem_list_of_symbols_base(docitem_list_base):
 		"""
 		IDENTIFIER = 1
 		QUALIFIED_IDENTIFIER = 2
-	def _parse(self,tr : tracer,refs : docstring_subtree,pattern : ValuePattern) -> None:
+	def _parse(self,tr : tracer,refs : DocstringSubtree,pattern : ValuePattern) -> None:
 		"""
 		Preamble:
 			profile:
@@ -337,7 +395,7 @@ class docitem_list_of_symbols_base(docitem_list_base):
 		for ref in refs:
 # Only string are allowed (not list of something)
 			if not isinstance(ref,str):
-				raise_parsing_error_expected_but_got(tr,["LQID-001"],'str', f'{ref}')
+				raise_parsing_error_expected_but_got(tr,"LQID-001",'str', f'{ref}')
 # We allow a comma separated string of qualified identifiers.
 # Strip due to rule LQID-003
 			segments = map(str.strip,ref.split(","))
@@ -347,9 +405,9 @@ class docitem_list_of_symbols_base(docitem_list_base):
 				re_compiled = RE_IDENTIFIER_COMPILED
 			for seg in segments:
 				if seg in seen:
-					raise_parsing_error(tr, ["LQID-004"], f"duplicate entry {seg}.")
+					raise_parsing_error(tr, "LQID-004", f"duplicate entry {seg}.")
 				if not RE_QUALIFIED_IDENTIFIER_COMPILED.fullmatch(seg):
-					raise_parsing_error_expected_but_got(tr,["LQID-002"],'[qualified] identifier',f'{seg}')
+					raise_parsing_error_expected_but_got(tr,"LQID-002",'[qualified] identifier',f'{seg}')
 				refs_split.append(seg)
 				seen.add(seg)
 # We have a flat list, rule LQID-005.

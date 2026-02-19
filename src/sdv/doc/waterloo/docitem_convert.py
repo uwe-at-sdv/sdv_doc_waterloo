@@ -246,7 +246,7 @@ def build_node_json(node_docstring: docitem_docstring_base, flavour: Flavour) ->
 		m[label] = build_node_section_json(label,node_docstring.item(label),flavour)
 	return m
 
-def to_node_docstring_tree_json(tree: docstring_tree, flavour: Flavour) -> WtrlJsonNode_t:
+def to_node_docstring_tree_json(tree: DocstringTree, flavour: Flavour) -> WtrlJsonNode_t:
 	r"""
 	Preamble:
 		profile:
@@ -317,7 +317,7 @@ def to_node_legend_json() -> Dict[str, WtrlJsonNode_t]:
 
 #===== MARKDOWN ===============================================#
 
-def to_string_md(tree: docstring_tree, flavour: Flavour = Flavour.MARKDOWN, headings: bool = True) -> str:
+def to_string_md(tree: DocstringTree, flavour: Flavour = Flavour.MARKDOWN, headings: bool = True) -> str:
 	r"""
 	Preamble:
 		profile:
@@ -657,7 +657,7 @@ def to_string_signature_yaml(obj: object, config: YamlConfig = YamlConfig()) -> 
 	_emit_node(out_lines, yaml_dict, config)
 	return "\n".join(out_lines) + "\n"
 
-def to_string_yaml(tree: docstring_tree, flavour: Flavour, config: YamlConfig = YamlConfig()) -> str:
+def to_string_yaml(tree: DocstringTree, flavour: Flavour, config: YamlConfig = YamlConfig()) -> str:
 	r"""
 	Preamble:
 		profile:

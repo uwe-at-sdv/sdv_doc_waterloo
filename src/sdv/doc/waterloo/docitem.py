@@ -17,7 +17,7 @@ Contract:
 		|Must| provide validator functions for docstrings for modules, classes and callables.
 		|Must| provide functions for verifying coverage where applicable.
 Public_functions:
-	is_attr_annotated, is_attr_final, get_obj_name, get_obj_path, resolve_object, get_status, get_profile, get_num_indent
+	is_attr_annotated, is_attr_final, get_obj_name, get_obj_path, get_obj_annotations, resolve_object, get_status, get_profile, get_num_indent
 	parse_indent_docstring, get_tree_of_section, get_tree_of_subsection, to_string_tree
 	validate_docstring_method, validate_docstring_inherited_method, validate_docstring_class
 	validate_docstring_module, validate_docstring, validate_class_class_coverage
@@ -206,11 +206,11 @@ Class_overview:
 	docitem_docstring_inherited_method:
 		Node class for an inherited method docstring
 Public_types:
-	docstring_tree:
+	DocstringTree:
 		The type alias for docstring trees.
-	Documentable_t:
+	Documentable:
 		Type for objects that can have a docstring.
-	Scopes_t:
+	Scopes:
 		Type alias for a set of scopes.
 Public_constants:
 	RE_IDENTIFIER:
@@ -229,8 +229,6 @@ Public_constants:
 		Map string representations of output formats to symbolic/numeric values.
 """
 
-# Todo: think about Contract.import_side_fx
-
 import sys,re
 import inspect,importlib
 import builtins
@@ -248,7 +246,9 @@ try:
 except ImportError:
 	from sdv.doc.waterloo.docitem_validator import *
 
-__version__ = "0.2.0"
+__version__ = "0.4.0"
+# - 0.4.0 [2026-02-19]	Major changes in class tracer: Debugging, detailed error records.
+# - 0.3.0 [2026-02-18]	Partial Normativity Detection (PNB-rules)
 # - 0.2.0 [2026-02-15]	Sphinx: Clickable references in Public_*, *_overview, See_also, and Derived_from;
 #			JSON: trait `generator`.
 # - 0.1.2 [2026-02-14]	Moved Waterloo specific stuff away from docitem_sphinx.py

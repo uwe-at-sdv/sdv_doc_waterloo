@@ -57,7 +57,7 @@ Method_overview:
 		raise NotImplementedError
 	def label(self) -> str:
 		return "docstring"
-	def scopes(self) -> Scopes_t:
+	def scopes(self) -> Scopes:
 		"""
 		Preamble:
 			profile:
@@ -88,7 +88,7 @@ Method_overview:
 			return set([Scope.PUBLIC])
 		node_scope = node_preamble.item("scope")
 		return set([SCOPE_TAG_MAP[s] for s in node_scope.items()])
-	def is_visible(self,sc_query: Scopes_t) -> bool:
+	def is_visible(self,sc_query: Scopes) -> bool:
 		r"""
 		Preamble:
 			profile:
@@ -117,7 +117,7 @@ Method_overview:
 		"""
 		scopes_obj = self.scopes()
 		return any(s_obj <= s_query for s_query in sc_query for s_obj in scopes_obj)
-	def can_see(self,sc_query: Scopes_t) -> bool:
+	def can_see(self,sc_query: Scopes) -> bool:
 		r"""
 		Preamble:
 			profile:
@@ -176,7 +176,7 @@ Method_overview:
 		scopes_trg = obj_trg.scopes()
 		return any(s_src <= s_trg for s_src in scopes_src for s_trg in scopes_trg)
 		
-	def parse(self,tr : tracer,tree : docstring_subtree) -> None:
+	def parse(self,tr : tracer,tree : DocstringSubtree) -> None:
 		"""
 Preamble:
 	profile:
@@ -206,23 +206,23 @@ Raises:
 		dmap = self.dispatch_map()
 		while pos < len(tree):
 # Section labels must be identifiers.
-			with rules_on_fail(tr, ["PRSR-005"]):
+			with rule_on_fail(tr, "PRSR-005"):
 				label,pos = expect_label_identifier(tr,tree,pos)
 			if label in dmap:
 				if label == "Preamble":
 					found_preamble = True
 				elif not found_preamble:
-					raise_parsing_error(tr,["PRE-001"],"Preamble is not first.")
+					raise_parsing_error(tr,"PRE-001","Preamble is not first.")
 				items,pos = expect_list(tr,tree,pos)
 				self.add_child(tr,label, dmap[label], items)
 			else:
 # Choose profile-specific rule for unexpected sections.
 				if isinstance(self, docitem_docstring_module):
-					rule_ids = ["DOC-003"]
+					rule_ids = "DOC-003"
 				elif isinstance(self, docitem_docstring_class):
-					rule_ids = ["DOC-004"]
+					rule_ids = "DOC-004"
 				else:
-					rule_ids = ["DOC-005"]
+					rule_ids = "DOC-005"
 				raise_parsing_error_invalid_label(tr,rule_ids,label,dmap)
 
 class docitem_docstring_module(docitem_docstring_base):
@@ -251,6 +251,9 @@ Method_overview:
 	"""
 	def __init__(self) -> None:
 		super().__init__()
+	@classmethod
+	def is_docstring_module(cls) -> bool:
+		return True
 	def label(self) -> str:
 		return "docstring"
 	def dispatch_map(self) -> Dict[str, Type[docitem_base]]:
@@ -312,6 +315,9 @@ Method_overview:
 	"""
 	def __init__(self) -> None:
 		super().__init__()
+	@classmethod
+	def is_docstring_class(cls) -> bool:
+		return True
 	def label(self) -> str:
 		return "docstring"
 	def dispatch_map(self) -> Dict[str, Type[docitem_base]]:
@@ -460,25 +466,25 @@ Raises:
 		 "See_also":docitem_see_also,
 		 }
 
-def make_docitem_tree_from_docstring_tree(tr : tracer, tree : docstring_tree) -> docitem_docstring_base:
+def make_docitem_tree_from_docstring_tree(tr : tracer, tree : DocstringTree) -> docitem_docstring_base:
 # Extract profile
 	if tree == []:
-		raise_parsing_error(tr,["DOC-007"],"Empty docstring.")
+		raise_parsing_error(tr,"DOC-007","Empty docstring.")
 	try:
 		profile = get_profile_of_tree(tr,tree)
 	except SectionNotFoundError:
-		raise_parsing_error(tr,["PRE-001"],"Section 'Preamble' not found.")
+		raise_parsing_error(tr,"PRE-001","Section 'Preamble' not found.")
 	except SubsectionNotFoundError:
-		raise_parsing_error(tr,["PRE-003"],"Subsection 'Preamble.profile' not found.")
+		raise_parsing_error(tr,"PRE-003","Subsection 'Preamble.profile' not found.")
 	except NoContentError:
-		raise_parsing_error(tr,["PRE-004"],"Section 'Preamble.profile' must have exactly one item.")
+		raise_parsing_error(tr,"PRE-004","Section 'Preamble.profile' must have exactly one item.")
 	except Exception as exc:
 		raise
-#		raise_parsing_error(tr,["UNSP-999"],f"get_profile_of_tree: Unspecified error, check implementation: {exc}.")
+#		raise_parsing_error(tr,"UNSP-999",f"get_profile_of_tree: Unspecified error, check implementation: {exc}.")
 # This looks redundant because later we directly check for allowed profiles, but
 # we should check the rules in certain order so that behaviour remains predictible.
 	if not RE_IDENTIFIER_COMPILED.fullmatch(profile):
-		raise_parsing_error(tr,["PRE-014"],"'Preamble.profile' must be an identifier.")
+		raise_parsing_error(tr,"PRE-014","'Preamble.profile' must be an identifier.")
 # Now we know the profile is an identifier.
 	di_node : docitem_docstring_base
 	if profile == "module":
@@ -490,7 +496,7 @@ def make_docitem_tree_from_docstring_tree(tr : tracer, tree : docstring_tree) ->
 	elif profile == "inherited_method":
 		di_node = docitem_docstring_inherited_method()
 	else:
-		raise_parsing_error(tr,["PRE-005"],f"invalid profile: '{profile}'")
+		raise_parsing_error(tr,"PRE-005",f"invalid profile: '{profile}'")
 	di_node.parse(tr,tree)
 	return di_node
 

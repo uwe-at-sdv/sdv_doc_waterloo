@@ -23,6 +23,7 @@ dynamic = ["version"]
 dependencies = [
 	"jsonschema",
 	"jsonpointer",
+	"docutils"
 	]
 
 # Optional dependencies.

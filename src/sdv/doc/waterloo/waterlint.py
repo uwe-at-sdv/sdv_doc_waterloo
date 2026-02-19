@@ -23,9 +23,12 @@ import json
 
 from jsonpointer import JsonPointerException, resolve_pointer
 from jsonschema import Draft202012Validator
+#from jsonschema import JSONDecodeError
+import jsonschema.exceptions
 
-__version__ = "0.2.4"
-# - 0.2.3 [2026-02-12]	Subcommand render-json: traits, decorators, default output filename.
+__version__ = "0.3.0"
+# - 0.3.0 [2026-02-19]	Several refactorings concerning error handling, raw and JSON.
+# - 0.2.4 [2026-02-12]	Subcommand render-json: traits, decorators, default output filename.
 # - 0.2.3 [2026-02-12]	Subcommand version-json: prints only the JSON-schema version string.
 # - 0.2.2 [2026-02-12]	Subcommand version: prints only the waterlint version string.
 # - 0.2.1 [2026-02-12]	Subcommand validate-json: --schema is now optional; automatic detection applies.
@@ -68,28 +71,81 @@ with contextlib.redirect_stdout(sys.stderr):
 
 #===== Constants ==============================================#
 
-#----- Add subcommands here -----------------------------------#
+#----- Schema versions, keep up to date -----------------------#
 WTRL_JSON_SCHEMA_VERSION = "0.0.4"
+WTRL_TRACER_JSON_SCHEMA_VERSION = "0.0.2"
+
+#----- Add subcommands here -----------------------------------#
 SUBCOMMANDS = ("validate","coverage","extract","validate-json","render-json","list-schemas","version","version-json")
 
 #===== Helper =================================================#
 
 def _emit_diagnostics(tr: tracer, dest: io.TextIOBase) -> None:
-	for msg in tr.gen_infos():
-		print(f"Info: {msg}", file=dest)
-	for rule_ids, msg in tr.gen_errors():
-		rule_txt = ""
-		if rule_ids:
-			rule_txt = f"[Rules: {', '.join(rule_ids)}] "
-		print(f"Error: {rule_txt}{msg}", file=dest)
-	for rule_ids, msg in tr.gen_warnings():
-		rule_txt = ""
-		if rule_ids:
-			rule_txt = f"[Rules: {', '.join(rule_ids)}] "
-		print(f"Warning: {rule_txt}{msg}", file=dest)
+#----- Debug notes --------------------------------------------#
 	if _debug:
-		for msg in tr.gen_infos():
-			print(f"Info: {msg}", file=dest)
+		for context,origin,msg in tr.gen_debug_notes():
+			print(f"Debug[{origin}]: {msg}", file=dest)
+#----- Infos --------------------------------------------------#
+	for context,origin,msg in tr.gen_infos():
+		print(f"Info[{origin}]: {msg}", file=dest)
+#----- Warnings -----------------------------------------------#
+	for context,rule_id,origin,msg,details in tr.gen_warnings():
+		rule_txt = ""
+		if rule_id:
+			rule_txt = f"[Rule: {rule_id}] "
+		print(f"Warning[{origin}]: {rule_txt}{msg}", file=dest)
+#----- Errors -------------------------------------------------#
+	for context,rule_id,origin,msg,details in tr.gen_errors():
+		rule_txt = ""
+		if rule_id:
+			rule_txt = f"[Rule: {rule_id}] "
+		print(f"Error[{origin}]: {rule_txt}{msg}", file=dest)
+
+def _build_tracer_json_doc(tr: tracer) -> dict[str, Any]:
+	doc: dict[str, Any] = {
+		"$schema": f"https://sci-d-vis.com/schema/wtrl-tracer-json-{WTRL_TRACER_JSON_SCHEMA_VERSION}.schema.json",
+		"$id": f"urn:waterlint:{__version__}:diag:{datetime.now().strftime('%Y%m%d%H%M%S')}",
+		"__WTRL_VERSION__": {
+			"waterloo": docitem.__version__,
+			"schema": WTRL_TRACER_JSON_SCHEMA_VERSION,
+		},
+		"__WTRL_INFO__": [],
+		"__WTRL_WARNING__": [],
+		"__WTRL_ERROR__": [],
+	}
+	if _debug:
+		doc["__WTRL_DEBUG__"] = []
+#----- Debug notes --------------------------------------------#
+	if _debug:
+		for context,origin,msg in tr.gen_debug_notes():
+			dentry: dict[str, Any] = {"kind": "debug", "origin": origin, "msg": msg}
+			dentry["context"] = context
+			cast(list[dict[str, Any]], doc["__WTRL_DEBUG__"]).append(dentry)
+#----- Infos --------------------------------------------------#
+	for context,origin,msg in tr.gen_infos():
+		entry: dict[str, Any] = {"kind": "info", "origin": origin, "msg": msg}
+		entry["context"] = context
+		cast(list[dict[str, Any]], doc["__WTRL_INFO__"]).append(entry)
+#----- Warnings -----------------------------------------------#
+	for context,rule_id,origin,msg,details in tr.gen_warnings():
+		entry = {"kind": "warning", "origin": origin, "rule-id": rule_id, "msg": msg}
+		entry["context"] = context
+		entry["details"] = details
+		cast(list[dict[str, Any]], doc["__WTRL_WARNING__"]).append(entry)
+#----- Errors -------------------------------------------------#
+	for context,rule_id,origin,msg,details in tr.gen_errors():
+		entry = {"kind": "error", "origin": origin, "rule-id": rule_id, "msg": msg}
+		entry["context"] = context
+		entry["details"] = details
+		cast(list[dict[str, Any]], doc["__WTRL_ERROR__"]).append(entry)
+	return doc
+
+def _tokens_to_json_pointer(tokens: list[object]) -> str:
+	if not tokens:
+		return ""
+	def _esc(seg: object) -> str:
+		return str(seg).replace("~", "~0").replace("/", "~1")
+	return "/" + "/".join(_esc(t) for t in tokens)
 
 
 def _final_exit_code(base_code: int, tr: tracer, fail_on_warning: bool) -> int:
@@ -101,12 +157,17 @@ def _final_exit_code(base_code: int, tr: tracer, fail_on_warning: bool) -> int:
 	return code
 
 
-def _emit_tracer(tr: tracer, out_path: str | None) -> None:
+def _emit_tracer(tr: tracer, out_path: str | None, out_json_path: str | None = None) -> None:
 	if out_path:
 		with open(out_path, "w", encoding="utf-8") as fh:
 			_emit_diagnostics(tr, fh)
 	else:
 		_emit_diagnostics(tr, sys.stderr) # type: ignore[arg-type]
+	if out_json_path:
+		doc = _build_tracer_json_doc(tr)
+		with open(out_json_path, "w", encoding="utf-8") as fh:
+			json.dump(doc, fh, indent=4)
+			fh.write("\n")
 
 
 def _load_json(path: str | None) -> cvrt.WtrlJsonNode_t:
@@ -136,26 +197,37 @@ def _validate_json_against_schema(tr: tracer, doc: cvrt.WtrlJsonNode_t, schema_p
 	validator = Draft202012Validator(schema)
 	errors = sorted(validator.iter_errors(doc), key=lambda e: list(e.path))
 	for e in errors:
-		path_txt = "/".join(str(p) for p in e.path) or "<root>"
-		tr.add_error(["JSCH-001"], f"{path_txt}: {e.message}")
+		path_tokens = list(e.path)
+		schema_path_tokens = list(e.schema_path)
+		if isinstance(e,jsonschema.exceptions.ValidationError):
+			details = {
+				"validator": e.validator,
+				"path": path_tokens,
+				"schema_path": schema_path_tokens,
+				"path_pointer": _tokens_to_json_pointer(path_tokens),
+				"schema_path_pointer": _tokens_to_json_pointer(schema_path_tokens),
+			}
+			tr.add_error("JSCH-005", "tool",  "[" + docitem.get_obj_fully_qualified_name(e) + "] " + e.message,details)
+		else:
+			tr.add_error("JSCH-800", "tool",  "[" + docitem.get_obj_fully_qualified_name(e) + "] " + e.message,{})
 
 
 def _check_toc_pointers_json(tr: tracer, doc: cvrt.WtrlJsonNode_t, toc_key: str, rule_id: str) -> None:
 	if not isinstance(doc, dict):
-		tr.add_error([rule_id], f"document is not a dict, so cannot be valid.")
+		tr.add_error(rule_id, "tool", f"document is not a dict, so cannot be valid.")
 		return
 	toc = doc.get(toc_key, {})
 	if not isinstance(toc, dict):
-		tr.add_error([rule_id], f"{toc_key} is not an object")
+		tr.add_error(rule_id, "tool", f"{toc_key} is not an object")
 		return
 	for name, ptr in toc.items():
 		if not isinstance(ptr, str):
-			tr.add_error([rule_id], f"{toc_key}.{name}: pointer is not a string")
+			tr.add_error(rule_id, "tool", f"{toc_key}.{name}: pointer is not a string")
 			continue
 		try:
 			resolve_pointer(doc, ptr)
 		except JsonPointerException as exc:
-			tr.add_error([rule_id], f"{toc_key}.{name}: {ptr} -> {exc}")
+			tr.add_error(rule_id, "tool", f"{toc_key}.{name}: {ptr} -> {exc}")
 
 
 def _read_docstring_from_file(path: str) -> str:
@@ -226,6 +298,10 @@ def _apply_basedir(basedir: str | None, qname: str | None) -> None:
 
 def _validate_command(args: argparse.Namespace) -> int:
 	tr = tracer()
+#----- output spec --------------------------------------------#
+	out_diag	=  getattr(args, "out_diag", None)
+	out_diag_json	=  getattr(args, "out_diag_json", None)
+#--------------------------------------------------------------#
 	if getattr(args, "ignore", None):
 		for rule in args.ignore.split():
 			try:
@@ -254,33 +330,46 @@ def _validate_command(args: argparse.Namespace) -> int:
 				file=sys.stderr,
 			)
 # Check these first, otherwise RuntimeError will shadow some of them.
-	except (ImportError,IndexError,NameError,AssertionError,NotImplementedError,AttributeError):
+	except (IndexError,NameError,AssertionError,NotImplementedError,AttributeError):
 # Implementation error
+		raise
+	except ImportError:
 		raise
 	except ValidationError as exc:
 #		print(str(exc), file=sys.stderr)
-		_emit_tracer(tr, args.out_diag)
+		_emit_tracer(tr, out_diag, out_diag_json)
 		return 1
 	except ParseError as exc:
 #		print(str(exc), file=sys.stderr)
-		_emit_tracer(tr, args.out_diag)
+		_emit_tracer(tr, out_diag, out_diag_json)
 		return 1
 	except RuntimeError as exc:
 #		print(str(exc), file=sys.stderr)
-		_emit_tracer(tr, args.out_diag)
+		_emit_tracer(tr, out_diag, out_diag_json)
 		return 1
 	except Exception as exc:  # pragma: no cover - defensive
 		print(f"Error: {exc}", file=sys.stderr)
-		_emit_tracer(tr, args.out_diag)
+		_emit_tracer(tr, out_diag, out_diag_json)
 		return 1
 
-	_emit_tracer(tr, args.out_diag)
+	_emit_tracer(tr, out_diag, out_diag_json)
 	return _final_exit_code(0, tr, args.fail_on_warning)
 
 #===== Coverage ===============================================#
 
 def _coverage_command(args: argparse.Namespace) -> int:
 	tr = tracer()
+#----- output spec --------------------------------------------#
+	out_diag	=  getattr(args, "out_diag", None)
+	out_diag_json	=  getattr(args, "out_diag_json", None)
+#--------------------------------------------------------------#
+	if getattr(args, "ignore", None):
+		for rule in args.ignore.split():
+			try:
+				tr.add_ignore_rule(rule)
+			except RuntimeError as exc:
+				print(f"Error: {exc}", file=sys.stderr)
+				return 2
 	if not args.obj:
 		print("Error: --obj is required for coverage.", file=sys.stderr)
 		return 2
@@ -303,30 +392,36 @@ def _coverage_command(args: argparse.Namespace) -> int:
 	except (IndexError,NameError,AssertionError,NotImplementedError,AttributeError):
 # Implementation error
 		raise
+	except ImportError:
+		raise
 	except ValidationError as exc:
-		print(str(exc), file=sys.stderr)
-		_emit_tracer(tr, args.out_diag)
+#		print(str(exc), file=sys.stderr)
+		_emit_tracer(tr, out_diag, out_diag_json)
 		return 1
 	except ParseError as exc:
-		print(str(exc), file=sys.stderr)
-		_emit_tracer(tr, args.out_diag)
+#		print(str(exc), file=sys.stderr)
+		_emit_tracer(tr, out_diag, out_diag_json)
 		return 1
 	except RuntimeError as exc:
-		print(str(exc), file=sys.stderr)
-		_emit_tracer(tr, args.out_diag)
+#		print(str(exc), file=sys.stderr)
+		_emit_tracer(tr, out_diag, out_diag_json)
 		return 1
 	except Exception as exc:  # pragma: no cover - defensive
-		print(f"Error: {exc}", file=sys.stderr)
-		_emit_tracer(tr, args.out_diag)
+#		print(f"Error: {exc}", file=sys.stderr)
+		_emit_tracer(tr, out_diag, out_diag_json)
 		return 1
 
-	_emit_tracer(tr, args.out_diag)
+	_emit_tracer(tr, out_diag, out_diag_json)
 	return _final_exit_code(0, tr, args.fail_on_warning)
 
 #===== Extract ================================================#
 
 def _extract_command(args: argparse.Namespace) -> int:
 	tr = tracer()
+#----- output spec --------------------------------------------#
+	out_diag	=  getattr(args, "out_diag", None)
+	out_diag_json	=  getattr(args, "out_diag_json", None)
+#--------------------------------------------------------------#
 	try:
 		if args.subsection and not args.section:
 			print("Error: --subsection requires --section.", file=sys.stderr)
@@ -358,28 +453,32 @@ def _extract_command(args: argparse.Namespace) -> int:
 		sys.stdout.write(out)
 	except (SectionNotFoundError, SubsectionNotFoundError) as exc:
 #		print(str(exc), file=sys.stderr)
-		_emit_tracer(tr, args.out_diag)
+		_emit_tracer(tr, out_diag, out_diag_json)
 		return 1
 	except ValidationError as exc:
 #		print(str(exc), file=sys.stderr)
-		_emit_tracer(tr, args.out_diag)
+		_emit_tracer(tr, out_diag, out_diag_json)
 		return 1
 	except ParseError as exc:
 #		print(str(exc), file=sys.stderr)
-		_emit_tracer(tr, args.out_diag)
+		_emit_tracer(tr, out_diag, out_diag_json)
 		return 1
 	except Exception as exc:  # pragma: no cover - defensive
 		print(f"Error: {exc}", file=sys.stderr)
-		_emit_tracer(tr, args.out_diag)
+		_emit_tracer(tr, out_diag, out_diag_json)
 		return 1
 
-	_emit_tracer(tr, args.out_diag)
+	_emit_tracer(tr, out_diag, out_diag_json)
 	return _final_exit_code(0, tr, args.fail_on_warning)
 
 #===== Validate JSON ==========================================#
 
 def _validate_json_command(args: argparse.Namespace) -> int:
 	tr = tracer()
+#----- output spec --------------------------------------------#
+	out_diag	=  getattr(args, "out_diag", None)
+	out_diag_json	=  getattr(args, "out_diag_json", None)
+#--------------------------------------------------------------#
 	try:
 		doc: Dict[str,cvrt.WtrlJsonNode_t] = cast(Dict[str,cvrt.WtrlJsonNode_t],_load_json(getattr(args, "input_file", None)))
 # Try schema path from argparse.
@@ -392,9 +491,9 @@ def _validate_json_command(args: argparse.Namespace) -> int:
 					raise KeyError
 				schema_version = str(version_obj_raw["schema"])
 				schema_path = Path(__file__).resolve().parent / "schema" / f"wtrl-json-{schema_version}.schema.json"
-			except Exception:
-				tr.add_error(["JSCH-000"], "Cannot infer schema path; __WTRL_VERSION__.schema missing or malformed.")
-				_emit_tracer(tr, args.out_diag)
+			except Exception as exc:
+				tr.add_error("JSCH-003", "tool", "[" + docitem.get_obj_fully_qualified_name(exc) + "] " + "Cannot infer schema path; __WTRL_VERSION__.schema missing or malformed.")
+				_emit_tracer(tr, out_diag, out_diag_json)
 				return _final_exit_code(1, tr, args.fail_on_warning)
 		_validate_json_against_schema(tr, doc, str(schema_path))
 		_check_toc_pointers_json(tr, doc, "__WTRL_TOC_MODULES__", "JPTR-001")
@@ -402,12 +501,20 @@ def _validate_json_command(args: argparse.Namespace) -> int:
 		_check_toc_pointers_json(tr, doc, "__WTRL_TOC_CALLABLES__", "JPTR-003")
 	except (IndexError, NameError, AssertionError, NotImplementedError, AttributeError):
 		raise
+	except OSError as exc:  # pragma: no cover - defensive
+		tr.add_error("JSCH-002", "tool", str(exc))
+		_emit_tracer(tr, out_diag, out_diag_json)
+		return 1
+	except json.decoder.JSONDecodeError as exc:  # pragma: no cover - defensive
+		tr.add_error("JSCH-004", "tool", "[" + docitem.get_obj_fully_qualified_name(exc) + "] Input is not JSON: " + str(exc))
+		_emit_tracer(tr, out_diag, out_diag_json)
+		return 1
 	except Exception as exc:  # pragma: no cover - defensive
-		tr.add_error(["JSCH-001"], str(exc))
-		_emit_tracer(tr, args.out_diag)
+		tr.add_error("JSCH-000", "tool", "[" + docitem.get_obj_fully_qualified_name(exc) + "] " + str(exc))
+		_emit_tracer(tr, out_diag, out_diag_json)
 		return 1
 
-	_emit_tracer(tr, args.out_diag)
+	_emit_tracer(tr, out_diag, out_diag_json)
 	return _final_exit_code(0, tr, args.fail_on_warning)
 
 #===== Render JSON ============================================#
@@ -438,7 +545,7 @@ def _render_json_command(args: argparse.Namespace) -> int:
 		except Exception:
 			pass
 # Special decorators but not property.
-		decorator_lines = docitem.get_decorators(obj)
+		decorator_lines = docitem.get_obj_decorators(obj)
 		for line in decorator_lines:
 			if line in ("@staticmethod","@classmethod"):
 				traits.append(line.strip()[1:])
@@ -449,9 +556,14 @@ def _render_json_command(args: argparse.Namespace) -> int:
 		return traits
 
 	def _collect_decorators_for_callable(obj: object) -> list[cvrt.WtrlJsonNode_t]:
-		return cast(list[cvrt.WtrlJsonNode_t],docitem.get_decorators(obj))
+		return cast(list[cvrt.WtrlJsonNode_t],docitem.get_obj_decorators(obj))
 
 	tr = tracer()
+#----- output spec --------------------------------------------#
+	out_diag	=  getattr(args, "out_diag", None)
+	out_diag_json	=  getattr(args, "out_diag_json", None)
+#--------------------------------------------------------------#
+
 #----- Security note: local paths -----------------------------#
 	if getattr(args, "allow_local_paths", True):
 		tr.add_info("Result JSON contains local filesystem paths; disable with --no-allow-local-paths.")
@@ -845,11 +957,11 @@ def _render_json_command(args: argparse.Namespace) -> int:
 		raise
 #----- Catch errors from rendering JSON -----------------------#
 	except Exception as exc:  # pragma: no cover - defensive
-		tr.add_error(["JSCH-001"], str(exc))
-		_emit_tracer(tr, args.out_diag)
+		tr.add_error("JSCH-700", "tool", "[" + docitem.get_obj_fully_qualified_name(exc) + "] " + str(exc))
+		_emit_tracer(tr, out_diag, out_diag_json)
 		return 1
 
-	_emit_tracer(tr, args.out_diag)
+	_emit_tracer(tr, out_diag, out_diag_json)
 	return _final_exit_code(0, tr, args.fail_on_warning)
 
 #===== Help topic  ============================================#
@@ -978,6 +1090,11 @@ def _build_parser() -> argparse.ArgumentParser:
 		metavar="PATH",
 		help="Write tracer diagnostics (errors/warnings) to PATH instead of stderr.",
 	)
+	global_opts.add_argument(
+		"--out-diag-json",
+		metavar="PATH",
+		help="Write tracer diagnostics in machine-readable JSON format to PATH.",
+	)
 
 	common_validate_group = argparse.ArgumentParser(add_help=False)
 	common_validate_group.add_argument(
@@ -1011,6 +1128,11 @@ def _build_parser() -> argparse.ArgumentParser:
 		help="Base directory for resolving objects passed to --obj.",
 	)
 	coverage.add_argument("--obj", required=True, metavar="QUALNAME", help="Qualified identifier of module/class")
+	coverage.add_argument(
+		"--ignore",
+		metavar="RULES",
+		help="Whitespace-separated list of Rule-IDs to ignore for warnings.",
+	)
 	coverage.add_argument("--debug", action="store_true", help="Emit debugging data to stderr (reserved)")
 
 #----- extract ------------------------------------------------#

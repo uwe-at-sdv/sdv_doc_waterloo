@@ -1,12 +1,12 @@
 {
     "$schema": "https://sci-d-vis.com/schema/wtrl-json-0.0.4.schema.json",
-    "$id": "urn:waterlint:0.2.4:render-json:core:rfc-2119:4142548aa4e8b1d57feecc01a740adcf",
+    "$id": "urn:waterlint:0.2.4:render-json:core:rfc-2119:6719b04ec96d545d8ea5779d56ad0b3a",
     "__WTRL_VERSION__": {
-        "waterloo": "0.2.0",
+        "waterloo": "0.3.0",
         "schema": "0.0.4"
     },
     "__WTRL_META__": {
-        "generated_at": "2026-02-17T14:01:45+01:00",
+        "generated_at": "2026-02-19T16:19:40+01:00",
         "generator": "waterlint",
         "scope": "core",
         "flavour": "rfc-2119"
@@ -118,6 +118,7 @@
         "sdv.doc.waterloo.docitem_helper.build_anchor": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.build_anchor",
         "sdv.doc.waterloo.docitem_helper.get_func_obj_from_callable": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.get_func_obj_from_callable",
         "sdv.doc.waterloo.docitem_helper.get_obj_docstring": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.get_obj_docstring",
+        "sdv.doc.waterloo.docitem_helper.get_obj_annotations": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.get_obj_annotations",
         "sdv.doc.waterloo.docitem_helper.gen_documentable_objects": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.gen_documentable_objects",
         "sdv.doc.waterloo.docitem_tokenizer.get_num_indent": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_tokenizer.get_num_indent",
         "sdv.doc.waterloo.docitem_tokenizer.parse_indent_docstring": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_tokenizer.parse_indent_docstring",
@@ -206,9 +207,10 @@
         "sdv.doc.waterloo.docitem_convert.to_string_yaml": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_convert.to_string_yaml"
     },
     "__WTRL_TOC_TYPES__": {
-        "sdv.doc.waterloo.docitem.docstring_tree": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem.docstring_tree",
-        "sdv.doc.waterloo.docitem.Documentable_t": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem.Documentable_t",
-        "sdv.doc.waterloo.docitem.Scopes_t": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem.Scopes_t",
+        "sdv.doc.waterloo.docitem.DocstringTree": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem.DocstringTree",
+        "sdv.doc.waterloo.docitem.Documentable": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem.Documentable",
+        "sdv.doc.waterloo.docitem.Scopes": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem.Scopes",
+        "sdv.doc.waterloo.docitem_helper.tracer.Context": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.tracer.Context",
         "sdv.doc.waterloo.docitem_convert.WtrlJsonNode_t": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_convert.WtrlJsonNode_t"
     },
     "__WTRL_TOC_VARIABLES__": {},
@@ -233,19 +235,19 @@
         "sdv.doc.waterloo.docitem_base.docitem_list_of_symbols_base.ValuePattern.QUALIFIED_IDENTIFIER": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_base.docitem_list_of_symbols_base.ValuePattern.QUALIFIED_IDENTIFIER"
     },
     "__WTRL_OBJECTS__": {
-        "sdv.doc.waterloo.docitem.docstring_tree": {
+        "sdv.doc.waterloo.docitem.DocstringTree": {
             "doc": {},
             "doc_lines": [
                 "The type alias for docstring trees."
             ]
         },
-        "sdv.doc.waterloo.docitem.Documentable_t": {
+        "sdv.doc.waterloo.docitem.Documentable": {
             "doc": {},
             "doc_lines": [
                 "Type for objects that can have a docstring."
             ]
         },
-        "sdv.doc.waterloo.docitem.Scopes_t": {
+        "sdv.doc.waterloo.docitem.Scopes": {
             "doc": {},
             "doc_lines": [
                 "Type alias for a set of scopes."
@@ -320,6 +322,7 @@
                     "is_attr_final",
                     "get_obj_name",
                     "get_obj_path",
+                    "get_obj_annotations",
                     "resolve_object",
                     "get_status",
                     "get_profile",
@@ -649,13 +652,13 @@
                     ]
                 },
                 "Public_types": {
-                    "docstring_tree": [
+                    "DocstringTree": [
                         "The type alias for docstring trees."
                     ],
-                    "Documentable_t": [
+                    "Documentable": [
                         "Type for objects that can have a docstring."
                     ],
-                    "Scopes_t": [
+                    "Scopes": [
                         "Type alias for a set of scopes."
                     ]
                 },
@@ -946,12 +949,12 @@
         },
         "sdv.doc.waterloo.docitem_helper.is_attr_annotated": {
             "signature": {
-                "text": "is_attr_annotated(obj: 'AnnotatedObject_t', attr: 'str') -> 'bool'",
+                "text": "is_attr_annotated(obj: 'AnnotatableObject', attr: 'str') -> 'bool'",
                 "parameters": [
                     {
                         "name": "obj",
                         "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "AnnotatedObject_t",
+                        "annotation": "AnnotatableObject",
                         "default": null
                     },
                     {
@@ -1006,12 +1009,12 @@
         },
         "sdv.doc.waterloo.docitem_helper.is_attr_final": {
             "signature": {
-                "text": "is_attr_final(obj: 'AnnotatedObject_t', attr: 'str') -> 'bool'",
+                "text": "is_attr_final(obj: 'AnnotatableObject', attr: 'str') -> 'bool'",
                 "parameters": [
                     {
                         "name": "obj",
                         "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "AnnotatedObject_t",
+                        "annotation": "AnnotatableObject",
                         "default": null
                     },
                     {
@@ -1292,6 +1295,9 @@
                         "Parameters",
                         "Returns",
                         "Raises"
+                    ],
+                    "scope": [
+                        "public"
                     ]
                 },
                 "Contract": {
@@ -1340,6 +1346,9 @@
                         "Parameters",
                         "Returns",
                         "Raises"
+                    ],
+                    "scope": [
+                        "public"
                     ]
                 },
                 "Contract": {
@@ -1565,14 +1574,61 @@
                 }
             }
         },
-        "sdv.doc.waterloo.docitem_helper.gen_documentable_objects": {
+        "sdv.doc.waterloo.docitem_helper.get_obj_annotations": {
             "signature": {
-                "text": "gen_documentable_objects(obj: 'Documentable_t', config: 'ConfigTraversal' = ConfigTraversal()) -> 'Generator[Documentable_t, None, None]'",
+                "text": "get_obj_annotations(obj: 'object') -> 'dict[str, Any]'",
                 "parameters": [
                     {
                         "name": "obj",
                         "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "Documentable_t",
+                        "annotation": "object",
+                        "default": null
+                    }
+                ],
+                "returns": "dict[str, Any]"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST build a |type|`dict` (the |dfn|`result`) as follows:",
+                        "MUST analyse the object's annotations by means of |mod|`inspect`.",
+                        "On success, MUST add the annotations to the result.",
+                        "MUST check for an attribute |value|`__type_params__` in the object.",
+                        "If it exists (as of Python 3.12), MUST iterate over the |type|`tuple` |var|`obj.__type_params__` and add pairs consisting of |var|`param.__name__` and |value|`type(param)` to the result."
+                    ]
+                },
+                "Parameters": {
+                    "obj": [
+                        "The object to be inspected."
+                    ]
+                },
+                "Returns": [
+                    "A |type|`dict` representing the object's annotations."
+                ],
+                "Raises": {
+                    "BaseException": [
+                        "MAY propagate exceptions other than |type|`TypeError` and |type|`ValueError` from module |mod|`inspect`."
+                    ]
+                }
+            }
+        },
+        "sdv.doc.waterloo.docitem_helper.gen_documentable_objects": {
+            "signature": {
+                "text": "gen_documentable_objects(obj: 'Documentable', config: 'ConfigTraversal' = ConfigTraversal()) -> 'Generator[Documentable, None, None]'",
+                "parameters": [
+                    {
+                        "name": "obj",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "Documentable",
                         "default": null
                     },
                     {
@@ -1582,7 +1638,7 @@
                         "default": "ConfigTraversal()"
                     }
                 ],
-                "returns": "Generator[Documentable_t, None, None]"
+                "returns": "Generator[Documentable, None, None]"
             },
             "traits": [
                 "generator"
@@ -1621,6 +1677,12 @@
                 "Raises": {}
             }
         },
+        "sdv.doc.waterloo.docitem_helper.tracer.Context": {
+            "doc": {},
+            "doc_lines": [
+                "A list of strings built per context manager during parsing and validation. Entries can be module, class or function names, or labels."
+            ]
+        },
         "sdv.doc.waterloo.docitem_helper.tracer": {
             "signature": {
                 "text": "tracer.__init__(self) -> 'None'",
@@ -1631,7 +1693,8 @@
                 "Preamble": {
                     "profile": "class",
                     "normative_sections": [
-                        "Contract"
+                        "Contract",
+                        "Public_types"
                     ]
                 },
                 "Terminology": {
@@ -1652,26 +1715,31 @@
                         "MUST provide a method for clearing the list of infos.",
                         "MUST provide a method for rendering the list of infos as a string.",
                         "MUST provide a generator which allows iterating over the list of infos.",
-                        "MUST maintain a list of warnings, where each entry is a tuple consisting of list of Rule-IDs and a free-form message.",
+                        "MUST maintain a list of warnings, where each entry is a tuple consisting of one Rule-ID and a free-form message.",
                         "MUST provide a method for adding such a warning entry.",
                         "MUST allow to query if warnings have been added.",
                         "MUST provide a method for clearing the list of warnings.",
                         "MUST provide a method for rendering the list of warnings as a string.",
                         "MUST provide a generator which allows iterating over the list of warnings.",
-                        "MUST maintain a list of errors, where each entry is a tuple consisting of list of Rule-IDs and a free-form message.",
+                        "MUST maintain a list of errors, where each entry is a tuple consisting of one Rule-ID and a free-form message.",
                         "MUST provide a method for adding such a error entry.",
                         "MUST allow to query if errors have been added.",
                         "MUST provide a method for clearing the list of errors.",
                         "MUST provide a method for rendering the list of errors as a string.",
                         "MUST provide a generator which allows iterating over the list of errors.",
                         "MUST manage a set of ignore-rule instructions",
-                        "MUST provide a stack containing the current set of |dfn|`rules on fail` being validated against.",
-                        "MUST provide an api like |func|`push...`, |func|`pop...`, |func|`get...` for the |dfn|`rules on fail` stack.",
+                        "MUST provide a stack containing the current |dfn|`rule on fail` being validated against.",
+                        "MUST provide an api like |func|`push...`, |func|`pop...`, |func|`get...` for the |dfn|`rule on fail` stack.",
                         "MUST provide a stack containing the current set of |dfn|`scopes` being validated against.",
                         "MUST provide an api like |func|`push...`, |func|`pop...`, |func|`get...` for the |dfn|`scopes` stack."
                     ],
                     "constructor": [
                         "MUST be default-constructible."
+                    ]
+                },
+                "Public_types": {
+                    "Context": [
+                        "A list of strings built per context manager during parsing and validation. Entries can be module, class or function names, or labels."
                     ]
                 }
             }
@@ -1742,7 +1810,7 @@
                     ]
                 },
                 "Returns": [
-                    "MUST return the number of indentations found at the beginning of the string in units as decribed by the indentation scheme passed."
+                    "MUST return the number of indentations found at the beginning of the string in units as described by the indentation scheme passed."
                 ],
                 "Raises": {
                     "RuntimeError": [
@@ -1757,7 +1825,7 @@
         },
         "sdv.doc.waterloo.docitem_tokenizer.parse_indent_docstring": {
             "signature": {
-                "text": "parse_indent_docstring(tr: 'tracer', text: 'str') -> 'docstring_tree'",
+                "text": "parse_indent_docstring(tr: 'tracer', text: 'str') -> 'DocstringTree'",
                 "parameters": [
                     {
                         "name": "tr",
@@ -1772,7 +1840,7 @@
                         "default": null
                     }
                 ],
-                "returns": "docstring_tree"
+                "returns": "DocstringTree"
             },
             "doc": {
                 "Preamble": {
@@ -1788,7 +1856,7 @@
                 },
                 "Definitions": {
                     "DocstringTree": [
-                        "A value matching the following type: |type|`docstring_tree` = |type|`List`\\[ |type|`Union`\\[ |type|`str`, |value|`\"docstring_tree\"`]]"
+                        "A value matching the following type: |type|`DocstringTree` = |type|`List`\\[ |type|`Union`\\[ |type|`str`, |value|`\"DocstringTree\"`]]"
                     ]
                 },
                 "Contract": {
@@ -1840,7 +1908,7 @@
         },
         "sdv.doc.waterloo.docitem_tokenizer.get_tree_of_section": {
             "signature": {
-                "text": "get_tree_of_section(tr: 'tracer', tree: 'docstring_tree', sec: 'str') -> 'docstring_subtree'",
+                "text": "get_tree_of_section(tr: 'tracer', tree: 'DocstringTree', sec: 'str') -> 'DocstringSubtree'",
                 "parameters": [
                     {
                         "name": "tr",
@@ -1851,7 +1919,7 @@
                     {
                         "name": "tree",
                         "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "docstring_tree",
+                        "annotation": "DocstringTree",
                         "default": null
                     },
                     {
@@ -1861,7 +1929,7 @@
                         "default": null
                     }
                 ],
-                "returns": "docstring_subtree"
+                "returns": "DocstringSubtree"
             },
             "doc": {
                 "Preamble": {
@@ -1906,7 +1974,7 @@
         },
         "sdv.doc.waterloo.docitem_tokenizer.get_tree_of_subsection": {
             "signature": {
-                "text": "get_tree_of_subsection(tr: 'tracer', tree: 'docstring_tree', sec: 'str', subsec: 'str') -> 'docstring_subtree'",
+                "text": "get_tree_of_subsection(tr: 'tracer', tree: 'DocstringTree', sec: 'str', subsec: 'str') -> 'DocstringSubtree'",
                 "parameters": [
                     {
                         "name": "tr",
@@ -1917,7 +1985,7 @@
                     {
                         "name": "tree",
                         "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "docstring_tree",
+                        "annotation": "DocstringTree",
                         "default": null
                     },
                     {
@@ -1933,7 +2001,7 @@
                         "default": null
                     }
                 ],
-                "returns": "docstring_subtree"
+                "returns": "DocstringSubtree"
             },
             "doc": {
                 "Preamble": {
@@ -1986,7 +2054,7 @@
         },
         "sdv.doc.waterloo.docitem_tokenizer.get_scopes_of_tree": {
             "signature": {
-                "text": "get_scopes_of_tree(tr: 'tracer', tree: 'docstring_tree') -> 'Scopes_t'",
+                "text": "get_scopes_of_tree(tr: 'tracer', tree: 'DocstringTree') -> 'Scopes'",
                 "parameters": [
                     {
                         "name": "tr",
@@ -1997,11 +2065,11 @@
                     {
                         "name": "tree",
                         "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "docstring_tree",
+                        "annotation": "DocstringTree",
                         "default": null
                     }
                 ],
-                "returns": "Scopes_t"
+                "returns": "Scopes"
             },
             "doc": {
                 "Preamble": {
@@ -2040,12 +2108,12 @@
         },
         "sdv.doc.waterloo.docitem_tokenizer.to_string_tree": {
             "signature": {
-                "text": "to_string_tree(tree: 'docstring_subtree', indent_scheme: 'int' = 0, indent: 'int' = 0) -> 'str'",
+                "text": "to_string_tree(tree: 'DocstringSubtree', indent_scheme: 'int' = 0, indent: 'int' = 0) -> 'str'",
                 "parameters": [
                     {
                         "name": "tree",
                         "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "docstring_subtree",
+                        "annotation": "DocstringSubtree",
                         "default": null
                     },
                     {
@@ -2101,22 +2169,9 @@
         },
         "sdv.doc.waterloo.docitem_base.docitem_base": {
             "signature": {
-                "text": "object.__init__(self, /, *args, **kwargs)",
-                "parameters": [
-                    {
-                        "name": "args",
-                        "kind": "VAR_POSITIONAL",
-                        "annotation": null,
-                        "default": null
-                    },
-                    {
-                        "name": "kwargs",
-                        "kind": "VAR_KEYWORD",
-                        "annotation": null,
-                        "default": null
-                    }
-                ],
-                "returns": null
+                "text": "docitem_base.__init__(self) -> 'None'",
+                "parameters": [],
+                "returns": "None"
             },
             "doc": {
                 "Preamble": {
@@ -2177,7 +2232,7 @@
         },
         "sdv.doc.waterloo.docitem_base.docitem_base.parse": {
             "signature": {
-                "text": "docitem_base.parse(self, tr: 'tracer', subtree: 'docstring_subtree') -> 'None'",
+                "text": "docitem_base.parse(self, tr: 'tracer', subtree: 'DocstringSubtree') -> 'None'",
                 "parameters": [
                     {
                         "name": "tr",
@@ -2188,7 +2243,7 @@
                     {
                         "name": "subtree",
                         "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "docstring_subtree",
+                        "annotation": "DocstringSubtree",
                         "default": null
                     }
                 ],
@@ -2511,7 +2566,7 @@
         },
         "sdv.doc.waterloo.docitem_base.docitem_list_of_symbols_base._parse": {
             "signature": {
-                "text": "docitem_list_of_symbols_base._parse(self, tr: 'tracer', refs: 'docstring_subtree', pattern: 'ValuePattern') -> 'None'",
+                "text": "docitem_list_of_symbols_base._parse(self, tr: 'tracer', refs: 'DocstringSubtree', pattern: 'ValuePattern') -> 'None'",
                 "parameters": [
                     {
                         "name": "tr",
@@ -2522,7 +2577,7 @@
                     {
                         "name": "refs",
                         "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "docstring_subtree",
+                        "annotation": "DocstringSubtree",
                         "default": null
                     },
                     {
@@ -2619,7 +2674,7 @@
         },
         "sdv.doc.waterloo.docitem_sections.docitem_derived_from.parse": {
             "signature": {
-                "text": "docitem_derived_from.parse(self, tr: 'tracer', bases: 'docstring_subtree') -> 'None'",
+                "text": "docitem_derived_from.parse(self, tr: 'tracer', bases: 'DocstringSubtree') -> 'None'",
                 "parameters": [
                     {
                         "name": "tr",
@@ -2630,7 +2685,7 @@
                     {
                         "name": "bases",
                         "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "docstring_subtree",
+                        "annotation": "DocstringSubtree",
                         "default": null
                     }
                 ],
@@ -2692,7 +2747,7 @@
         },
         "sdv.doc.waterloo.docitem_sections.docitem_see_also.parse": {
             "signature": {
-                "text": "docitem_see_also.parse(self, tr: 'tracer', refs: 'docstring_subtree') -> 'None'",
+                "text": "docitem_see_also.parse(self, tr: 'tracer', refs: 'DocstringSubtree') -> 'None'",
                 "parameters": [
                     {
                         "name": "tr",
@@ -2703,7 +2758,7 @@
                     {
                         "name": "refs",
                         "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "docstring_subtree",
+                        "annotation": "DocstringSubtree",
                         "default": null
                     }
                 ],
@@ -2765,7 +2820,7 @@
         },
         "sdv.doc.waterloo.docitem_sections.docitem_public_classes.parse": {
             "signature": {
-                "text": "docitem_public_classes.parse(self, tr: 'tracer', refs: 'docstring_subtree') -> 'None'",
+                "text": "docitem_public_classes.parse(self, tr: 'tracer', refs: 'DocstringSubtree') -> 'None'",
                 "parameters": [
                     {
                         "name": "tr",
@@ -2776,7 +2831,7 @@
                     {
                         "name": "refs",
                         "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "docstring_subtree",
+                        "annotation": "DocstringSubtree",
                         "default": null
                     }
                 ],
@@ -2838,7 +2893,7 @@
         },
         "sdv.doc.waterloo.docitem_sections.docitem_public_methods.parse": {
             "signature": {
-                "text": "docitem_public_methods.parse(self, tr: 'tracer', refs: 'docstring_subtree') -> 'None'",
+                "text": "docitem_public_methods.parse(self, tr: 'tracer', refs: 'DocstringSubtree') -> 'None'",
                 "parameters": [
                     {
                         "name": "tr",
@@ -2849,7 +2904,7 @@
                     {
                         "name": "refs",
                         "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "docstring_subtree",
+                        "annotation": "DocstringSubtree",
                         "default": null
                     }
                 ],
@@ -2911,7 +2966,7 @@
         },
         "sdv.doc.waterloo.docitem_sections.docitem_public_functions.parse": {
             "signature": {
-                "text": "docitem_public_functions.parse(self, tr: 'tracer', refs: 'docstring_subtree') -> 'None'",
+                "text": "docitem_public_functions.parse(self, tr: 'tracer', refs: 'DocstringSubtree') -> 'None'",
                 "parameters": [
                     {
                         "name": "tr",
@@ -2922,7 +2977,7 @@
                     {
                         "name": "refs",
                         "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "docstring_subtree",
+                        "annotation": "DocstringSubtree",
                         "default": null
                     }
                 ],
@@ -2984,7 +3039,7 @@
         },
         "sdv.doc.waterloo.docitem_sections.docitem_factory_functions.parse": {
             "signature": {
-                "text": "docitem_factory_functions.parse(self, tr: 'tracer', factory_functions: 'docstring_subtree') -> 'None'",
+                "text": "docitem_factory_functions.parse(self, tr: 'tracer', factory_functions: 'DocstringSubtree') -> 'None'",
                 "parameters": [
                     {
                         "name": "tr",
@@ -2995,7 +3050,7 @@
                     {
                         "name": "factory_functions",
                         "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "docstring_subtree",
+                        "annotation": "DocstringSubtree",
                         "default": null
                     }
                 ],
@@ -3073,7 +3128,7 @@
         },
         "sdv.doc.waterloo.docitem_sections.docitem_factory.parse": {
             "signature": {
-                "text": "docitem_factory.parse(self, tr: 'tracer', functions: 'docstring_subtree') -> 'None'",
+                "text": "docitem_factory.parse(self, tr: 'tracer', functions: 'DocstringSubtree') -> 'None'",
                 "parameters": [
                     {
                         "name": "tr",
@@ -3084,7 +3139,7 @@
                     {
                         "name": "functions",
                         "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "docstring_subtree",
+                        "annotation": "DocstringSubtree",
                         "default": null
                     }
                 ],
@@ -3165,7 +3220,7 @@
         },
         "sdv.doc.waterloo.docitem_sections.docitem_free_text_entry_base.parse": {
             "signature": {
-                "text": "docitem_free_text_entry_base.parse(self, tr: 'tracer', lines: 'docstring_subtree') -> 'None'",
+                "text": "docitem_free_text_entry_base.parse(self, tr: 'tracer', lines: 'DocstringSubtree') -> 'None'",
                 "parameters": [
                     {
                         "name": "tr",
@@ -3176,7 +3231,7 @@
                     {
                         "name": "lines",
                         "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "docstring_subtree",
+                        "annotation": "DocstringSubtree",
                         "default": null
                     }
                 ],
@@ -3291,7 +3346,7 @@
         },
         "sdv.doc.waterloo.docitem_sections.docitem_class_overview.parse": {
             "signature": {
-                "text": "docitem_class_overview.parse(self, tr: 'tracer', entries: 'docstring_subtree') -> 'None'",
+                "text": "docitem_class_overview.parse(self, tr: 'tracer', entries: 'DocstringSubtree') -> 'None'",
                 "parameters": [
                     {
                         "name": "tr",
@@ -3302,7 +3357,7 @@
                     {
                         "name": "entries",
                         "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "docstring_subtree",
+                        "annotation": "DocstringSubtree",
                         "default": null
                     }
                 ],
@@ -3418,7 +3473,7 @@
         },
         "sdv.doc.waterloo.docitem_sections.docitem_public_types.parse": {
             "signature": {
-                "text": "docitem_public_types.parse(self, tr: 'tracer', entries: 'docstring_subtree') -> 'None'",
+                "text": "docitem_public_types.parse(self, tr: 'tracer', entries: 'DocstringSubtree') -> 'None'",
                 "parameters": [
                     {
                         "name": "tr",
@@ -3429,7 +3484,7 @@
                     {
                         "name": "entries",
                         "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "docstring_subtree",
+                        "annotation": "DocstringSubtree",
                         "default": null
                     }
                 ],
@@ -3545,7 +3600,7 @@
         },
         "sdv.doc.waterloo.docitem_sections.docitem_public_assignables_base.parse": {
             "signature": {
-                "text": "docitem_public_assignables_base.parse(self, tr: 'tracer', entries: 'docstring_subtree') -> 'None'",
+                "text": "docitem_public_assignables_base.parse(self, tr: 'tracer', entries: 'DocstringSubtree') -> 'None'",
                 "parameters": [
                     {
                         "name": "tr",
@@ -3556,7 +3611,7 @@
                     {
                         "name": "entries",
                         "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "docstring_subtree",
+                        "annotation": "DocstringSubtree",
                         "default": null
                     }
                 ],
@@ -3672,7 +3727,7 @@
         },
         "sdv.doc.waterloo.docitem_sections.docitem_method_overview.parse": {
             "signature": {
-                "text": "docitem_method_overview.parse(self, tr: 'tracer', entries: 'docstring_subtree') -> 'None'",
+                "text": "docitem_method_overview.parse(self, tr: 'tracer', entries: 'DocstringSubtree') -> 'None'",
                 "parameters": [
                     {
                         "name": "tr",
@@ -3683,7 +3738,7 @@
                     {
                         "name": "entries",
                         "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "docstring_subtree",
+                        "annotation": "DocstringSubtree",
                         "default": null
                     }
                 ],
@@ -3799,7 +3854,7 @@
         },
         "sdv.doc.waterloo.docitem_sections.docitem_function_overview.parse": {
             "signature": {
-                "text": "docitem_function_overview.parse(self, tr: 'tracer', entries: 'docstring_subtree') -> 'None'",
+                "text": "docitem_function_overview.parse(self, tr: 'tracer', entries: 'DocstringSubtree') -> 'None'",
                 "parameters": [
                     {
                         "name": "tr",
@@ -3810,7 +3865,7 @@
                     {
                         "name": "entries",
                         "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "docstring_subtree",
+                        "annotation": "DocstringSubtree",
                         "default": null
                     }
                 ],
@@ -3884,7 +3939,7 @@
         },
         "sdv.doc.waterloo.docitem_sections.docitem_returns.parse": {
             "signature": {
-                "text": "docitem_returns.parse(self, tr: 'tracer', lines: 'docstring_subtree') -> 'None'",
+                "text": "docitem_returns.parse(self, tr: 'tracer', lines: 'DocstringSubtree') -> 'None'",
                 "parameters": [
                     {
                         "name": "tr",
@@ -3895,7 +3950,7 @@
                     {
                         "name": "lines",
                         "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "docstring_subtree",
+                        "annotation": "DocstringSubtree",
                         "default": null
                     }
                 ],
@@ -3978,7 +4033,7 @@
         },
         "sdv.doc.waterloo.docitem_sections.docitem_description.parse": {
             "signature": {
-                "text": "docitem_description.parse(self, tr: 'tracer', lines: 'docstring_subtree') -> 'None'",
+                "text": "docitem_description.parse(self, tr: 'tracer', lines: 'DocstringSubtree') -> 'None'",
                 "parameters": [
                     {
                         "name": "tr",
@@ -3989,7 +4044,7 @@
                     {
                         "name": "lines",
                         "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "docstring_subtree",
+                        "annotation": "DocstringSubtree",
                         "default": null
                     }
                 ],
@@ -4105,7 +4160,7 @@
         },
         "sdv.doc.waterloo.docitem_sections.docitem_parameters.parse": {
             "signature": {
-                "text": "docitem_parameters.parse(self, tr: 'tracer', entries: 'docstring_subtree') -> 'None'",
+                "text": "docitem_parameters.parse(self, tr: 'tracer', entries: 'DocstringSubtree') -> 'None'",
                 "parameters": [
                     {
                         "name": "tr",
@@ -4116,7 +4171,7 @@
                     {
                         "name": "entries",
                         "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "docstring_subtree",
+                        "annotation": "DocstringSubtree",
                         "default": null
                     }
                 ],
@@ -4237,7 +4292,7 @@
         },
         "sdv.doc.waterloo.docitem_sections.docitem_raises.parse": {
             "signature": {
-                "text": "docitem_raises.parse(self, tr: 'tracer', entries: 'docstring_subtree') -> 'None'",
+                "text": "docitem_raises.parse(self, tr: 'tracer', entries: 'DocstringSubtree') -> 'None'",
                 "parameters": [
                     {
                         "name": "tr",
@@ -4248,7 +4303,7 @@
                     {
                         "name": "entries",
                         "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "docstring_subtree",
+                        "annotation": "DocstringSubtree",
                         "default": null
                     }
                 ],
@@ -4365,7 +4420,7 @@
         },
         "sdv.doc.waterloo.docitem_sections.docitem_definitions.parse": {
             "signature": {
-                "text": "docitem_definitions.parse(self, tr: 'tracer', entries: 'docstring_subtree') -> 'None'",
+                "text": "docitem_definitions.parse(self, tr: 'tracer', entries: 'DocstringSubtree') -> 'None'",
                 "parameters": [
                     {
                         "name": "tr",
@@ -4376,7 +4431,7 @@
                     {
                         "name": "entries",
                         "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "docstring_subtree",
+                        "annotation": "DocstringSubtree",
                         "default": null
                     }
                 ],
@@ -4498,7 +4553,7 @@
         },
         "sdv.doc.waterloo.docitem_sections.docitem_terminology.parse": {
             "signature": {
-                "text": "docitem_terminology.parse(self, tr: 'tracer', entries: 'docstring_subtree') -> 'None'",
+                "text": "docitem_terminology.parse(self, tr: 'tracer', entries: 'DocstringSubtree') -> 'None'",
                 "parameters": [
                     {
                         "name": "tr",
@@ -4509,7 +4564,7 @@
                     {
                         "name": "entries",
                         "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "docstring_subtree",
+                        "annotation": "DocstringSubtree",
                         "default": null
                     }
                 ],
@@ -4624,7 +4679,7 @@
         },
         "sdv.doc.waterloo.docitem_sections.docitem_notes.parse": {
             "signature": {
-                "text": "docitem_notes.parse(self, tr: 'tracer', entries: 'docstring_subtree') -> 'None'",
+                "text": "docitem_notes.parse(self, tr: 'tracer', entries: 'DocstringSubtree') -> 'None'",
                 "parameters": [
                     {
                         "name": "tr",
@@ -4635,7 +4690,7 @@
                     {
                         "name": "entries",
                         "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "docstring_subtree",
+                        "annotation": "DocstringSubtree",
                         "default": null
                     }
                 ],
@@ -4722,7 +4777,7 @@
         },
         "sdv.doc.waterloo.docitem_preamble.docitem_profile.parse": {
             "signature": {
-                "text": "docitem_profile.parse(self, tr: 'tracer', refs: 'docstring_subtree') -> 'None'",
+                "text": "docitem_profile.parse(self, tr: 'tracer', refs: 'DocstringSubtree') -> 'None'",
                 "parameters": [
                     {
                         "name": "tr",
@@ -4733,7 +4788,7 @@
                     {
                         "name": "refs",
                         "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "docstring_subtree",
+                        "annotation": "DocstringSubtree",
                         "default": null
                     }
                 ],
@@ -4813,7 +4868,7 @@
         },
         "sdv.doc.waterloo.docitem_preamble.docitem_normative_sections.parse": {
             "signature": {
-                "text": "docitem_normative_sections.parse(self, tr: 'tracer', refs: 'docstring_subtree') -> 'None'",
+                "text": "docitem_normative_sections.parse(self, tr: 'tracer', refs: 'DocstringSubtree') -> 'None'",
                 "parameters": [
                     {
                         "name": "tr",
@@ -4824,7 +4879,7 @@
                     {
                         "name": "refs",
                         "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "docstring_subtree",
+                        "annotation": "DocstringSubtree",
                         "default": null
                     }
                 ],
@@ -4886,7 +4941,7 @@
         },
         "sdv.doc.waterloo.docitem_preamble.docitem_status.parse": {
             "signature": {
-                "text": "docitem_status.parse(self, tr: 'tracer', refs: 'docstring_subtree') -> 'None'",
+                "text": "docitem_status.parse(self, tr: 'tracer', refs: 'DocstringSubtree') -> 'None'",
                 "parameters": [
                     {
                         "name": "tr",
@@ -4897,7 +4952,7 @@
                     {
                         "name": "refs",
                         "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "docstring_subtree",
+                        "annotation": "DocstringSubtree",
                         "default": null
                     }
                 ],
@@ -4977,7 +5032,7 @@
         },
         "sdv.doc.waterloo.docitem_preamble.docitem_scope.parse": {
             "signature": {
-                "text": "docitem_scope.parse(self, tr: 'tracer', refs: 'docstring_subtree') -> 'None'",
+                "text": "docitem_scope.parse(self, tr: 'tracer', refs: 'DocstringSubtree') -> 'None'",
                 "parameters": [
                     {
                         "name": "tr",
@@ -4988,7 +5043,7 @@
                     {
                         "name": "refs",
                         "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "docstring_subtree",
+                        "annotation": "DocstringSubtree",
                         "default": null
                     }
                 ],
@@ -5050,7 +5105,7 @@
         },
         "sdv.doc.waterloo.docitem_preamble.docitem_preamble.parse": {
             "signature": {
-                "text": "docitem_preamble.parse(self, tr: 'tracer', subtree: 'docstring_subtree') -> 'None'",
+                "text": "docitem_preamble.parse(self, tr: 'tracer', subtree: 'DocstringSubtree') -> 'None'",
                 "parameters": [
                     {
                         "name": "tr",
@@ -5061,7 +5116,7 @@
                     {
                         "name": "subtree",
                         "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "docstring_subtree",
+                        "annotation": "DocstringSubtree",
                         "default": null
                     }
                 ],
@@ -5142,7 +5197,7 @@
         },
         "sdv.doc.waterloo.docitem_contract.docitem_constructor.parse": {
             "signature": {
-                "text": "docitem_constructor.parse(self, tr: 'tracer', subtree: 'docstring_subtree') -> 'None'",
+                "text": "docitem_constructor.parse(self, tr: 'tracer', subtree: 'DocstringSubtree') -> 'None'",
                 "parameters": [
                     {
                         "name": "tr",
@@ -5153,7 +5208,7 @@
                     {
                         "name": "subtree",
                         "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "docstring_subtree",
+                        "annotation": "DocstringSubtree",
                         "default": null
                     }
                 ],
@@ -5232,7 +5287,7 @@
         },
         "sdv.doc.waterloo.docitem_contract.docitem_general.parse": {
             "signature": {
-                "text": "docitem_general.parse(self, tr: 'tracer', subtree: 'docstring_subtree') -> 'None'",
+                "text": "docitem_general.parse(self, tr: 'tracer', subtree: 'DocstringSubtree') -> 'None'",
                 "parameters": [
                     {
                         "name": "tr",
@@ -5243,7 +5298,7 @@
                     {
                         "name": "subtree",
                         "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "docstring_subtree",
+                        "annotation": "DocstringSubtree",
                         "default": null
                     }
                 ],
@@ -5321,7 +5376,7 @@
         },
         "sdv.doc.waterloo.docitem_contract.docitem_invariants.parse": {
             "signature": {
-                "text": "docitem_invariants.parse(self, tr: 'tracer', subtree: 'docstring_subtree') -> 'None'",
+                "text": "docitem_invariants.parse(self, tr: 'tracer', subtree: 'DocstringSubtree') -> 'None'",
                 "parameters": [
                     {
                         "name": "tr",
@@ -5332,7 +5387,7 @@
                     {
                         "name": "subtree",
                         "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "docstring_subtree",
+                        "annotation": "DocstringSubtree",
                         "default": null
                     }
                 ],
@@ -5415,7 +5470,7 @@
         },
         "sdv.doc.waterloo.docitem_contract.docitem_requires.parse": {
             "signature": {
-                "text": "docitem_requires.parse(self, tr: 'tracer', subtree: 'docstring_subtree') -> 'None'",
+                "text": "docitem_requires.parse(self, tr: 'tracer', subtree: 'DocstringSubtree') -> 'None'",
                 "parameters": [
                     {
                         "name": "tr",
@@ -5426,7 +5481,7 @@
                     {
                         "name": "subtree",
                         "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "docstring_subtree",
+                        "annotation": "DocstringSubtree",
                         "default": null
                     }
                 ],
@@ -5509,7 +5564,7 @@
         },
         "sdv.doc.waterloo.docitem_contract.docitem_ensures.parse": {
             "signature": {
-                "text": "docitem_ensures.parse(self, tr: 'tracer', subtree: 'docstring_subtree') -> 'None'",
+                "text": "docitem_ensures.parse(self, tr: 'tracer', subtree: 'DocstringSubtree') -> 'None'",
                 "parameters": [
                     {
                         "name": "tr",
@@ -5520,7 +5575,7 @@
                     {
                         "name": "subtree",
                         "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "docstring_subtree",
+                        "annotation": "DocstringSubtree",
                         "default": null
                     }
                 ],
@@ -5598,7 +5653,7 @@
         },
         "sdv.doc.waterloo.docitem_contract.docitem_base_to_inherit_from.parse": {
             "signature": {
-                "text": "docitem_base_to_inherit_from.parse(self, tr: 'tracer', bases: 'docstring_subtree') -> 'None'",
+                "text": "docitem_base_to_inherit_from.parse(self, tr: 'tracer', bases: 'DocstringSubtree') -> 'None'",
                 "parameters": [
                     {
                         "name": "tr",
@@ -5609,7 +5664,7 @@
                     {
                         "name": "bases",
                         "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "docstring_subtree",
+                        "annotation": "DocstringSubtree",
                         "default": null
                     }
                 ],
@@ -5688,7 +5743,7 @@
         },
         "sdv.doc.waterloo.docitem_contract.docitem_traits.parse": {
             "signature": {
-                "text": "docitem_traits.parse(self, tr: 'tracer', refs: 'docstring_subtree') -> 'None'",
+                "text": "docitem_traits.parse(self, tr: 'tracer', refs: 'DocstringSubtree') -> 'None'",
                 "parameters": [
                     {
                         "name": "tr",
@@ -5699,7 +5754,7 @@
                     {
                         "name": "refs",
                         "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "docstring_subtree",
+                        "annotation": "DocstringSubtree",
                         "default": null
                     }
                 ],
@@ -5761,7 +5816,7 @@
         },
         "sdv.doc.waterloo.docitem_contract.docitem_contract_module.parse": {
             "signature": {
-                "text": "docitem_contract_module.parse(self, tr: 'tracer', subtree: 'docstring_subtree') -> 'None'",
+                "text": "docitem_contract_module.parse(self, tr: 'tracer', subtree: 'DocstringSubtree') -> 'None'",
                 "parameters": [
                     {
                         "name": "tr",
@@ -5772,7 +5827,7 @@
                     {
                         "name": "subtree",
                         "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "docstring_subtree",
+                        "annotation": "DocstringSubtree",
                         "default": null
                     }
                 ],
@@ -5850,7 +5905,7 @@
         },
         "sdv.doc.waterloo.docitem_contract.docitem_contract_class.parse": {
             "signature": {
-                "text": "docitem_contract_class.parse(self, tr: 'tracer', subtree: 'docstring_subtree') -> 'None'",
+                "text": "docitem_contract_class.parse(self, tr: 'tracer', subtree: 'DocstringSubtree') -> 'None'",
                 "parameters": [
                     {
                         "name": "tr",
@@ -5861,7 +5916,7 @@
                     {
                         "name": "subtree",
                         "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "docstring_subtree",
+                        "annotation": "DocstringSubtree",
                         "default": null
                     }
                 ],
@@ -5939,7 +5994,7 @@
         },
         "sdv.doc.waterloo.docitem_contract.docitem_contract_method.parse": {
             "signature": {
-                "text": "docitem_contract_method.parse(self, tr: 'tracer', subtree: 'docstring_subtree') -> 'None'",
+                "text": "docitem_contract_method.parse(self, tr: 'tracer', subtree: 'DocstringSubtree') -> 'None'",
                 "parameters": [
                     {
                         "name": "tr",
@@ -5950,7 +6005,7 @@
                     {
                         "name": "subtree",
                         "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "docstring_subtree",
+                        "annotation": "DocstringSubtree",
                         "default": null
                     }
                 ],
@@ -6028,7 +6083,7 @@
         },
         "sdv.doc.waterloo.docitem_contract.docitem_contract_inherited_method.parse": {
             "signature": {
-                "text": "docitem_contract_inherited_method.parse(self, tr: 'tracer', subtree: 'docstring_subtree') -> 'None'",
+                "text": "docitem_contract_inherited_method.parse(self, tr: 'tracer', subtree: 'DocstringSubtree') -> 'None'",
                 "parameters": [
                     {
                         "name": "tr",
@@ -6039,7 +6094,7 @@
                     {
                         "name": "subtree",
                         "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "docstring_subtree",
+                        "annotation": "DocstringSubtree",
                         "default": null
                     }
                 ],
@@ -6130,9 +6185,9 @@
         },
         "sdv.doc.waterloo.docitem_docstring.docitem_docstring_base.scopes": {
             "signature": {
-                "text": "docitem_docstring_base.scopes(self) -> 'Scopes_t'",
+                "text": "docitem_docstring_base.scopes(self) -> 'Scopes'",
                 "parameters": [],
-                "returns": "Scopes_t"
+                "returns": "Scopes"
             },
             "doc": {
                 "Preamble": {
@@ -6170,12 +6225,12 @@
         },
         "sdv.doc.waterloo.docitem_docstring.docitem_docstring_base.is_visible": {
             "signature": {
-                "text": "docitem_docstring_base.is_visible(self, sc_query: 'Scopes_t') -> 'bool'",
+                "text": "docitem_docstring_base.is_visible(self, sc_query: 'Scopes') -> 'bool'",
                 "parameters": [
                     {
                         "name": "sc_query",
                         "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "Scopes_t",
+                        "annotation": "Scopes",
                         "default": null
                     }
                 ],
@@ -6219,12 +6274,12 @@
         },
         "sdv.doc.waterloo.docitem_docstring.docitem_docstring_base.can_see": {
             "signature": {
-                "text": "docitem_docstring_base.can_see(self, sc_query: 'Scopes_t') -> 'bool'",
+                "text": "docitem_docstring_base.can_see(self, sc_query: 'Scopes') -> 'bool'",
                 "parameters": [
                     {
                         "name": "sc_query",
                         "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "Scopes_t",
+                        "annotation": "Scopes",
                         "default": null
                     }
                 ],
@@ -6317,7 +6372,7 @@
         },
         "sdv.doc.waterloo.docitem_docstring.docitem_docstring_base.parse": {
             "signature": {
-                "text": "docitem_docstring_base.parse(self, tr: 'tracer', tree: 'docstring_subtree') -> 'None'",
+                "text": "docitem_docstring_base.parse(self, tr: 'tracer', tree: 'DocstringSubtree') -> 'None'",
                 "parameters": [
                     {
                         "name": "tr",
@@ -6328,7 +6383,7 @@
                     {
                         "name": "tree",
                         "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "docstring_subtree",
+                        "annotation": "DocstringSubtree",
                         "default": null
                     }
                 ],
@@ -8409,12 +8464,12 @@
         },
         "sdv.doc.waterloo.docitem_convert.to_node_docstring_tree_json": {
             "signature": {
-                "text": "to_node_docstring_tree_json(tree: 'docstring_tree', flavour: 'Flavour') -> 'WtrlJsonNode_t'",
+                "text": "to_node_docstring_tree_json(tree: 'DocstringTree', flavour: 'Flavour') -> 'WtrlJsonNode_t'",
                 "parameters": [
                     {
                         "name": "tree",
                         "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "docstring_tree",
+                        "annotation": "DocstringTree",
                         "default": null
                     },
                     {
@@ -8518,12 +8573,12 @@
         },
         "sdv.doc.waterloo.docitem_convert.to_string_md": {
             "signature": {
-                "text": "to_string_md(tree: 'docstring_tree', flavour: 'Flavour' = <Flavour.MARKDOWN: 2>, headings: 'bool' = True) -> 'str'",
+                "text": "to_string_md(tree: 'DocstringTree', flavour: 'Flavour' = <Flavour.MARKDOWN: 2>, headings: 'bool' = True) -> 'str'",
                 "parameters": [
                     {
                         "name": "tree",
                         "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "docstring_tree",
+                        "annotation": "DocstringTree",
                         "default": null
                     },
                     {
@@ -8594,13 +8649,13 @@
         },
         "sdv.doc.waterloo.docitem_convert.to_string_legend_yaml": {
             "signature": {
-                "text": "to_string_legend_yaml(config: 'YamlConfig' = <sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f4c23b22fe0>) -> 'str'",
+                "text": "to_string_legend_yaml(config: 'YamlConfig' = <sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7fc229eab940>) -> 'str'",
                 "parameters": [
                     {
                         "name": "config",
                         "kind": "POSITIONAL_OR_KEYWORD",
                         "annotation": "YamlConfig",
-                        "default": "<sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f4c23b22fe0>"
+                        "default": "<sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7fc229eab940>"
                     }
                 ],
                 "returns": "str"
@@ -8637,7 +8692,7 @@
         },
         "sdv.doc.waterloo.docitem_convert.to_string_signature_yaml": {
             "signature": {
-                "text": "to_string_signature_yaml(obj: 'object', config: 'YamlConfig' = <sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f4c23b23910>) -> 'str'",
+                "text": "to_string_signature_yaml(obj: 'object', config: 'YamlConfig' = <sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7fc229eaaa40>) -> 'str'",
                 "parameters": [
                     {
                         "name": "obj",
@@ -8649,7 +8704,7 @@
                         "name": "config",
                         "kind": "POSITIONAL_OR_KEYWORD",
                         "annotation": "YamlConfig",
-                        "default": "<sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f4c23b23910>"
+                        "default": "<sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7fc229eaaa40>"
                     }
                 ],
                 "returns": "str"
@@ -8719,12 +8774,12 @@
         },
         "sdv.doc.waterloo.docitem_convert.to_string_yaml": {
             "signature": {
-                "text": "to_string_yaml(tree: 'docstring_tree', flavour: 'Flavour', config: 'YamlConfig' = <sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f4c23b23940>) -> 'str'",
+                "text": "to_string_yaml(tree: 'DocstringTree', flavour: 'Flavour', config: 'YamlConfig' = <sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7fc229eaa800>) -> 'str'",
                 "parameters": [
                     {
                         "name": "tree",
                         "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "docstring_tree",
+                        "annotation": "DocstringTree",
                         "default": null
                     },
                     {
@@ -8737,7 +8792,7 @@
                         "name": "config",
                         "kind": "POSITIONAL_OR_KEYWORD",
                         "annotation": "YamlConfig",
-                        "default": "<sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f4c23b23940>"
+                        "default": "<sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7fc229eaa800>"
                     }
                 ],
                 "returns": "str"

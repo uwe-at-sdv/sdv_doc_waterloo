@@ -12,7 +12,7 @@ except ImportError:
 INDENT_SCHEME_TAB : Final[int] = 0
 INDENT_SCHEME_SPC4 : Final[int] = 1
 
-def make_got_tag(subtree : docstring_subtree,pos : int) -> str:
+def make_got_tag(subtree : DocstringSubtree,pos : int) -> str:
 	if pos < 0:
 		return "<implementation_error_lt_0>"
 	elif pos < len(subtree):
@@ -49,7 +49,7 @@ def get_num_indent(tr : tracer,line : str,indent_scheme: int) -> int:
 		indent_scheme:
 			A symbolic value representing one of the two possible indentation schemes |term|`TAB` or |term|`SPC4`.
 	Returns:
-		|Must| return the number of indentations found at the beginning of the string in units as decribed by the indentation scheme passed.
+		|Must| return the number of indentations found at the beginning of the string in units as described by the indentation scheme passed.
 	Raises:
 		RuntimeError:
 			|Must| raise if prefix contains a mix not representable as |var|`n` repetitions of |var|`INDENT_UNIT`.
@@ -61,7 +61,7 @@ def get_num_indent(tr : tracer,line : str,indent_scheme: int) -> int:
 			if c == "\t":
 				n_tab += 1
 			elif c == " ":
-				raise_parsing_error(tr,["TKN-001"],"Inconsistent indent in docstring: space found in TAB scheme.")
+				raise_parsing_error(tr,"TKN-001","Inconsistent indent in docstring: space found in TAB scheme.")
 			else:
 				break
 		return n_tab
@@ -71,16 +71,16 @@ def get_num_indent(tr : tracer,line : str,indent_scheme: int) -> int:
 			if c == " ":
 				n_spaces += 1
 			elif c == "\t":
-				raise_parsing_error(tr,["TKN-001"],"Inconsistent indent in docstring: tab found in SPC4 scheme.")
+				raise_parsing_error(tr,"TKN-001","Inconsistent indent in docstring: tab found in SPC4 scheme.")
 			else:
 				break
 		if n_spaces % 4 != 0:
-			raise_parsing_error(tr,["TKN-002"],"Inconsistent indent in docstring: spaces not a multiple of 4.")
+			raise_parsing_error(tr,"TKN-002","Inconsistent indent in docstring: spaces not a multiple of 4.")
 		return n_spaces // 4
 	else:
-		raise_parsing_error(tr,["TKN-003"],f"Unknown indentation scheme: {indent_scheme}")
+		raise_parsing_error(tr,"TKN-003",f"Unknown indentation scheme: {indent_scheme}")
 
-def parse_indent_docstring(tr : tracer,text : str) -> docstring_tree:
+def parse_indent_docstring(tr : tracer,text : str) -> DocstringTree:
 	"""
 Preamble:
 	profile:
@@ -89,7 +89,7 @@ Preamble:
 		Definitions, Contract, Description, Parameters, Returns, Raises
 Definitions:
 	DocstringTree:
-		A value matching the following type: |type|`docstring_tree` = |type|`List`\[ |type|`Union`\[ |type|`str`, |value|`"docstring_tree"`]]
+		A value matching the following type: |type|`DocstringTree` = |type|`List`\[ |type|`Union`\[ |type|`str`, |value|`"DocstringTree"`]]
 Contract:
 	general:
 		|Must| generate a |term|`DocstringTree` from a docstring. In order to achieve this:
@@ -142,7 +142,7 @@ Raises:
 # Extract indent and check for inconcistency.
 		prefix = ln[:prefix_len]
 		if " " in prefix and "\t" in prefix:
-			raise_parsing_error(tr,["TKN-001"],"Mixed tabs and spaces in indent.")
+			raise_parsing_error(tr,"TKN-001","Mixed tabs and spaces in indent.")
 # Determine indentation scheme and leave loop.
 		indent_scheme = INDENT_SCHEME_TAB if "\t" in prefix else INDENT_SCHEME_SPC4
 		break
@@ -157,8 +157,8 @@ Raises:
 		indents.append(get_num_indent(tr,ln, indent_scheme))
 	common_indent = min(indents) if indents else 0
 # Build tree
-	target : docstring_tree = []
-	stack : List[docstring_tree] = [target]
+	target : DocstringTree = []
+	stack : List[DocstringTree] = [target]
 	cur_indent = 0
 	for line in lines:
 		join_lines = False
@@ -171,11 +171,11 @@ Raises:
 		num_indent_abs = get_num_indent(tr,line, indent_scheme)
 		num_indent = num_indent_abs - common_indent
 		if num_indent < 0:
-			raise_parsing_error(tr,["TKN-999"],"Indentation smaller than common indent.")
+			raise_parsing_error(tr,"TKN-999","Indentation smaller than common indent.")
 		elif num_indent > cur_indent + 1:
-			raise_parsing_error(tr,["TKN-004"],f"indent jump > 1, not allowed, cur_indent: {cur_indent}, num_indent: {num_indent}, line '{line}'")
+			raise_parsing_error(tr,"TKN-004",f"indent jump > 1, not allowed, cur_indent: {cur_indent}, num_indent: {num_indent}, line '{line}'")
 		elif num_indent > cur_indent:
-			subtree : docstring_tree = []
+			subtree : DocstringTree = []
 			stack[cur_indent].append(subtree)
 			stack.append(subtree)
 			cur_indent += 1
@@ -200,7 +200,7 @@ Raises:
 #			if expect_join_lines:
 # We are not amused about the trailing backslash, but not totally grumpy either.
 #				print("LAST_LINE:", last_line)
-#				warn_parsing(tr,["TKN-007"],"Line ends with backslash but is not followed by another line.")
+#				warn_parsing(tr,"TKN-007","Line ends with backslash but is not followed by another line.")
 # No join: normal appending
 			content = line.strip()
 			stack[cur_indent].append(content)
@@ -212,10 +212,10 @@ Raises:
 			assert isinstance(last_line,str)
 			stack[cur_indent][-1] = last_line[:-1].rstrip() + " " + content
 		if "\t" in content:
-			warn_parsing(tr,["TKN-009"],'Line contains inner TABs. Please connect lines with escaped \\ or use a raw string notation like r"""..."""')
+			warn_parsing(tr,"TKN-009",'Line contains inner TABs. Please connect lines with escaped \\ or use a raw string notation like r"""..."""')
 	return target
 
-def expect_list(tr : tracer,subtree : docstring_subtree,pos : int) -> Tuple[docstring_subtree,int]:
+def expect_list(tr : tracer,subtree : DocstringSubtree,pos : int) -> Tuple[DocstringSubtree,int]:
 	if pos >= len(subtree):
 		return [],pos
 	if not isinstance(subtree[pos],list):
@@ -224,48 +224,48 @@ def expect_list(tr : tracer,subtree : docstring_subtree,pos : int) -> Tuple[docs
 	pos += 1
 	return items,pos
 
-def expect_label(tr : tracer,subtree : docstring_subtree,pos : int) -> Tuple[str,int]:
+def expect_label(tr : tracer,subtree : DocstringSubtree,pos : int) -> Tuple[str,int]:
 	cur = pos
 	if pos >= len(subtree):
-		raise_parsing_error_expected_but_got(tr,tr.get_rules_on_fail(),"label","end of data")
+		raise_parsing_error_expected_but_got(tr,tr.get_rule_on_fail(),"label","end of data")
 	if not isinstance(subtree[pos], str):
-		raise_parsing_error_expected_but_got(tr,tr.get_rules_on_fail(),'str', f'{make_got_tag(subtree,cur)}')
+		raise_parsing_error_expected_but_got(tr,tr.get_rule_on_fail(),'str', f'{make_got_tag(subtree,cur)}')
 	if subtree[pos] == "":
-		raise_parsing_error(tr,["PRSR-002"],f"empty label, not clear how this can happen at all.")
+		raise_parsing_error(tr,"PRSR-002",f"empty label, not clear how this can happen at all.")
 # Important! Easy to forget...
 	if subtree[pos][-1] != ":":
-		raise_parsing_error(tr,["PRSR-003"],f"missing colon after {make_got_tag(subtree,cur)}.")
+		raise_parsing_error(tr,"PRSR-003",f"missing colon after {make_got_tag(subtree,cur)}.")
 	s = subtree[pos][:-1]
 	pos += 1
 	assert isinstance(s,str)
 	return s,pos
 
-def expect_label_identifier(tr : tracer,subtree : docstring_subtree,pos : int) -> Tuple[str,int]:
+def expect_label_identifier(tr : tracer,subtree : DocstringSubtree,pos : int) -> Tuple[str,int]:
 	cur = pos
 	s,pos = expect_label(tr,subtree,pos)
 	if not RE_IDENTIFIER_COMPILED.fullmatch(s):
-		raise_parsing_error_expected_but_got(tr,tr.get_rules_on_fail(),'identifier', f'{make_got_tag(subtree,cur)}')
+		raise_parsing_error_expected_but_got(tr,tr.get_rule_on_fail(),'identifier', f'{make_got_tag(subtree,cur)}')
 	return s,pos
 
-def expect_label_qualified_identifier(tr : tracer,subtree : docstring_subtree,pos : int) -> Tuple[str,int]:
+def expect_label_qualified_identifier(tr : tracer,subtree : DocstringSubtree,pos : int) -> Tuple[str,int]:
 	cur = pos
 	s,pos = expect_label(tr,subtree,pos)
 	if not RE_QUALIFIED_IDENTIFIER_COMPILED.fullmatch(s):
-		raise_parsing_error_expected_but_got(tr,tr.get_rules_on_fail(),'qualified identifier', f'{make_got_tag(subtree,cur)}')
+		raise_parsing_error_expected_but_got(tr,tr.get_rule_on_fail(),'qualified identifier', f'{make_got_tag(subtree,cur)}')
 	return s,pos
 
-def expect_text(tr : tracer,subtree : docstring_subtree,pos : int) -> Tuple[str,int]:
+def expect_text(tr : tracer,subtree : DocstringSubtree,pos : int) -> Tuple[str,int]:
 	cur = pos
 	if pos >= len(subtree):
-		raise_parsing_error(tr,["PRSR-004"],"missing block after label")
+		raise_parsing_error(tr,"PRSR-004","missing block after label")
 	if not isinstance(subtree[pos],str):
-		raise_parsing_error_expected_but_got(tr,tr.get_rules_on_fail(),'str', f'{make_got_tag(subtree,cur)}')
+		raise_parsing_error_expected_but_got(tr,tr.get_rule_on_fail(),'str', f'{make_got_tag(subtree,cur)}')
 	s = subtree[pos]
 	pos += 1
 	assert isinstance(s,str)
 	return s,pos
 
-def get_tree_of_section(tr : tracer,tree : docstring_tree,sec : str) -> docstring_subtree:
+def get_tree_of_section(tr : tracer,tree : DocstringTree,sec : str) -> DocstringSubtree:
 	"""
 Preamble:
 	profile:
@@ -300,7 +300,7 @@ Raises:
 			return subtree
 	raise SectionNotFoundError(f"Section '{sec}' not found.")
 
-def get_tree_of_subsection(tr : tracer,tree : docstring_tree,sec : str,subsec : str) -> docstring_subtree:
+def get_tree_of_subsection(tr : tracer,tree : DocstringTree,sec : str,subsec : str) -> DocstringSubtree:
 	"""
 Preamble:
 	profile:
@@ -335,7 +335,7 @@ Raises:
 	"""
 	pos = 0
 	while pos < len(tree):
-		with rules_on_fail(tr,["PRSR-005"]):
+		with rule_on_fail(tr,"PRSR-005"):
 			label,pos = expect_label_identifier(tr,tree,pos)
 		subtree,pos = expect_list(tr,tree,pos)
 		if label == sec:
@@ -348,7 +348,7 @@ Raises:
 			raise SubsectionNotFoundError(f"Subsection '{subsec}' not found in section '{sec}'.")
 	raise SectionNotFoundError(f"Section '{sec}' not found.")
 
-def get_profile_of_tree(tr : tracer,tree : docstring_tree) -> str:
+def get_profile_of_tree(tr : tracer,tree : DocstringTree) -> str:
 	if not tree:
 		return ""
 	t = get_tree_of_subsection(tr,tree,"Preamble","profile")
@@ -356,13 +356,13 @@ def get_profile_of_tree(tr : tracer,tree : docstring_tree) -> str:
 		raise NoContentError("get_profile_of_tree")
 	return str(t[0])
 
-def get_profile_of_tree_nothrow(tr : tracer,tree : docstring_tree) -> str:
+def get_profile_of_tree_nothrow(tr : tracer,tree : DocstringTree) -> str:
 	try:
 		return get_profile_of_tree(tr,tree)
 	except:
 		return ""
 
-def get_scopes_of_tree(tr : tracer,tree : docstring_tree) -> Scopes_t:
+def get_scopes_of_tree(tr : tracer,tree : DocstringTree) -> Scopes:
 	"""
 	Preamble:
 		profile:
@@ -403,7 +403,7 @@ def get_scopes_of_tree(tr : tracer,tree : docstring_tree) -> Scopes_t:
 	assert is_list_of_str(scopes)
 	return set([scope_tag_map[s] for s in scopes if s in scope_tag_map])
 
-def to_string_tree(tree : docstring_subtree,indent_scheme : int = INDENT_SCHEME_TAB,indent : int = 0) -> str:
+def to_string_tree(tree : DocstringSubtree,indent_scheme : int = INDENT_SCHEME_TAB,indent : int = 0) -> str:
 	"""
 Preamble:
 	profile:

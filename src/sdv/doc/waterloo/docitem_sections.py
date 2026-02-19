@@ -41,7 +41,7 @@ Method_overview:
 		super().__init__()
 	def label(self) -> str:
 		return "Derived_from"
-	def parse(self,tr : tracer,bases : docstring_subtree) -> None:
+	def parse(self,tr : tracer,bases : DocstringSubtree) -> None:
 		"""
 Preamble:
 	profile:
@@ -89,7 +89,7 @@ Method_overview:
 		super().__init__()
 	def label(self) -> str:
 		return "See_also"
-	def parse(self, tr: tracer, refs: docstring_subtree) -> None:
+	def parse(self, tr: tracer, refs: DocstringSubtree) -> None:
 		"""
 Preamble:
 	profile:
@@ -135,7 +135,7 @@ Method_overview:
 		super().__init__()
 	def label(self) -> str:
 		return "Public_classes"
-	def parse(self, tr: tracer, refs: docstring_subtree) -> None:
+	def parse(self, tr: tracer, refs: DocstringSubtree) -> None:
 		"""
 Preamble:
 	profile:
@@ -181,7 +181,7 @@ Method_overview:
 		super().__init__()
 	def label(self) -> str:
 		return "Public_methods"
-	def parse(self, tr: tracer, refs: docstring_subtree) -> None:
+	def parse(self, tr: tracer, refs: DocstringSubtree) -> None:
 		"""
 Preamble:
 	profile:
@@ -227,7 +227,7 @@ Method_overview:
 		super().__init__()
 	def label(self) -> str:
 		return "Public_functions"
-	def parse(self, tr: tracer, refs: docstring_subtree) -> None:
+	def parse(self, tr: tracer, refs: DocstringSubtree) -> None:
 		"""
 Preamble:
 	profile:
@@ -275,7 +275,7 @@ Method_overview:
 		super().__init__()
 	def label(self) -> str:
 		return "factory_functions"
-	def parse(self,tr : tracer,factory_functions : docstring_subtree) -> None:
+	def parse(self,tr : tracer,factory_functions : DocstringSubtree) -> None:
 		"""
 Preamble:
 	profile:
@@ -296,10 +296,10 @@ Raises:
 	RuntimeError:
 		|Must| raise if the content is not a list of strings.
 		"""
-		with rules_on_fail(tr, ["FAC-007"]):
+		with rule_on_fail(tr, "FAC-007"):
 # Expect list of strings
 			if not is_list_of_str(factory_functions):
-				raise_parsing_error_expected_but_got(tr,tr.get_rules_on_fail(),"list of strings",f"{factory_functions}")
+				raise_parsing_error_expected_but_got(tr,tr.get_rule_on_fail(),"list of strings",f"{factory_functions}")
 # No restrictions. The content is a list of free-form text lines.
 			self.set_items(factory_functions)
 	def __str__(self) -> str:
@@ -330,7 +330,7 @@ Method_overview:
 		super().__init__()
 	def label(self) -> str:
 		return "Factory"
-	def parse(self,tr : tracer,functions : docstring_subtree) -> None:
+	def parse(self,tr : tracer,functions : DocstringSubtree) -> None:
 		"""
 Preamble:
 	profile:
@@ -354,7 +354,7 @@ Raises:
 		"""
 		pos = 0
 		while pos < len(functions):
-			with rules_on_fail(tr, ["FAC-005"]):
+			with rule_on_fail(tr, "FAC-005"):
 				label,pos = expect_label(tr,functions,pos)
 # factory requires a list of factory function names
 			items,pos = expect_list(tr,functions,pos)
@@ -388,7 +388,7 @@ Method_overview:
 	parse:
 		Parse free-form text lines.
 	"""
-	def parse(self,tr : tracer,lines : docstring_subtree) -> None:
+	def parse(self,tr : tracer,lines : DocstringSubtree) -> None:
 		"""
 Preamble:
 	profile:
@@ -411,7 +411,7 @@ Raises:
 		"""
 # Expect list of strings
 		if not is_list_of_str(lines):
-			raise_parsing_error_expected_but_got(tr,tr.get_rules_on_fail(),"list of strings",f"{lines}")
+			raise_parsing_error_expected_but_got(tr,tr.get_rule_on_fail(),"list of strings",f"{lines}")
 # No restrictions. The content is a list of free-form text lines.
 		self.set_items(lines)
 	def __str__(self) -> str:
@@ -474,7 +474,7 @@ Method_overview:
 		super().__init__()
 	def label(self) -> str:
 		return "Class_overview"
-	def parse(self,tr : tracer,entries : docstring_subtree) -> None:
+	def parse(self,tr : tracer,entries : DocstringSubtree) -> None:
 		"""
 Preamble:
 	profile:
@@ -498,7 +498,7 @@ Raises:
 		"""
 		pos = 0
 		while pos < len(entries):
-			with rules_on_fail(tr, ["CLOV-010"]):
+			with rule_on_fail(tr, "CLOV-010"):
 				label,pos = expect_label(tr,entries,pos)
 # class_overview requires a list of class_overview function names
 			items,pos = expect_list(tr,entries,pos)
@@ -562,7 +562,7 @@ Method_overview:
 		super().__init__()
 	def label(self) -> str:
 		return "Public_types"
-	def parse(self,tr : tracer,entries : docstring_subtree) -> None:
+	def parse(self,tr : tracer,entries : DocstringSubtree) -> None:
 		"""
 Preamble:
 	profile:
@@ -586,7 +586,18 @@ Raises:
 		"""
 		pos = 0
 		while pos < len(entries):
-			with rules_on_fail(tr, ["PTY-004","PTY-011"]):
+			rule_id: str
+			p = self.parent()
+			assert isinstance(p,docitem_base)
+# Public_types can occur in modules and classes
+			if p.is_docstring_module():
+				rule_id = "PTY-004"
+			elif p.is_docstring_class():
+				rule_id = "PTY-011"
+			else:
+# Should never happen.
+				rule_id = "PTY-999"
+			with rule_on_fail(tr, rule_id):
 				label,pos = expect_label_identifier(tr,entries,pos)
 # public_types requires a list of public_types function names
 			items,pos = expect_list(tr,entries,pos)
@@ -648,7 +659,7 @@ Method_overview:
 	"""
 	def __init__(self) -> None:
 		super().__init__()
-	def parse(self,tr : tracer,entries : docstring_subtree) -> None:
+	def parse(self,tr : tracer,entries : DocstringSubtree) -> None:
 		"""
 Preamble:
 	profile:
@@ -672,7 +683,7 @@ Raises:
 		"""
 		pos = 0
 		while pos < len(entries):
-			with rules_on_fail(tr, ["PVAR-004"]):
+			with rule_on_fail(tr, "PVAR-004"):
 				label,pos = expect_label(tr,entries,pos)
 # public_assignables requires a list of public_assignables function names
 			items,pos = expect_list(tr,entries,pos)
@@ -747,7 +758,7 @@ Method_overview:
 		super().__init__()
 	def label(self) -> str:
 		return "Method_overview"
-	def parse(self,tr : tracer,entries : docstring_subtree) -> None:
+	def parse(self,tr : tracer,entries : DocstringSubtree) -> None:
 		"""
 Preamble:
 	profile:
@@ -771,7 +782,7 @@ Raises:
 		"""
 		pos = 0
 		while pos < len(entries):
-			with rules_on_fail(tr, ["CMTO-004"]):
+			with rule_on_fail(tr, "CMTO-004"):
 				label, pos = expect_label(tr, entries, pos)
 				# method_overview requires a list of method_overview function names
 				items, pos = expect_list(tr, entries, pos)
@@ -832,7 +843,7 @@ Method_overview:
 		super().__init__()
 	def label(self) -> str:
 		return "Function_overview"
-	def parse(self,tr : tracer,entries : docstring_subtree) -> None:
+	def parse(self,tr : tracer,entries : DocstringSubtree) -> None:
 		"""
 Preamble:
 	profile:
@@ -856,7 +867,7 @@ Raises:
 		"""
 		pos = 0
 		while pos < len(entries):
-			with rules_on_fail(tr, ["MFNO-005"]):
+			with rule_on_fail(tr, "MFNO-005"):
 				label,pos = expect_label(tr,entries,pos)
 # function_overview requires a list of function_overview function names
 				items,pos = expect_list(tr,entries,pos)
@@ -892,7 +903,7 @@ Method_overview:
 		super().__init__()
 	def label(self) -> str:
 		return "Returns"
-	def parse(self,tr : tracer,lines : docstring_subtree) -> None:
+	def parse(self,tr : tracer,lines : DocstringSubtree) -> None:
 		"""
 Preamble:
 	profile:
@@ -916,7 +927,7 @@ Raises:
 		"""
 # Expect list of strings
 		if not is_list_of_str(lines):
-			raise_parsing_error_expected_but_got(tr,["RET-005"],"list of strings",f"{lines}")
+			raise_parsing_error_expected_but_got(tr,"RET-005","list of strings",f"{lines}")
 		self.set_items(lines)
 	def __str__(self) -> str:
 		return " {'" + "','".join(self._items) + "'}"
@@ -958,7 +969,7 @@ Method_overview:
 		super().__init__()
 	def label(self) -> str:
 		return "Description"
-	def parse(self,tr : tracer,lines : docstring_subtree) -> None:
+	def parse(self,tr : tracer,lines : DocstringSubtree) -> None:
 		"""
 Preamble:
 	profile:
@@ -982,7 +993,7 @@ Raises:
 		"""
 # Expect list of strings
 		if not is_list_of_str(lines):
-			raise_parsing_error_expected_but_got(tr,["DESC-004"],"list of strings",f"{lines}")
+			raise_parsing_error_expected_but_got(tr,"DESC-004","list of strings",f"{lines}")
 		self._items = lines
 	def __str__(self) -> str:
 		return " {'" + "','".join(self._items) + "'}"
@@ -1044,7 +1055,7 @@ Method_overview:
 		super().__init__()
 	def label(self) -> str:
 		return "Parameters"
-	def parse(self,tr : tracer,entries : docstring_subtree) -> None:
+	def parse(self,tr : tracer,entries : DocstringSubtree) -> None:
 		"""
 Preamble:
 	profile:
@@ -1071,7 +1082,7 @@ Raises:
 		"""
 		pos = 0
 		while pos < len(entries):
-			with rules_on_fail(tr,["PAR-006"]):
+			with rule_on_fail(tr,"PAR-006"):
 				label,pos = expect_label_identifier(tr,entries,pos)
 			items,pos = expect_list(tr,entries,pos)
 			self.add_child(tr,label, docitem_parameters_entry, items)
@@ -1135,7 +1146,7 @@ Method_overview:
 		super().__init__()
 	def label(self) -> str:
 		return "Raises"
-	def parse(self,tr : tracer,entries : docstring_subtree) -> None:
+	def parse(self,tr : tracer,entries : DocstringSubtree) -> None:
 		"""
 Preamble:
 	profile:
@@ -1164,7 +1175,7 @@ Raises:
 		while pos < len(entries):
 # label is e.g. "RuntimeError", "RangeError",... but could also be a class
 # in a different module, therefore we allow qualified identifiers.
-			with rules_on_fail(tr, ["RAI-008"]):
+			with rule_on_fail(tr, "RAI-008"):
 				label,pos = expect_label_qualified_identifier(tr,entries,pos)
 # factory requires a list of factory function names
 			items,pos = expect_list(tr,entries,pos)
@@ -1227,7 +1238,7 @@ Method_overview:
 		super().__init__()
 	def label(self) -> str:
 		return "Definitions"
-	def parse(self,tr : tracer,entries : docstring_subtree) -> None:
+	def parse(self,tr : tracer,entries : DocstringSubtree) -> None:
 		"""
 Preamble:
 	profile:
@@ -1250,7 +1261,7 @@ Raises:
 		"""
 		pos = 0
 		while pos < len(entries):
-			with rules_on_fail(tr,["DEF-004"]):
+			with rule_on_fail(tr,"DEF-004"):
 				label,pos = expect_label_identifier(tr,entries,pos)
 			items,pos = expect_list(tr,entries,pos)
 			self.add_child(tr,label, docitem_definitions_entry, items)
@@ -1316,7 +1327,7 @@ Method_overview:
 		super().__init__()
 	def label(self) -> str:
 		return "Terminology"
-	def parse(self,tr : tracer,entries : docstring_subtree) -> None:
+	def parse(self,tr : tracer,entries : DocstringSubtree) -> None:
 		"""
 Preamble:
 	profile:
@@ -1339,7 +1350,7 @@ Raises:
 		"""
 		pos = 0
 		while pos < len(entries):
-			with rules_on_fail(tr, ["TERM-005"]):
+			with rule_on_fail(tr, "TERM-005"):
 				label,pos = expect_label(tr,entries,pos)
 			items,pos = expect_list(tr,entries,pos)
 			self.add_child(tr,label, docitem_terminology_entry, items)
@@ -1401,7 +1412,7 @@ Method_overview:
 		super().__init__()
 	def label(self) -> str:
 		return "Notes"
-	def parse(self,tr : tracer,entries : docstring_subtree) -> None:
+	def parse(self,tr : tracer,entries : DocstringSubtree) -> None:
 		"""
 Preamble:
 	profile:
@@ -1428,7 +1439,7 @@ Raises:
 		"""
 		pos = 0
 		while pos < len(entries):
-			with rules_on_fail(tr, ["PRSR-006"]):
+			with rule_on_fail(tr, "PRSR-006"):
 				label,pos = expect_label(tr,entries,pos)
 			items,pos = expect_list(tr,entries,pos)
 			self.add_child(tr,label, docitem_notes_entry, items)

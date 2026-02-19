@@ -1,0 +1,42 @@
+{
+	"$schema": "https://sci-d-vis.com/schema/wtrl-tracer-json-0.0.2.schema.json",
+	"$id": "urn:waterlint:0.2.4:validate-json:c992279d4887f9389c95e0e4a1d3efc3",
+	"__WTRL_VERSION__": {
+		"waterloo": "0.3.0",
+		"schema": "0.0.2"
+	},
+	"__WTRL_DEBUG__": [
+		{
+			"kind":"debug",
+			"origin":"tool",
+			"context":["some","context"],
+			"msg":"Some debug info"
+		}
+	],
+	"__WTRL_INFO__": [
+		{
+			"kind":"info",
+			"origin":"tool",
+			"context":["some","context"],
+			"msg":"Some info"
+		}
+	],
+	"__WTRL_WARNING__": [
+		{
+			"kind":"warning",
+			"origin":"validation",
+			"context":["some","context"],
+			"rule-id":"XXX-999",
+			"msg":"Some warning"
+		}
+	],
+	"__WTRL_ERROR__": [
+		{
+			"kind":"error",
+			"origin":"validation",
+			"context":["some","context"],
+			"rule-id":"XXX-999",
+			"msg":"Some error"
+		}
+	]
+}

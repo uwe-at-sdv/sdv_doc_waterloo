@@ -41,7 +41,7 @@ Method_overview:
 		super().__init__()
 	def label(self) -> str:
 		return "constructor"
-	def parse(self,tr : tracer,subtree : docstring_subtree) -> None:
+	def parse(self,tr : tracer,subtree : DocstringSubtree) -> None:
 		"""
 Preamble:
 	profile:
@@ -66,7 +66,7 @@ Raises:
 		pos = 0
 		while pos < len(subtree):
 # constructor requires a list of strings
-			with rules_on_fail(tr, ["CON-008"]):
+			with rule_on_fail(tr, "CON-008"):
 				entry,pos = expect_text(tr,subtree,pos)
 			self._items.append(entry)
 	def __str__(self) -> str:
@@ -99,7 +99,7 @@ Method_overview:
 		super().__init__()
 	def label(self) -> str:
 		return "general"
-	def parse(self,tr : tracer,subtree : docstring_subtree) -> None:
+	def parse(self,tr : tracer,subtree : DocstringSubtree) -> None:
 		"""
 Preamble:
 	profile:
@@ -123,7 +123,7 @@ Raises:
 		pos = 0
 		while pos < len(subtree):
 # general requires a list of strings
-			with rules_on_fail(tr, ["CON-006"]):
+			with rule_on_fail(tr, "CON-006"):
 				entry,pos = expect_text(tr,subtree,pos)
 			self._items.append(entry)
 	def __str__(self) -> str:
@@ -156,7 +156,7 @@ Method_overview:
 		super().__init__()
 	def label(self) -> str:
 		return "invariants"
-	def parse(self,tr : tracer,subtree : docstring_subtree) -> None:
+	def parse(self,tr : tracer,subtree : DocstringSubtree) -> None:
 		"""
 Preamble:
 	profile:
@@ -180,7 +180,7 @@ Raises:
 		pos = 0
 		while pos < len(subtree):
 # invariants requires a list of strings
-			with rules_on_fail(tr, ["CON-026"]):
+			with rule_on_fail(tr, "CON-026"):
 				entry,pos = expect_text(tr,subtree,pos)
 			self._items.append(entry)
 	def __str__(self) -> str:
@@ -217,7 +217,7 @@ Method_overview:
 		super().__init__()
 	def label(self) -> str:
 		return "requires"
-	def parse(self,tr : tracer,subtree : docstring_subtree) -> None:
+	def parse(self,tr : tracer,subtree : DocstringSubtree) -> None:
 		"""
 Preamble:
 	profile:
@@ -241,7 +241,7 @@ Raises:
 		pos = 0
 		while pos < len(subtree):
 # requires requires a list of strings
-			with rules_on_fail(tr, ["CON-048"]):
+			with rule_on_fail(tr, "CON-048"):
 				entry,pos = expect_text(tr,subtree,pos)
 			self._items.append(entry)
 	def __str__(self) -> str:
@@ -278,7 +278,7 @@ Method_overview:
 		super().__init__()
 	def label(self) -> str:
 		return "ensures"
-	def parse(self,tr : tracer,subtree : docstring_subtree) -> None:
+	def parse(self,tr : tracer,subtree : DocstringSubtree) -> None:
 		"""
 Preamble:
 	profile:
@@ -302,7 +302,7 @@ Raises:
 		pos = 0
 		while pos < len(subtree):
 # ensures ensures a list of strings
-			with rules_on_fail(tr, ["CON-050"]):
+			with rule_on_fail(tr, "CON-050"):
 				entry,pos = expect_text(tr,subtree,pos)
 			self._items.append(entry)
 	def __str__(self) -> str:
@@ -335,7 +335,7 @@ Method_overview:
 		super().__init__()
 	def label(self) -> str:
 		return "base"
-	def parse(self,tr : tracer,bases : docstring_subtree) -> None:
+	def parse(self,tr : tracer,bases : DocstringSubtree) -> None:
 		"""
 Preamble:
 	profile:
@@ -359,7 +359,7 @@ Raises:
 		"""
 # exactly one entry required (CON-040)
 		if len(bases) != 1:
-			raise_parsing_error_expected_but_got(tr, ["CON-040"], "exactly one item", f"{bases}")
+			raise_parsing_error_expected_but_got(tr, "CON-040", "exactly one item", f"{bases}")
 # No need to set a default rule. _parse in the base class is
 # a complete implementation of rules LQID-001 to LQID-005.
 		super()._parse(tr, bases, docitem_list_of_symbols_base.ValuePattern.QUALIFIED_IDENTIFIER)
@@ -394,7 +394,7 @@ Method_overview:
 		super().__init__()
 	def label(self) -> str:
 		return "traits"
-	def parse(self, tr: tracer, refs: docstring_subtree) -> None:
+	def parse(self, tr: tracer, refs: DocstringSubtree) -> None:
 		"""
 Preamble:
 	profile:
@@ -438,7 +438,7 @@ Method_overview:
 		super().__init__()
 	def label(self) -> str:
 		return "Contract"
-	def parse(self,tr : tracer,subtree : docstring_subtree) -> None:
+	def parse(self,tr : tracer,subtree : DocstringSubtree) -> None:
 		"""
 Preamble:
 	profile:
@@ -467,13 +467,13 @@ Raises:
 			lb = subtree[pos]
 			assert isinstance(lb,str)
 			if lb in dispatch_map:
-				with rules_on_fail(tr, ["CON-028"]):
+				with rule_on_fail(tr, "CON-028"):
 					label,pos = expect_label(tr,subtree,pos)
 # Contract requires a list
 				items,pos = expect_list(tr,subtree,pos)
 				self.add_child(tr,label, dispatch_map[lb], items)
 			else:
-				raise_parsing_error_invalid_label(tr,["CON-028"],lb,dispatch_map)
+				raise_parsing_error_invalid_label(tr,"CON-028",lb,dispatch_map)
 	def __str__(self) -> str:
 		return self.label() + " {" + ", ".join([key + str(value) for key,value in self._items.items()]) + "}"
 
@@ -502,7 +502,7 @@ Method_overview:
 		super().__init__()
 	def label(self) -> str:
 		return "Contract"
-	def parse(self,tr : tracer,subtree : docstring_subtree) -> None:
+	def parse(self,tr : tracer,subtree : DocstringSubtree) -> None:
 		"""
 Preamble:
 	profile:
@@ -533,13 +533,13 @@ Raises:
 			lb = subtree[pos]
 			assert isinstance(lb,str)
 			if lb in dispatch_map:
-				with rules_on_fail(tr, ["CON-032"]):
+				with rule_on_fail(tr, "CON-032"):
 					label,pos = expect_label(tr,subtree,pos)
 # Contract requires a list
 				items,pos = expect_list(tr,subtree,pos)
 				self.add_child(tr,label, dispatch_map[lb], items)
 			else:
-				raise_parsing_error_invalid_label(tr,["CON-032"],lb,dispatch_map)
+				raise_parsing_error_invalid_label(tr,"CON-032",lb,dispatch_map)
 	def __str__(self) -> str:
 		return self.label() + " {" + ", ".join([key + str(value) for key,value in self._items.items()]) + "}"
 
@@ -568,7 +568,7 @@ Method_overview:
 		super().__init__()
 	def label(self) -> str:
 		return "Contract"
-	def parse(self,tr : tracer,subtree : docstring_subtree) -> None:
+	def parse(self,tr : tracer,subtree : DocstringSubtree) -> None:
 		"""
 Preamble:
 	profile:
@@ -600,13 +600,13 @@ Raises:
 			lb = subtree[pos]
 			assert isinstance(lb,str)
 			if lb in dispatch_map:
-				with rules_on_fail(tr, ["CON-027"]):
+				with rule_on_fail(tr, "CON-027"):
 					label,pos = expect_label(tr,subtree,pos)
 # Contract requires a list
 				items,pos = expect_list(tr,subtree,pos)
 				self.add_child(tr,label, dispatch_map[lb], items)
 			else:
-				raise_parsing_error_invalid_label(tr,["CON-027"],lb,dispatch_map)
+				raise_parsing_error_invalid_label(tr,"CON-027",lb,dispatch_map)
 	def __str__(self) -> str:
 		return self.label() + " {" + ", ".join([key + str(value) for key,value in self._items.items()]) + "}"
 
@@ -635,7 +635,7 @@ Method_overview:
 		super().__init__()
 	def label(self) -> str:
 		return "Contract"
-	def parse(self,tr : tracer,subtree : docstring_subtree) -> None:
+	def parse(self,tr : tracer,subtree : DocstringSubtree) -> None:
 		"""
 Preamble:
 	profile:
@@ -666,13 +666,13 @@ Raises:
 				lb = subtree[pos]
 				assert isinstance(lb,str)
 				if lb in dispatch_map:
-					with rules_on_fail(tr, ["CON-035"]):
+					with rule_on_fail(tr, "CON-035"):
 						label,pos = expect_label(tr,subtree,pos)
 # Contract requires a list
 					items,pos = expect_list(tr,subtree,pos)
 					self.add_child(tr,label, dispatch_map[lb], items)
 				else:
-					raise_parsing_error_invalid_label(tr,["CON-035"],lb,dispatch_map)
+					raise_parsing_error_invalid_label(tr,"CON-035",lb,dispatch_map)
 	def __str__(self) -> str:
 		return self.label() + " {" + ", ".join([key + str(value) for key,value in self._items.items()]) + "}"
 

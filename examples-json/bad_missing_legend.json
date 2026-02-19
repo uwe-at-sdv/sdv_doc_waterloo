@@ -6,29 +6,10 @@
         "schema": "0.0.4"
     },
     "__WTRL_META__": {
-        "generated_at": "2026-02-19T16:19:40+01:00",
+        "generated_at": "2026-02-19T14:44:11+01:00",
         "generator": "waterlint",
         "scope": "core",
         "flavour": "rfc-2119"
-    },
-    "__WTRL_ROLES__": {
-        "attr": "Attribute name",
-        "cmd": "Shell or CLI command",
-        "dfn": "Definition of a term",
-        "file": "File or path",
-        "func": "Function or callable",
-        "label": "Section/Subsection label",
-        "lit": "Literal text or code",
-        "mod": "Module name",
-        "norm": "Normativity keyword",
-        "op": "Operator symbol",
-        "opt": "Command-line option or flag",
-        "tag": "Tag or marker",
-        "term": "Domain-specific term",
-        "type": "Type name or annotation",
-        "value": "Concrete value",
-        "var": "Variable name",
-        "var_type": "Variable and type, like 'var:type'"
     },
     "__WTRL_TOC_MODULES__": {
         "test_docitem_method_decorator": "/__WTRL_OBJECTS__/test_docitem_method_decorator"

@@ -441,6 +441,13 @@ def resolve_markup(text : str) -> str:
 		role = m.group(1)
 		body = m.group(2)
 		if role == "ref":
+# Check for http- and https-links.
+			m_ext = re.match(r"^\s*([^<>`]+?)\s*<\s*(https?://[^>\s]+)\s*>\s*$", body)
+			if m_ext:
+				label = m_ext.group(1).strip()
+				url = m_ext.group(2).strip()
+				return f"`{label} <{url}>`_"
+# Sphinx internal reference.
 			return f":ref:`{body}`"
 		return f":wtrl_{role}:`{body}`"
 	s =  mod_docitem.RE_WTRL_MARKUP_BACKTICK_COMPILED.sub(_repl, text)
@@ -465,7 +472,7 @@ def build_sphinx_nodes(ctx : context,obj: object,doc: mod_docitem.docitem_docstr
 			|Must| render selected reference-like entries as internal links where targets can be resolved.
 			|Must| keep unresolved reference entries visible as plain text fallback.
 			|Must| emit runtime warnings for unresolved entries in sections where linkability is expected.
-			|Must| not raise hard validation errors for unresolved references; semantic enforcement belongs to the validator.
+			|Must_not| raise hard validation errors for unresolved references; semantic enforcement belongs to the validator.
 	Parameters:
 		ctx:
 			Rendering context providing inline parser and role-formatters.
@@ -1286,7 +1293,7 @@ def render_signature_tokens_inline(ctx: context, func_qname: str, *, drop_self: 
 	display_name = head_name
 
 # detect decorators
-	decorator_lines = mod_docitem.get_decorators(obj)
+	decorator_lines = mod_docitem.get_obj_decorators(obj)
 # detect async
 	coroutine_marker = ""
 	if inspect.iscoroutinefunction(obj) or inspect.isasyncgenfunction(obj):
@@ -1364,7 +1371,7 @@ def render_signature_tokens_multiline(ctx: context, func_qname: str, *, drop_sel
 	display_name = head_name
 
 # detect decorators
-	decorator_lines = mod_docitem.get_decorators(obj)
+	decorator_lines = mod_docitem.get_obj_decorators(obj)
 
 # detect async
 	coroutine_marker = ""
@@ -1410,7 +1417,7 @@ def render_head_of_callable(ctx: context, obj: object, display_scope: bool = Tru
 	objname = mod_docitem.get_obj_name(obj)
 	objname_segments = objname.split(".")
 # detect decorators
-	decorator_lines = mod_docitem.get_decorators(obj)
+	decorator_lines = mod_docitem.get_obj_decorators(obj)
 # detect async
 	coroutine_marker = ""
 	if inspect.iscoroutinefunction(obj) or inspect.isasyncgenfunction(obj):
