@@ -7,7 +7,6 @@ from pygments.lexer import Lexer
 from pygments.lexers.python import PythonLexer
 from pygments.token import Generic, Keyword, Name, String, Literal
 
-
 RE_SECTION = re.compile(
 	r"^\s*(?:"
 	r"Preamble|Contract|Parameters|Returns|Raises|Notes|See_also|"
