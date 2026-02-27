@@ -533,10 +533,56 @@ Raises:
 		|May| propagate exceptions from method |func|`parse_indent_docstring`.
 		|May| propagate exceptions from method |type|`docitem_docstring_base`. |func|`parse`.
 Notes:
-	Drift:
-		Last check on 2026-01-22
+	Last review:
+		2026-01-22
 	"""
 	tree = parse_indent_docstring(tr, doc_txt)
+	return make_docitem_tree_from_docstring_tree(tr, tree)
+
+def check_profile_matches_object(tr: tracer, profile: str, obj: object) -> None:
+	if is_obj_module(obj):
+		if profile != "module":
+			raise_validation_error(tr, obj, "PRE-017", f"profile is '{profile}' but '{get_obj_name(obj)}' is a module.")
+	elif is_obj_class(obj):
+		if profile != "class":
+			raise_validation_error(tr, obj, "PRE-018", f"profile is '{profile}' but '{get_obj_name(obj)}' is a class.")
+	else:
+		if profile not in {"function", "method", "inherited_method"}:
+			raise_validation_error(tr, obj, "PRE-019", f"profile is '{profile}' but '{get_obj_name(obj)}' is a function or method.")
+# Heuristic split between function and method-like callables.
+		is_method_like: bool = False
+		qual = getattr(obj, "__qualname__", "")
+		if isinstance(qual, str) and "." in qual and "<locals>" not in qual:
+			is_method_like = True
+		try:
+# Improve heuristics by checking for certain decorators.
+			decorator_lines = get_obj_decorators(obj)
+			if any(
+				line in ("@staticmethod", "@classmethod", "@abstractmethod", "@abc.abstractmethod")
+				for line in decorator_lines
+			):
+				is_method_like = True
+		except Exception:
+			pass
+		if is_method_like:
+			if profile not in {"method", "inherited_method"}:
+				raise_validation_error(tr, obj, "PRE-019", f"profile is '{profile}' but '{get_obj_name(obj)}' is method-like.")
+		else:
+			if profile != "function":
+				raise_validation_error(tr, obj, "PRE-019", f"profile is '{profile}' but '{get_obj_name(obj)}' is a function.")
+
+def make_docitem_tree_from_object(tr: tracer, obj: object) -> docitem_docstring_base:
+	tree = parse_indent_docstring(tr, get_obj_docstring(obj))
+# We test **carefully** if the profile exists and matches. We skip the
+# test if the profile cannot be determined, in order to not shadow other
+# error messages like DOC-007.
+	try:
+		profile = get_profile_of_tree(tr,tree)
+		if profile != "":
+			check_profile_matches_object(tr,profile,obj)
+# The profile must match the object type.
+	except Exception:
+		pass
 	return make_docitem_tree_from_docstring_tree(tr, tree)
 
 #===== end Docstring ==========================================#

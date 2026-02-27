@@ -1,0 +1,169 @@
+{
+    "$schema": "https://sci-d-vis.com/schema/wtrl-json-0.0.4.schema.json",
+    "$id": "urn:waterlint:0.4.0:render-json:core:rfc-2119:2b4d68e0293d84aef1d61d60d4185af2",
+    "__WTRL_VERSION__": {
+        "waterloo": "0.5.4",
+        "schema": "0.0.4"
+    },
+    "__WTRL_META__": {
+        "generated_at": "2026-02-27T20:38:13+01:00",
+        "generator": "waterlint",
+        "scope": "core",
+        "flavour": "rfc-2119"
+    },
+    "__WTRL_ROLES__": {
+        "attr": "Attribute name",
+        "cmd": "Shell or CLI command",
+        "dfn": "Definition of a term",
+        "file": "File or path",
+        "func": "Function or callable",
+        "label": "Section/Subsection label",
+        "lit": "Literal text or code",
+        "mod": "Module name",
+        "norm": "Normativity keyword",
+        "op": "Operator symbol",
+        "opt": "Command-line option or flag",
+        "tag": "Tag or marker",
+        "term": "Domain-specific term",
+        "type": "Type name or annotation",
+        "value": "Concrete value",
+        "var": "Variable name",
+        "var_type": "Variable and type, like 'var:type'"
+    },
+    "__WTRL_TOC_MODULES__": {
+        "test_docitem_definitions_inherited": "/__WTRL_OBJECTS__/test_docitem_definitions_inherited"
+    },
+    "__WTRL_TOC_CLASSES__": {
+        "test_docitem_definitions_inherited.X": "/__WTRL_OBJECTS__/test_docitem_definitions_inherited.X"
+    },
+    "__WTRL_TOC_CALLABLES__": {
+        "test_docitem_definitions_inherited.X.spam": "/__WTRL_OBJECTS__/test_docitem_definitions_inherited.X.spam"
+    },
+    "__WTRL_TOC_TYPES__": {},
+    "__WTRL_TOC_VARIABLES__": {},
+    "__WTRL_TOC_CONSTANTS__": {},
+    "__WTRL_OBJECTS__": {
+        "test_docitem_definitions_inherited": {
+            "doc": {
+                "Preamble": {
+                    "profile": "module",
+                    "normative_sections": [
+                        "Contract",
+                        "Definitions"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST provide a |label|`Definitions` section for demonstration purposes."
+                    ]
+                },
+                "Definitions": {
+                    "Identifier": [
+                        "A string that matches the regular expression |value|`[a-zA-Z_][a-zA-Z0-9_]*`"
+                    ],
+                    "Qualified_Identifier": [
+                        "A |term|`Qualified_Identifier` is a string formed by concatenating |term|`Identifier` values separated by a dot."
+                    ],
+                    "Term_Z": [
+                        "|term|`Term_Z` is another term inherited by objects in this module."
+                    ]
+                }
+            }
+        },
+        "test_docitem_definitions_inherited.X": {
+            "signature": {
+                "text": "object.__init__(self, /, *args, **kwargs)",
+                "parameters": [
+                    {
+                        "name": "args",
+                        "kind": "VAR_POSITIONAL",
+                        "annotation": null,
+                        "default": null
+                    },
+                    {
+                        "name": "kwargs",
+                        "kind": "VAR_KEYWORD",
+                        "annotation": null,
+                        "default": null
+                    }
+                ],
+                "returns": null
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "class",
+                    "normative_sections": [
+                        "Contract",
+                        "Definitions"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST demonstrate inherited definition items."
+                    ],
+                    "constructor": [
+                        "default"
+                    ]
+                },
+                "definitions_inherited_from_module": {
+                    "source": "/__WTRL_OBJECTS__/test_docitem_definitions_inherited",
+                    "terms": [
+                        "Identifier",
+                        "Term_Z"
+                    ]
+                },
+                "Definitions": {
+                    "Private_Identifier": [
+                        "A |term|`Private_Identifier` is an |term|`Identifier` that starts with a double underscore."
+                    ]
+                }
+            }
+        },
+        "test_docitem_definitions_inherited.X.spam": {
+            "signature": {
+                "text": "X.spam(self) -> None",
+                "parameters": [],
+                "returns": "None"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "method",
+                    "normative_sections": [
+                        "Contract",
+                        "Definitions",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST demonstrate inherited definition items."
+                    ]
+                },
+                "definitions_inherited_from_module": {
+                    "source": "/__WTRL_OBJECTS__/test_docitem_definitions_inherited",
+                    "terms": [
+                        "Identifier",
+                        "Qualified_Identifier"
+                    ]
+                },
+                "Definitions": {
+                    "Anchor": [
+                        "An |term|`Anchor` is a special string computed from a |term|`Qualified_Identifier`",
+                        "in the following way: 1. The |term|`Qualified_Identifier` is split into segments,",
+                        "where each segment is an |term|`Identifier`. 2. To each segment the string",
+                        "|value|`\"<n>:\"` is prepended where |var|`<n>` stands for the length of the segment.",
+                        "3. The results are concatenated with |value|`\"-\"` as separator.",
+                        "Example: The |term|`Anchor` of |value|`AAA.BB.C` is |value|`3:AAA-2:BB-1:C`."
+                    ]
+                },
+                "Parameters": {},
+                "Returns": [
+                    "|None|"
+                ],
+                "Raises": {}
+            }
+        }
+    }
+}

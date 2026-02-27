@@ -3,11 +3,16 @@ Preamble:
 	profile:
 		module
 	normative_sections:
-		Contract
+		Contract, Definitions
 Contract:
 	general:
 		|Must| provide bases classes for the Abstract Syntax Tree.
 		|Should_not| be imported directly. Import |mod|`sdv.doc.waterloo.docitem` instead.
+Definitions:
+	Identifier:
+		As defined in |mod|`sdv.doc.waterloo.docitem`.
+	Qualified_Identifier:
+		As defined in |mod|`sdv.doc.waterloo.docitem`.
 """
 
 from __future__ import annotations
@@ -206,6 +211,8 @@ Description:
 		return self._items
 	def item_by_index(self,index : int) -> str:
 		return self._items[index]
+	def has_item(self,name : str) -> bool:
+		return name in self._items
 	def empty(self) -> bool:
 		return len(self._items) == 0
 	def has_norm_keywords(self) -> bool:
@@ -239,6 +246,8 @@ Description:
 							ok = False
 					i += 1
 		return ok
+	def __str__(self) -> str:
+		return " {'" + "','".join(self._items) + "'}"
 
 class docitem_map_base(docitem_base):
 	"""
@@ -313,6 +322,8 @@ Raises:
 				with traced_section(tr,f"'{label}'"):
 					ok &= item.detect_partial_normativity(tr)
 		return ok
+	def __str__(self) -> str:
+		return " {" + ",".join(self._items) + "}"
 
 class docitem_list_of_symbols_base(docitem_list_base):
 	"""
@@ -320,10 +331,13 @@ class docitem_list_of_symbols_base(docitem_list_base):
 		profile:
 			class
 		normative_sections:
-			Contract, Public_classes, Public_methods
+			Contract, Definitions, Public_classes, Public_methods
+	Definitions:
+		_inherit:
+			Identifier
 	Contract:
 		general:
-			|Must| represent a list of symbols, each matching the pattern of an identifier.
+			|Must| represent a list of symbols, each matching the pattern of an |term|`Identifier`.
 		constructor:
 			|Must| Be default-constructible
 		traits:
@@ -345,18 +359,21 @@ class docitem_list_of_symbols_base(docitem_list_base):
 			profile:
 				class
 			normative_sections:
-				Contract, Public_constants
+				Contract, Definitions, Public_constants
+		Definitions:
+			_inherit:
+				Identifier, Qualified_Identifier
 		Contract:
 			general:
 				|Must| be an Enum class.
-				|Must| provide constants representing regular expressions for Identifier and Qualified Identifier.
+				|Must| provide constants representing regular expressions for |term|`Identifier` and |term|`Qualified_Identifier`.
 			constructor:
 				|Must| inherit the constructor from |type|`int`, since the class is derived from |type|`IntEnum`.
 		Public_constants:
 			IDENTIFIER:
-				|Must| represent the pattern of an Identifier.
+				|Must| represent the pattern of an |term|`Identifier`.
 			QUALIFIED_IDENTIFIER:
-				|Must| represent the pattern of a Qualified Identifier.
+				|Must| represent the pattern of a |term|`Qualified_Identifier`.
 		"""
 		IDENTIFIER = 1
 		QUALIFIED_IDENTIFIER = 2
@@ -366,12 +383,15 @@ class docitem_list_of_symbols_base(docitem_list_base):
 			profile:
 				method
 			normative_sections:
-				Contract, Parameters, Returns, Raises
+				Contract, Definitions, Parameters, Returns, Raises
+		Definitions:
+			_inherit:
+				Identifier, Qualified_Identifier
 		Contract:
 			general:
 				|Must| verify that the subtree passed (|var|`refs`) is a list of strings.
 				|Must| parse the content the list of strings and store them as items.
-				|Must| ensure each string is an Identifier or Qualified Identifier, as specified by parameter |var|`pattern`.
+				|Must| ensure each string is an |term|`Identifier` or |term|`Qualified_Identifier`, as specified by parameter |var|`pattern`.
 		Parameters:
 			tr:
 				The tracer for collecting diagnostics.
@@ -399,20 +419,74 @@ class docitem_list_of_symbols_base(docitem_list_base):
 # We allow a comma separated string of qualified identifiers.
 # Strip due to rule LQID-003
 			segments = map(str.strip,ref.split(","))
+			what = "unspecified"
 			if pattern == self.ValuePattern.QUALIFIED_IDENTIFIER:
 				re_compiled = RE_QUALIFIED_IDENTIFIER_COMPILED
+				what = "qualified identifier"
 			elif pattern == self.ValuePattern.IDENTIFIER:
 				re_compiled = RE_IDENTIFIER_COMPILED
+				what = "identifier"
 			for seg in segments:
 				if seg in seen:
 					raise_parsing_error(tr, "LQID-004", f"duplicate entry {seg}.")
-				if not RE_QUALIFIED_IDENTIFIER_COMPILED.fullmatch(seg):
-					raise_parsing_error_expected_but_got(tr,"LQID-002",'[qualified] identifier',f'{seg}')
+				if not re_compiled.fullmatch(seg):
+					raise_parsing_error_expected_but_got(tr,"LQID-002",what,f'{seg}')
 				refs_split.append(seg)
 				seen.add(seg)
 # We have a flat list, rule LQID-005.
 		self.set_items(refs_split)
 	def __str__(self) -> str:
 		return " {" + ",".join(self._items) + "}"
+
+class docitem_free_text_entry_base(docitem_list_base):
+	"""
+Preamble:
+	profile:
+		class
+	normative_sections:
+		Contract, Derived_from, Public_methods
+Contract:
+	general:
+		|Must| represent free-form text content for various sections.
+	constructor:
+		|Must| be default-constructible.
+	traits:
+		abstract
+Derived_from:
+	docitem_list_base
+Public_methods:
+	parse
+Method_overview:
+	parse:
+		Parse free-form text lines.
+	"""
+	def parse(self,tr : tracer,lines : DocstringSubtree) -> None:
+		"""
+Preamble:
+	profile:
+		method
+	normative_sections:
+		Contract, Parameters, Returns, Raises
+Contract:
+	general:
+		|Must| parse the content of an entry in section |label|`Class_overview`, |label|`Public_types`, |label|`Public_constants`, |label|`Method_overview`, |label|`Function_overview`, |label|`Parameters`, |label|`Raises`, |label|`Definitions`, |label|`Terminology`.
+Parameters:
+	tr:
+		The tracer for collecting diagnostics.
+	lines:
+		The docstring subtree to parse, a list of free-form strings representing the content of any of the sections listet in section |label|`Contract.General`.
+Returns:
+	|Must| return |None|.
+Raises:
+	RuntimeError:
+		|Must| raise if the content is not a list of strings.
+		"""
+# Expect list of strings
+		if not is_list_of_str(lines):
+			raise_parsing_error_expected_but_got(tr,tr.get_rule_on_fail(),"list of strings",f"{lines}")
+# No restrictions. The content is a list of free-form text lines.
+		self.set_items(lines)
+	def __str__(self) -> str:
+		return " {'" + "','".join(self._items) + "'}"
 
 #===== end base classes =======================================#

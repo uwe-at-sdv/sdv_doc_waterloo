@@ -224,7 +224,8 @@ Contract:
 		self.add_role_var_type = lambda t:f":wtrl_var_type:`{t}`"
 		self.build_prolog_method_overview : Callable[[context,str],List[nodes.Node]] = build_prolog_method_overview
 		self.build_prolog_method_block : Callable[[context,nodes.Element | None,type[object],Callable[...,Any]],List[nodes.Node]] = build_prolog_method_block
-  
+		self.tr = mod_docitem.tracer()
+
 	def set_add_role_attr(self,c : Callable[[str],str]) -> None:
 		self.add_role_attr = c
 	def set_add_role_cmd(self,c : Callable[[str],str]) -> None:
@@ -494,8 +495,8 @@ def build_sphinx_nodes(ctx : context,obj: object,doc: mod_docitem.docitem_docstr
 		Linking:
 			Internal links are created using anchor ids from |func|`build_anchor`.
 			Built-in exceptions in section |label|`Raises` are intentionally rendered as plain text without internal links.
-		Drift:
-			Last reviewed on 2026-02-15
+		Last review:
+			2026-02-15
 		"""
 	node_root: List[nodes.Node] = []
 	def parse_text(parent: nodes.Element, text: str) -> List[nodes.Node]:
@@ -510,6 +511,27 @@ def build_sphinx_nodes(ctx : context,obj: object,doc: mod_docitem.docitem_docstr
 			return section_label in {str(x) for x in node_norm.items()}
 		except Exception:
 			return False
+
+	def render_linked_factory_entry(
+		parent: nodes.paragraph,
+		entry: str,
+		objname: str,
+		css_class: str,
+		role_fn: Callable[[str], str],
+	) -> None:
+		try:
+			target_obj, _, _, _ = resolve_qualified_name(ctx, entry)
+		except Exception as exc:
+			try:
+				target_obj, _, _, _ = resolve_qualified_name(ctx, objname + "." + entry)
+			except Exception as exc:
+				warnings.warn(f"Factory entry '{entry}' cannot be resolved for linking: {exc}",RuntimeWarning)
+				parent.extend(ctx.parse(parent,0,role_fn(entry)))
+				return
+		target_anchor = mod_docitem.build_anchor(target_obj)
+		node_ref = nodes.reference(entry, entry, refid=target_anchor)
+		node_ref["classes"].append(css_class)
+		parent += node_ref
 
 	def render_linked_public_entry(
 		parent: nodes.paragraph,
@@ -526,10 +548,7 @@ def build_sphinx_nodes(ctx : context,obj: object,doc: mod_docitem.docitem_docstr
 			node_ref["classes"].append(css_class)
 			parent += node_ref
 		except Exception as exc:
-			warnings.warn(
-				f"{warn_label} entry '{entry}' cannot be resolved for linking: {exc}",
-				RuntimeWarning,
-			)
+			warnings.warn(f"{warn_label} entry '{entry}' cannot be resolved for linking: {exc}",RuntimeWarning)
 			parent.extend(ctx.parse(parent,0,role_fn(entry)))
 
 	def render_linked_public_entries(
@@ -574,10 +593,7 @@ def build_sphinx_nodes(ctx : context,obj: object,doc: mod_docitem.docitem_docstr
 				node_ref["classes"].append(css_class)
 				parent += node_ref
 			else:
-				warnings.warn(
-					f"Derived_from entry '{content_s}' is not a direct base class of '{objname}'.",
-					RuntimeWarning,
-				)
+				warnings.warn(f"Derived_from entry '{content_s}' is not a direct base class of '{objname}'.",RuntimeWarning)
 				parent.extend(ctx.parse(parent,0,role_fn(content_s)))
 
 	def render_linked_see_also_entries(
@@ -597,10 +613,7 @@ def build_sphinx_nodes(ctx : context,obj: object,doc: mod_docitem.docitem_docstr
 				parent += node_ref
 			except Exception as exc:
 				if is_normative:
-					warnings.warn(
-						f"See_also entry '{content_s}' cannot be resolved for linking: {exc}",
-						RuntimeWarning,
-					)
+					warnings.warn(f"See_also entry '{content_s}' cannot be resolved for linking: {exc}",RuntimeWarning)
 				parent.extend(ctx.parse(parent,0,ctx.add_role_var(content_s)))
 
 	def render_linked_raises_entry_label(parent: nodes.paragraph, exc_name: str) -> None:
@@ -619,17 +632,11 @@ def build_sphinx_nodes(ctx : context,obj: object,doc: mod_docitem.docitem_docstr
 			if isinstance(bi, type) and issubclass(bi, BaseException):
 				parent.extend(ctx.parse(parent,0,ctx.add_role_type(exc_name)))
 				return
-			warnings.warn(
-				f"Raises entry '{exc_name}' cannot be resolved: {last_exc}",
-				RuntimeWarning,
-			)
+			warnings.warn(f"Raises entry '{exc_name}' cannot be resolved: {last_exc}",RuntimeWarning)
 			parent.extend(ctx.parse(parent,0,ctx.add_role_type(exc_name)))
 			return
 		if not isinstance(exc_obj, type) or not issubclass(exc_obj, BaseException):
-			warnings.warn(
-				f"Raises entry '{exc_name}' resolves to non-exception object.",
-				RuntimeWarning,
-			)
+			warnings.warn(f"Raises entry '{exc_name}' resolves to non-exception object.",RuntimeWarning)
 			parent.extend(ctx.parse(parent,0,ctx.add_role_type(exc_name)))
 			return
 		# For builtins we keep plain styled text (usually no local anchor target).
@@ -765,6 +772,30 @@ def build_sphinx_nodes(ctx : context,obj: object,doc: mod_docitem.docitem_docstr
 
 		elif label in ("Definitions","Terminology"):
 			dl = nodes.definition_list(classes=["wtrl-dfn-list"])
+			if label == "Definitions":
+				obj_definitions = cast(mod_docitem.docitem_definitions,item_section)
+				if obj_definitions.inherited():
+# We would like to link to the module doc
+					direct_module = mod_docitem.get_obj_direct_module(obj)
+					module_anchor = mod_docitem.build_anchor(direct_module) if direct_module else ""
+					dli = nodes.definition_list_item()
+# Label "<Inherited terms>"
+					dt = nodes.term()
+
+					if module_anchor:
+						node_inh = nodes.reference("<Terms inherited from module>", "<Terms inherited from module>", refid=module_anchor)
+						node_inh["classes"].append("wtrl_label")
+						dt += node_inh
+					else:
+						dt.extend(ctx.parse(dt, 0, ctx.add_role_label("<Terms inherited from module>")))
+					dli += dt
+					dd = nodes.definition()
+					p = nodes.paragraph()
+					p.extend(ctx.parse(p, 0, ", ".join([ctx.add_role_dfn(inh) for inh in obj_definitions.inherited()])))
+					dd += p
+					dli += dd
+					dl += dli
+
 			for term, item_subsection in item_section.items().items():
 				dli = nodes.definition_list_item()
 # Term
@@ -777,7 +808,6 @@ def build_sphinx_nodes(ctx : context,obj: object,doc: mod_docitem.docitem_docstr
 # Content
 				p.extend(parse_text(p, " ".join([content for content in item_subsection.items()])))
 				dd += p
-
 				dli += dd
 				dl += dli
 			node_entry += dl
@@ -796,7 +826,9 @@ def build_sphinx_nodes(ctx : context,obj: object,doc: mod_docitem.docitem_docstr
 			for label1,item_subsection in item_section.items().items():
 				node_list_item = nodes.list_item()
 				node1_paragraph = nodes.paragraph()
-				node1_paragraph.extend(ctx.parse(node1_paragraph,0,ctx.add_role_func(label1)))
+#				node1_paragraph.extend(ctx.parse(node1_paragraph,0,ctx.add_role_func(label1)))
+
+				render_linked_factory_entry(node1_paragraph,label1,objname,"wtrl_func",ctx.add_role_func)
 
 				node2_bullet_list = nodes.bullet_list()
 # Content
@@ -1085,7 +1117,8 @@ Raises:
 	BaseException:
 		|Must| forward exceptions from Sphinx
 	"""
-	tr = mod_docitem.tracer()
+# Tracer
+	tr = ctx.tr
 	with mod_docitem.traced_section(tr, class_obj.__name__):
 		nodes_out: List[nodes.Node] = []
 
@@ -1609,10 +1642,9 @@ Raises:
 	BaseException:
 		|May| raise if building the list of Docutils nodes fails.
 	"""
-	tr = mod_docitem.tracer()
+	ctx = make_context(app, lambda parent, ln, txt: parse_inline(inliner,parent,ln,txt), lineno)
+	tr = ctx.tr
 	with mod_docitem.traced_section(tr, qname):
-		ctx = make_context(app, lambda parent, ln, txt: parse_inline(inliner,parent,ln,txt), lineno)
-
 		module_obj, _, _, _ = resolve_qualified_name(ctx, qname)
 		if not mod_docitem.is_obj_module(module_obj):
 			raise RuntimeError(f"{qname} does not resolve to a module.")
@@ -1661,10 +1693,9 @@ Raises:
 	BaseException:
 		|May| raise if building the list of Docutils nodes fails.
 	"""
-	tr = mod_docitem.tracer()
+	ctx = make_context(app, lambda parent, ln, txt: parse_inline(inliner, parent, ln, txt), lineno)
+	tr = ctx.tr
 	with mod_docitem.traced_section(tr, qname):
-		ctx = make_context(app, lambda parent, ln, txt: parse_inline(inliner, parent, ln, txt), lineno)
-
 		function_obj, _, _, _ = resolve_qualified_name(ctx, qname)
 		if not callable(function_obj):
 			raise RuntimeError(f"{qname} does not resolve to a callable.")
@@ -1719,9 +1750,9 @@ Raises:
 	BaseException:
 		|May| raise if building the list of Docutils nodes fails.
 	"""
-	tr = mod_docitem.tracer()
+	ctx = make_context(app, lambda parent, ln, txt: parse_inline(inliner, parent, ln, txt), lineno)
+	tr = ctx.tr
 	with mod_docitem.traced_section(tr, qname):
-		ctx = make_context(app, lambda parent, ln, txt: parse_inline(inliner, parent, ln, txt), lineno)
 		obj, _, _, _ = resolve_qualified_name(ctx, qname)
 		if not mod_docitem.is_obj_class(obj):
 			raise RuntimeError(f"{qname} is not a class.")
@@ -1771,15 +1802,19 @@ Raises:
 	BaseException:
 		|May| raise if building the list of Docutils nodes fails.
 	"""
-	tr = mod_docitem.tracer()
+	ctx = make_context(app, lambda parent, ln, txt: parse_inline(inliner, parent, ln, txt), lineno)
+	tr = ctx.tr
 	with mod_docitem.traced_section(tr, qname):
-		ctx = make_context(app, lambda parent, ln, txt: parse_inline(inliner, parent, ln, txt), lineno)
 		obj, _, _, _ = resolve_qualified_name(ctx, qname)
 		if not mod_docitem.is_obj_class(obj):
 			raise RuntimeError(f"{qname} is not a class.")
 		if not isinstance(obj.__doc__, str):
 			raise RuntimeError(f"{qname} has no docstring.")
-		return build_sphinx_nodes_full(ctx, obj)
+		try:
+			return build_sphinx_nodes_full(ctx, obj)
+		except Exception as e:
+			print(tr.str_by_severity(mod_docitem.tracer.Severity.DEBUG),file=sys.stderr)
+			raise
 
 def wtrl_build_push_current_module_nodes(app: SphinxAppProtocol | Any, inliner: InlinerProtocol, lineno: int, qname: str) -> list[nodes.Node]:
 	"""
@@ -1814,19 +1849,20 @@ Raises:
 		|May| propagate exceptions from |func|`resolve_qualified_name`.
 		|May| propagate exceptions from within Sphinx or Docutils.
 Notes:
-	Drift:
-		Last reviewed on 2026-02-04
+	Last review:
+		2026-02-04
 	"""
-	tr = mod_docitem.tracer()
+	ctx = make_context(app, lambda parent, ln, txt: parse_inline(inliner, parent, ln, txt), lineno)
+	tr = ctx.tr
 	with mod_docitem.traced_section(tr, qname):
-		ctx = make_context(app, lambda parent, ln, txt: parse_inline(inliner, parent, ln, txt), lineno)
 		mod_obj, _, _, _ = resolve_qualified_name(ctx, qname)
 		if not mod_docitem.is_obj_module(mod_obj):
 			raise RuntimeError(f"{qname} does not resolve to a module.")
 		push_current_module(qname, env=ctx.env)
-		msg = f"Classes and functions below this point implicitly belong to module/package {ctx.add_role_var(qname)}. "
-		parent = nodes.paragraph()
-		return parse_inline(inliner, parent, lineno, msg)
+		msg = f"Classes and functions below this point implicitly belong to package/module {ctx.add_role_var(qname)}. "
+		node_par = nodes.paragraph(classes=["wtrl-current-module-message", "wtrl-current-module-push"])
+		node_par.extend(parse_inline(inliner, node_par, lineno, msg))
+		return [node_par]
 
 def wtrl_build_push_current_class_nodes(app: SphinxAppProtocol | Any, inliner: InlinerProtocol, lineno: int, qname: str) -> list[nodes.Node]:
 	"""
@@ -1861,19 +1897,20 @@ Raises:
 		|May| propagate exceptions from |func|`resolve_qualified_name`.
 		|May| propagate exceptions from within Sphinx or Docutils.
 Notes:
-	Drift:
-		Last reviewed on 2026-02-04
+	Last review:
+		2026-02-04
 	"""
-	tr = mod_docitem.tracer()
+	ctx = make_context(app, lambda parent, ln, txt: parse_inline(inliner, parent, ln, txt), lineno)
+	tr = ctx.tr
 	with mod_docitem.traced_section(tr, qname):
-		ctx = make_context(app, lambda parent, ln, txt: parse_inline(inliner, parent, ln, txt), lineno)
 		cls_obj, _, _, _ = resolve_qualified_name(ctx, qname)
 		if not mod_docitem.is_obj_class(cls_obj):
 			raise RuntimeError(f"{qname} does not resolve to a class.")
 		push_current_class(qname, env=ctx.env)
 		msg = f"Methods below this point implicitly belong to class {ctx.add_role_var(qname)}."
-		parent = nodes.paragraph()
-		return parse_inline(inliner, parent, lineno, msg)
+		node_par = nodes.paragraph(classes=["wtrl-current-class-message", "wtrl-current-class-push"])
+		node_par.extend(parse_inline(inliner, node_par, lineno, msg))
+		return [node_par]
 
 def wtrl_build_push_current_scope_nodes(app: SphinxAppProtocol | Any, inliner: InlinerProtocol, lineno: int, scope_tag: str) -> list[nodes.Node]:
 	"""
@@ -1906,16 +1943,17 @@ Raises:
 	BaseException:
 		|May| propagate exceptions from within Sphinx or Docutils.
 Notes:
-	Drift:
-		Last reviewed on 2026-02-04
+	Last review:
+		2026-02-04
 	"""
-	tr = mod_docitem.tracer()
+	ctx = make_context(app, lambda parent, ln, txt: parse_inline(inliner, parent, ln, txt), lineno)
+	tr = ctx.tr
 	with mod_docitem.traced_section(tr, scope_tag):
-		ctx = make_context(app, lambda parent, ln, txt: parse_inline(inliner, parent, ln, txt), lineno)
 		push_current_scope(scope_tag, env=ctx.env)
 		msg = f"Scope below this point is set to {ctx.add_role_var(scope_tag)}."
-		parent = nodes.paragraph()
-		return parse_inline(inliner, parent, lineno, msg)
+		node_par = nodes.paragraph(classes=["wtrl-current-scope-message", "wtrl-current-scope-push"])
+		node_par.extend(parse_inline(inliner, node_par, lineno, msg))
+		return [node_par]
 
 def wtrl_build_pop_current_module_nodes(app: SphinxAppProtocol | Any, inliner: InlinerProtocol, lineno: int, qname: str) -> list[nodes.Node]:
 	"""
@@ -1952,12 +1990,12 @@ Raises:
 		|May| propagate exceptions from |func|`resolve_qualified_name`.
 		|May| propagate exceptions from within Sphinx or Docutils.
 Notes:
-	Drift:
-		Last reviewed on 2026-02-04
+	Last review:
+		2026-02-04
 	"""
-	tr = mod_docitem.tracer()
+	ctx = make_context(app, lambda parent, ln, txt: parse_inline(inliner, parent, ln, txt), lineno)
+	tr = ctx.tr
 	with mod_docitem.traced_section(tr, qname):
-		ctx = make_context(app, lambda parent, ln, txt: parse_inline(inliner, parent, ln, txt), lineno)
 		mod_obj, _, _, _ = resolve_qualified_name(ctx, qname)
 		if not mod_docitem.is_obj_module(mod_obj):
 			raise RuntimeError(f"{qname} does not resolve to a module.")
@@ -1970,8 +2008,9 @@ Notes:
 			msg = f"Default module qualifier {ctx.add_role_var(text_top)} ends here. New default: {ctx.add_role_var(new_top)}. "
 		else:
 			msg = f"Default module qualifier {ctx.add_role_var(text_top)} ends here. No default module active. "
-		parent = nodes.paragraph()
-		return parse_inline(inliner, parent, lineno, msg)
+		node_par = nodes.paragraph(classes=["wtrl-current-module-message", "wtrl-current-module-pop"])
+		node_par.extend(parse_inline(inliner, node_par, lineno, msg))
+		return [node_par]
 
 def wtrl_build_pop_current_class_nodes(app: SphinxAppProtocol | Any, inliner: InlinerProtocol, lineno: int, qname: str) -> list[nodes.Node]:
 	"""
@@ -2008,12 +2047,12 @@ Raises:
 		|May| propagate exceptions from |func|`resolve_qualified_name`.
 		|May| propagate exceptions from within Sphinx or Docutils.
 Notes:
-	Drift:
-		Last reviewed on 2026-02-04
+	Last review:
+		2026-02-04
 	"""
-	tr = mod_docitem.tracer()
+	ctx = make_context(app, lambda parent, ln, txt: parse_inline(inliner, parent, ln, txt), lineno)
+	tr = ctx.tr
 	with mod_docitem.traced_section(tr, qname):
-		ctx = make_context(app, lambda parent, ln, txt: parse_inline(inliner, parent, ln, txt), lineno)
 		cls_obj, _, _, _ = resolve_qualified_name(ctx, qname)
 		if not mod_docitem.is_obj_class(cls_obj):
 			raise RuntimeError(f"{qname} does not resolve to a class.")
@@ -2026,8 +2065,9 @@ Notes:
 			msg = f"Default class qualifier {ctx.add_role_var(text_top)} ends here. New default: {ctx.add_role_var(new_top)}. "
 		else:
 			msg = f"Default class qualifier {ctx.add_role_var(text_top)} ends here. No default class active. "
-		parent = nodes.paragraph()
-		return parse_inline(inliner, parent, lineno, msg)
+		node_par = nodes.paragraph(classes=["wtrl-current-class-message", "wtrl-current-class-pop"])
+		node_par.extend(parse_inline(inliner, node_par, lineno, msg))
+		return [node_par]
 
 def wtrl_build_pop_current_scope_nodes(app: SphinxAppProtocol | Any, inliner: InlinerProtocol, lineno: int, scope_tag: str) -> list[nodes.Node]:
 	"""
@@ -2062,12 +2102,12 @@ Raises:
 	BaseException:
 		|May| propagate exceptions from within Sphinx or Docutils.
 Notes:
-	Drift:
-		Last reviewed on 2026-02-04
+	Last review:
+		2026-02-04
 	"""
-	tr = mod_docitem.tracer()
+	ctx = make_context(app, lambda parent, ln, txt: parse_inline(inliner,parent,ln,txt), lineno)
+	tr = ctx.tr
 	with mod_docitem.traced_section(tr, scope_tag):
-		ctx = make_context(app, lambda parent, ln, txt: parse_inline(inliner,parent,ln,txt), lineno)
 		if not has_current_scope(ctx.env):
 			raise RuntimeError("Cannot pop current scope: stack is empty.")
 		text_top_scope = get_current_scope(ctx.env)
@@ -2081,8 +2121,9 @@ Notes:
 			msg = f"Scope qualifier {ctx.add_role_var(scope_tag)} ends here. New current scope: {ctx.add_role_var(mod_docitem.Scope(new_scope).name.lower())}. "
 		else:
 			msg = f"Scope qualifier {ctx.add_role_var(scope_tag)} ends here. No current scope active. "
-		parent = nodes.paragraph()
-		return parse_inline(inliner,parent,lineno,msg)
+		node_par = nodes.paragraph(classes=["wtrl-current-scope-message", "wtrl-current-scope-pop"])
+		node_par.extend(parse_inline(inliner, node_par, lineno, msg))
+		return [node_par]
 
 def wtrl_build_method_signature_nodes(app: SphinxAppProtocol | Any, inliner: InlinerProtocol, lineno: int, qname: str) -> list[nodes.Node]:
 	"""
@@ -2111,8 +2152,8 @@ Raises:
 	BaseException:
 		|May| propagate exceptions from |type|`docutils`.
 Notes:
-	Drift:
-		Last reviewed on 2026-02-04
+	Last review:
+		2026-02-04
 	"""
 	ctx = make_context(app, lambda parent, ln, txt: parse_inline(inliner, parent, ln, txt), lineno)
 	return render_signature_tokens_inline(ctx, qname)
@@ -2144,8 +2185,8 @@ Raises:
 	BaseException:
 		|May| propagate exceptions from |type|`docutils`.
 Notes:
-	Drift:
-		Last reviewed on 2026-02-04
+	Last review:
+		2026-02-04
 	"""
 	ctx = make_context(app, lambda parent, ln, txt: parse_inline(inliner, parent, ln, txt), lineno)
 	return render_signature_tokens_inline(ctx, qname, drop_self=False)
@@ -2177,8 +2218,8 @@ Raises:
 	BaseException:
 		|May| propagate exceptions from |type|`docutils`.
 Notes:
-	Drift:
-		Last reviewed on 2026-02-04
+	Last review:
+		2026-02-04
 	"""
 	ctx = make_context(app, lambda parent, ln, txt: parse_inline(inliner, parent, ln, txt), lineno)
 	return render_signature_tokens_multiline(ctx, qname)
@@ -2210,8 +2251,8 @@ Raises:
 	BaseException:
 		|May| propagate exceptions from |type|`docutils`.
 Notes:
-	Drift:
-		Last reviewed on 2026-02-04
+	Last review:
+		2026-02-04
 	"""
 	ctx = make_context(app, lambda parent, ln, txt: parse_inline(inliner, parent, ln, txt), lineno)
 	return render_signature_tokens_multiline(ctx, qname, drop_self=False)
@@ -2272,8 +2313,9 @@ def build_prolog_method_overview(ctx: context,class_name : str) -> List[nodes.No
 def build_prolog_method_block(ctx: context,parent : nodes.Element | None,class_obj: type[object],meth_obj : Callable[..., Any]) -> List[nodes.Node]:
 # Render the signature directly (multiline variant) instead of parsing a directive string.
 # Use fully-qualified name so resolution works even for nested classes.
-	qname = mod_docitem.get_obj_fully_qualified_name(meth_obj)
-	return render_signature_tokens_multiline(ctx, qname, drop_self=True, display_scope=True)
+#	qname = mod_docitem.get_obj_fully_qualified_name(meth_obj)
+#	return render_signature_tokens_multiline(ctx, qname, drop_self=True, display_scope=True)
+	return []
 
 def wtrl_attr_role(name: str, rawtext: str, text: str, lineno: int, inliner: InlinerProtocol, options: Mapping[str,Any] | None=None, content: list[str] | None=None) -> tuple[List[nodes.Node], list[nodes.Node]]:
 	node = nodes.literal(text, text, classes=["wtrl_attr"])

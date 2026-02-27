@@ -308,6 +308,47 @@ tr.wtrl-section p.wtrl-note-content {
 	font-size: 90%;
 	}
 
+/*----- Status messages for push and pop ---------------------*/
+.wtrl-current-module-message {
+	border: 1px #bbb solid;
+	border-radius: 0.4em;
+	padding-left:1em;
+	padding-right:1em;
+	padding-top:0.5em;
+	padding-bottom:0.5em;
+	}
+.wtrl-current-module-push {
+	}
+.wtrl-current-module-pop {
+	}
+
+.wtrl-current-class-message {
+	border: 1px #bbb solid;
+	border-radius: 0.4em;
+	padding-left:1em;
+	padding-right:1em;
+	padding-top:0.5em;
+	padding-bottom:0.5em;
+	}
+.wtrl-current-class-push {
+	}
+.wtrl-current-class-pop {
+	}
+
+.wtrl-current-scope-message {
+	border: 1px #bbb solid;
+	border-radius: 0.4em;
+	padding-left:1em;
+	padding-right:1em;
+	padding-top:0.5em;
+	padding-bottom:0.5em;
+	}
+.wtrl-current-scope-push {
+	}
+.wtrl-current-scope-pop {
+	}
+
+
 /*----- Signatures -------------------------------------------*/
 
 div.wtrl-signature-multiline {
@@ -419,7 +460,7 @@ dd {
 	{
 	font-family:monospace;
 
-	color: #335522;
+	color: #446622;
 	font-weight:var(--sdv-mod-font-weight);
 	font-style:var(--sdv-mod-font-style);
 	font-size: 90%;

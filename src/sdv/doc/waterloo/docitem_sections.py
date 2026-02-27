@@ -112,24 +112,24 @@ Contract:
 
 class docitem_public_classes(docitem_list_of_symbols_base):
 	"""
-Preamble:
-	profile:
-		class
-	normative_sections:
-		Contract, Derived_from, Public_methods
-Contract:
-	general:
-		|Must| represent the |label|`Public_classes` section.
-		|Must| be able to hold a list of strings.
-	constructor:
-		|Must| be default-constructible.
-Derived_from:
-	docitem_list_of_symbols_base
-Public_methods:
-	parse
-Method_overview:
-	parse:
-		Inherited method
+	Preamble:
+		profile:
+			class
+		normative_sections:
+			Contract, Derived_from, Public_methods
+	Contract:
+		general:
+			|Must| represent the |label|`Public_classes` section.
+			|Must| be able to hold a list of strings.
+		constructor:
+			|Must| be default-constructible.
+	Derived_from:
+		docitem_list_of_symbols_base
+	Public_methods:
+		parse
+	Method_overview:
+		parse:
+			Inherited method
 	"""
 	def __init__(self) -> None:
 		super().__init__()
@@ -137,16 +137,20 @@ Method_overview:
 		return "Public_classes"
 	def parse(self, tr: tracer, refs: DocstringSubtree) -> None:
 		"""
-Preamble:
-	profile:
-		inherited_method
-	normative_sections:
-		Contract
-Contract:
-	general:
-		|Must| set rules-on-fail in the tracer and delegate to the base implementation.
-	base:
-		sdv.doc.waterloo.docitem.docitem_list_of_symbols_base.parse
+		Preamble:
+			profile:
+				inherited_method
+			normative_sections:
+				Contract
+		Contract:
+			general:
+				|Must| delegate to |func|`_parse` in the base implementation.
+				|Must| parse |var|`refs` as a list of Qualified Identifiers.
+			base:
+				sdv.doc.waterloo.docitem.docitem_list_of_symbols_base.parse
+		Notes:
+			Last review:
+				2026-02-23
 		"""
 # No need to set a default rule. _parse in the base class is
 # a complete implementation of rules LQID-001 to LQID-005.
@@ -183,16 +187,20 @@ Method_overview:
 		return "Public_methods"
 	def parse(self, tr: tracer, refs: DocstringSubtree) -> None:
 		"""
-Preamble:
-	profile:
-		inherited_method
-	normative_sections:
-		Contract
-Contract:
-	general:
-		|Must| set rules-on-fail in the tracer and delegate to the base implementation.
-	base:
-		sdv.doc.waterloo.docitem.docitem_list_of_symbols_base.parse
+		Preamble:
+			profile:
+				inherited_method
+			normative_sections:
+				Contract
+		Contract:
+			general:
+				|Must| delegate to |func|`_parse` in the base implementation.
+				|Must| parse |var|`refs` as a list of Qualified Identifiers.
+			base:
+				sdv.doc.waterloo.docitem.docitem_list_of_symbols_base.parse
+		Notes:
+			Last review:
+				2026-02-23
 		"""
 # No need to set a default rule. _parse in the base class is
 # a complete implementation of rules LQID-001 to LQID-005.
@@ -229,16 +237,20 @@ Method_overview:
 		return "Public_functions"
 	def parse(self, tr: tracer, refs: DocstringSubtree) -> None:
 		"""
-Preamble:
-	profile:
-		inherited_method
-	normative_sections:
-		Contract
-Contract:
-	general:
-		|Must| set rules-on-fail in the tracer and delegate to the base implementation.
-	base:
-		sdv.doc.waterloo.docitem.docitem_list_of_symbols_base.parse
+		Preamble:
+			profile:
+				inherited_method
+			normative_sections:
+				Contract
+		Contract:
+			general:
+				|Must| delegate to |func|`_parse` in the base implementation.
+				|Must| parse |var|`refs` as a list of Qualified Identifiers.
+			base:
+				sdv.doc.waterloo.docitem.docitem_list_of_symbols_base.parse
+		Notes:
+			Last review:
+				2026-02-23
 		"""
 # No need to set a default rule. _parse in the base class is
 # a complete implementation of rules LQID-001 to LQID-005.
@@ -250,7 +262,7 @@ Contract:
 
 #----- docitem class factory ----------------------------------#
 
-class docitem_factory_functions(docitem_list_base):
+class docitem_factory_functions(docitem_free_text_entry_base):
 	"""
 Preamble:
 	profile:
@@ -264,7 +276,7 @@ Contract:
 	constructor:
 		|Must| be default-constructible.
 Derived_from:
-	docitem_list_base
+	docitem_free_text_entry_base
 Public_methods:
 	parse
 Method_overview:
@@ -275,35 +287,6 @@ Method_overview:
 		super().__init__()
 	def label(self) -> str:
 		return "factory_functions"
-	def parse(self,tr : tracer,factory_functions : DocstringSubtree) -> None:
-		"""
-Preamble:
-	profile:
-		method
-	normative_sections:
-		Contract, Parameters, Returns, Raises
-Contract:
-	general:
-		|Must| parse the content of an entry in section |label|`Factory`.
-Parameters:
-	tr:
-		The tracer for collecting diagnostics.
-	factory_functions:
-		The docstring subtree to parse, a list of strings representing factory functions.
-Returns:
-	|Must| return |None|.
-Raises:
-	RuntimeError:
-		|Must| raise if the content is not a list of strings.
-		"""
-		with rule_on_fail(tr, "FAC-007"):
-# Expect list of strings
-			if not is_list_of_str(factory_functions):
-				raise_parsing_error_expected_but_got(tr,tr.get_rule_on_fail(),"list of strings",f"{factory_functions}")
-# No restrictions. The content is a list of free-form text lines.
-			self.set_items(factory_functions)
-	def __str__(self) -> str:
-		return " {'" + "','".join(self._items) + "'}"
 
 class docitem_factory(docitem_map_base):
 	"""
@@ -353,70 +336,21 @@ Raises:
 		|Must| raise if the content is not a sequence of pairs label / list of strings.
 		"""
 		pos = 0
+		seen: Set[str] = set()
 		while pos < len(functions):
+# "Factory" requires a list of factory function names
 			with rule_on_fail(tr, "FAC-005"):
-				label,pos = expect_label(tr,functions,pos)
-# factory requires a list of factory function names
+				label,pos = expect_label_qualified_identifier(tr,functions,pos)
+				if label in seen:
+					raise_parsing_error(tr,"FAC-008",f"Duplicate entry '{label}'.")
+				seen.add(label)
 			items,pos = expect_list(tr,functions,pos)
-			self.add_child(tr,label, docitem_factory_functions, items)
-	def __str__(self) -> str:
-		return " {" + ",".join(self._items) + "}"
+			with rule_on_fail(tr, "FAC-007"):
+				self.add_child(tr,label, docitem_factory_functions, items)
 
 #===== end section Factory ====================================#
 
 #===== begin section Class_overview ===========================#
-
-class docitem_free_text_entry_base(docitem_list_base):
-	"""
-Preamble:
-	profile:
-		class
-	normative_sections:
-		Contract, Derived_from, Public_methods
-Contract:
-	general:
-		|Must| represent free-form text content for various sections.
-	constructor:
-		|Must| be default-constructible.
-	traits:
-		abstract
-Derived_from:
-	docitem_list_base
-Public_methods:
-	parse
-Method_overview:
-	parse:
-		Parse free-form text lines.
-	"""
-	def parse(self,tr : tracer,lines : DocstringSubtree) -> None:
-		"""
-Preamble:
-	profile:
-		method
-	normative_sections:
-		Contract, Parameters, Returns, Raises
-Contract:
-	general:
-		|Must| parse the content of an entry in section |label|`Class_overview`, |label|`Public_types`, |label|`Public_constants`, |label|`Method_overview`, |label|`Function_overview`, |label|`Parameters`, |label|`Raises`, |label|`Definitions`, |label|`Terminology`.
-Parameters:
-	tr:
-		The tracer for collecting diagnostics.
-	lines:
-		The docstring subtree to parse, a list of free-form strings representing the content of any of the sections listet in section |label|`Contract.General`.
-Returns:
-	|Must| return |None|.
-Raises:
-	RuntimeError:
-		|Must| raise if the content is not a list of strings.
-		"""
-# Expect list of strings
-		if not is_list_of_str(lines):
-			raise_parsing_error_expected_but_got(tr,tr.get_rule_on_fail(),"list of strings",f"{lines}")
-# No restrictions. The content is a list of free-form text lines.
-		self.set_items(lines)
-	def __str__(self) -> str:
-		return " {'" + "','".join(self._items) + "'}"
-
 
 #----- docitem class class_overview ---------------------------#
 
@@ -496,15 +430,28 @@ Raises:
 		|Must| raise if the content is not a set of public class entries. In detail:
 		|Must| raise if the content is not a sequence of pairs label / list of strings.
 		"""
+		p = self.parent()
 		pos = 0
 		while pos < len(entries):
-			with rule_on_fail(tr, "CLOV-010"):
-				label,pos = expect_label(tr,entries,pos)
+			assert isinstance(p,docitem_base)
+# Public_types can occur in modules and classes
+			if p.is_docstring_module():
+				rule_id = "MCLO-005"
+			elif p.is_docstring_class():
+				rule_id = "CCLO-005"
+			else:
+# Should never happen. Keep split placeholder mnemonic for consistency.
+				rule_id = "MPTYP-999"
+			with rule_on_fail(tr, rule_id):
+				label,pos = expect_label_identifier(tr,entries,pos)
 # class_overview requires a list of class_overview function names
 			items,pos = expect_list(tr,entries,pos)
-			self.add_child(tr,label, docitem_class_overview_entry, items)
-	def __str__(self) -> str:
-		return " {" + ",".join(self._items) + "}"
+			if p.is_docstring_module():
+				rule_id = "MCLO-006"
+			else:
+				rule_id = "CCLO-006"
+			with rule_on_fail(tr, rule_id):
+				self.add_child(tr,label, docitem_class_overview_entry, items)
 
 #----- docitem class public_types ----------------------------#
 
@@ -584,26 +531,29 @@ Raises:
 		|Must| raise if the content is not a set of public type entries. In detail:
 		|Must| raise if the content is not a sequence of pairs label / list of strings.
 		"""
+		p = self.parent()
 		pos = 0
 		while pos < len(entries):
 			rule_id: str
-			p = self.parent()
 			assert isinstance(p,docitem_base)
 # Public_types can occur in modules and classes
 			if p.is_docstring_module():
-				rule_id = "PTY-004"
+				rule_id = "MPTYP-004"
 			elif p.is_docstring_class():
-				rule_id = "PTY-011"
+				rule_id = "CPTYP-004"
 			else:
-# Should never happen.
-				rule_id = "PTY-999"
+# Should never happen. Keep split placeholder mnemonic for consistency.
+				rule_id = "MPTYP-999"
 			with rule_on_fail(tr, rule_id):
 				label,pos = expect_label_identifier(tr,entries,pos)
-# public_types requires a list of public_types function names
+# public_types requires a list of type names
 			items,pos = expect_list(tr,entries,pos)
-			self.add_child(tr,label, docitem_public_types_entry, items)
-	def __str__(self) -> str:
-		return " {" + ",".join(self._items) + "}"
+			if p.is_docstring_module():
+				rule_id = "MPTYP-006"
+			else:
+				rule_id = "CPTYP-006"
+			with rule_on_fail(tr, rule_id):
+				self.add_child(tr,label, docitem_public_types_entry, items)
 
 #----- docitem class public_constants ----------------------------#
 
@@ -681,15 +631,41 @@ Raises:
 		|Must| raise if the content is not a set of public assignable entries. In detail:
 		|Must| raise if the content is not a sequence of pairs label / list of strings.
 		"""
+		p = self.parent()
 		pos = 0
 		while pos < len(entries):
-			with rule_on_fail(tr, "PVAR-004"):
-				label,pos = expect_label(tr,entries,pos)
+			rule_id: str
+			assert isinstance(p,docitem_base)
+# Public_types can occur in modules and classes
+			if p.is_docstring_module():
+				if isinstance(self,docitem_public_variables):
+					rule_id = "MPVAR-004"
+				else:
+					rule_id = "MPCON-004"
+			elif p.is_docstring_class():
+				if isinstance(self,docitem_public_variables):
+					rule_id = "CPVAR-004"
+				else:
+					rule_id = "CPCON-004"
+			else:
+# Should never happen. Keep split placeholder mnemonic for consistency.
+				rule_id = "MPVAR-999"
+			with rule_on_fail(tr, rule_id):
+				label,pos = expect_label_identifier(tr,entries,pos)
 # public_assignables requires a list of public_assignables function names
 			items,pos = expect_list(tr,entries,pos)
-			self.add_child(tr,label, docitem_public_assignables_entry, items)
-	def __str__(self) -> str:
-		return " {" + ",".join(self._items) + "}"
+			if p.is_docstring_module():
+				if isinstance(self,docitem_public_variables):
+					rule_id = "MPVAR-006"
+				else:
+					rule_id = "MPCON-007"
+			else:
+				if isinstance(self,docitem_public_variables):
+					rule_id = "CPVAR-006"
+				else:
+					rule_id = "CPCON-007"
+			with rule_on_fail(tr, rule_id):
+				self.add_child(tr,label, docitem_public_assignables_entry, items)
 
 class docitem_public_constants(docitem_public_assignables_base):
 	def label(self) -> str:
@@ -782,13 +758,12 @@ Raises:
 		"""
 		pos = 0
 		while pos < len(entries):
-			with rule_on_fail(tr, "CMTO-004"):
-				label, pos = expect_label(tr, entries, pos)
-				# method_overview requires a list of method_overview function names
-				items, pos = expect_list(tr, entries, pos)
+			with rule_on_fail(tr, "CMTO-005"):
+				label, pos = expect_label_identifier(tr, entries, pos)
+# method_overview requires a list of method_overview function names
+			items, pos = expect_list(tr, entries, pos)
+			with rule_on_fail(tr, "CMTO-006"):
 				self.add_child(tr, label, docitem_method_overview_entry, items)
-	def __str__(self) -> str:
-		return " {" + ",".join(self._items) + "}"
 
 #----- docitem class function_overview ---------------------------#
 
@@ -845,35 +820,34 @@ Method_overview:
 		return "Function_overview"
 	def parse(self,tr : tracer,entries : DocstringSubtree) -> None:
 		"""
-Preamble:
-	profile:
-		method
-	normative_sections:
-		Contract, Parameters, Returns, Raises
-Contract:
-	general:
-		|Must| parse the content of section |label|`Function_overview`.
-Parameters:
-	tr:
-		The tracer for collecting diagnostics.
-	entries:
-		The docstring subtree to parse, a list of public function entries.
-Returns:
-	|Must| return |None|.
-Raises:
-	RuntimeError:
-		|Must| raise if the content is not a set of public function entries. In detail:
-		|Must| raise if the content is not a sequence of pairs label / list of strings.
+		Preamble:
+			profile:
+				method
+			normative_sections:
+				Contract, Parameters, Returns, Raises
+		Contract:
+			general:
+				|Must| parse the content of section |label|`Function_overview`.
+		Parameters:
+			tr:
+				The tracer for collecting diagnostics.
+			entries:
+				The docstring subtree to parse, a list of public function entries.
+		Returns:
+			|Must| return |None|.
+		Raises:
+			RuntimeError:
+				|Must| raise if the content is not a set of public function entries. In detail:
+				|Must| raise if the content is not a sequence of pairs label / list of strings.
 		"""
 		pos = 0
 		while pos < len(entries):
 			with rule_on_fail(tr, "MFNO-005"):
-				label,pos = expect_label(tr,entries,pos)
-# function_overview requires a list of function_overview function names
-				items,pos = expect_list(tr,entries,pos)
+				label,pos = expect_label_identifier(tr,entries,pos)
+# function_overview requires free-form text per function entry
+			items,pos = expect_list(tr,entries,pos)
+			with rule_on_fail(tr, "MFNO-006"):
 				self.add_child(tr,label, docitem_function_overview_entry, items)
-	def __str__(self) -> str:
-		return " {" + ",".join(self._items) + "}"
 
 #===== end section Public_<callable> ==========================#
 
@@ -929,8 +903,6 @@ Raises:
 		if not is_list_of_str(lines):
 			raise_parsing_error_expected_but_got(tr,"RET-005","list of strings",f"{lines}")
 		self.set_items(lines)
-	def __str__(self) -> str:
-		return " {'" + "','".join(self._items) + "'}"
 
 #===== end section Returns ====================================#
 
@@ -995,8 +967,6 @@ Raises:
 		if not is_list_of_str(lines):
 			raise_parsing_error_expected_but_got(tr,"DESC-004","list of strings",f"{lines}")
 		self._items = lines
-	def __str__(self) -> str:
-		return " {'" + "','".join(self._items) + "'}"
 
 #===== end section Description ================================#
 
@@ -1023,7 +993,7 @@ Public_methods:
 	parse
 Method_overview:
 	parse:
-		Parse a the content of a parameter entry.
+		Parse the content of a parameter entry.
 	"""
 	def __init__(self) -> None:
 		super().__init__()
@@ -1085,9 +1055,8 @@ Raises:
 			with rule_on_fail(tr,"PAR-006"):
 				label,pos = expect_label_identifier(tr,entries,pos)
 			items,pos = expect_list(tr,entries,pos)
-			self.add_child(tr,label, docitem_parameters_entry, items)
-	def __str__(self) -> str:
-		return " {" + ",".join(self._items) + "}"
+			with rule_on_fail(tr,"PAR-007"):
+				self.add_child(tr,label, docitem_parameters_entry, items)
 
 #===== end section Parameters =================================#
 
@@ -1114,7 +1083,7 @@ Public_methods:
 	parse
 Method_overview:
 	parse:
-		Parse a the content of an exception entry.
+		Parse the content of an exception entry.
 	"""
 	def __init__(self) -> None:
 		super().__init__()
@@ -1179,9 +1148,8 @@ Raises:
 				label,pos = expect_label_qualified_identifier(tr,entries,pos)
 # factory requires a list of factory function names
 			items,pos = expect_list(tr,entries,pos)
-			self.add_child(tr,label, docitem_raises_entry, items)
-	def __str__(self) -> str:
-		return " {" + ",".join(self._items) + "}"
+			with rule_on_fail(tr, "RAI-005"):
+				self.add_child(tr,label, docitem_raises_entry, items)
 
 #===== end section Raises =====================================#
 
@@ -1208,12 +1176,40 @@ Public_methods:
 	parse
 Method_overview:
 	parse:
-		Parse a the content of an definition entry.
+		Parse the content of an definition entry.
 	"""
 	def __init__(self) -> None:
 		super().__init__()
 	def label(self) -> str:
 		return "dfn"
+
+class docitem_inherited_defitems(docitem_list_of_symbols_base):
+	"""
+Preamble:
+	profile:
+		class
+	normative_sections:
+		Contract, Derived_from, Public_methods
+Contract:
+	general:
+		|Must| represent the special entry in the |label|`Definitions` section.
+		|Must| accept and store a list of identifiers.
+	constructor:
+		|Must| be default-constructible.
+Derived_from:
+	docitem_list_of_symbols_base
+Public_methods:
+	parse
+Method_overview:
+	parse:
+		Parse the content of an inherited defitem.
+	"""
+	def __init__(self) -> None:
+		super().__init__()
+	def parse(self,tr : tracer,defitems : DocstringSubtree) -> None:
+# LQID-001: list of identifiers, each one unique.
+		super()._parse(tr, defitems, docitem_list_of_symbols_base.ValuePattern.IDENTIFIER)
+
 
 class docitem_definitions(docitem_map_base):
 	"""
@@ -1236,6 +1232,7 @@ Method_overview:
 	"""
 	def __init__(self) -> None:
 		super().__init__()
+		self._inherited_defitems = docitem_inherited_defitems()
 	def label(self) -> str:
 		return "Definitions"
 	def parse(self,tr : tracer,entries : DocstringSubtree) -> None:
@@ -1259,14 +1256,26 @@ Raises:
 	RuntimeError:
 		|Must| raise if parsing fails.
 		"""
+		found_inherited = False
 		pos = 0
 		while pos < len(entries):
 			with rule_on_fail(tr,"DEF-004"):
 				label,pos = expect_label_identifier(tr,entries,pos)
-			items,pos = expect_list(tr,entries,pos)
-			self.add_child(tr,label, docitem_definitions_entry, items)
-	def __str__(self) -> str:
-		return " {" + ",".join(self._items) + "}"
+# DEF-010: "_inherit" is special:
+			if label == "_inherit":
+				if found_inherited:
+# DEF-013: "_inherit" only once.
+					raise raise_parsing_error(tr,"PRSR-008","Duplicate subsection '_inherit'.")
+				with traced_section(tr, "_inherit"):
+					self._inherited_defitems.parse(tr,entries[pos])
+				pos += 1
+				found_inherited = True
+			else:
+				items,pos = expect_list(tr,entries,pos)
+				with rule_on_fail(tr,"DEF-006"):
+					self.add_child(tr,label, docitem_definitions_entry, items)
+	def inherited(self) -> List[str]:
+		return self._inherited_defitems.items()
 
 #----- docitem class Terminology ------------------------------#
 
@@ -1293,7 +1302,7 @@ Public_methods:
 	parse
 Method_overview:
 	parse:
-		Parse a the content of an terminology entry.
+		Parse the content of an terminology entry.
 	"""
 	def __init__(self) -> None:
 		super().__init__()
@@ -1353,9 +1362,8 @@ Raises:
 			with rule_on_fail(tr, "TERM-005"):
 				label,pos = expect_label(tr,entries,pos)
 			items,pos = expect_list(tr,entries,pos)
-			self.add_child(tr,label, docitem_terminology_entry, items)
-	def __str__(self) -> str:
-		return " {" + ",".join(self._items) + "}"
+			with rule_on_fail(tr,"TERM-007"):
+				self.add_child(tr,label, docitem_terminology_entry, items)
 
 #===== end section Definitions and Terminology ================#
 
@@ -1441,7 +1449,8 @@ Raises:
 		while pos < len(entries):
 			with rule_on_fail(tr, "PRSR-006"):
 				label,pos = expect_label(tr,entries,pos)
+			if label == "":
+				raise_parsing_error(tr,"NOTE-006","Label must not be empty.")
 			items,pos = expect_list(tr,entries,pos)
-			self.add_child(tr,label, docitem_notes_entry, items)
-	def __str__(self) -> str:
-		return " {" + ",".join(self._items) + "}"
+			with rule_on_fail(tr, "NOTE-007"):
+				self.add_child(tr,label, docitem_notes_entry, items)

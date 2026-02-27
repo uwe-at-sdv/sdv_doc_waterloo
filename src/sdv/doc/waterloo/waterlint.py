@@ -14,6 +14,7 @@ import io
 import importlib.util
 import importlib.resources as importlib_resources
 import sys,inspect,os
+import traceback
 from datetime import datetime
 from pathlib import Path
 from types import ModuleType
@@ -26,7 +27,8 @@ from jsonschema import Draft202012Validator
 #from jsonschema import JSONDecodeError
 import jsonschema.exceptions
 
-__version__ = "0.3.0"
+__version__ = "0.4.0"
+# - 0.4.0 [2026-02-22]	Subcommand render-json: Node "definition_inherited_from_module", see also sdv.doc.waterloo.docitem_convert.
 # - 0.3.0 [2026-02-19]	Several refactorings concerning error handling, raw and JSON.
 # - 0.2.4 [2026-02-12]	Subcommand render-json: traits, decorators, default output filename.
 # - 0.2.3 [2026-02-12]	Subcommand version-json: prints only the JSON-schema version string.
@@ -36,6 +38,8 @@ __version__ = "0.3.0"
 # - 0.1.0 [2026-02-12]	Versioning starts. Subcommands are "validate", "coverage", "extract", "validate-json", "render-json"
 
 _debug = False
+
+SOURCE_CODE_ERRORS = (AttributeError,IndexError,KeyError,NameError,AssertionError,NotImplementedError,SyntaxError)
 
 # Import project modules while redirecting noisy stdout prints to stderr to
 # satisfy the requirement that stdout stays clean unless explicitly written.
@@ -48,6 +52,7 @@ with contextlib.redirect_stdout(sys.stderr):
 			tracer,
 			get_obj_name,
 			get_obj_fully_qualified_name,
+			RE_ANSI_SGR_COMPILED,
 			ValidationError,
 			ParseError,
 			SectionNotFoundError,
@@ -62,6 +67,7 @@ with contextlib.redirect_stdout(sys.stderr):
 			tracer,
 			get_obj_name,
 			get_obj_fully_qualified_name,
+			RE_ANSI_SGR_COMPILED,
 			ValidationError,
 			ParseError,
 			SectionNotFoundError,
@@ -80,26 +86,26 @@ SUBCOMMANDS = ("validate","coverage","extract","validate-json","render-json","li
 
 #===== Helper =================================================#
 
-def _emit_diagnostics(tr: tracer, dest: io.TextIOBase) -> None:
-#----- Debug notes --------------------------------------------#
-	if _debug:
-		for context,origin,msg in tr.gen_debug_notes():
-			print(f"Debug[{origin}]: {msg}", file=dest)
-#----- Infos --------------------------------------------------#
-	for context,origin,msg in tr.gen_infos():
-		print(f"Info[{origin}]: {msg}", file=dest)
-#----- Warnings -----------------------------------------------#
-	for context,rule_id,origin,msg,details in tr.gen_warnings():
-		rule_txt = ""
-		if rule_id:
-			rule_txt = f"[Rule: {rule_id}] "
-		print(f"Warning[{origin}]: {rule_txt}{msg}", file=dest)
-#----- Errors -------------------------------------------------#
-	for context,rule_id,origin,msg,details in tr.gen_errors():
-		rule_txt = ""
-		if rule_id:
-			rule_txt = f"[Rule: {rule_id}] "
-		print(f"Error[{origin}]: {rule_txt}{msg}", file=dest)
+def _add_traceback(tr: tracer) -> None:
+	exc_type, exc_value, exc_traceback = sys.exc_info()
+	if exc_value is not None:
+		tb_exc = traceback.TracebackException.from_exception(exc_value)
+		for i, frame in enumerate(tb_exc.stack):
+			line_txt = (frame.line or "").strip()
+			frame_msg = f"#{i} \x1b[38;2;159;159;255m{frame.filename}\x1b[0m:\x1b[38;2;159;255;159m{frame.lineno}\x1b[0m in {frame.name}"
+			if line_txt:
+				frame_msg += f" | {line_txt}"
+			tr.add_info(frame_msg, "tool")
+	err_name = exc_type.__name__ if exc_type is not None else "Exception"
+	err_msg = str(exc_value) if exc_value is not None else "unknown error"
+	tr.add_error("TOOL-800","tool",f"{err_name}: {err_msg}")
+
+def _emit_diagnostics(tr: tracer, dest: io.TextIOBase, strip_ansi: bool = False) -> None:
+	severity = tr.Severity.DEBUG if _debug else tr.Severity.INFO
+	txt = tr.str_by_severity(severity)
+	if strip_ansi:
+		txt = RE_ANSI_SGR_COMPILED.sub("", txt)
+	dest.write(txt)
 
 def _build_tracer_json_doc(tr: tracer) -> dict[str, Any]:
 	doc: dict[str, Any] = {
@@ -160,9 +166,10 @@ def _final_exit_code(base_code: int, tr: tracer, fail_on_warning: bool) -> int:
 def _emit_tracer(tr: tracer, out_path: str | None, out_json_path: str | None = None) -> None:
 	if out_path:
 		with open(out_path, "w", encoding="utf-8") as fh:
-			_emit_diagnostics(tr, fh)
+			_emit_diagnostics(tr, fh, strip_ansi=True)
 	else:
-		_emit_diagnostics(tr, sys.stderr) # type: ignore[arg-type]
+		severity = tr.Severity.DEBUG if _debug else tr.Severity.INFO
+		print(tr.str_by_severity(severity),file=sys.stderr,end="")
 	if out_json_path:
 		doc = _build_tracer_json_doc(tr)
 		with open(out_json_path, "w", encoding="utf-8") as fh:
@@ -314,7 +321,7 @@ def _validate_command(args: argparse.Namespace) -> int:
 			_apply_basedir(getattr(args, "basedir", None), args.obj)
 			obj = _resolve_object(args.obj)
 # We have an object, so let's use the tracer!
-			with docitem.traced_section(tr, get_obj_name(obj)):
+			with docitem.traced_section(tr, get_obj_fully_qualified_name(obj)):
 				docitem.validate_docstring(tr, obj, None, None)
 		else:
 # Read from file or stdin.
@@ -330,11 +337,19 @@ def _validate_command(args: argparse.Namespace) -> int:
 				file=sys.stderr,
 			)
 # Check these first, otherwise RuntimeError will shadow some of them.
-	except (IndexError,NameError,AssertionError,NotImplementedError,AttributeError):
+	except SOURCE_CODE_ERRORS:
 # Implementation error
-		raise
-	except ImportError:
-		raise
+		if not out_diag:
+			_add_traceback(tr)
+			_emit_tracer(tr, out_diag)
+			return 1
+		else:
+			raise
+	except ImportError as e:
+		tr.add_error("TOOL-001","tool",str(e))
+		_emit_tracer(tr, out_diag, out_diag_json)
+		return 1
+#		raise
 	except ValidationError as exc:
 #		print(str(exc), file=sys.stderr)
 		_emit_tracer(tr, out_diag, out_diag_json)
@@ -389,11 +404,19 @@ def _coverage_command(args: argparse.Namespace) -> int:
 				print("Error: --obj must resolve to module or class for coverage.", file=sys.stderr)
 				return 1
 # Check these first, otherwise RuntimeError will shadow some of them.
-	except (IndexError,NameError,AssertionError,NotImplementedError,AttributeError):
+	except SOURCE_CODE_ERRORS:
 # Implementation error
-		raise
-	except ImportError:
-		raise
+		if not out_diag:
+			_add_traceback(tr)
+			_emit_tracer(tr, out_diag)
+			return 1
+		else:
+			raise
+	except ImportError as e:
+		tr.add_error("TOOL-001","tool",str(e))
+		_emit_tracer(tr, out_diag, out_diag_json)
+		return 1
+#		raise
 	except ValidationError as exc:
 #		print(str(exc), file=sys.stderr)
 		_emit_tracer(tr, out_diag, out_diag_json)
@@ -409,6 +432,7 @@ def _coverage_command(args: argparse.Namespace) -> int:
 	except Exception as exc:  # pragma: no cover - defensive
 #		print(f"Error: {exc}", file=sys.stderr)
 		_emit_tracer(tr, out_diag, out_diag_json)
+		raise
 		return 1
 
 	_emit_tracer(tr, out_diag, out_diag_json)
@@ -540,8 +564,13 @@ def _render_json_command(args: argparse.Namespace) -> int:
 		except Exception:
 			pass
 		try:
-			if inspect.isgeneratorfunction(obj) or inspect.isasyncgenfunction(obj):
+			if inspect.isgeneratorfunction(obj):
 				traits.append("generator")
+		except Exception:
+			pass
+		try:
+			if inspect.isasyncgenfunction(obj):
+				traits.append("asyncgenerator")
 		except Exception:
 			pass
 # Special decorators but not property.
@@ -557,6 +586,22 @@ def _render_json_command(args: argparse.Namespace) -> int:
 
 	def _collect_decorators_for_callable(obj: object) -> list[cvrt.WtrlJsonNode_t]:
 		return cast(list[cvrt.WtrlJsonNode_t],docitem.get_obj_decorators(obj))
+
+	def _apply_definitions_inherited_source(doc_node: cvrt.WtrlJsonNode_t, obj: object) -> None:
+		"""
+		Fill `doc.definitions_inherited_from_module.source` as JSON pointer.
+		The converter emits the node shape; render-json resolves the source pointer.
+		"""
+		if not isinstance(doc_node, dict):
+			return
+		inh = doc_node.get("definitions_inherited_from_module")
+		if not isinstance(inh, dict):
+			return
+		if isinstance(obj, ModuleType):
+			return
+		modname = getattr(obj, "__module__", None)
+		if isinstance(modname, str) and modname:
+			inh["source"] = f"/__WTRL_OBJECTS__/{modname}"
 
 	tr = tracer()
 #----- output spec --------------------------------------------#
@@ -763,6 +808,7 @@ def _render_json_command(args: argparse.Namespace) -> int:
 									objects_counted.add(qname_prop_meth)
 # Docstring handling: same for modules, classes, and callables.
 								tree_doc = cvrt.to_node_docstring_tree_json(tree_prop_meth, flavour)
+								_apply_definitions_inherited_source(tree_doc, obj_prop_meth)
 								entry_prop_meth = dict(tree_sig_prop_meth)
 # Traits
 								if traits_prop_meth:
@@ -815,8 +861,11 @@ def _render_json_command(args: argparse.Namespace) -> int:
 				if qname not in objects_counted:
 					num_callables_rendered += 1
 					objects_counted.add(qname)
+			else:
+				continue
 # Docstring handling: same for modules, classes, and callables.
 			tree_doc = cvrt.to_node_docstring_tree_json(tree_parsed, flavour)
+			_apply_definitions_inherited_source(tree_doc, o)
 			entry = dict(tree_sig)
 # Traits
 			if tree_traits:
@@ -931,9 +980,12 @@ def _render_json_command(args: argparse.Namespace) -> int:
 		if getattr(args, "out_prefix", None) and not getattr(args, "out_dir", None):
 			raise RuntimeError("--out-prefix requires --out-dir.")
 		if args.out_file:
+# --out is given? Dump to file.
 			with open(args.out_file, "w", encoding="utf-8") as fh:
 				json.dump(tree_full, fh, indent=4)
 		elif getattr(args, "out_dir", None):
+# If --out-dir is specified, we construct the filename by a strict pattern,
+# which contains scope and flavour as segments.
 			out_dir = Path(args.out_dir)
 			if not out_dir.exists():
 				raise RuntimeError(f"output directory does not exist: {args.out_dir}")
@@ -941,10 +993,12 @@ def _render_json_command(args: argparse.Namespace) -> int:
 				raise RuntimeError(f"output path is not a directory: {args.out_dir}")
 			if len(obj_qnames) > 1 and not getattr(args, "out_prefix", None):
 				raise RuntimeError("--out-prefix is required with --out-dir when multiple --obj are given.")
+# The user can still set the filename prefix without impact on the pattern.
 			if getattr(args, "out_prefix", None):
 				base_name = str(args.out_prefix)
 			else:
 				base_name = str(obj_qnames[0])
+# The pattern:
 			out_name = f"{base_name}.wtrl.{scope_str}.{flavour_str}.json"
 			out_path = out_dir / out_name
 			with open(out_path, "w", encoding="utf-8") as fh:

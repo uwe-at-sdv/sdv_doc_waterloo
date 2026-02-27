@@ -1,5 +1,5 @@
 from __future__ import annotations
-from enum import IntEnum
+from enum import Enum,IntEnum
 from types import FunctionType, MappingProxyType, ModuleType
 from typing_extensions import Self, TypeIs
 from typing import Any, Callable, Dict, Final, get_type_hints, get_origin, get_args, Generator, Iterable, Iterator, List, Literal, NewType, NoReturn, Sequence, Set, Tuple, Type, TypeAlias, TypeGuard, Union, cast
@@ -9,6 +9,12 @@ import pkgutil,inspect,importlib
 import builtins
 from contextlib import contextmanager
 
+try:
+	from enum import StrEnum # type: ignore[attr-defined]
+except:
+	class StrEnum(str, Enum): # type: ignore[no-redef]
+		pass
+
 #===== Constants ==============================================#
 
 RE_RULE_ID : Final[str] = r"[A-Z][A-Z][A-Z]+-[0-9][0-9][0-9]+"
@@ -17,11 +23,15 @@ RE_RULE_ID_COMPILED : Final[re.Pattern[str]] = re.compile(RE_RULE_ID)
 RE_IDENTIFIER : Final[str] = r"[A-Za-z_][A-Za-z0-9_]*"
 RE_IDENTIFIER_COMPILED : Final[re.Pattern[str]] = re.compile(RE_IDENTIFIER)
 
-RE_QUALIFIED_IDENTIFIER : Final[str] = r"[A-Za-z_.][A-Za-z0-9_.]*"
+RE_QUALIFIED_IDENTIFIER : Final[str] = r"[A-Za-z_][A-Za-z0-9_]*([.][A-Za-z_][A-Za-z0-9_]*)*"
 RE_QUALIFIED_IDENTIFIER_COMPILED : Final[re.Pattern[str]] = re.compile(RE_QUALIFIED_IDENTIFIER)
 
 RE_LABEL : Final[str] = RE_QUALIFIED_IDENTIFIER + ":"
 RE_LABEL_COMPILED : Final[re.Pattern[str]] = re.compile(RE_LABEL)
+
+# ANSI SGR escape sequences, e.g. "\x1b[31m"
+RE_ANSI_SGR: Final[str] = r"\x1b\[[0-9;]*m"
+RE_ANSI_SGR_COMPILED: Final[re.Pattern[str]] = re.compile(RE_ANSI_SGR)
 
 # Markup tokens for Waterloo roles, e.g. |type|`int` -> :wtrl_type:`int`
 WTRL_MARKUP_ROLES: Final[str] = r"(attr|cmd|dfn|file|func|label|lit|mod|norm|op|opt|ref|tag|term|type|value|var|var_type)"
@@ -31,7 +41,7 @@ RE_WTRL_MARKUP_BACKTICK_COMPILED: Final[re.Pattern[str]] = re.compile(RE_WTRL_MA
 #RE_SUSPICIOUS_MARKUP_BACKTICK: Final[str] = rf"\|[a-zA-Z0-9_]+\|`"
 #RE_SUSPICIOUS_MARKUP_BACKTICK_COMPILED: Final[re.Pattern[str]] = re.compile(RE_SUSPICIOUS_MARKUP_BACKTICK)
 
-CSV_SECTIONS = frozenset(["normative_sections", "scopes", "Public_classes", "Public_methods", "Public_functions", "See_also"])
+#CSV_SECTIONS = frozenset(["normative_sections", "scopes", "Public_classes", "Public_methods", "Public_functions", "See_also"])
 SINGLE_STRING_SECTIONS = frozenset(["profile","status"])
 
 
@@ -148,7 +158,7 @@ class Format(IntEnum):
 			public
 	Contract:
 		general:
-			|Must| provide constant representing available output formats for string rendering.
+			|Must| provide constants representing available output formats for string rendering.
 		constructor:
 			Inherit from |type|`int`.
 	Public_constants:
@@ -169,6 +179,52 @@ format_tag_map = {
 	"md":		Format.MD
 	}
 FORMAT_TAG_MAP = MappingProxyType(format_tag_map)	
+
+class Status(StrEnum):
+	"""
+	Preamble:
+		profile:
+			class
+		normative_sections:
+			Contract, Public_constants
+		scope:
+			public
+	Contract:
+		general:
+			|Must| provide constants representing the values of subsection |label|`Preamble.status`.
+		constructor:
+			Inherit from |type|`Enum`.
+	Public_constants:
+		EXPERIMENTAL:
+			See rule |ref|`STA-004 <section_function_pramble>`.
+		STABLE:
+			See rule |ref|`STA-004 <section_function_pramble>`.
+		FROZEN:
+			See rule |ref|`STA-004 <section_function_pramble>`.
+		DEPRECATED:
+			See rule |ref|`STA-004 <section_function_pramble>`.
+		DRAFT:
+			See rule |ref|`STA-004 <section_function_pramble>`.
+	Notes:
+		LoII:
+			This docstring violates LoII in order to preserve SSoT,
+			see |label|`Public_constants`.
+	"""
+	EXPERIMENTAL	= "experimental"
+	STABLE		= "stable"
+	FROZEN		= "frozen"
+	DEPRECATED	= "deprecated"
+	DRAFT		= "draft"
+
+status_tag_map = {
+	"experimental":	Status.EXPERIMENTAL,
+	"stable":	Status.STABLE,
+	"frozen":	Status.FROZEN,
+	"deprecated":	Status.DEPRECATED,
+	"draft":	Status.DRAFT
+	}
+STATUS_TAG_MAP = MappingProxyType(status_tag_map)	
+
 
 #===== Config =================================================#
 
@@ -270,8 +326,8 @@ def is_attr_annotated(obj : AnnotatableObject, attr: str) -> bool:
 		BaseException:
 			|May| propagate exceptions from |func|`getattr`.
 	Notes:
-		Drift:
-			Last reviewed on 2026-02-04
+		Last review:
+			2026-02-04
 	"""
 	return attr in get_obj_annotations(obj)
 
@@ -298,23 +354,14 @@ def is_attr_final(obj : AnnotatableObject, attr: str) -> bool:
 		BaseException:
 			|May| propagate exceptions from |func|`get_type_hints`.
 	Notes:
-		Drift:
-			Last reviewed on 2026-02-04
+		Last review:
+			2026-02-04
 	"""
 # Get type annotations
 	hints = get_type_hints(obj, include_extras=True)
 	hint = hints.get(attr)
 # Is final or not
 	return get_origin(hint) is Final
-
-def returns_bool(obj : object) -> bool:
-	if obj is bool:
-		return True
-	origin = get_origin(obj)
-	if origin is None:
-		return False
-	args = get_args(obj)
-	return bool(args) and any(a is bool for a in args)
 
 def is_list_of_str(val: Any) -> TypeGuard[List[str]]:
 	if not isinstance(val,list):
@@ -430,6 +477,83 @@ def is_obj_named_value(obj: object) -> TypeIs[Callable[...,Any]]:
 	return not is_obj_module(obj) and not is_obj_class(obj) and not is_obj_function(obj)
 
 
+def get_obj_direct_module(obj: object) -> ModuleType | None:
+	"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises, Notes
+		scope:
+			public
+	Contract:
+		general:
+			|Must| return the direct owner module of |var|`obj`.
+			|Must| return |var|`obj` unchanged if |var|`obj` is a module.
+			|Must| try to resolve the module named by |var|`obj.__module__` for classes and callables.
+			|Must| return |None| if no direct module can be resolved.
+			|Must| avoid deep traversal (e.g. not resolve enclosing module hierarchies recursively).
+	Parameters:
+		obj:
+			The object to inspect.
+	Returns:
+		The direct module object, or |None| if unavailable.
+	Raises:
+		ImportError:
+			|May| be raised by module import helpers if implementation chooses to import by name.
+		ValueError:
+			|May| be raised by import helpers for malformed module names.
+		AttributeError:
+			|May| be raised by low-level inspection for malformed objects.
+	Notes:
+		Boundary:
+			"Direct module" is defined by immediate metadata (`__module__`) only.
+			Nested ownership (class-inside-class, closures, descriptors) is out of scope.
+	"""
+# obj is a module? Nothing to do.
+	if isinstance(obj, ModuleType):
+		return obj
+# Primary path: resolve immediate __module__ metadata.
+	modname = getattr(obj, "__module__", None)
+	if isinstance(modname, str) and modname:
+# Try to find in sys.modules.
+		mod = sys.modules.get(modname, None)
+		if isinstance(mod, ModuleType):
+			return mod
+# Try to import.
+		try:
+			mod = importlib.import_module(modname)
+		except Exception:
+			mod = None
+# Really a module? Then we're done.
+		if isinstance(mod, ModuleType):
+			return mod
+# Fallback: inspect-based resolution for odd callables/descriptors/instances.
+	try:
+		mod = inspect.getmodule(obj)
+	except Exception:
+		mod = None
+	if isinstance(mod, ModuleType):
+		return mod
+# Last fallback for instances/proxies lacking a useful __module__ on the object itself.
+	cls = getattr(obj, "__class__", None)
+	cls_modname = getattr(cls, "__module__", None)
+	if isinstance(cls_modname, str) and cls_modname:
+# Again, try to find in sys.modules.
+		mod = sys.modules.get(cls_modname, None)
+		if isinstance(mod, ModuleType):
+			return mod
+# Again, try to import.
+		try:
+			mod = importlib.import_module(cls_modname)
+		except Exception:
+			return None
+# Really a module? Then we're done.
+		if isinstance(mod, ModuleType):
+			return mod
+	return None
+	
+
 def get_obj_name(obj: object) -> str:
 	"""
 	Preamble:
@@ -453,8 +577,8 @@ def get_obj_name(obj: object) -> str:
 		The resolved name according to the defined hierarchy.
 	Raises:
 	Notes:
-		Drift:
-			Last reviewed on 2026-02-04
+		Last review:
+			2026-02-04
 	"""
 	if isinstance(obj, str):
 		return obj
@@ -519,8 +643,8 @@ def get_obj_path(obj: object) -> str | None:
 		Absolute path string or |None|.
 	Raises:
 	Notes:
-		Drift:
-			Last reviewed on 2026-02-05
+		Last review:
+			2026-02-05
 	"""
 	try:
 		mod = inspect.getmodule(obj)
@@ -643,8 +767,8 @@ def get_obj_docstring(obj: object) -> str:
 		|Must| return the docstring text, or empty string if none exists.
 	Raises:
 	Notes:
-		Drift:
-			Last reviewed on 2026-02-04
+		Last review:
+			2026-02-04
 	"""
 	checked: set[int] = set()
 
@@ -868,6 +992,11 @@ Public_types:
 		Entries can be module, class or function names, or labels.
 	"""
 	Context: TypeAlias = List[str]
+	class Severity(IntEnum):
+		DEBUG		= 0,
+		INFO		= 1,
+		WARNING		= 2
+		ERROR		= 3
 
 	def __init__(self) -> None:
 		self._names : List[str] = []
@@ -894,6 +1023,21 @@ Public_types:
 		t += "Warnings:\n" + self.to_string_warnings() + "\n"
 		t += "Error:\n" + self.to_string_errors() + "\n"
 		return t
+# For humans
+	def str_by_severity(self,severity: Severity) -> str:
+		t = ""
+		t += "----- Tracer-----8<---------------------------------------------\n"
+		if severity <= self.Severity.DEBUG:
+			t += self.to_string_debug_notes()
+		if severity <= self.Severity.INFO:
+			t += self.to_string_infos()
+		if severity <= self.Severity.WARNING:
+			t += self.to_string_warnings()
+		if severity <= self.Severity.ERROR:
+			t += self.to_string_errors()
+		t += "----- Tracer----->8---------------------------------------------\n"
+		return t
+
 #----- Context ------------------------------------------------#
 	def push(self,name : str) -> None:
 		self._names.append(name)
@@ -913,7 +1057,7 @@ Public_types:
 	def add_debug_note(self,msg : str,origin: Origin = "tool") -> None:
 		self._debug.append((copy.copy(self._names),origin,msg))
 	def to_string_debug_notes(self) -> str:
-		return "\n".join([f"[{origin}] {msg}" for context,origin,msg in self._debug])
+		return "".join([f"- \x1b[35mDebug\x1b[0m [{origin}] - [{'->'.join(context)}] {msg}\n"  for context,origin,msg in self._debug])
 # Implement your own pretty printing.
 	def gen_debug_notes(self) -> Generator[Tuple[tracer.Context,Origin,str],None,None]:
 		for context,origin,msg in self._debug:
@@ -926,7 +1070,7 @@ Public_types:
 	def add_info(self,msg : str,origin: Origin = "tool") -> None:
 		self._infos.append((copy.copy(self._names),origin,msg))
 	def to_string_infos(self) -> str:
-		return "\n".join([f"[{origin}] {msg}" for context,origin,msg in self._infos])
+		return "".join([f"- \x1b[32mInfo\x1b[0m [{origin}] - [{'->'.join(context)}] {msg}\n"  for context,origin,msg in self._infos])
 # Implement your own pretty printing.
 	def gen_infos(self) -> Generator[Tuple[tracer.Context,Origin,str],None,None]:
 		for context,origin,msg in self._infos:
@@ -939,7 +1083,7 @@ Public_types:
 	def add_warning(self,rule_id : RuleId, origin: Origin, msg : str,/,details: Details | None = None) -> None:
 		self._warnings.append((copy.copy(self._names),rule_id,origin,msg,details or {}))
 	def to_string_warnings(self) -> str:
-		return "\n".join([f"[Rule {rid}] [{origin}] {msg}"  for context,rid,origin,msg,details in self._warnings])
+		return "".join([f"- \x1b[33mWarning\x1b[0m [{origin}] - [{'->'.join(context)}] [Rule {rid}] {msg}\n"  for context,rid,origin,msg,details in self._warnings])
 # Implement your own pretty printing.
 	def gen_warnings(self) -> Generator[Tuple[tracer.Context,RuleId,Origin,str,Details],None,None]:
 		for context,rid,origin,msg,details in self._warnings:
@@ -952,7 +1096,7 @@ Public_types:
 	def add_error(self,rule_id : RuleId, origin: Origin, msg : str,/,details: Details | None = None) -> None:
 		self._errors.append((copy.copy(self._names),rule_id,origin,msg,details or {}))
 	def to_string_errors(self) -> str:
-		return "\n".join([f"[Rule {rid}] [{origin}] {msg}"  for context,rid,origin,msg,details in self._errors])
+		return "".join([f"- \x1b[31mError\x1b[0m [{origin}] - [{'->'.join(context)}] [Rule {rid}] {msg}\n"  for context,rid,origin,msg,details in self._errors])
 # Implement your own pretty printing.
 	def gen_errors(self) -> Generator[Tuple[tracer.Context,RuleId,Origin,str,Details],None,None]:
 		for context,rid,origin,msg,details in self._errors:
@@ -1048,7 +1192,7 @@ def raise_parsing_error(tr : tracer, rule_id: RuleId, msg : str) -> NoReturn:
 	raise ParseError(out)
 
 def raise_parsing_error_expected_but_got(tr : tracer, rule_id: RuleId, expected : str, got : str) -> NoReturn:
-	out = f"expected {expected}, but got {got}"
+	out = f"expected {expected}, but got '{got}'"
 	tr.add_error(rule_id, "parsing", out)
 	raise ParseError(out)
 

@@ -4,6 +4,7 @@ Preamble:
 		module
 	normative_sections:
 		Contract
+		Definitions
 		Public_classes
 		Public_functions
 		Public_types
@@ -16,6 +17,11 @@ Contract:
 		|Must| be able to represent any valid docstring by a single node which is the root of a tree of nodes.
 		|Must| provide validator functions for docstrings for modules, classes and callables.
 		|Must| provide functions for verifying coverage where applicable.
+Definitions:
+	Identifier:
+		A string that matches the regular expression |var|`RE_IDENTIFIER` (see |label|`Public_constants`).
+	Qualified_Identifier:
+		A string that matches the regular expression |var|`RE_QUALIFIED_IDENTIFIER` (see |label|`Public_constants`).
 Public_functions:
 	is_attr_annotated, is_attr_final, get_obj_name, get_obj_path, get_obj_annotations, resolve_object, get_status, get_profile, get_num_indent
 	parse_indent_docstring, get_tree_of_section, get_tree_of_subsection, to_string_tree
@@ -32,7 +38,7 @@ Function_overview:
 	is_attr_final:
 		Find out if an attribute of a class or module is annotated as 'Final'.
 	resolve_object:
-		Resolve an object by its qualified identifier
+		Resolve an object by its |term|`Qualified_Identifier`
 	get_status:
 		Extract documented object status from docitem tree
 	get_profile:
@@ -98,7 +104,7 @@ Public_classes:
 	docitem_definitions_entry, docitem_definitions, docitem_terminology_entry, docitem_terminology
 	docitem_notes_entry, docitem_notes, docitem_description, docitem_see_also, docitem_docstring_base
 	docitem_docstring_module, docitem_docstring_class, docitem_docstring_method, docitem_docstring_inherited_method
-	Scope, Flavour, Format
+	Scope, Flavour, Format, Status
 Class_overview:
 	tracer:
 		Context and helper for exceptions and warnings.
@@ -214,9 +220,9 @@ Public_types:
 		Type alias for a set of scopes.
 Public_constants:
 	RE_IDENTIFIER:
-		Regular expression for identifiers: ``[A-Za-z_][A-Za-z0-9_]*``
+		Regular expression for identifiers: |value|`[A-Za-z_][A-Za-z0-9_]*`
 	RE_QUALIFIED_IDENTIFIER:
-		Regular expression for qualified identifiers: ``[A-Za-z_.][A-Za-z0-9_.]*``
+		Regular expression for qualified identifiers: |value|`[A-Za-z_][A-Za-z0-9_]*([.][A-Za-z_][A-Za-z0-9_]*)*`
 	KEYWORDS_OF_NORMATIVITY:
 		The set of normative keywords.
 	CANONICAL_ORDER_OF_SECTIONS:
@@ -227,6 +233,8 @@ Public_constants:
 		Map string representations of flavours to symbolic/numeric values.
 	FORMAT_TAG_MAP:
 		Map string representations of output formats to symbolic/numeric values.
+	STATUS_TAG_MAP:
+		Map string representations of |label|`Contract.status` values to symbolic values.
 """
 
 import sys,re
@@ -246,7 +254,13 @@ try:
 except ImportError:
 	from sdv.doc.waterloo.docitem_validator import *
 
-__version__ = "0.4.0"
+__version__ = "0.5.4"
+# - 0.5.4 [2026-02-25]	Doctests; Documentation review
+# - 0.5.3 [2026-02-24]	Doctests; Documentation review
+# - 0.5.2 [2026-02-22]	Sections "Definitions" and "Termiinology": Rules tightened
+# - 0.5.1 [2026-02-22]	Subsection "_inherited" in "Definitions": JSON rendering implemented.
+# - 0.5.0 [2026-02-21]	Subsection "_inherited" in "Definitions"; Specification, Sphinx, examples.
+# - 0.4.1 [2026-02-20]	Improved rendering of "Factory" in sphinx extension; Tests for matching profile vs object, e.g. PRE-019.
 # - 0.4.0 [2026-02-19]	Major changes in class tracer: Debugging, detailed error records.
 # - 0.3.0 [2026-02-18]	Partial Normativity Detection (PNB-rules)
 # - 0.2.0 [2026-02-15]	Sphinx: Clickable references in Public_*, *_overview, See_also, and Derived_from;

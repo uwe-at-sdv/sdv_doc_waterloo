@@ -241,8 +241,19 @@ def build_node_json(node_docstring: docitem_docstring_base, flavour: Flavour) ->
 			|May| propagate from underlying modules such as |mod|`re`.
 	"""
 	
-	m =  {}
+	m: dict[str, WtrlJsonNode_t] = {}
 	for label in node_docstring.items():
+		if label == "Definitions":
+			node_definitions = node_docstring.item(label)
+			if isinstance(node_definitions, docitem_definitions):
+				inherited_terms = [str(x) for x in node_definitions.inherited() if str(x).strip()]
+				if inherited_terms:
+	# Keep inherited definitions separate from local Definitions content.
+	# `source` is filled by the renderer (waterlint) which knows object context.
+					m["definitions_inherited_from_module"] = {
+						"source": None,
+						"terms": cast(WtrlJsonNode_t, [_render_token(t, flavour) for t in inherited_terms]),
+					}
 		m[label] = build_node_section_json(label,node_docstring.item(label),flavour)
 	return m
 
