@@ -1,0 +1,42 @@
+# Python bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments (falls du mal eines reinlegst)
+.venv/
+venv/
+env/
+
+# Packaging
+# Neither build nor dist are part of the git-repo. In order to install
+# from github, pip uses pyproject.toml and builds a temporary wheel.
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# Mypy
+.mypy_cache/
+
+# Pytest
+.pytest_cache/
+
+# Coverage
+.coverage
+htmlcov/
+
+# Sphinx build output
+docs/_build/
+_build/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+# My own private tools.
+build.sh
+gather.sh
+
