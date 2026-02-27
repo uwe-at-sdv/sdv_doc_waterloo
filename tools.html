@@ -37,18 +37,38 @@
             
   <section id="tools">
 <h1><span class="section-number">7. </span>Tools<a class="headerlink" href="#tools" title="Permalink to this headline">¶</a></h1>
-<p>This section is normative.</p>
+<p>This section is informative.</p>
+<p>The reference implementation provides the command-line tool
+<code class="wtrl_cmd docutils literal notranslate"><span class="pre">waterlint</span></code>. The error codes listed below are used by this tool.
+These codes are specific to the reference implementation and do not
+form part of the normative Waterloo language specification.</p>
+<section id="error-code-structure">
+<h2><span class="section-number">7.1. </span>Error code structure<a class="headerlink" href="#error-code-structure" title="Permalink to this headline">¶</a></h2>
+<p>Error codes consist of a mnemonic prefix and a three-digit numeric identifier.
+The prefix indicates the subsystem that produced the error.
+The numeric identifier identifies the specific condition within that subsystem.
+Unless explicitly stated otherwise, error codes are considered stable
+within a minor version of the tool.</p>
+</section>
 <section id="waterlint-error-codes">
-<h2><span class="section-number">7.1. </span><code class="wtrl_cmd docutils literal notranslate"><span class="pre">waterlint</span></code> error codes<a class="headerlink" href="#waterlint-error-codes" title="Permalink to this headline">¶</a></h2>
-<p>The following error codes <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span></code> be used by <code class="wtrl_cmd docutils literal notranslate"><span class="pre">waterlint</span></code> for JSON processing.</p>
+<h2><span class="section-number">7.2. </span><code class="wtrl_cmd docutils literal notranslate"><span class="pre">waterlint</span></code> error codes<a class="headerlink" href="#waterlint-error-codes" title="Permalink to this headline">¶</a></h2>
+<p class="rubric">JSON processing</p>
 <ul class="simple">
-<li><p>[JSCH-000] – Unspecified catch-all error.</p></li>
+<li><p>[JSCH-000] – Unspecified catch-all error during JSON processing.</p></li>
 <li><p>[JSCH-002] – Cannot open the input JSON file for validation.</p></li>
-<li><p>[JSCH-003] – Cannot infer the schema from the input JSON file.</p></li>
+<li><p>[JSCH-003] – Cannot determine the applicable schema from the input JSON file.</p></li>
 <li><p>[JSCH-004] – Input is not valid JSON.</p></li>
 <li><p>[JSCH-005] – JSON validation against the schema failed.</p></li>
-<li><p>[JSCH-700] – Unspecified exception during JSON rendering.</p></li>
+<li><p>[JSCH-700] – Unspecified error during JSON rendering.</p></li>
 <li><p>[JSCH-800] – Unspecified JSON schema exception.</p></li>
+</ul>
+<p class="rubric">General tool errors</p>
+<ul class="simple">
+<li><p>[TOOL-001] – Cannot resolve an object passed via option <code class="wtrl_opt docutils literal notranslate"><span class="pre">--obj</span></code>.</p></li>
+<li><p>[TOOL-800] – Unspecified runtime error during analysis.
+This code is used when an unexpected exception escapes the validation process.
+The tracer diagnostic output should provide sufficient detail to identify
+the underlying cause.</p></li>
 </ul>
 </section>
 </section>
@@ -79,7 +99,8 @@
 <li class="toctree-l1"><a class="reference internal" href="misc.html">5. Miscellaneous</a></li>
 <li class="toctree-l1"><a class="reference internal" href="format.html">6. Docstring format</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">7. Tools</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#waterlint-error-codes">7.1. <code class="wtrl_cmd docutils literal notranslate"><span class="pre">waterlint</span></code> error codes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#error-code-structure">7.1. Error code structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#waterlint-error-codes">7.2. <code class="wtrl_cmd docutils literal notranslate"><span class="pre">waterlint</span></code> error codes</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="reference.html">8. Reference - Core View</a></li>

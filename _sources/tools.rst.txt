@@ -1,18 +1,43 @@
 Tools
 =====
 
-This section is normative.
+This section is informative.
+
+The reference implementation provides the command-line tool
+:wtrl_cmd:`waterlint`. The error codes listed below are used by this tool.
+These codes are specific to the reference implementation and do not
+form part of the normative Waterloo language specification.
+
+
+Error code structure
+--------------------
+
+Error codes consist of a mnemonic prefix and a three-digit numeric identifier.
+The prefix indicates the subsystem that produced the error.
+The numeric identifier identifies the specific condition within that subsystem.
+Unless explicitly stated otherwise, error codes are considered stable
+within a minor version of the tool.
+
 
 :wtrl_cmd:`waterlint` error codes
 ---------------------------------
 
-The following error codes |must| be used by :wtrl_cmd:`waterlint` for JSON processing.
+.. rubric:: JSON processing
 
-* [JSCH-000] -- Unspecified catch-all error.
+* [JSCH-000] -- Unspecified catch-all error during JSON processing.
 * [JSCH-002] -- Cannot open the input JSON file for validation.
-* [JSCH-003] -- Cannot infer the schema from the input JSON file.
+* [JSCH-003] -- Cannot determine the applicable schema from the input JSON file.
 * [JSCH-004] -- Input is not valid JSON.
 * [JSCH-005] -- JSON validation against the schema failed.
 
-* [JSCH-700] -- Unspecified exception during JSON rendering.
+* [JSCH-700] -- Unspecified error during JSON rendering.
 * [JSCH-800] -- Unspecified JSON schema exception.
+
+
+.. rubric:: General tool errors
+
+* [TOOL-001] -- Cannot resolve an object passed via option :wtrl_opt:`--obj`.
+* [TOOL-800] -- Unspecified runtime error during analysis.
+  This code is used when an unexpected exception escapes the validation process.
+  The tracer diagnostic output should provide sufficient detail to identify
+  the underlying cause.

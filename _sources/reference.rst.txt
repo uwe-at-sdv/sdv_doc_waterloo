@@ -5,7 +5,7 @@ Reference - Core View
 
 .. wtrl_push_current_module:: sdv.doc.waterloo
 
-Module :wtrl_type:`docitem`
+Module :wtrl_mod:`docitem`
 ===========================
 
 .. wtrl_autodoc_module:: docitem
@@ -78,7 +78,6 @@ Typechecking helpers
 
 .. wtrl_autodoc_function:: is_attr_final
 
-
 Tokenizer functions
 -------------------
 
@@ -103,8 +102,6 @@ AST properties
 :wtrl_func:`get_status`
 ...................................
 
-.. wtrl_function_signature_block:: get_status
-
 .. wtrl_autodoc_function:: get_status
 
 Per-object validators
@@ -113,32 +110,23 @@ Per-object validators
 :wtrl_func:`validate_docstring_method`
 ......................................
 
-.. wtrl_function_signature_block:: validate_docstring_method
-
 
 .. wtrl_autodoc_function:: validate_docstring_method
 
 :wtrl_func:`validate_docstring_class`
 .....................................
 
-.. wtrl_function_signature_block:: validate_docstring_class
-
 .. wtrl_autodoc_function:: validate_docstring_class
 
 :wtrl_func:`validate_docstring_module`
 ......................................
-
-.. wtrl_function_signature_block:: validate_docstring_module
 
 .. wtrl_autodoc_function:: validate_docstring_module
 
 :wtrl_func:`validate_docstring`
 ...............................
 
-.. wtrl_function_signature_block:: validate_docstring
-
 .. wtrl_autodoc_function:: validate_docstring
-
 
 Coverage validators
 -------------------
@@ -146,70 +134,50 @@ Coverage validators
 :wtrl_func:`validate_class_class_coverage`
 ...........................................
 
-.. wtrl_function_signature_block:: validate_class_class_coverage
-
 .. wtrl_autodoc_function:: validate_class_class_coverage
 
 :wtrl_func:`validate_class_method_coverage`
 ...........................................
-
-.. wtrl_function_signature_block:: validate_class_method_coverage
 
 .. wtrl_autodoc_function:: validate_class_method_coverage
 
 :wtrl_func:`validate_class_constant_coverage`
 .............................................
 
-.. wtrl_function_signature_block:: validate_class_constant_coverage
-
 .. wtrl_autodoc_function:: validate_class_constant_coverage
 
 :wtrl_func:`validate_class_coverage`
 ....................................
-
-.. wtrl_function_signature_block:: validate_class_coverage
 
 .. wtrl_autodoc_function:: validate_class_coverage
 
 :wtrl_func:`validate_module_class_coverage`
 ...........................................
 
-.. wtrl_function_signature_block:: validate_module_class_coverage
-
 .. wtrl_autodoc_function:: validate_module_class_coverage
 
 :wtrl_func:`validate_module_function_coverage`
 ..............................................
-
-.. wtrl_function_signature_block:: validate_module_function_coverage
 
 .. wtrl_autodoc_function:: validate_module_function_coverage
 
 :wtrl_func:`validate_module_type_coverage`
 ..........................................
 
-.. wtrl_function_signature_block:: validate_module_type_coverage
-
 .. wtrl_autodoc_function:: validate_module_type_coverage
 
 :wtrl_func:`validate_module_constant_coverage`
 ..............................................
-
-.. wtrl_function_signature_block:: validate_module_constant_coverage
 
 .. wtrl_autodoc_function:: validate_module_constant_coverage
 
 :wtrl_func:`validate_module_variable_coverage`
 ..............................................
 
-.. wtrl_function_signature_block:: validate_module_variable_coverage
-
 .. wtrl_autodoc_function:: validate_module_variable_coverage
 
 :wtrl_func:`validate_module_coverage`
 .....................................
-
-.. wtrl_function_signature_block:: validate_module_coverage
 
 .. wtrl_autodoc_function:: validate_module_coverage
 
@@ -231,28 +199,20 @@ Additional helpers
 :wtrl_func:`get_tree_of_section`
 .....................................
 
-.. wtrl_function_signature_block:: get_tree_of_section
-
 .. wtrl_autodoc_function:: get_tree_of_section
 
 :wtrl_func:`get_tree_of_subsection`
 .....................................
-
-.. wtrl_function_signature_block:: get_tree_of_subsection
 
 .. wtrl_autodoc_function:: get_tree_of_subsection
 
 :wtrl_func:`get_scopes_of_tree`
 .....................................
 
-.. wtrl_function_signature_block:: get_scopes_of_tree
-
 .. wtrl_autodoc_function:: get_scopes_of_tree
 
 :wtrl_func:`to_string_tree`
 .....................................
-
-.. wtrl_function_signature_block:: to_string_tree
 
 .. wtrl_autodoc_function:: to_string_tree
 
@@ -266,6 +226,11 @@ Additional helpers
 Enum classes
 ------------
 
+:wtrl_type:`sdv.doc.waterloo.docitem_helper.Scope`
+......................................................
+
+.. wtrl_autodoc_class:: sdv.doc.waterloo.docitem_helper.Scope
+
 :wtrl_type:`sdv.doc.waterloo.docitem_helper.Flavour`
 ......................................................
 
@@ -275,6 +240,11 @@ Enum classes
 ......................................................
 
 .. wtrl_autodoc_class:: sdv.doc.waterloo.docitem_helper.Format
+
+:wtrl_type:`sdv.doc.waterloo.docitem_helper.Status`
+......................................................
+
+.. wtrl_autodoc_class:: sdv.doc.waterloo.docitem_helper.Status
 
 Helper classes
 --------------
@@ -516,6 +486,11 @@ Other sections node classes
 
 .. wtrl_autodoc_class_full:: docitem_definitions_entry
 
+:wtrl_type:`docitem_inherited_defitems`
+.......................................
+
+.. wtrl_autodoc_class_full:: docitem_inherited_defitems
+
 :wtrl_type:`docitem_definitions`
 .....................................
 
@@ -551,7 +526,6 @@ Other sections node classes
 
 .. wtrl_autodoc_class_full:: docitem_see_also
 
-
 Top-level node classes
 ----------------------
 
@@ -581,19 +555,10 @@ Factories
 :wtrl_func:`make_docitem_tree`
 ...........................................
 
-.. wtrl_function_signature_block:: make_docitem_tree
-
 .. wtrl_autodoc_function:: make_docitem_tree
-
-
 .. wtrl_pop_current_module:: sdv.doc.waterloo.docitem
 
-.. wtrl_pop_current_module:: sdv.doc.waterloo
-
-
-.. wtrl_push_current_module:: sdv.doc.waterloo
-
-Module :wtrl_type:`docitem_sphinx`
+Module :wtrl_mod:`docitem_sphinx`
 ==================================
 
 .. wtrl_autodoc_module:: docitem_sphinx
@@ -606,21 +571,15 @@ Functions
 :wtrl_func:`build_sphinx_nodes`
 ...................................
 
-.. wtrl_function_signature_block:: build_sphinx_nodes
-
 .. wtrl_autodoc_function:: build_sphinx_nodes
 
 :wtrl_func:`build_sphinx_nodes_full`
 ....................................
 
-.. wtrl_function_signature_block:: build_sphinx_nodes_full
-
 .. wtrl_autodoc_function:: build_sphinx_nodes_full
 
 :wtrl_func:`resolve_qualified_name`
 ...................................
-
-.. wtrl_function_signature_block:: resolve_qualified_name
 
 .. wtrl_autodoc_function:: resolve_qualified_name
 
@@ -630,28 +589,20 @@ Directives for docstring rendering
 :wtrl_func:`wtrl_build_autodoc_module_nodes`
 ............................................
 
-.. wtrl_function_signature_block:: wtrl_build_autodoc_module_nodes
-
 .. wtrl_autodoc_function:: wtrl_build_autodoc_module_nodes
 
 :wtrl_func:`wtrl_build_autodoc_function_nodes`
 ..............................................
-
-.. wtrl_function_signature_block:: wtrl_build_autodoc_function_nodes
 
 .. wtrl_autodoc_function:: wtrl_build_autodoc_function_nodes
 
 :wtrl_func:`wtrl_build_autodoc_class_full_nodes`
 ................................................
 
-.. wtrl_function_signature_block:: wtrl_build_autodoc_class_full_nodes
-
 .. wtrl_autodoc_function:: wtrl_build_autodoc_class_full_nodes
 
 :wtrl_func:`wtrl_build_autodoc_class_nodes`
 ................................................
-
-.. wtrl_function_signature_block:: wtrl_build_autodoc_class_nodes
 
 .. wtrl_autodoc_function:: wtrl_build_autodoc_class_nodes
 
@@ -661,42 +612,30 @@ Directives for setting default module and class
 :wtrl_func:`wtrl_build_push_current_module_nodes`
 .................................................
 
-.. wtrl_function_signature_block:: wtrl_build_push_current_module_nodes
-
 .. wtrl_autodoc_function:: wtrl_build_push_current_module_nodes
 
 :wtrl_func:`wtrl_build_push_current_class_nodes`
 ................................................
-
-.. wtrl_function_signature_block:: wtrl_build_push_current_class_nodes
 
 .. wtrl_autodoc_function:: wtrl_build_push_current_class_nodes
 
 :wtrl_func:`wtrl_build_push_current_scope_nodes`
 ................................................
 
-.. wtrl_function_signature_block:: wtrl_build_push_current_scope_nodes
-
 .. wtrl_autodoc_function:: wtrl_build_push_current_scope_nodes
 
 :wtrl_func:`wtrl_build_pop_current_module_nodes`
 ................................................
-
-.. wtrl_function_signature_block:: wtrl_build_pop_current_module_nodes
 
 .. wtrl_autodoc_function:: wtrl_build_pop_current_module_nodes
 
 :wtrl_func:`wtrl_build_pop_current_class_nodes`
 ...............................................
 
-.. wtrl_function_signature_block:: wtrl_build_pop_current_class_nodes
-
 .. wtrl_autodoc_function:: wtrl_build_pop_current_class_nodes
 
 :wtrl_func:`wtrl_build_pop_current_scope_nodes`
 ...............................................
-
-.. wtrl_function_signature_block:: wtrl_build_pop_current_scope_nodes
 
 .. wtrl_autodoc_function:: wtrl_build_pop_current_scope_nodes
 
@@ -706,41 +645,31 @@ Directives for expanding callable signatures
 :wtrl_func:`wtrl_build_method_signature_nodes`
 ................................................
 
-.. wtrl_function_signature_block:: wtrl_build_method_signature_nodes
-
 .. wtrl_autodoc_function:: wtrl_build_method_signature_nodes
 
 :wtrl_func:`wtrl_build_function_signature_nodes`
 ................................................
-
-.. wtrl_function_signature_block:: wtrl_build_function_signature_nodes
 
 .. wtrl_autodoc_function:: wtrl_build_function_signature_nodes
 
 :wtrl_func:`wtrl_build_method_signature_block_nodes`
 ....................................................
 
-.. wtrl_function_signature_block:: wtrl_build_method_signature_block_nodes
-
 .. wtrl_autodoc_function:: wtrl_build_method_signature_block_nodes
 
 :wtrl_func:`wtrl_build_function_signature_block_nodes`
 ......................................................
 
-.. wtrl_function_signature_block:: wtrl_build_function_signature_block_nodes
-
 .. wtrl_autodoc_function:: wtrl_build_function_signature_block_nodes
-
 
 .. wtrl_pop_current_module:: sdv.doc.waterloo.docitem_sphinx
 
-Module :wtrl_type:`docitem_convert`
+Module :wtrl_mod:`docitem_convert`
 ===================================
 
 .. wtrl_autodoc_module:: docitem_convert
 
 .. wtrl_push_current_module:: sdv.doc.waterloo.docitem_convert
-
 
 Converter functions
 -------------------
@@ -748,60 +677,42 @@ Converter functions
 :wtrl_func:`to_node_legend_json`
 ......................................
 
-.. wtrl_function_signature_block:: to_node_legend_json
-
 .. wtrl_autodoc_function:: to_node_legend_json
 
 :wtrl_func:`to_node_docstring_tree_json`
 .............................................
-
-.. wtrl_function_signature_block:: to_node_docstring_tree_json
 
 .. wtrl_autodoc_function:: to_node_docstring_tree_json
 
 :wtrl_func:`to_node_signature_json`
 ......................................
 
-.. wtrl_function_signature_block:: to_node_signature_json
-
 .. wtrl_autodoc_function:: to_node_signature_json
 
 :wtrl_func:`build_node_json`
 ...................................
-
-.. wtrl_function_signature_block:: build_node_json
 
 .. wtrl_autodoc_function:: build_node_json
 
 :wtrl_func:`to_string_legend_yaml`
 ......................................
 
-.. wtrl_function_signature_block:: to_string_legend_yaml
-
 .. wtrl_autodoc_function:: to_string_legend_yaml
 
 :wtrl_func:`to_string_yaml`
 ...........................
-
-.. wtrl_function_signature_block:: to_string_yaml
 
 .. wtrl_autodoc_function:: to_string_yaml
 
 :wtrl_func:`to_string_signature_yaml`
 ......................................
 
-.. wtrl_function_signature_block:: to_string_signature_yaml
-
 .. wtrl_autodoc_function:: to_string_signature_yaml
 
 :wtrl_func:`to_string_md`
 ...........................
 
-.. wtrl_function_signature_block:: to_string_md
-
 .. wtrl_autodoc_function:: to_string_md
-
-
 
 .. wtrl_pop_current_module:: sdv.doc.waterloo.docitem_convert
 

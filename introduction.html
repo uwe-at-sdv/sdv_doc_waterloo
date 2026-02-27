@@ -388,7 +388,9 @@ complete verification in all contexts.</p>
 </pre></div>
 </div>
 <p>Exceptions from typechecking are:</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>sdv_doc_docitem_convert.py:631 # pragma: no cover - defensive
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>sdv_doc_docitem_convert.py:642 # pragma: no cover - defensive
+sdv_doc_docitem_helper.py:13 # type: ignore[attr-defined]
+sdv_doc_docitem_helper.py:15 # type: ignore[no-redef]
 sdv_doc_docitem_sphinx.py:129 # type: ignore[attr-defined]
 sdv_doc_docitem_validator.py:12 # type: ignore
 sdv_doc_docitem_validator.py:13 # pragma: no cover - older Python
@@ -435,18 +437,17 @@ for example to identify documented modules or objects, and to query associated m
 <p>Let us do an example: In directory <code class="wtrl_file docutils literal notranslate"><span class="pre">doc/examples</span></code> you see a file <code class="wtrl_file docutils literal notranslate"><span class="pre">test_docitem_module.py</span></code>.
 On module level this is equipped with a basic Waterloo docstring:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Preamble:</span>
-<span class="sd">	profile:</span>
+<span class="ge">Preamble:</span>
+<span class="sd">	</span><span class="gh">profile:</span>
 <span class="sd">		module</span>
-<span class="sd">	normative_sections:</span>
+<span class="sd">	</span><span class="gh">normative_sections:</span>
 <span class="sd">		Contract</span>
-<span class="sd">Contract:</span>
-<span class="sd">	general:</span>
-<span class="sd">		|Must| make a good impression, since it&#39;s our first example.</span>
+<span class="ge">Contract:</span>
+<span class="sd">	</span><span class="gh">general:</span>
+<span class="sd">		</span><span class="k">|Must|</span><span class="sd"> make a good impression, since it&#39;s our first example.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">MyClass</span><span class="p">:</span>
 	<span class="k">pass</span>
-
 </pre></div>
 </div>
 <p>In order to render this in Sphinx, we add the directive</p>
@@ -520,36 +521,34 @@ and it must be declared normative.</p></li>
 <p>In the next example we have a module and a class docstring, and we consider the class as
 part of the public API of the module:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Preamble:</span>
-<span class="sd">	profile:</span>
+<span class="ge">Preamble:</span>
+<span class="sd">	</span><span class="gh">profile:</span>
 <span class="sd">		module</span>
-<span class="sd">	normative_sections:</span>
+<span class="sd">	</span><span class="gh">normative_sections:</span>
 <span class="sd">		Contract, Public_classes</span>
-<span class="sd">Contract:</span>
-<span class="sd">	general:</span>
-<span class="sd">		|Must| provide an example class.</span>
-<span class="sd">Public_classes:</span>
+<span class="ge">Contract:</span>
+<span class="sd">	</span><span class="gh">general:</span>
+<span class="sd">		</span><span class="k">|Must|</span><span class="sd"> provide an example class.</span>
+<span class="ge">Public_classes:</span>
 <span class="sd">	MyClass</span>
-<span class="sd">Class_overview:</span>
-<span class="sd">	MyClass:</span>
+<span class="ge">Class_overview:</span>
+<span class="sd">	</span><span class="gh">MyClass:</span>
 <span class="sd">		An empty class</span>
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">MyClass</span><span class="p">:</span>
 <span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">	Preamble:</span>
-<span class="sd">		profile:</span>
+<span class="ge">	Preamble:</span>
+<span class="sd">		</span><span class="gh">profile:</span>
 <span class="sd">			class</span>
-<span class="sd">		normative_sections:</span>
+<span class="sd">		</span><span class="gh">normative_sections:</span>
 <span class="sd">			Contract</span>
-<span class="sd">	Contract:</span>
-<span class="sd">		general:</span>
-<span class="sd">			|Must| provide nothing.</span>
-<span class="sd">		constructor:</span>
-<span class="sd">			|Must| be default-constructible.</span>
+<span class="ge">	Contract:</span>
+<span class="sd">		</span><span class="gh">general:</span>
+<span class="sd">			</span><span class="k">|Must|</span><span class="sd"> provide nothing.</span>
+<span class="sd">		</span><span class="gh">constructor:</span>
+<span class="sd">			</span><span class="k">|Must|</span><span class="sd"> be default-constructible.</span>
 <span class="sd">	&quot;&quot;&quot;</span>
 	<span class="k">pass</span>
-
-
 </pre></div>
 </div>
 <p>We render the module docstring as before:</p>
@@ -649,56 +648,54 @@ part of the public API of the module:</p>
 <h3><span class="section-number">1.10.3. </span>Module, class and method<a class="headerlink" href="#module-class-and-method" title="Permalink to this headline">¶</a></h3>
 <p>Finally, let us add a method to the class and attach a docstring.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Preamble:</span>
-<span class="sd">	profile:</span>
+<span class="ge">Preamble:</span>
+<span class="sd">	</span><span class="gh">profile:</span>
 <span class="sd">		module</span>
-<span class="sd">	normative_sections:</span>
+<span class="sd">	</span><span class="gh">normative_sections:</span>
 <span class="sd">		Contract, Public_classes</span>
-<span class="sd">Contract:</span>
-<span class="sd">	general:</span>
-<span class="sd">		|Must| provide an example class.</span>
-<span class="sd">Public_classes:</span>
+<span class="ge">Contract:</span>
+<span class="sd">	</span><span class="gh">general:</span>
+<span class="sd">		</span><span class="k">|Must|</span><span class="sd"> provide an example class.</span>
+<span class="ge">Public_classes:</span>
 <span class="sd">	MyClass</span>
-<span class="sd">Class_overview:</span>
-<span class="sd">	MyClass:</span>
+<span class="ge">Class_overview:</span>
+<span class="sd">	</span><span class="gh">MyClass:</span>
 <span class="sd">		An empty class</span>
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">MyClass</span><span class="p">:</span>
 <span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">	Preamble:</span>
-<span class="sd">		profile:</span>
+<span class="ge">	Preamble:</span>
+<span class="sd">		</span><span class="gh">profile:</span>
 <span class="sd">			class</span>
-<span class="sd">		normative_sections:</span>
+<span class="sd">		</span><span class="gh">normative_sections:</span>
 <span class="sd">			Contract, Public_methods</span>
-<span class="sd">	Contract:</span>
-<span class="sd">		general:</span>
-<span class="sd">			|Must| provide nothing.</span>
-<span class="sd">		constructor:</span>
-<span class="sd">			|Must| be default-constructible.</span>
-<span class="sd">	Public_methods:</span>
+<span class="ge">	Contract:</span>
+<span class="sd">		</span><span class="gh">general:</span>
+<span class="sd">			</span><span class="k">|Must|</span><span class="sd"> provide nothing.</span>
+<span class="sd">		</span><span class="gh">constructor:</span>
+<span class="sd">			</span><span class="k">|Must|</span><span class="sd"> be default-constructible.</span>
+<span class="ge">	Public_methods:</span>
 <span class="sd">		greeting</span>
-<span class="sd">	Method_overview:</span>
-<span class="sd">		greeting:</span>
+<span class="ge">	Method_overview:</span>
+<span class="sd">		</span><span class="gh">greeting:</span>
 <span class="sd">			Function which prints a greeting.</span>
 <span class="sd">	&quot;&quot;&quot;</span>
 	<span class="k">def</span><span class="w"> </span><span class="nf">greeting</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">		Preamble:</span>
-<span class="sd">			profile:</span>
+<span class="ge">		Preamble:</span>
+<span class="sd">			</span><span class="gh">profile:</span>
 <span class="sd">				method</span>
-<span class="sd">			normative_sections:</span>
+<span class="sd">			</span><span class="gh">normative_sections:</span>
 <span class="sd">				Contract, Parameters, Returns, Raises</span>
-<span class="sd">		Contract:</span>
-<span class="sd">			general:</span>
-<span class="sd">				|Must| render a greeting message to ``stdout``.</span>
-<span class="sd">		Parameters:</span>
-<span class="sd">		Returns:</span>
-<span class="sd">			|Must| return |None|</span>
-<span class="sd">		Raises:</span>
+<span class="ge">		Contract:</span>
+<span class="sd">			</span><span class="gh">general:</span>
+<span class="sd">				</span><span class="k">|Must|</span><span class="sd"> render a greeting message to ``stdout``.</span>
+<span class="ge">		Parameters:</span>
+<span class="ge">		Returns:</span>
+<span class="sd">			</span><span class="k">|Must|</span><span class="sd"> return </span><span class="kc">|None|</span>
+<span class="ge">		Raises:</span>
 <span class="sd">		&quot;&quot;&quot;</span>
 		<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Hello world!&quot;</span><span class="p">)</span>
-
-
 </pre></div>
 </div>
 <p>The module, class and method docstrings are rendered by</p>
@@ -866,7 +863,8 @@ qualified identifiers for objects will be assumed to belong to that module:</p>
 </pre></div>
 </div>
 <p>This pushes the module name to the module stack and creates a message in the document:</p>
-Classes and functions below this point implicitly belong to module/package <code class="wtrl_var docutils literal notranslate"><span class="pre">test_docitem_module_3</span></code>. <p>Now since we have a default module, a class in the module is simply addressed by for instance:</p>
+<p class="wtrl-current-module-message wtrl-current-module-push">Classes and functions below this point implicitly belong to package/module <code class="wtrl_var docutils literal notranslate"><span class="pre">test_docitem_module_3</span></code>. </p>
+<p>Now since we have a default module, a class in the module is simply addressed by for instance:</p>
 <div class="highlight-rst notranslate"><div class="highlight"><pre><span></span><span class="p">..</span> <span class="ow">wtrl_autodoc_class</span><span class="p">::</span> MyClass
 </pre></div>
 </div>
@@ -879,7 +877,8 @@ Classes and functions below this point implicitly belong to module/package <code
 </pre></div>
 </div>
 <p>and in the text you will see:</p>
-Default module qualifier <code class="wtrl_var docutils literal notranslate"><span class="pre">test_docitem_module_3</span></code> ends here. No default module active. <p class="rubric">Classes</p>
+<p class="wtrl-current-module-message wtrl-current-module-pop">Default module qualifier <code class="wtrl_var docutils literal notranslate"><span class="pre">test_docitem_module_3</span></code> ends here. No default module active. </p>
+<p class="rubric">Classes</p>
 <p>The same mechanism is provided for class level as well. The purpose here is to avoid
 repeating the class name over and over again in comprehensive documentations
 of methods. The push-command reads:</p>
@@ -887,12 +886,14 @@ of methods. The push-command reads:</p>
 </pre></div>
 </div>
 <p>which creates a text snippet:</p>
-Methods below this point implicitly belong to class <code class="wtrl_var docutils literal notranslate"><span class="pre">test_docitem_module_3.MyClass</span></code>.<p>whereas the pop-command is</p>
+<p class="wtrl-current-class-message wtrl-current-class-push">Methods below this point implicitly belong to class <code class="wtrl_var docutils literal notranslate"><span class="pre">test_docitem_module_3.MyClass</span></code>.</p>
+<p>whereas the pop-command is</p>
 <div class="highlight-rst notranslate"><div class="highlight"><pre><span></span><span class="p">..</span> <span class="ow">wtrl_pop_current_class</span><span class="p">::</span> test_docitem_module_3.MyClass
 </pre></div>
 </div>
 <p>which is rendered as:</p>
-Default class qualifier <code class="wtrl_var docutils literal notranslate"><span class="pre">test_docitem_module_3.MyClass</span></code> ends here. No default class active. </section>
+<p class="wtrl-current-class-message wtrl-current-class-pop">Default class qualifier <code class="wtrl_var docutils literal notranslate"><span class="pre">test_docitem_module_3.MyClass</span></code> ends here. No default class active. </p>
+</section>
 </section>
 
 

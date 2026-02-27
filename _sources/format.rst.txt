@@ -1,3 +1,8 @@
+.. |LastReview| replace:: **Last review**
+.. |ObsoleteRules| replace:: **Obsolete rules**
+.. |Rationale| replace:: **Rationale** (informative)
+.. |Informative| replace:: **Informative**
+
 .. _chapter_format:
 
 Docstring format
@@ -123,31 +128,53 @@ The following list explains the mnemonic prefixes and their semantics.
 
 .. rubric:: Sections and subsections
 
+* CON: All profiles: Section :wtrl_label:`Contract`
+
 * CCLO: Profile :wtrl_value:`class`: Section :wtrl_label:`Class_overview`
 * CMTO: Profile :wtrl_value:`class`: Section :wtrl_label:`Method_overview`
-* CON: All profiles: Section :wtrl_label:`Contract`
 * CPCL: Profile :wtrl_value:`class`: Section :wtrl_label:`Public_classes`
 * CPMT: Profile :wtrl_value:`class`: Section :wtrl_label:`Public_methods`
+* CPTYP: Profile :wtrl_value:`class` Section :wtrl_label:`Public_types`
+* CPVAR: Profile :wtrl_value:`class`: Section :wtrl_label:`Public_variables`
+* CPCON: Profile :wtrl_value:`class`: Section :wtrl_label:`Public_constants`
+
 * DEF: All profiles: Section :wtrl_label:`Definitions`
 * DER: Profile :wtrl_value:`class`: Section :wtrl_label:`Derived_from`
 * DESC: All profiles: Section :wtrl_label:`Description`
 * FAC: Profile :wtrl_value:`class`: Section :wtrl_label:`Factory`
-* MCLO: Module: Section :wtrl_label:`Class_overview`
-* MFNO: Module: Section :wtrl_label:`Function_overview`
-* MPCL: Module: Section :wtrl_label:`Public_classes`
-* MPFN: Module: Section :wtrl_label:`Public_functions`
+
+* MCLO: Profile :wtrl_value:`module`: Section :wtrl_label:`Class_overview`
+* MFNO: Profile :wtrl_value:`module`: Section :wtrl_label:`Function_overview`
+* MPCL: Profile :wtrl_value:`module`: Section :wtrl_label:`Public_classes`
+* MPFN: Profile :wtrl_value:`module`: Section :wtrl_label:`Public_functions`
+* MPTYP: Profile :wtrl_value:`module` Section :wtrl_label:`Public_types`
+* MPVAR: Profile :wtrl_value:`module`: Section :wtrl_label:`Public_variables`
+* MPCON: Profile :wtrl_value:`module`: Section :wtrl_label:`Public_constants`
+
 * NOTE: All profiles: Section :wtrl_label:`Notes`
 * PAR: Profiles :wtrl_value:`function`, :wtrl_value:`method`: Section :wtrl_label:`Parameters`
-* PCON: Profiles :wtrl_value:`module`, :wtrl_value:`class`: Section :wtrl_label:`Public_constants`
 * PRE: All profiles: Section :wtrl_label:`Preamble`
-* PTY: Profiles :wtrl_value:`module`, :wtrl_value:`class`: Section :wtrl_label:`Public_types`
-* PVAR: Profiles :wtrl_value:`module`, :wtrl_value:`class`: Section :wtrl_label:`Public_variables`
 * RAI: Profiles :wtrl_value:`function`, :wtrl_value:`method`: Section :wtrl_label:`Raises`
 * RET: Profiles :wtrl_value:`function`, :wtrl_value:`method`: Section :wtrl_label:`Returns`
 * SCP: All profiles: Subsection :wtrl_label:`scope`
 * SEE: All profiles: Section :wtrl_label:`See_also`
 * STA: All profiles: Subsection :wtrl_label:`status`
 * TERM: All profiles: Section :wtrl_label:`Terminology`
+
+.. rubric:: Miscellaneous
+
+* JSCH: Error messages related to JSON and JSON Schema
+* TOOL: Error messages from :wtrl_cmd:`waterlint` (or other tools)
+* VLII: Warning for a section or subsection that violates the LoII principle.
+  The warning will remain in place until the section or subsection is generally accepted
+  and recognized as having practical benefits that outweigh the LoII principle.
+
+.. rubric:: Obsolete
+
+* PTY: Profiles :wtrl_value:`module`, :wtrl_value:`class`: Section :wtrl_label:`Public_types`
+* PVAR: Profiles :wtrl_value:`module`, :wtrl_value:`class`: Section :wtrl_label:`Public_variables`
+* PCON: Profiles :wtrl_value:`module`, :wtrl_value:`class`: Section :wtrl_label:`Public_constants`
+
 
 The structure of Waterloo docstrings
 ------------------------------------
@@ -350,7 +377,7 @@ The set of tokens currently available is:
 		- The argument (inside the tick delimiters) |must| match the pattern of an Identifier.
 		- The argument |must| refer to an existing definition item :wtrl_label:`Definitions.<DefItem>`.
 		- [DEF-007] -- If token :wtrl_lit:`|term|` is used at least once, section :wtrl_label:`Definitions` |must| exist and be listed as normative.
-		- [DEF-008] -- Each token :wtrl_lit:`|term|` |must| reference a defined term in section :wtrl_label:`Definitions`.
+		- [DEF-008] -- Each token :wtrl_lit:`|term|` |must| reference a defined or inherited term in section :wtrl_label:`Definitions`.
 		- Tools |must| report an error if the referenced definition item does not exist.
 		- Renderers |should| translate this markup to a suitable construct in the target format (e.g. a term/definition role in reST).
 		- If the target format does not support such a construct, tools |must| fall back to rendering only the argument text.
@@ -442,6 +469,10 @@ state whether it applies to Identifiers or to Qualified Identifiers.
 * [LQID-004] -- Each [Qualified] Identifier |must| occur at most once in the resulting list.
 * [LQID-005] -- Tools |must| treat the result as a flat list of [Qualified] Identifiers, without preserving line structure or grouping.
 
+* [VLII-001] -- A warning with this rule ID |may| be issued if a section appears in a docstring
+  that violates the LoII principle. Informative: The section that triggers this warning is
+  not deprecated unless explicitly stated.
+
 Normativity keyword handling
 ----------------------------
 
@@ -467,8 +498,52 @@ In the following rules "WS" stands for one or more whitespace characters.
 
 .. _common_sections:
 
+Sections and subsections
+------------------------
+
+Specification conventions
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+This section is informative.
+
+The specification of individual sections throughout this document
+follows a common structural pattern. The purpose of this pattern is to
+ensure consistency, readability, and long-term maintainability of the
+specification text.
+
+A section specification may consist of the following components,
+in the order listed below:
+
+* **Normative rules**
+
+  One or more rules identified by rule IDs.
+  These define the formal semantics and validation requirements.
+
+* **Obsolete rules** (optional)
+
+  A list of previously defined rules that have been superseded.
+  Each obsolete rule should indicate the version in which it became
+  obsolete and, if applicable, the rule that replaces it.
+
+* **Rationale** (informative, optional)
+
+  Explanatory text describing the intent, design considerations,
+  or background of the preceding rules.
+  The rationale does not introduce additional normative requirements.
+
+* |LastReview| (editorial, optional)
+
+  A date indicating the most recent editorial review of the section.
+  This item has no normative effect.
+
+Not all components are mandatory. Their presence depends on the
+complexity, maturity, and historical evolution of the section.
+This structural pattern serves as a guideline for authors and editors
+of this specification. It is intended to promote uniformity without
+constraining future refinement.
+
 Common sections for all profiles
---------------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 * :wtrl_label:`Preamble:`
 	- [PRE-001] -- The section |must| exist and it |must| be the first of all sections.
@@ -524,42 +599,84 @@ Common sections for all profiles
 		  a Waterloo-documented object. Any scope-compatibility violation in this case
 		  |must| be reported as an error.
 
+For the following section, we define:
+
+:dfn:`Current Object`
+	The object in which the docstring resides. This can be a class or a callable, but not a module.
+
+:dfn:`Direct Module`
+	The module that contains the :wtrl_dfn:`Current Object`.
 
 * :wtrl_label:`Definitions:`
 	- [DEF-001] -- The section |may| exist.
 	- [DEF-002] -- If it exists, it |must| be listed as normative in :wtrl_label:`Preamble.normative_sections`.
-	- [DEF-003] -- Each entry in the section |must| have the form of a subsection. Pattern:
+	- [DEF-003] -- Each entry in the section |must| have the form of a subsection matching one of the following patterns:
 	- :wtrl_label:`<DefItem>:`
-		* [DEF-004] -- Any number of subsections |may| exist provided :wtrl_label:`<DefItem>` matches the pattern of an Identifier.
+		* [DEF-020] -- Any number of subsections |may| exist
+		* [DEF-004] -- :wtrl_label:`<DefItem>` matches the pattern of an Identifier.
+		* [DEF-010] -- :wtrl_label:`<DefItem>` :wtrl_value:`_inherited` has a special meaning and |must_not| denote a term.
 		* [DEF-005] -- :wtrl_label:`<DefItem>` stands for the term to be defined normatively.
-		* [DEF-006] -- The subsection |must| allow multiline free-form text.
+		* [DEF-006] -- The subsection content |must| be free-form text.
 		* [DEF-009] -- The subsection content |should| not be empty.
+	- :wtrl_label:`_inherit:`
+		* [DEF-011] -- The subsection :wtrl_label:`_inherit:` |must_not| appear in profile :wtrl_value:`module`.
+		* [DEF-012] -- The subsection :wtrl_label:`_inherit:` |may| appear in profiles :wtrl_value:`class`, :wtrl_value:`function`,
+		  :wtrl_value:`method`, and :wtrl_value:`inherited_method`.
+		* [DEF-014] -- If the subsection :wtrl_label:`_inherit:` exists, the :wtrl_term:`Direct Module` |must| have a valid docstring.
+		* [DEF-015] -- If the subsection :wtrl_label:`_inherit:` exists, the docstring of the :wtrl_term:`Direct Module` |must| contain a :wtrl_label:`Definitions` section.
+		* [DEF-016] -- The content of :wtrl_label:`_inherit:` |must| be a list of identifiers according to LQID-001.
+		* [DEF-017] -- Each entry in :wtrl_label:`_inherit:` |must_not| occur as a term in the :wtrl_label:`Definitions` section of the :wtrl_term:`Current Object`.
+		* [DEF-018] -- Each entry in :wtrl_label:`_inherit:` |must| occur as a term in the :wtrl_term:`Direct Module` docstring's :wtrl_label:`Definitions` section.
+		* [DEF-019] -- The use of the subsection :wtrl_label:`_inherit:` |must| result in a warning with rule ID :wtrl_value:`VLII-001` at validation time.
+	- |ObsoleteRules|
+		* DEF-013 -- Obsolete since 0.5.2; superseded by PRSR-008.
+	- |Rationale|
+
+	  Definition items are restricted to Identifiers for the following reasons:
+
+		* They can be referenced in a machine-verifiable way via the semantic role :wtrl_lit:`\|term\|\`...\``.
+		* They are robust with respect to formatting changes such as line wrapping.
+		* They behave similarly to symbolic constants or macros in a programming language:
+		  the identifier provides a stable symbolic anchor, while the definition body
+		  provides the human-readable explanation.
+	- |LastReview|: 2026-02-23
 * :wtrl_label:`Terminology:`
 	- [TERM-001] -- The section |may| exist.
 	- [TERM-002] -- It |must_not| be listed as normative in :wtrl_label:`Preamble.normative_sections`.
 	- [TERM-003] -- It |must_not| contain Normativity Keywords.
-	- [TERM-004] -- Each entry in the section |must| have the form of a subsection. Pattern:
+	- [TERM-004] -- Each entry in the section |must| have the form of a subsection matching the following pattern:
 	- :wtrl_label:`<Term>:`
-		* [TERM-005] -- Any number of subsections |may| exist provided :wtrl_label:`<Term>` is a non-empty human-readable string.
+		* [TERM-009] -- Any number of subsections |may| exist
+		* [TERM-005] -- :wtrl_label:`<Term>` |must| be a non-empty human-readable string.
 		* [TERM-006] -- :wtrl_label:`<Term>` stands for the term to be explained informatively.
-		* [TERM-007] -- The subsection |must| allow multiline free-form text.
+		* [TERM-007] -- The subsection content |must| be free-form text.
 		* [TERM-008] -- The subsection content |should| not be empty.
+	- |Rationale|
+
+	  In contrast to the :wtrl_label:`Definitions` section, the :wtrl_label:`Terminology` section
+	  allows arbitrary human-readable labels and is intended solely for explanatory purposes.
+	- |LastReview|: 2026-02-23
+
 * :wtrl_label:`Description:`
 	- [DESC-001] -- The section |may| exist.
 	- [DESC-002] -- It |may| be listed as normative in :wtrl_label:`Preamble.normative_sections`.
-	- [DESC-003] -- If it contains at least one Normativity Keyword, it |must| be listed as normative in :wtrl_label:`Preamble.normative_sections`.
 	- [DESC-004] -- The content |may| consist of any number of free-form lines.
 	- [DESC-005] -- Lines containing only a single character "|" (ASCII 124) |may| occur and |must| be interpreted as separator between paragraphs.
+	- |ObsoleteRules|:
+		* DESC-003 -- Obsolete since 0.5.1; superseded by PRE-013.
 * :wtrl_label:`Notes:`
 	- [NOTE-001] -- The section |may| exist.
 	- [NOTE-002] -- It |must_not| be listed as normative in :wtrl_label:`Preamble.normative_sections`.
 	- [NOTE-003] -- It |must_not| contain Normativity Keywords.
 	- [NOTE-004] -- Tools |must| treat the content of section :wtrl_label:`Notes` as informative and must not derive normative requirements from it.
-	- [NOTE-005] -- Each entry in the section |must| have the form of a subsection. Pattern:
+	- [NOTE-005] -- Each entry in the section |must| have the form of a subsection matching the following pattern:
 	- :wtrl_label:`<Note>:`
-		* [NOTE-006] -- Any number of subsections |may| exist provided :wtrl_label:`<Note>` is a non-empty human-readable string.
-		* [NOTE-007] -- The content |may| consist of any number of free-form lines.
-* :wtrl_label:`See_also:` [last reviewed on 2026-01-31]
+		* [NOTE-008] -- Any number of subsections |may| exist
+		* [NOTE-006] -- :wtrl_label:`<Note>` |must| be a non-empty human-readable string.
+		* [NOTE-007] -- The subsection content |must| be free-form text.
+		* [NOTE-009] -- The subsection content |should| not be empty.
+	- |LastReview|: 2026-02-23
+* :wtrl_label:`See_also:`
 	- [SEE-001] -- The section |may| exist.
 	- [SEE-002] -- Each entry in the section |must| be an Identifier or a Qualified Identifier.
 	- [SEE-003] -- If the section is not listed as normative each entry |should| refer to an existing public object.
@@ -570,11 +687,12 @@ Common sections for all profiles
 	- [SEE-008] -- If the section is listed as normative the object (module, class, function, or method) referred to by entry |must| have a valid Waterloo docstring.
 	- [SEE-009] -- Tools |must| treat unresolved references as errors when :wtrl_label:`See_also` is normative, and |must| treat them as warnings when :wtrl_label:`See_also` is informative.
 	- [SEE-010] -- Rules SEE-007 and SEE-008 |must_not| be tested for built-ins. The criteria |must| be :wtrl_func:`inspect.ismodule`, :wtrl_func:`inspect.isclass`, and :wtrl_func:`inspect.isfunction`.
-	- Informative: Listing :wtrl_label:`See_also` as normative increases strictness and allows tools to rely on resolvable references.
-	- Informative: Resolution may be limited across module boundaries, since object resolution typically follows the import hierarchy.
+	- |Informative|: Listing :wtrl_label:`See_also` as normative increases strictness and allows tools to rely on resolvable references.
+	- |Informative|: Resolution may be limited across module boundaries, since object resolution typically follows the import hierarchy.
+	- |LastReview|: 2026-01-31
 
 Sections for module docstrings
-------------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 In addition to the sections described in :ref:`common_sections`
 a module docstring |must| have the following structure:
@@ -591,15 +709,15 @@ a module docstring |must| have the following structure:
 		* [CON-022] -- The subsection |must| exist.
 		* [CON-003] -- |Must| contain an explanation of the purpose of the module sufficient to decide
 		  whether the module is applicable to a given use case.
-	- Obsolete rules:
-		* [CON-029] -- obsolete
-		* [CON-030] -- obsolete
-		* [CON-031] -- obsolete
+	- |ObsoleteRules|:
+		* CON-029
+		* CON-030
+		* CON-031
 * :wtrl_label:`Public_classes:`
 	- [MPCL-001] -- The section |may| exist.
 	- [MPCL-002] -- If it exists, it |must| be listed as normative in :wtrl_label:`Preamble.normative_sections`.
 	- [MPCL-003] -- The content |must| be a list of Qualified Identifiers according to LQID-001.
-	- [MPCL-004] -- Each entry listed |must| be resolvable to the documented module.
+	- [MPCL-004] -- Each entry listed |must| be resolvable relative to the documented module.
 	- [MPCL-005] -- Each entry listed |must| refer to a class.
 	- [MPCL-006] -- Each class with a valid docstring |should| be listed in :wtrl_label:`Public_classes`.
 	- [MPCL-007] -- Each class listed in :wtrl_label:`Public_classes` |should| have a valid docstring.
@@ -608,19 +726,21 @@ a module docstring |must| have the following structure:
 	- [MCLO-001] -- The section |may| exist.
 	- [MCLO-002] -- |Must_not| be listed as normative in :wtrl_label:`Preamble.normative_sections`.
 	- [MCLO-003] -- |Must_not| exist if there is no section :wtrl_label:`Public_classes:`
-	- [MCLO-004] -- Each entry in the section |must| have the form of a subsection. Pattern:
+	- [MCLO-004] -- Each entry in the section |must| have the form of a subsection matching the following pattern:
 	- :wtrl_label:`<Class>:`
 		* [MCLO-005] -- :wtrl_label:`<Class>` |must| match the pattern of an Identifier.
-		* [MCLO-006] -- The content |may| consist of any number of lines.
-		* [MCLO-007] -- The content is informative and |must_not| contain any Normativity Keyword.
+		* [MCLO-006] -- The subsection content |must| be free-form text.
+		* [MCLO-007] -- The subsection content is informative and |must_not| contain any Normativity Keyword.
 		* [MCLO-008] -- :wtrl_label:`<Class>` |must| be resolvable relative to the documented module.
 		* [MCLO-009] -- :wtrl_label:`<Class>` |must| refer to a class object.
+		* [MCLO-011] -- <Method> must appear in section :wtrl_label:`Public_classes`.
 	- [MCLO-010] -- Any number of subsections |may| exist.
+	- |LastReview|: 2026-02-25
 * :wtrl_label:`Public_functions:`
 	- [MPFN-001] -- The section |may| exist.
 	- [MPFN-002] -- If it exists, it |must| be listed as normative in :wtrl_label:`Preamble.normative_sections`.
 	- [MPFN-003] -- The content |must| be a list of Qualified Identifiers according to LQID-001.
-	- [MPFN-004] -- Each entry listed |must| be resolvable to the documented module.
+	- [MPFN-004] -- Each entry listed |must| be resolvable relative to the documented module.
 	- [MPFN-005] -- Each entry listed |must| refer to a function.
 	- [MPFN-006] -- Each function with a valid docstring |should| be listed in :wtrl_label:`Public_functions`.
 	- [MPFN-007] -- Each function listed in :wtrl_label:`Public_functions` |should| have a valid docstring.
@@ -629,50 +749,57 @@ a module docstring |must| have the following structure:
 	- [MFNO-001] -- The section |may| exist.
 	- [MFNO-002] -- |Must_not| be listed as normative in :wtrl_label:`Preamble.normative_sections`.
 	- [MFNO-003] -- |Must_not| exist if there is no section :wtrl_label:`Public_functions:`
-	- [MFNO-004] -- Each entry in the section |must| have the form of a subsection. Pattern:
+	- [MFNO-004] -- Each entry in the section |must| have the form of a subsection matching the following pattern:
 	- :wtrl_label:`<Function>:`
 		* [MFNO-005] -- :wtrl_label:`<Function>` |must| match the pattern of an Identifier.
-		* [MFNO-006] -- The content |may| consist of any number of lines.
+		* [MFNO-006] -- The subsection content |must| be free-form text.
 		* [MFNO-007] -- The content is informative and |must_not| contain any Normativity Keyword.
 		* [MFNO-008] -- :wtrl_label:`<Function>` |must| be resolvable relative to the documented module.
 		* [MFNO-009] -- :wtrl_label:`<Function>` |must| refer to a function object.
-	- [MFNO-010] -- Any number of subsections |may| exist provided :wtrl_label:`<Function>` can be resolved to a function with valid docstring.
+		* [MFNO-011] -- <Method> must appear in section :wtrl_label:`Public_functions`.
+	- [MFNO-010] -- Any number of subsections |may| exist.
+	- |LastReview|: 2026-02-25
 * :wtrl_label:`Public_types:`
-	- [PTY-001] -- The section |may| exist.
-	- [PTY-002] -- If it exists, it |must| be listed as normative in :wtrl_label:`Preamble.normative_sections`.
-	- [PTY-003] -- Each entry in the section |must| have the form of a subsection. Pattern:
+	- [MPTYP-001] -- The section |may| exist.
+	- [MPTYP-002] -- If it exists, it |must| be listed as normative in :wtrl_label:`Preamble.normative_sections`.
+	- [MPTYP-003] -- Each entry in the section |must| have the form of a subsection matching the following pattern:
 	- :wtrl_label:`<Type>:`
-		* [PTY-004] -- :wtrl_label:`<Type>` |must| match the pattern of an Identifier.
-		* [PTY-005] -- Any number of subsections |may| exist provided :wtrl_label:`<Type>` can be resolved to an existing TypeAlias or NewType.
-		* [PTY-006] -- The content |may| consist of any number of lines.
-	- [PTY-007] -- Each type listed in :wtrl_label:`Public_types` |must| exist in the module.
-	- [PTY-016] -- Each type listed in :wtrl_label:`Public_types` |must| refer to a TypeAlias or NewType.
+		* [MPTYP-004] -- :wtrl_label:`<Type>` |must| match the pattern of an Identifier.
+		* [MPTYP-006] -- The subsection content |must| be free-form text.
+		* [MPTYP-005] -- :wtrl_label:`<Type>` |must| be resolvable relative to the documented module.
+		* [MPTYP-008] -- :wtrl_label:`<Type>` |must| refer to a TypeAlias or NewType.
+	- |ObsoleteRules|
+		* MPTYP-007 -- Obsolete in version 0.5.3; duplicate of MPTYP-005.
+	- |LastReview|: 2026-02-24
 * :wtrl_label:`Public_variables:`
-	- [PVAR-001] -- The section |may| exist.
-	- [PVAR-002] -- If it exists, it |must| be listed as normative in :wtrl_label:`Preamble.normative_sections`.
-	- [PVAR-003] -- Each entry in the section |must| have the form of a subsection. Pattern:
+	- [MPVAR-001] -- The section |may| exist.
+	- [MPVAR-002] -- If it exists, it |must| be listed as normative in :wtrl_label:`Preamble.normative_sections`.
+	- [MPVAR-003] -- Each entry in the section |must| have the form of a subsection matching the following pattern:
 	- :wtrl_label:`<Assignable>:`
-		* [PVAR-004] --:wtrl_label:`<Assignable>` |must| match the pattern of an Identifier.
-		* [PVAR-005] -- Any number of subsections |may| exist provided :wtrl_label:`<Assignable>` can be resolved to an existing variable.
-		* [PVAR-006] -- The content |may| consist of any number of lines.
-	- [PVAR-013] -- Each variable listed in :wtrl_label:`Public_variables` |must| exist in the module.
-	- [PVAR-024] -- Each variable listed in :wtrl_label:`Public_variables` |must| refer to a Named Value.
-	- [PVAR-014] -- If a variable listed in :wtrl_label:`Public_variables` is annotated, it |must_not| be annotated as :wtrl_type:`Final`.
+		* [MPVAR-004] -- :wtrl_label:`<Assignable>` |must| match the pattern of an Identifier.
+		* [MPVAR-006] -- The subsection content |must| be free-form text.
+		* [MPVAR-005] -- :wtrl_label:`<Assignable>` |must| be resolvable relative to the documented module.
+		* [MPVAR-008] -- :wtrl_label:`<Assignable>` |must| refer to a Named Value.
+		* [MPVAR-009] -- If the object referenced by :wtrl_label:`<Assignable>` is annotated, the annotation |must_not| be wtrl_type:`Final`.
+	- |ObsoleteRules|
+		* MPVAR-007 -- Obsolete in version 0.5.3; duplicate of MPVAR-005.
+	- |LastReview|: 2026-02-24
 * :wtrl_label:`Public_constants:`
-	- [PCON-001] -- The section |may| exist.
-	- [PCON-002] -- If it exists, it |must| be listed as normative in :wtrl_label:`Preamble.normative_sections`.
-	- [PCON-003] -- Each entry in the section |must| have the form of a subsection. Pattern:
+	- [MPCON-001] -- The section |may| exist.
+	- [MPCON-002] -- If it exists, it |must| be listed as normative in :wtrl_label:`Preamble.normative_sections`.
+	- [MPCON-003] -- Each entry in the section |must| have the form of a subsection matching the following pattern:
 	- :wtrl_label:`<Assignable>:`
-		* [PCON-004] -- :wtrl_label:`<Assignable>` |must| match the pattern of an Identifier.
-		* [PCON-005] -- Any number of subsections |may| exist provided :wtrl_label:`<Assignable>` can be resolved to an existing variable.
-		* [PCON-006] -- If the variable is annotated, it |must| be annotated as :wtrl_type:`Final`.
-		* [PCON-007] -- The content |may| consist of any number of lines.
-	- [PCON-015] -- Each constant listed in :wtrl_label:`Public_constants` |must| exist in the module.
-	- [PCON-024] -- Each constant listed in :wtrl_label:`Public_constants` |must| refer to a Named Value.
-	- [PCON-016] -- Each constant listed in :wtrl_label:`Public_constants` that is annotated |must| be annotated as :wtrl_type:`Final`.
+		* [MPCON-004] -- :wtrl_label:`<Assignable>` |must| match the pattern of an Identifier.
+		* [MPCON-007] -- The subsection content |must| be free-form text.
+		* [MPCON-005] -- :wtrl_label:`<Assignable>` |must| be resolvable relative to the documented module.
+		* [MPCON-009] -- :wtrl_label:`<Assignable>` |must| refer to a Named Value.
+		* [MPCON-006] -- If the object referenced by :wtrl_label:`<Assignable>` is annotated, the annotation  |must| be :wtrl_type:`Final`.
+	- |ObsoleteRules|
+		* MPCON-008 -- Obsolete in version 0.5.3; duplicate of MPCON-005.
+	- |LastReview|: 2026-02-24
 
 Sections for class docstrings
------------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 In addition to the sections described in :ref:`common_sections`
 a class docstring |must| have the following structure:
@@ -719,7 +846,7 @@ a class docstring |must| have the following structure:
 	- [CPCL-001] -- The section |may| exist.
 	- [CPCL-002] -- If it exists, it |must| be listed as normative in :wtrl_label:`Preamble.normative_sections`.
 	- [CPCL-003] -- The content |must| be a list of Qualified Identifiers according to LQID-001.
-	- [CPCL-004] -- Each entry listed |must| be resolvable to the documented class.
+	- [CPCL-004] -- Each entry listed |must| be resolvable relative to the documented class.
 	- [CPCL-005] -- Each entry listed |must| refer to a class.
 	- [CPCL-006] -- Each class with a valid docstring |should| be listed in :wtrl_label:`Public_classes`.
 	- [CPCL-007] -- Each class listed in :wtrl_label:`Public_classes` |should| have a valid docstring.
@@ -728,19 +855,21 @@ a class docstring |must| have the following structure:
 	- [CCLO-001] -- The section |may| exist.
 	- [CCLO-002] -- |Must_not| be listed as normative in :wtrl_label:`Preamble.normative_sections`.
 	- [CCLO-003] -- |Must_not| exist if there is no section :wtrl_label:`Public_classes:`
-	- [CCLO-004] -- Each entry in the section |must| have the form of a subsection. Pattern:
+	- [CCLO-004] -- Each entry in the section |must| have the form of a subsection matching the following pattern:
 	- :wtrl_label:`<Class>:`
 		* [CCLO-005] -- :wtrl_label:`<Class>` |must| match the pattern of an Identifier.
-		* [CCLO-006] -- The content |may| consist of any number of lines.
-		* [CCLO-007] -- The content is informative and |must_not| contain any Normativity Keyword.
-		* [CCLO-008] -- :wtrl_label:`<Class>` |must| be resolvable relative to the documented module.
+		* [CCLO-006] -- The subsection content |must| be free-form text.
+		* [CCLO-007] -- The subsection content is informative and |must_not| contain any Normativity Keyword.
+		* [CCLO-008] -- :wtrl_label:`<Class>` |must| be resolvable relative to the documented class.
 		* [CCLO-009] -- :wtrl_label:`<Class>` |must| refer to a class object.
+		* [CCLO-011] -- <Method> must appear in section :wtrl_label:`Public_classes`.
 	- [CCLO-010] -- Any number of subsections |may| exist.
+	- |LastReview|: 2026-02-25
 * :wtrl_label:`Public_methods:`
 	- [CPMT-001] -- The section |may| exist.
 	- [CPMT-002] -- If it exists, it |must| be listed as normative in :wtrl_label:`Preamble.normative_sections`.
 	- [CPMT-003] -- The content |must| be a list of Qualified Identifiers according to LQID-001.
-	- [CPMT-004] -- Each entry listed |must| be resolvable to the documented class.
+	- [CPMT-004] -- Each entry listed |must| be resolvable relative to the documented class.
 	- [CPMT-005] -- Each entry listed |must| refer to a method.
 	- [CPMT-006] -- Each method with a valid docstring |should| be listed in section :wtrl_label:`Public_methods`.
 	- [CPMT-007] -- Each method listed in section :wtrl_label:`Public_methods` |should| have a valid docstring.
@@ -749,65 +878,77 @@ a class docstring |must| have the following structure:
 	- [CMTO-001] -- The section |may| exist.
 	- [CMTO-002] -- |Must_not| be listed as normative in :wtrl_label:`Preamble.normative_sections`.
 	- [CMTO-003] -- |Must_not| exist if there is no section :wtrl_label:`Public_methods:`
-	- [CMTO-004] -- Each entry in the section |must| have the form of a subsection. Pattern:
+	- [CMTO-004] -- Each entry in the section |must| have the form of a subsection matching the following pattern:
 	- :wtrl_label:`<Method>:`
 		* [CMTO-005] -- :wtrl_label:`<Method>` |must| match the pattern of an Identifier.
-		* [CMTO-006] -- The content |may| consist of any number of lines.
-		* [CMTO-007] -- The content is informative and |must_not| contain any Normativity Keyword.
+		* [CMTO-006] -- The subsection content |must| be free-form text.
+		* [CMTO-007] -- The subsection content is informative and |must_not| contain any Normativity Keyword.
 		* [CMTO-008] -- :wtrl_label:`<Method>` |must| be resolvable relative to the documented class.
 		* [CMTO-009] -- :wtrl_label:`<Method>` |must| refer to a method.
-	- [CMTO-010] -- Any number of subsections |may| exist provided :wtrl_label:`<Method>` can be resolved to a method with valid docstring.
+		* [CMTO-011] -- :wtrl_label:`<Method>` |must| appear in section :wtrl_label:`Public_methods`.
+	- [CMTO-010] -- Any number of subsections |may| exist.
+	- |LastReview|: 2026-02-25
 * :wtrl_label:`Public_types:`
-	- [PTY-008] -- The section |may| exist.
-	- [PTY-009] -- If it exists, it |must| be listed as normative in :wtrl_label:`Preamble.normative_sections`.
-	- [PTY-010] -- Each entry in the section |must| have the form of a subsection. Pattern:
+	- [CPTYP-001] -- The section |may| exist.
+	- [CPTYP-002] -- If it exists, it |must| be listed as normative in :wtrl_label:`Preamble.normative_sections`.
+	- [CPTYP-003] -- Each entry in the section |must| have the form of a subsection matching the following pattern:
 	- :wtrl_label:`<Type>:`
-		* [PTY-011] -- :wtrl_label:`<Type>` |must| match the pattern of an Identifier.
-		* [PTY-012] -- Any number of subsections |may| exist provided :wtrl_label:`<Type>` can be resolved to an existing TypeAlias or NewType.
-		* [PTY-013] -- The content |may| consist of any number of lines.
-	- [PTY-014] -- Each type listed in :wtrl_label:`Public_types` |must| exist in the class.
-	- [PTY-015] -- Each type listed in :wtrl_label:`Public_types` |must| refer to a TypeAlias or NewType.
+		* [CPTYP-004] -- :wtrl_label:`<Type>` |must| match the pattern of an Identifier.
+		* [CPTYP-006] -- The subsection content |must| be free-form text.
+		* [CPTYP-005] -- :wtrl_label:`<Type>` |must| be resolvable relative to the documented class.
+		* [CPTYP-008] -- :wtrl_label:`<Type>` |must| refer to a TypeAlias or NewType.
+	- |ObsoleteRules|
+		* CPTYP-007 -- Obsolete in version 0.5.3; duplicate of CPTYP-005.
+	- |LastReview|: 2026-02-24
 * :wtrl_label:`Public_variables:`
-	- [PVAR-007] -- The section |may| exist.
-	- [PVAR-008] -- If it exists, it |must| be listed as normative in :wtrl_label:`Preamble.normative_sections`.
-	- [PVAR-009] -- Each entry in the section |must| have the form of a subsection. Pattern:
+	- [CPVAR-001] -- The section |may| exist.
+	- [CPVAR-002] -- If it exists, it |must| be listed as normative in :wtrl_label:`Preamble.normative_sections`.
+	- [CPVAR-003] -- Each entry in the section |must| have the form of a subsection matching the following pattern:
 	- :wtrl_label:`<Assignable>:`
-		* [PVAR-010] --:wtrl_label:`<Assignable>` |must| match the pattern of an Identifier.
-		* [PVAR-011] -- Any number of subsections |may| exist provided :wtrl_label:`<Assignable>` can be resolved to an existing variable.
-		* [PVAR-012] -- The content |may| consist of any number of lines.
-	- [PVAR-021] -- Each variable listed in :wtrl_label:`Public_variables` |must| exist on the documented class.
-	- [PVAR-023] -- Each variable listed in :wtrl_label:`Public_variables` |must| refer to a Named Value.
-	- [PVAR-022] -- If a variable listed in :wtrl_label:`Public_variables` is annotated, it |must_not| be annotated as :wtrl_type:`Final`.
+		* [CPVAR-004] -- :wtrl_label:`<Assignable>` |must| match the pattern of an Identifier.
+		* [CPVAR-006] -- The subsection content |must| be free-form text.
+		* [CPVAR-005] -- :wtrl_label:`<Assignable>` |must| be resolvable relative to the documented class.
+		* [CPVAR-008] -- :wtrl_label:`<Assignable>` |must| refer to a Named Value.
+		* [CPVAR-009] -- If the object referenced by :wtrl_label:`<Assignable>` is annotated, the annotation |must_not| be wtrl_type:`Final`.
+	- |ObsoleteRules|
+		* CPVAR-007 -- Obsolete in version 0.5.3; duplicate of CPVAR-005.
+	- |LastReview|: 2026-02-24
 * :wtrl_label:`Public_constants:`
-	- [PCON-008] -- The section |may| exist.
-	- [PCON-009] -- If it exists, it |must| be listed as normative in :wtrl_label:`Preamble.normative_sections`.
-	- [PCON-010] -- Each entry in the section |must| have the form of a subsection. Pattern:
+	- [CPCON-001] -- The section |may| exist.
+	- [CPCON-002] -- If it exists, it |must| be listed as normative in :wtrl_label:`Preamble.normative_sections`.
+	- [CPCON-003] -- Each entry in the section |must| have the form of a subsection matching the following pattern:
 	- :wtrl_label:`<Assignable>:`
-		* [PCON-011] -- :wtrl_label:`<Assignable>` |must| match the pattern of an Identifier.
-		* [PCON-012] -- Any number of subsections |may| exist provided :wtrl_label:`<Assignable>` can be resolved to an existing variable.
-		* [PCON-013] -- If the variable is annotated, it |must| be annotated as :wtrl_type:`Final`.
-		* [PCON-014] -- The content |may| consist of any number of lines.
-	- [PCON-021] -- Each constant listed in :wtrl_label:`Public_constants` |must| exist on the documented class.
-	- [PCON-023] -- Each constant listed in :wtrl_label:`Public_constants` |must| refer to a Named Value.
-	- [PCON-022] -- Each constant listed in :wtrl_label:`Public_constants` that is annotated |must| be annotated as :wtrl_type:`Final`.
+		* [CPCON-004] -- :wtrl_label:`<Assignable>` |must| match the pattern of an Identifier.
+		* [CPCON-007] -- The subsection content |must| be free-form text.
+		* [CPCON-005] -- :wtrl_label:`<Assignable>` |must| be resolvable relative to the documented class.
+		* [CPCON-009] -- :wtrl_label:`<Assignable>` |must| refer to a Named Value.
+		* [CPCON-006] -- If the object referenced by :wtrl_label:`<Assignable>` is annotated, the annotation  |must| be :wtrl_type:`Final`.
+	- |ObsoleteRules|
+		* CPCON-008 -- Obsolete in version 0.5.3; duplicate of CPCON-005.
+	- |LastReview|: 2026-02-24
 * :wtrl_label:`Factory:`
 	- [FAC-001] -- The section |may| exist.
-	- [FAC-002] -- If it contains at least one Normativity Keyword, it |must| be listed as normative in :wtrl_label:`Preamble.normative_sections`.
-	- [FAC-003] -- If it exists, it |should| list all factory functions with full signature.
-	- [FAC-004] -- Each entry in the section |must| have the form of a subsection. Pattern:
+	- [FAC-004] -- Each entry in the section |must| have the form of a subsection matching the following pattern:
 	- :wtrl_label:`<Function>:`
-		* [FAC-005] -- :wtrl_label:`<Function>` |must| match the pattern of an Identifier.
-		* [FAC-006] -- Any number of subsections |may| exist provided :wtrl_label:`<Function>` can be resolved to an existing function.
-		* [FAC-007] -- The content |may| consist of any number of lines.
+		* [FAC-005] -- :wtrl_label:`<Function>` |must| match the pattern of a Qualified Identifier.
+		* [FAC-008] -- Each :wtrl_label:`<Function>` |must| occur at most once within its enclosing :wtrl_label:`Factory` section.
+		* [FAC-006] -- :wtrl_label:`<Function>` |must| resolve to an existing function.
+		* [FAC-007] -- The content of :wtrl_label:`<Function>` |must| be interpreted as free-form text.
+	- |ObsoleteRules|:
+		* FAC-002 -- Obsolete since version 0.5.1; superseded by PRE-013.
+		* FAC-003 -- Obsolete since version 0.5.0.
+	- |LastReview|: 2026-02-23
 
 
 .. _function_sections:
 
 Sections for function/method docstrings
----------------------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 In addition to the sections described in :ref:`common_sections`
 a function or method docstring |must| have the following structure:
+
+.. _section_function_pramble:
 
 * :wtrl_label:`Preamble:`
 	- :wtrl_label:`profile:`
@@ -838,50 +979,61 @@ a function or method docstring |must| have the following structure:
 		  whether the function is applicable to a given use case.
 	- :wtrl_label:`invariants:`
 		* [CON-025] -- The subsection |may| exist.
-		* [CON-026] -- If it exists, it |must| allow multiline free-form text.
+		* [CON-026] -- The subsection content |must| be free-form text.
 	- :wtrl_label:`requires:`
 		* [CON-047] -- The subsection |may| exist.
-		* [CON-048] -- If it exists, it |must| allow multiline free-form text.
+		* [CON-048] -- The subsection content |must| be free-form text.
 	- :wtrl_label:`ensures:`
 		* [CON-049] -- The subsection |may| exist.
-		* [CON-050] -- If it exists, it |must| allow multiline free-form text.
+		* [CON-050] -- The subsection content |must| be free-form text.
+	- |LastReview|: 2026-02-23
 * :wtrl_label:`Parameters:`
 	- [PAR-001] -- The section |must| exist.
-	- [PAR-002] -- It |must| be listed as normative in :wtrl_label:`Preamble.normative_sections`.
-	- [PAR-003] -- |Must| list all parameters and an explanation for each parameter
+	- [PAR-002] -- The section |must| be listed as normative in :wtrl_label:`Preamble.normative_sections`.
+	- [PAR-003] -- The section |must| list all parameters and provide an explanation for each parameter.
+	- [PAR-008] -- Each entry in the section |must| have the form of a subsection matching the following pattern:
 	- :wtrl_label:`<Par>:`
-		* [PAR-006] -- :wtrl_label:`<Par>` |must| match the pattern of an Identifier.
-		* [PAR-004] -- Each parameter in the function's signature |must| exist here as an entry addressed by :wtrl_label:`<Par>`.
-		* [PAR-005] -- The parameter addressed by :wtrl_label:`<Par>` must appear in the function's signature.
-* :wtrl_label:`Returns:` [last reviewed on 2026-01-31]
+		* [PAR-006] -- :wtrl_label:`<Par>` |must| be an Identifier.
+		* [PAR-007] -- The subsection content |must| be free-form text.
+		* [PAR-004] -- Each parameter in the function's signature |must| be documented by a corresponding :wtrl_label:`<Par>` entry.
+		* [PAR-005] -- Each :wtrl_label:`<Par>` entry |must| correspond to a parameter in the function's signature.
+	- |LastReview|: 2026-02-25
+* :wtrl_label:`Returns:`
 	- [RET-001] -- The section |must| exist.
-	- [RET-005] -- It |must_not| contain subsections.
-	- [RET-002] -- It |must| be listed as normative in :wtrl_label:`Preamble.normative_sections`.
-	- [RET-003] -- |Must| explain the return value of the function.
-	- [RET-004] -- If the documented object is a function or method with return type :wtrl_type:`bool`, section :wtrl_label:`Returns` |should| mention at least one of the tokens :wtrl_value:`|True|` or :wtrl_value:`|False|`.
-	- [RET-006] -- If the documented function or method returns with return value :wtrl_value:`None`, section :wtrl_label:`Returns` |should| mention the tokens :wtrl_value:`|None|`.
-	- [RET-007] -- If the documented function or method returns with return value :wtrl_value:`self`, section :wtrl_label:`Returns` |should| mention the tokens :wtrl_value:`|Self|` (capitalized like in :wtrl_type:`like typing.Self`).
-	- [RET-008] -- Validators |should| test RET-006 only if the function/method is annotated to return :wtrl_value:`None` **and** the section contains ``None`` in non-tokenised form.
-	- [RET-009] -- Validators |should| test RET-007 only if the function/method is annotated to return :wtrl_value:`Self` **and** the section contains ``self`` or ``Self`` in non-tokenised form.
-	- [RET-010] -- Validators |must_not| treat RET-004, RET-006, or RET-007 as errors; they |must| be reported as warnings only.
+	- [RET-002] -- The section |must| be listed as normative in :wtrl_label:`Preamble.normative_sections`.
+	- [RET-005] -- The section |must_not| contain subsections.
+	- [RET-003] -- The section |must| explain the return value of the documented function or method.
+	- [RET-004] -- If the documented function or method is annotated with return type :wtrl_type:`bool`,
+	  section :wtrl_label:`Returns` |should| mention at least one of the tokens
+	  :wtrl_value:`|True|` or :wtrl_value:`|False|`.
+	- [RET-006] -- If the documented function or method is annotated to return :wtrl_value:`None`,
+	  section :wtrl_label:`Returns` |should| mention the token :wtrl_value:`|None|`.
+	- [RET-007] -- If the documented function or method is annotated to return :wtrl_type:`Self`,
+	  section :wtrl_label:`Returns` |should| mention the token :wtrl_value:`|Self|`.
+	- [RET-008] -- Validators |should| apply rule RET-006 only if the function or method
+	  is annotated to return :wtrl_value:`None` and the section contains ``None`` in non-tokenised form.
+	- [RET-009] -- Validators |should| apply rule RET-007 only if the function or method
+	  is annotated to return :wtrl_type:`Self` and the section contains ``self`` or ``Self`` in non-tokenised form.
+	- [RET-010] -- Violations of rules RET-004, RET-006, and RET-007
+	  |must| be reported as warnings and |must_not| be reported as errors.
+	- |LastReview|: 2026-02-25
 * :wtrl_label:`Raises:`
 	- [RAI-001] -- The section |must| exist.
-	- [RAI-002] -- It |must| be listed as normative in :wtrl_label:`Preamble.normative_sections`.
-	- [RAI-003] -- |Must| list all exception classes that may raise under normal circumstances,
-	  that means, the caller has been typechecked with similarly strict rules
-	  as the module containing the called function. Pattern:
+	- [RAI-002] -- The section |must| be listed as normative in :wtrl_label:`Preamble.normative_sections`.
+	- [RAI-003] -- The section |must| list all exception classes that may be raised under correct and contract-compliant usage.
+	- [RAI-011] -- Each entry in the section |must| have the form of a subsection matching the following pattern:
 	- :wtrl_label:`<Exception>:`
 		* [RAI-008] -- :wtrl_label:`<Exception>` |must| be a Qualified Identifier.
-		* [RAI-004] -- Any number of subsections |may| exist provided :wtrl_label:`<Exception>` can be resolved to an existing (exception) class.
-		* [RAI-005] -- The content |may| consist of any number of lines.
+		* [RAI-004] -- :wtrl_label:`<Exception>` |must| resolve to an existing (exception) class.
+		* [RAI-005] -- The subsection content |must| be free-form text.
 		* [RAI-006] -- The content |must| explain the circumstances which must or may lead to raising the exception addressed by :wtrl_label:`<Exception>`.
-		* [RAI-009] -- Each entry listed |must| be resolvable to a class.
 		* [RAI-007] -- Each entry listed |must| represent a subclass of :wtrl_type:`BaseException`.
+	- |ObsoleteRules|
+		* RAI-009 -- Obsolete since 0.5.2; superseded by RAI-004.
+		* RAI-010 -- Obsolete since 0.5.3;
 
 Sections for inherited method docstrings
-----------------------------------------
-
-The following section is normative.
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 In addition to the sections described in :ref:`common_sections`
 an inherited method docstring |must| have the following structure:
@@ -950,13 +1102,13 @@ At module level, the specification expresses the following principles:
 	  (MPFN-007).
 
 	* The specification requires that each type listed in :wtrl_label:`Public_types` exists in the module
-	  (PTY-007).
+	  (MPTYP-005).
 
 	* The specification requires that each variable listed in :wtrl_label:`Public_variables` exists in the module
-	  (PVAR-013).
+	  (MPVAR-005).
 
 	* The specification requires that each constant listed in :wtrl_label:`Public_constants` exists in the module
-	  (PCON-015).
+	  (MPCON-005).
 
 Class-level coverage
 ^^^^^^^^^^^^^^^^^^^^
@@ -976,10 +1128,10 @@ At class level, the specification expresses the following principles:
 	  (CPMT-005).
 
 	* The specification requires that each variable listed in :wtrl_label:`Public_variables` exists on the documented class
-	  (PVAR-021).
+	  (CPVAR-005).
 
 	* The specification requires that each constant listed in :wtrl_label:`Public_constants` exists on the documented class
-	  (PCON-021).
+	  (CPCON-005).
 
 Practical consequence
 ^^^^^^^^^^^^^^^^^^^^^
@@ -1067,21 +1219,51 @@ less than or equal to at least one selected scope.
 
 .. _section_scope_monotonicity_rule:
 
-Scope Monotonicity rule
+Scope Monotonicity Rule
 ^^^^^^^^^^^^^^^^^^^^^^^
 
-Documented objects form a directed reference graph. References arise from
-explicit API listings (such as Public_* sections) and from :wtrl_label:`See_also`
-entries referring to internal objects.
+Documented objects form a directed reference graph. A directed edge from object A
+to object B exists if and only if A establishes a reference to B.
+Reference edges arise exclusively from the following constructs:
 
-For every such reference from object A to object B, the following rule applies:
+* Entries in :wtrl_label:`Public_classes`
+* Entries in :wtrl_label:`Public_functions`
+* Entries in :wtrl_label:`Public_methods`
+* Subsection :wtrl_label:`Contract.base` in profile :wtrl_value:`inherited_method`
+* Entries in :wtrl_label:`See_also`
 
-* For a reference from object A to object B, scope compatibility is given if and only if
-  there exists s_A in scopes(A) and s_B in scopes(B) such that:
+No other structural or semantic relationship constitutes a reference edge
+for the purposes of scope validation.
+
+For every such reference from object A to object B, scope compatibility is given
+if and only if there exist s_A in scopes(A) and s_B in scopes(B) such that:
 
 	s_A <= s_B
 
 This rule is referred to as the :wtrl_term:`Scope Monotonicity Rule`.
+
+Non-referential relationships
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Certain structural relationships do not introduce reference edges
+for the purposes of scope validation.
+In particular, entries in the :wtrl_label:`Factory` section do not
+constitute reference edges.
+
+The :wtrl_label:`Factory` section describes callable entry points
+for object construction. The direction of instantiation does not
+imply contractual visibility in either direction.
+
+For example:
+
+* A factory function may have scope :wtrl_value:`core` while the
+  constructed class has scope :wtrl_value:`public`.
+* Conversely, a class may have scope :wtrl_value:`core` while a
+  factory function providing controlled access to instances is
+  visible under :wtrl_value:`public`.
+
+Both situations are valid and do not violate scope monotonicity.
+Therefore, factory declarations do not participate in the reference graph.
 
 Rendering and validation
 ^^^^^^^^^^^^^^^^^^^^^^^^^

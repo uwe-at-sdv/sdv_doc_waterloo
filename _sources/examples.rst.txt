@@ -3,15 +3,72 @@
 Examples
 ########
 
-This section covers cases which are not contained in the reference documentation,
+This section covers cases that are not necessarily contained in the reference documentation,
 such as
 
+* factories
 * properties
 * decorators
 * coroutines
 * classes within classes
 * constants in classes
-* maybe types in classes
+* type aliases in classes
+
+Factories
+---------
+
+.. wtrl_push_current_module:: test_docitem_factory_vec2d
+
+This section illustrates the use of the :wtrl_label:`Factory` section. In this context,
+:wtrl_label:`Factory` does not refer to the well-known design pattern, but to the
+practical notion of a function that creates an instance of a class and
+encapsulates the constructor.
+
+In Python, several patterns exist for defining factory functions.
+In the sample program, we focus on the following:
+
+* module-level functions with explicit signatures,
+* class methods with explicit signatures,
+* functions or class methods using runtime polymorphism.
+
+The use of :wtrl_attr:`@singledispatch` is intentionally omitted.
+
+The inventory of factory functions in this example is intentionally redundant
+for demonstration purposes. In practice, the choice among these patterns
+depends on personal style and design preferences.
+
+The class :wtrl_type:`Vec2d` represents two-dimensional vectors.
+We would like to create a vector in the following ways:
+
+* without arguments, yielding the zero vector,
+* by passing two :wtrl_type:`float`-valued components :wtrl_var:`x` and :wtrl_var:`y`,
+* by passing another two-dimensional vector in order to create a copy.
+
+The corresponding implementation is shown below:
+
+.. literalinclude:: ../examples/test_docitem_factory_vec2d_no_doc.py
+	:language: python
+
+There are eight factory functions, all of which form part of the class API.
+The Waterloo docstring format captures this relationship by means of a
+:wtrl_label:`Factory` section, as shown in the following excerpt:
+
+.. literalinclude:: ../examples/test_docitem_factory_vec2d.py
+	:language: python
+	:start-after: #-----8<-----1
+	:end-before: #----->8-----1
+
+Validation ensures that each factory entry listed in this section
+is resolvable. In the generated HTML artifact, the labels of the
+factory entries are rendered as links to the documentation boxes
+of the referenced objects.
+
+.. wtrl_autodoc_class_full:: Vec2d
+
+.. wtrl_autodoc_function:: vec2d
+
+.. wtrl_pop_current_module:: test_docitem_factory_vec2d
+
 
 Properties
 ----------
@@ -121,6 +178,38 @@ from source code:
 	:language: python
 	:start-after: #-----8<-----2
 	:end-before: #----->8-----2
+
+Inherited Definitions
+---------------------
+
+The following example demonstrates how definition items can be inherited
+from module level to class or function level in order to avoid unnecessary repetition.
+
+.. literalinclude:: ../examples/test_docitem_definitions_inherited.py
+	:language: python
+
+The module docstring is rendered as shown below. It contains commonly used
+definitions for :wtrl_term:`Identifier` and :wtrl_term:`Qualified_Identifier`.
+By means of the subsection :wtrl_label:`Definitions._inherited`, each class or
+function object defined in the module can reference these definitions in its
+free-text sections.
+
+.. wtrl_autodoc_module:: test_docitem_definitions_inherited
+
+The class docstring inherits the terms :wtrl_term:`Identifier` and
+:wtrl_term:`Term_Z`, and defines a new term
+:wtrl_term:`Private_Identifier` based on :wtrl_term:`Identifier`.
+Referencing inherited terms using :wtrl_lit:`\|term\|` is valid and
+results in semantic highlighting in the generated HTML artifact.
+
+.. wtrl_autodoc_class:: test_docitem_definitions_inherited.X
+
+The method docstring inherits the terms
+:wtrl_term:`Identifier` and :wtrl_term:`Qualified_Identifier`
+and uses them to define a new term :wtrl_term:`Anchor`.
+
+.. wtrl_autodoc_method:: test_docitem_definitions_inherited.X.spam
+
 
 A display cabinet of sections
 -----------------------------
