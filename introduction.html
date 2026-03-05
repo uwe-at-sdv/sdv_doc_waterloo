@@ -433,14 +433,76 @@ for example to identify documented modules or objects, and to query associated m
 </li>
 </ul>
 </section>
+<section id="versioning">
+<h2><span class="section-number">1.9. </span>Versioning<a class="headerlink" href="#versioning" title="Link to this heading">¶</a></h2>
+<p>This section is informative.</p>
+<p>Waterloo consists of several components that may evolve independently.
+These currently include:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>the Python library implementing the Waterloo docstring model,</p></li>
+<li><p>the command line tool <code class="wtrl_cmd docutils literal notranslate"><span class="pre">waterlint</span></code>,</p></li>
+<li><p>the JSON schema used for interchange and validation,</p></li>
+<li><p>and potentially additional subsystems in the future.</p></li>
+</ul>
+</div></blockquote>
+<p>Each subsystem maintains its own semantic version number of the form
+<code class="wtrl_value docutils literal notranslate"><span class="pre">X.Y.Z</span></code>.</p>
+<p>In addition to these subsystem versions, Waterloo defines a single
+<code class="wtrl_dfn docutils literal notranslate"><span class="pre">main</span> <span class="pre">version</span></code>. The main version serves as the externally
+communicated compatibility version of the Waterloo specification and
+toolchain.</p>
+<p>The main version is intended to remain stable over long periods of time.
+A change of the major component indicates an intentional incompatibility
+with previously valid Waterloo documents or tools.</p>
+<p>Subsystems may evolve independently and therefore maintain their own
+version numbers. A version change in one subsystem does not directly
+modify the version numbers of other subsystems.</p>
+<p>Subsystem versions exist primarily to track development and internal
+evolution of the individual components.</p>
+<p>The main version reflects the highest-order change among the subsystem
+versions that occur within a release.</p>
+<p>The following interpretation is used:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>If a subsystem performs a patch update (<code class="wtrl_value docutils literal notranslate"><span class="pre">X.Y.Z</span> <span class="pre">u2192</span> <span class="pre">X.Y.(Z+1)</span></code>),
+the patch component of the main version is increased.</p></li>
+<li><p>If a subsystem performs a minor update (<code class="wtrl_value docutils literal notranslate"><span class="pre">X.Y.Z</span> <span class="pre">u2192</span> <span class="pre">X.(Y+1).0</span></code>),
+the minor component of the main version is increased and the patch
+component is reset to zero.</p></li>
+<li><p>If a subsystem performs a major update (<code class="wtrl_value docutils literal notranslate"><span class="pre">X.Y.Z</span> <span class="pre">u2192</span> <span class="pre">(X+1).0.0</span></code>),
+the major component of the main version is increased and the minor and
+patch components are reset to zero.</p></li>
+</ul>
+</div></blockquote>
+<p>If several subsystems change within the same release, the main version
+reflects the highest-order change (major overrides minor, minor overrides
+patch).</p>
+<p>The major component of the main version represents the compatibility
+level of the Waterloo specification.</p>
+<p>As a design goal, the major version is expected to remain stable for as
+long as possible. A major version change would normally correspond to a
+deliberate and incompatible modification of the specification, such as:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>changes that invalidate previously valid Waterloo docstrings,</p></li>
+<li><p>changes that alter the semantic interpretation of existing rules,</p></li>
+<li><p>structural changes requiring modifications to existing documentation.</p></li>
+</ul>
+</div></blockquote>
+<p>Such changes are expected to be rare.</p>
+<p>Minor and patch updates are used for incremental evolution of the
+specification, tooling improvements, clarifications, and additional
+features that remain compatible with existing Waterloo documents.</p>
+</section>
 <section id="possible-future-enhancements">
-<h2><span class="section-number">1.9. </span>Possible future enhancements<a class="headerlink" href="#possible-future-enhancements" title="Link to this heading">¶</a></h2>
+<h2><span class="section-number">1.10. </span>Possible future enhancements<a class="headerlink" href="#possible-future-enhancements" title="Link to this heading">¶</a></h2>
 </section>
 <section id="introductory-examples">
-<h2><span class="section-number">1.10. </span>Introductory examples<a class="headerlink" href="#introductory-examples" title="Link to this heading">¶</a></h2>
+<h2><span class="section-number">1.11. </span>Introductory examples<a class="headerlink" href="#introductory-examples" title="Link to this heading">¶</a></h2>
 <p>This section is informative.</p>
 <section id="module">
-<h3><span class="section-number">1.10.1. </span>Module<a class="headerlink" href="#module" title="Link to this heading">¶</a></h3>
+<h3><span class="section-number">1.11.1. </span>Module<a class="headerlink" href="#module" title="Link to this heading">¶</a></h3>
 <p>Let us do an example: In directory <code class="wtrl_file docutils literal notranslate"><span class="pre">doc/examples</span></code> you see a file <code class="wtrl_file docutils literal notranslate"><span class="pre">test_docitem_module.py</span></code>.
 On module level this is equipped with a basic Waterloo docstring:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;</span>
@@ -520,7 +582,7 @@ and it must be declared normative.</p></li>
 </div></blockquote>
 </section>
 <section id="module-and-class">
-<h3><span class="section-number">1.10.2. </span>Module and class<a class="headerlink" href="#module-and-class" title="Link to this heading">¶</a></h3>
+<h3><span class="section-number">1.11.2. </span>Module and class<a class="headerlink" href="#module-and-class" title="Link to this heading">¶</a></h3>
 <p>In the next example we have a module and a class docstring, and we consider the class as
 part of the public API of the module:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;</span>
@@ -640,7 +702,7 @@ part of the public API of the module:</p>
 </table>
 </section>
 <section id="module-class-and-method">
-<h3><span class="section-number">1.10.3. </span>Module, class and method<a class="headerlink" href="#module-class-and-method" title="Link to this heading">¶</a></h3>
+<h3><span class="section-number">1.11.3. </span>Module, class and method<a class="headerlink" href="#module-class-and-method" title="Link to this heading">¶</a></h3>
 <p>Finally, let us add a method to the class and attach a docstring.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="ge">Preamble:</span>
@@ -835,7 +897,7 @@ part of the public API of the module:</p>
 </section>
 </section>
 <section id="convenience-module-and-class-stack">
-<h2><span class="section-number">1.11. </span>Convenience: module and class stack<a class="headerlink" href="#convenience-module-and-class-stack" title="Link to this heading">¶</a></h2>
+<h2><span class="section-number">1.12. </span>Convenience: module and class stack<a class="headerlink" href="#convenience-module-and-class-stack" title="Link to this heading">¶</a></h2>
 <p>Repeating the module and the class each time a function, method, type or constant
 is addressed by means of qualified identifier (dot notation) can become a little annoying.
 Therefore the extension is equipped with state stacks for modules and classes.</p>
@@ -920,14 +982,15 @@ of methods. The push-command reads:</p>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#dependencies">1.8. Dependencies</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#possible-future-enhancements">1.9. Possible future enhancements</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#introductory-examples">1.10. Introductory examples</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#module">1.10.1. Module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#module-and-class">1.10.2. Module and class</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#module-class-and-method">1.10.3. Module, class and method</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#versioning">1.9. Versioning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#possible-future-enhancements">1.10. Possible future enhancements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#introductory-examples">1.11. Introductory examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#module">1.11.1. Module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-and-class">1.11.2. Module and class</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-class-and-method">1.11.3. Module, class and method</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#convenience-module-and-class-stack">1.11. Convenience: module and class stack</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#convenience-module-and-class-stack">1.12. Convenience: module and class stack</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="getting_started.html">2. Getting Started</a></li>
