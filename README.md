@@ -7,6 +7,12 @@
 * Human-readable documentation
   * ``https://...``
 
+#### Branch ide-plugins
+
+* Additional utilities
+  * Lexer for ``pygments``
+    * ``pygmentize/python_waterloo_lexer.py``
+
 #### Branch main
 
 * Machine-readable documentation
