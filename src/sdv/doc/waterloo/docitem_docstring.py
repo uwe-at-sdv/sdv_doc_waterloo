@@ -204,6 +204,8 @@ Raises:
 		found_preamble = False
 		pos = 0
 		dmap = self.dispatch_map()
+# Duplicate section labels are an error.
+		seen = set()
 		while pos < len(tree):
 # Section labels must be identifiers.
 			with rule_on_fail(tr, "PRSR-005"):
@@ -214,6 +216,9 @@ Raises:
 				elif not found_preamble:
 					raise_parsing_error(tr,"PRE-001","Preamble is not first.")
 				items,pos = expect_list(tr,tree,pos)
+				if label in seen:
+					raise_parsing_error(tr,"PRSR-007",f"Duplicate label '{label}'.")
+				seen.add(label)
 				self.add_child(tr,label, dmap[label], items)
 			else:
 # Choose profile-specific rule for unexpected sections.
@@ -221,8 +226,12 @@ Raises:
 					rule_ids = "DOC-003"
 				elif isinstance(self, docitem_docstring_class):
 					rule_ids = "DOC-004"
-				else:
+				elif isinstance(self, docitem_docstring_method):
 					rule_ids = "DOC-005"
+				elif isinstance(self, docitem_docstring_inherited_method):
+					rule_ids = "DOC-006"
+				else:
+					rule_ids = "DOC-999"
 				raise_parsing_error_invalid_label(tr,rule_ids,label,dmap)
 
 class docitem_docstring_module(docitem_docstring_base):
@@ -480,7 +489,6 @@ def make_docitem_tree_from_docstring_tree(tr : tracer, tree : DocstringTree) -> 
 		raise_parsing_error(tr,"PRE-004","Section 'Preamble.profile' must have exactly one item.")
 	except Exception as exc:
 		raise
-#		raise_parsing_error(tr,"UNSP-999",f"get_profile_of_tree: Unspecified error, check implementation: {exc}.")
 # This looks redundant because later we directly check for allowed profiles, but
 # we should check the rules in certain order so that behaviour remains predictible.
 	if not RE_IDENTIFIER_COMPILED.fullmatch(profile):
@@ -548,6 +556,7 @@ def check_profile_matches_object(tr: tracer, profile: str, obj: object) -> None:
 			raise_validation_error(tr, obj, "PRE-018", f"profile is '{profile}' but '{get_obj_name(obj)}' is a class.")
 	else:
 		if profile not in {"function", "method", "inherited_method"}:
+			warn_validation(tr, obj, "PRE-020", f"profile 'inherited_method' might be appropriate, cannot decide at this location in code.")
 			raise_validation_error(tr, obj, "PRE-019", f"profile is '{profile}' but '{get_obj_name(obj)}' is a function or method.")
 # Heuristic split between function and method-like callables.
 		is_method_like: bool = False

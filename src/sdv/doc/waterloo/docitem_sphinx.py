@@ -128,6 +128,7 @@ from docutils.parsers.rst import Directive
 from docutils.parsers.rst.directives.admonitions import BaseAdmonition
 from docutils.parsers.rst.states import Struct as RstStruct  # type: ignore[attr-defined]
 from typing import Sequence, TypeAlias, cast, no_type_check
+from sphinx.util.nodes import make_refnode
 
 try:
 	import sdv_doc_docitem
@@ -205,6 +206,7 @@ Contract:
 	def __init__(self,parse_inline : Callable[[nodes.Element, int, str], List[nodes.Node]],lineno: int) -> None:
 		self.parse = parse_inline
 		self.i_line = lineno
+# See make_context. We extract env from the SphinxApp instance.
 		self.env = None
 		self.add_role_attr = lambda t:f":wtrl_attr:`{t}`"
 		self.add_role_cmd = lambda t:f":wtrl_cmd:`{t}`"
@@ -323,6 +325,75 @@ def parse_inline(inliner: InlinerProtocol, parent: nodes.Element, ln: int, txt: 
 	return result
 
 
+def _register_anchor(ctx: context, obj: object, anchor: str) -> None:
+	"""
+	Register a local anchor for later cross-reference resolution.
+
+	The registry lives on the Sphinx environment and maps fully qualified object
+	names to tuples ``(docname, anchor_id)``.
+	"""
+	env = getattr(ctx, "env", None)
+	if env is None:
+		return
+	docname = getattr(env, "docname", None)
+	if not isinstance(docname, str) or not docname:
+		return
+	obj_fqn = mod_docitem.get_obj_fully_qualified_name(obj)
+	if not isinstance(obj_fqn, str) or not obj_fqn:
+		return
+	index = getattr(env, "wtrl_anchor_index", None)
+	if not isinstance(index, dict):
+		index = {}
+		setattr(env, "wtrl_anchor_index", index)
+	index[obj_fqn] = (docname, anchor)
+
+
+def _build_internal_ref(ctx: context, target_obj: object, link_text: str, css_class: str) -> nodes.reference:
+	"""
+	Create an internal reference node for a resolved target object.
+
+	If Sphinx environment/builder context and anchor registry are available,
+	use ``make_refnode`` (supports cross-document links). Otherwise fall back
+	to a local ``refid`` reference.
+	"""
+	target_anchor = mod_docitem.build_anchor(target_obj)
+	node_child = nodes.inline(link_text, link_text)
+	env = getattr(ctx, "env", None)
+	builder = getattr(getattr(env, "app", None), "builder", None)
+	from_docname = getattr(env, "docname", None)
+	index = getattr(env, "wtrl_anchor_index", None)
+	target_fqn = mod_docitem.get_obj_fully_qualified_name(target_obj)
+
+	if (
+		builder is not None
+		and isinstance(from_docname, str)
+		and from_docname
+		and isinstance(index, dict)
+	):
+		target_docname: str = from_docname
+		target_id: str = target_anchor
+		loc = index.get(target_fqn)
+		if (
+			isinstance(loc, tuple)
+			and len(loc) == 2
+			and isinstance(loc[0], str)
+			and isinstance(loc[1], str)
+		):
+			target_docname, target_id = loc
+		node_ref = make_refnode(
+			builder,
+			from_docname,
+			target_docname,
+			target_id,
+			node_child,
+			title=target_fqn,
+		)
+	else:
+		node_ref = nodes.reference(link_text, link_text, refid=target_anchor)
+
+	node_ref["classes"].append(css_class)
+	return node_ref
+
 def _signature_for(obj: object) -> inspect.Signature:
 	return inspect.signature(cast(Callable[..., Any], obj))
 
@@ -437,17 +508,90 @@ def has_current_scope(env: Any | None = None) -> bool:
 #==============================================================#
 
 # Official markup resolver: converts |role|`text` into :wtrl_role:`text`
-def resolve_markup(text : str) -> str:
+def resolve_markup(text : str, ctx: context) -> str:
+	def _resolve_wtrl_ref_uri(qname: str) -> str | None:
+# Resolve object
+		try:
+			target_obj, _, _, _ = resolve_qualified_name(ctx, qname)
+		except Exception as exc:
+			warnings.warn(f"WTRL ref target '{qname}' cannot be resolved: {exc}", RuntimeWarning)
+			return None
+# Build anchor of object.
+		target_anchor = mod_docitem.build_anchor(target_obj)
+# Build fallback that works at least page internally,
+# if we cannot access the current document name.
+		env = getattr(ctx, "env", None)
+		if env is None:
+			return "#" + target_anchor
+		from_docname = getattr(env, "docname", None)
+		if not isinstance(from_docname, str) or not from_docname:
+			return "#" + target_anchor
+# Part of the best effort fallback strategy: If we fail to build the
+# inter-page URI we can still hope the target is on the same page.
+		target_docname: str = from_docname
+		target_id: str = target_anchor
+# At this point we already know that the enviroment is well-defined.
+# Now extract the wtrl-specific index we accumulate in build_sphinx_nodes.
+# Note that the first call to this function via parse_text happens deep inside
+# build_sphinx_node, at a point where we already have wtrl_anchor_index.
+# Yet, referencing objects rendered later than the current one fails
+# if the target is in a different document (works intra-page, fails inter-page).
+		index = getattr(env, "wtrl_anchor_index", None)
+		target_fqn = mod_docitem.get_obj_fully_qualified_name(target_obj)
+# But nonetheless we make sure the index exists and is a dict as expected.
+		if isinstance(index, dict):
+# Our helper _register_anchor adds anchor as tuple made of two components,
+# the document name and the object anchor. If we find this structure
+# we can extract the full inter-page URI. This conservative tests makes
+# our code immune with respect to "creative" use of wtrl_anchor_index.
+			loc = index.get(target_fqn)
+			if (
+				isinstance(loc, tuple)
+				and len(loc) == 2
+				and isinstance(loc[0], str)
+				and isinstance(loc[1], str)
+			):
+				target_docname, target_id = loc
+# Sphinx provides a mechanism for building the URI from source and target
+# document name, provided we can get access to the Sphinx builder.
+		builder = getattr(getattr(env, "app", None), "builder", None)
+		if builder is not None:
+			try:
+# No need for inter-page URI if source and target document are the same.
+				if from_docname == target_docname:
+					return f"#{target_id}"
+# Chill mypy. Use Sphinx builder and return URI,
+				uri: str = cast(str,builder.get_relative_uri(from_docname, target_docname) + "#" + target_id)
+				return uri
+			except Exception as exc:
+				warnings.warn(
+					f"WTRL ref target '{qname}' resolved, but URI construction failed: {exc}",
+					RuntimeWarning,
+				)
+				return None
+# Fallback: Intra-page link.
+		return "#" + target_id
+
 	def _repl(m: re.Match[str]) -> str:
 		role = m.group(1)
 		body = m.group(2)
 		if role == "ref":
 # Check for http- and https-links.
-			m_ext = re.match(r"^\s*([^<>`]+?)\s*<\s*(https?://[^>\s]+)\s*>\s*$", body)
+			m_ext = mod_docitem.RE_WTRL_ANGLE_HTTPS_REF_COMPILED.match(body)
 			if m_ext:
 				label = m_ext.group(1).strip()
 				url = m_ext.group(2).strip()
 				return f"`{label} <{url}>`_"
+# Check for wtrl://qualified.name links.
+			m_wtrl = mod_docitem.RE_WTRL_ANGLE_WTRL_REF_COMPILED.match(body)
+			if m_wtrl:
+				label = m_wtrl.group(1).strip()
+				qname = m_wtrl.group(2).strip()
+# Resolve qualified name and build URI in Sphinx/reST style.
+				uri = _resolve_wtrl_ref_uri(qname)
+				if uri:
+					return f"`{label} <{uri}>`_"
+				return label
 # Sphinx internal reference.
 			return f":ref:`{body}`"
 		return f":wtrl_{role}:`{body}`"
@@ -500,7 +644,7 @@ def build_sphinx_nodes(ctx : context,obj: object,doc: mod_docitem.docitem_docstr
 		"""
 	node_root: List[nodes.Node] = []
 	def parse_text(parent: nodes.Element, text: str) -> List[nodes.Node]:
-		return ctx.parse(parent, 0, resolve_markup(text))
+		return ctx.parse(parent, 0, resolve_markup(text, ctx))
 
 	def is_normative_section(section_label: str) -> bool:
 		try:
@@ -512,13 +656,7 @@ def build_sphinx_nodes(ctx : context,obj: object,doc: mod_docitem.docitem_docstr
 		except Exception:
 			return False
 
-	def render_linked_factory_entry(
-		parent: nodes.paragraph,
-		entry: str,
-		objname: str,
-		css_class: str,
-		role_fn: Callable[[str], str],
-	) -> None:
+	def render_linked_factory_entry(parent: nodes.paragraph,entry: str,objname: str,css_class: str,role_fn: Callable[[str], str]) -> None:
 		try:
 			target_obj, _, _, _ = resolve_qualified_name(ctx, entry)
 		except Exception as exc:
@@ -528,10 +666,10 @@ def build_sphinx_nodes(ctx : context,obj: object,doc: mod_docitem.docitem_docstr
 				warnings.warn(f"Factory entry '{entry}' cannot be resolved for linking: {exc}",RuntimeWarning)
 				parent.extend(ctx.parse(parent,0,role_fn(entry)))
 				return
-		target_anchor = mod_docitem.build_anchor(target_obj)
-		node_ref = nodes.reference(entry, entry, refid=target_anchor)
-		node_ref["classes"].append(css_class)
-		parent += node_ref
+		parent += _build_internal_ref(ctx, target_obj, entry, css_class)
+
+	def render_linked_base_entry(parent: nodes.paragraph,entry: str,objname: str,css_class: str,role_fn: Callable[[str], str]) -> None:
+		return render_linked_factory_entry(parent,entry,objname,css_class,role_fn)
 
 	def render_linked_public_entry(
 		parent: nodes.paragraph,
@@ -543,10 +681,7 @@ def build_sphinx_nodes(ctx : context,obj: object,doc: mod_docitem.docitem_docstr
 	) -> None:
 		try:
 			target_obj, _, _, _ = resolve_qualified_name(ctx, resolver_prefix + "." + entry)
-			target_anchor = mod_docitem.build_anchor(target_obj)
-			node_ref = nodes.reference(entry, entry, refid=target_anchor)
-			node_ref["classes"].append(css_class)
-			parent += node_ref
+			parent += _build_internal_ref(ctx, target_obj, entry, css_class)
 		except Exception as exc:
 			warnings.warn(f"{warn_label} entry '{entry}' cannot be resolved for linking: {exc}",RuntimeWarning)
 			parent.extend(ctx.parse(parent,0,role_fn(entry)))
@@ -588,10 +723,7 @@ def build_sphinx_nodes(ctx : context,obj: object,doc: mod_docitem.docitem_docstr
 				parent += nodes.Text(", ")
 			base_obj = base_by_name.get(content_s)
 			if base_obj is not None:
-				target_anchor = mod_docitem.build_anchor(base_obj)
-				node_ref = nodes.reference(content_s, content_s, refid=target_anchor)
-				node_ref["classes"].append(css_class)
-				parent += node_ref
+				parent += _build_internal_ref(ctx, base_obj, content_s, css_class)
 			else:
 				warnings.warn(f"Derived_from entry '{content_s}' is not a direct base class of '{objname}'.",RuntimeWarning)
 				parent.extend(ctx.parse(parent,0,role_fn(content_s)))
@@ -607,10 +739,7 @@ def build_sphinx_nodes(ctx : context,obj: object,doc: mod_docitem.docitem_docstr
 				parent += nodes.Text(", ")
 			try:
 				target_obj, _, _, _ = resolve_qualified_name(ctx, content_s)
-				target_anchor = mod_docitem.build_anchor(target_obj)
-				node_ref = nodes.reference(content_s, content_s, refid=target_anchor)
-				node_ref["classes"].append("wtrl_var")
-				parent += node_ref
+				parent += _build_internal_ref(ctx, target_obj, content_s, "wtrl_var")
 			except Exception as exc:
 				if is_normative:
 					warnings.warn(f"See_also entry '{content_s}' cannot be resolved for linking: {exc}",RuntimeWarning)
@@ -643,13 +772,49 @@ def build_sphinx_nodes(ctx : context,obj: object,doc: mod_docitem.docitem_docstr
 		if getattr(exc_obj, "__module__", "") == "builtins":
 			parent.extend(ctx.parse(parent,0,ctx.add_role_type(exc_name)))
 			return
-		target_anchor = mod_docitem.build_anchor(exc_obj)
-		node_ref = nodes.reference(exc_name, exc_name, refid=target_anchor)
-		node_ref["classes"].append("wtrl_type")
-		parent += node_ref
+		parent += _build_internal_ref(ctx, exc_obj, exc_name, "wtrl_type")
+
+	def build_bullet_list_from_subsection_items(items: Iterable[str]) -> nodes.bullet_list:
+		node_bullet_list = nodes.bullet_list()
+		for content in items:
+			node_list_item = nodes.list_item()
+			node_paragraph = nodes.paragraph()
+			node_paragraph.extend(parse_text(node_paragraph, content))
+			node_list_item += node_paragraph
+			node_bullet_list += node_list_item
+		return node_bullet_list
+
+	def build_paragraphs_from_items(items: Iterable[str]) -> List[nodes.paragraph]:
+		node_paragraph = nodes.paragraph()
+		restart = True
+		out: List[nodes.paragraph] = []
+		for content in items:
+			if content == "|":
+				out.append(node_paragraph)
+				node_paragraph = nodes.paragraph()
+				restart = True
+			else:
+				node_paragraph.extend(parse_text(node_paragraph, ("" if restart else " ") + content))
+				restart = False
+		out.append(node_paragraph)
+		return out
+
+	def build_bullet_list_from_section_items(section_items: Mapping[str, Any],render_label: Callable[[nodes.paragraph, str], None]) -> nodes.bullet_list:
+		node_bullet_list = nodes.bullet_list()
+		for label1, item_subsection in section_items.items():
+			node_list_item = nodes.list_item()
+			node_paragraph = nodes.paragraph()
+			render_label(node_paragraph, str(label1))
+			node2_bullet_list = build_bullet_list_from_subsection_items(item_subsection.items())
+			node_paragraph += node2_bullet_list
+			node_list_item += node_paragraph
+			node_bullet_list += node_list_item
+		return node_bullet_list
 
 	objname = mod_docitem.get_obj_name(obj)
 	anchor = mod_docitem.build_anchor(obj)
+# Required for inter-page references.
+	_register_anchor(ctx, obj, anchor)
 
 # Build table
 	node_table = nodes.table(classes=["wtrl-box"])
@@ -727,13 +892,13 @@ def build_sphinx_nodes(ctx : context,obj: object,doc: mod_docitem.docitem_docstr
 				node_list_item = nodes.list_item()
 				node1_paragraph = nodes.paragraph()
 				node1_paragraph.extend(ctx.parse(node1_paragraph,0,ctx.add_role_label(label1_hr)))
-				if label1 in ("api","normative_sections","traits","status","scope"):
+				if label1 in ("normative_sections","traits","status","scope"):
 					node2_bullet_list = nodes.bullet_list()
 					node2_list_item = nodes.list_item()
 					node2_paragraph = nodes.paragraph()
 					sub_items = list(cast(Iterable[str], cast(Any, item_subsection).items()))
 					if len(sub_items) > 0:
-						if label1 in ("api","normative_sections"):
+						if label1 in ("normative_sections",):
 							node2_paragraph.extend(ctx.parse(node2_paragraph,0,", ".join([ctx.add_role_label(content.replace("_"," ")) for content in sub_items])))
 						elif label1 in ("traits","status","scope"):
 							node2_paragraph.extend(ctx.parse(node2_paragraph,0,", ".join([ctx.add_role_value(content) for content in sub_items])))
@@ -747,20 +912,13 @@ def build_sphinx_nodes(ctx : context,obj: object,doc: mod_docitem.docitem_docstr
 					node2_paragraph = nodes.paragraph()
 					sub_items = list(cast(Iterable[str], cast(Any, item_subsection).items()))
 # Always one entry.
-					node2_paragraph.extend(ctx.parse(node2_paragraph,0,ctx.add_role_func(sub_items[0])))
+					render_linked_base_entry(node2_paragraph,sub_items[0],objname,"wtrl_func",ctx.add_role_func)
+#					node2_paragraph.extend(ctx.parse(node2_paragraph,0,ctx.add_role_func(sub_items[0])))
+
 					node2_list_item += node2_paragraph
 					node2_bullet_list += node2_list_item
 				elif label1 in ("general","constructor","requires","ensures","invariants",):
-					node2_bullet_list = nodes.bullet_list()
-# Content
-					for content in cast(Iterable[str], cast(Any, item_subsection).items()):
-						node2_list_item = nodes.list_item()
-						node2_paragraph = nodes.paragraph()
-
-						node2_paragraph.extend(parse_text(node2_paragraph, content))
-
-						node2_list_item += node2_paragraph
-						node2_bullet_list += node2_list_item
+					node2_bullet_list = build_bullet_list_from_subsection_items(item_subsection.items())
 				else:
 					raise NotImplementedError("dude",label1)
 
@@ -777,14 +935,17 @@ def build_sphinx_nodes(ctx : context,obj: object,doc: mod_docitem.docitem_docstr
 				if obj_definitions.inherited():
 # We would like to link to the module doc
 					direct_module = mod_docitem.get_obj_direct_module(obj)
-					module_anchor = mod_docitem.build_anchor(direct_module) if direct_module else ""
 					dli = nodes.definition_list_item()
 # Label "<Inherited terms>"
 					dt = nodes.term()
 
-					if module_anchor:
-						node_inh = nodes.reference("<Terms inherited from module>", "<Terms inherited from module>", refid=module_anchor)
-						node_inh["classes"].append("wtrl_label")
+					if direct_module:
+						node_inh = _build_internal_ref(
+							ctx,
+							direct_module,
+							"<Terms inherited from module>",
+							"wtrl_label",
+						)
 						dt += node_inh
 					else:
 						dt.extend(ctx.parse(dt, 0, ctx.add_role_label("<Terms inherited from module>")))
@@ -796,21 +957,28 @@ def build_sphinx_nodes(ctx : context,obj: object,doc: mod_docitem.docitem_docstr
 					dli += dd
 					dl += dli
 
-			for term, item_subsection in item_section.items().items():
-				dli = nodes.definition_list_item()
+				for term, item_subsection in item_section.items().items():
+					dli = nodes.definition_list_item()
 # Term
-				dt = nodes.term()
-				dt.extend(ctx.parse(dt, 0, ctx.add_role_dfn(term)))
-				dli += dt
-# Definition
-				dd = nodes.definition()
-				p = nodes.paragraph()
+					dt = nodes.term()
+					dt.extend(ctx.parse(dt, 0, ctx.add_role_dfn(term)))
+					dli += dt
+					# Definition
+					dd = nodes.definition()
 # Content
-				p.extend(parse_text(p, " ".join([content for content in item_subsection.items()])))
-				dd += p
-				dli += dd
-				dl += dli
-			node_entry += dl
+					for paragraph in build_paragraphs_from_items(item_subsection.items()):
+						dd += paragraph
+					dli += dd
+					dl += dli
+				node_entry += dl
+		elif label in ("Description",):
+# Content
+			for paragraph in build_paragraphs_from_items(item_section.items()):
+				node_entry += paragraph
+		elif label in ("Returns",):
+# Content
+			for paragraph in build_paragraphs_from_items(item_section.items()):
+				node_entry += paragraph
 		elif label in ("Notes",):
 			for term, item_subsection in item_section.items().items():
 # Rubric, allows classes=['',...]
@@ -818,225 +986,71 @@ def build_sphinx_nodes(ctx : context,obj: object,doc: mod_docitem.docitem_docstr
 				rub.extend(ctx.parse(rub, 0, term))
 				node_entry += rub
 # Content
-				p_def = nodes.paragraph(classes=['wtrl-note-content'])
-				p_def.extend(parse_text(p_def, " ".join(item_subsection.items())))
-				node_entry += p_def
+				for paragraph in build_paragraphs_from_items(item_subsection.items()):
+					paragraph["classes"].append("wtrl-note-content")
+					node_entry += paragraph
 		elif label in ("Factory"):
-			node_bullet_list = nodes.bullet_list()
-			for label1,item_subsection in item_section.items().items():
-				node_list_item = nodes.list_item()
-				node1_paragraph = nodes.paragraph()
-#				node1_paragraph.extend(ctx.parse(node1_paragraph,0,ctx.add_role_func(label1)))
-
-				render_linked_factory_entry(node1_paragraph,label1,objname,"wtrl_func",ctx.add_role_func)
-
-				node2_bullet_list = nodes.bullet_list()
-# Content
-				for content in item_subsection.items():
-					node2_list_item = nodes.list_item()
-					node2_paragraph = nodes.paragraph()
-
-					node2_paragraph.extend(parse_text(node2_paragraph, content))
-
-					node2_list_item += node2_paragraph
-					node2_bullet_list += node2_list_item
-				node1_paragraph += node2_bullet_list
-
-				node_list_item += node1_paragraph
-				node_bullet_list += node_list_item
-
+			node_bullet_list = build_bullet_list_from_section_items(
+				item_section.items(),
+				lambda p, lbl: render_linked_factory_entry(
+					p, lbl, objname, "wtrl_func", ctx.add_role_func
+				),
+			)
 			node_entry += node_bullet_list
 		elif label in ("Method_overview"):
-#			node_paragraph = nodes.paragraph()
-#			node_paragraph.extend(ctx.parse(node_paragraph,0,"This section is |normative|. The list below defines the set of public methods."))
-#			node_entry += node_paragraph
-
-			node_bullet_list = nodes.bullet_list()
-			for label1,item_subsection in item_section.items().items():
-				node_list_item = nodes.list_item()
-				node1_paragraph = nodes.paragraph()
-				render_linked_public_entry(node1_paragraph,label1,objname,"wtrl_func",ctx.add_role_func,"Method_overview")
-				node2_bullet_list = nodes.bullet_list()
-# Content
-				for content in item_subsection.items():
-					node2_list_item = nodes.list_item()
-					node2_paragraph = nodes.paragraph()
-
-					node2_paragraph.extend(parse_text(node2_paragraph, content))
-
-					node2_list_item += node2_paragraph
-					node2_bullet_list += node2_list_item
-				node1_paragraph += node2_bullet_list
-
-				node_list_item += node1_paragraph
-				node_bullet_list += node_list_item
-
+			node_bullet_list = build_bullet_list_from_section_items(
+				item_section.items(),
+				lambda p, lbl: render_linked_public_entry(
+					p, lbl, objname, "wtrl_func", ctx.add_role_func, "Method_overview"
+				),
+			)
 			node_entry += node_bullet_list
 		elif label in ("Function_overview"):
-			node_bullet_list = nodes.bullet_list()
-			for label1,item_subsection in item_section.items().items():
-				node_list_item = nodes.list_item()
-				node1_paragraph = nodes.paragraph()
-				render_linked_public_entry(node1_paragraph,label1,objname,"wtrl_func",ctx.add_role_func,"Function_overview")
-				node2_bullet_list = nodes.bullet_list()
-# Content
-				for content in item_subsection.items():
-					node2_list_item = nodes.list_item()
-					node2_paragraph = nodes.paragraph()
-
-					node2_paragraph.extend(parse_text(node2_paragraph, content))
-
-					node2_list_item += node2_paragraph
-					node2_bullet_list += node2_list_item
-				node1_paragraph += node2_bullet_list
-
-				node_list_item += node1_paragraph
-				node_bullet_list += node_list_item
-
+			node_bullet_list = build_bullet_list_from_section_items(
+				item_section.items(),
+				lambda p, lbl: render_linked_public_entry(
+					p, lbl, objname, "wtrl_func", ctx.add_role_func, "Function_overview"
+				),
+			)
 			node_entry += node_bullet_list
 		elif label in ("Class_overview"):
-			node_bullet_list = nodes.bullet_list()
-			for label1,item_subsection in item_section.items().items():
-				node_list_item = nodes.list_item()
-				node1_paragraph = nodes.paragraph()
-				render_linked_public_entry(node1_paragraph,label1,objname,"wtrl_type",ctx.add_role_type,"Class_overview")
-				node2_bullet_list = nodes.bullet_list()
-# Content
-				for content in item_subsection.items():
-					node2_list_item = nodes.list_item()
-					node2_paragraph = nodes.paragraph()
-
-					node2_paragraph.extend(parse_text(node2_paragraph,content))
-
-					node2_list_item += node2_paragraph
-					node2_bullet_list += node2_list_item
-				node1_paragraph += node2_bullet_list
-
-				node_list_item += node1_paragraph
-				node_bullet_list += node_list_item
-
+			node_bullet_list = build_bullet_list_from_section_items(
+				item_section.items(),
+				lambda p, lbl: render_linked_public_entry(
+					p, lbl, objname, "wtrl_type", ctx.add_role_type, "Class_overview"
+				),
+			)
 			node_entry += node_bullet_list
 		elif label in ("Public_types"):
-			node_bullet_list = nodes.bullet_list()
-			for label1,item_subsection in item_section.items().items():
-				node_list_item = nodes.list_item()
-				node1_paragraph = nodes.paragraph()
-				node1_paragraph.extend(ctx.parse(node1_paragraph,0,ctx.add_role_type(label1)))
-
-				node2_bullet_list = nodes.bullet_list()
-# Content
-				for content in item_subsection.items():
-					node2_list_item = nodes.list_item()
-					node2_paragraph = nodes.paragraph()
-
-					node2_paragraph.extend(parse_text(node2_paragraph,content))
-
-					node2_list_item += node2_paragraph
-					node2_bullet_list += node2_list_item
-				node1_paragraph += node2_bullet_list
-
-				node_list_item += node1_paragraph
-				node_bullet_list += node_list_item
-
+			node_bullet_list = build_bullet_list_from_section_items(
+				item_section.items(),
+				lambda p, lbl: p.extend(ctx.parse(p, 0, ctx.add_role_type(lbl))),
+			)
 			node_entry += node_bullet_list
 		elif label in ("Public_constants", "Public_variables"):
-			node_bullet_list = nodes.bullet_list()
-			for label1,item_subsection in item_section.items().items():
-				node_list_item = nodes.list_item()
-				node1_paragraph = nodes.paragraph()
-				node1_paragraph.extend(ctx.parse(node1_paragraph,0,ctx.add_role_var(label1)))
-
-				node2_bullet_list = nodes.bullet_list()
-# Content
-				for content in item_subsection.items():
-					node2_list_item = nodes.list_item()
-					node2_paragraph = nodes.paragraph()
-
-					node2_paragraph.extend(parse_text(node2_paragraph, content))
-
-					node2_list_item += node2_paragraph
-					node2_bullet_list += node2_list_item
-				node1_paragraph += node2_bullet_list
-
-				node_list_item += node1_paragraph
-				node_bullet_list += node_list_item
-
+			node_bullet_list = build_bullet_list_from_section_items(
+				item_section.items(),
+				lambda p, lbl: p.extend(ctx.parse(p, 0, ctx.add_role_var(lbl))),
+			)
 			node_entry += node_bullet_list
 		elif label in ("Parameters"):
-#			node_paragraph = nodes.paragraph()
-#			node_entry += node_paragraph
 			if len(item_section.items()) == 0:
 				node_entry.extend(parse_text(node1_paragraph,"|empty|"))
 			else:
-				node_bullet_list = nodes.bullet_list()
-				for label1,item_subsection in item_section.items().items():
-					node_list_item = nodes.list_item()
-					node1_paragraph = nodes.paragraph()
-					node1_paragraph.extend(ctx.parse(node1_paragraph,0,ctx.add_role_var(label1)))
-
-					node2_bullet_list = nodes.bullet_list()
-# Content
-					for content in item_subsection.items():
-						node2_list_item = nodes.list_item()
-						node2_paragraph = nodes.paragraph()
-
-						node2_paragraph.extend(parse_text(node2_paragraph, content))
-
-						node2_list_item += node2_paragraph
-						node2_bullet_list += node2_list_item
-					node1_paragraph += node2_bullet_list
-
-					node_list_item += node1_paragraph
-					node_bullet_list += node_list_item
-
+				node_bullet_list = build_bullet_list_from_section_items(
+					item_section.items(),
+					lambda p, lbl: p.extend(ctx.parse(p, 0, ctx.add_role_var(lbl))),
+				)
 				node_entry += node_bullet_list
 		elif label in ("Raises"):
-#			node_paragraph = nodes.paragraph()
-#			node_entry += node_paragraph
 			if len(item_section.items()) == 0:
 				node_entry.extend(parse_text(node1_paragraph,"|empty|"))
 			else:
-				node_bullet_list = nodes.bullet_list()
-				for label1,item_subsection in item_section.items().items():
-					node_list_item = nodes.list_item()
-					node1_paragraph = nodes.paragraph()
-					render_linked_raises_entry_label(node1_paragraph, str(label1))
-
-					node2_bullet_list = nodes.bullet_list()
-# Content
-					for content in item_subsection.items():
-						node2_list_item = nodes.list_item()
-						node2_paragraph = nodes.paragraph()
-
-						node2_paragraph.extend(parse_text(node2_paragraph, content))
-
-						node2_list_item += node2_paragraph
-						node2_bullet_list += node2_list_item
-					node1_paragraph += node2_bullet_list
-
-					node_list_item += node1_paragraph
-					node_bullet_list += node_list_item
-
+				node_bullet_list = build_bullet_list_from_section_items(
+					item_section.items(),
+					lambda p, lbl: render_linked_raises_entry_label(p, lbl),
+				)
 				node_entry += node_bullet_list
-		elif label in ("Description",):
-			node1_paragraph = nodes.paragraph()
-			restart = True
-# Content
-			for content in item_section.items():
-				if content == "|":
-					node_entry += node1_paragraph
-					node1_paragraph = nodes.paragraph()
-					restart = True
-				else:
-					node1_paragraph.extend(parse_text(node1_paragraph,("" if restart else " ") + content))
-					restart = False
-			node_entry += node1_paragraph
-
-		elif label in ("Returns"):
-			node1_paragraph = nodes.paragraph()
-# Content
-			node1_paragraph.extend(parse_text(node1_paragraph," ".join([content for content in item_section.items()])))
-			node_entry += node1_paragraph
 		elif label in ("Derived_from"):
 			node1_paragraph = nodes.paragraph()
 			render_linked_derived_from_entries(

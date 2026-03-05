@@ -441,7 +441,7 @@ Raises:
 				rule_id = "CCLO-005"
 			else:
 # Should never happen. Keep split placeholder mnemonic for consistency.
-				rule_id = "MPTYP-999"
+				rule_id = "MCLO-999"
 			with rule_on_fail(tr, rule_id):
 				label,pos = expect_label_identifier(tr,entries,pos)
 # class_overview requires a list of class_overview function names
@@ -1264,7 +1264,7 @@ Raises:
 # DEF-010: "_inherit" is special:
 			if label == "_inherit":
 				if found_inherited:
-# DEF-013: "_inherit" only once.
+# "_inherit" only once.
 					raise raise_parsing_error(tr,"PRSR-008","Duplicate subsection '_inherit'.")
 				with traced_section(tr, "_inherit"):
 					self._inherited_defitems.parse(tr,entries[pos])

@@ -63,6 +63,7 @@ Notes:
 		Function may be renamed soon.
 	"""
 	node_preamble = top.item("Preamble")
+# STA-005
 	if "status" not in node_preamble.items():
 		return "stable"
 	node_status = node_preamble.item("status")
@@ -538,7 +539,7 @@ Notes:
 			with traced_section(tr, "traits"):
 				traits = list(node_traits.items())
 				if len(traits) != len(set(traits)):
-					raise_validation_error(tr, obj, "CON-016", "Trait identifiers must not occur more than once.")
+					raise_validation_error(tr, obj, "LQID-004", "Trait identifiers must not occur more than once.")
 				allowed_traits = {"final", "abstract"}
 				for tr_name in traits:
 					if tr_name not in allowed_traits:
@@ -754,7 +755,9 @@ Notes:
 				obj_factory, _ = resolve_object(item, obj)
 			except Exception:
 				raise_validation_error(tr, obj, "FAC-006", f"Factory entry '{item}' does not resolve to an existing callable.")
-
+# ...must be normative.
+		if "Factory" not in node_normative_sections.items():
+			raise_validation_error(tr,obj,"FAC-009",f"Section 'Factory' is not listed as normative.")
 
 def validate_docstring_method(tr : tracer, obj: Callable[..., Any], top : docitem_docstring_method,node_contract : docitem_map_base,node_normative_sections : docitem_list_base, _seen: Dict[object,docitem_docstring_base] | None = None) -> None:
 	"""
@@ -1211,13 +1214,13 @@ See_also:
   
 	with traced_section(tr, f"{get_obj_name(obj)}"):
 #===== Preamble must exist ====================================#
-# Rule pre-01: Preamble must exist. We do not allow purely informative docstrings.
+# Preamble must exist. We do not allow purely informative docstrings.
 		if "Preamble" not in top.items():
 			raise_validation_error(tr,obj,"PRE-001","Section 'Preamble' does not exist.")
 		node_preamble = top.item("Preamble")
 		with traced_section(tr, f"Preamble"):
 #..... profile must exist .....................................#
-# Rule pre-02: profile must exist.
+# Profile must exist.
 			if not "profile" in node_preamble.items():
 				raise_validation_error(tr,obj,"PRE-003","Section 'profile' does not exist.")
 # Here we know it exists.
@@ -1236,23 +1239,32 @@ See_also:
 # tested most likely, but we leave the code here for saftey.
 				check_profile_matches_object(tr, profile, obj)
 
-# Rule pre-03: normative_sections must exist and be non-empty. Non-emptyness is implied by existence and normativity of Contract.
+# Normative_sections must exist and be non-empty. Non-emptyness is implied by existence and normativity of Contract.
 			with traced_section(tr, "normative_sections"):
 				if "normative_sections" not in node_preamble.items():
 					raise_validation_error(tr,obj,"PRE-006","Section 'normative_sections' does not exist.")
 # Here we know it exists.
 				node_normative_sections =  node_preamble.item("normative_sections")
+# Handle the meta case here:
+				if "Preamble" in node_normative_sections.items():
+					raise_validation_error(tr,obj,"PRE-002","Section 'Preamble' must not list itself as normative.")
 # Chill mypy. We know it's a docitem_list_base.
 				assert isinstance(node_normative_sections,docitem_list_base)
 				seen = set()
 				for sec in node_normative_sections.items():
-# Rule pre-05: each entry must point to an existing section.
+# Each entry must point to an existing section.
 					if not sec in top.items():
 						raise_validation_error(tr,obj,"PRE-012",f"Entry '{sec}' does not refer to an existing section.")
-# Rule pre-xx
-					if sec in seen:
-						raise_validation_error(tr,obj,"PRE-009","Entry '{sec}' is duplicate.")
+#					if sec in seen:
+#						raise_validation_error(tr,obj,"LQID-004","Entry '{sec}' is duplicate.")
 					seen.add(sec)
+			with traced_section(tr, "scope"):
+				if "scope" in node_preamble.items():
+					node_scope = node_preamble.item("scope")
+					for s in node_scope.items():
+						if s not in SCOPE_TAG_MAP:
+							raise_validation_error_expected_but_got(tr,obj,"SCP-003",f"{{{','.join([s for s in SCOPE_TAG_MAP])}}}",f"'{s}'.")
+
 # Rule: Any section containing one of the keywords of normativity
 # must be listed under normative_sections.
 			for label,item in top.items().items():
@@ -1267,18 +1279,10 @@ See_also:
 		with traced_section(tr, "Contract"):
 			if "Contract" not in top.items():
 				rule = "CON-001"
-				if profile == "class":
-					rule = "CON-004"
-				elif profile in ("method","function"):
-					rule = "CON-019"
 				raise_validation_error(tr,obj,rule,"Section 'Contract' does not exist.")
 # Rule pre-04: the contract must be listed as normative
 			if not "Contract" in node_normative_sections.items():
 				rule = "CON-002"
-				if profile == "class":
-					rule = "CON-005"
-				elif profile in ("method","function"):
-					rule = "CON-020"
 				raise_validation_error(tr,obj,rule,"Section 'Contract' must be listed under 'normative_sections'.")
 			node_contract = top._items["Contract"]
 # Chill mypy. We know it's a docitem_map_base.
@@ -1354,6 +1358,9 @@ See_also:
 					node_term = node_terminology.item(name)
 					if node_term.empty():
 						warn_validation(tr,obj,"TERM-008","Term content should not be empty.")
+					if node_term.has_norm_keywords():
+						raise_validation_error(tr, obj, "TERM-003",f"Term content has normativity keywords; content is informational only.")
+
 #===== If See_also exists, more tests apply ===================#
 		with traced_section(tr, "See_also"):
 # Section may exist, SEE-001.
@@ -1385,7 +1392,7 @@ See_also:
 						if "See_also" in node_normative_sections.items() and (is_obj_module(target_obj) or is_obj_class(target_obj) or is_obj_function(target_obj)) and not is_builtin:
 							raise_validation_error(tr,obj,"SEE-008", f"See_also reference '{item_see_also}' has no valid docstring ('See_also' is normative).")
 					else:
-# Note that we do not validate built-ins!
+# Note that we do not validate built-ins! SEE-010
 						if (is_obj_module(target_obj) or is_obj_class(target_obj) or is_obj_function(target_obj)):
 							is_builtin = inspect.isbuiltin(target_obj) or getattr(target_obj, "__module__", "") == "builtins"
 							if is_builtin:
@@ -1398,6 +1405,7 @@ See_also:
 								target_scopes = get_scopes_of_tree(tr_tmp, tree)
 							except (ParseError, SectionNotFoundError):
 								if  "See_also" in node_normative_sections.items():
+									tr.add_info("Rule SEE-009 applies","validation")
 									raise_validation_error(tr,obj,"SEE-008", f"See_also reference '{item_see_also}' has no valid docstring ('See_also' is normative).")
 								else:
 									warn_validation(tr,obj,"SEE-007", f"See_also reference '{item_see_also}' has no valid docstring (informative section).")
@@ -1701,19 +1709,6 @@ Raises:
 		if not isinstance(doc_class, docitem_docstring_class):
 			raise TypeError("doc_class must be a docitem_docstring_class instance")
 
-# Collect declared public constants from class docstring
-# checked elsewhere
-#		public_constants: set[str] = set()
-#		if "Public_constants" in doc_class.items():
-#			pc_node = doc_class._items["Public_constants"]
-#			assert isinstance(pc_node, docitem_public_constants)
-#			public_constants = set(pc_node.items().keys())
-# Make sure all constants are annotated as Final.
-#		for con in public_constants:
-#			if is_attr_annotated(obj,con):
-#				if not is_attr_final(obj,con):
-#					raise_validation_error(tr,obj,"CPCON-010",f"Class {obj.__name__}: constant '{con}' listed in Public_constants but is not annotated as 'Final'.")
-
 def validate_class_variable_coverage(tr : tracer,obj: type[object], doc_class: docitem_docstring_class) -> None:
 	"""
 Preamble:
@@ -1752,16 +1747,6 @@ Raises:
 			pv_node = doc_class._items["Public_variables"]
 			assert isinstance(pv_node, docitem_public_variables)
 			public_variables = set(pv_node.items().keys())
-# Rule: every variable listed must exist
-# checked elsewhere
-#		with traced_section(tr, "Public_variables"):
-#			for const_name in public_variables:
-#				if not hasattr(obj, const_name):
-#					raise_validation_error(tr,obj,"CPVAR-007",f"Class {obj.__name__}: variable '{const_name}' listed in Public_variables but does not exist.")
-# Make sure all variables are annotated as Final.
-#				if is_attr_annotated(obj,const_name):
-#					if is_attr_final(obj,const_name):
-#						raise_validation_error(tr,obj,"CPVAR-009",f"Class {obj.__name__}: variable '{const_name}' listed in Public_variables but is annotated as 'Final'.")
 
 def validate_module_class_coverage(tr : tracer,obj: ModuleType, doc_module: docitem_docstring_module) -> None:
 	"""

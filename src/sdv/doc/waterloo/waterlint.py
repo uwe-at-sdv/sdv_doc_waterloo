@@ -27,7 +27,8 @@ from jsonschema import Draft202012Validator
 #from jsonschema import JSONDecodeError
 import jsonschema.exceptions
 
-__version__ = "0.4.0"
+__version__ = "0.5.0"
+# - 0.5.0 [2026-03-05]	__WTRL_SCOPES__ in JSON which allows future customization of scopes.
 # - 0.4.0 [2026-02-22]	Subcommand render-json: Node "definition_inherited_from_module", see also sdv.doc.waterloo.docitem_convert.
 # - 0.3.0 [2026-02-19]	Several refactorings concerning error handling, raw and JSON.
 # - 0.2.4 [2026-02-12]	Subcommand render-json: traits, decorators, default output filename.
@@ -78,7 +79,7 @@ with contextlib.redirect_stdout(sys.stderr):
 #===== Constants ==============================================#
 
 #----- Schema versions, keep up to date -----------------------#
-WTRL_JSON_SCHEMA_VERSION = "0.0.4"
+WTRL_JSON_SCHEMA_VERSION = "0.0.5"
 WTRL_TRACER_JSON_SCHEMA_VERSION = "0.0.2"
 
 #----- Add subcommands here -----------------------------------#
@@ -673,6 +674,9 @@ def _render_json_command(args: argparse.Namespace) -> int:
 			}
 #..... Content ................................................#
 		tree_full["__WTRL_ROLES__"] = cvrt.to_node_legend_json()
+		tree_full["__WTRL_SCOPES__"] = {
+			k: {"value": int(v), "description": ""} for k, v in SCOPE_TAG_MAP.items()
+		}
 		tree_full["__WTRL_TOC_MODULES__"] = {}
 		tree_full["__WTRL_TOC_CLASSES__"] = {}
 		tree_full["__WTRL_TOC_CALLABLES__"] = {}
