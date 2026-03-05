@@ -310,10 +310,17 @@ of strict locality.
 
 .. rubric:: BinNorm -- Binary Normativity
 
-The distinction between normative and informative content is structural and
-absolute within Waterloo.
-This principle is inherent to the format definition and does not admit
-contextual relaxation.
+The distinction between normative and informative content in Waterloo
+is structural and absolute.
+Normativity is defined at the level of sections.
+Each section is assigned exactly one normativity state:
+either normative or informative.
+Sections constitute the largest contiguous structural units
+with a well-defined normativity classification.
+Normativity does not depend on wording, emphasis, or context,
+but solely on structural placement.
+This binary partitioning is inherent to the format definition
+and does not admit contextual relaxation or mixed states.
 
 
 .. rubric:: SoSaC -- Separation of Structure and Content

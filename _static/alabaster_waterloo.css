@@ -116,8 +116,9 @@ div.highlight-xml pre {
 	}
 
 div.highlight-python div.highlight {
-	background-color: #e4ebf0;
-	border: 1px solid #779;
+/*	background-color: #e4ebf0;*/
+	background-color: #f9fbf9;
+	border: 1px solid #797;
 	}
 div.highlight-python div.highlight pre {
 	background-color: inherit;
@@ -141,7 +142,16 @@ div.code_ansi pre {
 	font-family: monospace;
 	}
 
-.wtrl-box {
+/* The table */
+table.wtrl-box {
+	}
+
+table.wtrl-box p {
+	margin: 0;
+	}
+
+table.wtrl-box p + p {
+	margin-top: 0.5lh;
 	}
 
 .wtrl-code-ansi pre {
@@ -236,11 +246,11 @@ table > tbody > tr:nth-child(even)
 	{
 	padding-left:10px;
 	padding-right:10px;
-	background-color:#ddd;
+	background-color:#e6e6e6;
 	}
 table > tbody > tr:nth-child(odd)
 	{
-	background-color:#eee;
+	background-color:#eeeeee;
 	}
 table > thead > tr > th
 	{
@@ -274,13 +284,13 @@ span.descname {
 	}
 
 /* For sections "Notes" which contains a rubric elements.*/
-tr.wtrl-section p.rubric {
-	margin-top:0em;
-	margin-bottom:0.5em;
+tr.wtrl-section p + p.rubric {
+	margin-top:0.5lh;
+	margin-bottom:0.0lh;
 	}
-tr.wtrl-section p.wtrl-note-content {
-	margin-top:0em;
-	margin-bottom:1em;
+
+tr.wtrl-section ul {
+	margin-top: 0.2lh;
 	}
 
 .wtrl-side-by-side {
@@ -380,6 +390,23 @@ dd {
 	margin-left: 1em;
 	font-size: 100%;
 	color: #333;
+	}
+
+/*----- Visited links ----------------------------------------*/
+
+/* We don't change color since it carries semantics like "function"
+   or "class".*/
+a.wtrl_func:visited
+	{
+	color: var(--sdv-func-color);
+	}
+a.wtrl_type:visited
+	{
+	color: var(--sdv-type-color);
+	}
+a.wtrl_var:visited
+	{
+	color: #a00;
 	}
 
 /*----- Roles ------------------------------------------------*/

@@ -325,3 +325,12 @@ And the result is:
 .. wtrl_autodoc_class_full:: X
 
 .. wtrl_pop_current_module:: test_docitem_class_class
+
+Formatting tests
+----------------
+
+A simple test for demonstrating the pipe operator convention in the output layer.
+
+.. wtrl_autodoc_function:: test_docitem_function_pipe.f
+
+

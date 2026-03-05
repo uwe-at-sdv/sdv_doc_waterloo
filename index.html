@@ -1,28 +1,28 @@
-
 <!DOCTYPE html>
 
-<html>
+<html lang="en" data-content_root="./">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>Waterloo &#8212; Waterloo Docstrings 0 documentation</title>
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
-    <link rel="stylesheet" type="text/css" href="_static/common_styles.css" />
-    <link rel="stylesheet" type="text/css" href="_static/alabaster_waterloo.css" />
-    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-    <script src="_static/jquery.js"></script>
-    <script src="_static/underscore.js"></script>
-    <script src="_static/doctools.js"></script>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5f771d8e" />
+    <link rel="stylesheet" type="text/css" href="_static/basic.css?v=686e5160" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=27fed22d" />
+    <link rel="stylesheet" type="text/css" href="_static/common_styles.css?v=27e4112a" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster_waterloo.css?v=c8df8ccf" />
+    <script src="_static/documentation_options.js?v=8dde47fa"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="1. Introduction" href="introduction.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
+
   
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+  
 
   </head><body>
   
@@ -35,7 +35,7 @@
           <div class="body" role="main">
             
   <section id="waterloo">
-<h1>Waterloo<a class="headerlink" href="#waterloo" title="Permalink to this headline">¶</a></h1>
+<h1>Waterloo<a class="headerlink" href="#waterloo" title="Link to this heading">¶</a></h1>
 <div class="toctree-wrapper compound">
 <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
@@ -100,6 +100,7 @@
 <li class="toctree-l2"><a class="reference internal" href="examples.html#a-display-cabinet-of-sections">4.6. A display cabinet of sections</a></li>
 <li class="toctree-l2"><a class="reference internal" href="examples.html#subections-requires-ensures-and-invariants">4.7. Subections <code class="wtrl_label docutils literal notranslate"><span class="pre">requires</span></code>, <code class="wtrl_label docutils literal notranslate"><span class="pre">ensures</span></code>, and <code class="wtrl_label docutils literal notranslate"><span class="pre">invariants</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="examples.html#class-within-class">4.8. Class within class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#formatting-tests">4.9. Formatting tests</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="misc.html">5. Miscellaneous</a><ul>
@@ -116,7 +117,8 @@
 <li class="toctree-l2"><a class="reference internal" href="format.html#building-the-ast">6.7. Building the AST</a></li>
 <li class="toctree-l2"><a class="reference internal" href="format.html#inline-markup-in-free-form-content">6.8. Inline markup in free-form content</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="format.html#tokens">6.8.1. Tokens</a></li>
-<li class="toctree-l3"><a class="reference internal" href="format.html#examples-informative">6.8.2. Examples (informative)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="format.html#semantic-role-ref">6.8.2. Semantic role <code class="wtrl_lit docutils literal notranslate"><span class="pre">|ref|</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="format.html#examples-informative">6.8.3. Examples (informative)</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="format.html#rules-not-bound-to-a-particular-section">6.9. Rules not bound to a particular section</a></li>
@@ -130,26 +132,27 @@
 <li class="toctree-l3"><a class="reference internal" href="format.html#sections-for-inherited-method-docstrings">6.11.6. Sections for inherited method docstrings</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="format.html#coverage-rules-and-intended-workflow">6.12. Coverage rules and intended workflow</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="format.html#module-level-coverage">6.12.1. Module-level coverage</a></li>
-<li class="toctree-l3"><a class="reference internal" href="format.html#class-level-coverage">6.12.2. Class-level coverage</a></li>
-<li class="toctree-l3"><a class="reference internal" href="format.html#practical-consequence">6.12.3. Practical consequence</a></li>
+<li class="toctree-l2"><a class="reference internal" href="format.html#rules-for-exceptions-not-supposed-to-occur">6.12. Rules for exceptions not supposed to occur</a></li>
+<li class="toctree-l2"><a class="reference internal" href="format.html#coverage-rules-and-intended-workflow">6.13. Coverage rules and intended workflow</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="format.html#module-level-coverage">6.13.1. Module-level coverage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="format.html#class-level-coverage">6.13.2. Class-level coverage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="format.html#practical-consequence">6.13.3. Practical consequence</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="format.html#scopes-and-visibility">6.13. Scopes and visibility</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="format.html#conceptual-model">6.13.1. Conceptual model</a></li>
-<li class="toctree-l3"><a class="reference internal" href="format.html#scope-values">6.13.2. Scope values</a></li>
-<li class="toctree-l3"><a class="reference internal" href="format.html#scope-sets">6.13.3. Scope sets</a></li>
-<li class="toctree-l3"><a class="reference internal" href="format.html#visibility">6.13.4. Visibility</a></li>
-<li class="toctree-l3"><a class="reference internal" href="format.html#scope-monotonicity-rule">6.13.5. Scope Monotonicity Rule</a></li>
-<li class="toctree-l3"><a class="reference internal" href="format.html#non-referential-relationships">6.13.6. Non-referential relationships</a></li>
-<li class="toctree-l3"><a class="reference internal" href="format.html#rendering-and-validation">6.13.7. Rendering and validation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="format.html#scopes-and-visibility">6.14. Scopes and visibility</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="format.html#conceptual-model">6.14.1. Conceptual model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="format.html#scope-values">6.14.2. Scope values</a></li>
+<li class="toctree-l3"><a class="reference internal" href="format.html#scope-sets">6.14.3. Scope sets</a></li>
+<li class="toctree-l3"><a class="reference internal" href="format.html#visibility">6.14.4. Visibility</a></li>
+<li class="toctree-l3"><a class="reference internal" href="format.html#scope-monotonicity-rule">6.14.5. Scope Monotonicity Rule</a></li>
+<li class="toctree-l3"><a class="reference internal" href="format.html#non-referential-relationships">6.14.6. Non-referential relationships</a></li>
+<li class="toctree-l3"><a class="reference internal" href="format.html#rendering-and-validation">6.14.7. Rendering and validation</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="format.html#rationale-ssot-for-normative-statements">6.14. Rationale: SSoT for Normative Statements</a></li>
-<li class="toctree-l2"><a class="reference internal" href="format.html#distinction-description-vs-notes">6.15. Distinction <code class="wtrl_label docutils literal notranslate"><span class="pre">Description</span></code> vs <code class="wtrl_label docutils literal notranslate"><span class="pre">Notes</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="format.html#distinction-general-vs-invariants">6.16. Distinction <code class="wtrl_label docutils literal notranslate"><span class="pre">general</span></code> vs <code class="wtrl_label docutils literal notranslate"><span class="pre">invariants</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="format.html#distinction-ensures-vs-invariants">6.17. Distinction <code class="wtrl_label docutils literal notranslate"><span class="pre">ensures</span></code> vs <code class="wtrl_label docutils literal notranslate"><span class="pre">invariants</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="format.html#rationale-ssot-for-normative-statements">6.15. Rationale: SSoT for Normative Statements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="format.html#distinction-description-vs-notes">6.16. Distinction <code class="wtrl_label docutils literal notranslate"><span class="pre">Description</span></code> vs <code class="wtrl_label docutils literal notranslate"><span class="pre">Notes</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="format.html#distinction-general-vs-invariants">6.17. Distinction <code class="wtrl_label docutils literal notranslate"><span class="pre">general</span></code> vs <code class="wtrl_label docutils literal notranslate"><span class="pre">invariants</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="format.html#distinction-ensures-vs-invariants">6.18. Distinction <code class="wtrl_label docutils literal notranslate"><span class="pre">ensures</span></code> vs <code class="wtrl_label docutils literal notranslate"><span class="pre">invariants</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="tools.html">7. Tools</a><ul>
@@ -358,7 +361,7 @@
 </div>
 </section>
 <section id="indices-and-tables">
-<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Link to this heading">¶</a></h1>
 <ul class="simple">
 <li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
 <li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
@@ -371,7 +374,7 @@
           
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper">
 <h1 class="logo"><a href="#">Waterloo Docstrings</a></h1>
 
@@ -382,7 +385,16 @@
 
 
 
-<h3>Navigation</h3>
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
 <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="introduction.html">1. Introduction</a></li>
@@ -403,16 +415,6 @@
   </ul></li>
 </ul>
 </div>
-<div id="searchbox" style="display: none" role="search">
-  <h3 id="searchlabel">Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
-      <input type="submit" value="Go" />
-    </form>
-    </div>
-</div>
-<script>$('#searchbox').show(0);</script>
 
 
 
@@ -426,11 +428,11 @@
       <div class="clearer"></div>
     </div>
     <div class="footer">
-      &copy;2026, Uwe.
+      &#169;2026, Uwe.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.3.2</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.1.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
       
       |
       <a href="_sources/index.rst.txt"

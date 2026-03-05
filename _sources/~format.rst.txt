@@ -228,17 +228,10 @@ We shall use a simple dot notation in order to refer to subsections in the docst
 Building the AST
 ----------------
 
-The Abstract Syntax Tree (AST) is created in two steps. In the first step ("tokenization")
-the docstring is transformed into an intermediate tree representation
-as defined in this section. In the second step ("parsing"),
-the intermediate representation is transformed into the AST.
-
-We allow two indentation schemes named :wtrl_dfn:`TAB`
-(using tab, ASCII 0x09, as indentation unit)
-and :wtrl_dfn:`SPC4`
-(using four spaces, ASCII 0x20, as indentation unit).
-The indentation scheme |must_not| be mixed within a single docstring.
-
+The Abstract Syntax Tree (AST) is created in two steps. In the first step ("tokenization") the lines of the docstring are analyzed and mapped
+to the data structure described below in this section. We allow two indentation schemes namend :wtrl_dfn:`TAB` using tab (ASCII 0x09) as indentation unit
+and :wtrl_dfn:`SPC4` using four spaces (ASCII 0x20) as indentation unit.
+The indentation |must_not| be mixed within a docstring.
 The grammar of the tokenizer in Pseudo-EBNF is:
 
 .. code:: none
@@ -261,7 +254,7 @@ The grammar of the tokenizer in Pseudo-EBNF is:
 	(* A docstring consists of a set of sections *)
 	wldocstring = { section } ;
 
-	(* A section is one logical line plus an optional nested block *)
+	(* A section is one physical line plus an optional nested block *)
 	section     = indent_token, logical_line, [ block ] ;
 
 	block       = indent_increase, { section }, indent_decrease ;
@@ -289,39 +282,28 @@ The grammar of the tokenizer in Pseudo-EBNF is:
 	indent_nochange = ? indentation remains unchanged ? ;
 	indent_token    = ? current indentation string, a multiple of indent_unit ? ;
 
-The tokenizer operates on :wtrl_dfn:`logical lines`.
-
-A logical line is the result of joining one or more physical lines
-according to the rule :wtrl_type:`logical_line` defined above.
-Physical lines serve only as input units and have no independent
-semantic meaning once logical lines have been formed.
-
-Empty lines and whitespace-only lines do not form logical lines.
-They |must| be ignored for indentation analysis and |must| not affect
-the tokenizer state.
-
 The normative rules derived from this grammar are:
 
 	* [TKN-001] -- The indentation scheme |must| be consistent within a docstring.
 	* [TKN-002] -- In indentation scheme SPC4, indentation |must| be a multiple of 4.
 	* [TKN-003] -- The indentation scheme |must| be either TAB or SPC4.
-	* [TKN-004] -- Indentation from one logical line to the next |must_not| increase by more than one unit.
-	* [TKN-005] -- A physical content line |may| be continued on the next physical line
-	  by placing a backslash (ASCII 92) as the last non-whitespace character.
-	* [TKN-006] -- Line continuation according to TKN-005 |must| only join lines
-	  at the same indentation level.
-	* [TKN-007] -- A physical content line that ends with a backslash according to TKN-005
-	  |should_not| be the last physical line within an indentation block.
-	* [TKN-008] -- Tools |must| join continued lines by removing the backslash
-	  and newline and inserting a single ASCII space character at the join position.
+	* [TKN-004] -- Indentation from one line to the next |must_not| increase by more than one unit.
+	* [TKN-005] -- A physical content line |may| be continued on the next physical line by placing a backslash (ASCII 92)
+	  as the last non-whitespace character of the line.
+	* [TKN-008] -- Tools |must| join the lines by removing the backslash and newline
+	  and inserting a single ASCII space character at the join position.
 	* [TKN-009] -- Tools |must| emit a warning if
 		- **either** a trailing backslash used for line continuation is not escaped,
 		- **or** the enclosing Python string literal is not declared as a raw string.
+	* [TKN-006] -- Line continuation according to TKN-005 |must| only join lines at the same indentation level.
+	* [TKN-007] -- A physical content line that ends with a backslash according to TKN-005 |should_not|
+	  be the last physical line within an indentation block.
 	* [TKN-999] -- The tokenizer implementation |must| not produce undefined behavior.
 	  Informative: This rule serves as a catch-all for unspecified tokenizer errors.
+	  It should never occur in practice.
 
-In order to describe the tokenizer state, we define the following type
-(in Python for practical reasons):
+
+In order to describe the tokenizer we define a type (in Python for practical reasons):
 
 .. code:: python
 
@@ -329,51 +311,41 @@ In order to describe the tokenizer state, we define the following type
 
 A :wtrl_dfn:`DocstringTree` is a value of this type.
 
-The tokenizer maintains the following state:
+The tokenizer manages a state engine, which consists of the following components:
 
-	1. A DocstringTree (initial state: :wtrl_value:`[]`),
-	   represented by a variable such as :wtrl_var:`target`.
-	2. A stack whose elements reference :wtrl_var:`target`
-	   or any subtree thereof (see recursive definition of :wtrl_type:`DocstringTree`).
-	   The initial state is :wtrl_value:`[target]`.
-	   The stack is represented by a variable :wtrl_var:`stack`.
-	3. An integer variable :wtrl_var:`cur_indent` representing the current indentation level.
-	   The initial value is computed as the greatest common indentation
-	   over all non-empty physical lines of the docstring,
-	   measured in indent units (TAB or SPC4).
+	1. A DocstringTree (initial state: :wtrl_value:`[]`), given by a variable e.g. :wtrl_var:`target`.
+	2. A stack the elements of which point to :wtrl_var:`target` or any subtree thereof
+	   (see recursive definition of :wtrl_type:`DocstringTree`; initial state is :wtrl_value:`[target]`),
+	   represented by a variable :wtrl_var:`stack`.
+	3. An integer variable :wtrl_var:`cur_indent` which represents the current level
+	   of indendation during line parsing. The initial value results from analyzing
+	   the docstring lines ahead of tokenization; it is the greatest common indentation value
+	   over all non-empty docstring lines, measured in inden units (tab or four spaces).
+	   Empty lines and whitespace-only lines |MUST| be ignored
+	   for indentation analysis and |MUST| not affect the tokenizer state (stack, cur_indent).
 
-For each logical line, processed sequentially,
-the tokenizer performs the following:
+The parser transforms the DocstringTree into an Abstract Syntax Tree, the node classes
+of which are documented normatively in the Reference section of this document.
+During parsing, the tokenizer |must| do the following:
 
-	If the indentation level remains unchanged,
-	the logical line is appended as a string
-	to the subtree referenced by the top element of :wtrl_var:`stack`.
+For each incoming line (as defined in the Pseudo-EBNF, i.e. without indent),
+processed sequentially, the following happens:
+If the indentation level remains unchanged, the line is appended as a string
+to the subtree represented by the top element of stack. If the indentation
+level increases, an empty DocstringTree is appended to the subtree
+referenced by the top element of :wtrl_var:`stack` and a reference to this DocstringTree
+is pushed to :wtrl_var:`stack`. If the indentation level decreases by :wtrl_value:`n` indentation units,
+an element is popped from :wtrl_var:`stack` for each of the :wtrl_value:`n` indentation levels.
 
-	If the indentation level increases by one indent unit,
-	an empty DocstringTree is appended to the subtree referenced
-	by the top element of :wtrl_var:`stack`,
-	and a reference to this new subtree is pushed onto :wtrl_var:`stack`.
+The resulting DocstringTree only contains two categories of tokens, strings and lists.
+The Tokenizer |must| produce a DocstringTree where each nested list corresponds to exactly
+one indentation increase relative to its parent.
+The Docstring is then parsed as described in section :ref:`common_sections` ff.
+The Parser |must| treat the top-level as sequence of sections; each section node begins with a label-line.
+Labels are parsed from strings and sets of strings or subsections are parsed from lists
+in the DocstringTree. Parsing is sussessful, if the structure of the DocstringTree
+is compatible to the section and subsection requirements as given below.
 
-	If the indentation level decreases by :wtrl_value:`n` indent units,
-	an element is popped from :wtrl_var:`stack`
-	for each of the :wtrl_value:`n` indentation levels.
-
-The resulting DocstringTree contains only two kinds of elements:
-strings and lists.
-
-The tokenizer |must| produce a DocstringTree in which each nested list
-corresponds to exactly one indentation increase relative to its parent.
-
-The parser then transforms the DocstringTree into an Abstract Syntax Tree (AST).
-The parser |must| treat the top-level DocstringTree as a sequence of sections,
-each beginning with a label line.
-
-Labels are parsed from strings, and sets of strings or subsections
-are parsed from lists in the DocstringTree.
-
-Parsing is successful if and only if the structure of the DocstringTree
-is compatible with the section and subsection requirements
-specified in section :ref:`common_sections` ff.
 
 Inline markup in free-form content
 ----------------------------------
@@ -435,50 +407,11 @@ The set of tokens currently available is:
 		- Tools |must| preserve the token text if no translation is available.
 
 	* Tokens :wtrl_lit:`|attr|`, :wtrl_lit:`|cmd|`, :wtrl_lit:`|dfn|`, :wtrl_lit:`|file|`, :wtrl_lit:`|func|`, :wtrl_lit:`|label|`, :wtrl_lit:`|lit|`, :wtrl_lit:`|mod|`, :wtrl_lit:`|op|`, :wtrl_lit:`|opt|`, :wtrl_lit:`|ref|`, :wtrl_lit:`|tag|`, :wtrl_lit:`|type|`, :wtrl_lit:`|value|`, :wtrl_lit:`|var|`, :wtrl_lit:`|var_type|`
-		- Usage: Tools |must| accept the form :wtrl_lit:`|role|\`content\``,
-		  where :wtrl_lit:`role` is one of the above tokens and
-		  :wtrl_lit:`content` is a non-empty string that does not contain backticks.
-		- These tokens |must| only be used inside Waterloo docstrings.
-		  Using them in accompanying reST documents |may| trigger warnings
-		  or errors from the Sphinx builder.
-		- These tokens represent semantic roles. When building the Abstract Syntax Tree,
-		  tools |must| preserve them without modification.
-		- Tools translating to a target format (e.g. :wtrl_lit:`reST`)
-		  |must| map these roles to well-defined constructs in the target format.
-		- Informative: These tokens improve semantic clarity for human readers
-		  and may assist automated tools or AI agents. Tools that are not tied
-		  to a specific rendering target may ignore them.
-
-As mentioned above, the tokenized form using the pipe character "\|"
-is defined only within Waterloo docstrings.
-The Waterloo Sphinx extension additionally defines equivalent roles
-in native reST form, e.g. :wtrl_lit:`:wtrl_file:\`path/to/file\``.
-
-Semantic role :wtrl_lit:`|ref|`
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-Semantic role :wtrl_lit:`|ref|` is used to create references.
-The following forms are supported:
-
-	* :wtrl_lit:`|ref|\`Name <DocutilsLabel>\`` --
-	  A reference to a :wtrl_mod:`docutils` label,
-	  equivalent to :wtrl_lit:`:ref:\`Name <DocutilsLabel>\``.
-
-	* :wtrl_lit:`|ref|\`Name <https://some.url>\`` --
-	  A reference to an external HTTP or HTTPS target.
-
-	* :wtrl_lit:`|ref|\`Name <wtrl://Module.Class.Object>\`` --
-	  A reference to the documentation of a Waterloo object.
-	  The object path |must| be resolvable by the Waterloo name resolution mechanism.
-	  Partial qualification is permitted if the reference can be resolved
-	  unambiguously in the current resolution context.
-
-Current implementation limitation:
-
-	An object defined in a different document is reachable via
-	:wtrl_lit:`|ref|` only if the target document is built before
-	the document containing the reference.
-
+		- Usage: Tools |must| accept the following form: :wtrl_lit:`|role|\`content\``, where :wtrl_lit:`role` is one of the above, and :wtrl_lit:`content` is a non-empty string not containing backticks.
+		- The role token |must| only be used in Waterloo docstrings. Using them in the accompanying text in reST-documents |may| trigger a warning or error from the Sphinx builder.
+		- These token represent semantic roles. When building the Abstract Syntax Tree, tool |must| propagate these tokens without modifikation.
+		- Tools translating to a target language like e.g. :wtrl_lit:`reST` |must| make sure that these are mapped to well-defined expressions in the target language.
+		- Informative: The tokens are helpful for human readers and maybe also for AI agents, but tool not related to any target language will ignore them. Use these at your own discretion.
 
 Examples (informative)
 ^^^^^^^^^^^^^^^^^^^^^^
@@ -487,6 +420,26 @@ Examples (informative)
 	* :wtrl_lit:`|Must| return |Self| to support fluent APIs.`
 	* :wtrl_lit:`|Must| accept a |term|\`Qualified_Identifier\` as input.`
 
+The semantic roles are:
+	* :wtrl_lit:`|attr|` -- An :wtrl_attr:`attribute` for something like in XML. Not yet relevant for Waterloo.
+	* :wtrl_lit:`|cmd|` -- A CLI command like :wtrl_cmd:`waterlint`.
+	* :wtrl_lit:`|dfn|` -- An :wtrl_dfn:`item` at the point of its definition.
+	* :wtrl_lit:`|file|` -- A :wtrl_file:`/path/to/a/file`
+	* :wtrl_lit:`|func|` -- A function like :wtrl_func:`spam`
+	* :wtrl_lit:`|label|` -- A label like :wtrl_label:`Contract:`.
+	* :wtrl_lit:`|lit|` -- A :wtrl_lit:`literal` expression, anything machine-readable.
+	* :wtrl_lit:`|mod|` -- A :wtrl_mod:`module`. Rarely used.
+	* :wtrl_lit:`|op|` -- An operator like :wtrl_op:`+` or :wtrl_op:`*`.
+	* :wtrl_lit:`|opt|` -- An option to a CLI command, like :wtrl_opt:`--obj`.
+	* :wtrl_lit:`|ref|` -- A reference to a :wtrl_mod:`docutils` label, like :wtrl_lit:`|ref|\`Name <Label>\``.
+	* :wtrl_lit:`|tag|` -- Some :wtrl_tag:`tag` in angle brackets, like in XML. Not yet relevant for Waterloo.
+	* :wtrl_lit:`|type|` -- A type like :wtrl_type:`float`.
+	* :wtrl_lit:`|value|` -- A value or literal like :wtrl_value:`42` or :wtrl_value:`done`.
+	* :wtrl_lit:`|var|` -- A variable like :wtrl_var:`myvar`
+	* :wtrl_lit:`|var_type|` - Combination of variable and type, like :wtrl_var_type:`myvar:float`.
+
+As mentioned the tokenized form with pipe character "\|" is only defined within docstrings,
+but the Waterloo Sphinx extension defines the same roles in reST style, like :wtrl_lit:`:wtrl_file:\`path/to/file\``.
 
 Rules not bound to a particular section
 ---------------------------------------
@@ -495,7 +448,7 @@ Rules not bound to a particular section
 * [DOC-007] -- The docstring |must_not| be empty after whitespace-stripping.
 * [DOC-002] -- Validation |must| only be applied to modules, classes, functions, or methods; other object types |must_not| be validated.
 
-* [PRSR-001] -- Sections and subsections |must| start with a label line, as specified in the following
+* [PRSR-001] -- Sections and subsections |must| start with a label line, that is a line containing a label.
 * [PRSR-002] -- The line containing the section or subsection label |must| start with a non-empty label string after stripping indentation.
 * [PRSR-003] -- The label string |must| be followed by a colon (ASCII 58).
 * [PRSR-004] -- No characters other than optional whitespace |may| follow the colon on a label line.
@@ -508,10 +461,10 @@ The following set of rules applies to both lists of Identifiers and lists of
 Qualified Identifiers.
 Whenever rule LQID-001 is referenced, the surrounding context |must| explicitly
 state whether it applies to Identifiers or to Qualified Identifiers.
-[Rules last reviewed on 2026-03-03]
+[Rules last reviewed on 2026-02-02]
 
 * [LQID-001] -- Lists of [Qualified] Identifiers |must| obey rules LQID-002 through LQID-005.
-* [LQID-002] -- Each logical line |may| contain zero or more [Qualified] Identifiers, separated by commas.
+* [LQID-002] -- Each line |may| contain zero or more [Qualified] Identifiers, separated by commas.
 * [LQID-003] -- Whitespace surrounding each [Qualified] Identifier |must| be stripped by tools.
 * [LQID-004] -- Each [Qualified] Identifier |must| occur at most once in the resulting list.
 * [LQID-005] -- Tools |must| treat the result as a flat list of [Qualified] Identifiers, without preserving line structure or grouping.
@@ -594,7 +547,7 @@ Common sections for all profiles
 
 * :wtrl_label:`Preamble:`
 	- [PRE-001] -- The section |must| exist and it |must| be the first of all sections.
-	- [PRE-002] -- The section |must_not| list itself in :wtrl_label:`normative_sections`.
+	- [PRE-002] -- The section |must_not| list itself in :wtrl_label:`normative_sections`. (to be implemented)
 	- [PRE-015] -- |Must_not| have subsections other than { :wtrl_label:`profile`, :wtrl_label:`normative_sections`, :wtrl_label:`status`, :wtrl_label:`scope`}.
 	- :wtrl_label:`profile:`
 		* [PRE-003] -- The subsection |must| exist.
@@ -603,7 +556,10 @@ Common sections for all profiles
 		* [PRE-005] -- The entry |must| be one of {:wtrl_value:`module`, :wtrl_value:`class`, :wtrl_value:`function`, :wtrl_value:`method`, :wtrl_value:`inherited_method`}.
 	- :wtrl_label:`normative_sections:`
 		* [PRE-006] -- The subsection |must| exist.
-		* [PRE-021] -- The content |must| be a list of Identifiers according to rule LQID-001. In this context, "Identifier" (not "Qualified Identifier") applies.
+		* [PRE-007] -- Each line in Preamble.normative_sections |may| contain one or more Identifiers separated by commas.
+		* [PRE-008] -- Whitespace around the Identifiers |must| be stripped by any tool.
+		* [PRE-009] -- Each Identifier |must| occur at most once.
+		* [PRE-010] -- Tools |must| treat the result as a flat list of Identifiers.
 		* [PRE-011] -- The subsection |must| list the normative sections of the documentation block.
 		* [PRE-012] -- Each section listed in this subsection |must| exist.
 		* [PRE-013] -- Each section or subsection in the docstring that contains a Normativity Keyword must be listed in this subsection.
@@ -642,12 +598,6 @@ Common sections for all profiles
 		  :ref:`section_scope_monotonicity_rule` to each such reference that resolves to
 		  a Waterloo-documented object. Any scope-compatibility violation in this case
 		  |must| be reported as an error.
-	- |ObsoleteRules|
-		* PRE-007 -- Obsolete since 0.5.5; superseded by PRE-021 and PRE-022.
-		* PRE-008 -- Obsolete since 0.5.5; superseded by PRE-021 and PRE-022.
-		* PRE-009 -- Obsolete since 0.5.5; superseded by PRE-021 and PRE-022.
-		* PRE-010 -- Obsolete since 0.5.5; superseded by PRE-021 and PRE-022.
-		* PRE-022 -- Obsolete since 0.5.5; Implied by other rules.
 
 For the following section, we define:
 
@@ -669,15 +619,15 @@ For the following section, we define:
 		* [DEF-006] -- The subsection content |must| be free-form text.
 		* [DEF-009] -- The subsection content |should| not be empty.
 	- :wtrl_label:`_inherit:`
-		* [DEF-011] -- The subsection :wtrl_label:`_inherit` |must_not| appear in profile :wtrl_value:`module`.
-		* [DEF-012] -- The subsection :wtrl_label:`_inherit` |may| appear in profiles :wtrl_value:`class`, :wtrl_value:`function`,
+		* [DEF-011] -- The subsection :wtrl_label:`_inherit:` |must_not| appear in profile :wtrl_value:`module`.
+		* [DEF-012] -- The subsection :wtrl_label:`_inherit:` |may| appear in profiles :wtrl_value:`class`, :wtrl_value:`function`,
 		  :wtrl_value:`method`, and :wtrl_value:`inherited_method`.
-		* [DEF-014] -- If the subsection :wtrl_label:`_inherit` exists, the :wtrl_term:`Direct Module` |must| have a valid docstring.
-		* [DEF-015] -- If the subsection :wtrl_label:`_inherit` exists, the docstring of the :wtrl_term:`Direct Module` |must| contain a :wtrl_label:`Definitions` section.
-		* [DEF-016] -- The content of :wtrl_label:`_inherit` |must| be a list of identifiers according to LQID-001.
-		* [DEF-017] -- Each entry in :wtrl_label:`_inherit` |must_not| occur as a term in the :wtrl_label:`Definitions` section of the :wtrl_term:`Current Object`.
-		* [DEF-018] -- Each entry in :wtrl_label:`_inherit` |must| occur as a term in the :wtrl_term:`Direct Module` docstring's :wtrl_label:`Definitions` section.
-		* [DEF-019] -- The use of the subsection :wtrl_label:`_inherit` |must| result in a warning with rule ID :wtrl_value:`VLII-001` at validation time.
+		* [DEF-014] -- If the subsection :wtrl_label:`_inherit:` exists, the :wtrl_term:`Direct Module` |must| have a valid docstring.
+		* [DEF-015] -- If the subsection :wtrl_label:`_inherit:` exists, the docstring of the :wtrl_term:`Direct Module` |must| contain a :wtrl_label:`Definitions` section.
+		* [DEF-016] -- The content of :wtrl_label:`_inherit:` |must| be a list of identifiers according to LQID-001.
+		* [DEF-017] -- Each entry in :wtrl_label:`_inherit:` |must_not| occur as a term in the :wtrl_label:`Definitions` section of the :wtrl_term:`Current Object`.
+		* [DEF-018] -- Each entry in :wtrl_label:`_inherit:` |must| occur as a term in the :wtrl_term:`Direct Module` docstring's :wtrl_label:`Definitions` section.
+		* [DEF-019] -- The use of the subsection :wtrl_label:`_inherit:` |must| result in a warning with rule ID :wtrl_value:`VLII-001` at validation time.
 	- |ObsoleteRules|
 		* DEF-013 -- Obsolete since 0.5.2; superseded by PRSR-008.
 	- |Rationale|
@@ -711,9 +661,9 @@ For the following section, we define:
 	- [DESC-001] -- The section |may| exist.
 	- [DESC-002] -- The section |may| be listed as normative in :wtrl_label:`Preamble.normative_sections`.
 	- [DESC-004] -- The content |may| consist of any number of free-form lines.
+	- [DESC-005] -- Lines containing only a single character "|" (ASCII 124) |may| occur and |must| be interpreted as separator between paragraphs.
 	- |ObsoleteRules|:
 		* DESC-003 -- Obsolete since 0.5.1; superseded by PRE-013.
-		* DESC-005 -- Obsolete since 0.5.5 (pipe operator as separator); more general approach required.
 * :wtrl_label:`Notes:`
 	- [NOTE-001] -- The section |may| exist.
 	- [NOTE-002] -- It |must_not| be listed as normative in :wtrl_label:`Preamble.normative_sections`.
@@ -784,7 +734,7 @@ a module docstring |must| have the following structure:
 		* [MCLO-007] -- The subsection content is informative and |must_not| contain any Normativity Keyword.
 		* [MCLO-008] -- :wtrl_label:`<Class>` |must| be resolvable relative to the documented module.
 		* [MCLO-009] -- :wtrl_label:`<Class>` |must| refer to a class object.
-		* [MCLO-011] -- :wtrl_label:`<Class>` |must| appear in section :wtrl_label:`Public_classes`.
+		* [MCLO-011] -- <Method> must appear in section :wtrl_label:`Public_classes`.
 	- [MCLO-010] -- Any number of subsections |may| exist.
 	- |LastReview|: 2026-02-25
 * :wtrl_label:`Public_functions:`
@@ -807,7 +757,7 @@ a module docstring |must| have the following structure:
 		* [MFNO-007] -- The content is informative and |must_not| contain any Normativity Keyword.
 		* [MFNO-008] -- :wtrl_label:`<Function>` |must| be resolvable relative to the documented module.
 		* [MFNO-009] -- :wtrl_label:`<Function>` |must| refer to a function object.
-		* [MFNO-011] -- :wtrl_label:`<Function>` |must| appear in section :wtrl_label:`Public_functions`.
+		* [MFNO-011] -- <Method> must appear in section :wtrl_label:`Public_functions`.
 	- [MFNO-010] -- Any number of subsections |may| exist.
 	- |LastReview|: 2026-02-25
 * :wtrl_label:`Public_types:`
@@ -860,6 +810,8 @@ a class docstring |must| have the following structure:
 	- :wtrl_label:`profile:`
 		* [PRE-018] -- The profile |must| be :wtrl_value:`class`.
 * :wtrl_label:`Contract:`
+	- [CON-004] -- The section |must| exist.
+	- [CON-005] -- The section |must| be listed as normative in :wtrl_label:`Preamble.normative_sections`.
 	- [CON-032] -- |Must_not| have subsections other than { :wtrl_label:`general`, :wtrl_label:`constructor`, :wtrl_label:`api`, :wtrl_label:`traits` }.
 	- :wtrl_label:`general:`
 		* [CON-023] -- The subsection |must| exist.
@@ -868,34 +820,29 @@ a class docstring |must| have the following structure:
 	- :wtrl_label:`constructor:`
 		* [CON-007] -- The subsection |must| exist.
 		* [CON-008] -- |Should| contain a brief explanation of the constructor or point to special method :wtrl_func:`__init__` with a valid docstring.
+	- :wtrl_label:`api:`
+		* [CON-009] -- The subsection |may| exist. If it exists:
+		* [CON-010] -- |Must| list all sections whose contents define the public method set. The union of these sections defines the public API.
+		* [CON-011] -- By default, the API is defined by the sections named "Public_*" listed in :wtrl_label:`Preamble.normative_sections`. An existing subsection :wtrl_label:`api:` overrides the default behaviour.
 	- :wtrl_label:`traits:`
 		* [CON-012] -- The subsection |may| exist.
-		* [CON-053] -- If it exists, the content |must| be a list of Identifiers according to rule LQID-001. In this context, "Identifier" (not "Qualified Identifier") applies.
-		* [CON-017] -- Each trait identifier |must| be one of the following
+		* [CON-013] -- If it exists, it |must| be a list of Identifiers (one per line or comma-separated).
+		* [CON-014] -- The subsection |must| list zero or more trait identifiers.
+		* [CON-015] -- Each trait identifier |must| match the pattern of an Identifier.
+		* [CON-016] -- Trait identifiers |must_not| occur more than once.
+		* [CON-017] -- Only the traits listed here are allowed.
+		* [CON-018] -- The following trait identifiers are defined by this specification:
 			+ :wtrl_value:`final` -- A class marked :wtrl_value:`final` |must_not| be derived from.
 			+ :wtrl_value:`abstract` -- A class marked :wtrl_value:`abstract` |must_not| be instantiated directly.
-	- |ObsoleteRules|
-		* CON-004 -- Obsolete in version 0.5.5; Superseded by CON-001
-		* CON-005 -- Obsolete in version 0.5.5; Superseded by CON-002
-		* CON-009 -- Obsolete in version 0.5.5; Obsolete subsection :wtrl_label:`api`.
-		* CON-010 -- Obsolete in version 0.5.5; Obsolete subsection :wtrl_label:`api`.
-		* CON-011 -- Obsolete in version 0.5.5; Obsolete subsection :wtrl_label:`api`.
-		* CON-018 -- Obsolete in version 0.5.5; Now covered by CON-017
-		* CON-013 -- Obsolete in version 0.5.5; Superseded by CON-053
-		* CON-014 -- Obsolete in version 0.5.5; Superseded by CON-053
-		* CON-015 -- Obsolete in version 0.5.5; Superseded by CON-053
-		* CON-016 -- Obsolete in version 0.5.5; Superseded by CON-053
 * :wtrl_label:`Derived_from:`
 	- [DER-001] -- The section |may| exist.
 	- [DER-004] -- If it exists, it |must| be listed as normative in :wtrl_label:`Preamble.normative_sections`.
-	- [DER-009] -- If it exists, the content |must| be a list of Qualified Identifiers according to rule LQID-001.
+	- [DER-005] -- Each line |may| contain one or more Qualified Identifiers separated by commas.
+	- [DER-006] -- Whitespace around the Qualified Identifiers |must| be stripped by any tool.
+	- [DER-007] -- Each Qualified Identifier |must| occur at most once.
+	- [DER-008] -- Tools |must| treat the result as a flat list of Qualified Identifiers.
 	- [DER-002] -- |Must| list the base classes that contribute public functions, types, constants, attributes, or semantic guarantees.
 	- [DER-003] -- Each entry |must| refer to a direct base class of the documented class.
-	- |ObsoleteRules|
-		* DER-005 -- Obsolete in version 0.5.5; superseded by DER-009.
-		* DER-006 -- Obsolete in version 0.5.5; superseded by DER-009.
-		* DER-007 -- Obsolete in version 0.5.5; superseded by DER-009.
-		* DER-008 -- Obsolete in version 0.5.5; superseded by DER-009.
 * :wtrl_label:`Public_classes:`
 	- [CPCL-001] -- The section |may| exist.
 	- [CPCL-002] -- If it exists, it |must| be listed as normative in :wtrl_label:`Preamble.normative_sections`.
@@ -916,7 +863,7 @@ a class docstring |must| have the following structure:
 		* [CCLO-007] -- The subsection content is informative and |must_not| contain any Normativity Keyword.
 		* [CCLO-008] -- :wtrl_label:`<Class>` |must| be resolvable relative to the documented class.
 		* [CCLO-009] -- :wtrl_label:`<Class>` |must| refer to a class object.
-		* [CCLO-011] -- :wtrl_label:`<Class>` |must| appear in section :wtrl_label:`Public_classes`.
+		* [CCLO-011] -- <Method> must appear in section :wtrl_label:`Public_classes`.
 	- [CCLO-010] -- Any number of subsections |may| exist.
 	- |LastReview|: 2026-02-25
 * :wtrl_label:`Public_methods:`
@@ -982,7 +929,7 @@ a class docstring |must| have the following structure:
 	- |LastReview|: 2026-02-24
 * :wtrl_label:`Factory:`
 	- [FAC-001] -- The section |may| exist.
-	- [FAC-009] -- The section |must| be listed as normative in :wtrl_label:`Preamble.normative_sections`.
+	- [FAC-009] -- t |must| be listed as normative in :wtrl_label:`Preamble.normative_sections`.
 	- [FAC-004] -- Each entry in the section |must| have the form of a subsection matching the following pattern:
 	- :wtrl_label:`<Function>:`
 		* [FAC-005] -- :wtrl_label:`<Function>` |must| match the pattern of a Qualified Identifier.
@@ -1022,6 +969,8 @@ a function or method docstring |must| have the following structure:
 
 * [DOC-005] -- Function or method docstrings |must_not| contain sections other than { :wtrl_label:`Preamble`, :wtrl_label:`Definitions`, :wtrl_label:`Terminology`, :wtrl_label:`Description`, :wtrl_label:`Notes`, :wtrl_label:`See_also`, :wtrl_label:`Contract`, :wtrl_label:`Parameters`, :wtrl_label:`Returns`, :wtrl_label:`Raises` }.
 * :wtrl_label:`Contract:`
+	- [CON-019] -- The section |must| exist.
+	- [CON-020] -- The section |must| be listed as normative in :wtrl_label:`Preamble.normative_sections`.
 	- [CON-027] -- |Must_not| have subsections other than { :wtrl_label:`general`, :wtrl_label:`invariants`, :wtrl_label:`requires`, :wtrl_label:`ensures` }.
 	- For subsections { :wtrl_label:`general`, :wtrl_label:`invariants`, :wtrl_label:`requires`, :wtrl_label:`ensures` } the following rules apply:
 		* [CON-051] -- Tools |must| treat the free-form content as an ordered sequence of logical lines.
@@ -1039,10 +988,7 @@ a function or method docstring |must| have the following structure:
 	- :wtrl_label:`ensures:`
 		* [CON-049] -- The subsection |may| exist.
 		* [CON-050] -- The subsection content |must| be free-form text.
-	- |ObsoleteRules|
-		* CON-019 -- Obsolete in version 0.5.5; Superseded by CON-001
-		* CON-020 -- Obsolete in version 0.5.5; Superseded by CON-002
-	- |LastReview|: 2026-03-03
+	- |LastReview|: 2026-02-23
 * :wtrl_label:`Parameters:`
 	- [PAR-001] -- The section |must| exist.
 	- [PAR-002] -- The section |must| be listed as normative in :wtrl_label:`Preamble.normative_sections`.
@@ -1102,6 +1048,8 @@ an inherited method docstring |must| have the following structure:
 	- :wtrl_label:`profile:`
 		* [PRE-020] -- The profile |must| be :wtrl_value:`inherited_method`.
 * :wtrl_label:`Contract:`
+	- [CON-033] -- The section |must| exist.
+	- [CON-034] -- The section |must| be listed as normative in :wtrl_label:`Preamble.normative_sections`.
 	- [CON-035] -- The section |must_not| have subsections other than { :wtrl_label:`general`, :wtrl_label:`base` }.
 
 	- :wtrl_label:`general:`
@@ -1119,30 +1067,7 @@ an inherited method docstring |must| have the following structure:
 		* [CON-044] -- The name of the resolved object |must| equal the name of the documented method.
 		* [CON-045] -- The referenced base method |must| have a valid docstring.
 		* [CON-046] -- Tools |should| check type-level Liskov compatibility against the referenced base method if sufficient type information is available.
-	- |ObsoleteRules|:
-		* CON-033 -- Obsolete in version 0.5.5; Superseded by CON-001
-		* CON-034 -- Obsolete in version 0.5.5; Superseded by CON-002
-	- |LastReview|: 2026-02-23
 
-Rules for exceptions not supposed to occur
-------------------------------------------
-
-The rule declarations in this section describe error conditions that correspond
-to logically unreachable branches in the implementation. Under correct
-implementation of both the specification and the analyzed code, these cases
-should never occur.
-
-However, since the documentation is regularly validated against the codebase,
-formal rule identifiers must exist so that such situations can be reported
-consistently if they are encountered.
-
-If any of the rules listed below is triggered during validation, this indicates
-an internal inconsistency or an implementation defect.
-
-* [DOC-999] -- Should never occur.
-* [MCLO-999] -- Should never occur.
-* [MPTYP-999] -- Should never occur.
-* [MPVAR-999] -- Should never occur.
 
 Coverage rules and intended workflow
 ------------------------------------
