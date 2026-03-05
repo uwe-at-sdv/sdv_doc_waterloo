@@ -7,6 +7,13 @@ from pygments.lexer import Lexer
 from pygments.lexers.python import PythonLexer
 from pygments.token import Error, Generic, Keyword, Name, String, Literal
 
+
+#----- Changelog ----------------------------------------------#
+
+__version__ = "0.1.0"
+# - 0.1.0 [2026-03-05]	Versioning starts now.
+
+#----- Constants ----------------------------------------------#
 RE_SECTION = re.compile(
 	r"^\s*(?:"
 	r"Preamble|Contract|Parameters|Returns|Raises|Notes|See_also|"
@@ -83,6 +90,8 @@ SUBSECTIONS_WITH_FREE_FORM_LABELS = (
 
 RE_PREAMBLE = re.compile(r"^\s*Preamble:\s*$")
 RE_CONTRACT = re.compile(r"^\s*Contract:\s*$")
+
+#----- Lexer --------------------------------------------------#
 
 class PythonWaterlooLexer(PythonLexer):
 	"""
