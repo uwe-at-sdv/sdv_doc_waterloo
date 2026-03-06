@@ -217,7 +217,7 @@ class Scope(IntEnum):
 		profile:
 			class
 		normative_sections:
-			Contract, Public_constants
+			Contract, Public_constants, bla
 		scope:
 			public
 	Contract:
