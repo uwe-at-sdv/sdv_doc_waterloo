@@ -1,0 +1,103 @@
+{
+  "scopeName": "waterloo.injection",
+  "injectionSelector": "L:source.python string.quoted.docstring",
+  "patterns": [
+    {
+      "name": "markup.heading.waterloo.section",
+      "match": "^(\\s*)(Preamble|Contract|Parameters|Returns|Raises|Notes|See_also|Definitions|Terminology|Description|Derived_from|Factory|Public_[A-Za-z_][A-Za-z0-9_]*|[A-Za-z_][A-Za-z0-9_]*_overview)(:)(\\s*)$",
+      "captures": {
+        "2": {
+          "name": "keyword.other.waterloo.section"
+        },
+        "3": {
+          "name": "punctuation.separator.key-value.waterloo"
+        }
+      }
+    },
+    {
+      "name": "meta.waterloo.subsection.inherited",
+      "match": "^(\\s*)(_inherit|_inherited)(:)(\\s*)$",
+      "captures": {
+        "2": {
+          "name": "keyword.control.waterloo.inherited"
+        },
+        "3": {
+          "name": "punctuation.separator.key-value.waterloo"
+        }
+      }
+    },
+    {
+      "name": "meta.waterloo.subsection",
+      "match": "^(\\s*)([A-Za-z_][A-Za-z0-9_.]*)(:)(\\s*)$",
+      "captures": {
+        "2": {
+          "name": "entity.name.label.waterloo"
+        },
+        "3": {
+          "name": "punctuation.separator.key-value.waterloo"
+        }
+      }
+    },
+    {
+      "name": "keyword.operator.waterloo.textflow",
+      "match": "^\\s*\\|\\s*$"
+    },
+    {
+      "name": "keyword.control.waterloo.normative",
+      "match": "\\|(?:Must|must|Must_not|must_not|Should|should|Should_not|should_not|May|may)\\|"
+    },
+    {
+      "name": "constant.language.waterloo.special",
+      "match": "\\|(?:Self|None|True|False)\\|"
+    },
+    {
+      "name": "meta.link.waterloo.ref",
+      "match": "(\\|ref\\|)(`)([^`<>]*)(\\s*<)([^`>]+)(>)(`)",
+      "captures": {
+        "1": {
+          "name": "support.function.waterloo.role"
+        },
+        "2": {
+          "name": "punctuation.definition.string.begin.waterloo"
+        },
+        "3": {
+          "name": "string.unquoted.waterloo.ref-title"
+        },
+        "4": {
+          "name": "punctuation.definition.link.begin.waterloo"
+        },
+        "5": {
+          "name": "markup.underline.link.waterloo"
+        },
+        "6": {
+          "name": "punctuation.definition.link.end.waterloo"
+        },
+        "7": {
+          "name": "punctuation.definition.string.end.waterloo"
+        }
+      }
+    },
+    {
+      "name": "meta.inline.waterloo.role",
+      "match": "(\\|[A-Za-z_][A-Za-z0-9_]*\\|)(`)([^`]*)(`)",
+      "captures": {
+        "1": {
+          "name": "support.function.waterloo.role"
+        },
+        "2": {
+          "name": "punctuation.definition.string.begin.waterloo"
+        },
+        "3": {
+          "name": "string.unquoted.waterloo.role-arg"
+        },
+        "4": {
+          "name": "punctuation.definition.string.end.waterloo"
+        }
+      }
+    },
+    {
+      "name": "keyword.operator.line-continuation.waterloo",
+      "match": "\\\\(?=\\s*$)"
+    }
+  ]
+}

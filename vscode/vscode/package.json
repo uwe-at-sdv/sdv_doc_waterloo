@@ -1,0 +1,24 @@
+{
+  "name": "waterloo-highlighting",
+  "displayName": "Waterloo Highlighting",
+  "description": "Minimal VS Code injection grammar for Waterloo-style Python docstrings.",
+  "version": "0.0.1",
+  "publisher": "local",
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "contributes": {
+    "grammars": [
+      {
+        "scopeName": "waterloo.injection",
+        "path": "./syntaxes/waterloo.injection.tmLanguage.json",
+        "injectTo": [
+          "source.python"
+        ]
+      }
+    ]
+  }
+}
