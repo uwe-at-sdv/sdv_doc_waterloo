@@ -1,0 +1,7 @@
+[project]
+name = "python-waterloo-lexer"
+version = "0.1.0"
+dependencies = ["pygments"]
+
+[project.entry-points."pygments.lexers"]
+python_waterloo = "python_waterloo_lexer:PythonWaterlooLexer"
