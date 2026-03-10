@@ -89,7 +89,7 @@ Decorators
 
 .. wtrl_push_current_module:: test_docitem_method_decorator
 
-In this section we test the graphi representation of method signatures
+In this section we test the graphic representation of function and method signatures
 in presence of decorators, such as :wtrl_attr:`@classmethod` and :wtrl_attr:`@staticmethod`.
 Consider the following test snippet:
 
