@@ -38,7 +38,16 @@ from pygments.token import Error, Generic, Keyword, Name, String, Literal, Numbe
 
 #----- Changelog ----------------------------------------------#
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"
+# - 0.2.0 [2026-03-10]	* Added comprehensive comments and documentation to the code,
+# 						explaining the purpose and functionality of each method and
+# 						section of the lexer. This includes detailed descriptions
+# 						of the parameters, return values, and potential exceptions
+# 						for each method, as well as explanations of the regular
+# 						expressions used for tokenization.
+#						* Careful handling of edge cases, such as docstrings that do not
+# 						conform to the expected structure or contain mixed indentation,
+# 						to ensure that the lexer behaves robustly in a variety of scenarios.
 # - 0.1.0 [2026-03-05]	Versioning starts now.
 
 #----- Constants ----------------------------------------------#
