@@ -6,7 +6,7 @@
         "schema": "0.0.5"
     },
     "__WTRL_META__": {
-        "generated_at": "2026-03-10T17:21:34+01:00",
+        "generated_at": "2026-03-10T19:41:10+01:00",
         "generator": "waterlint",
         "scope": "core",
         "flavour": "rfc-2119"
@@ -745,7 +745,7 @@
         },
         "sdv.doc.waterloo.docitem_helper.Trait": {
             "signature": {
-                "text": "Enum.__init__(self, *args, **kwds)",
+                "text": "object.__init__(self, /, *args, **kwargs)",
                 "parameters": [
                     {
                         "name": "args",
@@ -754,7 +754,7 @@
                         "default": null
                     },
                     {
-                        "name": "kwds",
+                        "name": "kwargs",
                         "kind": "VAR_KEYWORD",
                         "annotation": null,
                         "default": null
@@ -814,7 +814,7 @@
         },
         "sdv.doc.waterloo.docitem_helper.Scope": {
             "signature": {
-                "text": "Enum.__init__(self, *args, **kwds)",
+                "text": "object.__init__(self, /, *args, **kwargs)",
                 "parameters": [
                     {
                         "name": "args",
@@ -823,7 +823,7 @@
                         "default": null
                     },
                     {
-                        "name": "kwds",
+                        "name": "kwargs",
                         "kind": "VAR_KEYWORD",
                         "annotation": null,
                         "default": null
@@ -892,7 +892,7 @@
         },
         "sdv.doc.waterloo.docitem_helper.Flavour": {
             "signature": {
-                "text": "Enum.__init__(self, *args, **kwds)",
+                "text": "object.__init__(self, /, *args, **kwargs)",
                 "parameters": [
                     {
                         "name": "args",
@@ -901,7 +901,7 @@
                         "default": null
                     },
                     {
-                        "name": "kwds",
+                        "name": "kwargs",
                         "kind": "VAR_KEYWORD",
                         "annotation": null,
                         "default": null
@@ -961,7 +961,7 @@
         },
         "sdv.doc.waterloo.docitem_helper.Format": {
             "signature": {
-                "text": "Enum.__init__(self, *args, **kwds)",
+                "text": "object.__init__(self, /, *args, **kwargs)",
                 "parameters": [
                     {
                         "name": "args",
@@ -970,7 +970,7 @@
                         "default": null
                     },
                     {
-                        "name": "kwds",
+                        "name": "kwargs",
                         "kind": "VAR_KEYWORD",
                         "annotation": null,
                         "default": null
@@ -1042,7 +1042,7 @@
         },
         "sdv.doc.waterloo.docitem_helper.Status": {
             "signature": {
-                "text": "Enum.__init__(self, *args, **kwds)",
+                "text": "object.__init__(self, /, *args, **kwargs)",
                 "parameters": [
                     {
                         "name": "args",
@@ -1051,7 +1051,7 @@
                         "default": null
                     },
                     {
-                        "name": "kwds",
+                        "name": "kwargs",
                         "kind": "VAR_KEYWORD",
                         "annotation": null,
                         "default": null
@@ -2797,7 +2797,7 @@
         },
         "sdv.doc.waterloo.docitem_base.docitem_list_of_symbols_base.ValuePattern": {
             "signature": {
-                "text": "Enum.__init__(self, *args, **kwds)",
+                "text": "object.__init__(self, /, *args, **kwargs)",
                 "parameters": [
                     {
                         "name": "args",
@@ -2806,7 +2806,7 @@
                         "default": null
                     },
                     {
-                        "name": "kwds",
+                        "name": "kwargs",
                         "kind": "VAR_KEYWORD",
                         "annotation": null,
                         "default": null
@@ -8966,13 +8966,13 @@
         },
         "sdv.doc.waterloo.docitem_convert.to_string_legend_yaml": {
             "signature": {
-                "text": "to_string_legend_yaml(config: 'YamlConfig' = <sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f7e2c7d40d0>) -> 'str'",
+                "text": "to_string_legend_yaml(config: 'YamlConfig' = <sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7fd885a40fd0>) -> 'str'",
                 "parameters": [
                     {
                         "name": "config",
                         "kind": "POSITIONAL_OR_KEYWORD",
                         "annotation": "YamlConfig",
-                        "default": "<sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f7e2c7d40d0>"
+                        "default": "<sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7fd885a40fd0>"
                     }
                 ],
                 "returns": "str"
@@ -9009,7 +9009,7 @@
         },
         "sdv.doc.waterloo.docitem_convert.to_string_signature_yaml": {
             "signature": {
-                "text": "to_string_signature_yaml(obj: 'object', config: 'YamlConfig' = <sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f7e2cb27b10>) -> 'str'",
+                "text": "to_string_signature_yaml(obj: 'object', config: 'YamlConfig' = <sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7fd885a41420>) -> 'str'",
                 "parameters": [
                     {
                         "name": "obj",
@@ -9021,7 +9021,7 @@
                         "name": "config",
                         "kind": "POSITIONAL_OR_KEYWORD",
                         "annotation": "YamlConfig",
-                        "default": "<sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f7e2cb27b10>"
+                        "default": "<sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7fd885a41420>"
                     }
                 ],
                 "returns": "str"
@@ -9091,7 +9091,7 @@
         },
         "sdv.doc.waterloo.docitem_convert.to_string_yaml": {
             "signature": {
-                "text": "to_string_yaml(tree: 'DocstringTree', flavour: 'Flavour', config: 'YamlConfig' = <sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f7e2c7d41d0>) -> 'str'",
+                "text": "to_string_yaml(tree: 'DocstringTree', flavour: 'Flavour', config: 'YamlConfig' = <sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7fd885a41450>) -> 'str'",
                 "parameters": [
                     {
                         "name": "tree",
@@ -9109,7 +9109,7 @@
                         "name": "config",
                         "kind": "POSITIONAL_OR_KEYWORD",
                         "annotation": "YamlConfig",
-                        "default": "<sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f7e2c7d41d0>"
+                        "default": "<sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7fd885a41450>"
                     }
                 ],
                 "returns": "str"
