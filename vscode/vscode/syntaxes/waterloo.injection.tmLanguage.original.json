@@ -2,31 +2,26 @@
 	"scopeName": "waterloo.injection",
 	"injectionSelector": "L:source.python string.quoted.docstring",
 	"patterns": [
-		{ "include": "#waterloo-docstring" }
+		{ "include": "#section-preamble" },
+		{ "include": "#section-definitions" },
+		{ "include": "#section-terminology" },
+		{ "include": "#section-contract" },
+		{ "include": "#section-description" },
+		{ "include": "#section-derived-from" },
+		{ "include": "#section-factory" },
+		{ "include": "#section-public-classes" },
+		{ "include": "#section-public-functions-methods" },
+		{ "include": "#section-class-overview" },
+		{ "include": "#section-function-method-overview" },
+		{ "include": "#section-public-types" },
+		{ "include": "#section-public-constants-variables" },
+		{ "include": "#section-parameters" },
+		{ "include": "#section-raises" },
+		{ "include": "#section-notes" },
+		{ "include": "#section-see-also" },
+		{ "include": "#section-returns" }
 		],
 		"repository": {
-			"waterloo-docstring": {
-				"patterns": [
-					{ "include": "#section-preamble" },
-					{ "include": "#section-definitions" },
-					{ "include": "#section-terminology" },
-					{ "include": "#section-contract" },
-					{ "include": "#section-description" },
-					{ "include": "#section-derived-from" },
-					{ "include": "#section-factory" },
-					{ "include": "#section-public-classes" },
-					{ "include": "#section-public-functions-methods" },
-					{ "include": "#section-class-overview" },
-					{ "include": "#section-function-method-overview" },
-					{ "include": "#section-public-types" },
-					{ "include": "#section-public-constants-variables" },
-					{ "include": "#section-parameters" },
-					{ "include": "#section-raises" },
-					{ "include": "#section-notes" },
-					{ "include": "#section-see-also" },
-					{ "include": "#section-returns" }
-				]
-			},
 			"section-preamble": {
 			"begin": "^(\\s*)(Preamble:)\\s*$",
 			"end": "^(?=(?:\\1(?:Preamble|Contract|Parameters|Returns|Raises|Notes|See_also|Definitions|Terminology|Description|Derived_from|Factory|Public_(classes|functions|methods)|(?:Class|Function|Method)_overview):|\\s*(?:\\\"\\\"\\\"|''')))",
@@ -35,10 +30,12 @@
 			},
 			"patterns": [
 				{
-					"begin": "^([ \\\t]+)((?:profile):)\\s*$",
+					"comment": "Allowed preamble subsections: profile, status, scope",
+					"begin": "^([ \\\t]+)((?:profile|status|scope):)\\s*$",
 					"end": "^(?=(?:[ \\\t]*[A-Za-z_][A-Za-z0-9_]*:|\\s*(?:\\\"\\\"\\\"|''')))",
 					"beginCaptures": {
 						"2": {
+							"comment": "italic because it is a predefined subsection",
 							"name": "entity.name.label.waterloo markup.italic.section.waterloo"
 						}
 					},
@@ -46,10 +43,9 @@
 						{ "include": "#list-of-literals" }
 					]
 				},
-				{ "include": "#subsection-preamble-normative-sections" },
-				{ "include": "#subsection-preamble-scope" },
-				{ "include": "#subsection-preamble-status" },
+				{ "include": "#subsection-normative-sections" },
 				{
+					"comment": "Catch any other subsection label under Preamble and mark as invalid",
 					"begin": "^([ \\\t]+)([A-Za-z_][A-Za-z0-9_]*:)\\s*$",
 					"end": "^(?=(?:[ \\\t]*[A-Za-z_][A-Za-z0-9_]*:|\\s*(?:\\\"\\\"\\\"|''')))",
 					"beginCaptures": {
@@ -69,6 +65,7 @@
 			},
 			"patterns": [
 				{
+					"comment": "Allowed contract subsections",
 					"begin": "^([ \\\t]+)((?:general|constructor|invariants|requires|ensures):)\\s*$",
 					"end": "^(?=(?:[ \\\t]*[A-Za-z_][A-Za-z0-9_]*:|\\s*(?:\\\"\\\"\\\"|''')))",
 					"beginCaptures": {
@@ -78,9 +75,10 @@
 						{ "include": "#inline-waterloo" }
 					]
 				},
-				{ "include": "#subsection-contract-traits" },
-				{ "include": "#subsection-contract-base" },
+				{ "include": "#subsection-traits" },
+				{ "include": "#subsection-base" },
 				{
+					"comment": "Catch any other subsection label under Contract and mark as invalid",
 					"begin": "^([ \\\t]+)([A-Za-z_][A-Za-z0-9_]*:)\\s*$",
 					"end": "^(?=(?:[ \\\t]*[A-Za-z_][A-Za-z0-9_]*:|\\s*(?:\\\"\\\"\\\"|''')))",
 					"beginCaptures": {
@@ -100,7 +98,7 @@
 				"2": { "name": "markup.heading.section.waterloo markup.italic.section.waterloo" }
 			},
 			"patterns": [
-				{ "include": "#list-of-type-qualified-identifiers" }
+				{ "include": "#list-of-qualified-identifiers" }
 			]
 		},
 		"section-factory": {
@@ -235,7 +233,7 @@
 			},
 			"patterns": [
 				{
-					"begin": "^([ \\\t]+)((ArithmeticError|AssertionError|AttributeError|BaseException|BlockingIOError|BrokenPipeError|BufferError|ChildProcessError|ConnectionAbortedError|ConnectionError|ConnectionRefusedError|ConnectionResetError|EOFError|EnvironmentError|Exception|FileExistsError|FileNotFoundError|FloatingPointError|GeneratorExit|IOError|ImportError|IndentationError|IndexError|InterruptedError|IsADirectoryError|KeyError|KeyboardInterrupt|LookupError|MemoryError|ModuleNotFoundError|NameError|NotADirectoryError|NotImplementedError|OSError|OverflowError|PermissionError|ProcessLookupError|RecursionError|ReferenceError|RuntimeError|StopAsyncIteration|StopIteration|SyntaxError|SystemError|SystemExit|TabError|TimeoutError|TypeError|UnboundLocalError|UnicodeDecodeError|UnicodeEncodeError|UnicodeError|UnicodeTranslateError|ValueError|ZeroDivisionError):)\\s*$",
+					"begin": "^([ \\\t]+)((ArithmeticError|AssertionError|AttributeError|BaseException|BaseExceptionGroup|BlockingIOError|BrokenPipeError|BufferError|ChildProcessError|ConnectionAbortedError|ConnectionError|ConnectionRefusedError|ConnectionResetError|EOFError|Exception|ExceptionGroup|FileExistsError|FileNotFoundError|FloatingPointError|GeneratorExit|ImportError|IndentationError|IndexError|InterruptedError|IsADirectoryError|KeyboardInterrupt|KeyError|LookupError|MemoryError|ModuleNotFoundError|NameError|NotADirectoryError|NotImplementedError|OSError|OverflowError|PermissionError|ProcessLookupError|PythonFinalizationError|RecursionError|ReferenceError|RuntimeError|StopAsyncIteration|StopIteration|SyntaxError|SystemError|SystemExit|TabError|TimeoutError|TypeError|UnboundLocalError|UnicodeDecodeError|UnicodeEncodeError|UnicodeError|UnicodeTranslateError|ValueError|ZeroDivisionError):)\\s*$",
 					"end": "^(?=(?:[ \\\t]*[A-Za-z_][A-Za-z0-9_]*:|\\s*(?:\\\"\\\"\\\"|''')))",
 					"beginCaptures": {
 						"2": { "name": "entity.name.type.exception.python markup.italic.type.waterloo" }
@@ -286,57 +284,31 @@
 				{ "include": "#inline-waterloo" }
 			]
 		},
-		"subsection-preamble-normative-sections": {
+		"subsection-normative-sections": {
 			"begin": "^([ \\t]+)(normative_sections:)\\s*$",
 			"end": "^(?=(?:[ \\t]*[A-Za-z_][A-Za-z0-9_]*:|\\s*(?:\\\"\\\"\\\"|''')))",
 			"beginCaptures": {
 				"2": {
+					"comment": "italic because it is a predefined subsection",
 					"name": "entity.name.label.waterloo markup.italic.section.waterloo"
 				}
 			},
 			"patterns": [
 				{
+					"comment": "Whitelist of valid sections",
 					"match": "\\b(Contract|Parameters|Returns|Raises|See_also|Definitions|Derived_from|Factory|Public_(classes|functions|methods|types|constants|variables))\\b",
 					"name": "markup.inline.raw.waterloo markup.italic.literal.waterloo"
 				},
 				{
+					"comment": "Catch any other identifier in normative_sections and mark as invalid; add additional scopes so themes highlight it more strongly",
 					"match": "\\b([A-Za-z_][A-Za-z0-9_]*)\\b",
 					"name": "invalid.illegal.section.waterloo markup.error markup.bold"
 				},
 				{ "include": "#inline-waterloo" }
 			]
 		},
-		"subsection-preamble-scope":{
-			"begin": "^([ \\\t]+)(scope:)\\s*$",
-			"end": "^(?=(?:[ \\\t]*[A-Za-z_][A-Za-z0-9_]*:|\\s*(?:\\\"\\\"\\\"|''')))",
-			"beginCaptures": {
-				"2": { "name": "entity.name.label.waterloo markup.italic.section.waterloo" }
-			},
-			"patterns": [
-				{
-					"match": "(?:public|extension|core)\\b",
-					"name": "markup.inline.raw.waterloo markup.italic.literal.waterloo"
-				},
-				{
-					"match": "(?:[A-Za-z_][A-Za-z0-9_]*)\\b",
-					"name": "markup.inline.raw.waterloo"
-				}
-			]
-		},
-		"subsection-preamble-status":{
-			"begin": "^([ \\\t]+)(status:)\\s*$",
-			"end": "^(?=(?:[ \\\t]*[A-Za-z_][A-Za-z0-9_]*:|\\s*(?:\\\"\\\"\\\"|''')))",
-			"beginCaptures": {
-				"2": { "name": "entity.name.label.waterloo markup.italic.section.waterloo" }
-			},
-			"patterns": [
-				{
-					"match": "(?:experimental|stable|frozen|deprecated|draft)\\b",
-					"name": "markup.inline.raw.waterloo markup.italic.literal.waterloo"
-				}
-			]
-		},
-		"subsection-contract-traits":{
+		"subsection-traits":{
+			"comment": "Allowed contract subsections",
 			"begin": "^([ \\\t]+)(traits:)\\s*$",
 			"end": "^(?=(?:[ \\\t]*[A-Za-z_][A-Za-z0-9_]*:|\\s*(?:\\\"\\\"\\\"|''')))",
 			"beginCaptures": {
@@ -344,12 +316,13 @@
 			},
 			"patterns": [
 				{
-					"match": "(?:abstract|final)\\b",
+					"match": "(abstract|final)\\b",
 					"name": "markup.inline.raw.waterloo markup.italic.literal.waterloo"
 				}
 			]
 		},
-		"subsection-contract-base":{
+		"subsection-base":{
+			"comment": "Allowed contract subsections",
 			"begin": "^([ \\\t]+)(base:)\\s*$",
 			"end": "^(?=(?:[ \\\t]*[A-Za-z_][A-Za-z0-9_]*:|\\s*(?:\\\"\\\"\\\"|''')))",
 			"beginCaptures": {
