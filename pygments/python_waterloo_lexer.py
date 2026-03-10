@@ -1,3 +1,31 @@
+r"""
+Preamble:
+	profile:
+		module
+	normative_sections:
+		Contract, Definitions, Public_classes, Public_constants
+Definitions:
+	Pos_Role_Substring_Triple:
+		A tuple (|var|`position`, |var|`token_type`, |var|`substring`) specifying syntax highlighting:
+		- position: The starting index of the substring in the original text.
+		- token_type: A Pygments token class (from |type|`pygments.token`).
+		- substring: The text to be highlighted.
+Contract:
+	general:
+		|Must| provide a Python module that defines the PythonWaterlooLexer class for syntax highlighting of Waterloo-docstrings.
+Public_classes:
+	PythonWaterlooLexer
+Public_constants:
+	RE_SECTION_ALLOWED_NORMATIVE:
+		A regular expression pattern that matches section names allowed or mandatory\
+		in the "normative_sections" subsection of the Preamble.\
+		This expression is governed by the normative rules and must be kept up to date.\
+		Mandatory : CON-002, CON-005, CON-020, CON-034, CPCL-002, CPCON-002, CPMT-002,\
+		CPTYP-002, CPVAR-002, DEF-002, DER-004, FAC-009, MPCL-002, MPCON-002, MPFN-002,\
+		MPTYP-002, MPVAR-002, PAR-002, RAI-002, RET-002.\
+		Accepted : DESC-002, SEE-011.\
+		Refused : NOTE-002, PRE-002, TERM-002.
+"""
 from __future__ import annotations
 
 import sys,re
@@ -31,33 +59,6 @@ RE_SECTION_CAPTURE = re.compile(
 	r"):\s*$"
 )
 
-# This expression is governed by the normative rules
-# and must be kept up to date.
-# Mandatory:
-# * CON-002, CON-005, CON-020, CON-034
-# * CPCL-002
-# * CPCON-002
-# * CPMT-002
-# * CPTYP-002
-# * CPVAR-002
-# * DEF-002
-# * DER-004
-# * FAC-009
-# * MPCL-002
-# * MPCON-002
-# * MPFN-002
-# * MPTYP-002
-# * MPVAR-002
-# * PAR-002
-# * RAI-002
-# * RET-002
-# Accepted:
-# * DESC-002
-# * SEE-011
-# Refused:
-# * NOTE-002
-# * PRE-002
-# * TERM-002
 RE_SECTION_ALLOWED_NORMATIVE = re.compile(
 	r"^(?:"
 	r"Contract|Parameters|Returns|Raises|Derived_from|"
@@ -157,13 +158,37 @@ RE_CONTRACT = re.compile(r"^\s*Contract:\s*$")
 #----- Lexer --------------------------------------------------#
 
 class PythonWaterlooLexer(PythonLexer):
+	r"""
+	Preamble:
+		profile:
+			class
+		normative_sections:
+			Contract, Public_methods
+	Contract:
+		general:
+			|Must| implement a Pygments lexer class that extends the standard Python\
+			lexer to provide syntax highlighting for Waterloo-docstrings.
+			|Must| define a static method `analyse_text` that checks if a\
+			given string looks like a Waterloo-docstring, returning a float score for lexer selection.
+			|Must| implement the `get_tokens_unprocessed` method to yield\
+			tokens with appropriate types for different parts of the docstring,\
+			such as section headers, normative keywords, and inline markup.
+			|Must| use regular expressions to identify section headers and inline markup patterns.
+			|Must| ensure that the lexer can be used with Pygments for\
+			syntax highlighting in various tools and editors.
+			|Must| prioritize this lexer over the standard Python lexer\
+			when the input text contains Waterloo-docstring patterns.
+			|Must| handle edge cases gracefully, such as docstrings that\
+			do not conform to the expected structure or contain mixed indentation.
+			|Must| include comprehensive comments and documentation within\
+			the code to explain the implementation and usage of the lexer.
+			|Must| be implemented in a way that allows for easy maintenance\
+			and extension in the future, such as adding support for new sections or inline markup patterns.
+		constructor:
+			default
+	Public_methods:
+		highlight_docstring,_highlight_line,_looks_like_waterloo_docstring,_has_mixed_indentation,analyse_text,get_tokens_unprocessed
 	"""
-	Python lexer with lightweight Waterloo-docstring highlighting.
-
-	Usage (without installation):
-		pygmentize -x -l package_ide-plugins/pygmentize/python_waterloo_lexer.py:PythonWaterlooLexer file.py
-	"""
-
 	name = "Python-Waterloo"
 	aliases = ["python-waterloo"]
 	filenames = ["*.py"]
@@ -176,39 +201,73 @@ class PythonWaterlooLexer(PythonLexer):
 				method
 			normative_sections:
 				Contract, Definitions, Parameters, Returns, Raises
+			scope:
+				extension
 		Definitions:
-			Pos_Role_Substring_Triple:
-				A tuple containing the specification the caller needs for
-				assigning syntax highlighting to a substring. If the components
-				of the tuple are addressed by [...], [0] represents the
-				position of the substring in the original string, [1] is a class object
-				representing the semantic class to be assigned, as defined in |mod|`pygments.token`.
-				[2] is substring to be highlighted.
+			_inherit:
+				Pos_Role_Substring_Triple
+		Description:
+			This is the core tokenization method that Pygments calls to obtain syntax highlighting tokens.
+			It iterates over tokens from the parent PythonLexer and intercepts docstrings (String.Doc tokens)
+			to apply Waterloo-specific highlighting rules. This method is the entry point for all tokenization
+			and determines the highlighting of the entire source code.
 		Contract:
 			general:
-				|Must| analyze the string passed.
-				|Must| iterate over the lines of the input and look for waterloo specific tokens.
-				|Must| generate a |term|`Pos_Role_Substring_Triple` for each matching waterloo specific token found.
-				|Must| fall back to the default highlighting for docstrings where no waterloo token matches,
+				|Must| analyze the provided string.
+				|Must| iterate over the input lines to identify Waterloo-specific tokens.
+				|Must| generate a |term|`Pos_Role_Substring_Triple` for each matching token.
+				|Must| fall back to default highlighting for non-matching docstring parts.
 		Parameters:
 			text:
-				The string to analyze
+				The input text to tokenize.
 		Returns:
-			An iterable over |term|`Pos_Role_Substring_Triple`-s.
+			An iterable of |term|`Pos_Role_Substring_Triple` tuples.
 		Raises:
 			BaseException:
-				|May| propagate from module |mod|`pygments`.	
+				|May| propagate from the pygments module.
 		"""
 		self._current_section = ""
 		self._current_subsection = ""
 		for index, ttype, value in super().get_tokens_unprocessed(text):
 			if ttype in String.Doc:   # oder is String.Doc
-				yield from self._highlight_docstring(index, value)
+				yield from self.highlight_docstring(index, value)
 			else:
 				yield index, ttype, value
 
+# waterlint demands profile function because internally this
+# seems to be a function make_analysator.<locals>.text_analyse.
+# Not sure how this remapping works, but to satisfy waterlint
+# we need to comment it with profile function, even though it is a static method.
 	@staticmethod
 	def analyse_text(text: str) -> float:
+		"""
+		Preamble:
+			profile:
+				function
+			normative_sections:
+				Contract, Parameters, Returns, Raises
+		Description:
+			This method is called by Pygments during lexer selection to prioritize
+			the PythonWaterlooLexer over the standard PythonLexer.
+			It analyzes the input text for patterns indicative of Waterloo-docstrings,
+			such as the presence of "Preamble:" and "Contract:" sections, ensuring
+			that files containing structured docstrings are highlighted
+			appropriately by this specialized lexer.
+		Contract:
+			general:
+				|Must| determine if the given text resembles a Waterloo-docstring.
+				|Must| perform a quick check for presence of "Preamble:" and "Contract:".
+				|Must| conduct a detailed line-by-line validation using regex patterns.
+				|Must| return 1.0 if both sections are properly matched, otherwise 0.0.
+		Parameters:
+			text:
+				The input text to analyze for Waterloo-docstring characteristics.
+		Returns:
+			A float value: 1.0 if the text is identified as a Waterloo-docstring, 0.0 otherwise.
+		Raises:
+			BaseException:
+				|May| propagate exceptions from the |mod|`re` module.
+		"""
 # This is important in order to priorize our Lexer over the standard Python lexer.
 # Quick check
 		if "Preamble:" not in text or "Contract:" not in text:
@@ -229,7 +288,34 @@ class PythonWaterlooLexer(PythonLexer):
 				return 1.0
 		return 0.0
 
-	def _highlight_docstring(self, base: int, text: str) -> Iterable[tuple[int, object, str]]:
+	def highlight_docstring(self, base: int, text: str) -> Iterable[tuple[int, object, str]]:
+		"""
+		Preamble:
+			profile:
+				method
+			normative_sections:
+				Definitions, Contract, Parameters, Returns, Raises
+		Definitions:
+			_inherit:
+				Pos_Role_Substring_Triple
+		Contract:
+			general:
+				|Must| check if the given text looks like a Waterloo-docstring.
+				|Must| if it does not look like a Waterloo-docstring, yield the entire text as a single String.Doc token.
+				|Must| if it looks like a Waterloo-docstring, reset the parser state and analyze the text line by line.
+				|Must| for each line, call the _highlight_line method to identify and yield tokens for that line.
+		Parameters:
+			base:
+				The base index for token positions in the original text.
+			text:
+				The docstring text to analyze and tokenize.
+		Returns:
+			An iterable of |term|`Pos_Role_Substring_Triple` tuples for the given docstring.
+		Raises:
+			BaseException:
+				|May| propagate exceptions from the |mod|`re` module.
+				|May| propagate exceptions from the |mod|`pygments` module.
+		"""
 		if not self._looks_like_waterloo_docstring(text):
 			yield base, String.Doc, text
 			return
@@ -468,6 +554,34 @@ class PythonWaterlooLexer(PythonLexer):
 			yield base + cur, String.Doc, line[cur:]
 
 	def _highlight_line(self, base: int, line: str) -> Iterable[tuple[int, object, str]]:
+		"""
+		Preamble:
+			profile:
+				method
+			normative_sections:
+				Definitions, Contract, Parameters, Returns, Raises
+		Definitions:
+			_inherit:
+				Pos_Role_Substring_Triple
+		Contract:
+			general:
+				|Must| analyze the given line in the context of the current section and subsection.
+				|Must| identify section headers and update the current section state.
+				|Must| identify subsection headers if the current section allows subsections, and update the current subsection state.
+				|Must| identify special markers such as text flow markers and apply appropriate token types.
+				|Must| apply specific tokenization rules based on the current section and subsection, such as treating certain lines as lists of identifiers or free-form text.
+				|Must| yield tokens with appropriate types for the identified elements in the line.
+		Parameters:
+			base:
+				The base index for token positions in the original text.
+			line:
+				The line of text to analyze and tokenize.
+		Returns:
+			An iterable of |term|`Pos_Role_Substring_Triple` tuples for the given line.
+		Raises:
+			BaseException:
+				|May| propagate exceptions from the |mod|`re` module.
+		"""
 		stripped = line.rstrip("\r\n")
 # Analyze for section labels
 		m_sec = RE_SECTION_CAPTURE.match(stripped)
@@ -547,6 +661,30 @@ class PythonWaterlooLexer(PythonLexer):
 
 	@staticmethod
 	def _has_mixed_indentation(text: str) -> bool:
+		r"""
+		Preamble:
+			profile:
+				method
+			normative_sections:
+				Contract, Parameters, Returns, Raises
+		Contract:
+			general:
+				|Must| check for the presence of mixed indentation in the text.
+				|Must| consider a line to have mixed indentation if it contains\
+				both tabs and spaces in the leading whitespace.
+				|Must| consider the text to have mixed indentation if there are\
+				some lines that use tabs for indentation and some lines that\
+				use spaces, even if no individual line has mixed indentation.
+		Parameters:
+			text:
+				The string to analyze for mixed indentation.
+		Returns:
+			|True| if the text has mixed indentation, |False| otherwise.
+		Raises:
+			BaseException:
+				|May| propagate from module |mod|`re`.
+				|May| propagate from module |mod|`sys`.
+		"""
 		uses_tabs = False
 		uses_spaces = False
 		for line in text.splitlines():
@@ -567,12 +705,37 @@ class PythonWaterlooLexer(PythonLexer):
 
 	@staticmethod
 	def _looks_like_waterloo_docstring(text: str) -> bool:
+		r"""
+		Preamble:
+			profile:
+				method
+			normative_sections:
+				Contract, Parameters, Returns, Raises
+			scope:
+				core
+		Contract:
+			general:
+				|Must| look for the presence of a Preamble and Contract section.
+				|Must| check that the section labels match the expected format.
+				|Must| check that the Preamble and Contract sections appear in the correct order.
+				|Must| check that there is no mixed indentation in the docstring.
+		Parameters:
+			text:
+				The string to analyze
+		Returns:
+			|True| if the string looks like a Waterloo docstring, |False| otherwise.
+		Raises:
+			BaseException:
+				|May| propagate from module |mod|`re`.
+		"""
 		found_preamble = False
 		found_contract = False
 		for line in text.splitlines():
 			if not found_preamble and RE_PREAMBLE.match(line):
 				found_preamble = True
 			if not found_contract and RE_CONTRACT.match(line):
+				if not found_preamble:
+					return False
 				found_contract = True
 			if found_preamble and found_contract:
 				if PythonWaterlooLexer._has_mixed_indentation(text):

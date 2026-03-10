@@ -1,0 +1,696 @@
+{
+	"scopeName": "waterloo.injection",
+	"injectionSelector": "L:source.python string.quoted.docstring",
+	"patterns": [
+		{ "include": "#waterloo-docstring" }
+		],
+		"repository": {
+			"waterloo-docstring": {
+# Wrapper retained for future gating experiments.
+				"patterns": [
+					{ "include": "#section-preamble" },
+					{ "include": "#section-definitions" },
+					{ "include": "#section-terminology" },
+					{ "include": "#section-contract" },
+					{ "include": "#section-description" },
+					{ "include": "#section-derived-from" },
+					{ "include": "#section-factory" },
+					{ "include": "#section-public-classes" },
+					{ "include": "#section-public-functions-methods" },
+					{ "include": "#section-class-overview" },
+					{ "include": "#section-function-method-overview" },
+					{ "include": "#section-public-types" },
+					{ "include": "#section-public-constants-variables" },
+					{ "include": "#section-parameters" },
+					{ "include": "#section-raises" },
+					{ "include": "#section-notes" },
+					{ "include": "#section-see-also" },
+					{ "include": "#section-returns" }
+				]
+			},
+			"section-preamble": {
+			"begin": "^(\\s*)(Preamble:)\\s*$",
+			"end": "{{RE_END_OF_SECTION}}",
+			"beginCaptures": {
+				"2": { "name": "markup.heading.section.waterloo markup.italic.section.waterloo" }
+			},
+			"patterns": [
+				{
+# Allowed preamble subsections: profile, status, scope
+					"begin": "^([ \\\t]+)((?:profile):)\\s*$",
+					"end": "{{RE_END_OF_SUBSECTION}}",
+					"beginCaptures": {
+						"2": {
+# Rendered italic because it is a predefined subsection
+							"name": "entity.name.label.waterloo markup.italic.section.waterloo"
+						}
+					},
+					"patterns": [
+						{ "include": "#list-of-literals" }
+					]
+				},
+				{ "include": "#subsection-preamble-normative-sections" },
+				{ "include": "#subsection-preamble-scope" },
+				{ "include": "#subsection-preamble-status" },
+				{
+# Catch any other subsection label under Preamble and mark as invalid
+					"begin": "^([ \\\t]+)({{RE_IDENTIFIER}}:)\\s*$",
+					"end": "^(?=(?:[ \\\t]*{{RE_IDENTIFIER}}:|\\s*{{RE_END_OF_DOCSTRING}}))",
+					"beginCaptures": {
+						"2": { "name": "invalid.illegal.section.waterloo markup.error markup.bold" }
+					},
+					"patterns": [
+						{ "include": "#inline-waterloo" }
+					]
+				}
+			]
+		},
+		"section-contract": {
+			"begin": "^(\\s*)(Contract:)\\s*$",
+			"end": "{{RE_END_OF_SECTION}}",
+			"beginCaptures": {
+				"2": { "name": "markup.heading.section.waterloo markup.italic.section.waterloo" }
+			},
+			"patterns": [
+				{
+# Allowed contract subsections
+					"begin": "^([ \\\t]+)((?:general|constructor|invariants|requires|ensures):)\\s*$",
+					"end": "^(?=(?:[ \\\t]*{{RE_IDENTIFIER}}:|\\s*{{RE_END_OF_DOCSTRING}}))",
+					"beginCaptures": {
+						"2": { "name": "entity.name.label.waterloo markup.italic.section.waterloo" }
+					},
+					"patterns": [
+						{ "include": "#inline-waterloo" }
+					]
+				},
+				{ "include": "#subsection-contract-traits" },
+				{ "include": "#subsection-contract-base" },
+				{
+# Catch any other subsection label under Contract and mark as invalid
+					"begin": "^([ \\\t]+)({{RE_IDENTIFIER}}:)\\s*$",
+					"end": "^(?=(?:[ \\\t]*{{RE_IDENTIFIER}}:|\\s*{{RE_END_OF_DOCSTRING}}))",
+					"beginCaptures": {
+						"2": { "name": "invalid.illegal.section.waterloo markup.error markup.bold" }
+					},
+					"patterns": [
+						{ "include": "#inline-waterloo" }
+					]
+				},
+				{ "include": "#map-from-identifier-to-freeform" }
+			]
+		},
+		"section-derived-from": {
+			"begin": "^(\\s*)(Derived_from:)\\s*$",
+			"end": "{{RE_END_OF_SECTION}}",
+			"beginCaptures": {
+				"2": { "name": "markup.heading.section.waterloo markup.italic.section.waterloo" }
+			},
+# Base classes form a list of types.
+			"patterns": [
+				{ "include": "#list-of-type-qualified-identifiers" }
+			]
+		},
+		"section-factory": {
+			"begin": "^(\\s*)(Factory:)\\s*$",
+			"end": "{{RE_END_OF_SECTION}}",
+			"beginCaptures": {
+				"2": { "name": "markup.heading.section.waterloo markup.italic.section.waterloo" }
+			},
+			"patterns": [
+				{ "include": "#map-from-func-qualified-identifier-to-freeform" }
+			]
+		},
+		"section-public-classes": {
+			"begin": "^(\\s*)(Public_classes:)\\s*$",
+			"end": "{{RE_END_OF_SECTION}}",
+			"beginCaptures": {
+				"2": { "name": "markup.heading.section.waterloo markup.italic.section.waterloo" }
+			},
+			"patterns": [
+				{ "include": "#list-of-type-qualified-identifiers" }
+			]
+		},
+		"section-public-functions-methods": {
+			"begin": "^(\\s*)(Public_(functions|methods):)\\s*$",
+			"end": "{{RE_END_OF_SECTION}}",
+			"beginCaptures": {
+				"2": { "name": "markup.heading.section.waterloo markup.italic.section.waterloo" }
+			},
+			"patterns": [
+				{ "include": "#list-of-func-qualified-identifiers" }
+			]
+		},
+		"section-public-types": {
+			"begin": "^(\\s*)(Public_types:)\\s*$",
+			"end": "{{RE_END_OF_SECTION}}",
+			"beginCaptures": {
+				"2": { "name": "markup.heading.section.waterloo markup.italic.section.waterloo" }
+			},
+			"patterns": [
+				{ "include": "#map-from-type-identifier-to-freeform" }
+			]
+		},
+		"section-public-constants-variables": {
+			"begin": "^(\\s*)(Public_(constants|variables):)\\s*$",
+			"end": "{{RE_END_OF_SECTION}}",
+			"beginCaptures": {
+				"2": { "name": "markup.heading.section.waterloo markup.italic.section.waterloo" }
+			},
+			"patterns": [
+				{ "include": "#map-from-var-identifier-to-freeform" }
+			]
+		},
+		"section-class-overview": {
+			"begin": "^(\\s*)(Class_overview:)\\s*$",
+			"end": "{{RE_END_OF_SECTION}}",
+			"beginCaptures": {
+				"2": { "name": "markup.heading.section.waterloo markup.italic.section.waterloo" }
+			},
+			"patterns": [
+				{ "include": "#map-from-type-identifier-to-freeform" }
+			]
+		},
+		"section-function-method-overview": {
+			"begin": "^(\\s*)((Function|Method)_overview:)\\s*$",
+			"end": "{{RE_END_OF_SECTION}}",
+			"beginCaptures": {
+				"2": { "name": "markup.heading.section.waterloo markup.italic.section.waterloo" }
+			},
+			"patterns": [
+				{ "include": "#map-from-func-identifier-to-freeform" }
+			]
+		},
+		"section-see-also": {
+			"begin": "^(\\s*)(See_also:)\\s*$",
+			"end": "{{RE_END_OF_SECTION}}",
+			"beginCaptures": {
+				"2": { "name": "markup.heading.section.waterloo markup.italic.section.waterloo" }
+			},
+			"patterns": [
+				{
+					"match": "({{RE_IDENTIFIER}})",
+					"name": "markup.inline.raw.waterloo"
+				}
+			]
+		},
+		"section-description": {
+			"begin": "^(\\s*)(Description:)\\s*$",
+			"end": "{{RE_END_OF_SECTION}}",
+			"beginCaptures": {
+				"2": { "name": "markup.heading.section.waterloo markup.italic.section.waterloo" }
+			},
+			"patterns": [
+				{ "include": "#inline-waterloo" }
+			]
+		},
+		"section-definitions": {
+			"begin": "^(\\s*)(Definitions:)\\s*$",
+			"end": "{{RE_END_OF_SECTION}}",
+			"beginCaptures": {
+				"2": { "name": "markup.heading.section.waterloo markup.italic.section.waterloo" }
+			},
+			"patterns": [
+				{ "include": "#subsection-definitions-inherit" },
+				{ "include": "#map-from-identifier-to-freeform" }
+			]
+		},
+		"section-parameters": {
+			"begin": "^(\\s*)(Parameters:)\\s*$",
+			"end": "{{RE_END_OF_SECTION}}",
+			"beginCaptures": {
+				"2": { "name": "markup.heading.section.waterloo markup.italic.section.waterloo" }
+			},
+			"patterns": [
+				{
+					"begin": "^([ \\\t]+)({{RE_IDENTIFIER}}:)\\s*$",
+					"end": "^(?=(?:[ \\\t]*{{RE_IDENTIFIER}}:|\\s*{{RE_END_OF_DOCSTRING}}))",
+					"beginCaptures": {
+						"2": { "name": "variable.parameter.python" }
+					},
+					"patterns": [
+						{ "include": "#inline-waterloo" }
+					]
+				},
+				{ "include": "#map-from-identifier-to-freeform" }
+			]
+		},
+		"section-raises": {
+			"begin": "^(\\s*)(Raises:)\\s*$",
+			"end": "{{RE_END_OF_SECTION}}",
+			"beginCaptures": {
+				"2": { "name": "markup.heading.section.waterloo markup.italic.section.waterloo" }
+			},
+			"patterns": [
+				{
+# Built-in exception classes are rendered italic.
+					"begin": "^([ \\\t]+)(({{RE_BUILTIN_EXCEPTION_CLASSES}}):)\\s*$",
+					"end": "^(?=(?:[ \\\t]*{{RE_IDENTIFIER}}:|\\s*{{RE_END_OF_DOCSTRING}}))",
+					"beginCaptures": {
+						"2": { "name": "entity.name.type.exception.python markup.italic.type.waterloo" }
+					},
+					"patterns": [
+						{ "include": "#inline-waterloo" }
+					]
+				},
+				{
+# User-defined exception classes are rendered plain.
+					"begin": "^([ \\\t]+)({{RE_IDENTIFIER}}(?:\\.{{RE_IDENTIFIER}})*:)\\s*$",
+					"end": "^(?=(?:[ \\\t]*{{RE_IDENTIFIER}}:|\\s*{{RE_END_OF_DOCSTRING}}))",
+					"beginCaptures": {
+						"2": { "name": "entity.name.type.exception.python" }
+					},
+					"patterns": [
+						{ "include": "#inline-waterloo" }
+					]
+				}
+			]
+		},
+		"section-terminology": {
+			"begin": "^(\\s*)(Terminology:)\\s*$",
+			"end": "{{RE_END_OF_SECTION}}",
+			"beginCaptures": {
+				"2": { "name": "markup.heading.section.waterloo markup.italic.section.waterloo" }
+			},
+			"patterns": [
+				{ "include": "#map-from-anything-to-freeform" }
+			]
+		},
+		"section-notes": {
+			"begin": "^(\\s*)(Notes:)\\s*$",
+			"end": "{{RE_END_OF_SECTION}}",
+			"beginCaptures": {
+				"2": { "name": "markup.heading.section.waterloo markup.italic.section.waterloo" }
+			},
+			"patterns": [
+				{ "include": "#map-from-anything-to-freeform" }
+			]
+		},
+		"section-returns": {
+			"begin": "^(\\s*)(Returns:)\\s*$",
+			"end": "{{RE_END_OF_SECTION}}",
+			"beginCaptures": {
+				"2": { "name": "markup.heading.section.waterloo markup.italic.section.waterloo" }
+			},
+			"patterns": [
+				{ "include": "#inline-waterloo" }
+			]
+		},
+		"subsection-preamble-normative-sections": {
+			"begin": "^([ \\t]+)(normative_sections:)\\s*$",
+			"end": "^(?=(?:[ \\t]*{{RE_IDENTIFIER}}:|\\s*{{RE_END_OF_DOCSTRING}}))",
+			"beginCaptures": {
+				"2": {
+# italic because it is a predefined subsection
+					"name": "entity.name.label.waterloo markup.italic.section.waterloo"
+				}
+			},
+			"patterns": [
+				{
+# Whitelist of valid sections
+					"match": "\\b(Contract|Parameters|Returns|Raises|See_also|Definitions|Derived_from|Factory|Public_(classes|functions|methods|types|constants|variables))\\b",
+					"name": "markup.inline.raw.waterloo markup.italic.literal.waterloo"
+				},
+				{
+# Catch any other identifier in normative_sections and mark as invalid; add additional scopes so themes highlight it more strongly
+					"match": "\\b({{RE_IDENTIFIER}})\\b",
+					"name": "invalid.illegal.section.waterloo markup.error markup.bold"
+				},
+				{ "include": "#inline-waterloo" }
+			]
+		},
+		"subsection-preamble-scope":{
+			"begin": "^([ \\\t]+)(scope:)\\s*$",
+			"end": "^(?=(?:[ \\\t]*{{RE_IDENTIFIER}}:|\\s*{{RE_END_OF_DOCSTRING}}))",
+			"beginCaptures": {
+				"2": { "name": "entity.name.label.waterloo markup.italic.section.waterloo" }
+			},
+			"patterns": [
+				{
+# Mark built-in scopes italic 
+					"match": "(?:{{RE_SCOPE_VALUES}})\\b",
+					"name": "markup.inline.raw.waterloo markup.italic.literal.waterloo"
+				},
+				{
+# Mark other scopes *not* as error. We might allow/encourage to customize the set of scopes.
+					"match": "(?:{{RE_IDENTIFIER}})\\b",
+					"name": "markup.inline.raw.waterloo"
+				}
+			]
+		},
+		"subsection-preamble-status":{
+			"begin": "^([ \\\t]+)(status:)\\s*$",
+			"end": "^(?=(?:[ \\\t]*{{RE_IDENTIFIER}}:|\\s*{{RE_END_OF_DOCSTRING}}))",
+			"beginCaptures": {
+				"2": { "name": "entity.name.label.waterloo markup.italic.section.waterloo" }
+			},
+			"patterns": [
+				{
+# Mark built-in values italic 
+					"match": "(?:{{RE_STATUS_VALUES}})\\b",
+					"name": "markup.inline.raw.waterloo markup.italic.literal.waterloo"
+				}
+			]
+		},
+# Traits are coloured as pre-defined literals
+		"subsection-contract-traits":{
+			"begin": "^([ \\\t]+)(traits:)\\s*$",
+			"end": "^(?=(?:[ \\\t]*{{RE_IDENTIFIER}}:|\\s*{{RE_END_OF_DOCSTRING}}))",
+			"beginCaptures": {
+				"2": { "name": "entity.name.label.waterloo markup.italic.section.waterloo" }
+			},
+			"patterns": [
+				{
+# Mark built-in values italic 
+					"match": "(?:{{RE_TRAIT_VALUES}})\\b",
+					"name": "markup.inline.raw.waterloo markup.italic.literal.waterloo"
+				}
+			]
+		},
+# Base entries are coloured as types, because they are classes.
+		"subsection-contract-base":{
+			"begin": "^([ \\\t]+)(base:)\\s*$",
+			"end": "^(?=(?:[ \\\t]*{{RE_IDENTIFIER}}:|\\s*{{RE_END_OF_DOCSTRING}}))",
+			"beginCaptures": {
+				"2": { "name": "entity.name.label.waterloo markup.italic.section.waterloo" }
+			},
+			"patterns": [
+				{ "include": "#list-of-type-qualified-identifiers" }
+			]
+		},
+		"subsection-definitions-inherit": {
+			"name": "meta.subsection.inherit.waterloo",
+			"match": "^(\\s*)(_inherit:)(\\s*)$",
+# "_inherit" is a keyword.
+			"captures": {
+				"2": { "name": "keyword.control.inherit.waterloo" }
+			}
+		},
+		"map-from-anything-to-freeform": {
+			"begin": "^([ \\t]+)([^:]*:)\\s*$",
+			"end": "^(?=(?:[ \\t]*{{RE_IDENTIFIER}}:|\\s*{{RE_END_OF_DOCSTRING}}))",
+			"beginCaptures": {
+				"2": { "name": "entity.name.label.waterloo" }
+			},
+			"patterns": [
+				{ "include": "#inline-waterloo" }
+			]
+		},
+		"list-of-qualified-identifiers": {
+			"patterns": [
+				{
+					"match": "({{RE_IDENTIFIER}}(?:\\.{{RE_IDENTIFIER}})*)",
+					"name": "markup.inline.raw.waterloo"
+				}
+			]
+		},
+# For lists of types such as in Public_classes or Contract.base
+		"list-of-type-qualified-identifiers": {
+			"patterns": [
+				{
+					"match": "({{RE_IDENTIFIER}}(?:\\.{{RE_IDENTIFIER}})*)",
+					"name": "entity.name.type.waterloo"
+				}
+			]
+		},
+		"list-of-func-qualified-identifiers": {
+			"patterns": [
+				{
+					"match": "({{RE_IDENTIFIER}}(?:\\.{{RE_IDENTIFIER}})*)",
+					"name": "entity.name.function.waterloo"
+				}
+			]
+		},
+		"list-of-literals": {
+			"patterns": [
+				{
+					"match": "({{RE_IDENTIFIER}}(?:\\.{{RE_IDENTIFIER}})*)",
+					"name": "markup.inline.raw.waterloo markup.italic.literal.waterloo"
+				}
+			]
+		},
+		"map-from-identifier-to-freeform": {
+			"begin": "^([ \\t]+)({{RE_IDENTIFIER}}:)\\s*$",
+			"end": "^(?=(?:[ \\t]*{{RE_IDENTIFIER}}:|\\s*{{RE_END_OF_DOCSTRING}}))",
+			"beginCaptures": {
+				"2": { "name": "entity.name.label.waterloo" }
+			},
+			"patterns": [
+				{ "include": "#inline-waterloo" }
+			]
+		},
+		"map-from-type-identifier-to-freeform": {
+			"begin": "^([ \\t]+)({{RE_IDENTIFIER}}:)\\s*$",
+			"end": "^(?=(?:[ \\t]*{{RE_IDENTIFIER}}:|\\s*{{RE_END_OF_DOCSTRING}}))",
+			"beginCaptures": {
+				"2": { "name": "entity.name.type.waterloo" }
+			},
+			"patterns": [
+				{ "include": "#inline-waterloo" }
+			]
+		},
+		"map-from-func-identifier-to-freeform": {
+			"begin": "^([ \\t]+)({{RE_IDENTIFIER}}:)\\s*$",
+			"end": "^(?=(?:[ \\t]*{{RE_IDENTIFIER}}:|\\s*{{RE_END_OF_DOCSTRING}}))",
+			"beginCaptures": {
+				"2": { "name": "entity.name.function.waterloo" }
+			},
+			"patterns": [
+				{ "include": "#inline-waterloo" }
+			]
+		},
+		"map-from-func-qualified-identifier-to-freeform": {
+			"begin": "^([ \\t]+)({{RE_IDENTIFIER}}(?:\\.{{RE_IDENTIFIER}})*:)\\s*$",
+			"end": "^(?=(?:[ \\t]*{{RE_IDENTIFIER}}:|\\s*{{RE_END_OF_DOCSTRING}}))",
+			"beginCaptures": {
+				"2": { "name": "entity.name.function.waterloo" }
+			},
+			"patterns": [
+				{ "include": "#inline-waterloo" }
+			]
+		},
+		"map-from-var-identifier-to-freeform": {
+			"begin": "^([ \\t]+)({{RE_IDENTIFIER}}:)\\s*$",
+			"end": "^(?=(?:[ \\t]*{{RE_IDENTIFIER}}:|\\s*{{RE_END_OF_DOCSTRING}}))",
+			"beginCaptures": {
+				"2": { "name": "variable.other.python.waterloo" }
+			},
+			"patterns": [
+				{ "include": "#inline-waterloo" }
+			]
+		},
+		"map-from-qualified-identifier-to-freeform": {
+			"begin": "^([ \\t]+)({{RE_IDENTIFIER}}(?:\\.{{RE_IDENTIFIER}})*:)\\s*$",
+			"end": "^(?=(?:[ \\t]*{{RE_IDENTIFIER}}:|\\s*{{RE_END_OF_DOCSTRING}}))",
+			"beginCaptures": {
+				"2": { "name": "entity.name.label.waterloo" }
+			},
+			"patterns": [
+				{ "include": "#inline-waterloo" }
+			]
+		},
+		"inline-waterloo": {
+			"patterns": [
+				{
+					"name": "keyword.control.normative.waterloo",
+					"match": "\\|(?:Must|must|Must_not|must_not|Should|should|Should_not|should_not|May|may)\\|"
+				},
+				{
+					"name": "constant.language.special.waterloo",
+					"match": "\\|(?:Self|None|True|False)\\|"
+				},
+				{
+					"include": "#role-ref"
+				},
+				{
+					"include": "#inline-roles"
+				},
+				{
+					"name": "keyword.operator.textflow.waterloo",
+					"match": "^\\s*\\|\\s*$"
+				},
+				{
+					"name": "keyword.operator.line-continuation.waterloo",
+					"match": "\\\\(?=\\s*$)"
+				}
+			]
+		},
+		"inline-roles": {
+			"patterns": [
+				{
+					"name": "meta.literal.waterloo",
+					"match": "(\\|lit\\|)(`)([^`]+)(`)",
+					"captures": {
+						"1": { "name": "support.function.role.waterloo" },
+						"2": { "name": "punctuation.definition.string.begin.waterloo" },
+						"3": { "name": "markup.inline.raw.waterloo" },
+						"4": { "name": "punctuation.definition.string.end.waterloo" }
+					}
+				},
+				{
+					"name": "meta.inline.role.var.waterloo",
+					"match": "(\\|var\\|)(`)([^`]*)(`)",
+					"captures": {
+						"1": { "name": "support.function.role.waterloo" },
+						"2": { "name": "punctuation.definition.string.begin.waterloo" },
+						"3": { "name": "variable.other.python.waterloo" },
+						"4": { "name": "punctuation.definition.string.end.waterloo" }
+					}
+				},
+				{
+					"name": "meta.inline.role.type.waterloo",
+					"match": "(\\|type\\|)(`)([^`]*)(`)",
+					"captures": {
+						"1": { "name": "support.function.role.waterloo" },
+						"2": { "name": "punctuation.definition.string.begin.waterloo" },
+						"3": { "name": "entity.name.type.waterloo" },
+						"4": { "name": "punctuation.definition.string.end.waterloo" }
+					}
+				},
+				{
+					"name": "meta.inline.role.mod.waterloo",
+					"match": "(\\|mod\\|)(`)([^`]*)(`)",
+					"captures": {
+						"1": { "name": "support.function.role.waterloo" },
+						"2": { "name": "punctuation.definition.string.begin.waterloo" },
+						"3": { "name": "entity.name.namespace.python.waterloo" },
+						"4": { "name": "punctuation.definition.string.end.waterloo" }
+					}
+				},
+				{
+					"name": "meta.inline.role.value.waterloo",
+					"match": "(\\|value\\|)(`)([^`]*)(`)",
+					"captures": {
+						"1": { "name": "support.function.role.waterloo" },
+						"2": { "name": "punctuation.definition.string.begin.waterloo" },
+						"3": { "name": "constant.numeric.waterloo" },
+						"4": { "name": "punctuation.definition.string.end.waterloo" }
+					}
+				},
+				{
+					"name": "meta.inline.role.op.waterloo",
+					"match": "(\\|op\\|)(`)([^`]*)(`)",
+					"captures": {
+						"1": { "name": "support.function.role.waterloo" },
+						"2": { "name": "punctuation.definition.string.begin.waterloo" },
+						"3": { "name": "keyword.operator.waterloo" },
+						"4": { "name": "punctuation.definition.string.end.waterloo" }
+					}
+				},
+				{
+					"name": "meta.inline.role.func.waterloo",
+					"match": "(\\|func\\|)(`)([^`]*)(`)",
+					"captures": {
+						"1": { "name": "support.function.role.waterloo" },
+						"2": { "name": "punctuation.definition.string.begin.waterloo" },
+						"3": { "name": "entity.name.function.waterloo" },
+						"4": { "name": "punctuation.definition.string.end.waterloo" }
+					}
+				},
+				{
+					"name": "meta.inline.role.label.waterloo",
+					"match": "(\\|label\\|)(`)([^`]*)(`)",
+					"captures": {
+						"1": { "name": "support.function.role.waterloo" },
+						"2": { "name": "punctuation.definition.string.begin.waterloo" },
+						"3": { "name": "markup.heading.section.waterloo markup.italic.section.waterloo" },
+						"4": { "name": "punctuation.definition.string.end.waterloo" }
+					}
+				},
+				{
+					"name": "meta.inline.role.attr.waterloo",
+					"match": "(\\|attr\\|)(`)([^`]*)(`)",
+					"captures": {
+						"1": { "name": "support.function.role.waterloo" },
+						"2": { "name": "punctuation.definition.string.begin.waterloo" },
+						"3": { "name": "support.type.property-name.waterloo" },
+						"4": { "name": "punctuation.definition.string.end.waterloo" }
+					}
+				},
+				{
+					"name": "meta.inline.role.file.waterloo",
+					"match": "(\\|file\\|)(`)([^`]*)(`)",
+					"captures": {
+						"1": { "name": "support.function.role.waterloo" },
+						"2": { "name": "punctuation.definition.string.begin.waterloo" },
+						"3": { "name": "string.other.path.waterloo" },
+						"4": { "name": "punctuation.definition.string.end.waterloo" }
+					}
+				},
+				{
+					"name": "meta.inline.role.dfn.waterloo",
+					"match": "(\\|dfn\\|)(`)([^`]*)(`)",
+					"captures": {
+						"1": { "name": "support.function.role.waterloo" },
+						"2": { "name": "punctuation.definition.string.begin.waterloo" },
+						"3": { "name": "markup.italic.waterloo" },
+						"4": { "name": "punctuation.definition.string.end.waterloo" }
+					}
+				},
+				{
+					"name": "meta.inline.role.term.waterloo",
+					"match": "(\\|term\\|)(`)([^`]*)(`)",
+					"captures": {
+						"1": { "name": "support.function.role.waterloo" },
+						"2": { "name": "punctuation.definition.string.begin.waterloo" },
+						"3": { "name": "markup.italic.waterloo" },
+						"4": { "name": "punctuation.definition.string.end.waterloo" }
+					}
+				},
+				{
+					"name": "meta.inline.role.tag.waterloo",
+					"match": "(\\|tag\\|)(`)([^`]*)(`)",
+					"captures": {
+						"1": { "name": "support.function.role.waterloo" },
+						"2": { "name": "punctuation.definition.string.begin.waterloo" },
+						"3": { "name": "entity.name.tag.waterloo" },
+						"4": { "name": "punctuation.definition.string.end.waterloo" }
+					}
+				},
+				{
+					"name": "meta.inline.role.cmd.waterloo",
+					"match": "(\\|cmd\\|)(`)([^`]*)(`)",
+					"captures": {
+						"1": { "name": "support.function.role.waterloo" },
+						"2": { "name": "punctuation.definition.string.begin.waterloo" },
+						"3": { "name": "support.function.waterloo" },
+						"4": { "name": "punctuation.definition.string.end.waterloo" }
+					}
+				},
+				{
+					"name": "meta.inline.role.opt.waterloo",
+					"match": "(\\|opt\\|)(`)([^`]*)(`)",
+					"captures": {
+						"1": { "name": "support.function.role.waterloo" },
+						"2": { "name": "punctuation.definition.string.begin.waterloo" },
+						"3": { "name": "variable.parameter.option.waterloo" },
+						"4": { "name": "punctuation.definition.string.end.waterloo" }
+					}
+				},
+				{
+					"name": "meta.inline.role.waterloo",
+					"match": "(\\|{{RE_IDENTIFIER}}\\|)(`)([^`]*)(`)",
+					"captures": {
+						"1": { "name": "support.function.role.waterloo" },
+						"2": { "name": "punctuation.definition.string.begin.waterloo" },
+						"3": { "name": "string.quoted.other.role-arg.waterloo" },
+						"4": { "name": "punctuation.definition.string.end.waterloo" }
+					}
+				}
+			]
+		},
+		"role-ref": {
+			"name": "meta.link.ref.waterloo",
+			"match": "(\\|ref\\|)(`)([^`<>]*)(\\s*<)([^`<>]+)(>)(\\s*)(`)",
+			"captures": {
+				"1": { "name": "support.function.role.waterloo" },
+				"2": { "name": "punctuation.definition.string.begin.waterloo" },
+				"3": { "name": "string.other.link.title.waterloo" },
+				"4": { "name": "punctuation.definition.location.begin.waterloo" },
+				"5": { "name": "markup.underline.link.waterloo" },
+				"6": { "name": "punctuation.definition.location.end.waterloo" },
+				"7": { "name": "string.quoted.other.role-arg.waterloo" },
+				"8": { "name": "punctuation.definition.string.end.waterloo" }
+			}
+		}
+	}
+}
