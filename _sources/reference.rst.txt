@@ -718,5 +718,18 @@ Converter functions
 
 .. wtrl_pop_current_module:: sdv.doc.waterloo
 
+Lexer
+-----
+
+.. wtrl_push_current_module:: python_waterloo_lexer
+
+.. wtrl_autodoc_module:: python_waterloo_lexer
+
+.. wtrl_autodoc_class_full:: PythonWaterlooLexer
+
+.. wtrl_pop_current_module:: python_waterloo_lexer
+
+
+
 .. wtrl_pop_current_scope:: core
 
