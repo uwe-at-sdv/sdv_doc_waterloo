@@ -57,13 +57,13 @@ what an object is used for, what it must be capable of, what preconditions must 
 in order to use it, and what guarantees the object provides for the result.
 In the case of the module, there is a subsection named <code class="wtrl_label docutils literal notranslate"><span class="pre">general</span></code>.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;</span>
-<span class="ge">Preamble:</span>
-<span class="sd">	</span><span class="gh">profile:</span>
-<span class="sd">		module</span>
-<span class="sd">	</span><span class="gh">normative_sections:</span>
-<span class="sd">		</span><span class="ge">Contract</span>
-<span class="ge">Contract:</span>
-<span class="sd">	</span><span class="gh">general:</span>
+<span class="gh">Preamble:</span>
+<span class="sd">	</span><span class="gu">profile:</span>
+<span class="sd">		</span><span class="no">module</span>
+<span class="sd">	</span><span class="gu">normative_sections:</span>
+<span class="sd">		</span><span class="no">Contract</span>
+<span class="gh">Contract:</span>
+<span class="sd">	</span><span class="gu">general:</span>
 <span class="sd">		</span><span class="k">|Must|</span><span class="sd"> demonstrate the minimal module docstring.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 </pre></div>
@@ -134,26 +134,26 @@ sections is therefore necessary to satisfy BinNorm. Without this split,
 sections would contain a mixture of normative and informative content.</p></li>
 </ul>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="ge">Preamble:</span>
-<span class="sd">	</span><span class="gh">profile:</span>
-<span class="sd">		module</span>
-<span class="sd">	</span><span class="gh">normative_sections:</span>
-<span class="sd">		</span><span class="ge">Contract</span><span class="sd">, </span><span class="ge">Definitions</span><span class="sd">, </span><span class="ge">Public_classes</span><span class="sd">, </span><span class="ge">Public_functions</span>
-<span class="sd">		</span><span class="ge">Public_types</span><span class="sd">, </span><span class="ge">Public_variables</span><span class="sd">, </span><span class="ge">Public_constants</span>
-<span class="ge">Definitions:</span>
-<span class="sd">	</span><span class="gh">MyItem:</span>
-<span class="sd">		This is a term named </span><span class="k">|term|</span><span class="l">`MyItem`</span><span class="sd"> in section &quot;Definitions&quot;.</span>
+<span class="gh">Preamble:</span>
+<span class="sd">	</span><span class="gu">profile:</span>
+<span class="sd">		</span><span class="no">module</span>
+<span class="sd">	</span><span class="gu">normative_sections:</span>
+<span class="sd">		</span><span class="no">Contract</span><span class="sd">, </span><span class="no">Definitions</span><span class="sd">, </span><span class="no">Public_classes</span><span class="sd">, </span><span class="no">Public_functions</span>
+<span class="sd">		</span><span class="no">Public_types</span><span class="sd">, </span><span class="no">Public_variables</span><span class="sd">, </span><span class="no">Public_constants</span>
+<span class="gh">Definitions:</span>
+<span class="sd">	</span><span class="ge">MyItem:</span>
+<span class="sd">		This is a term named </span><span class="k">|term|</span><span class="ge">`MyItem`</span><span class="sd"> in section &quot;Definitions&quot;.</span>
 <span class="sd">		This section is always normative and </span><span class="k">|must|</span><span class="sd"> be listed</span>
 <span class="sd">		in &quot;normative_sections&quot;. You can refer to this term by using the</span>
 <span class="sd">		syntax token &quot;|&quot; + term + &quot;|&quot; followed by the referred term in</span>
 <span class="sd">		backticks. Any validator will ensure that the terms you refer to</span>
 <span class="sd">		by this token are defined in section &quot;Definitions&quot;.</span>
-<span class="sd">	</span><span class="gh">My_Other_Item:</span>
+<span class="sd">	</span><span class="ge">My_Other_Item:</span>
 <span class="sd">		Here is another example. Note that term names are Identifiers</span>
 <span class="sd">		like variable names in most programming languages, restricted to</span>
 <span class="sd">		letters, digits, and underscore.</span>
-<span class="ge">Terminology:</span>
-<span class="sd">	</span><span class="gh">Fancy-Unicorn:</span>
+<span class="gh">Terminology:</span>
+<span class="sd">	</span><span class="ge">Fancy-Unicorn:</span>
 <span class="sd">		The section &quot;Terminology&quot; allows to define terms in an informative</span>
 <span class="sd">		manner. Typically, this subsection would start like</span>
 <span class="sd">		&quot;A Fancy-Unicorn is ...&quot; followed by an explanation.</span>
@@ -167,14 +167,14 @@ sections would contain a mixture of normative and informative content.</p></li>
 <span class="sd">		Take care, however, that the name does not collide with syntax rules</span>
 <span class="sd">		of the intermediate document language (like reST in our case).</span>
 <span class="sd">	</span>
-<span class="ge">Contract:</span>
-<span class="sd">	</span><span class="gh">general:</span>
+<span class="gh">Contract:</span>
+<span class="sd">	</span><span class="gu">general:</span>
 <span class="sd">		</span><span class="k">|Must|</span><span class="sd"> demonstrate all sections and subsection</span><span class="k">\</span>
 <span class="sd">		and syntax tokens like backslash for continued lines.</span>
 <span class="sd">		</span><span class="k">|Must|</span><span class="sd"> point out that logical lines are interpreted</span><span class="k">\</span>
 <span class="sd">		as items, so here we have two logical lines, i.e. two items.</span>
-<span class="sd">		This docstring </span><span class="k">|may|</span><span class="sd"> refer to </span><span class="k">|term|</span><span class="l">`MyItem`</span><span class="sd"> for demonstration purposes.</span>
-<span class="ge">Description:</span>
+<span class="sd">		This docstring </span><span class="k">|may|</span><span class="sd"> refer to </span><span class="k">|term|</span><span class="ge">`MyItem`</span><span class="sd"> for demonstration purposes.</span>
+<span class="gh">Description:</span>
 <span class="sd">	The purpose of this module is to demonstrate waterloo docstrings</span>
 <span class="sd">	on module level. A linter will accept this docstring, but</span>
 <span class="sd">	coverage is not given, because the classes and function mentioned</span>
@@ -185,7 +185,7 @@ sections would contain a mixture of normative and informative content.</p></li>
 <span class="k">	|</span>
 <span class="sd">	A section &quot;Description&quot; may be normative, but in this example it is not,</span>
 <span class="sd">	since it does not contain normativity keywords in tokenized form.</span>
-<span class="ge">Notes:</span>
+<span class="gh">Notes:</span>
 <span class="sd">	</span><span class="gh">What is it good for:</span>
 <span class="sd">		Section &quot;Notes&quot; allows you to add informative content.</span>
 <span class="sd">	</span><span class="gh">What it is not good for:</span>
@@ -196,38 +196,38 @@ sections would contain a mixture of normative and informative content.</p></li>
 <span class="sd">		The section &quot;Notes&quot; is subdivided into subsections with</span>
 <span class="sd">		user-defined labels like in this example &quot;What is it good for:&quot;,</span>
 <span class="sd">		&quot;What it is not good for:&quot; and &quot;Syntax:&quot;</span>
-<span class="ge">Public_classes:</span>
-<span class="sd">	MyClass</span>
-<span class="ge">Class_overview:</span>
-<span class="sd">	</span><span class="gh">MyClass:</span>
+<span class="gh">Public_classes:</span>
+<span class="sd">	</span><span class="nc">MyClass</span>
+<span class="gh">Class_overview:</span>
+<span class="sd">	</span><span class="nc">MyClass:</span>
 <span class="sd">		Class for nothing</span>
-<span class="ge">Public_functions:</span>
-<span class="sd">	my_function</span>
-<span class="ge">Function_overview:</span>
-<span class="sd">	</span><span class="gh">my_function:</span>
+<span class="gh">Public_functions:</span>
+<span class="sd">	</span><span class="nf">my_function</span>
+<span class="gh">Function_overview:</span>
+<span class="sd">	</span><span class="nf">my_function:</span>
 <span class="sd">		Important for demonstration but does nothing</span>
-<span class="ge">Public_types:</span>
-<span class="sd">	</span><span class="gh">MyTypeAlias_t:</span>
+<span class="gh">Public_types:</span>
+<span class="sd">	</span><span class="nc">MyTypeAlias_t:</span>
 <span class="sd">		</span><span class="k">|Must|</span><span class="sd"> represent a union of :wtrl_type:`float` and :wtrl_type:`int`.</span><span class="k">\</span>
 <span class="sd">		This section is always normative. All relevant information about the</span><span class="k">\</span>
 <span class="sd">		type alias is specified here, as type aliases do not provide their own</span><span class="k">\</span>
 <span class="sd">		machine-verifiable docstrings.</span>
-<span class="ge">Public_variables:</span>
-<span class="sd">	</span><span class="gh">my_variable:</span>
+<span class="gh">Public_variables:</span>
+<span class="sd">	</span><span class="nv">my_variable:</span>
 <span class="sd">		</span><span class="k">|Must|</span><span class="sd"> represent a value for this and that.</span><span class="k">\</span>
 <span class="sd">		This section is always normative. All relevant information is specified</span><span class="k">\</span>
 <span class="sd">		here, since variables do not have standardized, machine-verifiable</span><span class="k">\</span>
 <span class="sd">		docstrings.</span>
-<span class="ge">Public_constants:</span>
-<span class="sd">	</span><span class="gh">MY_CONSTANT:</span>
+<span class="gh">Public_constants:</span>
+<span class="sd">	</span><span class="nv">MY_CONSTANT:</span>
 <span class="sd">		</span><span class="k">|Must|</span><span class="sd"> represent a constant value annotated as :wtrl_type:`Final`.</span><span class="k">\</span>
 <span class="sd">		This section is always normative. All relevant information is specified</span><span class="k">\</span>
 <span class="sd">		here, as constants do not provide their own machine-verifiable</span><span class="k">\</span>
 <span class="sd">		docstrings.</span>
 <span class="sd">		</span>
-<span class="ge">See_also:</span>
-<span class="sd">	test_docitem_module_minimal</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="gh">See_also:</span>
+<span class="sd">	</span><span class="nv">test_docitem_module_minimal</span>
+<span class="nv">&quot;&quot;&quot;</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Final</span><span class="p">,</span> <span class="n">TypeAlias</span>
 
@@ -368,15 +368,15 @@ Therefore the Waterloo format demands a normative statement
 on the class constructor in section <code class="wtrl_label docutils literal notranslate"><span class="pre">Contract</span></code>.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">MyClass</span><span class="p">:</span>
 <span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="ge">Preamble:</span>
-<span class="sd">	</span><span class="gh">profile:</span>
-<span class="sd">		class</span>
-<span class="sd">	</span><span class="gh">normative_sections:</span>
-<span class="sd">		</span><span class="ge">Contract</span>
-<span class="ge">Contract:</span>
-<span class="sd">	</span><span class="gh">general:</span>
+<span class="gh">Preamble:</span>
+<span class="sd">	</span><span class="gu">profile:</span>
+<span class="sd">		</span><span class="no">class</span>
+<span class="sd">	</span><span class="gu">normative_sections:</span>
+<span class="sd">		</span><span class="no">Contract</span>
+<span class="gh">Contract:</span>
+<span class="sd">	</span><span class="gu">general:</span>
 <span class="sd">		</span><span class="k">|Must|</span><span class="sd"> demonstrate the minimal class docstring.</span>
-<span class="sd">	</span><span class="gh">constructor:</span>
+<span class="sd">	</span><span class="gu">constructor:</span>
 <span class="sd">		</span><span class="k">|Must|</span><span class="sd"> be default-constructible</span>
 <span class="sd">	&quot;&quot;&quot;</span>
 	<span class="k">pass</span>
@@ -467,22 +467,22 @@ usage. This section may only be present if section
 
 <span class="k">class</span><span class="w"> </span><span class="nc">MyClass</span><span class="p">(</span><span class="n">MyBaseClass</span><span class="p">,</span><span class="n">MyOtherBaseClass</span><span class="p">):</span>
 <span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="ge">	Preamble:</span>
-<span class="sd">		</span><span class="gh">profile:</span>
-<span class="sd">			class</span>
-<span class="sd">		</span><span class="gh">normative_sections:</span>
-<span class="sd">			</span><span class="ge">Contract</span><span class="sd">, </span><span class="ge">Definitions</span><span class="sd">, </span><span class="ge">Derived_from</span><span class="sd">, </span><span class="ge">Public_classes</span>
-<span class="sd">			</span><span class="ge">Public_methods</span><span class="sd">, </span><span class="ge">Public_types</span><span class="sd">, </span><span class="ge">Public_variables</span><span class="sd">, </span><span class="ge">Public_constants</span>
-<span class="ge">	Definitions:</span>
-<span class="sd">		</span><span class="gh">MyExampleItem:</span>
+<span class="gh">	Preamble:</span>
+<span class="sd">		</span><span class="gu">profile:</span>
+<span class="sd">			</span><span class="no">class</span>
+<span class="sd">		</span><span class="gu">normative_sections:</span>
+<span class="sd">			</span><span class="no">Contract</span><span class="sd">, </span><span class="no">Definitions</span><span class="sd">, </span><span class="no">Derived_from</span><span class="sd">, </span><span class="no">Public_classes</span>
+<span class="sd">			</span><span class="no">Public_methods</span><span class="sd">, </span><span class="no">Public_types</span><span class="sd">, </span><span class="no">Public_variables</span><span class="sd">, </span><span class="no">Public_constants</span>
+<span class="gh">	Definitions:</span>
+<span class="sd">		</span><span class="ge">MyExampleItem:</span>
 <span class="sd">			Define a term normatively. Same as for modules.</span>
-<span class="ge">	Terminology:</span>
-<span class="sd">		</span><span class="gh">Fancy-Unicorn:</span>
+<span class="gh">	Terminology:</span>
+<span class="sd">		</span><span class="ge">Fancy-Unicorn:</span>
 <span class="sd">			Define a term informatively. Same as for modules.</span>
-<span class="ge">	Contract:</span>
-<span class="sd">		</span><span class="gh">general:</span>
+<span class="gh">	Contract:</span>
+<span class="sd">		</span><span class="gu">general:</span>
 <span class="sd">			</span><span class="k">|Must|</span><span class="sd"> demonstrate the minimal class docstring.</span>
-<span class="sd">		</span><span class="gh">constructor:</span>
+<span class="sd">		</span><span class="gu">constructor:</span>
 <span class="sd">			</span><span class="k">|Must|</span><span class="sd"> demand an int-valued positional parameter &#39;a&#39;.</span>
 <span class="sd">			</span><span class="k">|Must|</span><span class="sd"> demand a str-valued positional or keyword parameter &#39;b&#39;.</span>
 <span class="sd">			</span><span class="k">|Must|</span><span class="sd"> accept a float-valued positional or keyword parameter &#39;c&#39;.</span>
@@ -490,39 +490,39 @@ usage. This section may only be present if section
 <span class="sd">			</span><span class="k">|Must|</span><span class="sd"> accept (variadic) keyword parameters and dispatch them as follows:</span>
 <span class="sd">			</span><span class="k">|Must|</span><span class="sd"> accept a keyword parameter &#39;e&#39; and assert it is str-valued (if present).</span>
 <span class="sd">			The constructor </span><span class="k">|must|</span><span class="sd"> print all parameter values to &#39;stdout&#39;.</span>
-<span class="sd">		</span><span class="gh">traits:</span>
-<span class="sd">			final</span>
-<span class="ge">	Derived_from:</span>
-<span class="sd">		MyBaseClass</span>
-<span class="ge">	Description:</span>
+<span class="sd">		</span><span class="gu">traits:</span>
+<span class="sd">			</span><span class="no">final</span>
+<span class="gh">	Derived_from:</span>
+<span class="sd">		</span><span class="nc">MyBaseClass</span>
+<span class="gh">	Description:</span>
 <span class="sd">		As for modules</span>
-<span class="ge">	Notes:</span>
+<span class="gh">	Notes:</span>
 <span class="sd">		</span><span class="gh">Purpose and Syntax:</span>
 <span class="sd">			Same as for modules</span>
-<span class="ge">	Public_classes:</span>
-<span class="sd">		MyNestedClass</span>
-<span class="ge">	Class_overview:</span>
-<span class="sd">		</span><span class="gh">MyNestedClass:</span>
+<span class="gh">	Public_classes:</span>
+<span class="sd">		</span><span class="nc">MyNestedClass</span>
+<span class="gh">	Class_overview:</span>
+<span class="sd">		</span><span class="nc">MyNestedClass:</span>
 <span class="sd">			Use this section for informative reminders what the class</span><span class="k">\</span>
 <span class="sd">			is good for.</span>
 <span class="sd">			Multiple lines are possible. Do not use Normativity Keywords.</span>
-<span class="ge">	Public_methods:</span>
-<span class="sd">		my_method</span>
-<span class="ge">	Method_overview:</span>
-<span class="sd">		</span><span class="gh">my_method:</span>
+<span class="gh">	Public_methods:</span>
+<span class="sd">		</span><span class="nf">my_method</span>
+<span class="gh">	Method_overview:</span>
+<span class="sd">		</span><span class="nf">my_method:</span>
 <span class="sd">			Important for demonstration but does nothing</span>
-<span class="ge">	Public_types:</span>
-<span class="sd">		</span><span class="gh">MyTypeAlias_t:</span>
+<span class="gh">	Public_types:</span>
+<span class="sd">		</span><span class="nc">MyTypeAlias_t:</span>
 <span class="sd">			Important type for annotations</span>
-<span class="ge">	Public_variables:</span>
-<span class="sd">		</span><span class="gh">my_variable:</span>
+<span class="gh">	Public_variables:</span>
+<span class="sd">		</span><span class="nv">my_variable:</span>
 <span class="sd">			A variable</span>
-<span class="ge">	Public_constants:</span>
-<span class="sd">		</span><span class="gh">MY_CONSTANT:</span>
+<span class="gh">	Public_constants:</span>
+<span class="sd">		</span><span class="nv">MY_CONSTANT:</span>
 <span class="sd">			Another constant</span>
-<span class="ge">	See_also:</span>
-<span class="sd">		test_docitem_module_minimal</span>
-<span class="sd">	&quot;&quot;&quot;</span>
+<span class="gh">	See_also:</span>
+<span class="sd">		</span><span class="nv">test_docitem_module_minimal</span>
+<span class="sd">	</span><span class="nv">&quot;&quot;&quot;</span>
 
 	<span class="k">class</span><span class="w"> </span><span class="nc">MyNestedClass</span><span class="p">:</span>
 		<span class="k">pass</span>
@@ -694,18 +694,18 @@ Each subsection is labelled by an exception class and describes, normatively,
 the circumstances under which the exception is raised.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">spam</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="ge">	Preamble:</span>
-<span class="sd">		</span><span class="gh">profile:</span>
-<span class="sd">			function</span>
-<span class="sd">		</span><span class="gh">normative_sections:</span>
-<span class="sd">			</span><span class="ge">Contract</span><span class="sd">, </span><span class="ge">Parameters</span><span class="sd">, </span><span class="ge">Returns</span><span class="sd">, </span><span class="ge">Raises</span>
-<span class="ge">	Contract:</span>
-<span class="sd">		</span><span class="gh">general:</span>
+<span class="gh">	Preamble:</span>
+<span class="sd">		</span><span class="gu">profile:</span>
+<span class="sd">			</span><span class="no">function</span>
+<span class="sd">		</span><span class="gu">normative_sections:</span>
+<span class="sd">			</span><span class="no">Contract</span><span class="sd">, </span><span class="no">Parameters</span><span class="sd">, </span><span class="no">Returns</span><span class="sd">, </span><span class="no">Raises</span>
+<span class="gh">	Contract:</span>
+<span class="sd">		</span><span class="gu">general:</span>
 <span class="sd">			</span><span class="k">|Must|</span><span class="sd"> demonstrate the minimal function docstring.</span>
-<span class="ge">	Parameters:</span>
-<span class="ge">	Returns:</span>
+<span class="gh">	Parameters:</span>
+<span class="gh">	Returns:</span>
 <span class="sd">		</span><span class="kc">|None|</span>
-<span class="ge">	Raises:</span>
+<span class="gh">	Raises:</span>
 <span class="sd">	&quot;&quot;&quot;</span>
 </pre></div>
 </div>
@@ -760,8 +760,8 @@ called internally, potentially even from a different package.</p>
 due to refactoring), the most conservative approach for such cases is to
 document exception propagation explicitly:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;</span>
-<span class="ge">Raises:</span>
-<span class="sd">        </span><span class="gh">BaseException:</span>
+<span class="gh">Raises:</span>
+<span class="sd">        </span><span class="ne">BaseException:</span>
 <span class="sd">                </span><span class="k">|May|</span><span class="sd"> propagate from functions ... and ...</span>
 <span class="sd">&quot;&quot;&quot;</span>
 </pre></div>
@@ -800,33 +800,33 @@ optional.</p>
 <span class="k">class</span><span class="w"> </span><span class="nc">docitem_base</span><span class="p">:</span>
 	<span class="k">def</span><span class="w"> </span><span class="nf">parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">tr</span> <span class="p">:</span> <span class="n">tracer</span><span class="p">,</span><span class="n">subtree</span> <span class="p">:</span> <span class="n">DocstringSubtree</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="ge">		Preamble:</span>
-<span class="sd">			</span><span class="gh">profile:</span>
-<span class="sd">				method</span>
-<span class="sd">			</span><span class="gh">normative_sections:</span>
-<span class="sd">				</span><span class="ge">Contract</span><span class="sd">, </span><span class="ge">Parameters</span><span class="sd">, </span><span class="ge">Returns</span><span class="sd">, </span><span class="ge">Raises</span>
-<span class="ge">		Description:</span>
+<span class="gh">		Preamble:</span>
+<span class="sd">			</span><span class="gu">profile:</span>
+<span class="sd">				</span><span class="no">method</span>
+<span class="sd">			</span><span class="gu">normative_sections:</span>
+<span class="sd">				</span><span class="no">Contract</span><span class="sd">, </span><span class="no">Parameters</span><span class="sd">, </span><span class="no">Returns</span><span class="sd">, </span><span class="no">Raises</span>
+<span class="gh">		Description:</span>
 <span class="sd">			This docstring is located in the base class of all docitem</span>
 <span class="sd">			node classes. The method is not implemented here and will</span>
 <span class="sd">			raise an exception if it is invoked without a corresponding</span>
 <span class="sd">			implementation in a derived class.</span>
-<span class="ge">		Contract:</span>
-<span class="sd">			</span><span class="gh">general:</span>
+<span class="gh">		Contract:</span>
+<span class="sd">			</span><span class="gu">general:</span>
 <span class="sd">				</span><span class="k">|Must|</span><span class="sd"> parse a docstring subtree and create the related child items.</span>
-<span class="sd">			</span><span class="gh">requires:</span>
+<span class="sd">			</span><span class="gu">requires:</span>
 <span class="sd">				:wtrl_var:`subtree` </span><span class="k">|must|</span><span class="sd"> be a formally correct docstring subtree</span><span class="k">\</span>
 <span class="sd">				from a Waterloo docstring; otherwise parsing will fail.</span>
-<span class="ge">		Parameters:</span>
-<span class="sd">			</span><span class="gh">tr:</span>
+<span class="gh">		Parameters:</span>
+<span class="sd">			</span><span class="nv">tr:</span>
 <span class="sd">				The tracer for collecting diagnostics.</span>
-<span class="sd">			</span><span class="gh">subtree:</span>
+<span class="sd">			</span><span class="nv">subtree:</span>
 <span class="sd">				A subtree of the tree matching this instance.</span>
-<span class="ge">		Returns:</span>
+<span class="gh">		Returns:</span>
 <span class="sd">			</span><span class="kc">|None|</span>
-<span class="ge">		Raises:</span>
-<span class="sd">			</span><span class="gh">NotImplementedError:</span>
+<span class="gh">		Raises:</span>
+<span class="sd">			</span><span class="ne">NotImplementedError:</span>
 <span class="sd">				</span><span class="k">|Must|</span><span class="sd"> raise if not implemented in the derived class.</span>
-<span class="sd">			</span><span class="gh">RuntimeError:</span>
+<span class="sd">			</span><span class="ne">RuntimeError:</span>
 <span class="sd">				</span><span class="k">|Must|</span><span class="sd"> raise if the subtree does not match the expected format.</span>
 <span class="sd">				&quot;&quot;&quot;</span>
 		<span class="k">raise</span> <span class="ne">NotImplementedError</span>
@@ -951,19 +951,19 @@ is explicitly referenced using the mandatory subsection <code class="wtrl_label 
 <span class="k">class</span><span class="w"> </span><span class="nc">docitem_traits</span><span class="p">(</span><span class="n">docitem_list_of_symbols_base</span><span class="p">):</span>
 	<span class="k">def</span><span class="w"> </span><span class="nf">parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tr</span><span class="p">:</span> <span class="n">tracer</span><span class="p">,</span> <span class="n">refs</span><span class="p">:</span> <span class="n">DocstringSubtree</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="ge">		Preamble:</span>
-<span class="sd">			</span><span class="gh">profile:</span>
-<span class="sd">				inherited_method</span>
-<span class="sd">			</span><span class="gh">normative_sections:</span>
-<span class="sd">				</span><span class="ge">Contract</span>
-<span class="ge">		Contract:</span>
-<span class="sd">			</span><span class="gh">general:</span>
+<span class="gh">		Preamble:</span>
+<span class="sd">			</span><span class="gu">profile:</span>
+<span class="sd">				</span><span class="no">inherited_method</span>
+<span class="sd">			</span><span class="gu">normative_sections:</span>
+<span class="sd">				</span><span class="no">Contract</span>
+<span class="gh">		Contract:</span>
+<span class="sd">			</span><span class="gu">general:</span>
 <span class="sd">				</span><span class="k">|Must|</span><span class="sd"> set rules-on-fail in the tracer and delegate</span><span class="k">\</span>
 <span class="sd">				to method :wtrl_func:`._parse` in class</span><span class="k">\</span>
 <span class="sd">				:wtrl_type:`docitem_list_of_symbols_base`.</span>
-<span class="sd">			</span><span class="gh">base:</span>
-<span class="sd">				test_docitem_function_medium.docitem_base.parse</span>
-<span class="sd">		&quot;&quot;&quot;</span>
+<span class="sd">			</span><span class="gu">base:</span>
+<span class="sd">				</span><span class="nc">test_docitem_function_medium.docitem_base.parse</span>
+<span class="sd">		</span><span class="nc">&quot;&quot;&quot;</span>
 <span class="c1"># Some implementation here...</span>
 <span class="c1">#		...</span>
 		<span class="k">pass</span>
@@ -1057,79 +1057,79 @@ the base preconditions, unless they are explicitly permitted by the base contrac
 
 <span class="k">def</span><span class="w"> </span><span class="nf">test</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="ge">Preamble:</span>
-<span class="sd">	</span><span class="gh">profile:</span>
-<span class="sd">		function</span>
-<span class="sd">	</span><span class="gh">normative_sections:</span>
-<span class="sd">		</span><span class="ge">Contract</span><span class="sd">, </span><span class="ge">Parameters</span><span class="sd">, </span><span class="ge">Returns</span><span class="sd">, </span><span class="ge">Raises</span>
-<span class="ge">Description:</span>
+<span class="gh">Preamble:</span>
+<span class="sd">	</span><span class="gu">profile:</span>
+<span class="sd">		</span><span class="no">function</span>
+<span class="sd">	</span><span class="gu">normative_sections:</span>
+<span class="sd">		</span><span class="no">Contract</span><span class="sd">, </span><span class="no">Parameters</span><span class="sd">, </span><span class="no">Returns</span><span class="sd">, </span><span class="no">Raises</span>
+<span class="gh">Description:</span>
 <span class="sd">	By this function we test the See_also section in factorial.</span>
 <span class="sd">	Since :trl_label:`See_also` is normative (in this case)</span>
 <span class="sd">	the docstring in the referred object must be a valid Waterloo string.</span>
-<span class="ge">Contract:</span>
-<span class="sd">	</span><span class="gh">general:</span>
+<span class="gh">Contract:</span>
+<span class="sd">	</span><span class="gu">general:</span>
 <span class="sd">		</span><span class="k">|Must|</span><span class="sd"> do nothing.</span>
-<span class="ge">Parameters:</span>
-<span class="ge">Returns:</span>
+<span class="gh">Parameters:</span>
+<span class="gh">Returns:</span>
 <span class="sd">	</span><span class="kc">|None|</span>
-<span class="ge">Raises:</span>
+<span class="gh">Raises:</span>
 <span class="sd">	&quot;&quot;&quot;</span>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">factorial</span><span class="p">(</span><span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="ge">Preamble:</span>
-<span class="sd">	</span><span class="gh">profile:</span>
-<span class="sd">		function</span>
-<span class="sd">	</span><span class="gh">normative_sections:</span>
-<span class="sd">		</span><span class="ge">Definitions</span><span class="sd">, </span><span class="ge">Contract</span><span class="sd">, </span><span class="ge">Parameters</span><span class="sd">, </span><span class="ge">Returns</span><span class="sd">, </span><span class="ge">Raises</span><span class="sd">, </span><span class="ge">See_also</span>
+<span class="gh">Preamble:</span>
+<span class="sd">	</span><span class="gu">profile:</span>
+<span class="sd">		</span><span class="no">function</span>
+<span class="sd">	</span><span class="gu">normative_sections:</span>
+<span class="sd">		</span><span class="no">Definitions</span><span class="sd">, </span><span class="no">Contract</span><span class="sd">, </span><span class="no">Parameters</span><span class="sd">, </span><span class="no">Returns</span><span class="sd">, </span><span class="no">Raises</span><span class="sd">, </span><span class="no">See_also</span>
 
-<span class="ge">Definitions:</span>
-<span class="sd">	</span><span class="gh">factorial:</span>
+<span class="gh">Definitions:</span>
+<span class="sd">	</span><span class="ge">factorial:</span>
 <span class="sd">		For a non-negative integer n, factorial(n) is defined recursively by:</span>
 <span class="sd">		factorial(0) = 1 and factorial(n) = n * factorial(n-1) for n &gt; 0.</span>
-<span class="sd">	</span><span class="gh">positive:</span>
+<span class="sd">	</span><span class="ge">positive:</span>
 <span class="sd">		An integer x is called ``positive`` if x &gt; 0.</span>
 
-<span class="ge">Description:</span>
+<span class="gh">Description:</span>
 <span class="sd">	This function provides a simple, deterministic reference implementation.</span>
 <span class="sd">	It is intended to demonstrate a full Waterloo function docstring with a</span>
 <span class="sd">	clear contract and well-defined failure modes.</span>
 
-<span class="ge">Terminology:</span>
-<span class="sd">	</span><span class="gh">recursion:</span>
+<span class="gh">Terminology:</span>
+<span class="sd">	</span><span class="ge">recursion:</span>
 <span class="sd">		The definition uses recursion; the implementation does not have to.</span>
 
-<span class="ge">Contract:</span>
-<span class="sd">	</span><span class="gh">general:</span>
-<span class="sd">		</span><span class="k">|Must|</span><span class="sd"> compute </span><span class="k">|term|</span><span class="l">`factorial`</span><span class="sd"> for the given argument.</span>
+<span class="gh">Contract:</span>
+<span class="sd">	</span><span class="gu">general:</span>
+<span class="sd">		</span><span class="k">|Must|</span><span class="sd"> compute </span><span class="k">|term|</span><span class="ge">`factorial`</span><span class="sd"> for the given argument.</span>
 <span class="sd">		</span><span class="k">|Must|</span><span class="sd"> be thread-safe.</span>
-<span class="sd">	</span><span class="gh">requires:</span>
-<span class="sd">		</span><span class="k">|var|</span><span class="l">`n`</span><span class="sd"> </span><span class="k">|must|</span><span class="sd"> be an integer.</span>
-<span class="sd">		</span><span class="k">|var|</span><span class="l">`n`</span><span class="sd"> </span><span class="k">|must|</span><span class="sd"> be greater than or equal to 0.</span>
-<span class="sd">		</span><span class="k">|var|</span><span class="l">`n`</span><span class="sd"> </span><span class="k">|must|</span><span class="sd"> be less than or equal to </span><span class="k">|var|</span><span class="l">`_MAX_N`</span><span class="sd">.</span>
-<span class="sd">	</span><span class="gh">ensures:</span>
+<span class="sd">	</span><span class="gu">requires:</span>
+<span class="sd">		</span><span class="k">|var|</span><span class="nv">`n`</span><span class="sd"> </span><span class="k">|must|</span><span class="sd"> be an integer.</span>
+<span class="sd">		</span><span class="k">|var|</span><span class="nv">`n`</span><span class="sd"> </span><span class="k">|must|</span><span class="sd"> be greater than or equal to 0.</span>
+<span class="sd">		</span><span class="k">|var|</span><span class="nv">`n`</span><span class="sd"> </span><span class="k">|must|</span><span class="sd"> be less than or equal to </span><span class="k">|var|</span><span class="nv">`_MAX_N`</span><span class="sd">.</span>
+<span class="sd">	</span><span class="gu">ensures:</span>
 <span class="sd">		The return value </span><span class="k">|must|</span><span class="sd"> be an integer.</span>
-<span class="sd">		If </span><span class="k">|var|</span><span class="l">`n`</span><span class="sd"> is 0, the result </span><span class="k">|must|</span><span class="sd"> be 1.</span>
-<span class="sd">		If </span><span class="k">|var|</span><span class="l">`n`</span><span class="sd"> is greater than 0, the result </span><span class="k">|must|</span><span class="sd"> be </span><span class="k">|term|</span><span class="l">`positive`</span><span class="sd">.</span>
-<span class="sd">		The result </span><span class="k">|must|</span><span class="sd"> be divisible by </span><span class="k">|var|</span><span class="l">`n`</span><span class="sd"> for all </span><span class="k">|var|</span><span class="l">`n`</span><span class="sd"> &gt; 0.</span>
+<span class="sd">		If </span><span class="k">|var|</span><span class="nv">`n`</span><span class="sd"> is 0, the result </span><span class="k">|must|</span><span class="sd"> be 1.</span>
+<span class="sd">		If </span><span class="k">|var|</span><span class="nv">`n`</span><span class="sd"> is greater than 0, the result </span><span class="k">|must|</span><span class="sd"> be </span><span class="k">|term|</span><span class="ge">`positive`</span><span class="sd">.</span>
+<span class="sd">		The result </span><span class="k">|must|</span><span class="sd"> be divisible by </span><span class="k">|var|</span><span class="nv">`n`</span><span class="sd"> for all </span><span class="k">|var|</span><span class="nv">`n`</span><span class="sd"> &gt; 0.</span>
 
-<span class="ge">Parameters:</span>
-<span class="sd">	</span><span class="gh">n:</span>
+<span class="gh">Parameters:</span>
+<span class="sd">	</span><span class="nv">n:</span>
 <span class="sd">		Non-negative integer input.</span>
 
-<span class="ge">Returns:</span>
+<span class="gh">Returns:</span>
 <span class="sd">	The factorial value.</span>
 
-<span class="ge">Raises:</span>
-<span class="sd">	</span><span class="gh">TypeError:</span>
-<span class="sd">		</span><span class="k">|Must|</span><span class="sd"> raise if </span><span class="k">|var|</span><span class="l">`n`</span><span class="sd"> is not an </span><span class="k">|type|</span><span class="l">`int`</span><span class="sd">.</span>
-<span class="sd">	</span><span class="gh">ValueError:</span>
-<span class="sd">		</span><span class="k">|Must|</span><span class="sd"> raise if </span><span class="k">|var|</span><span class="l">`n`</span><span class="sd"> is negative.</span>
-<span class="sd">	</span><span class="gh">OverflowError:</span>
-<span class="sd">		</span><span class="k">|Must|</span><span class="sd"> raise if </span><span class="k">|var|</span><span class="l">`n`</span><span class="sd"> is greater than </span><span class="k">|var|</span><span class="l">`_MAX_N`</span><span class="sd">.</span>
-<span class="ge">See_also:</span>
-<span class="sd">	math.factorial, test</span>
-<span class="sd">	&quot;&quot;&quot;</span>
+<span class="gh">Raises:</span>
+<span class="sd">	</span><span class="ne">TypeError:</span>
+<span class="sd">		</span><span class="k">|Must|</span><span class="sd"> raise if </span><span class="k">|var|</span><span class="nv">`n`</span><span class="sd"> is not an </span><span class="k">|type|</span><span class="nc">`int`</span><span class="sd">.</span>
+<span class="sd">	</span><span class="ne">ValueError:</span>
+<span class="sd">		</span><span class="k">|Must|</span><span class="sd"> raise if </span><span class="k">|var|</span><span class="nv">`n`</span><span class="sd"> is negative.</span>
+<span class="sd">	</span><span class="ne">OverflowError:</span>
+<span class="sd">		</span><span class="k">|Must|</span><span class="sd"> raise if </span><span class="k">|var|</span><span class="nv">`n`</span><span class="sd"> is greater than </span><span class="k">|var|</span><span class="nv">`_MAX_N`</span><span class="sd">.</span>
+<span class="gh">See_also:</span>
+<span class="sd">	</span><span class="nv">math.factorial</span><span class="sd">, </span><span class="nv">test</span>
+<span class="sd">	</span><span class="nv">&quot;&quot;&quot;</span>
 	<span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
 		<span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;factorial: n must be an int&quot;</span><span class="p">)</span>
 	<span class="k">if</span> <span class="n">n</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>

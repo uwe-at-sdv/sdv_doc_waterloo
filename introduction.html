@@ -455,22 +455,26 @@ toolchain.</p>
 <p>The main version is intended to remain stable over long periods of time.
 A change of the major component indicates an intentional incompatibility
 with previously valid Waterloo documents or tools.</p>
+<section id="subsystem-versions">
+<h3><span class="section-number">1.9.1. </span>Subsystem versions<a class="headerlink" href="#subsystem-versions" title="Link to this heading">¶</a></h3>
 <p>Subsystems may evolve independently and therefore maintain their own
 version numbers. A version change in one subsystem does not directly
 modify the version numbers of other subsystems.</p>
 <p>Subsystem versions exist primarily to track development and internal
 evolution of the individual components.</p>
+</section>
+<section id="main-version-derivation">
+<h3><span class="section-number">1.9.2. </span>Main version derivation<a class="headerlink" href="#main-version-derivation" title="Link to this heading">¶</a></h3>
 <p>The main version reflects the highest-order change among the subsystem
-versions that occur within a release.</p>
-<p>The following interpretation is used:</p>
+versions that occur within a release. The following interpretation is used:</p>
 <blockquote>
 <div><ul class="simple">
-<li><p>If a subsystem performs a patch update (<code class="wtrl_value docutils literal notranslate"><span class="pre">X.Y.Z</span> <span class="pre">u2192</span> <span class="pre">X.Y.(Z+1)</span></code>),
+<li><p>If a subsystem performs a patch update (<code class="wtrl_value docutils literal notranslate"><span class="pre">X.Y.Z</span> <span class="pre">-&gt;</span> <span class="pre">X.Y.(Z+1)</span></code>),
 the patch component of the main version is increased.</p></li>
-<li><p>If a subsystem performs a minor update (<code class="wtrl_value docutils literal notranslate"><span class="pre">X.Y.Z</span> <span class="pre">u2192</span> <span class="pre">X.(Y+1).0</span></code>),
+<li><p>If a subsystem performs a minor update (<code class="wtrl_value docutils literal notranslate"><span class="pre">X.Y.Z</span> <span class="pre">-&gt;</span> <span class="pre">X.(Y+1).0</span></code>),
 the minor component of the main version is increased and the patch
 component is reset to zero.</p></li>
-<li><p>If a subsystem performs a major update (<code class="wtrl_value docutils literal notranslate"><span class="pre">X.Y.Z</span> <span class="pre">u2192</span> <span class="pre">(X+1).0.0</span></code>),
+<li><p>If a subsystem performs a major update (<code class="wtrl_value docutils literal notranslate"><span class="pre">X.Y.Z</span> <span class="pre">-&gt;</span> <span class="pre">(X+1).0.0</span></code>),
 the major component of the main version is increased and the minor and
 patch components are reset to zero.</p></li>
 </ul>
@@ -478,6 +482,9 @@ patch components are reset to zero.</p></li>
 <p>If several subsystems change within the same release, the main version
 reflects the highest-order change (major overrides minor, minor overrides
 patch).</p>
+</section>
+<section id="compatibility-interpretation">
+<h3><span class="section-number">1.9.3. </span>Compatibility interpretation<a class="headerlink" href="#compatibility-interpretation" title="Link to this heading">¶</a></h3>
 <p>The major component of the main version represents the compatibility
 level of the Waterloo specification.</p>
 <p>As a design goal, the major version is expected to remain stable for as
@@ -495,6 +502,7 @@ deliberate and incompatible modification of the specification, such as:</p>
 specification, tooling improvements, clarifications, and additional
 features that remain compatible with existing Waterloo documents.</p>
 </section>
+</section>
 <section id="possible-future-enhancements">
 <h2><span class="section-number">1.10. </span>Possible future enhancements<a class="headerlink" href="#possible-future-enhancements" title="Link to this heading">¶</a></h2>
 </section>
@@ -506,13 +514,13 @@ features that remain compatible with existing Waterloo documents.</p>
 <p>Let us do an example: In directory <code class="wtrl_file docutils literal notranslate"><span class="pre">doc/examples</span></code> you see a file <code class="wtrl_file docutils literal notranslate"><span class="pre">test_docitem_module.py</span></code>.
 On module level this is equipped with a basic Waterloo docstring:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;</span>
-<span class="ge">Preamble:</span>
-<span class="sd">	</span><span class="gh">profile:</span>
-<span class="sd">		module</span>
-<span class="sd">	</span><span class="gh">normative_sections:</span>
-<span class="sd">		</span><span class="ge">Contract</span>
-<span class="ge">Contract:</span>
-<span class="sd">	</span><span class="gh">general:</span>
+<span class="gh">Preamble:</span>
+<span class="sd">	</span><span class="gu">profile:</span>
+<span class="sd">		</span><span class="no">module</span>
+<span class="sd">	</span><span class="gu">normative_sections:</span>
+<span class="sd">		</span><span class="no">Contract</span>
+<span class="gh">Contract:</span>
+<span class="sd">	</span><span class="gu">general:</span>
 <span class="sd">		</span><span class="k">|Must|</span><span class="sd"> make a good impression, since it&#39;s our first example.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">MyClass</span><span class="p">:</span>
@@ -586,31 +594,31 @@ and it must be declared normative.</p></li>
 <p>In the next example we have a module and a class docstring, and we consider the class as
 part of the public API of the module:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;</span>
-<span class="ge">Preamble:</span>
-<span class="sd">	</span><span class="gh">profile:</span>
-<span class="sd">		module</span>
-<span class="sd">	</span><span class="gh">normative_sections:</span>
-<span class="sd">		</span><span class="ge">Contract</span><span class="sd">, </span><span class="ge">Public_classes</span>
-<span class="ge">Contract:</span>
-<span class="sd">	</span><span class="gh">general:</span>
+<span class="gh">Preamble:</span>
+<span class="sd">	</span><span class="gu">profile:</span>
+<span class="sd">		</span><span class="no">module</span>
+<span class="sd">	</span><span class="gu">normative_sections:</span>
+<span class="sd">		</span><span class="no">Contract</span><span class="sd">, </span><span class="no">Public_classes</span>
+<span class="gh">Contract:</span>
+<span class="sd">	</span><span class="gu">general:</span>
 <span class="sd">		</span><span class="k">|Must|</span><span class="sd"> provide an example class.</span>
-<span class="ge">Public_classes:</span>
-<span class="sd">	MyClass</span>
-<span class="ge">Class_overview:</span>
-<span class="sd">	</span><span class="gh">MyClass:</span>
+<span class="gh">Public_classes:</span>
+<span class="sd">	</span><span class="nc">MyClass</span>
+<span class="gh">Class_overview:</span>
+<span class="sd">	</span><span class="nc">MyClass:</span>
 <span class="sd">		An empty class</span>
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">MyClass</span><span class="p">:</span>
 <span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="ge">	Preamble:</span>
-<span class="sd">		</span><span class="gh">profile:</span>
-<span class="sd">			class</span>
-<span class="sd">		</span><span class="gh">normative_sections:</span>
-<span class="sd">			</span><span class="ge">Contract</span>
-<span class="ge">	Contract:</span>
-<span class="sd">		</span><span class="gh">general:</span>
+<span class="gh">	Preamble:</span>
+<span class="sd">		</span><span class="gu">profile:</span>
+<span class="sd">			</span><span class="no">class</span>
+<span class="sd">		</span><span class="gu">normative_sections:</span>
+<span class="sd">			</span><span class="no">Contract</span>
+<span class="gh">	Contract:</span>
+<span class="sd">		</span><span class="gu">general:</span>
 <span class="sd">			</span><span class="k">|Must|</span><span class="sd"> provide nothing.</span>
-<span class="sd">		</span><span class="gh">constructor:</span>
+<span class="sd">		</span><span class="gu">constructor:</span>
 <span class="sd">			</span><span class="k">|Must|</span><span class="sd"> be default-constructible.</span>
 <span class="sd">	&quot;&quot;&quot;</span>
 	<span class="k">pass</span>
@@ -705,52 +713,52 @@ part of the public API of the module:</p>
 <h3><span class="section-number">1.11.3. </span>Module, class and method<a class="headerlink" href="#module-class-and-method" title="Link to this heading">¶</a></h3>
 <p>Finally, let us add a method to the class and attach a docstring.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;</span>
-<span class="ge">Preamble:</span>
-<span class="sd">	</span><span class="gh">profile:</span>
-<span class="sd">		module</span>
-<span class="sd">	</span><span class="gh">normative_sections:</span>
-<span class="sd">		</span><span class="ge">Contract</span><span class="sd">, </span><span class="ge">Public_classes</span>
-<span class="ge">Contract:</span>
-<span class="sd">	</span><span class="gh">general:</span>
+<span class="gh">Preamble:</span>
+<span class="sd">	</span><span class="gu">profile:</span>
+<span class="sd">		</span><span class="no">module</span>
+<span class="sd">	</span><span class="gu">normative_sections:</span>
+<span class="sd">		</span><span class="no">Contract</span><span class="sd">, </span><span class="no">Public_classes</span>
+<span class="gh">Contract:</span>
+<span class="sd">	</span><span class="gu">general:</span>
 <span class="sd">		</span><span class="k">|Must|</span><span class="sd"> provide an example class.</span>
-<span class="ge">Public_classes:</span>
-<span class="sd">	MyClass</span>
-<span class="ge">Class_overview:</span>
-<span class="sd">	</span><span class="gh">MyClass:</span>
+<span class="gh">Public_classes:</span>
+<span class="sd">	</span><span class="nc">MyClass</span>
+<span class="gh">Class_overview:</span>
+<span class="sd">	</span><span class="nc">MyClass:</span>
 <span class="sd">		An empty class</span>
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">MyClass</span><span class="p">:</span>
 <span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="ge">	Preamble:</span>
-<span class="sd">		</span><span class="gh">profile:</span>
-<span class="sd">			class</span>
-<span class="sd">		</span><span class="gh">normative_sections:</span>
-<span class="sd">			</span><span class="ge">Contract</span><span class="sd">, </span><span class="ge">Public_methods</span>
-<span class="ge">	Contract:</span>
-<span class="sd">		</span><span class="gh">general:</span>
+<span class="gh">	Preamble:</span>
+<span class="sd">		</span><span class="gu">profile:</span>
+<span class="sd">			</span><span class="no">class</span>
+<span class="sd">		</span><span class="gu">normative_sections:</span>
+<span class="sd">			</span><span class="no">Contract</span><span class="sd">, </span><span class="no">Public_methods</span>
+<span class="gh">	Contract:</span>
+<span class="sd">		</span><span class="gu">general:</span>
 <span class="sd">			</span><span class="k">|Must|</span><span class="sd"> provide nothing.</span>
-<span class="sd">		</span><span class="gh">constructor:</span>
+<span class="sd">		</span><span class="gu">constructor:</span>
 <span class="sd">			</span><span class="k">|Must|</span><span class="sd"> be default-constructible.</span>
-<span class="ge">	Public_methods:</span>
-<span class="sd">		greeting</span>
-<span class="ge">	Method_overview:</span>
-<span class="sd">		</span><span class="gh">greeting:</span>
+<span class="gh">	Public_methods:</span>
+<span class="sd">		</span><span class="nf">greeting</span>
+<span class="gh">	Method_overview:</span>
+<span class="sd">		</span><span class="nf">greeting:</span>
 <span class="sd">			Function which prints a greeting.</span>
 <span class="sd">	&quot;&quot;&quot;</span>
 	<span class="k">def</span><span class="w"> </span><span class="nf">greeting</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="ge">		Preamble:</span>
-<span class="sd">			</span><span class="gh">profile:</span>
-<span class="sd">				method</span>
-<span class="sd">			</span><span class="gh">normative_sections:</span>
-<span class="sd">				</span><span class="ge">Contract</span><span class="sd">, </span><span class="ge">Parameters</span><span class="sd">, </span><span class="ge">Returns</span><span class="sd">, </span><span class="ge">Raises</span>
-<span class="ge">		Contract:</span>
-<span class="sd">			</span><span class="gh">general:</span>
+<span class="gh">		Preamble:</span>
+<span class="sd">			</span><span class="gu">profile:</span>
+<span class="sd">				</span><span class="no">method</span>
+<span class="sd">			</span><span class="gu">normative_sections:</span>
+<span class="sd">				</span><span class="no">Contract</span><span class="sd">, </span><span class="no">Parameters</span><span class="sd">, </span><span class="no">Returns</span><span class="sd">, </span><span class="no">Raises</span>
+<span class="gh">		Contract:</span>
+<span class="sd">			</span><span class="gu">general:</span>
 <span class="sd">				</span><span class="k">|Must|</span><span class="sd"> render a greeting message to ``stdout``.</span>
-<span class="ge">		Parameters:</span>
-<span class="ge">		Returns:</span>
+<span class="gh">		Parameters:</span>
+<span class="gh">		Returns:</span>
 <span class="sd">			</span><span class="k">|Must|</span><span class="sd"> return </span><span class="kc">|None|</span>
-<span class="ge">		Raises:</span>
+<span class="gh">		Raises:</span>
 <span class="sd">		&quot;&quot;&quot;</span>
 		<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Hello world!&quot;</span><span class="p">)</span>
 </pre></div>
@@ -982,7 +990,12 @@ of methods. The push-command reads:</p>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#dependencies">1.8. Dependencies</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#versioning">1.9. Versioning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#versioning">1.9. Versioning</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#subsystem-versions">1.9.1. Subsystem versions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#main-version-derivation">1.9.2. Main version derivation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#compatibility-interpretation">1.9.3. Compatibility interpretation</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="#possible-future-enhancements">1.10. Possible future enhancements</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#introductory-examples">1.11. Introductory examples</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#module">1.11.1. Module</a></li>

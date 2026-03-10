@@ -128,37 +128,37 @@ The Waterloo docstring format captures this relationship by means of a
 <code class="wtrl_label docutils literal notranslate"><span class="pre">Factory</span></code> section, as shown in the following excerpt:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">Vec2d</span><span class="p">:</span>
 <span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="ge">	Preamble:</span>
-<span class="sd">		</span><span class="gh">profile:</span>
-<span class="sd">			class</span>
-<span class="sd">		</span><span class="gh">normative_sections:</span>
-<span class="sd">			</span><span class="ge">Contract</span><span class="sd">, </span><span class="ge">Factory</span><span class="sd">, </span><span class="ge">Public_methods</span>
-<span class="ge">	Contract:</span>
-<span class="sd">		</span><span class="gh">general:</span>
-<span class="sd">			</span><span class="k">|Must|</span><span class="sd"> represent a two-dimensional vector with </span><span class="k">|type|</span><span class="l">`float`</span><span class="sd">-valued components.</span>
-<span class="sd">		</span><span class="gh">constructor:</span>
+<span class="gh">	Preamble:</span>
+<span class="sd">		</span><span class="gu">profile:</span>
+<span class="sd">			</span><span class="no">class</span>
+<span class="sd">		</span><span class="gu">normative_sections:</span>
+<span class="sd">			</span><span class="no">Contract</span><span class="sd">, </span><span class="no">Factory</span><span class="sd">, </span><span class="no">Public_methods</span>
+<span class="gh">	Contract:</span>
+<span class="sd">		</span><span class="gu">general:</span>
+<span class="sd">			</span><span class="k">|Must|</span><span class="sd"> represent a two-dimensional vector with </span><span class="k">|type|</span><span class="nc">`float`</span><span class="sd">-valued components.</span>
+<span class="sd">		</span><span class="gu">constructor:</span>
 <span class="sd">			Do not use directly; use the factory functions instead.</span>
-<span class="ge">	Factory:</span>
-<span class="sd">		</span><span class="gh">Vec2d.from_zero:</span>
+<span class="gh">	Factory:</span>
+<span class="sd">		</span><span class="nf">Vec2d.from_zero:</span>
 <span class="sd">			Null vector</span>
-<span class="sd">		</span><span class="gh">Vec2d.from_comp:</span>
+<span class="sd">		</span><span class="nf">Vec2d.from_comp:</span>
 <span class="sd">			Vector from components (x, y)</span>
-<span class="sd">		</span><span class="gh">Vec2d.from_vec2d:</span>
+<span class="sd">		</span><span class="nf">Vec2d.from_vec2d:</span>
 <span class="sd">			Vector by copy</span>
-<span class="sd">		</span><span class="gh">Vec2d.gen:</span>
+<span class="sd">		</span><span class="nf">Vec2d.gen:</span>
 <span class="sd">			All of the above via runtime polymorphism</span>
-<span class="sd">		</span><span class="gh">make_vec2d_from_zero:</span>
+<span class="sd">		</span><span class="nf">make_vec2d_from_zero:</span>
 <span class="sd">			Null vector</span>
-<span class="sd">		</span><span class="gh">make_vec2d_from_comp:</span>
+<span class="sd">		</span><span class="nf">make_vec2d_from_comp:</span>
 <span class="sd">			Vector from components (x, y)</span>
-<span class="sd">		</span><span class="gh">make_vec2d_from_vec2d:</span>
+<span class="sd">		</span><span class="nf">make_vec2d_from_vec2d:</span>
 <span class="sd">			Vector by copy</span>
-<span class="sd">		</span><span class="gh">vec2d:</span>
+<span class="sd">		</span><span class="nf">vec2d:</span>
 <span class="sd">			All of the above via runtime polymorphism</span>
-<span class="ge">	Public_methods:</span>
-<span class="sd">		from_zero, from_comp, from_vec2d</span>
-<span class="sd">		gen</span>
-<span class="sd">	&quot;&quot;&quot;</span>
+<span class="gh">	Public_methods:</span>
+<span class="sd">		</span><span class="nf">from_zero</span><span class="sd">, </span><span class="nf">from_comp</span><span class="sd">, </span><span class="nf">from_vec2d</span>
+<span class="sd">		</span><span class="nf">gen</span>
+<span class="sd">	</span><span class="nf">&quot;&quot;&quot;</span>
 </pre></div>
 </div>
 <p>Validation ensures that each factory entry listed in this section
@@ -526,20 +526,20 @@ Consider the following test snippet:</p>
 	<span class="nd">@abstractmethod</span>
 	<span class="k">def</span><span class="w"> </span><span class="nf">f_abstractmethod</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NoReturn</span><span class="p">:</span>
 <span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="ge">		Preamble:</span>
-<span class="sd">			</span><span class="gh">profile:</span>
-<span class="sd">				function</span>
-<span class="sd">			</span><span class="gh">normative_sections:</span>
-<span class="sd">				</span><span class="ge">Contract</span><span class="sd">, </span><span class="ge">Parameters</span><span class="sd">, </span><span class="ge">Returns</span><span class="sd">, </span><span class="ge">Raises</span>
-<span class="ge">		Contract:</span>
-<span class="sd">			</span><span class="gh">general:</span>
+<span class="gh">		Preamble:</span>
+<span class="sd">			</span><span class="gu">profile:</span>
+<span class="sd">				</span><span class="no">function</span>
+<span class="sd">			</span><span class="gu">normative_sections:</span>
+<span class="sd">				</span><span class="no">Contract</span><span class="sd">, </span><span class="no">Parameters</span><span class="sd">, </span><span class="no">Returns</span><span class="sd">, </span><span class="no">Raises</span>
+<span class="gh">		Contract:</span>
+<span class="sd">			</span><span class="gu">general:</span>
 <span class="sd">				</span><span class="k">|Must|</span><span class="sd"> always raise an exception because</span><span class="k">\</span>
 <span class="sd">				it is an abstract method.</span>
-<span class="ge">		Parameters:</span>
-<span class="ge">		Returns:</span>
+<span class="gh">		Parameters:</span>
+<span class="gh">		Returns:</span>
 <span class="sd">			Does not return.</span>
-<span class="ge">		Raises:</span>
-<span class="sd">			</span><span class="gh">NotImplementedError:</span>
+<span class="gh">		Raises:</span>
+<span class="sd">			</span><span class="ne">NotImplementedError:</span>
 <span class="sd">				</span><span class="k">|Must|</span><span class="sd"> always raise. Method </span><span class="k">|must|</span><span class="sd"> be</span><span class="k">\</span>
 <span class="sd">				implemented by derived class.</span>
 <span class="sd">		&quot;&quot;&quot;</span>
@@ -554,20 +554,20 @@ Consider the following test snippet:</p>
 	<span class="nd">@staticmethod</span>
 	<span class="k">def</span><span class="w"> </span><span class="nf">f_staticmethod</span><span class="p">(</span><span class="n">q</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="ge">		Preamble:</span>
-<span class="sd">			</span><span class="gh">profile:</span>
-<span class="sd">				function</span>
-<span class="sd">			</span><span class="gh">normative_sections:</span>
-<span class="sd">				</span><span class="ge">Contract</span><span class="sd">, </span><span class="ge">Parameters</span><span class="sd">, </span><span class="ge">Returns</span><span class="sd">, </span><span class="ge">Raises</span>
-<span class="ge">		Contract:</span>
-<span class="sd">			</span><span class="gh">general:</span>
+<span class="gh">		Preamble:</span>
+<span class="sd">			</span><span class="gu">profile:</span>
+<span class="sd">				</span><span class="no">function</span>
+<span class="sd">			</span><span class="gu">normative_sections:</span>
+<span class="sd">				</span><span class="no">Contract</span><span class="sd">, </span><span class="no">Parameters</span><span class="sd">, </span><span class="no">Returns</span><span class="sd">, </span><span class="no">Raises</span>
+<span class="gh">		Contract:</span>
+<span class="sd">			</span><span class="gu">general:</span>
 <span class="sd">				</span><span class="k">|Must|</span><span class="sd"> print its name</span>
-<span class="ge">		Parameters:</span>
-<span class="sd">			</span><span class="gh">q:</span>
+<span class="gh">		Parameters:</span>
+<span class="sd">			</span><span class="nv">q:</span>
 <span class="sd">				A dummy parameter.</span>
-<span class="ge">		Returns:</span>
+<span class="gh">		Returns:</span>
 <span class="sd">			</span><span class="kc">|None|</span>
-<span class="ge">		Raises:</span>
+<span class="gh">		Raises:</span>
 <span class="sd">		&quot;&quot;&quot;</span>
 		<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;f_staticmethod&quot;</span><span class="p">)</span>
 
@@ -583,22 +583,22 @@ Consider the following test snippet:</p>
 <span class="nd">@functools</span><span class="o">.</span><span class="n">lru_cache</span><span class="p">(</span><span class="n">maxsize</span><span class="o">=</span><span class="mi">128</span><span class="p">)</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">fib</span><span class="p">(</span><span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="ge">	Preamble:</span>
-<span class="sd">		</span><span class="gh">profile:</span>
-<span class="sd">			function</span>
-<span class="sd">		</span><span class="gh">normative_sections:</span>
-<span class="sd">			</span><span class="ge">Contract</span><span class="sd">, </span><span class="ge">Parameters</span><span class="sd">, </span><span class="ge">Returns</span><span class="sd">, </span><span class="ge">Raises</span>
-<span class="ge">	Contract:</span>
-<span class="sd">		</span><span class="gh">general:</span>
-<span class="sd">			</span><span class="k">|Must|</span><span class="sd"> compute the </span><span class="k">|var|</span><span class="l">`n`</span><span class="sd">-th Fibonacci number.</span>
+<span class="gh">	Preamble:</span>
+<span class="sd">		</span><span class="gu">profile:</span>
+<span class="sd">			</span><span class="no">function</span>
+<span class="sd">		</span><span class="gu">normative_sections:</span>
+<span class="sd">			</span><span class="no">Contract</span><span class="sd">, </span><span class="no">Parameters</span><span class="sd">, </span><span class="no">Returns</span><span class="sd">, </span><span class="no">Raises</span>
+<span class="gh">	Contract:</span>
+<span class="sd">		</span><span class="gu">general:</span>
+<span class="sd">			</span><span class="k">|Must|</span><span class="sd"> compute the </span><span class="k">|var|</span><span class="nv">`n`</span><span class="sd">-th Fibonacci number.</span>
 <span class="sd">			</span><span class="k">|Must|</span><span class="sd"> cache intermediate results.</span>
-<span class="ge">	Parameters:</span>
-<span class="sd">		</span><span class="gh">n:</span>
-<span class="sd">			The </span><span class="k">|var|</span><span class="l">`n`</span><span class="sd"> in &quot;compute the </span><span class="k">|var|</span><span class="l">`n`</span><span class="sd">-th Fibonacci number&quot;.</span>
-<span class="ge">	Returns:</span>
+<span class="gh">	Parameters:</span>
+<span class="sd">		</span><span class="nv">n:</span>
+<span class="sd">			The </span><span class="k">|var|</span><span class="nv">`n`</span><span class="sd"> in &quot;compute the </span><span class="k">|var|</span><span class="nv">`n`</span><span class="sd">-th Fibonacci number&quot;.</span>
+<span class="gh">	Returns:</span>
 <span class="sd">		The Fibonacci number</span>
-<span class="ge">	Raises:</span>
-<span class="sd">		</span><span class="gh">BaseException:</span>
+<span class="gh">	Raises:</span>
+<span class="sd">		</span><span class="ne">BaseException:</span>
 <span class="sd">			</span><span class="k">|May|</span><span class="sd"> propagate from |mod| functools.</span>
 <span class="sd">	&quot;&quot;&quot;</span>
 	<span class="k">if</span> <span class="n">n</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
@@ -673,20 +673,20 @@ not really helpful, and we recommend to switch to the block representation.</p>
 The code segment</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">make_coffee</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="ge">	Preamble:</span>
-<span class="sd">		</span><span class="gh">profile:</span>
-<span class="sd">			function</span>
-<span class="sd">		</span><span class="gh">normative_sections:</span>
-<span class="sd">			</span><span class="ge">Contract</span><span class="sd">, </span><span class="ge">Parameters</span><span class="sd">, </span><span class="ge">Returns</span><span class="sd">, </span><span class="ge">Raises</span>
-<span class="ge">	Contract:</span>
-<span class="sd">		</span><span class="gh">general:</span>
+<span class="gh">	Preamble:</span>
+<span class="sd">		</span><span class="gu">profile:</span>
+<span class="sd">			</span><span class="no">function</span>
+<span class="sd">		</span><span class="gu">normative_sections:</span>
+<span class="sd">			</span><span class="no">Contract</span><span class="sd">, </span><span class="no">Parameters</span><span class="sd">, </span><span class="no">Returns</span><span class="sd">, </span><span class="no">Raises</span>
+<span class="gh">	Contract:</span>
+<span class="sd">		</span><span class="gu">general:</span>
 <span class="sd">			</span><span class="k">|Must|</span><span class="sd"> represent a non-blocking asynchronous task.</span>
 <span class="sd">			</span><span class="k">|Must|</span><span class="sd"> take 3 seconds.</span>
-<span class="ge">	Parameters:</span>
-<span class="ge">	Returns:</span>
+<span class="gh">	Parameters:</span>
+<span class="gh">	Returns:</span>
 <span class="sd">		</span><span class="k">|Must|</span><span class="sd"> return a string telling what has been prepared.</span>
-<span class="ge">	Raises:</span>
-<span class="sd">		</span><span class="gh">asyncio.CancelledError:</span>
+<span class="gh">	Raises:</span>
+<span class="sd">		</span><span class="ne">asyncio.CancelledError:</span>
 <span class="sd">			</span><span class="k">|May|</span><span class="sd"> throw if the task running the coroutine is cancelled from outside.</span>
 <span class="sd">	&quot;&quot;&quot;</span>
 	<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;  [Coffee] Coffee machine started...&quot;</span><span class="p">)</span>
@@ -755,21 +755,21 @@ The code segment</p>
 <p>from source code:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_marmalade</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">AsyncGenerator</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span><span class="kc">None</span><span class="p">]:</span>
 <span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="ge">	Preamble:</span>
-<span class="sd">		</span><span class="gh">profile:</span>
-<span class="sd">			function</span>
-<span class="sd">		</span><span class="gh">normative_sections:</span>
-<span class="sd">			</span><span class="ge">Contract</span><span class="sd">, </span><span class="ge">Parameters</span><span class="sd">, </span><span class="ge">Returns</span><span class="sd">, </span><span class="ge">Raises</span>
-<span class="ge">	Contract:</span>
-<span class="sd">		</span><span class="gh">general:</span>
+<span class="gh">	Preamble:</span>
+<span class="sd">		</span><span class="gu">profile:</span>
+<span class="sd">			</span><span class="no">function</span>
+<span class="sd">		</span><span class="gu">normative_sections:</span>
+<span class="sd">			</span><span class="no">Contract</span><span class="sd">, </span><span class="no">Parameters</span><span class="sd">, </span><span class="no">Returns</span><span class="sd">, </span><span class="no">Raises</span>
+<span class="gh">	Contract:</span>
+<span class="sd">		</span><span class="gu">general:</span>
 <span class="sd">			</span><span class="k">|Must|</span><span class="sd"> represent a non-blocking asynchronous task.</span>
 <span class="sd">			</span><span class="k">|Must|</span><span class="sd"> serve cherry marmalade after a second.</span>
 <span class="sd">			</span><span class="k">|Must|</span><span class="sd"> serve strawberry marmalade after two seconds.</span>
-<span class="ge">	Parameters:</span>
-<span class="ge">	Returns:</span>
+<span class="gh">	Parameters:</span>
+<span class="gh">	Returns:</span>
 <span class="sd">		</span><span class="k">|Must|</span><span class="sd"> produce an asynchronous generator yielding strings of marmalade types.</span>
-<span class="ge">	Raises:</span>
-<span class="sd">		</span><span class="gh">asyncio.CancelledError:</span>
+<span class="gh">	Raises:</span>
+<span class="sd">		</span><span class="ne">asyncio.CancelledError:</span>
 <span class="sd">			</span><span class="k">|May|</span><span class="sd"> be raised if the task is cancelled during an await point.</span>
 <span class="sd">	&quot;&quot;&quot;</span>
 	<span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
@@ -785,67 +785,67 @@ The code segment</p>
 <p>The following example demonstrates how definition items can be inherited
 from module level to class or function level in order to avoid unnecessary repetition.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="ge">Preamble:</span>
-<span class="sd">	</span><span class="gh">profile:</span>
-<span class="sd">		module</span>
-<span class="sd">	</span><span class="gh">normative_sections:</span>
-<span class="sd">		</span><span class="ge">Contract</span><span class="sd">, </span><span class="ge">Definitions</span>
-<span class="ge">Contract:</span>
-<span class="sd">	</span><span class="gh">general:</span>
-<span class="sd">		</span><span class="k">|Must|</span><span class="sd"> provide a </span><span class="k">|label|</span><span class="l">`Definitions`</span><span class="sd"> section for demonstration purposes.</span>
-<span class="ge">Definitions:</span>
-<span class="sd">	</span><span class="gh">Identifier:</span>
-<span class="sd">		A string that matches the regular expression </span><span class="k">|value|</span><span class="l">`[a-zA-Z_][a-zA-Z0-9_]*`</span>
-<span class="sd">	</span><span class="gh">Qualified_Identifier:</span>
-<span class="sd">		A </span><span class="k">|term|</span><span class="l">`Qualified_Identifier`</span><span class="sd"> is a string formed by concatenating </span><span class="k">|term|</span><span class="l">`Identifier`</span><span class="sd"> values</span><span class="k">\</span>
+<span class="gh">Preamble:</span>
+<span class="sd">	</span><span class="gu">profile:</span>
+<span class="sd">		</span><span class="no">module</span>
+<span class="sd">	</span><span class="gu">normative_sections:</span>
+<span class="sd">		</span><span class="no">Contract</span><span class="sd">, </span><span class="no">Definitions</span>
+<span class="gh">Contract:</span>
+<span class="sd">	</span><span class="gu">general:</span>
+<span class="sd">		</span><span class="k">|Must|</span><span class="sd"> provide a </span><span class="k">|label|</span><span class="gu">`Definitions`</span><span class="sd"> section for demonstration purposes.</span>
+<span class="gh">Definitions:</span>
+<span class="sd">	</span><span class="ge">Identifier:</span>
+<span class="sd">		A string that matches the regular expression </span><span class="k">|value|</span><span class="no">`[a-zA-Z_][a-zA-Z0-9_]*`</span>
+<span class="sd">	</span><span class="ge">Qualified_Identifier:</span>
+<span class="sd">		A </span><span class="k">|term|</span><span class="ge">`Qualified_Identifier`</span><span class="sd"> is a string formed by concatenating </span><span class="k">|term|</span><span class="ge">`Identifier`</span><span class="sd"> values</span><span class="k">\</span>
 <span class="sd">		separated by a dot.</span>
-<span class="sd">	</span><span class="gh">Term_Z:</span>
-<span class="sd">		</span><span class="k">|term|</span><span class="l">`Term_Z`</span><span class="sd"> is another term inherited by objects in this module.</span>
+<span class="sd">	</span><span class="ge">Term_Z:</span>
+<span class="sd">		</span><span class="k">|term|</span><span class="ge">`Term_Z`</span><span class="sd"> is another term inherited by objects in this module.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="k">class</span><span class="w"> </span><span class="nc">X</span><span class="p">:</span>
 <span class="w">	</span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="ge">	Preamble:</span>
-<span class="sd">		</span><span class="gh">profile:</span>
-<span class="sd">			class</span>
-<span class="sd">		</span><span class="gh">normative_sections:</span>
-<span class="sd">			</span><span class="ge">Contract</span><span class="sd">, </span><span class="ge">Definitions</span>
-<span class="ge">	Contract:</span>
-<span class="sd">		</span><span class="gh">general:</span>
+<span class="gh">	Preamble:</span>
+<span class="sd">		</span><span class="gu">profile:</span>
+<span class="sd">			</span><span class="no">class</span>
+<span class="sd">		</span><span class="gu">normative_sections:</span>
+<span class="sd">			</span><span class="no">Contract</span><span class="sd">, </span><span class="no">Definitions</span>
+<span class="gh">	Contract:</span>
+<span class="sd">		</span><span class="gu">general:</span>
 <span class="sd">			</span><span class="k">|Must|</span><span class="sd"> demonstrate inherited definition items.</span>
-<span class="sd">		</span><span class="gh">constructor:</span>
+<span class="sd">		</span><span class="gu">constructor:</span>
 <span class="sd">			default</span>
-<span class="ge">	Definitions:</span>
-<span class="sd">		</span><span class="gh">Private_Identifier:</span>
-<span class="sd">			A </span><span class="k">|term|</span><span class="l">`Private_Identifier`</span><span class="sd"> is an </span><span class="k">|term|</span><span class="l">`Identifier`</span><span class="sd"> that starts with a double underscore.</span>
+<span class="gh">	Definitions:</span>
+<span class="sd">		</span><span class="ge">Private_Identifier:</span>
+<span class="sd">			A </span><span class="k">|term|</span><span class="ge">`Private_Identifier`</span><span class="sd"> is an </span><span class="k">|term|</span><span class="ge">`Identifier`</span><span class="sd"> that starts with a double underscore.</span>
 <span class="sd">		</span><span class="k">_inherit:</span>
 <span class="sd">			Identifier</span>
 <span class="sd">			Term_Z</span>
 <span class="sd">	&quot;&quot;&quot;</span>
 	<span class="k">def</span><span class="w"> </span><span class="nf">spam</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">		</span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="ge">		Preamble:</span>
-<span class="sd">			</span><span class="gh">profile:</span>
-<span class="sd">				method</span>
-<span class="sd">			</span><span class="gh">normative_sections:</span>
-<span class="sd">				</span><span class="ge">Contract</span><span class="sd">, </span><span class="ge">Definitions</span><span class="sd">, </span><span class="ge">Parameters</span><span class="sd">, </span><span class="ge">Returns</span><span class="sd">, </span><span class="ge">Raises</span>
-<span class="ge">		Contract:</span>
-<span class="sd">			</span><span class="gh">general:</span>
+<span class="gh">		Preamble:</span>
+<span class="sd">			</span><span class="gu">profile:</span>
+<span class="sd">				</span><span class="no">method</span>
+<span class="sd">			</span><span class="gu">normative_sections:</span>
+<span class="sd">				</span><span class="no">Contract</span><span class="sd">, </span><span class="no">Definitions</span><span class="sd">, </span><span class="no">Parameters</span><span class="sd">, </span><span class="no">Returns</span><span class="sd">, </span><span class="no">Raises</span>
+<span class="gh">		Contract:</span>
+<span class="sd">			</span><span class="gu">general:</span>
 <span class="sd">				</span><span class="k">|Must|</span><span class="sd"> demonstrate inherited definition items.</span>
-<span class="ge">		Definitions:</span>
+<span class="gh">		Definitions:</span>
 <span class="sd">			</span><span class="k">_inherit:</span>
 <span class="sd">				Identifier,Qualified_Identifier</span>
-<span class="sd">			</span><span class="gh">Anchor:</span>
-<span class="sd">				An </span><span class="k">|term|</span><span class="l">`Anchor`</span><span class="sd"> is a special string computed from a </span><span class="k">|term|</span><span class="l">`Qualified_Identifier`</span>
-<span class="sd">				in the following way: 1. The </span><span class="k">|term|</span><span class="l">`Qualified_Identifier`</span><span class="sd"> is split into segments,</span>
-<span class="sd">				where each segment is an </span><span class="k">|term|</span><span class="l">`Identifier`</span><span class="sd">. 2. To each segment the string</span>
-<span class="sd">				</span><span class="k">|value|</span><span class="l">`&quot;&lt;n&gt;:&quot;`</span><span class="sd"> is prepended where </span><span class="k">|var|</span><span class="l">`&lt;n&gt;`</span><span class="sd"> stands for the length of the segment.</span>
-<span class="sd">				3. The results are concatenated with </span><span class="k">|value|</span><span class="l">`&quot;-&quot;`</span><span class="sd"> as separator.</span>
-<span class="sd">				Example: The </span><span class="k">|term|</span><span class="l">`Anchor`</span><span class="sd"> of </span><span class="k">|value|</span><span class="l">`AAA.BB.C`</span><span class="sd"> is </span><span class="k">|value|</span><span class="l">`3:AAA-2:BB-1:C`</span><span class="sd">.</span>
-<span class="ge">		Parameters:</span>
-<span class="ge">		Returns:</span>
+<span class="sd">			</span><span class="ge">Anchor:</span>
+<span class="sd">				An </span><span class="k">|term|</span><span class="ge">`Anchor`</span><span class="sd"> is a special string computed from a </span><span class="k">|term|</span><span class="ge">`Qualified_Identifier`</span>
+<span class="sd">				in the following way: 1. The </span><span class="k">|term|</span><span class="ge">`Qualified_Identifier`</span><span class="sd"> is split into segments,</span>
+<span class="sd">				where each segment is an </span><span class="k">|term|</span><span class="ge">`Identifier`</span><span class="sd">. 2. To each segment the string</span>
+<span class="sd">				</span><span class="k">|value|</span><span class="no">`&quot;&lt;n&gt;:&quot;`</span><span class="sd"> is prepended where </span><span class="k">|var|</span><span class="nv">`&lt;n&gt;`</span><span class="sd"> stands for the length of the segment.</span>
+<span class="sd">				3. The results are concatenated with </span><span class="k">|value|</span><span class="no">`&quot;-&quot;`</span><span class="sd"> as separator.</span>
+<span class="sd">				Example: The </span><span class="k">|term|</span><span class="ge">`Anchor`</span><span class="sd"> of </span><span class="k">|value|</span><span class="no">`AAA.BB.C`</span><span class="sd"> is </span><span class="k">|value|</span><span class="no">`3:AAA-2:BB-1:C`</span><span class="sd">.</span>
+<span class="gh">		Parameters:</span>
+<span class="gh">		Returns:</span>
 <span class="sd">			</span><span class="kc">|None|</span>
-<span class="ge">		Raises:</span>
+<span class="gh">		Raises:</span>
 <span class="sd">		&quot;&quot;&quot;</span>
 </pre></div>
 </div>
@@ -1011,43 +1011,43 @@ The function has the following signature:</p>
 </div>
 <p>and the docstring reads:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="ge">Preamble:</span>
-<span class="sd">        </span><span class="gh">profile:</span>
-<span class="sd">                function</span>
-<span class="sd">        </span><span class="gh">normative_sections:</span>
-<span class="sd">                </span><span class="ge">Definitions</span><span class="sd">, </span><span class="ge">Contract</span><span class="sd">, </span><span class="ge">Parameters</span><span class="sd">, </span><span class="ge">Returns</span><span class="sd">, </span><span class="ge">Raises</span>
-<span class="sd">        </span><span class="gh">status:</span>
-<span class="sd">                stable</span>
-<span class="ge">Definitions:</span>
-<span class="sd">        </span><span class="gh">TAB:</span>
+<span class="gh">Preamble:</span>
+<span class="sd">        </span><span class="gu">profile:</span>
+<span class="sd">                </span><span class="no">function</span>
+<span class="sd">        </span><span class="gu">normative_sections:</span>
+<span class="sd">                </span><span class="no">Definitions</span><span class="sd">, </span><span class="no">Contract</span><span class="sd">, </span><span class="no">Parameters</span><span class="sd">, </span><span class="no">Returns</span><span class="sd">, </span><span class="no">Raises</span>
+<span class="sd">        </span><span class="gu">status:</span>
+<span class="sd">                </span><span class="no">stable</span>
+<span class="gh">Definitions:</span>
+<span class="sd">        </span><span class="ge">TAB:</span>
 <span class="sd">                A scheme that demands indentation by means of an integer number</span><span class="k">\</span>
-<span class="sd">                of tab characters (ASCII </span><span class="k">|value|</span><span class="l">`0x09`</span><span class="sd">).</span><span class="k">\</span>
-<span class="sd">                For this scheme, </span><span class="k">|var|</span><span class="l">`INDENT_UNIT`</span><span class="sd"> is a single tab character.</span>
-<span class="sd">        </span><span class="gh">SPC4:</span>
+<span class="sd">                of tab characters (ASCII </span><span class="k">|value|</span><span class="no">`0x09`</span><span class="sd">).</span><span class="k">\</span>
+<span class="sd">                For this scheme, </span><span class="k">|var|</span><span class="nv">`INDENT_UNIT`</span><span class="sd"> is a single tab character.</span>
+<span class="sd">        </span><span class="ge">SPC4:</span>
 <span class="sd">                A scheme that demands indentation by means of an integer multiple</span><span class="k">\</span>
-<span class="sd">                of four space characters (ASCII </span><span class="k">|value|</span><span class="l">`0x20`</span><span class="sd">).</span>
-<span class="sd">                For this scheme, </span><span class="k">|var|</span><span class="l">`INDENT_UNIT`</span><span class="sd"> consists of four space characters.</span>
-<span class="ge">Contract:</span>
-<span class="sd">        </span><span class="gh">general:</span>
+<span class="sd">                of four space characters (ASCII </span><span class="k">|value|</span><span class="no">`0x20`</span><span class="sd">).</span>
+<span class="sd">                For this scheme, </span><span class="k">|var|</span><span class="nv">`INDENT_UNIT`</span><span class="sd"> consists of four space characters.</span>
+<span class="gh">Contract:</span>
+<span class="sd">        </span><span class="gu">general:</span>
 <span class="sd">                </span><span class="k">|Must|</span><span class="sd"> accept a single line string and an indentation scheme.</span>
 <span class="sd">                </span><span class="k">|Must|</span><span class="sd"> count the number of leading indentations of the input according</span><span class="k">\</span>
 <span class="sd">                to the scheme passed.</span>
 <span class="sd">                </span><span class="k">|Must|</span><span class="sd"> accept an empty string.</span>
-<span class="ge">Parameters:</span>
-<span class="sd">        </span><span class="gh">tr:</span>
+<span class="gh">Parameters:</span>
+<span class="sd">        </span><span class="nv">tr:</span>
 <span class="sd">                Tracer for better error messages</span>
-<span class="sd">        </span><span class="gh">line:</span>
+<span class="sd">        </span><span class="nv">line:</span>
 <span class="sd">                A single line string.</span>
-<span class="sd">        </span><span class="gh">indent_scheme:</span>
+<span class="sd">        </span><span class="nv">indent_scheme:</span>
 <span class="sd">                A symbolic value representing one of the two possible indentation</span><span class="k">\</span>
-<span class="sd">                schemes </span><span class="k">|term|</span><span class="l">`TAB`</span><span class="sd"> or </span><span class="k">|term|</span><span class="l">`SPC4`</span><span class="sd">.</span>
-<span class="ge">Returns:</span>
+<span class="sd">                schemes </span><span class="k">|term|</span><span class="ge">`TAB`</span><span class="sd"> or </span><span class="k">|term|</span><span class="ge">`SPC4`</span><span class="sd">.</span>
+<span class="gh">Returns:</span>
 <span class="sd">        </span><span class="k">|Must|</span><span class="sd"> return the number of indentations found at the beginning of the string</span><span class="k">\</span>
 <span class="sd">        in units as decribed by the indentation scheme passed.</span>
-<span class="ge">Raises:</span>
-<span class="sd">        </span><span class="gh">RuntimeError:</span>
+<span class="gh">Raises:</span>
+<span class="sd">        </span><span class="ne">RuntimeError:</span>
 <span class="sd">                </span><span class="k">|Must|</span><span class="sd"> raise if prefix contains a mix not representable</span><span class="k">\</span>
-<span class="sd">                as </span><span class="k">|var|</span><span class="l">`n`</span><span class="sd"> repetitions of </span><span class="k">|var|</span><span class="l">`INDENT_UNIT`</span><span class="sd">.</span>
+<span class="sd">                as </span><span class="k">|var|</span><span class="nv">`n`</span><span class="sd"> repetitions of </span><span class="k">|var|</span><span class="nv">`INDENT_UNIT`</span><span class="sd">.</span>
 <span class="sd">                </span><span class="k">|Must|</span><span class="sd"> raise if the white space characters (greedy match of</span><span class="k">\</span>
 <span class="sd">                tab or space) at the beginning of the line</span><span class="k">\</span>
 <span class="sd">                cannot be described by the indentation scheme passed.</span>
@@ -1167,72 +1167,72 @@ both equipped with a method, can be rendered by a single command</p>
 member, like e.g. methods. The source code is:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">X</span><span class="p">:</span>
 <span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="ge">	Preamble:</span>
-<span class="sd">		</span><span class="gh">profile:</span>
-<span class="sd">			class</span>
-<span class="sd">		</span><span class="gh">normative_sections:</span>
-<span class="sd">			</span><span class="ge">Contract</span><span class="sd">, </span><span class="ge">Public_methods</span><span class="sd">, </span><span class="ge">Public_classes</span>
-<span class="ge">	Contract:</span>
-<span class="sd">		</span><span class="gh">general:</span>
+<span class="gh">	Preamble:</span>
+<span class="sd">		</span><span class="gu">profile:</span>
+<span class="sd">			</span><span class="no">class</span>
+<span class="sd">		</span><span class="gu">normative_sections:</span>
+<span class="sd">			</span><span class="no">Contract</span><span class="sd">, </span><span class="no">Public_methods</span><span class="sd">, </span><span class="no">Public_classes</span>
+<span class="gh">	Contract:</span>
+<span class="sd">		</span><span class="gu">general:</span>
 <span class="sd">			</span><span class="k">|Must|</span><span class="sd"> provide a method for writing a greeting message.</span>
-<span class="sd">		</span><span class="gh">constructor:</span>
+<span class="sd">		</span><span class="gu">constructor:</span>
 <span class="sd">			</span><span class="k">|Must|</span><span class="sd"> be default-constructible</span>
-<span class="ge">	Public_methods:</span>
-<span class="sd">		greeting</span>
-<span class="ge">	Method_overview:</span>
-<span class="sd">		</span><span class="gh">greeting:</span>
+<span class="gh">	Public_methods:</span>
+<span class="sd">		</span><span class="nf">greeting</span>
+<span class="gh">	Method_overview:</span>
+<span class="sd">		</span><span class="nf">greeting:</span>
 <span class="sd">			A simple test method.</span>
-<span class="ge">	Public_classes:</span>
-<span class="sd">		Y</span>
-<span class="ge">	Class_overview:</span>
-<span class="sd">		</span><span class="gh">Y:</span>
+<span class="gh">	Public_classes:</span>
+<span class="sd">		</span><span class="nc">Y</span>
+<span class="gh">	Class_overview:</span>
+<span class="sd">		</span><span class="nc">Y:</span>
 <span class="sd">			A nested class for testing purposes.</span>
 <span class="sd">	&quot;&quot;&quot;</span>
 	<span class="k">def</span><span class="w"> </span><span class="nf">greeting</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="ge">		Preamble:</span>
-<span class="sd">			</span><span class="gh">profile:</span>
-<span class="sd">				method</span>
-<span class="sd">			</span><span class="gh">normative_sections:</span>
-<span class="sd">				</span><span class="ge">Contract</span><span class="sd">, </span><span class="ge">Parameters</span><span class="sd">, </span><span class="ge">Returns</span><span class="sd">,</span><span class="ge">Raises</span>
-<span class="ge">		Contract:</span>
-<span class="sd">			</span><span class="gh">general:</span>
+<span class="gh">		Preamble:</span>
+<span class="sd">			</span><span class="gu">profile:</span>
+<span class="sd">				</span><span class="no">method</span>
+<span class="sd">			</span><span class="gu">normative_sections:</span>
+<span class="sd">				</span><span class="no">Contract</span><span class="sd">, </span><span class="no">Parameters</span><span class="sd">, </span><span class="no">Returns</span><span class="sd">,</span><span class="no">Raises</span>
+<span class="gh">		Contract:</span>
+<span class="sd">			</span><span class="gu">general:</span>
 <span class="sd">				</span><span class="k">|Must|</span><span class="sd"> render a greeting message to ``stdout``.</span>
-<span class="ge">		Parameters:</span>
-<span class="ge">		Returns:</span>
+<span class="gh">		Parameters:</span>
+<span class="gh">		Returns:</span>
 <span class="sd">			</span><span class="kc">|None|</span>
-<span class="ge">		Raises:</span>
+<span class="gh">		Raises:</span>
 <span class="sd">		&quot;&quot;&quot;</span>
 		<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Hello world!&quot;</span><span class="p">)</span>
 	<span class="k">class</span><span class="w"> </span><span class="nc">Y</span><span class="p">:</span>
 <span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="ge">		Preamble:</span>
-<span class="sd">			</span><span class="gh">profile:</span>
-<span class="sd">				class</span>
-<span class="sd">			</span><span class="gh">normative_sections:</span>
-<span class="sd">				</span><span class="ge">Contract</span><span class="sd">, </span><span class="ge">Public_methods</span>
-<span class="ge">		Contract:</span>
-<span class="sd">			</span><span class="gh">general:</span>
+<span class="gh">		Preamble:</span>
+<span class="sd">			</span><span class="gu">profile:</span>
+<span class="sd">				</span><span class="no">class</span>
+<span class="sd">			</span><span class="gu">normative_sections:</span>
+<span class="sd">				</span><span class="no">Contract</span><span class="sd">, </span><span class="no">Public_methods</span>
+<span class="gh">		Contract:</span>
+<span class="sd">			</span><span class="gu">general:</span>
 <span class="sd">				A class, nested in class :wtrl_type:`X`, </span><span class="k">|must|</span><span class="sd"> do nothing.</span>
-<span class="sd">			</span><span class="gh">constructor:</span>
+<span class="sd">			</span><span class="gu">constructor:</span>
 <span class="sd">				</span><span class="k">|Must|</span><span class="sd"> be default-constructible</span>
-<span class="ge">		Public_methods:</span>
-<span class="sd">			greeting_but_in_Y</span>
-<span class="sd">		&quot;&quot;&quot;</span>
+<span class="gh">		Public_methods:</span>
+<span class="sd">			</span><span class="nf">greeting_but_in_Y</span>
+<span class="sd">		</span><span class="nf">&quot;&quot;&quot;</span>
 		<span class="k">def</span><span class="w"> </span><span class="nf">greeting_but_in_Y</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">			</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="ge">			Preamble:</span>
-<span class="sd">				</span><span class="gh">profile:</span>
-<span class="sd">					method</span>
-<span class="sd">				</span><span class="gh">normative_sections:</span>
-<span class="sd">					</span><span class="ge">Contract</span><span class="sd">, </span><span class="ge">Parameters</span><span class="sd">, </span><span class="ge">Returns</span><span class="sd">,</span><span class="ge">Raises</span>
-<span class="ge">			Contract:</span>
-<span class="sd">				</span><span class="gh">general:</span>
+<span class="w">			</span><span class="nf">&quot;&quot;&quot;</span>
+<span class="gh">			Preamble:</span>
+<span class="sd">				</span><span class="gu">profile:</span>
+<span class="sd">					</span><span class="no">method</span>
+<span class="sd">				</span><span class="gu">normative_sections:</span>
+<span class="sd">					</span><span class="no">Contract</span><span class="sd">, </span><span class="no">Parameters</span><span class="sd">, </span><span class="no">Returns</span><span class="sd">,</span><span class="no">Raises</span>
+<span class="gh">			Contract:</span>
+<span class="sd">				</span><span class="gu">general:</span>
 <span class="sd">					</span><span class="k">|Must|</span><span class="sd"> render a greeting message to ``stdout``.</span>
-<span class="ge">			Parameters:</span>
-<span class="ge">			Returns:</span>
+<span class="gh">			Parameters:</span>
+<span class="gh">			Returns:</span>
 <span class="sd">				</span><span class="kc">|None|</span>
-<span class="ge">			Raises:</span>
+<span class="gh">			Raises:</span>
 <span class="sd">			&quot;&quot;&quot;</span>
 			<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Hello world from Y!&quot;</span><span class="p">)</span>
 </pre></div>

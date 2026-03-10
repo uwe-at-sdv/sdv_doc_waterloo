@@ -474,7 +474,7 @@ with previously valid Waterloo documents or tools.
 
 
 Subsystem versions
-^^^^^^^^^^^^^^^^^^
+..................
 
 Subsystems may evolve independently and therefore maintain their own
 version numbers. A version change in one subsystem does not directly
@@ -485,21 +485,19 @@ evolution of the individual components.
 
 
 Main version derivation
-^^^^^^^^^^^^^^^^^^^^^^^
+.......................
 
 The main version reflects the highest-order change among the subsystem
-versions that occur within a release.
+versions that occur within a release. The following interpretation is used:
 
-The following interpretation is used:
-
-	* If a subsystem performs a patch update (:wtrl_value:`X.Y.Z \u2192 X.Y.(Z+1)`),
+	* If a subsystem performs a patch update (:wtrl_value:`X.Y.Z -> X.Y.(Z+1)`),
 	  the patch component of the main version is increased.
 
-	* If a subsystem performs a minor update (:wtrl_value:`X.Y.Z \u2192 X.(Y+1).0`),
+	* If a subsystem performs a minor update (:wtrl_value:`X.Y.Z -> X.(Y+1).0`),
 	  the minor component of the main version is increased and the patch
 	  component is reset to zero.
 
-	* If a subsystem performs a major update (:wtrl_value:`X.Y.Z \u2192 (X+1).0.0`),
+	* If a subsystem performs a major update (:wtrl_value:`X.Y.Z -> (X+1).0.0`),
 	  the major component of the main version is increased and the minor and
 	  patch components are reset to zero.
 
@@ -509,7 +507,7 @@ patch).
 
 
 Compatibility interpretation
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+............................
 
 The major component of the main version represents the compatibility
 level of the Waterloo specification.
