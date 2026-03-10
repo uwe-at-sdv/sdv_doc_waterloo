@@ -410,25 +410,25 @@ Method_overview:
 		return "Class_overview"
 	def parse(self,tr : tracer,entries : DocstringSubtree) -> None:
 		"""
-Preamble:
-	profile:
-		method
-	normative_sections:
-		Contract, Parameters, Returns, Raises
-Contract:
-	general:
-		|Must| parse the content of section |label|`Class_overview`.
-Parameters:
-	tr:
-		The tracer for collecting diagnostics.
-	entries:
-		The docstring subtree to parse, a list of public class entries.
-Returns:
-	|Must| return |None|.
-Raises:
-	RuntimeError:
-		|Must| raise if the content is not a set of public class entries. In detail:
-		|Must| raise if the content is not a sequence of pairs label / list of strings.
+		Preamble:
+			profile:
+				method
+			normative_sections:
+				Contract, Parameters, Returns, Raises
+		Contract:
+			general:
+				|Must| parse the content of section |label|`Class_overview`.
+		Parameters:
+			tr:
+				The tracer for collecting diagnostics.
+			entries:
+				The docstring subtree to parse, a list of public class entries.
+		Returns:
+			|Must| return |None|.
+		Raises:
+			RuntimeError:
+				|Must| raise if the content is not a set of public class entries. In detail:
+				|Must| raise if the content is not a sequence of pairs label / list of strings.
 		"""
 		p = self.parent()
 		pos = 0

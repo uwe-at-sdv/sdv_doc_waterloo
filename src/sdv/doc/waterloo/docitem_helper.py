@@ -210,6 +210,36 @@ CANONICAL_ORDER_OF_SECTIONS : Final[Dict[str,None | Sequence[str]]] = {
 	"See_also"		: None,
 	}
 
+class Trait(StrEnum):
+	"""
+	Preamble:
+		profile:
+			class
+		normative_sections:
+			Contract, Public_constants
+		scope:
+			public
+	Contract:
+		general:
+			|Must| provide constants representing the traits of a class.
+		constructor:
+			Inherit from |type|`str` and |type|`Enum`.
+	Public_constants:
+		ABSTRACT:
+			The class is abstract, i.e. it cannot be instantiated directly and is not a complete specification of the concept.
+		FINAL:
+			The class is final, i.e. it cannot be subclassed and is a complete specification of the concept.
+	"""
+	ABSTRACT = "abstract"
+	FINAL = "final"
+
+trait_tag_map = {
+	"abstract": Trait.ABSTRACT,
+	"final": Trait.FINAL
+	}
+TRAIT_TAG_MAP = MappingProxyType(trait_tag_map)
+
+
 # Scope values
 class Scope(IntEnum):
 	r"""
@@ -217,7 +247,7 @@ class Scope(IntEnum):
 		profile:
 			class
 		normative_sections:
-			Contract, Public_constants, bla
+			Contract, Public_constants
 		scope:
 			public
 	Contract:

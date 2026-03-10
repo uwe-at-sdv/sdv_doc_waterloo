@@ -1,12 +1,12 @@
 {
     "$schema": "https://sci-d-vis.com/schema/wtrl-json-0.0.5.schema.json",
-    "$id": "urn:waterlint:0.5.0:render-json:core:rfc-2119:99c78e007c039537d29bb56fb7ec154b",
+    "$id": "urn:waterlint:0.5.0:render-json:core:rfc-2119:382a6714ce827932c633f3b36a24a704",
     "__WTRL_VERSION__": {
         "waterloo": "0.5.5",
         "schema": "0.0.5"
     },
     "__WTRL_META__": {
-        "generated_at": "2026-03-05T15:49:07+01:00",
+        "generated_at": "2026-03-10T00:14:32+01:00",
         "generator": "waterlint",
         "scope": "core",
         "flavour": "rfc-2119"
@@ -57,6 +57,7 @@
         "sdv.doc.waterloo.docitem_convert": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_convert"
     },
     "__WTRL_TOC_CLASSES__": {
+        "sdv.doc.waterloo.docitem_helper.Trait": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.Trait",
         "sdv.doc.waterloo.docitem_helper.Scope": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.Scope",
         "sdv.doc.waterloo.docitem_helper.Flavour": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.Flavour",
         "sdv.doc.waterloo.docitem_helper.Format": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.Format",
@@ -239,6 +240,8 @@
         "sdv.doc.waterloo.docitem.FLAVOUR_TAG_MAP": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem.FLAVOUR_TAG_MAP",
         "sdv.doc.waterloo.docitem.FORMAT_TAG_MAP": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem.FORMAT_TAG_MAP",
         "sdv.doc.waterloo.docitem.STATUS_TAG_MAP": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem.STATUS_TAG_MAP",
+        "sdv.doc.waterloo.docitem_helper.Trait.ABSTRACT": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.Trait.ABSTRACT",
+        "sdv.doc.waterloo.docitem_helper.Trait.FINAL": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.Trait.FINAL",
         "sdv.doc.waterloo.docitem_helper.Scope.PUBLIC": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.Scope.PUBLIC",
         "sdv.doc.waterloo.docitem_helper.Scope.EXTENSION": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.Scope.EXTENSION",
         "sdv.doc.waterloo.docitem_helper.Scope.CORE": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.Scope.CORE",
@@ -728,6 +731,69 @@
                 }
             }
         },
+        "sdv.doc.waterloo.docitem_helper.Trait.ABSTRACT": {
+            "doc": {},
+            "doc_lines": [
+                "The class is abstract, i.e. it cannot be instantiated directly and is not a complete specification of the concept."
+            ]
+        },
+        "sdv.doc.waterloo.docitem_helper.Trait.FINAL": {
+            "doc": {},
+            "doc_lines": [
+                "The class is final, i.e. it cannot be subclassed and is a complete specification of the concept."
+            ]
+        },
+        "sdv.doc.waterloo.docitem_helper.Trait": {
+            "signature": {
+                "text": "object.__init__(self, /, *args, **kwargs)",
+                "parameters": [
+                    {
+                        "name": "args",
+                        "kind": "VAR_POSITIONAL",
+                        "annotation": null,
+                        "default": null
+                    },
+                    {
+                        "name": "kwargs",
+                        "kind": "VAR_KEYWORD",
+                        "annotation": null,
+                        "default": null
+                    }
+                ],
+                "returns": null
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "class",
+                    "normative_sections": [
+                        "Contract",
+                        "Public_constants"
+                    ],
+                    "scope": [
+                        "public"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST provide constants representing the traits of a class."
+                    ],
+                    "constructor": [
+                        "Inherit from |type|`str` and |type|`Enum`."
+                    ]
+                },
+                "Public_constants": {
+                    "ABSTRACT": [
+                        "The class is abstract, i.e. it cannot be instantiated directly and is not a complete specification of the concept."
+                    ],
+                    "FINAL": [
+                        "The class is final, i.e. it cannot be subclassed and is a complete specification of the concept."
+                    ]
+                }
+            }
+        },
+        "sdv.doc.waterloo.docitem_helper": {
+            "doc": {}
+        },
         "sdv.doc.waterloo.docitem_helper.Scope.PUBLIC": {
             "doc": {},
             "doc_lines": [
@@ -805,9 +871,6 @@
                     ]
                 }
             }
-        },
-        "sdv.doc.waterloo.docitem_helper": {
-            "doc": {}
         },
         "sdv.doc.waterloo.docitem_helper.Flavour.RAW": {
             "doc": {},
@@ -8903,13 +8966,13 @@
         },
         "sdv.doc.waterloo.docitem_convert.to_string_legend_yaml": {
             "signature": {
-                "text": "to_string_legend_yaml(config: 'YamlConfig' = <sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7fc7e5d57940>) -> 'str'",
+                "text": "to_string_legend_yaml(config: 'YamlConfig' = <sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f5c0891ab60>) -> 'str'",
                 "parameters": [
                     {
                         "name": "config",
                         "kind": "POSITIONAL_OR_KEYWORD",
                         "annotation": "YamlConfig",
-                        "default": "<sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7fc7e5d57940>"
+                        "default": "<sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f5c0891ab60>"
                     }
                 ],
                 "returns": "str"
@@ -8946,7 +9009,7 @@
         },
         "sdv.doc.waterloo.docitem_convert.to_string_signature_yaml": {
             "signature": {
-                "text": "to_string_signature_yaml(obj: 'object', config: 'YamlConfig' = <sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7fc7e5d55cc0>) -> 'str'",
+                "text": "to_string_signature_yaml(obj: 'object', config: 'YamlConfig' = <sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f5c08918fa0>) -> 'str'",
                 "parameters": [
                     {
                         "name": "obj",
@@ -8958,7 +9021,7 @@
                         "name": "config",
                         "kind": "POSITIONAL_OR_KEYWORD",
                         "annotation": "YamlConfig",
-                        "default": "<sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7fc7e5d55cc0>"
+                        "default": "<sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f5c08918fa0>"
                     }
                 ],
                 "returns": "str"
@@ -9028,7 +9091,7 @@
         },
         "sdv.doc.waterloo.docitem_convert.to_string_yaml": {
             "signature": {
-                "text": "to_string_yaml(tree: 'DocstringTree', flavour: 'Flavour', config: 'YamlConfig' = <sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7fc7e5d54cd0>) -> 'str'",
+                "text": "to_string_yaml(tree: 'DocstringTree', flavour: 'Flavour', config: 'YamlConfig' = <sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f5c08918f70>) -> 'str'",
                 "parameters": [
                     {
                         "name": "tree",
@@ -9046,7 +9109,7 @@
                         "name": "config",
                         "kind": "POSITIONAL_OR_KEYWORD",
                         "annotation": "YamlConfig",
-                        "default": "<sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7fc7e5d54cd0>"
+                        "default": "<sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f5c08918f70>"
                     }
                 ],
                 "returns": "str"

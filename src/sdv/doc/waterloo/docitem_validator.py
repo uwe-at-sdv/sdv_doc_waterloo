@@ -540,10 +540,9 @@ Notes:
 				traits = list(node_traits.items())
 				if len(traits) != len(set(traits)):
 					raise_validation_error(tr, obj, "LQID-004", "Trait identifiers must not occur more than once.")
-				allowed_traits = {"final", "abstract"}
 				for tr_name in traits:
-					if tr_name not in allowed_traits:
-						raise_validation_error(tr, obj, "CON-017", f"Trait '{tr_name}' is not allowed; allowed: {sorted(allowed_traits)}")
+					if tr_name not in TRAIT_TAG_MAP:
+						raise_validation_error(tr, obj, "CON-017", f"Trait '{tr_name}' is not allowed; allowed: {sorted(TRAIT_TAG_MAP.keys())}")
 #===== Derived_from must exist if normative ===================#
 	with traced_section(tr, "Derived_from"):
 		if "Derived_from" in node_normative_sections.items():
