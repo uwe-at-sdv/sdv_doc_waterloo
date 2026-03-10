@@ -196,7 +196,7 @@ class PythonWaterlooLexer(PythonLexer):
 		constructor:
 			default
 	Public_methods:
-		highlight_docstring,_highlight_line,_looks_like_waterloo_docstring,_has_mixed_indentation,analyse_text,get_tokens_unprocessed
+		highlight_docstring,highlight_line,looks_like_waterloo_docstring,has_mixed_indentation,analyse_text,get_tokens_unprocessed
 	"""
 	name = "Python-Waterloo"
 	aliases = ["python-waterloo"]
@@ -312,7 +312,7 @@ class PythonWaterlooLexer(PythonLexer):
 				|Must| check if the given text looks like a Waterloo-docstring.
 				|Must| if it does not look like a Waterloo-docstring, yield the entire text as a single String.Doc token.
 				|Must| if it looks like a Waterloo-docstring, reset the parser state and analyze the text line by line.
-				|Must| for each line, call the _highlight_line method to identify and yield tokens for that line.
+				|Must| for each line, call the highlight_line method to identify and yield tokens for that line.
 		Parameters:
 			base:
 				The base index for token positions in the original text.
@@ -325,7 +325,7 @@ class PythonWaterlooLexer(PythonLexer):
 				|May| propagate exceptions from the |mod|`re` module.
 				|May| propagate exceptions from the |mod|`pygments` module.
 		"""
-		if not self._looks_like_waterloo_docstring(text):
+		if not self.looks_like_waterloo_docstring(text):
 			yield base, String.Doc, text
 			return
 
@@ -344,7 +344,7 @@ class PythonWaterlooLexer(PythonLexer):
 				line = text[pos : nl + 1]
 				next_pos = nl + 1
 # We have identified a line, now find out how to highlight.
-			yield from self._highlight_line(base + pos, line)
+			yield from self.highlight_line(base + pos, line)
 # Advance to next line.
 			pos = next_pos
 
@@ -562,7 +562,7 @@ class PythonWaterlooLexer(PythonLexer):
 		if cur < len(line):
 			yield base + cur, String.Doc, line[cur:]
 
-	def _highlight_line(self, base: int, line: str) -> Iterable[tuple[int, object, str]]:
+	def highlight_line(self, base: int, line: str) -> Iterable[tuple[int, object, str]]:
 		"""
 		Preamble:
 			profile:
@@ -669,7 +669,7 @@ class PythonWaterlooLexer(PythonLexer):
 		yield from self._emit_inline_line(base, line)
 
 	@staticmethod
-	def _has_mixed_indentation(text: str) -> bool:
+	def has_mixed_indentation(text: str) -> bool:
 		r"""
 		Preamble:
 			profile:
@@ -713,7 +713,7 @@ class PythonWaterlooLexer(PythonLexer):
 		return False
 
 	@staticmethod
-	def _looks_like_waterloo_docstring(text: str) -> bool:
+	def looks_like_waterloo_docstring(text: str) -> bool:
 		r"""
 		Preamble:
 			profile:
@@ -747,7 +747,7 @@ class PythonWaterlooLexer(PythonLexer):
 					return False
 				found_contract = True
 			if found_preamble and found_contract:
-				if PythonWaterlooLexer._has_mixed_indentation(text):
+				if PythonWaterlooLexer.has_mixed_indentation(text):
 					return False
 				return True
 		return False
