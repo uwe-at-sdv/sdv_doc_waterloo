@@ -7,9 +7,12 @@ Preamble:
 Definitions:
 	Pos_Role_Substring_Triple:
 		A tuple (|var|`position`, |var|`token_type`, |var|`substring`) specifying syntax highlighting:
-		- position: The starting index of the substring in the original text.
-		- token_type: A Pygments token class (from |type|`pygments.token`).
-		- substring: The text to be highlighted.
+		|
+		- |var|`position`: The starting index of the substring in the original text.
+		|
+		- |var|`token_type`: A Pygments token class (from |type|`pygments.token`).
+		|
+		- |var|`substring`: The text to be highlighted.
 Contract:
 	general:
 		|Must| provide a Python module that defines the PythonWaterlooLexer class for syntax highlighting of Waterloo-docstrings.
@@ -40,14 +43,14 @@ from pygments.token import Error, Generic, Keyword, Name, String, Literal, Numbe
 
 __version__ = "0.2.0"
 # - 0.2.0 [2026-03-10]	* Added comprehensive comments and documentation to the code,
-# 						explaining the purpose and functionality of each method and
-# 						section of the lexer. This includes detailed descriptions
-# 						of the parameters, return values, and potential exceptions
-# 						for each method, as well as explanations of the regular
-# 						expressions used for tokenization.
-#						* Careful handling of edge cases, such as docstrings that do not
-# 						conform to the expected structure or contain mixed indentation,
-# 						to ensure that the lexer behaves robustly in a variety of scenarios.
+# 			explaining the purpose and functionality of each method and
+# 			section of the lexer. This includes detailed descriptions
+# 			of the parameters, return values, and potential exceptions
+# 			for each method, as well as explanations of the regular
+# 			expressions used for tokenization.
+#			* Careful handling of edge cases, such as docstrings that do not
+# 			conform to the expected structure or contain mixed indentation,
+# 			to ensure that the lexer behaves robustly in a variety of scenarios.
 # - 0.1.0 [2026-03-05]	Versioning starts now.
 
 #----- Constants ----------------------------------------------#
@@ -312,7 +315,7 @@ class PythonWaterlooLexer(PythonLexer):
 				|Must| check if the given text looks like a Waterloo-docstring.
 				|Must| if it does not look like a Waterloo-docstring, yield the entire text as a single String.Doc token.
 				|Must| if it looks like a Waterloo-docstring, reset the parser state and analyze the text line by line.
-				|Must| for each line, call the highlight_line method to identify and yield tokens for that line.
+				|Must| for each line, call the |func|`highlight_line` method to identify and yield tokens for that line.
 		Parameters:
 			base:
 				The base index for token positions in the original text.
@@ -724,9 +727,9 @@ class PythonWaterlooLexer(PythonLexer):
 				core
 		Contract:
 			general:
-				|Must| look for the presence of a Preamble and Contract section.
+				|Must| look for the presence of a |label|`Preamble` and |label|`Contract` section.
 				|Must| check that the section labels match the expected format.
-				|Must| check that the Preamble and Contract sections appear in the correct order.
+				|Must| check that the |label|`Preamble` and |label|`Contract` sections appear in the correct order.
 				|Must| check that there is no mixed indentation in the docstring.
 		Parameters:
 			text:
