@@ -784,18 +784,87 @@ def build_sphinx_nodes(ctx : context,obj: object,doc: mod_docitem.docitem_docstr
 			node_bullet_list += node_list_item
 		return node_bullet_list
 
-	def build_paragraphs_from_items(items: Iterable[str]) -> List[nodes.paragraph]:
+	def build_paragraphs_from_items(items: Sequence[str]) -> List[nodes.paragraph]:
+		RE_DOC_BULLET_LIST = re.compile(r"^[-+*]\s")
 		node_paragraph = nodes.paragraph()
 		restart = True
 		out: List[nodes.paragraph] = []
-		for content in items:
+		i_item = 0
+		while i_item < len(items):
+			content = items[i_item]
 			if content == "|":
 				out.append(node_paragraph)
 				node_paragraph = nodes.paragraph()
 				restart = True
 			else:
+# We experimentally allow bullet lists triggered by a sequence of leading "* ", "+ ", or "- ".
+# in the content lines. If we find such a pattern, we build a bullet list from
+# all consecutive lines matching the pattern.
+				n_lines = 0
+				while i_item + n_lines < len(items) and RE_DOC_BULLET_LIST.match(items[i_item + n_lines]):
+					n_lines += 1
+					if i_item + n_lines >= len(items):
+						break
+# At least two items are required for safe pattern recognition.
+				if n_lines >= 2:
+# For nested itemizations we need a stack.
+					node_stack = []
+					symb_stack: List[str] = []
+					last_item_stack: List[nodes.list_item | None] = []
+
+					for content in items[i_item:i_item + n_lines]:
+						symbol = content[0]
+# Drop bullet marker and space.
+						text = content[2:]
+
+						if not symb_stack:
+        						node_stack.append(nodes.bullet_list())
+        						symb_stack.append(symbol)
+        						last_item_stack.append(None)
+# Is this symbol different and new? -> Increase itemization level
+						elif symbol != symb_stack[-1]:
+							if symbol not in symb_stack:
+# The new nested list must be attached to the previous item
+								parent_item = last_item_stack[-1]
+								if parent_item is None:
+									raise ValueError(
+									f"Cannot start nested list with symbol {symbol!r} "
+									"without a previous list item."
+									)
+								symb_stack.append(symbol)
+# Create (nested) bullet list and make it the current one.
+								node_bullet_list = nodes.bullet_list()
+								parent_item += node_bullet_list
+# Make nested list the current one
+								node_stack.append(node_bullet_list)
+								last_item_stack.append(None)
+# Is this symbol different but old? -> Decrease itemization level
+							else:
+								while symb_stack[-1] != symbol:
+									symb_stack.pop()
+									node_stack.pop()
+									last_item_stack.pop()
+# Same symbol as before? -> Keep itemization level
+						else:
+							pass
+# Always: create a new item on the current level
+						node_list_item = nodes.list_item()
+# Create paragraph for content.
+						node_item_paragraph = nodes.paragraph()
+						node_item_paragraph.extend(parse_text(node_list_item, text))
+						node_list_item += node_item_paragraph
+# Append item to current bullet list
+						node_stack[-1] += node_list_item
+# Remember last item on this level
+						last_item_stack[-1] = node_list_item
+
+					node_paragraph += node_stack[0]
+					i_item += n_lines
+					continue
+# The normal stuff
 				node_paragraph.extend(parse_text(node_paragraph, ("" if restart else " ") + content))
 				restart = False
+			i_item += 1
 		out.append(node_paragraph)
 		return out
 
