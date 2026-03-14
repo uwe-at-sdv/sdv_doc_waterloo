@@ -489,6 +489,13 @@
 					"match": "^\\s*\\|\\s*$"
 				},
 				{
+					"name": "meta.bullet.waterloo",
+					"match": "^([ \\t]*)([-+*])(\\s+)",
+					"captures": {
+						"2": { "name": "keyword.operator.bullet.waterloo" }
+					}
+				},
+				{
 					"name": "keyword.operator.line-continuation.waterloo",
 					"match": "\\\\(?=\\s*$)"
 				}

@@ -7,12 +7,9 @@ Preamble:
 Definitions:
 	Pos_Role_Substring_Triple:
 		A tuple (|var|`position`, |var|`token_type`, |var|`substring`) specifying syntax highlighting:
-		|
-		- |var|`position`: The starting index of the substring in the original text.
-		|
-		- |var|`token_type`: A Pygments token class (from |type|`pygments.token`).
-		|
-		- |var|`substring`: The text to be highlighted.
+		* |var|`position`: The starting index of the substring in the original text.
+		* |var|`token_type`: A Pygments token class (from |type|`pygments.token`).
+		* |var|`substring`: The text to be highlighted.
 Contract:
 	general:
 		|Must| provide a Python module that defines the PythonWaterlooLexer class for syntax highlighting of Waterloo-docstrings.
@@ -22,11 +19,11 @@ Public_constants:
 	RE_SECTION_ALLOWED_NORMATIVE:
 		A regular expression pattern that matches section names allowed or mandatory\
 		in the "normative_sections" subsection of the Preamble.\
-		This expression is governed by the normative rules and must be kept up to date.\
+		This expression is governed by the normative rules and must be kept up to date.
 		Mandatory : CON-002, CON-005, CON-020, CON-034, CPCL-002, CPCON-002, CPMT-002,\
 		CPTYP-002, CPVAR-002, DEF-002, DER-004, FAC-009, MPCL-002, MPCON-002, MPFN-002,\
-		MPTYP-002, MPVAR-002, PAR-002, RAI-002, RET-002.\
-		Accepted : DESC-002, SEE-011.\
+		MPTYP-002, MPVAR-002, PAR-002, RAI-002, RET-002.
+		Accepted : DESC-002, SEE-011.
 		Refused : NOTE-002, PRE-002, TERM-002.
 """
 from __future__ import annotations
@@ -41,8 +38,10 @@ from pygments.token import Error, Generic, Keyword, Name, String, Literal, Numbe
 
 #----- Changelog ----------------------------------------------#
 
-__version__ = "0.2.0"
-# - 0.2.0 [2026-03-10]	* Added comprehensive comments and documentation to the code,
+__version__ = "0.3.0"
+# - 0.3.0 [2026-03-14]	Added handling for bullet list markers (lines starting with "-", "+", or "*")
+# 			in the `highlight_line` method, treating them as keywords for syntax highlighting.
+# - 0.2.0 [2026-03-10]	Added comprehensive comments and documentation to the code,
 # 			explaining the purpose and functionality of each method and
 # 			section of the lexer. This includes detailed descriptions
 # 			of the parameters, return values, and potential exceptions
@@ -88,6 +87,9 @@ RE_SUBSECTION_ANY = re.compile(
 # text using a single pipe operator on a line.
 RE_TEXTFLOW_MARKER = re.compile(
 	r"^\s*(?:\|)\s*$"
+)
+RE_BULLETLIST_MARKER = re.compile(
+	r"^([ \t]*)([-+*])(\s+)(.*)$"
 )
 
 # 1: Normativity keywords
@@ -611,6 +613,25 @@ class PythonWaterlooLexer(PythonLexer):
 # Analyze for paragraph marker
 		if RE_TEXTFLOW_MARKER.fullmatch(stripped):
 			yield base, Keyword, line
+			return
+# Analyze for bullet list marker
+		line_no_nl = line[:-1] if line.endswith("\n") else line
+		m_bullet = RE_BULLETLIST_MARKER.match(line_no_nl)
+		if m_bullet is not None:
+			indent = m_bullet.group(1)
+			marker = m_bullet.group(2)
+			gap = m_bullet.group(3)
+			rest = m_bullet.group(4)
+			prefix_len = len(indent) + len(marker) + len(gap)
+			if indent:
+				yield base, String.Doc, indent
+			yield base + len(indent), Keyword, marker
+			if gap:
+				yield base + len(indent) + len(marker), String.Doc, gap
+			if rest:
+				yield from self._emit_inline_line(base + prefix_len, rest)
+			if line.endswith("\n"):
+				yield base + len(line_no_nl), String.Doc, "\n"
 			return
 
 # Special handling of "normative_sections"

@@ -1,7 +1,27 @@
+[build-system]
+requires = ["setuptools>=67", "wheel"]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "python-waterloo-lexer"
-version = "0.1.0"
+description = "A pygments lexer derived from the Python lexer, for WWaterloo docstrings"
+readme = "README.md"
 dependencies = ["pygments"]
+requires-python = ">=3.8"
+authors = [{ name = "Uwe" }]
+license = { text = "BSD-2-Clause" }
+classifiers = [
+	"Programming Language :: Python :: 3",
+	"Programming Language :: Python :: 3.10",
+	"Operating System :: OS Independent",
+	]
+dynamic = ["version"]
 
 [project.entry-points."pygments.lexers"]
 python_waterloo = "python_waterloo_lexer:PythonWaterlooLexer"
+
+[tool.setuptools.dynamic]
+version = { attr = "python_waterloo_lexer.__version__" }
+
+[tool.setuptools]
+py-modules = ["python_waterloo_lexer"]
