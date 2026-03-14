@@ -1,12 +1,12 @@
 {
     "$schema": "https://sci-d-vis.com/schema/wtrl-json-0.0.5.schema.json",
-    "$id": "urn:waterlint:0.5.0:render-json:core:rfc-2119:382a6714ce827932c633f3b36a24a704",
+    "$id": "urn:waterlint:0.5.0:render-json:core:rfc-2119:21408c06960e6d2fc3ebe17ba784db25",
     "__WTRL_VERSION__": {
         "waterloo": "0.5.5",
         "schema": "0.0.5"
     },
     "__WTRL_META__": {
-        "generated_at": "2026-03-10T19:41:10+01:00",
+        "generated_at": "2026-03-14T09:54:53+01:00",
         "generator": "waterlint",
         "scope": "core",
         "flavour": "rfc-2119"
@@ -128,7 +128,9 @@
         "sdv.doc.waterloo.docitem_helper.is_obj_module": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.is_obj_module",
         "sdv.doc.waterloo.docitem_helper.is_obj_class": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.is_obj_class",
         "sdv.doc.waterloo.docitem_helper.is_obj_function": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.is_obj_function",
+        "sdv.doc.waterloo.docitem_helper.is_obj_method_like": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.is_obj_method_like",
         "sdv.doc.waterloo.docitem_helper.is_obj_named_value": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.is_obj_named_value",
+        "sdv.doc.waterloo.docitem_helper.is_obj_documentable": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.is_obj_documentable",
         "sdv.doc.waterloo.docitem_helper.get_obj_direct_module": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.get_obj_direct_module",
         "sdv.doc.waterloo.docitem_helper.get_obj_name": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.get_obj_name",
         "sdv.doc.waterloo.docitem_helper.get_obj_fully_qualified_name": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.get_obj_fully_qualified_name",
@@ -226,6 +228,7 @@
     "__WTRL_TOC_TYPES__": {
         "sdv.doc.waterloo.docitem.DocstringTree": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem.DocstringTree",
         "sdv.doc.waterloo.docitem.Documentable": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem.Documentable",
+        "sdv.doc.waterloo.docitem.Profile": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem.Profile",
         "sdv.doc.waterloo.docitem.Scopes": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem.Scopes",
         "sdv.doc.waterloo.docitem_helper.tracer.Context": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.tracer.Context",
         "sdv.doc.waterloo.docitem_convert.WtrlJsonNode_t": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_convert.WtrlJsonNode_t"
@@ -270,6 +273,12 @@
             "doc": {},
             "doc_lines": [
                 "Type for objects that can have a docstring."
+            ]
+        },
+        "sdv.doc.waterloo.docitem.Profile": {
+            "doc": {},
+            "doc_lines": [
+                "The string literals representing values in the |label|`Preamble.profile` subsection."
             ]
         },
         "sdv.doc.waterloo.docitem.Scopes": {
@@ -358,6 +367,10 @@
                     ]
                 },
                 "Public_functions": [
+                    "is_obj_module",
+                    "is_obj_class",
+                    "is_obj_function",
+                    "is_obj_method_like",
                     "is_attr_annotated",
                     "is_attr_final",
                     "get_obj_name",
@@ -698,6 +711,9 @@
                     ],
                     "Documentable": [
                         "Type for objects that can have a docstring."
+                    ],
+                    "Profile": [
+                        "The string literals representing values in the |label|`Preamble.profile` subsection."
                     ],
                     "Scopes": [
                         "Type alias for a set of scopes."
@@ -1417,6 +1433,51 @@
                 }
             }
         },
+        "sdv.doc.waterloo.docitem_helper.is_obj_method_like": {
+            "signature": {
+                "text": "is_obj_method_like(obj: 'object') -> 'TypeIs[Callable[..., Any]]'",
+                "parameters": [
+                    {
+                        "name": "obj",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "object",
+                        "default": null
+                    }
+                ],
+                "returns": "TypeIs[Callable[..., Any]]"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ],
+                    "scope": [
+                        "extension"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST detect callables which should be treated as \"method-like\" for Waterloo profile heuristics.",
+                        "MUST return |False| for non-routines.",
+                        "MUST treat callables with class-like |value|`__qualname__` (`A.f`) as method-like.",
+                        "SHOULD additionally use decorators |lit|`@staticmethod`, |lit|`@classmethod`, |lit|`@abstractmethod`, |lit|`@abc.abstractmethod` as hints."
+                    ]
+                },
+                "Parameters": {
+                    "obj": [
+                        "Object to inspect."
+                    ]
+                },
+                "Returns": [
+                    "|True| if |var|`obj` is callable and method-like by heuristic."
+                ],
+                "Raises": {}
+            }
+        },
         "sdv.doc.waterloo.docitem_helper.is_obj_named_value": {
             "signature": {
                 "text": "is_obj_named_value(obj: 'object') -> 'TypeIs[Callable[..., Any]]'",
@@ -1471,6 +1532,45 @@
                 }
             }
         },
+        "sdv.doc.waterloo.docitem_helper.is_obj_documentable": {
+            "signature": {
+                "text": "is_obj_documentable(obj: 'object') -> 'TypeIs[Documentable]'",
+                "parameters": [
+                    {
+                        "name": "obj",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "object",
+                        "default": null
+                    }
+                ],
+                "returns": "TypeIs[Documentable]"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST find out if the object passed can have a docstring."
+                    ]
+                },
+                "Parameters": {
+                    "obj": [
+                        "The object to examine."
+                    ]
+                },
+                "Returns": [
+                    "|True| if |var|`obj` is a module, class or function, else |False|."
+                ],
+                "Raises": {}
+            }
+        },
         "sdv.doc.waterloo.docitem_helper.get_obj_direct_module": {
             "signature": {
                 "text": "get_obj_direct_module(obj: 'object') -> 'ModuleType | None'",
@@ -1491,8 +1591,7 @@
                         "Contract",
                         "Parameters",
                         "Returns",
-                        "Raises",
-                        "Notes"
+                        "Raises"
                     ],
                     "scope": [
                         "public"
@@ -8966,13 +9065,13 @@
         },
         "sdv.doc.waterloo.docitem_convert.to_string_legend_yaml": {
             "signature": {
-                "text": "to_string_legend_yaml(config: 'YamlConfig' = <sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7fd885a40fd0>) -> 'str'",
+                "text": "to_string_legend_yaml(config: 'YamlConfig' = <sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7fb991966440>) -> 'str'",
                 "parameters": [
                     {
                         "name": "config",
                         "kind": "POSITIONAL_OR_KEYWORD",
                         "annotation": "YamlConfig",
-                        "default": "<sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7fd885a40fd0>"
+                        "default": "<sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7fb991966440>"
                     }
                 ],
                 "returns": "str"
@@ -9009,7 +9108,7 @@
         },
         "sdv.doc.waterloo.docitem_convert.to_string_signature_yaml": {
             "signature": {
-                "text": "to_string_signature_yaml(obj: 'object', config: 'YamlConfig' = <sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7fd885a41420>) -> 'str'",
+                "text": "to_string_signature_yaml(obj: 'object', config: 'YamlConfig' = <sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7fb991966890>) -> 'str'",
                 "parameters": [
                     {
                         "name": "obj",
@@ -9021,7 +9120,7 @@
                         "name": "config",
                         "kind": "POSITIONAL_OR_KEYWORD",
                         "annotation": "YamlConfig",
-                        "default": "<sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7fd885a41420>"
+                        "default": "<sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7fb991966890>"
                     }
                 ],
                 "returns": "str"
@@ -9091,7 +9190,7 @@
         },
         "sdv.doc.waterloo.docitem_convert.to_string_yaml": {
             "signature": {
-                "text": "to_string_yaml(tree: 'DocstringTree', flavour: 'Flavour', config: 'YamlConfig' = <sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7fd885a41450>) -> 'str'",
+                "text": "to_string_yaml(tree: 'DocstringTree', flavour: 'Flavour', config: 'YamlConfig' = <sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7fb9919668c0>) -> 'str'",
                 "parameters": [
                     {
                         "name": "tree",
@@ -9109,7 +9208,7 @@
                         "name": "config",
                         "kind": "POSITIONAL_OR_KEYWORD",
                         "annotation": "YamlConfig",
-                        "default": "<sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7fd885a41450>"
+                        "default": "<sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7fb9919668c0>"
                     }
                 ],
                 "returns": "str"

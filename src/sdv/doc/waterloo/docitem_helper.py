@@ -151,6 +151,8 @@ RULE_ID_WHITELIST: Final[Dict[str, WHITELIST_REASON]] = {
 
 #===== Constants ==============================================#
 
+WTRL_TRACER_JSON_SCHEMA_VERSION = "0.0.2"
+
 RE_RULE_ID : Final[str] = r"[A-Z][A-Z][A-Z]+-[0-9][0-9][0-9]+"
 RE_RULE_ID_COMPILED : Final[re.Pattern[str]] = re.compile(RE_RULE_ID)
 
@@ -239,6 +241,8 @@ trait_tag_map = {
 	}
 TRAIT_TAG_MAP = MappingProxyType(trait_tag_map)
 
+# Valid profiles
+Profile = Literal["module", "class", "function", "method", "inherited_method"]
 
 # Scope values
 class Scope(IntEnum):
@@ -464,7 +468,7 @@ DocstringTree: TypeAlias = List[DocstringSubtree]
 AnnotatableObject: TypeAlias = Union[type, ModuleType, FunctionType]
 
 RuleId: TypeAlias = str
-Origin: TypeAlias = Literal["parsing", "validation", "tool"]
+Origin: TypeAlias = Literal["parsing", "validation", "tool", "extension"]
 Details: TypeAlias = Dict[str,Any]
 
 Scopes: TypeAlias = Set[int]
@@ -619,6 +623,46 @@ def is_obj_function(obj: object) -> TypeIs[Callable[...,Any]]:
 	"""
 	return inspect.isroutine(obj)
 
+def is_obj_method_like(obj: object) -> TypeIs[Callable[...,Any]]:
+	"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+		scope:
+			extension
+	Contract:
+		general:
+			|Must| detect callables which should be treated as "method-like" for Waterloo profile heuristics.
+			|Must| return |False| for non-routines.
+			|Must| treat callables with class-like |value|`__qualname__` (`A.f`) as method-like.
+			|Should| additionally use decorators |lit|`@staticmethod`, |lit|`@classmethod`, |lit|`@abstractmethod`, |lit|`@abc.abstractmethod` as hints.
+	Parameters:
+		obj:
+			Object to inspect.
+	Returns:
+		|True| if |var|`obj` is callable and method-like by heuristic.
+	Raises:
+	"""
+	if not is_obj_function(obj):
+		return False
+	if inspect.ismethod(obj):
+		return True
+	qual = getattr(obj, "__qualname__", "")
+	if isinstance(qual, str) and "." in qual and "<locals>" not in qual:
+		return True
+	try:
+		decorator_lines = get_obj_decorators(obj)
+		if any(
+			line in ("@staticmethod", "@classmethod", "@abstractmethod", "@abc.abstractmethod")
+			for line in decorator_lines
+		):
+			return True
+	except Exception:
+		pass
+	return False
+
 def is_obj_named_value(obj: object) -> TypeIs[Callable[...,Any]]:
 	"""
 	Preamble:
@@ -647,6 +691,24 @@ def is_obj_named_value(obj: object) -> TypeIs[Callable[...,Any]]:
 	"""
 	return not is_obj_module(obj) and not is_obj_class(obj) and not is_obj_function(obj)
 
+def is_obj_documentable(obj: object) -> TypeIs[Documentable]:
+	"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+	Contract:
+		general:
+			|Must| find out if the object passed can have a docstring.
+	Parameters:
+		obj:
+			The object to examine.
+	Returns:
+		|True| if |var|`obj` is a module, class or function, else |False|.
+	Raises:
+	"""
+	return is_obj_module(obj) or is_obj_class(obj) or is_obj_function(obj)
 
 def get_obj_direct_module(obj: object) -> ModuleType | None:
 	"""
@@ -654,7 +716,7 @@ def get_obj_direct_module(obj: object) -> ModuleType | None:
 		profile:
 			function
 		normative_sections:
-			Contract, Parameters, Returns, Raises, Notes
+			Contract, Parameters, Returns, Raises
 		scope:
 			public
 	Contract:
@@ -1208,6 +1270,47 @@ Public_types:
 			t += self.to_string_errors()
 		t += "----- Tracer----->8---------------------------------------------\n"
 		return t
+	def build_json(self,severity: Severity) -> dict[str, Any]:
+		doc: dict[str, Any] = {
+			"$schema": f"https://sci-d-vis.com/schema/wtrl-tracer-json-{WTRL_TRACER_JSON_SCHEMA_VERSION}.schema.json",
+#			"$id": f"urn:waterlint:{__version__}:diag:{datetime.now().strftime('%Y%m%d%H%M%S')}",
+			"__WTRL_VERSION__": {
+#				"waterloo": docitem.__version__,
+				"schema": WTRL_TRACER_JSON_SCHEMA_VERSION,
+			},
+			"__WTRL_INFO__": [],
+			"__WTRL_WARNING__": [],
+			"__WTRL_ERROR__": [],
+		}
+		if severity <= self.Severity.DEBUG:
+			doc["__WTRL_DEBUG__"] = []
+#----- Debug notes --------------------------------------------#
+		if severity <= self.Severity.DEBUG:
+			for context,origin,msg in self.gen_debug_notes():
+				dentry: dict[str, Any] = {"kind": "debug", "origin": origin, "msg": msg}
+				dentry["context"] = context
+				cast(list[dict[str, Any]], doc["__WTRL_DEBUG__"]).append(dentry)
+#----- Infos --------------------------------------------------#
+		if severity <= self.Severity.INFO:
+			for context,origin,msg in self.gen_infos():
+				entry: dict[str, Any] = {"kind": "info", "origin": origin, "msg": msg}
+				entry["context"] = context
+				cast(list[dict[str, Any]], doc["__WTRL_INFO__"]).append(entry)
+#----- Warnings -----------------------------------------------#
+		if severity <= self.Severity.WARNING:
+			for context,rule_id,origin,msg,details in self.gen_warnings():
+				entry = {"kind": "warning", "origin": origin, "rule-id": rule_id, "msg": msg}
+				entry["context"] = context
+				entry["details"] = details
+				cast(list[dict[str, Any]], doc["__WTRL_WARNING__"]).append(entry)
+#----- Errors -------------------------------------------------#
+		if severity <= self.Severity.ERROR:
+			for context,rule_id,origin,msg,details in self.gen_errors():
+				entry = {"kind": "error", "origin": origin, "rule-id": rule_id, "msg": msg}
+				entry["context"] = context
+				entry["details"] = details
+				cast(list[dict[str, Any]], doc["__WTRL_ERROR__"]).append(entry)
+		return doc
 
 #----- Context ------------------------------------------------#
 	def push(self,name : str) -> None:

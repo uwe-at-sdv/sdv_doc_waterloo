@@ -1,12 +1,12 @@
 {
     "$schema": "https://sci-d-vis.com/schema/wtrl-json-0.0.5.schema.json",
-    "$id": "urn:waterlint:0.5.0:render-json:core:rfc-2119:8ba46d3a5b6b996a7222eb8c95b5cf67",
+    "$id": "urn:waterlint:0.5.0:render-json:core:rfc-2119:180153be799aabe27be122cf4ee494d6",
     "__WTRL_VERSION__": {
         "waterloo": "0.5.5",
         "schema": "0.0.5"
     },
     "__WTRL_META__": {
-        "generated_at": "2026-03-10T19:41:11+01:00",
+        "generated_at": "2026-03-14T09:54:53+01:00",
         "generator": "waterlint",
         "scope": "core",
         "flavour": "rfc-2119"
@@ -55,7 +55,8 @@
         "sdv.doc.waterloo.docitem_docstring": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_docstring",
         "sdv.doc.waterloo.docitem_validator": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_validator",
         "sdv.doc.waterloo.docitem": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem",
-        "sdv.doc.waterloo.docitem_convert": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_convert"
+        "sdv.doc.waterloo.docitem_convert": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_convert",
+        "sdv.doc.waterloo.docitem_genutil": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_genutil"
     },
     "__WTRL_TOC_CLASSES__": {
         "sdv.doc.waterloo.docitem_helper.Trait": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.Trait",
@@ -130,7 +131,9 @@
         "sdv.doc.waterloo.docitem_helper.is_obj_module": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.is_obj_module",
         "sdv.doc.waterloo.docitem_helper.is_obj_class": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.is_obj_class",
         "sdv.doc.waterloo.docitem_helper.is_obj_function": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.is_obj_function",
+        "sdv.doc.waterloo.docitem_helper.is_obj_method_like": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.is_obj_method_like",
         "sdv.doc.waterloo.docitem_helper.is_obj_named_value": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.is_obj_named_value",
+        "sdv.doc.waterloo.docitem_helper.is_obj_documentable": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.is_obj_documentable",
         "sdv.doc.waterloo.docitem_helper.get_obj_direct_module": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.get_obj_direct_module",
         "sdv.doc.waterloo.docitem_helper.get_obj_name": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.get_obj_name",
         "sdv.doc.waterloo.docitem_helper.get_obj_fully_qualified_name": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.get_obj_fully_qualified_name",
@@ -224,6 +227,12 @@
         "sdv.doc.waterloo.docitem_convert.to_string_legend_yaml": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_convert.to_string_legend_yaml",
         "sdv.doc.waterloo.docitem_convert.to_string_signature_yaml": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_convert.to_string_signature_yaml",
         "sdv.doc.waterloo.docitem_convert.to_string_yaml": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_convert.to_string_yaml",
+        "sdv.doc.waterloo.docitem_genutil.parse_source_fragment": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_genutil.parse_source_fragment",
+        "sdv.doc.waterloo.docitem_genutil.infer_docstring_profile": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_genutil.infer_docstring_profile",
+        "sdv.doc.waterloo.docitem_genutil.generate_minimal_docstring": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_genutil.generate_minimal_docstring",
+        "sdv.doc.waterloo.docitem_genutil.generate_full_docstring": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_genutil.generate_full_docstring",
+        "sdv.doc.waterloo.docitem_genutil.generate_minimal_docstring_from_node": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_genutil.generate_minimal_docstring_from_node",
+        "sdv.doc.waterloo.docitem_genutil.generate_full_docstring_from_node": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_genutil.generate_full_docstring_from_node",
         "sdv.doc.waterloo.docitem_sphinx.build_sphinx_nodes": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_sphinx.build_sphinx_nodes",
         "sdv.doc.waterloo.docitem_sphinx.build_sphinx_nodes_full": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_sphinx.build_sphinx_nodes_full",
         "sdv.doc.waterloo.docitem_sphinx.resolve_qualified_name": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_sphinx.resolve_qualified_name",
@@ -246,6 +255,7 @@
         "sdv.doc.waterloo.docitem_helper.tracer.Context": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.tracer.Context",
         "sdv.doc.waterloo.docitem.DocstringTree": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem.DocstringTree",
         "sdv.doc.waterloo.docitem.Documentable": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem.Documentable",
+        "sdv.doc.waterloo.docitem.Profile": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem.Profile",
         "sdv.doc.waterloo.docitem.Scopes": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem.Scopes",
         "sdv.doc.waterloo.docitem_convert.WtrlJsonNode_t": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_convert.WtrlJsonNode_t"
     },
@@ -1101,6 +1111,51 @@
                 }
             }
         },
+        "sdv.doc.waterloo.docitem_helper.is_obj_method_like": {
+            "signature": {
+                "text": "is_obj_method_like(obj: 'object') -> 'TypeIs[Callable[..., Any]]'",
+                "parameters": [
+                    {
+                        "name": "obj",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "object",
+                        "default": null
+                    }
+                ],
+                "returns": "TypeIs[Callable[..., Any]]"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ],
+                    "scope": [
+                        "extension"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST detect callables which should be treated as \"method-like\" for Waterloo profile heuristics.",
+                        "MUST return |False| for non-routines.",
+                        "MUST treat callables with class-like |value|`__qualname__` (`A.f`) as method-like.",
+                        "SHOULD additionally use decorators |lit|`@staticmethod`, |lit|`@classmethod`, |lit|`@abstractmethod`, |lit|`@abc.abstractmethod` as hints."
+                    ]
+                },
+                "Parameters": {
+                    "obj": [
+                        "Object to inspect."
+                    ]
+                },
+                "Returns": [
+                    "|True| if |var|`obj` is callable and method-like by heuristic."
+                ],
+                "Raises": {}
+            }
+        },
         "sdv.doc.waterloo.docitem_helper.is_obj_named_value": {
             "signature": {
                 "text": "is_obj_named_value(obj: 'object') -> 'TypeIs[Callable[..., Any]]'",
@@ -1155,6 +1210,45 @@
                 }
             }
         },
+        "sdv.doc.waterloo.docitem_helper.is_obj_documentable": {
+            "signature": {
+                "text": "is_obj_documentable(obj: 'object') -> 'TypeIs[Documentable]'",
+                "parameters": [
+                    {
+                        "name": "obj",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "object",
+                        "default": null
+                    }
+                ],
+                "returns": "TypeIs[Documentable]"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST find out if the object passed can have a docstring."
+                    ]
+                },
+                "Parameters": {
+                    "obj": [
+                        "The object to examine."
+                    ]
+                },
+                "Returns": [
+                    "|True| if |var|`obj` is a module, class or function, else |False|."
+                ],
+                "Raises": {}
+            }
+        },
         "sdv.doc.waterloo.docitem_helper.get_obj_direct_module": {
             "signature": {
                 "text": "get_obj_direct_module(obj: 'object') -> 'ModuleType | None'",
@@ -1175,8 +1269,7 @@
                         "Contract",
                         "Parameters",
                         "Returns",
-                        "Raises",
-                        "Notes"
+                        "Raises"
                     ],
                     "scope": [
                         "public"
@@ -8302,6 +8395,12 @@
                 "Type for objects that can have a docstring."
             ]
         },
+        "sdv.doc.waterloo.docitem.Profile": {
+            "doc": {},
+            "doc_lines": [
+                "The string literals representing values in the |label|`Preamble.profile` subsection."
+            ]
+        },
         "sdv.doc.waterloo.docitem.Scopes": {
             "doc": {},
             "doc_lines": [
@@ -8388,6 +8487,10 @@
                     ]
                 },
                 "Public_functions": [
+                    "is_obj_module",
+                    "is_obj_class",
+                    "is_obj_function",
+                    "is_obj_method_like",
                     "is_attr_annotated",
                     "is_attr_final",
                     "get_obj_name",
@@ -8728,6 +8831,9 @@
                     ],
                     "Documentable": [
                         "Type for objects that can have a docstring."
+                    ],
+                    "Profile": [
+                        "The string literals representing values in the |label|`Preamble.profile` subsection."
                     ],
                     "Scopes": [
                         "Type alias for a set of scopes."
@@ -9121,13 +9227,13 @@
         },
         "sdv.doc.waterloo.docitem_convert.to_string_legend_yaml": {
             "signature": {
-                "text": "to_string_legend_yaml(config: 'YamlConfig' = <sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f9097969000>) -> 'str'",
+                "text": "to_string_legend_yaml(config: 'YamlConfig' = <sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f4af6c624a0>) -> 'str'",
                 "parameters": [
                     {
                         "name": "config",
                         "kind": "POSITIONAL_OR_KEYWORD",
                         "annotation": "YamlConfig",
-                        "default": "<sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f9097969000>"
+                        "default": "<sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f4af6c624a0>"
                     }
                 ],
                 "returns": "str"
@@ -9164,7 +9270,7 @@
         },
         "sdv.doc.waterloo.docitem_convert.to_string_signature_yaml": {
             "signature": {
-                "text": "to_string_signature_yaml(obj: 'object', config: 'YamlConfig' = <sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f9097969450>) -> 'str'",
+                "text": "to_string_signature_yaml(obj: 'object', config: 'YamlConfig' = <sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f4af6c628f0>) -> 'str'",
                 "parameters": [
                     {
                         "name": "obj",
@@ -9176,7 +9282,7 @@
                         "name": "config",
                         "kind": "POSITIONAL_OR_KEYWORD",
                         "annotation": "YamlConfig",
-                        "default": "<sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f9097969450>"
+                        "default": "<sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f4af6c628f0>"
                     }
                 ],
                 "returns": "str"
@@ -9246,7 +9352,7 @@
         },
         "sdv.doc.waterloo.docitem_convert.to_string_yaml": {
             "signature": {
-                "text": "to_string_yaml(tree: 'DocstringTree', flavour: 'Flavour', config: 'YamlConfig' = <sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f9097969480>) -> 'str'",
+                "text": "to_string_yaml(tree: 'DocstringTree', flavour: 'Flavour', config: 'YamlConfig' = <sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f4af6c62920>) -> 'str'",
                 "parameters": [
                     {
                         "name": "tree",
@@ -9264,7 +9370,7 @@
                         "name": "config",
                         "kind": "POSITIONAL_OR_KEYWORD",
                         "annotation": "YamlConfig",
-                        "default": "<sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f9097969480>"
+                        "default": "<sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f4af6c62920>"
                     }
                 ],
                 "returns": "str"
@@ -9327,6 +9433,387 @@
                     "sdv.doc.waterloo.docitem.Flavour",
                     "sdv.doc.waterloo.docitem.Format"
                 ]
+            }
+        },
+        "sdv.doc.waterloo.docitem_genutil": {
+            "doc": {
+                "Preamble": {
+                    "profile": "module",
+                    "normative_sections": [
+                        "Contract",
+                        "Public_functions"
+                    ],
+                    "scope": [
+                        "extension"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST provide functions for generating minimal and full waterloo docstring templates."
+                    ]
+                },
+                "Description": [
+                    "This module is intended for IDE-extension workflows.",
+                    "A typical use case is a VSCode context-menu action on a |lit|`class` or |lit|`def` line:",
+                    "parse the selected header fragment, infer/select a profile, and generate a minimal or full Waterloo docstring template."
+                ],
+                "Public_functions": [
+                    "parse_source_fragment",
+                    "infer_docstring_profile",
+                    "generate_minimal_docstring",
+                    "generate_full_docstring",
+                    "generate_minimal_docstring_from_node",
+                    "generate_full_docstring_from_node"
+                ]
+            }
+        },
+        "sdv.doc.waterloo.docitem_genutil.parse_source_fragment": {
+            "signature": {
+                "text": "parse_source_fragment(profile: 'Profile', source_fragment: 'str') -> 'ast.AST | None'",
+                "parameters": [
+                    {
+                        "name": "profile",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "Profile",
+                        "default": null
+                    },
+                    {
+                        "name": "source_fragment",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    }
+                ],
+                "returns": "ast.AST | None"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ],
+                    "scope": [
+                        "extension"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST return |None| if |var|`profile` is |value|`module`.",
+                        "MUST parse |var|`source_fragment` via |mod|`ast`.",
+                        "MUST return the first top-level AST node from the parsed tree.",
+                        "MUST ensure the returned node matches |var|`profile`:",
+                        "For |value|`class`, the node MUST be |type|`ast.ClassDef`.",
+                        "For |value|`function` or |value|`method`, the node MUST be |type|`ast.FunctionDef` or |type|`ast.AsyncFunctionDef`.",
+                        "MUST reject empty parses (no top-level nodes)."
+                    ]
+                },
+                "Parameters": {
+                    "profile": "Profile used for node-type validation.",
+                    "source_fragment": [
+                        "Source fragment containing a class/function header (or small stub).",
+                        "Ignored if |var|`profile` is |value|`module`."
+                    ]
+                },
+                "Returns": [
+                    "|None| for profile |value|`module`, otherwise the validated first AST node."
+                ],
+                "Raises": {
+                    "SyntaxError": [
+                        "MAY be raised by |func|`ast.parse` for invalid Python syntax."
+                    ],
+                    "RuntimeError": [
+                        "MUST raise if no top-level node exists after parsing.",
+                        "MUST raise if the parsed node type does not match |var|`profile`."
+                    ]
+                }
+            }
+        },
+        "sdv.doc.waterloo.docitem_genutil.infer_docstring_profile": {
+            "signature": {
+                "text": "infer_docstring_profile(obj: 'object') -> 'Profile'",
+                "parameters": [
+                    {
+                        "name": "obj",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "object",
+                        "default": null
+                    }
+                ],
+                "returns": "Profile"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ],
+                    "scope": [
+                        "extension"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST derive the best matching waterloo docstring profile from the object."
+                    ]
+                },
+                "Parameters": {
+                    "obj": [
+                        "Object to inspect."
+                    ]
+                },
+                "Returns": [],
+                "Raises": {
+                    "RuntimeError": [
+                        "MUST raise if |var|`obj` does not match any of the categories |lit|`module`, |lit|`class`, |lit|`callable`."
+                    ]
+                },
+                "Notes": {
+                    "Result": [
+                        "The |value|`inherited_method` profile is never returned because it",
+                        "does not differ from the |value|`method` profile based solely on formal criteria."
+                    ]
+                }
+            }
+        },
+        "sdv.doc.waterloo.docitem_genutil.generate_minimal_docstring": {
+            "signature": {
+                "text": "generate_minimal_docstring(obj: 'object', *, profile: 'Profile | None' = None) -> 'str'",
+                "parameters": [
+                    {
+                        "name": "obj",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "object",
+                        "default": null
+                    },
+                    {
+                        "name": "profile",
+                        "kind": "KEYWORD_ONLY",
+                        "annotation": "Profile | None",
+                        "default": "None"
+                    }
+                ],
+                "returns": "str"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ],
+                    "status": "stable",
+                    "scope": [
+                        "extension"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST generate a minimal Waterloo docstring template for |var|`obj`.",
+                        "MUST select the template by using |var|`profile` if provided.",
+                        "MUST infer the profile from |var|`obj` if |var|`profile` is |None|."
+                    ],
+                    "ensures": [
+                        "The resulting template MUST be structurally valid according to the Waterloo format."
+                    ]
+                },
+                "Parameters": {
+                    "obj": [
+                        "Object for which the docstring template is generated."
+                    ],
+                    "profile": "Optional explicit profile (`module`, `class`, `function`, `method`)."
+                },
+                "Returns": [
+                    "Generated minimal docstring template."
+                ],
+                "Raises": {
+                    "RuntimeError": [
+                        "MAY be raised if profile inference fails for |var|`obj`."
+                    ]
+                }
+            }
+        },
+        "sdv.doc.waterloo.docitem_genutil.generate_full_docstring": {
+            "signature": {
+                "text": "generate_full_docstring(obj: 'object', *, profile: 'Profile | None' = None) -> 'str'",
+                "parameters": [
+                    {
+                        "name": "obj",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "object",
+                        "default": null
+                    },
+                    {
+                        "name": "profile",
+                        "kind": "KEYWORD_ONLY",
+                        "annotation": "Profile | None",
+                        "default": "None"
+                    }
+                ],
+                "returns": "str"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ],
+                    "status": "stable",
+                    "scope": [
+                        "extension"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST generate a full Waterloo docstring template for |var|`obj`.",
+                        "MUST include the extended section set for the resolved profile.",
+                        "MUST select the template by using |var|`profile` if provided.",
+                        "MUST infer the profile from |var|`obj` if |var|`profile` is |None|."
+                    ],
+                    "ensures": [
+                        "The resulting template MUST be structurally valid according to the Waterloo format."
+                    ]
+                },
+                "Parameters": {
+                    "obj": [
+                        "Object for which the docstring template is generated."
+                    ],
+                    "profile": "Optional explicit profile (`module`, `class`, `function`, `method`)."
+                },
+                "Returns": [
+                    "Generated full docstring template."
+                ],
+                "Raises": {
+                    "RuntimeError": [
+                        "MAY be raised if profile inference fails for |var|`obj`."
+                    ]
+                }
+            }
+        },
+        "sdv.doc.waterloo.docitem_genutil.generate_minimal_docstring_from_node": {
+            "signature": {
+                "text": "generate_minimal_docstring_from_node(profile: 'Profile', node: 'ast.AST | None') -> 'str'",
+                "parameters": [
+                    {
+                        "name": "profile",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "Profile",
+                        "default": null
+                    },
+                    {
+                        "name": "node",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "ast.AST | None",
+                        "default": null
+                    }
+                ],
+                "returns": "str"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ],
+                    "status": "stable",
+                    "scope": [
+                        "extension"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST generate a minimal Waterloo docstring template from a pre-parsed AST node.",
+                        "MUST use |var|`profile` to select the target template variant.",
+                        "MUST ignore |var|`node` if |var|`profile` is |value|`module` or |value|`class`.",
+                        "MUST require a function-like AST node for profiles |value|`function` and |value|`method`."
+                    ]
+                },
+                "Parameters": {
+                    "profile": "Target profile (`module`, `class`, `function`, `method`).",
+                    "node": [
+                        "Parsed AST node for function/method generation.",
+                        "May be |None| for profile |value|`module`."
+                    ]
+                },
+                "Returns": [
+                    "Generated minimal docstring template."
+                ],
+                "Raises": {
+                    "RuntimeError": [
+                        "MUST be raised if function/method generation is requested with an incompatible AST node."
+                    ]
+                }
+            }
+        },
+        "sdv.doc.waterloo.docitem_genutil.generate_full_docstring_from_node": {
+            "signature": {
+                "text": "generate_full_docstring_from_node(profile: 'Profile', node: 'ast.AST | None') -> 'str'",
+                "parameters": [
+                    {
+                        "name": "profile",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "Profile",
+                        "default": null
+                    },
+                    {
+                        "name": "node",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "ast.AST | None",
+                        "default": null
+                    }
+                ],
+                "returns": "str"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ],
+                    "status": "stable",
+                    "scope": [
+                        "extension"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST generate a full Waterloo docstring template from a pre-parsed AST node.",
+                        "MUST use |var|`profile` to select the target template variant.",
+                        "MUST ignore |var|`node` if |var|`profile` is |value|`module` or |value|`class`.",
+                        "MUST require a function-like AST node for profiles |value|`function` and |value|`method`."
+                    ]
+                },
+                "Parameters": {
+                    "profile": "Target profile (`module`, `class`, `function`, `method`).",
+                    "node": [
+                        "Parsed AST node for function/method generation.",
+                        "May be |None| for profile |value|`module`."
+                    ]
+                },
+                "Returns": [
+                    "Generated full docstring template."
+                ],
+                "Raises": {
+                    "RuntimeError": [
+                        "MUST be raised if function/method generation is requested with an incompatible AST node."
+                    ]
+                }
             }
         },
         "sdv.doc.waterloo.docitem_sphinx.context": {

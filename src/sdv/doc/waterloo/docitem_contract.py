@@ -396,16 +396,16 @@ Method_overview:
 		return "traits"
 	def parse(self, tr: tracer, refs: DocstringSubtree) -> None:
 		"""
-Preamble:
-	profile:
-		inherited_method
-	normative_sections:
-		Contract
-Contract:
-	general:
-		|Must| set rules-on-fail in the tracer and delegate to the base implementation.
-	base:
-		sdv.doc.waterloo.docitem.docitem_base.parse
+		Preamble:
+			profile:
+				inherited_method
+			normative_sections:
+				Contract
+		Contract:
+			general:
+				|Must| set rules-on-fail in the tracer and delegate to the base implementation.
+			base:
+				sdv.doc.waterloo.docitem.docitem_base.parse
 		"""
 # No need to set a default rule. _parse in the base class is
 # a complete implementation of rules LQID-001 to LQID-005.

@@ -558,21 +558,7 @@ def check_profile_matches_object(tr: tracer, profile: str, obj: object) -> None:
 		if profile not in {"function", "method", "inherited_method"}:
 			warn_validation(tr, obj, "PRE-020", f"profile 'inherited_method' might be appropriate, cannot decide at this location in code.")
 			raise_validation_error(tr, obj, "PRE-019", f"profile is '{profile}' but '{get_obj_name(obj)}' is a function or method.")
-# Heuristic split between function and method-like callables.
-		is_method_like: bool = False
-		qual = getattr(obj, "__qualname__", "")
-		if isinstance(qual, str) and "." in qual and "<locals>" not in qual:
-			is_method_like = True
-		try:
-# Improve heuristics by checking for certain decorators.
-			decorator_lines = get_obj_decorators(obj)
-			if any(
-				line in ("@staticmethod", "@classmethod", "@abstractmethod", "@abc.abstractmethod")
-				for line in decorator_lines
-			):
-				is_method_like = True
-		except Exception:
-			pass
+		is_method_like = is_obj_method_like(obj)
 		if is_method_like:
 			if profile not in {"method", "inherited_method"}:
 				raise_validation_error(tr, obj, "PRE-019", f"profile is '{profile}' but '{get_obj_name(obj)}' is method-like.")

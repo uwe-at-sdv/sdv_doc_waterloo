@@ -23,7 +23,9 @@ Definitions:
 	Qualified_Identifier:
 		A string that matches the regular expression |var|`RE_QUALIFIED_IDENTIFIER` (see |label|`Public_constants`).
 Public_functions:
-	is_attr_annotated, is_attr_final, get_obj_name, get_obj_path, get_obj_annotations, resolve_object, get_status, get_profile, get_num_indent
+	is_obj_module, is_obj_class, is_obj_function, is_obj_method_like, is_attr_annotated, is_attr_final
+	get_obj_name, get_obj_path, get_obj_annotations
+	resolve_object, get_status, get_profile, get_num_indent
 	parse_indent_docstring, get_tree_of_section, get_tree_of_subsection, to_string_tree
 	validate_docstring_method, validate_docstring_inherited_method, validate_docstring_class
 	validate_docstring_module, validate_docstring, validate_class_class_coverage
@@ -216,6 +218,8 @@ Public_types:
 		The type alias for docstring trees.
 	Documentable:
 		Type for objects that can have a docstring.
+	Profile:
+		The string literals representing values in the |label|`Preamble.profile` subsection.
 	Scopes:
 		Type alias for a set of scopes.
 Public_constants:
