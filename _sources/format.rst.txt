@@ -165,6 +165,7 @@ The following list explains the mnemonic prefixes and their semantics.
 
 * JSCH: Error messages related to JSON and JSON Schema
 * TOOL: Error messages from :wtrl_cmd:`waterlint` (or other tools)
+* XTNSN: Error messages related to extensions (e.g. for IDEs)
 * VLII: Warning for a section or subsection that violates the LoII principle.
   The warning will remain in place until the section or subsection is generally accepted
   and recognized as having practical benefits that outweigh the LoII principle.

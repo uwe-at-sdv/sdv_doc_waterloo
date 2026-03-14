@@ -55,6 +55,16 @@ Fundamental helpers
 
 .. wtrl_autodoc_function:: is_obj_function
 
+:wtrl_func:`is_obj_method_like`
+............................................
+
+.. wtrl_autodoc_function:: is_obj_method_like
+
+:wtrl_func:`is_obj_documentable`
+................................
+
+.. wtrl_autodoc_function:: is_obj_documentable
+
 :wtrl_func:`is_obj_named_value`
 ............................................
 
@@ -718,12 +728,54 @@ Converter functions
 
 .. wtrl_pop_current_module:: sdv.doc.waterloo
 
-Lexer
------
+Module :wtrl_mod:`docitem_genutil`
+==================================
+
+.. wtrl_push_current_module:: sdv.doc.waterloo.docitem_genutil
+
+.. wtrl_autodoc_module:: sdv.doc.waterloo.docitem_genutil
+
+:wtrl_func:`parse_source_fragment`
+-----------------------------------
+
+.. wtrl_autodoc_function:: parse_source_fragment
+
+:wtrl_func:`infer_docstring_profile`
+-----------------------------------------------
+
+.. wtrl_autodoc_function:: infer_docstring_profile
+
+:wtrl_func:`generate_minimal_docstring`
+--------------------------------------------------
+
+.. wtrl_autodoc_function:: generate_minimal_docstring
+
+:wtrl_func:`generate_full_docstring`
+-----------------------------------------
+
+.. wtrl_autodoc_function:: generate_full_docstring
+
+:wtrl_func:`generate_minimal_docstring_from_node`
+----------------------------------------------------
+
+.. wtrl_autodoc_function:: generate_minimal_docstring_from_node
+
+:wtrl_func:`generate_full_docstring_from_node`
+---------------------------------------------------
+
+.. wtrl_autodoc_function:: generate_full_docstring_from_node
+
+.. wtrl_pop_current_module:: sdv.doc.waterloo.docitem_genutil
+
+Pygments Lexer
+==============
 
 .. wtrl_push_current_module:: python_waterloo_lexer
 
 .. wtrl_autodoc_module:: python_waterloo_lexer
+
+:wtrl_type:`PythonWaterlooLexer`
+................................
 
 .. wtrl_autodoc_class_full:: PythonWaterlooLexer
 
