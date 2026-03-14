@@ -10,7 +10,8 @@
 	"main": "./extension.js", 
 	"activationEvents": [
 		"onCommand:waterloo.generateMinimalDocstring",
-		"onCommand:waterloo.testMenu",
+		"onCommand:waterloo.generateFullDocstring",
+		"onCommand:waterloo.validateDocstring",
 		"onLanguage:python"
 	],
 	"categories": [
@@ -21,6 +22,16 @@
 		"use:experimental": "python3 ./tools/select_grammar.py experimental"
 	},
 	"contributes": {
+		"configuration": {
+			"title": "Waterloo",
+			"properties": {
+				"waterloo.showSuccessNotifications": {
+					"type": "boolean",
+					"default": false,
+					"description": "Show information notifications after successful Waterloo actions."
+				}
+			}
+		},
 		"grammars": [
 			{
 				"scopeName": "waterloo.injection",
@@ -36,8 +47,12 @@
 					"title": "Waterloo: Generate Minimal Docstring"
 				},
 				{
-					"command": "waterloo.testMenu",
-					"title": "Waterloo: Test Menu Item"
+					"command": "waterloo.generateFullDocstring",
+					"title": "Waterloo: Generate Full Docstring"
+				},
+				{
+					"command": "waterloo.validateDocstring",
+					"title": "Waterloo: Validate Docstring"
 				}
 			],
 		"submenus": [
@@ -51,28 +66,26 @@
 					{
 						"submenu": "waterloo.context",
 						"group": "navigation@50",
-						"when": "resourceLangId == python && editorTextFocus && waterloo.isFuncClassOrModuleLine"
+						"when": "resourceLangId == python && editorTextFocus && waterloo.backendReady && waterloo.cap.any && waterloo.isFuncClassOrModuleLine"
 					}
 				],
-						"waterloo.context": [
-							{
-								"command": "waterloo.generateMinimalDocstring",
-								"group": "1_generate@10",
-								"when": "resourceLangId == python && editorTextFocus && waterloo.isFuncClassOrModuleLine"
-						},
-						{
-							"command": "waterloo.testMenu",
-						"group": "9_test@10",
-						"when": "resourceLangId == python && editorTextFocus && waterloo.isFuncClassOrModuleLine"
+				"waterloo.context": [
+					{
+						"command": "waterloo.generateMinimalDocstring",
+						"group": "1_generate@10",
+						"when": "resourceLangId == python && editorTextFocus && waterloo.backendReady && waterloo.cap.generateMinimalDocstring && waterloo.isFuncClassOrModuleLine"
+					},
+					{
+						"command": "waterloo.generateFullDocstring",
+						"group": "1_generate@20",
+						"when": "resourceLangId == python && editorTextFocus && waterloo.backendReady && waterloo.cap.generateFullDocstring && waterloo.isFuncClassOrModuleLine"
+					},
+					{
+						"command": "waterloo.validateDocstring",
+						"group": "2_validate@10",
+						"when": "resourceLangId == python && editorTextFocus && waterloo.backendReady && waterloo.cap.validateDocstring && waterloo.isFuncClassOrModuleLine"
 					}
 				]
-			},
-		"keybindings": [
-				{
-					"command": "waterloo.testMenu",
-					"key": "ctrl+alt+w",
-					"when": "resourceLangId == python && editorTextFocus && waterloo.isFuncClassOrModuleLine"
-				}
-			]
+			}
+		}
 	}
-}

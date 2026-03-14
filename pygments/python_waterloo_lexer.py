@@ -725,12 +725,17 @@ class PythonWaterlooLexer(PythonLexer):
 				Contract, Parameters, Returns, Raises
 			scope:
 				core
+		Description:
+			This method performs a heuristic analysis of the input text
+			to determine if it resembles a Waterloo-docstring.
+			For a full and exact validation use the tool |cmd|`waterlint` instead,
+			which implements the complete set of normative rules for Waterloo-docstrings.
 		Contract:
 			general:
-				|Must| look for the presence of a |label|`Preamble` and |label|`Contract` section.
-				|Must| check that the section labels match the expected format.
-				|Must| check that the |label|`Preamble` and |label|`Contract` sections appear in the correct order.
-				|Must| check that there is no mixed indentation in the docstring.
+				|Must| look for the presence of a |label|`Preamble` and |label|`Contract` section (PRE-001, CON-001).
+				|Must| check that the section labels match the expected format (PRSR-001, PRSR-002, PRSR-003, PRSR-004, PRSR-005).
+				|Must| check that the |label|`Preamble` and |label|`Contract` sections appear in the correct order (PRE-001).
+				|Must| check that there is no mixed indentation in the docstring (TKN-003).
 		Parameters:
 			text:
 				The string to analyze
