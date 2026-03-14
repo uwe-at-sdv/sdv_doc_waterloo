@@ -391,17 +391,18 @@ Static typechecking
 
 We use :wtrl_lit:`mypy` for static typechecking. The modules
 
-* :wtrl_file:`sdv.doc.docitem`
-* :wtrl_file:`sdv.doc.docitem_base`
-* :wtrl_file:`sdv.doc.docitem_contract`
-* :wtrl_file:`sdv.doc.docitem_convert`
-* :wtrl_file:`sdv.doc.docitem_docstring`
-* :wtrl_file:`sdv.doc.docitem_helper`
-* :wtrl_file:`sdv.doc.docitem_preamble`
-* :wtrl_file:`sdv.doc.docitem_sections`
-* :wtrl_file:`sdv.doc.docitem_sphinx`
-* :wtrl_file:`sdv.doc.docitem_tokenizer`
-* :wtrl_file:`sdv.doc.docitem_validator`
+* :wtrl_file:`sdv.doc.waterloo.docitem`
+* :wtrl_file:`sdv.doc.waterloo.docitem_base`
+* :wtrl_file:`sdv.doc.waterloo.docitem_contract`
+* :wtrl_file:`sdv.doc.waterloo.docitem_convert`
+* :wtrl_file:`sdv.doc.waterloo.docitem_docstring`
+* :wtrl_file:`sdv.doc.waterloo.docitem_genutil`
+* :wtrl_file:`sdv.doc.waterloo.docitem_helper`
+* :wtrl_file:`sdv.doc.waterloo.docitem_preamble`
+* :wtrl_file:`sdv.doc.waterloo.docitem_sections`
+* :wtrl_file:`sdv.doc.waterloo.docitem_sphinx`
+* :wtrl_file:`sdv.doc.waterloo.docitem_tokenizer`
+* :wtrl_file:`sdv.doc.waterloo.docitem_validator`
 
 are validated on a regular basis. The current status is
 
@@ -420,9 +421,11 @@ Exceptions from typechecking are:
 Pytest
 ......
 
-File :wtrl_file:`test_docitem_pytest.py` contains a growing number of tests
-for the rules listed in section :ref:`chapter_format`. A new version will only
-be released if all test run green.
+Pytest files are
+
+* :wtrl_file:`pytest_lexer_golden.py`
+* :wtrl_file:`pytest_validation.py`
+* :wtrl_file:`pytest_vscode_docstring_generation.py`
 
 Dependencies
 ------------

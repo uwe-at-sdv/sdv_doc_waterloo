@@ -12305,7 +12305,7 @@
 <tbody>
 <tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Signature</span></code></p></td>
 <td><div class="wtrl-signature-head line"><span class="wtrl_mod">sdv.doc.waterloo.docitem_convert</span><span class="wtrl_op">.</span><span class="wtrl_func">to_string_legend_yaml</span><span class="wtrl_op">(</span></div>
-<div class="wtrl-signature-param line"><span class="wtrl_var">config</span><span class="wtrl_op">: </span><span class="wtrl_type">YamlConfig</span><span class="wtrl_op"> = </span><span class="wtrl_lit">&lt;sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7fada1ef4eb0&gt;</span></div>
+<div class="wtrl-signature-param line"><span class="wtrl_var">config</span><span class="wtrl_op">: </span><span class="wtrl_type">YamlConfig</span><span class="wtrl_op"> = </span><span class="wtrl_lit">&lt;sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f4785b82cb0&gt;</span></div>
 <div class="wtrl-signature-ret line"><span class="wtrl_op">)</span><span class="wtrl_op"> -&gt; </span><span class="wtrl_type">str</span></div>
 </td>
 </tr>
@@ -12370,7 +12370,7 @@
 <td><div class="wtrl-signature-head line"><span class="wtrl_mod">sdv.doc.waterloo.docitem_convert</span><span class="wtrl_op">.</span><span class="wtrl_func">to_string_yaml</span><span class="wtrl_op">(</span></div>
 <div class="wtrl-signature-param line"><span class="wtrl_var">tree</span><span class="wtrl_op">: </span><span class="wtrl_type">DocstringTree</span></div>
 <div class="wtrl-signature-param line"><span class="wtrl_var">flavour</span><span class="wtrl_op">: </span><span class="wtrl_type">Flavour</span></div>
-<div class="wtrl-signature-param line"><span class="wtrl_var">config</span><span class="wtrl_op">: </span><span class="wtrl_type">YamlConfig</span><span class="wtrl_op"> = </span><span class="wtrl_lit">&lt;sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7fada1c7ae00&gt;</span></div>
+<div class="wtrl-signature-param line"><span class="wtrl_var">config</span><span class="wtrl_op">: </span><span class="wtrl_type">YamlConfig</span><span class="wtrl_op"> = </span><span class="wtrl_lit">&lt;sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f4785a5d150&gt;</span></div>
 <div class="wtrl-signature-ret line"><span class="wtrl_op">)</span><span class="wtrl_op"> -&gt; </span><span class="wtrl_type">str</span></div>
 </td>
 </tr>
@@ -12469,7 +12469,7 @@
 <tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Signature</span></code></p></td>
 <td><div class="wtrl-signature-head line"><span class="wtrl_mod">sdv.doc.waterloo.docitem_convert</span><span class="wtrl_op">.</span><span class="wtrl_func">to_string_signature_yaml</span><span class="wtrl_op">(</span></div>
 <div class="wtrl-signature-param line"><span class="wtrl_var">obj</span><span class="wtrl_op">: </span><span class="wtrl_type">object</span></div>
-<div class="wtrl-signature-param line"><span class="wtrl_var">config</span><span class="wtrl_op">: </span><span class="wtrl_type">YamlConfig</span><span class="wtrl_op"> = </span><span class="wtrl_lit">&lt;sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7fada1c7ada0&gt;</span></div>
+<div class="wtrl-signature-param line"><span class="wtrl_var">config</span><span class="wtrl_op">: </span><span class="wtrl_type">YamlConfig</span><span class="wtrl_op"> = </span><span class="wtrl_lit">&lt;sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f4785a5d180&gt;</span></div>
 <div class="wtrl-signature-ret line"><span class="wtrl_op">)</span><span class="wtrl_op"> -&gt; </span><span class="wtrl_type">str</span></div>
 </td>
 </tr>
@@ -13190,11 +13190,18 @@
 </td>
 </tr>
 <tr class="wtrl-section row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Definitions</span></code></p></td>
-<td><dl class="wtrl-dfn-list">
-<dt><code class="wtrl_dfn docutils literal notranslate"><span class="pre">Pos_Role_Substring_Triple</span></code></dt><dd><p>A tuple (<code class="wtrl_var docutils literal notranslate"><span class="pre">position</span></code>, <code class="wtrl_var docutils literal notranslate"><span class="pre">token_type</span></code>, <code class="wtrl_var docutils literal notranslate"><span class="pre">substring</span></code>) specifying syntax highlighting:</p>
-<p>- <code class="wtrl_var docutils literal notranslate"><span class="pre">position</span></code>: The starting index of the substring in the original text.</p>
-<p>- <code class="wtrl_var docutils literal notranslate"><span class="pre">token_type</span></code>: A Pygments token class (from <code class="wtrl_type docutils literal notranslate"><span class="pre">pygments.token</span></code>).</p>
-<p>- <code class="wtrl_var docutils literal notranslate"><span class="pre">substring</span></code>: The text to be highlighted.</p>
+<td><dl class="simple wtrl-dfn-list">
+<dt><code class="wtrl_dfn docutils literal notranslate"><span class="pre">Pos_Role_Substring_Triple</span></code></dt><dd><p>A tuple (<code class="wtrl_var docutils literal notranslate"><span class="pre">position</span></code>, <code class="wtrl_var docutils literal notranslate"><span class="pre">token_type</span></code>, <code class="wtrl_var docutils literal notranslate"><span class="pre">substring</span></code>) specifying syntax highlighting:<ul class="simple">
+<li><p><code class="wtrl_var docutils literal notranslate"><span class="pre">position</span></code>: The starting index of the substring in the original text.</p>
+<ul>
+<li><p>Test Line1</p></li>
+<li><p>Test Line2</p></li>
+</ul>
+</li>
+<li><p><code class="wtrl_var docutils literal notranslate"><span class="pre">token_type</span></code>: A Pygments token class (from <code class="wtrl_type docutils literal notranslate"><span class="pre">pygments.token</span></code>).</p></li>
+<li><p><code class="wtrl_var docutils literal notranslate"><span class="pre">substring</span></code>: The text to be highlighted.</p></li>
+</ul>
+</p>
 </dd>
 </dl>
 </td>
@@ -13215,7 +13222,10 @@
 <tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Public</span> <span class="pre">constants</span></code></p></td>
 <td><ul class="simple">
 <li><p><code class="wtrl_var docutils literal notranslate"><span class="pre">RE_SECTION_ALLOWED_NORMATIVE</span></code><ul>
-<li><p>A regular expression pattern that matches section names allowed or mandatory in the “normative_sections” subsection of the Preamble. This expression is governed by the normative rules and must be kept up to date. Mandatory : CON-002, CON-005, CON-020, CON-034, CPCL-002, CPCON-002, CPMT-002, CPTYP-002, CPVAR-002, DEF-002, DER-004, FAC-009, MPCL-002, MPCON-002, MPFN-002, MPTYP-002, MPVAR-002, PAR-002, RAI-002, RET-002. Accepted : DESC-002, SEE-011. Refused : NOTE-002, PRE-002, TERM-002.</p></li>
+<li><p>A regular expression pattern that matches section names allowed or mandatory in the “normative_sections” subsection of the Preamble. This expression is governed by the normative rules and must be kept up to date.</p></li>
+<li><p>Mandatory : CON-002, CON-005, CON-020, CON-034, CPCL-002, CPCON-002, CPMT-002, CPTYP-002, CPVAR-002, DEF-002, DER-004, FAC-009, MPCL-002, MPCON-002, MPFN-002, MPTYP-002, MPVAR-002, PAR-002, RAI-002, RET-002.</p></li>
+<li><p>Accepted : DESC-002, SEE-011.</p></li>
+<li><p>Refused : NOTE-002, PRE-002, TERM-002.</p></li>
 </ul>
 </p></li>
 </ul>

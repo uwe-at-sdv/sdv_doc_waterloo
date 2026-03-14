@@ -359,17 +359,18 @@ complete verification in all contexts.</p>
 <h3><span class="section-number">1.7.1. </span>Static typechecking<a class="headerlink" href="#static-typechecking" title="Link to this heading">¶</a></h3>
 <p>We use <code class="wtrl_lit docutils literal notranslate"><span class="pre">mypy</span></code> for static typechecking. The modules</p>
 <ul class="simple">
-<li><p><code class="wtrl_file docutils literal notranslate"><span class="pre">sdv.doc.docitem</span></code></p></li>
-<li><p><code class="wtrl_file docutils literal notranslate"><span class="pre">sdv.doc.docitem_base</span></code></p></li>
-<li><p><code class="wtrl_file docutils literal notranslate"><span class="pre">sdv.doc.docitem_contract</span></code></p></li>
-<li><p><code class="wtrl_file docutils literal notranslate"><span class="pre">sdv.doc.docitem_convert</span></code></p></li>
-<li><p><code class="wtrl_file docutils literal notranslate"><span class="pre">sdv.doc.docitem_docstring</span></code></p></li>
-<li><p><code class="wtrl_file docutils literal notranslate"><span class="pre">sdv.doc.docitem_helper</span></code></p></li>
-<li><p><code class="wtrl_file docutils literal notranslate"><span class="pre">sdv.doc.docitem_preamble</span></code></p></li>
-<li><p><code class="wtrl_file docutils literal notranslate"><span class="pre">sdv.doc.docitem_sections</span></code></p></li>
-<li><p><code class="wtrl_file docutils literal notranslate"><span class="pre">sdv.doc.docitem_sphinx</span></code></p></li>
-<li><p><code class="wtrl_file docutils literal notranslate"><span class="pre">sdv.doc.docitem_tokenizer</span></code></p></li>
-<li><p><code class="wtrl_file docutils literal notranslate"><span class="pre">sdv.doc.docitem_validator</span></code></p></li>
+<li><p><code class="wtrl_file docutils literal notranslate"><span class="pre">sdv.doc.waterloo.docitem</span></code></p></li>
+<li><p><code class="wtrl_file docutils literal notranslate"><span class="pre">sdv.doc.waterloo.docitem_base</span></code></p></li>
+<li><p><code class="wtrl_file docutils literal notranslate"><span class="pre">sdv.doc.waterloo.docitem_contract</span></code></p></li>
+<li><p><code class="wtrl_file docutils literal notranslate"><span class="pre">sdv.doc.waterloo.docitem_convert</span></code></p></li>
+<li><p><code class="wtrl_file docutils literal notranslate"><span class="pre">sdv.doc.waterloo.docitem_docstring</span></code></p></li>
+<li><p><code class="wtrl_file docutils literal notranslate"><span class="pre">sdv.doc.waterloo.docitem_genutil</span></code></p></li>
+<li><p><code class="wtrl_file docutils literal notranslate"><span class="pre">sdv.doc.waterloo.docitem_helper</span></code></p></li>
+<li><p><code class="wtrl_file docutils literal notranslate"><span class="pre">sdv.doc.waterloo.docitem_preamble</span></code></p></li>
+<li><p><code class="wtrl_file docutils literal notranslate"><span class="pre">sdv.doc.waterloo.docitem_sections</span></code></p></li>
+<li><p><code class="wtrl_file docutils literal notranslate"><span class="pre">sdv.doc.waterloo.docitem_sphinx</span></code></p></li>
+<li><p><code class="wtrl_file docutils literal notranslate"><span class="pre">sdv.doc.waterloo.docitem_tokenizer</span></code></p></li>
+<li><p><code class="wtrl_file docutils literal notranslate"><span class="pre">sdv.doc.waterloo.docitem_validator</span></code></p></li>
 </ul>
 <p>are validated on a regular basis. The current status is</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Success: no issues found in 12 source files
@@ -406,9 +407,12 @@ sdv_doc_docitem_validator.py:13 # pragma: no cover - older Python
 </section>
 <section id="pytest">
 <h3><span class="section-number">1.7.2. </span>Pytest<a class="headerlink" href="#pytest" title="Link to this heading">¶</a></h3>
-<p>File <code class="wtrl_file docutils literal notranslate"><span class="pre">test_docitem_pytest.py</span></code> contains a growing number of tests
-for the rules listed in section <a class="reference internal" href="format.html#chapter-format"><span class="std std-ref">Docstring format</span></a>. A new version will only
-be released if all test run green.</p>
+<p>Pytest files are</p>
+<ul class="simple">
+<li><p><code class="wtrl_file docutils literal notranslate"><span class="pre">pytest_lexer_golden.py</span></code></p></li>
+<li><p><code class="wtrl_file docutils literal notranslate"><span class="pre">pytest_validation.py</span></code></p></li>
+<li><p><code class="wtrl_file docutils literal notranslate"><span class="pre">pytest_vscode_docstring_generation.py</span></code></p></li>
+</ul>
 </section>
 </section>
 <section id="dependencies">
