@@ -58,9 +58,22 @@ within a minor version of the tool.</p>
 <li><p>[JSCH-002] – Cannot open the input JSON file for validation.</p></li>
 <li><p>[JSCH-003] – Cannot determine the applicable schema from the input JSON file.</p></li>
 <li><p>[JSCH-004] – Input is not valid JSON.</p></li>
-<li><p>[JSCH-005] – JSON validation against the schema failed.</p></li>
+<li><p>[JSCH-005] – Validation against the JSON Schema failed.</p></li>
+<li><p>[JSCH-006] – Entry <code class="docutils literal notranslate"><span class="pre">__WTRL_OBJECTS__.&lt;QID&gt;.examples</span></code> contains an invalid pointer, a missing target example, or an invalid list shape.</p></li>
+<li><p>[JSCH-007] – Entry <code class="docutils literal notranslate"><span class="pre">__WTRL_EXAMPLES__.&lt;ID&gt;.referenced_by</span></code> contains an invalid value or an unknown object identifier.</p></li>
+<li><p>[JSCH-008] – Back-reference mismatch: an object points to an example, but the example does not list that object in <code class="docutils literal notranslate"><span class="pre">referenced_by</span></code>.</p></li>
+<li><p>[JSCH-009] – Forward-reference mismatch: an example lists an object in <code class="docutils literal notranslate"><span class="pre">referenced_by</span></code>, but the object does not point back via <code class="docutils literal notranslate"><span class="pre">examples</span></code>.</p></li>
 <li><p>[JSCH-700] – Unspecified error during JSON rendering.</p></li>
 <li><p>[JSCH-800] – Unspecified JSON schema exception.</p></li>
+</ul>
+<p class="rubric">Example mapping (add-example-json)</p>
+<ul class="simple">
+<li><p>[AXMPL-000] – Unspecified catch-all error during example mapping.</p></li>
+<li><p>[AXMPL-001] – Invalid JSON envelope structure for input or example entries.</p></li>
+<li><p>[AXMPL-002] – Mapping contains an unknown or invalid object identifier.</p></li>
+<li><p>[AXMPL-003] – Mapping contains an invalid list shape or non-string example path.</p></li>
+<li><p>[AXMPL-004] – Example file path, file access, base directory, or UTF-8 decoding failed.</p></li>
+<li><p>[AXMPL-005] – Input or mapping file is not valid JSON.</p></li>
 </ul>
 <p class="rubric">General tool errors</p>
 <ul class="simple">
@@ -69,6 +82,7 @@ within a minor version of the tool.</p>
 This code is used when an unexpected exception escapes the validation process.
 The tracer diagnostic output should provide sufficient detail to identify
 the underlying cause.</p></li>
+<li><p>[RHTM-001] – General error while rendering HTML5.</p></li>
 </ul>
 </section>
 <section id="extension-error-codes">

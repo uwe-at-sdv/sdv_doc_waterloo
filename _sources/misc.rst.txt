@@ -59,6 +59,21 @@ which is shipped with this package.
 						| select(.value.traits | any(. == "generator")?)
 						| .key' ${PATH}
 
+
+* Extract examples assigned to for a given object. The code snippet below
+  extracts the python example in :wtrl_file:`doc-json/tde4_with_examples.wtrl.core.rfc-2119.json`
+  for the documented function :wtrl_func:`tde4.getFirstCamera`.
+
+	.. code-block:: bash
+
+		jq -r '. as $root | "__WTRL_EXAMPLES__" , (
+        		$root.__WTRL_EXAMPLES__
+        		| to_entries[]
+        		| select((.value.referenced_by // []) | index("tde4.getFirstCamera"))
+        		| "---- " + .key + " ----\n" + (.value.code // "")
+			) ' doc-json/tde4_with_examples.wtrl.core.rfc-2119.json
+
+
 The examples above illustrate only a small subset of what can be achieved
 with :wtrl_cmd:`jq`. For a comprehensive reference, consult the official
 jq documentation at `jqlang.github.io/jq <https://jqlang.github.io>`_.

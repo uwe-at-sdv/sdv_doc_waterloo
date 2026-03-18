@@ -98,6 +98,20 @@ that satisfy the specified condition.</p>
 </div>
 </div></blockquote>
 </li>
+<li><p>Extract examples assigned to for a given object. The code snippet below
+extracts the python example in <code class="wtrl_file docutils literal notranslate"><span class="pre">doc-json/tde4_with_examples.wtrl.core.rfc-2119.json</span></code>
+for the documented function <code class="wtrl_func docutils literal notranslate"><span class="pre">tde4.getFirstCamera</span></code>.</p>
+<blockquote>
+<div><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;. as $root | &quot;__WTRL_EXAMPLES__&quot; , (</span>
+<span class="s1">        $root.__WTRL_EXAMPLES__</span>
+<span class="s1">        | to_entries[]</span>
+<span class="s1">        | select((.value.referenced_by // []) | index(&quot;tde4.getFirstCamera&quot;))</span>
+<span class="s1">        | &quot;---- &quot; + .key + &quot; ----\n&quot; + (.value.code // &quot;&quot;)</span>
+<span class="s1">        ) &#39;</span><span class="w"> </span>doc-json/tde4_with_examples.wtrl.core.rfc-2119.json
+</pre></div>
+</div>
+</div></blockquote>
+</li>
 </ul>
 <p>The examples above illustrate only a small subset of what can be achieved
 with <code class="wtrl_cmd docutils literal notranslate"><span class="pre">jq</span></code>. For a comprehensive reference, consult the official

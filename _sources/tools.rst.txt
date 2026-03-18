@@ -28,10 +28,23 @@ within a minor version of the tool.
 * [JSCH-002] -- Cannot open the input JSON file for validation.
 * [JSCH-003] -- Cannot determine the applicable schema from the input JSON file.
 * [JSCH-004] -- Input is not valid JSON.
-* [JSCH-005] -- JSON validation against the schema failed.
+* [JSCH-005] -- Validation against the JSON Schema failed.
+* [JSCH-006] -- Entry ``__WTRL_OBJECTS__.<QID>.examples`` contains an invalid pointer, a missing target example, or an invalid list shape.
+* [JSCH-007] -- Entry ``__WTRL_EXAMPLES__.<ID>.referenced_by`` contains an invalid value or an unknown object identifier.
+* [JSCH-008] -- Back-reference mismatch: an object points to an example, but the example does not list that object in ``referenced_by``.
+* [JSCH-009] -- Forward-reference mismatch: an example lists an object in ``referenced_by``, but the object does not point back via ``examples``.
 
 * [JSCH-700] -- Unspecified error during JSON rendering.
 * [JSCH-800] -- Unspecified JSON schema exception.
+
+.. rubric:: Example mapping (add-example-json)
+
+* [AXMPL-000] -- Unspecified catch-all error during example mapping.
+* [AXMPL-001] -- Invalid JSON envelope structure for input or example entries.
+* [AXMPL-002] -- Mapping contains an unknown or invalid object identifier.
+* [AXMPL-003] -- Mapping contains an invalid list shape or non-string example path.
+* [AXMPL-004] -- Example file path, file access, base directory, or UTF-8 decoding failed.
+* [AXMPL-005] -- Input or mapping file is not valid JSON.
 
 
 .. rubric:: General tool errors
@@ -41,6 +54,8 @@ within a minor version of the tool.
   This code is used when an unexpected exception escapes the validation process.
   The tracer diagnostic output should provide sufficient detail to identify
   the underlying cause.
+
+* [RHTM-001] -- General error while rendering HTML5.
 
 Extension error codes
 ---------------------

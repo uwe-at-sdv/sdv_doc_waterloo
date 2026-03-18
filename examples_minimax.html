@@ -266,7 +266,13 @@ sections would contain a mixture of normative and informative content.</p></li>
 </td>
 </tr>
 <tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Terminology</span></code></p></td>
-<td></td>
+<td><dl class="wtrl-dfn-list">
+<dt><code class="wtrl_dfn docutils literal notranslate"><span class="pre">Fancy-Unicorn</span></code></dt><dd><p>The section “Terminology” allows to define terms in an informative manner. Typically, this subsection would start like “A Fancy-Unicorn is …” followed by an explanation.</p>
+<p>The section “Terminology” is never normative, never listed in “normative_sections” and does not contain normativity keywords in tokenized form.</p>
+<p>As opposed to section “Definitions”, any non-empty string is allowed, like here “Fancy-Unicorn”. Take care, however, that the name does not collide with syntax rules of the intermediate document language (like reST in our case).</p>
+</dd>
+</dl>
+</td>
 </tr>
 <tr class="wtrl-section row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Contract</span></code></p></td>
 <td><ul class="simple">
@@ -572,7 +578,11 @@ usage. This section may only be present if section
 </td>
 </tr>
 <tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Terminology</span></code></p></td>
-<td></td>
+<td><dl class="simple wtrl-dfn-list">
+<dt><code class="wtrl_dfn docutils literal notranslate"><span class="pre">Fancy-Unicorn</span></code></dt><dd><p>Define a term informatively. Same as for modules.</p>
+</dd>
+</dl>
+</td>
 </tr>
 <tr class="wtrl-section row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Contract</span></code></p></td>
 <td><ul class="simple">
@@ -1175,7 +1185,11 @@ the base preconditions, unless they are explicitly permitted by the base contrac
 <td><p>This function provides a simple, deterministic reference implementation. It is intended to demonstrate a full Waterloo function docstring with a clear contract and well-defined failure modes.</p></td>
 </tr>
 <tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Terminology</span></code></p></td>
-<td></td>
+<td><dl class="simple wtrl-dfn-list">
+<dt><code class="wtrl_dfn docutils literal notranslate"><span class="pre">recursion</span></code></dt><dd><p>The definition uses recursion; the implementation does not have to.</p>
+</dd>
+</dl>
+</td>
 </tr>
 <tr class="wtrl-section row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Contract</span></code></p></td>
 <td><ul class="simple">
