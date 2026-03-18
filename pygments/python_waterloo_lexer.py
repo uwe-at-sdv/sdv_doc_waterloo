@@ -7,9 +7,9 @@ Preamble:
 Definitions:
 	Pos_Role_Substring_Triple:
 		A tuple (|var|`position`, |var|`token_type`, |var|`substring`) specifying syntax highlighting:
-		* |var|`position`: The starting index of the substring in the original text.
-		* |var|`token_type`: A Pygments token class (from |type|`pygments.token`).
-		* |var|`substring`: The text to be highlighted.
+		# |var|`position`: The starting index of the substring in the original text.
+		# |var|`token_type`: A Pygments token class (from |type|`pygments.token`).
+		# |var|`substring`: The text to be highlighted.
 Contract:
 	general:
 		|Must| provide a Python module that defines the PythonWaterlooLexer class for syntax highlighting of Waterloo-docstrings.
@@ -88,8 +88,8 @@ RE_SUBSECTION_ANY = re.compile(
 RE_TEXTFLOW_MARKER = re.compile(
 	r"^\s*(?:\|)\s*$"
 )
-RE_BULLETLIST_MARKER = re.compile(
-	r"^([ \t]*)([-+*])(\s+)(.*)$"
+RE_LIST_MARKER = re.compile(
+	r"^([ \t]*)([-+*#])(\s+)(.*)$"
 )
 
 # 1: Normativity keywords
@@ -616,7 +616,7 @@ class PythonWaterlooLexer(PythonLexer):
 			return
 # Analyze for bullet list marker
 		line_no_nl = line[:-1] if line.endswith("\n") else line
-		m_bullet = RE_BULLETLIST_MARKER.match(line_no_nl)
+		m_bullet = RE_LIST_MARKER.match(line_no_nl)
 		if m_bullet is not None:
 			indent = m_bullet.group(1)
 			marker = m_bullet.group(2)
