@@ -3,12 +3,16 @@
 	"x-published": "2026-03-05",
 	"x-changelog": [
 		{
-			"version": "0.0.5",
+			"version": "0.0.6",
 			"date": "2026-03-05",
 			"changes": [
 				{
 					"type": "change",
 					"summary": "Add optional __WTRL_SCOPES__ legend section with scope value/description entries."
+				},
+				{
+					"type": "change",
+					"summary": "Allow optional __WTRL_EXAMPLES__ and object-level examples pointers."
 				}
 			]
 		},
@@ -40,8 +44,8 @@
 		}
 	],
 	"$schema": "https://json-schema.org/draft/2020-12/schema",
-	"$id": "https://sci-d-vis.com/schema/wtrl-json-0.0.5.schema.json",
-	"title": "Waterloo JSON export (schema 0.0.5, provisional)",
+	"$id": "https://sci-d-vis.com/schema/wtrl-json-0.0.6.schema.json",
+	"title": "Waterloo JSON export (schema 0.0.6, provisional)",
 	"type": "object",
 	"required": [
 		"$schema",
@@ -93,6 +97,11 @@
 		"__WTRL_TOC_TYPES__": { "$ref": "#/$defs/toc_map" },
 		"__WTRL_TOC_VARIABLES__": { "$ref": "#/$defs/toc_map" },
 		"__WTRL_TOC_CONSTANTS__": { "$ref": "#/$defs/toc_map" },
+		"__WTRL_EXAMPLES__": {
+			"type": "object",
+			"minProperties": 0,
+			"additionalProperties": { "$ref": "#/$defs/wtrl_example" }
+		},
 
 		"__WTRL_OBJECTS__": {
 			"type": "object",
@@ -113,6 +122,10 @@
 		"json_pointer": {
 			"type": "string",
 			"pattern": "^(#)?(/([^~]|~[01])*)*$"
+		},
+		"json_pointer_to_example": {
+			"type": "string",
+			"pattern": "^/__WTRL_EXAMPLES__/[A-Za-z0-9_\\-\\.]+$"
 		},
 
 		"toc_map": {
@@ -148,6 +161,10 @@
 					"signature": { "$ref": "#/$defs/signature" },
 					"decorators": { "$ref": "#/$defs/list_of_strings" },
 					"traits": { "$ref": "#/$defs/list_of_identifiers" },
+					"examples": {
+						"type": "array",
+						"items": { "$ref": "#/$defs/json_pointer_to_example" }
+					},
 					"doc": {
 						"type": "object",
 						"minProperties": 0,
@@ -161,6 +178,10 @@
 				"required": ["doc_lines"],
 				"properties": {
 					"doc_lines": { "$ref": "#/$defs/list_of_strings" },
+					"examples": {
+						"type": "array",
+						"items": { "$ref": "#/$defs/json_pointer_to_example" }
+					},
 					"doc": {
 						"type": "object",
 						"minProperties": 0,
@@ -195,6 +216,21 @@
 				"kind": { "type": "string" },
 				"annotation": { "type": ["string", "null"] },
 				"default": { "type": ["string", "number", "boolean", "null", "object", "array"] }
+			},
+			"additionalProperties": true
+		},
+		"wtrl_example": {
+			"type": "object",
+			"required": ["lang", "hash", "code", "referenced_by"],
+			"properties": {
+				"lang": { "type": "string" },
+				"path": { "type": "string" },
+				"hash": { "type": "string" },
+				"code": { "type": "string" },
+				"referenced_by": {
+					"type": "array",
+					"items": { "$ref": "#/$defs/qualified_identifier" }
+				}
 			},
 			"additionalProperties": true
 		}

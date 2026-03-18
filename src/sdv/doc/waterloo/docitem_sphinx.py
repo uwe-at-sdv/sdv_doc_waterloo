@@ -423,8 +423,8 @@ def format_default(val: object) -> str:
 #===== State controlled by document input =====================#
 
 #----- Globale variables --------------------------------------#
-# The are fallback variables in case of testing from outside
-# the Sphinx context. In nomal usage the stacks are locaced
+# These are fallback variables in case of testing from outside
+# the Sphinx context. In normal usage the stacks are located
 # in some appropriate place within Sphinx.
 _global_current_module: List[str] = []
 _global_current_class: List[str] = []
@@ -774,6 +774,7 @@ def build_sphinx_nodes(ctx : context,obj: object,doc: mod_docitem.docitem_docstr
 			return
 		parent += _build_internal_ref(ctx, exc_obj, exc_name, "wtrl_type")
 
+# Contract.*
 	def build_bullet_list_from_subsection_items(items: Iterable[str]) -> nodes.bullet_list:
 		node_bullet_list = nodes.bullet_list()
 		for content in items:
@@ -784,8 +785,33 @@ def build_sphinx_nodes(ctx : context,obj: object,doc: mod_docitem.docitem_docstr
 			node_bullet_list += node_list_item
 		return node_bullet_list
 
+# Factory, Method_overview, Function_overview, Class_overview, Public_types, Public_constants, Public_variables, Parameters, Raises,
+	def build_bullet_list_from_section_items(section_items: Mapping[str, Any],render_label: Callable[[nodes.paragraph, str], None]) -> nodes.bullet_list:
+		node_bullet_list = nodes.bullet_list()
+		for label1, item_subsection in section_items.items():
+			node_list_item = nodes.list_item()
+			node_paragraph = nodes.paragraph()
+			render_label(node_paragraph, str(label1))
+			node_paragraph += build_bullet_list_from_subsection_items(item_subsection.items())
+			node_list_item += node_paragraph
+			node_bullet_list += node_list_item
+		return node_bullet_list
+
+# Definitions, Terminology, Description, Returns, Notes,
 	def build_paragraphs_from_items(items: Sequence[str]) -> List[nodes.paragraph]:
-		RE_DOC_BULLET_LIST = re.compile(r"^[-+*]\s")
+		def gen_list(symbol: str) -> nodes.Element:
+			node_any_list: nodes.Element
+			if symbol == "#":
+				node_any_list = nodes.enumerated_list()
+				node_any_list['enumtype'] = 'arabic'
+				node_any_list['prefix'] = ''
+				node_any_list['suffix'] = '.'
+				node_any_list['start'] = 1
+			else:
+				node_any_list = nodes.bullet_list()
+			return node_any_list
+
+		RE_DOC_BULLET_LIST = re.compile(r"^[-+*#]\s")
 		node_paragraph = nodes.paragraph()
 		restart = True
 		out: List[nodes.paragraph] = []
@@ -808,7 +834,7 @@ def build_sphinx_nodes(ctx : context,obj: object,doc: mod_docitem.docitem_docstr
 # At least two items are required for safe pattern recognition.
 				if n_lines >= 2:
 # For nested itemizations we need a stack.
-					node_stack = []
+					node_stack: List[nodes.Element] = []
 					symb_stack: List[str] = []
 					last_item_stack: List[nodes.list_item | None] = []
 
@@ -818,9 +844,9 @@ def build_sphinx_nodes(ctx : context,obj: object,doc: mod_docitem.docitem_docstr
 						text = content[2:]
 
 						if not symb_stack:
-        						node_stack.append(nodes.bullet_list())
-        						symb_stack.append(symbol)
-        						last_item_stack.append(None)
+							node_stack.append(gen_list(symbol))
+							symb_stack.append(symbol)
+							last_item_stack.append(None)
 # Is this symbol different and new? -> Increase itemization level
 						elif symbol != symb_stack[-1]:
 							if symbol not in symb_stack:
@@ -833,10 +859,10 @@ def build_sphinx_nodes(ctx : context,obj: object,doc: mod_docitem.docitem_docstr
 									)
 								symb_stack.append(symbol)
 # Create (nested) bullet list and make it the current one.
-								node_bullet_list = nodes.bullet_list()
-								parent_item += node_bullet_list
+								node_any_list = gen_list(symbol)
+								parent_item += node_any_list
 # Make nested list the current one
-								node_stack.append(node_bullet_list)
+								node_stack.append(node_any_list)
 								last_item_stack.append(None)
 # Is this symbol different but old? -> Decrease itemization level
 							else:
@@ -868,18 +894,6 @@ def build_sphinx_nodes(ctx : context,obj: object,doc: mod_docitem.docitem_docstr
 		out.append(node_paragraph)
 		return out
 
-	def build_bullet_list_from_section_items(section_items: Mapping[str, Any],render_label: Callable[[nodes.paragraph, str], None]) -> nodes.bullet_list:
-		node_bullet_list = nodes.bullet_list()
-		for label1, item_subsection in section_items.items():
-			node_list_item = nodes.list_item()
-			node_paragraph = nodes.paragraph()
-			render_label(node_paragraph, str(label1))
-			node2_bullet_list = build_bullet_list_from_subsection_items(item_subsection.items())
-			node_paragraph += node2_bullet_list
-			node_list_item += node_paragraph
-			node_bullet_list += node_list_item
-		return node_bullet_list
-
 	objname = mod_docitem.get_obj_name(obj)
 	anchor = mod_docitem.build_anchor(obj)
 # Required for inter-page references.
@@ -909,7 +923,7 @@ def build_sphinx_nodes(ctx : context,obj: object,doc: mod_docitem.docitem_docstr
 
 	node_table += node_tgroup
 
-# The purpose of this segment is to render the function or methos signature
+# The purpose of this segment is to render the function or method signature
 # inside the documentation box (instead of adding it overneath by hand).
 # This is closer to the LoIO principle (Locality of Information Output),
 # and it's easier for the user because rendering a function requires only
@@ -1026,20 +1040,20 @@ def build_sphinx_nodes(ctx : context,obj: object,doc: mod_docitem.docitem_docstr
 					dli += dd
 					dl += dli
 
-				for term, item_subsection in item_section.items().items():
-					dli = nodes.definition_list_item()
+			for term, item_subsection in item_section.items().items():
+				dli = nodes.definition_list_item()
 # Term
-					dt = nodes.term()
-					dt.extend(ctx.parse(dt, 0, ctx.add_role_dfn(term)))
-					dli += dt
+				dt = nodes.term()
+				dt.extend(ctx.parse(dt, 0, ctx.add_role_dfn(term)))
+				dli += dt
 					# Definition
-					dd = nodes.definition()
+				dd = nodes.definition()
 # Content
-					for paragraph in build_paragraphs_from_items(item_subsection.items()):
-						dd += paragraph
-					dli += dd
-					dl += dli
-				node_entry += dl
+				for paragraph in build_paragraphs_from_items(item_subsection.items()):
+					dd += paragraph
+				dli += dd
+				dl += dli
+			node_entry += dl
 		elif label in ("Description",):
 # Content
 			for paragraph in build_paragraphs_from_items(item_section.items()):

@@ -1796,11 +1796,12 @@ Notes:
 			doc = get_obj_docstring(member)
 			if not doc:
 				continue
-# Determine validity for warning purposes
+			# Determine validity for warning purposes
 			try:
 				tmp_tr = tracer()
 				validate_docstring(tmp_tr,member)
-				classes_with_valid_docstring.add(name_of_member)
+				if not tmp_tr.has_errors():
+					classes_with_valid_docstring.add(name_of_member)
 			except Exception:
 				pass
 # Validate only if class is listed

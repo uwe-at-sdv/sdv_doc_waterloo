@@ -18,7 +18,7 @@ import traceback
 from datetime import datetime
 from pathlib import Path
 from types import ModuleType
-from typing import Any, Callable, Dict, Optional, Tuple, cast
+from typing import Any, Callable, Dict, List, Optional, Tuple, cast
 
 import json
 
@@ -27,7 +27,8 @@ from jsonschema import Draft202012Validator
 #from jsonschema import JSONDecodeError
 import jsonschema.exceptions
 
-__version__ = "0.5.0"
+__version__ = "0.6.0"
+# - 0.6.0 [2026-03-18]	Subcommand add-example-json
 # - 0.5.0 [2026-03-05]	__WTRL_SCOPES__ in JSON which allows future customization of scopes.
 # - 0.4.0 [2026-02-22]	Subcommand render-json: Node "definition_inherited_from_module", see also sdv.doc.waterloo.docitem_convert.
 # - 0.3.0 [2026-02-19]	Several refactorings concerning error handling, raw and JSON.
@@ -49,6 +50,7 @@ with contextlib.redirect_stdout(sys.stderr):
 		import sdv_doc_docitem as docitem
 		import sdv_doc_docitem_convert as cvrt
 		import sdv_doc_docitem_genutil as genutil
+		import waterlint_render_html5 as rhtml5
 		import sdv_doc_docitem_tokenizer as tokenizer
 		from sdv_doc_docitem_helper import (
 			tracer,
@@ -65,6 +67,7 @@ with contextlib.redirect_stdout(sys.stderr):
 		import sdv.doc.waterloo.docitem as docitem		# type: ignore[no-redef]
 		import sdv.doc.waterloo.docitem_convert as cvrt		# type: ignore[no-redef]
 		import sdv.doc.waterloo.docitem_genutil as genutil	# type: ignore[no-redef]
+		import sdv.doc.waterloo.waterlint_render_html5 as rhtml5	# type: ignore[no-redef]
 		import sdv.doc.waterloo.docitem_tokenizer as tokenizer	# type: ignore[no-redef]
 		from sdv.doc.waterloo.docitem_helper import (		# type: ignore[no-redef]
 			tracer,
@@ -81,7 +84,7 @@ with contextlib.redirect_stdout(sys.stderr):
 #===== Constants ==============================================#
 
 #----- Schema versions, keep up to date -----------------------#
-WTRL_JSON_SCHEMA_VERSION = "0.0.5"
+WTRL_JSON_SCHEMA_VERSION = "0.0.6"
 
 #----- Add subcommands here -----------------------------------#
 SUBCOMMANDS = (
@@ -89,7 +92,9 @@ SUBCOMMANDS = (
 	"coverage",
 	"extract",
 	"validate-json",
+	"add-example-json",
 	"render-json",
+	"render-html5",
 	"gen-minimal",
 	"gen-full",
 	"list-schemas",
@@ -248,6 +253,262 @@ def _check_toc_pointers_json(tr: tracer, doc: cvrt.WtrlJsonNode_t, toc_key: str,
 			resolve_pointer(doc, ptr)
 		except JsonPointerException as exc:
 			tr.add_error(rule_id, "tool", f"{toc_key}.{name}: {ptr} -> {exc}")
+
+
+def _validate_examples_consistency_json(tr: tracer, doc: cvrt.WtrlJsonNode_t) -> None:
+	"""Validate n:m consistency between __WTRL_OBJECTS__.examples and __WTRL_EXAMPLES__.referenced_by."""
+	if not isinstance(doc, dict):
+		return
+	objects_raw = doc.get("__WTRL_OBJECTS__", {})
+	examples_raw = doc.get("__WTRL_EXAMPLES__", {})
+	if not isinstance(objects_raw, dict):
+		return
+	if not isinstance(examples_raw, dict):
+		return
+
+	obj_qids = set(objects_raw.keys())
+	ex_ptr_set = {f"/__WTRL_EXAMPLES__/{k}" for k in examples_raw.keys()}
+
+#----- object -> examples -------------------------------------#
+	for obj_qid, obj_node in objects_raw.items():
+		if not isinstance(obj_node, dict):
+			continue
+		ex_list = obj_node.get("examples", None)
+		if ex_list is None:
+			continue
+		if not isinstance(ex_list, list):
+			tr.add_error("JSCH-006", "tool", f"__WTRL_OBJECTS__.{obj_qid}.examples is not a list.")
+			continue
+		for ptr in ex_list:
+			if not isinstance(ptr, str):
+				tr.add_error("JSCH-006", "tool", f"__WTRL_OBJECTS__.{obj_qid}.examples contains non-string pointer.")
+				continue
+			if ptr not in ex_ptr_set:
+				tr.add_error("JSCH-006", "tool", f"__WTRL_OBJECTS__.{obj_qid}.examples contains missing pointer: {ptr}")
+				continue
+			ex_key = ptr.rsplit("/", 1)[-1]
+			ex_node = examples_raw.get(ex_key, {})
+			if not isinstance(ex_node, dict):
+				continue
+			ref_by = ex_node.get("referenced_by", [])
+			if not isinstance(ref_by, list):
+				tr.add_error("JSCH-008", "tool", f"__WTRL_EXAMPLES__.{ex_key}.referenced_by is not a list.")
+				continue
+			if obj_qid not in ref_by:
+				tr.add_error("JSCH-008", "tool", f"{ptr} does not reference back to object: {obj_qid}")
+
+#----- examples -> object -------------------------------------#
+	for ex_key, ex_node in examples_raw.items():
+		if not isinstance(ex_node, dict):
+			continue
+		ref_by = ex_node.get("referenced_by", [])
+		if not isinstance(ref_by, list):
+			tr.add_error("JSCH-007", "tool", f"__WTRL_EXAMPLES__.{ex_key}.referenced_by is not a list.")
+			continue
+		ptr = f"/__WTRL_EXAMPLES__/{ex_key}"
+		for obj_qid_2 in ref_by:
+			if not isinstance(obj_qid_2, str):
+				tr.add_error("JSCH-007", "tool", f"__WTRL_EXAMPLES__.{ex_key}.referenced_by contains non-string identifier.")
+				continue
+			if obj_qid_2 not in obj_qids:
+				tr.add_error("JSCH-007", "tool", f"__WTRL_EXAMPLES__.{ex_key}.referenced_by contains unknown object: {obj_qid_2}")
+				continue
+			obj_node = objects_raw.get(obj_qid_2, {})
+			if not isinstance(obj_node, dict):
+				continue
+			ex_list = obj_node.get("examples", [])
+			if not isinstance(ex_list, list):
+				tr.add_error("JSCH-009", "tool", f"__WTRL_OBJECTS__.{obj_qid_2}.examples is not a list.")
+				continue
+			if ptr not in ex_list:
+				tr.add_error("JSCH-009", "tool", f"Object {obj_qid_2} does not reference example: {ptr}")
+
+
+def _compute_example_path_for_json(path_abs: Path, basedir_abs: Path | None) -> str:
+	"""Compute path for JSON output (prefer basedir-relative, fallback absolute)."""
+	if basedir_abs is not None:
+		try:
+			rel = path_abs.relative_to(basedir_abs)
+			return "./" + str(rel)
+		except ValueError:
+			pass
+	return str(path_abs)
+
+
+def _add_example_json_command(args: argparse.Namespace) -> int:
+	tr = tracer()
+	out_diag = getattr(args, "out_diag", None)
+	out_diag_json = getattr(args, "out_diag_json", None)
+	try:
+		in_path = getattr(args, "input_file", None)
+		examples_map_path = getattr(args, "examples_file", None)
+		if not in_path:
+			raise RuntimeError("--in is required.")
+		if not examples_map_path:
+			raise RuntimeError("--examples is required.")
+
+		doc = cast(dict[str, Any], _load_json(in_path))
+		ex_map = cast(dict[str, Any], _load_json(examples_map_path))
+		if not isinstance(doc, dict):
+			tr.add_error("AXMPL-001", "tool", "Input JSON must be an object.")
+			_emit_tracer(tr, out_diag, out_diag_json)
+			return 1
+		if not isinstance(ex_map, dict):
+			tr.add_error("AXMPL-001", "tool", "Mapping JSON must be an object.")
+			_emit_tracer(tr, out_diag, out_diag_json)
+			return 1
+
+		objects = doc.get("__WTRL_OBJECTS__", {})
+		if not isinstance(objects, dict):
+			tr.add_error("AXMPL-001", "tool", "__WTRL_OBJECTS__ is missing or not an object.")
+			_emit_tracer(tr, out_diag, out_diag_json)
+			return 1
+
+		examples = doc.get("__WTRL_EXAMPLES__", {})
+		if not isinstance(examples, dict):
+			tr.add_error("AXMPL-001", "tool", "__WTRL_EXAMPLES__ exists but is not an object.")
+			_emit_tracer(tr, out_diag, out_diag_json)
+			return 1
+		doc["__WTRL_EXAMPLES__"] = examples
+		version_obj = doc.get("__WTRL_VERSION__")
+		if isinstance(version_obj, dict):
+			version_obj["schema"] = "0.0.6"
+
+		basedir_abs: Path | None = None
+		if getattr(args, "basedir", None):
+			basedir_abs = Path(str(args.basedir)).resolve()
+			if not basedir_abs.is_dir():
+				tr.add_error("AXMPL-004", "tool", f"basedir is not a directory: {args.basedir}")
+				_emit_tracer(tr, out_diag, out_diag_json)
+				return 1
+
+		for obj_qid, files_any in ex_map.items():
+			if not isinstance(obj_qid, str):
+				tr.add_error("AXMPL-002", "tool", "Mapping contains non-string object key.")
+				continue
+			if obj_qid not in objects:
+				tr.add_error("AXMPL-002", "tool", f"Unknown object: {obj_qid}")
+				continue
+			if not isinstance(files_any, list):
+				tr.add_error("AXMPL-003", "tool", f"Mapping value for {obj_qid} must be a list.")
+				continue
+
+			obj_node = objects.get(obj_qid)
+			if not isinstance(obj_node, dict):
+				tr.add_error("AXMPL-001", "tool", f"Object node must be object: __WTRL_OBJECTS__.{obj_qid}")
+				continue
+			obj_examples = obj_node.get("examples", [])
+			if not isinstance(obj_examples, list):
+				obj_examples = []
+			obj_node["examples"] = obj_examples
+
+			for file_any in files_any:
+				if not isinstance(file_any, str):
+					tr.add_error("AXMPL-003", "tool", f"Example path for {obj_qid} is not a string.")
+					continue
+				file_raw = Path(file_any)
+				if file_raw.is_absolute():
+					file_abs = file_raw
+				elif basedir_abs is not None:
+					file_abs = (basedir_abs / file_raw).resolve()
+				else:
+					file_abs = file_raw.resolve()
+				if not file_abs.is_file():
+					tr.add_error("AXMPL-004", "tool", f"Example file does not exist: {file_any}")
+					continue
+
+				code_bytes = file_abs.read_bytes()
+				hash_hex = hashlib.sha256(code_bytes).hexdigest()
+				ex_key = f"sha256_{hash_hex}"
+				ex_ptr = f"/__WTRL_EXAMPLES__/{ex_key}"
+				try:
+					code_txt = code_bytes.decode("utf-8")
+				except UnicodeDecodeError:
+					tr.add_error("AXMPL-004", "tool", f"Example file is not valid UTF-8: {file_abs}")
+					continue
+
+				ex_node = examples.get(ex_key)
+				if ex_node is None:
+					ex_node = {
+						"lang": "python",
+						"hash": hash_hex,
+						"code": code_txt,
+						"referenced_by": [],
+					}
+					examples[ex_key] = ex_node
+				if not isinstance(ex_node, dict):
+					tr.add_error("AXMPL-001", "tool", f"Example entry must be object: __WTRL_EXAMPLES__.{ex_key}")
+					continue
+				ref_by = ex_node.get("referenced_by", [])
+				if not isinstance(ref_by, list):
+					ref_by = []
+				ex_node["referenced_by"] = ref_by
+				ex_node["lang"] = "python"
+				ex_node["hash"] = hash_hex
+				ex_node["code"] = code_txt
+				if getattr(args, "allow_local_paths", False):
+					ex_node["path"] = _compute_example_path_for_json(file_abs, basedir_abs)
+				else:
+					ex_node.pop("path", None)
+
+				if obj_qid not in ref_by:
+					ref_by.append(obj_qid)
+				if ex_ptr not in obj_examples:
+					obj_examples.append(ex_ptr)
+
+		for ex_any in examples.values():
+			if isinstance(ex_any, dict):
+				ref_by = ex_any.get("referenced_by")
+				if isinstance(ref_by, list):
+					ex_any["referenced_by"] = sorted({str(x) for x in ref_by})
+		for obj_any in objects.values():
+			if isinstance(obj_any, dict):
+				ex_list = obj_any.get("examples")
+				if isinstance(ex_list, list):
+					obj_any["examples"] = sorted({str(x) for x in ex_list})
+
+		_validate_examples_consistency_json(tr, doc)
+		if tr.has_errors():
+			_emit_tracer(tr, out_diag, out_diag_json)
+			return 1
+
+		out_file = getattr(args, "out_file", None)
+		out_dir = getattr(args, "out_dir", None)
+		if (out_file is None and out_dir is None) or (out_file is not None and out_dir is not None):
+			raise RuntimeError("exactly one of --out or --out-dir must be provided")
+		if out_file is None:
+			od = Path(str(out_dir))
+			if not od.exists():
+				raise RuntimeError(f"output directory does not exist: {out_dir}")
+			if not od.is_dir():
+				raise RuntimeError(f"output path is not a directory: {out_dir}")
+			out_file = str(od / Path(str(in_path)).name)
+
+		with open(str(out_file), "w", encoding="utf-8") as fh:
+			json.dump(doc, fh, indent=4)
+			fh.write("\n")
+		tr.add_info(f"JSON with examples written to: {out_file}")
+	except SOURCE_CODE_ERRORS:
+		if not out_diag:
+			_add_traceback(tr)
+			_emit_tracer(tr, out_diag)
+			return 1
+		raise
+	except OSError as exc:
+		tr.add_error("AXMPL-004", "tool", str(exc))
+		_emit_tracer(tr, out_diag, out_diag_json)
+		return 1
+	except json.decoder.JSONDecodeError as exc:
+		tr.add_error("AXMPL-005", "tool", f"[{docitem.get_obj_fully_qualified_name(exc)}] Input is not JSON: {exc}")
+		_emit_tracer(tr, out_diag, out_diag_json)
+		return 1
+	except Exception as exc:
+		tr.add_error("AXMPL-000", "tool", f"[{docitem.get_obj_fully_qualified_name(exc)}] {exc}")
+		_emit_tracer(tr, out_diag, out_diag_json)
+		return 1
+
+	_emit_tracer(tr, out_diag, out_diag_json)
+	return _final_exit_code(0, tr, args.fail_on_warning)
 
 
 def _read_docstring_from_file(path: str) -> str:
@@ -535,6 +796,7 @@ def _validate_json_command(args: argparse.Namespace) -> int:
 		_check_toc_pointers_json(tr, doc, "__WTRL_TOC_MODULES__", "JPTR-001")
 		_check_toc_pointers_json(tr, doc, "__WTRL_TOC_CLASSES__", "JPTR-002")
 		_check_toc_pointers_json(tr, doc, "__WTRL_TOC_CALLABLES__", "JPTR-003")
+		_validate_examples_consistency_json(tr, doc)
 	except (IndexError, NameError, AssertionError, NotImplementedError, AttributeError):
 		raise
 	except OSError as exc:  # pragma: no cover - defensive
@@ -1033,6 +1295,43 @@ def _render_json_command(args: argparse.Namespace) -> int:
 	_emit_tracer(tr, out_diag, out_diag_json)
 	return _final_exit_code(0, tr, args.fail_on_warning)
 
+#===== Render HTML5 ===========================================#
+
+def _render_html5_command(args: argparse.Namespace) -> int:
+	tr = tracer()
+	out_diag = getattr(args, "out_diag", None)
+	out_diag_json = getattr(args, "out_diag_json", None)
+	try:
+		in_files: list[str] = []
+		if args.input_files:
+			for grp in args.input_files:
+				if isinstance(grp, list):
+					in_files.extend(grp)
+				else:
+					in_files.append(str(grp))
+		if not in_files:
+			raise RuntimeError("at least one --in must be provided")
+		out_path = rhtml5.render_html5(
+			input_paths=in_files,
+			out_file=getattr(args, "out_file", None),
+			out_dir=getattr(args, "out_dir", None),
+			css_path=getattr(args, "css_file", None),
+			pygments_theme=getattr(args, "pygments_theme", None),
+		)
+		tr.add_info(f"HTML5 documentation written to: {out_path}")
+	except SOURCE_CODE_ERRORS:
+		if not out_diag:
+			_add_traceback(tr)
+			_emit_tracer(tr, out_diag)
+			return 1
+		raise
+	except Exception as exc:
+		tr.add_error("RHTM-001", "tool", f"[{docitem.get_obj_fully_qualified_name(exc)}] {exc}")
+		_emit_tracer(tr, out_diag, out_diag_json)
+		return 1
+	_emit_tracer(tr, out_diag, out_diag_json)
+	return _final_exit_code(0, tr, args.fail_on_warning)
+
 #===== Generate ===============================================#
 
 def _leading_ws_width(s: str) -> int:
@@ -1218,8 +1517,14 @@ def _help_extract() -> None:
 def _help_validate_json() -> None:
 	print("Validate a Waterloo JSON document against the published JSON Schema.")
 
+def _help_add_example_json() -> None:
+	print("Add/update __WTRL_EXAMPLES__ and object-level examples pointers in Waterloo JSON.")
+
 def _help_render_json() -> None:
 	print("Render Waterloo objects (module) to Waterloo JSON.")
+
+def _help_render_html5() -> None:
+	print("Render Waterloo JSON documents into one bundled HTML5 file.")
 
 def _help_gen_minimal() -> None:
 	print("Generate minimal Waterloo docstring skeletons.")
@@ -1254,8 +1559,12 @@ def _help_topic_command(args: argparse.Namespace) -> int:
 						_help_extract()
 					if cmd == "validate-json":
 						_help_validate_json()
+					if cmd == "add-example-json":
+						_help_add_example_json()
 					if cmd == "render-json":
 						_help_render_json()
+					if cmd == "render-html5":
+						_help_render_html5()
 					if cmd == "gen-minimal":
 						_help_gen_minimal()
 					if cmd == "gen-full":
@@ -1410,6 +1719,18 @@ def _build_parser() -> argparse.ArgumentParser:
 	)
 	validate_json.add_argument("--debug", action="store_true", help="Emit debugging data to stderr (reserved)")
 
+#----- add-example-json ---------------------------------------#
+	add_example_json = subparsers.add_parser("add-example-json", help="Add example code mapping to Waterloo JSON", parents=[global_opts])
+	add_example_json.add_argument("--in", dest="input_file", required=True, metavar="FILE", help="Input Waterloo JSON file.")
+	add_example_json.add_argument("--examples", dest="examples_file", required=True, metavar="FILE", help="Mapping JSON: object QID -> list of example files.")
+	add_example_json.add_argument("--basedir", metavar="DIR", help="Base directory for resolving relative example file paths.")
+	add_example_json.add_argument("--allow-local-paths", dest="allow_local_paths", action="store_true", default=False, help="Include local example path in __WTRL_EXAMPLES__.path.")
+	add_example_json.add_argument("--no-allow-local-paths", dest="allow_local_paths", action="store_false", help="Do not include local path in __WTRL_EXAMPLES__.path (default).")
+	aex_out = add_example_json.add_mutually_exclusive_group(required=True)
+	aex_out.add_argument("--out", dest="out_file", metavar="FILE", help="Write updated JSON to FILE.")
+	aex_out.add_argument("--out-dir", dest="out_dir", metavar="DIR", help="Write updated JSON to DIR using input filename.")
+	add_example_json.add_argument("--debug", action="store_true", help="Emit debugging data to stderr (reserved)")
+
 #----- render-json --------------------------------------------#
 	render_json = subparsers.add_parser("render-json", help="Render module to Waterloo JSON", parents=[global_opts])
 	render_json.add_argument(
@@ -1437,6 +1758,24 @@ def _build_parser() -> argparse.ArgumentParser:
 	render_json.add_argument("--allow-local-paths", dest="allow_local_paths", action="store_true", default=True, help="Include filesystem paths in JSON (default).")
 	render_json.add_argument("--no-allow-local-paths", dest="allow_local_paths", action="store_false", help="Omit filesystem paths in JSON.")
 	render_json.add_argument("--debug", action="store_true", help="Emit debugging data to stderr (reserved)")
+
+#----- render-html5 -------------------------------------------#
+	render_html5 = subparsers.add_parser("render-html5", help="Render Waterloo JSON to bundled HTML5", parents=[global_opts])
+	render_html5.add_argument(
+		"--in",
+		dest="input_files",
+		required=True,
+		nargs="+",
+		action="append",
+		metavar="JSON",
+		help="One or more Waterloo JSON files. Option may be repeated.",
+	)
+	rh_out = render_html5.add_mutually_exclusive_group(required=True)
+	rh_out.add_argument("--out", dest="out_file", metavar="HTML", help="Write HTML to HTML.")
+	rh_out.add_argument("--out-dir", dest="out_dir", metavar="DIR", help="Write HTML to DIR with generated filename.")
+	render_html5.add_argument("--css", dest="css_file", metavar="FILE", help="Additional CSS file to embed into output HTML.")
+	render_html5.add_argument("--pygments-theme", dest="pygments_theme", default="gruvbox-light", metavar="THEME", help="Pygments style name for rendered examples (default: gruvbox-light).")
+	render_html5.add_argument("--debug", action="store_true", help="Emit debugging data to stderr (reserved)")
 
 #----- gen-minimal --------------------------------------------#
 	gen_minimal = subparsers.add_parser("gen-minimal", help="Generate minimal Waterloo docstring skeleton", parents=[global_opts, common_validate_group])
@@ -1514,8 +1853,12 @@ def main(argv: Optional[list[str]] = None) -> int:
 		return _extract_command(args)
 	if args.command == "validate-json":
 		return _validate_json_command(args)
+	if args.command == "add-example-json":
+		return _add_example_json_command(args)
 	if args.command == "render-json":
 		return _render_json_command(args)
+	if args.command == "render-html5":
+		return _render_html5_command(args)
 	if args.command == "gen-minimal":
 		return _generate_command(args, "minimal")
 	if args.command == "gen-full":
