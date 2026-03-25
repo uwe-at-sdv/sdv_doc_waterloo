@@ -775,7 +775,7 @@ Pygments Lexer
 .. wtrl_autodoc_module:: python_waterloo_lexer
 
 :wtrl_type:`PythonWaterlooLexer`
-................................
+--------------------------------
 
 .. wtrl_autodoc_class_full:: PythonWaterlooLexer
 

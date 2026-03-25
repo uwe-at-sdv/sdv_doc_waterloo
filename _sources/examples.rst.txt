@@ -179,6 +179,28 @@ from source code:
 	:start-after: #-----8<-----2
 	:end-before: #----->8-----2
 
+Definitions
+-----------
+
+A :wtrl_label:`Definitions` section can be provided for modules, classes, and callables.
+Each subsection label consists of a comma-separated list of identifiers.
+The first identifier denotes the :wtrl_term:`Term`, while any following identifiers
+denote :wtrl_term:`Variations` of that term.
+
+The purpose of allowing multiple identifiers is to capture morpho-syntactic
+and orthographic variations of the same term. In the following example,
+we define the term :wtrl_dfn:`sensitive`, as well as the capitalized form
+:wtrl_dfn:`Sensitive` (for sentence-initial usage) and the nominalized form
+:wtrl_dfn:`Sensitivity`.
+
+
+.. literalinclude:: ../examples/test_docitem_definitions.py
+	:language: python
+
+The result is
+
+.. wtrl_autodoc_module:: test_docitem_definitions
+
 Inherited Definitions
 ---------------------
 

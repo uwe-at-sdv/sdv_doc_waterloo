@@ -10,7 +10,7 @@
     <link rel="stylesheet" type="text/css" href="_static/basic.css?v=686e5160" />
     <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=27fed22d" />
     <link rel="stylesheet" type="text/css" href="_static/common_styles.css?v=27e4112a" />
-    <link rel="stylesheet" type="text/css" href="_static/alabaster_waterloo.css?v=c8df8ccf" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster_waterloo.css?v=774a9f0b" />
     <script src="_static/documentation_options.js?v=8dde47fa"></script>
     <script src="_static/doctools.js?v=9bcbadda"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
@@ -357,9 +357,8 @@ specified in section <a class="reference internal" href="#common-sections"><span
 <p>This subsection is normative.</p>
 <p>Waterloo docstrings are primarily plain text. However, a small set of inline markup tokens is defined to allow
 machine-verifiable references and consistent rendering in target formats (e.g. reST/Sphinx).</p>
-<p>Inline markup tokens <code class="wtrl_norm docutils literal notranslate"><span class="pre">may</span></code> occur only in <em>free-form content lines</em> (i.e. in lines that are not section labels,
-subsection labels, or identifier list entries).</p>
-<p>Tools <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span> <span class="pre">not</span></code> interpret inline markup tokens inside:</p>
+<p>Inline markup tokens <code class="wtrl_norm docutils literal notranslate"><span class="pre">may</span></code> occur in free-form content lines.
+Inline markup tokens <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span> <span class="pre">not</span></code> occur in:</p>
 <blockquote>
 <div><ul class="simple">
 <li><p>section labels,</p></li>
@@ -459,8 +458,37 @@ is defined only within Waterloo docstrings.
 The Waterloo Sphinx extension additionally defines equivalent roles
 in native reST form, e.g. <code class="wtrl_lit docutils literal notranslate"><span class="pre">:wtrl_file:`path/to/file`</span></code>.</p>
 </section>
+<section id="textflow-tokens">
+<h3><span class="section-number">6.8.2. </span>Textflow tokens<a class="headerlink" href="#textflow-tokens" title="Link to this heading">¶</a></h3>
+<p>This subsection is informative.</p>
+<p>Textflow tokens are interpreted at the rendering stage and influence the
+visual structure of the output without affecting the logical structure
+of the docstring.</p>
+<p class="rubric">Paragraph token</p>
+<p>A line starting with a single pipe character <code class="wtrl_lit docutils literal notranslate"><span class="pre">|</span></code>,
+optionally followed only by whitespace, denotes a paragraph boundary.
+This token is used to visually separate blocks of text into distinct
+paragraphs in the rendered output.</p>
+<p class="rubric">List tokens</p>
+<p>The following characters at the beginning of a line are interpreted as
+list markers:</p>
+<blockquote>
+<div><p><code class="wtrl_lit docutils literal notranslate"><span class="pre">*</span></code> <code class="wtrl_lit docutils literal notranslate"><span class="pre">+</span></code> <code class="wtrl_lit docutils literal notranslate"><span class="pre">-</span></code> <code class="wtrl_lit docutils literal notranslate"><span class="pre">#</span></code></p>
+</div></blockquote>
+<p>A list marker is recognized only if it is immediately followed by a
+space character (ASCII 32).</p>
+<p>Consecutive lines starting with a list marker form a list block.
+List nesting is determined by the order of occurrence of distinct list
+markers within such a block. Each distinct marker introduces
+a new nesting level within the block.
+Indentation of lines within a list block <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span> <span class="pre">not</span></code> be used to express
+nesting. Nesting <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span></code> be determined solely by the choice of list marker.</p>
+<p>The marker <code class="wtrl_lit docutils literal notranslate"><span class="pre">#</span></code> denotes an ordered list. In the current
+implementation, ordered lists are rendered using Arabic numerals
+followed by a period.</p>
+</section>
 <section id="semantic-role-ref">
-<h3><span class="section-number">6.8.2. </span>Semantic role <code class="wtrl_lit docutils literal notranslate"><span class="pre">|ref|</span></code><a class="headerlink" href="#semantic-role-ref" title="Link to this heading">¶</a></h3>
+<h3><span class="section-number">6.8.3. </span>Semantic role <code class="wtrl_lit docutils literal notranslate"><span class="pre">|ref|</span></code><a class="headerlink" href="#semantic-role-ref" title="Link to this heading">¶</a></h3>
 <p>Semantic role <code class="wtrl_lit docutils literal notranslate"><span class="pre">|ref|</span></code> is used to create references.
 The following forms are supported:</p>
 <blockquote>
@@ -485,7 +513,7 @@ the document containing the reference.</p>
 </div></blockquote>
 </section>
 <section id="examples-informative">
-<h3><span class="section-number">6.8.3. </span>Examples (informative)<a class="headerlink" href="#examples-informative" title="Link to this heading">¶</a></h3>
+<h3><span class="section-number">6.8.4. </span>Examples (informative)<a class="headerlink" href="#examples-informative" title="Link to this heading">¶</a></h3>
 <blockquote>
 <div><ul class="simple">
 <li><p><code class="wtrl_lit docutils literal notranslate"><span class="pre">|Must|</span> <span class="pre">return</span> <span class="pre">|None|</span> <span class="pre">if</span> <span class="pre">no</span> <span class="pre">result</span> <span class="pre">is</span> <span class="pre">available.</span></code></p></li>
@@ -678,6 +706,10 @@ a Waterloo-documented object. Any scope-compatibility violation in this case
 </dd>
 <dt><em class="dfn">Direct Module</em></dt><dd><p>The module that contains the <code class="wtrl_dfn docutils literal notranslate"><span class="pre">Current</span> <span class="pre">Object</span></code>.</p>
 </dd>
+<dt><em class="dfn">Term</em></dt><dd><p>The first identifier in a <code class="wtrl_label docutils literal notranslate"><span class="pre">Definitions.&lt;DefItem&gt;</span></code> header.</p>
+</dd>
+<dt><em class="dfn">Variation</em></dt><dd><p>Any identifier after the first one in a <code class="wtrl_label docutils literal notranslate"><span class="pre">Definitions.&lt;DefItem&gt;</span></code> header.</p>
+</dd>
 </dl>
 <ul>
 <li><dl>
@@ -687,12 +719,12 @@ a Waterloo-documented object. Any scope-compatibility violation in this case
 <li><p>[DEF-003] – Each entry in the section <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span></code> have the form of a subsection matching one of the following patterns:</p></li>
 <li><dl class="simple">
 <dt><code class="wtrl_label docutils literal notranslate"><span class="pre">&lt;DefItem&gt;:</span></code></dt><dd><ul class="simple">
-<li><p>[DEF-020] – Any number of subsections <code class="wtrl_norm docutils literal notranslate"><span class="pre">may</span></code> exist</p></li>
-<li><p>[DEF-004] – <code class="wtrl_label docutils literal notranslate"><span class="pre">&lt;DefItem&gt;</span></code> matches the pattern of an Identifier.</p></li>
-<li><p>[DEF-010] – <code class="wtrl_label docutils literal notranslate"><span class="pre">&lt;DefItem&gt;</span></code> <code class="wtrl_value docutils literal notranslate"><span class="pre">_inherited</span></code> has a special meaning and <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span> <span class="pre">not</span></code> denote a term.</p></li>
-<li><p>[DEF-005] – <code class="wtrl_label docutils literal notranslate"><span class="pre">&lt;DefItem&gt;</span></code> stands for the term to be defined normatively.</p></li>
+<li><p>[DEF-020] – Any number of subsections <code class="wtrl_norm docutils literal notranslate"><span class="pre">may</span></code> exist.</p></li>
+<li><p>[DEF-004] – <code class="wtrl_label docutils literal notranslate"><span class="pre">&lt;DefItem&gt;</span></code> <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span></code> match <cite>&lt;Identifier&gt; ( “,” &lt;Identifier&gt; )*</cite> with optional whitespace around commas.</p></li>
+<li><p>[DEF-005] – In <code class="wtrl_label docutils literal notranslate"><span class="pre">&lt;DefItem&gt;</span></code>, the first identifier denotes the <code class="wtrl_term docutils literal notranslate"><span class="pre">Term</span></code>; each following identifier denotes a <code class="wtrl_term docutils literal notranslate"><span class="pre">Variation</span></code> of that term.</p></li>
 <li><p>[DEF-006] – The subsection content <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span></code> be free-form text.</p></li>
 <li><p>[DEF-009] – The subsection content <code class="wtrl_norm docutils literal notranslate"><span class="pre">should</span></code> not be empty.</p></li>
+<li><p>[DEF-010] – <code class="wtrl_label docutils literal notranslate"><span class="pre">&lt;DefItem&gt;</span></code> <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span> <span class="pre">not</span></code> be <code class="wtrl_label docutils literal notranslate"><span class="pre">_inherit</span></code>.</p></li>
 </ul>
 </dd>
 </dl>
@@ -705,9 +737,10 @@ a Waterloo-documented object. Any scope-compatibility violation in this case
 <li><p>[DEF-014] – If the subsection <code class="wtrl_label docutils literal notranslate"><span class="pre">_inherit</span></code> exists, the <code class="wtrl_term docutils literal notranslate"><span class="pre">Direct</span> <span class="pre">Module</span></code> <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span></code> have a valid docstring.</p></li>
 <li><p>[DEF-015] – If the subsection <code class="wtrl_label docutils literal notranslate"><span class="pre">_inherit</span></code> exists, the docstring of the <code class="wtrl_term docutils literal notranslate"><span class="pre">Direct</span> <span class="pre">Module</span></code> <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span></code> contain a <code class="wtrl_label docutils literal notranslate"><span class="pre">Definitions</span></code> section.</p></li>
 <li><p>[DEF-016] – The content of <code class="wtrl_label docutils literal notranslate"><span class="pre">_inherit</span></code> <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span></code> be a list of identifiers according to LQID-001.</p></li>
-<li><p>[DEF-017] – Each entry in <code class="wtrl_label docutils literal notranslate"><span class="pre">_inherit</span></code> <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span> <span class="pre">not</span></code> occur as a term in the <code class="wtrl_label docutils literal notranslate"><span class="pre">Definitions</span></code> section of the <code class="wtrl_term docutils literal notranslate"><span class="pre">Current</span> <span class="pre">Object</span></code>.</p></li>
-<li><p>[DEF-018] – Each entry in <code class="wtrl_label docutils literal notranslate"><span class="pre">_inherit</span></code> <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span></code> occur as a term in the <code class="wtrl_term docutils literal notranslate"><span class="pre">Direct</span> <span class="pre">Module</span></code> docstring’s <code class="wtrl_label docutils literal notranslate"><span class="pre">Definitions</span></code> section.</p></li>
+<li><p>[DEF-017] – Each entry in <code class="wtrl_label docutils literal notranslate"><span class="pre">_inherit</span></code> <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span> <span class="pre">not</span></code> occur as a <code class="wtrl_term docutils literal notranslate"><span class="pre">Term</span></code> or <code class="wtrl_term docutils literal notranslate"><span class="pre">Variation</span></code> in the <code class="wtrl_label docutils literal notranslate"><span class="pre">Definitions</span></code> section of the <code class="wtrl_term docutils literal notranslate"><span class="pre">Current</span> <span class="pre">Object</span></code>.</p></li>
+<li><p>[DEF-018] – Each entry in <code class="wtrl_label docutils literal notranslate"><span class="pre">_inherit</span></code> <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span></code> occur as a <code class="wtrl_term docutils literal notranslate"><span class="pre">Term</span></code> in the <code class="wtrl_term docutils literal notranslate"><span class="pre">Direct</span> <span class="pre">Module</span></code> docstring’s <code class="wtrl_label docutils literal notranslate"><span class="pre">Definitions</span></code> section.</p></li>
 <li><p>[DEF-019] – The use of the subsection <code class="wtrl_label docutils literal notranslate"><span class="pre">_inherit</span></code> <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span></code> result in a warning with rule ID <code class="wtrl_value docutils literal notranslate"><span class="pre">VLII-001</span></code> at validation time.</p></li>
+<li><p>[DEF-022] – Implicitly, all <code class="wtrl_term docutils literal notranslate"><span class="pre">Variations</span></code> of an inherited <code class="wtrl_term docutils literal notranslate"><span class="pre">Term</span></code> are inherited as well.</p></li>
 </ul>
 </dd>
 </dl>
@@ -720,7 +753,7 @@ a Waterloo-documented object. Any scope-compatibility violation in this case
 </dl>
 </li>
 <li><p><strong>Rationale</strong> (informative)</p>
-<p>Definition items are restricted to Identifiers for the following reasons:</p>
+<p><code class="wtrl_term docutils literal notranslate"><span class="pre">Terms</span></code> and <code class="wtrl_term docutils literal notranslate"><span class="pre">Variations</span></code> are restricted to Identifiers for the following reasons:</p>
 <blockquote>
 <div><ul class="simple">
 <li><p>They can be referenced in a machine-verifiable way via the semantic role <code class="wtrl_lit docutils literal notranslate"><span class="pre">|term|`...`</span></code>.</p></li>
@@ -731,7 +764,7 @@ provides the human-readable explanation.</p></li>
 </ul>
 </div></blockquote>
 </li>
-<li><p><strong>Last review</strong>: 2026-02-23</p></li>
+<li><p><strong>Last review</strong>: 2026-03-25</p></li>
 </ul>
 </dd>
 </dl>
@@ -809,7 +842,7 @@ allows arbitrary human-readable labels and is intended solely for explanatory pu
 <li><p>[SEE-003] – If the section is not listed as normative each entry <code class="wtrl_norm docutils literal notranslate"><span class="pre">should</span></code> refer to an existing public object.</p></li>
 <li><p>[SEE-004] – If the section is listed as normative each entry <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span></code> refer to an existing public object.</p></li>
 <li><p>[SEE-005] – An entry in <code class="wtrl_label docutils literal notranslate"><span class="pre">See_also</span></code> <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span> <span class="pre">not</span></code> refer to the documented object itself.</p></li>
-<li><p>[SEE-006] – An entry in <code class="wtrl_label docutils literal notranslate"><span class="pre">See_also</span></code> <code class="wtrl_norm docutils literal notranslate"><span class="pre">should</span></code> refer to an object that has a docstring.</p></li>
+<li><p>[SEE-006] – An entry in <code class="wtrl_label docutils literal notranslate"><span class="pre">See_also</span></code> <code class="wtrl_norm docutils literal notranslate"><span class="pre">should</span></code> refer to an object that has a docstring, if the object is documentable (module, class, or callable).</p></li>
 <li><p>[SEE-007] – If the section is not listed as normative the object (module, class, function, or method) referred to by entry <code class="wtrl_norm docutils literal notranslate"><span class="pre">should</span></code> have a valid Waterloo docstring.</p></li>
 <li><p>[SEE-008] – If the section is listed as normative the object (module, class, function, or method) referred to by entry <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span></code> have a valid Waterloo docstring.</p></li>
 <li><p>[SEE-009] – Tools <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span></code> treat unresolved references as errors when <code class="wtrl_label docutils literal notranslate"><span class="pre">See_also</span></code> is normative, and <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span></code> treat them as warnings when <code class="wtrl_label docutils literal notranslate"><span class="pre">See_also</span></code> is informative.</p></li>
@@ -1846,8 +1879,9 @@ for automated testing, such as idempotence, non-mutation of inputs, or round-tri
 <li class="toctree-l2"><a class="reference internal" href="#building-the-ast">6.7. Building the AST</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#inline-markup-in-free-form-content">6.8. Inline markup in free-form content</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#tokens">6.8.1. Tokens</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#semantic-role-ref">6.8.2. Semantic role <code class="wtrl_lit docutils literal notranslate"><span class="pre">|ref|</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#examples-informative">6.8.3. Examples (informative)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#textflow-tokens">6.8.2. Textflow tokens</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#semantic-role-ref">6.8.3. Semantic role <code class="wtrl_lit docutils literal notranslate"><span class="pre">|ref|</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#examples-informative">6.8.4. Examples (informative)</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#rules-not-bound-to-a-particular-section">6.9. Rules not bound to a particular section</a></li>

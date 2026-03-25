@@ -384,10 +384,8 @@ This subsection is normative.
 Waterloo docstrings are primarily plain text. However, a small set of inline markup tokens is defined to allow
 machine-verifiable references and consistent rendering in target formats (e.g. reST/Sphinx).
 
-Inline markup tokens |may| occur only in *free-form content lines* (i.e. in lines that are not section labels,
-subsection labels, or identifier list entries).
-
-Tools |must_not| interpret inline markup tokens inside:
+Inline markup tokens |may| occur in free-form content lines.
+Inline markup tokens |must_not| occur in:
 
 	* section labels,
 	* subsection labels,
@@ -454,6 +452,48 @@ As mentioned above, the tokenized form using the pipe character "\|"
 is defined only within Waterloo docstrings.
 The Waterloo Sphinx extension additionally defines equivalent roles
 in native reST form, e.g. :wtrl_lit:`:wtrl_file:\`path/to/file\``.
+
+Textflow tokens
+^^^^^^^^^^^^^^^
+
+This subsection is informative.
+
+Textflow tokens are interpreted at the rendering stage and influence the
+visual structure of the output without affecting the logical structure
+of the docstring.
+
+.. rubric:: Paragraph token
+
+A line starting with a single pipe character :wtrl_lit:`|`,
+optionally followed only by whitespace, denotes a paragraph boundary.
+This token is used to visually separate blocks of text into distinct
+paragraphs in the rendered output.
+
+
+.. rubric:: List tokens
+
+The following characters at the beginning of a line are interpreted as
+list markers:
+
+	:wtrl_lit:`*` :wtrl_lit:`+` :wtrl_lit:`-` :wtrl_lit:`#`
+
+A list marker is recognized only if it is immediately followed by a
+space character (ASCII 32).
+
+Consecutive lines starting with a list marker form a list block.
+List nesting is determined by the order of occurrence of distinct list
+markers within such a block. Each distinct marker introduces
+a new nesting level within the block.
+Indentation of lines within a list block |must_not| be used to express
+nesting. Nesting |must| be determined solely by the choice of list marker.
+
+The marker :wtrl_lit:`#` denotes an ordered list. In the current
+implementation, ordered lists are rendered using Arabic numerals
+followed by a period.
+
+
+
+
 
 Semantic role :wtrl_lit:`|ref|`
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -658,17 +698,23 @@ For the following section, we define:
 :dfn:`Direct Module`
 	The module that contains the :wtrl_dfn:`Current Object`.
 
+:dfn:`Term`
+	The first identifier in a :wtrl_label:`Definitions.<DefItem>` header.
+
+:dfn:`Variation`
+	Any identifier after the first one in a :wtrl_label:`Definitions.<DefItem>` header.
+
 * :wtrl_label:`Definitions:`
 	- [DEF-001] -- The section |may| exist.
 	- [DEF-002] -- If it exists, it |must| be listed as normative in :wtrl_label:`Preamble.normative_sections`.
 	- [DEF-003] -- Each entry in the section |must| have the form of a subsection matching one of the following patterns:
 	- :wtrl_label:`<DefItem>:`
-		* [DEF-020] -- Any number of subsections |may| exist
-		* [DEF-004] -- :wtrl_label:`<DefItem>` matches the pattern of an Identifier.
-		* [DEF-010] -- :wtrl_label:`<DefItem>` :wtrl_value:`_inherited` has a special meaning and |must_not| denote a term.
-		* [DEF-005] -- :wtrl_label:`<DefItem>` stands for the term to be defined normatively.
+		* [DEF-020] -- Any number of subsections |may| exist.
+		* [DEF-004] -- :wtrl_label:`<DefItem>` |must| match `<Identifier> ( "," <Identifier> )*` with optional whitespace around commas.
+		* [DEF-005] -- In :wtrl_label:`<DefItem>`, the first identifier denotes the :wtrl_term:`Term`; each following identifier denotes a :wtrl_term:`Variation` of that term.
 		* [DEF-006] -- The subsection content |must| be free-form text.
 		* [DEF-009] -- The subsection content |should| not be empty.
+		* [DEF-010] -- :wtrl_label:`<DefItem>` |must_not| be :wtrl_label:`_inherit`.
 	- :wtrl_label:`_inherit:`
 		* [DEF-011] -- The subsection :wtrl_label:`_inherit` |must_not| appear in profile :wtrl_value:`module`.
 		* [DEF-012] -- The subsection :wtrl_label:`_inherit` |may| appear in profiles :wtrl_value:`class`, :wtrl_value:`function`,
@@ -676,21 +722,22 @@ For the following section, we define:
 		* [DEF-014] -- If the subsection :wtrl_label:`_inherit` exists, the :wtrl_term:`Direct Module` |must| have a valid docstring.
 		* [DEF-015] -- If the subsection :wtrl_label:`_inherit` exists, the docstring of the :wtrl_term:`Direct Module` |must| contain a :wtrl_label:`Definitions` section.
 		* [DEF-016] -- The content of :wtrl_label:`_inherit` |must| be a list of identifiers according to LQID-001.
-		* [DEF-017] -- Each entry in :wtrl_label:`_inherit` |must_not| occur as a term in the :wtrl_label:`Definitions` section of the :wtrl_term:`Current Object`.
-		* [DEF-018] -- Each entry in :wtrl_label:`_inherit` |must| occur as a term in the :wtrl_term:`Direct Module` docstring's :wtrl_label:`Definitions` section.
+		* [DEF-017] -- Each entry in :wtrl_label:`_inherit` |must_not| occur as a :wtrl_term:`Term` or :wtrl_term:`Variation` in the :wtrl_label:`Definitions` section of the :wtrl_term:`Current Object`.
+		* [DEF-018] -- Each entry in :wtrl_label:`_inherit` |must| occur as a :wtrl_term:`Term` in the :wtrl_term:`Direct Module` docstring's :wtrl_label:`Definitions` section.
 		* [DEF-019] -- The use of the subsection :wtrl_label:`_inherit` |must| result in a warning with rule ID :wtrl_value:`VLII-001` at validation time.
+		* [DEF-022] -- Implicitly, all :wtrl_term:`Variations` of an inherited :wtrl_term:`Term` are inherited as well.
 	- |ObsoleteRules|
 		* DEF-013 -- Obsolete since 0.5.2; superseded by PRSR-008.
 	- |Rationale|
 
-	  Definition items are restricted to Identifiers for the following reasons:
+	  :wtrl_term:`Terms` and :wtrl_term:`Variations` are restricted to Identifiers for the following reasons:
 
 		* They can be referenced in a machine-verifiable way via the semantic role :wtrl_lit:`\|term\|\`...\``.
 		* They are robust with respect to formatting changes such as line wrapping.
 		* They behave similarly to symbolic constants or macros in a programming language:
 		  the identifier provides a stable symbolic anchor, while the definition body
 		  provides the human-readable explanation.
-	- |LastReview|: 2026-02-23
+	- |LastReview|: 2026-03-25
 * :wtrl_label:`Terminology:`
 	- [TERM-001] -- The section |may| exist.
 	- [TERM-002] -- It |must_not| be listed as normative in :wtrl_label:`Preamble.normative_sections`.
@@ -734,7 +781,7 @@ For the following section, we define:
 	- [SEE-003] -- If the section is not listed as normative each entry |should| refer to an existing public object.
 	- [SEE-004] -- If the section is listed as normative each entry |must| refer to an existing public object.
 	- [SEE-005] -- An entry in :wtrl_label:`See_also` |must_not| refer to the documented object itself.
-	- [SEE-006] -- An entry in :wtrl_label:`See_also` |should| refer to an object that has a docstring.
+	- [SEE-006] -- An entry in :wtrl_label:`See_also` |should| refer to an object that has a docstring, if the object is documentable (module, class, or callable).
 	- [SEE-007] -- If the section is not listed as normative the object (module, class, function, or method) referred to by entry |should| have a valid Waterloo docstring.
 	- [SEE-008] -- If the section is listed as normative the object (module, class, function, or method) referred to by entry |must| have a valid Waterloo docstring.
 	- [SEE-009] -- Tools |must| treat unresolved references as errors when :wtrl_label:`See_also` is normative, and |must| treat them as warnings when :wtrl_label:`See_also` is informative.
