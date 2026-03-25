@@ -1296,9 +1296,11 @@ See_also:
 				if not "Definitions" in node_normative_sections.items():
 					raise_validation_error(tr,obj,"DEF-002","Section 'Definitions' exists but is not normative.")
 # Regular and inherited defitems.
-				def_names = set(node_definitions.items().keys())
-				inherited_def_names = set(node_definitions.inherited())
-				if inherited_def_names:
+				current_object_terms_and_variations = set(node_definitions.items().keys())
+				current_object_inherited_terms = set(node_definitions.inherited())
+# Required for DEF-022
+				inherited_terms_and_variations = set()
+				if current_object_inherited_terms:
 					if profile == "module":
 						raise_validation_error(tr,obj,"DEF-011","Subsection '_inherited' is not allowed in a module docstring.")
 					warn_validation(tr,obj,"VLII-001","Use of subsection '_inherited' violates the LoII principle.")
@@ -1319,31 +1321,34 @@ See_also:
 						mod_definitions = cast(docitem_definitions, mod_doc_top.item("Definitions"))
 # Chill mypy.
 						assert isinstance(mod_definitions, docitem_definitions)
-						module_def_names = set(mod_definitions.items().keys())
-						missing = inherited_def_names - module_def_names
+						module_terms = mod_definitions.terms()
+						missing = current_object_inherited_terms - module_terms
 						if missing:
-							raise_validation_error(tr,obj,"DEF-018",f"Inherited defitems not found in direct module definitions: {missing}.")
+							raise_validation_error(tr,obj,"DEF-018",f"Inherited defitems not found in direct module terms: {missing}.")
+# Extract terms and variations of module for the given set of inherited terms.
+						inherited_terms_and_variations = mod_definitions.terms_and_variations(current_object_inherited_terms)
 # Regular and inherited must be disjoint.
-				names_in_both = set.intersection(def_names,inherited_def_names)
+				names_in_both = set.intersection(current_object_terms_and_variations,current_object_inherited_terms)
 				if len(names_in_both ) > 0:
 					raise_validation_error(tr,obj,"DEF-017",f"Inherited defitems are redefined in section 'Definitions': {names_in_both}.")
 # Defitem content should not be empty.
-				for name in def_names:
+				for name in current_object_terms_and_variations:
 					node_defitem = node_definitions.item(name)
 					if node_defitem.empty():
 						warn_validation(tr,obj,"DEF-009","Definition item content should not be empty.")
 			else:
 				node_definitions = None
-# Regular and inherited defitems.
-				def_names = set()
-				inherited_def_names = set()
-# Ensure each referenced term appears in section `Definitions`.
+# Regular and inherited terms and variations.
+				current_object_terms_and_variations = set()
+				current_object_inherited_terms = set()
+# Ensure each referenced term appears in section `Definitions` either directly or by inheritance.
 			term_refs = _collect_term_refs(top)
 			if term_refs:
 				if node_definitions is None:
 					raise_validation_error(tr,obj,"DEF-007", "Token |term| is used but section 'Definitions' is missing.")
 				for term in term_refs:
-					if term not in (def_names | inherited_def_names):
+# Test term reference against 1. terms directly defined in the object and 2. (DEF-022) terms and variations inherited from the module.
+					if term not in (current_object_terms_and_variations | inherited_terms_and_variations):
 						raise_validation_error(tr,obj,"DEF-008", f"Token |term|`{term}` references an undefined term.")
 
 #===== Terminology must NOT be normative ======================#
@@ -1383,8 +1388,9 @@ See_also:
 						continue
 					doc = get_obj_docstring(target_obj)
 					if not doc:
+						if is_obj_documentable(target_obj):
 # No docstring at all: always warn (SEE-006).
-						warn_validation(tr,obj,"SEE-006", f"See_also reference '{item_see_also}' has no docstring.")
+							warn_validation(tr,obj,"SEE-006", f"See_also reference '{item_see_also}' has no docstring.")
 # If See_also is normative and the target is a user-defined module/class/function
 # (not a builtin), escalate to SEE-008.
 						is_builtin = inspect.isbuiltin(target_obj) or getattr(target_obj, "__module__", "") == "builtins"

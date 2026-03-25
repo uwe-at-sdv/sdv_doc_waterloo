@@ -1,12 +1,12 @@
 {
-    "$schema": "https://sci-d-vis.com/schema/wtrl-json-0.0.6.schema.json",
-    "$id": "urn:waterlint:0.6.0:render-json:core:rfc-2119:21408c06960e6d2fc3ebe17ba784db25",
+    "$schema": "https://sci-d-vis.com/schema/wtrl-json-0.1.0.schema.json",
+    "$id": "urn:waterlint:0.6.4:render-json:core:rfc-2119:21408c06960e6d2fc3ebe17ba784db25",
     "__WTRL_VERSION__": {
-        "waterloo": "0.5.5",
-        "schema": "0.0.6"
+        "waterloo": "0.6.0",
+        "schema": "0.1.0"
     },
     "__WTRL_META__": {
-        "generated_at": "2026-03-18T09:09:01+01:00",
+        "generated_at": "2026-03-25T22:33:15+01:00",
         "generator": "waterlint",
         "scope": "core",
         "flavour": "rfc-2119"
@@ -359,12 +359,18 @@
                     ]
                 },
                 "Definitions": {
-                    "Identifier": [
-                        "A string that matches the regular expression |var|`RE_IDENTIFIER` (see |label|`Public_constants`)."
-                    ],
-                    "Qualified_Identifier": [
-                        "A string that matches the regular expression |var|`RE_QUALIFIED_IDENTIFIER` (see |label|`Public_constants`)."
-                    ]
+                    "Identifier": {
+                        "variations": [],
+                        "text": [
+                            "A string that matches the regular expression |var|`RE_IDENTIFIER` (see |label|`Public_constants`)."
+                        ]
+                    },
+                    "Qualified_Identifier": {
+                        "variations": [],
+                        "text": [
+                            "A string that matches the regular expression |var|`RE_QUALIFIED_IDENTIFIER` (see |label|`Public_constants`)."
+                        ]
+                    }
                 },
                 "Public_functions": [
                     "is_obj_module",
@@ -2141,14 +2147,20 @@
                     "status": "stable"
                 },
                 "Definitions": {
-                    "TAB": [
-                        "A scheme that demands indentation by means of an integer number of tab characters (ASCII |value|`0x09`).",
-                        "For this scheme, |var|`INDENT_UNIT` is a single tab character."
-                    ],
-                    "SPC4": [
-                        "A scheme that demands indentation by means of an integer multiple of four space characters (ASCII |value|`0x20`).",
-                        "For this scheme, |var|`INDENT_UNIT` consists of four space characters."
-                    ]
+                    "TAB": {
+                        "variations": [],
+                        "text": [
+                            "A scheme that demands indentation by means of an integer number of tab characters (ASCII |value|`0x09`).",
+                            "For this scheme, |var|`INDENT_UNIT` is a single tab character."
+                        ]
+                    },
+                    "SPC4": {
+                        "variations": [],
+                        "text": [
+                            "A scheme that demands indentation by means of an integer multiple of four space characters (ASCII |value|`0x20`).",
+                            "For this scheme, |var|`INDENT_UNIT` consists of four space characters."
+                        ]
+                    }
                 },
                 "Contract": {
                     "general": [
@@ -2214,9 +2226,12 @@
                     ]
                 },
                 "Definitions": {
-                    "DocstringTree": [
-                        "A value matching the following type: |type|`DocstringTree` = |type|`List`\\[ |type|`Union`\\[ |type|`str`, |value|`\"DocstringTree\"`]]"
-                    ]
+                    "DocstringTree": {
+                        "variations": [],
+                        "text": [
+                            "A value matching the following type: |type|`DocstringTree` = |type|`List`\\[ |type|`Union`\\[ |type|`str`, |value|`\"DocstringTree\"`]]"
+                        ]
+                    }
                 },
                 "Contract": {
                     "general": [
@@ -2589,12 +2604,18 @@
                     ]
                 },
                 "Definitions": {
-                    "Identifier": [
-                        "As defined in |mod|`sdv.doc.waterloo.docitem`."
-                    ],
-                    "Qualified_Identifier": [
-                        "As defined in |mod|`sdv.doc.waterloo.docitem`."
-                    ]
+                    "Identifier": {
+                        "variations": [],
+                        "text": [
+                            "As defined in |mod|`sdv.doc.waterloo.docitem`."
+                        ]
+                    },
+                    "Qualified_Identifier": {
+                        "variations": [],
+                        "text": [
+                            "As defined in |mod|`sdv.doc.waterloo.docitem`."
+                        ]
+                    }
                 }
             }
         },
@@ -7334,18 +7355,30 @@
                     ]
                 },
                 "Definitions": {
-                    "Identifier": [
-                        "A string matching the regular expression ``[a-zA-Z_][a-zA-Z0-9_]*``."
-                    ],
-                    "Qualified_Identifier": [
-                        "A string formed by concatenating one or more Identifiers with \".\" as separator."
-                    ],
-                    "Public_object": [
-                        "An object that is importable as a module attribute or as an attribute of an object reachable from an importable module."
-                    ],
-                    "Resolved_reference": [
-                        "A pair (obj, qname) where qname is a candidate reference string that was successfully resolved and obj is the resulting Python object."
-                    ]
+                    "Identifier": {
+                        "variations": [],
+                        "text": [
+                            "A string matching the regular expression ``[a-zA-Z_][a-zA-Z0-9_]*``."
+                        ]
+                    },
+                    "Qualified_Identifier": {
+                        "variations": [],
+                        "text": [
+                            "A string formed by concatenating one or more Identifiers with \".\" as separator."
+                        ]
+                    },
+                    "Public_object": {
+                        "variations": [],
+                        "text": [
+                            "An object that is importable as a module attribute or as an attribute of an object reachable from an importable module."
+                        ]
+                    },
+                    "Resolved_reference": {
+                        "variations": [],
+                        "text": [
+                            "A pair (obj, qname) where qname is a candidate reference string that was successfully resolved and obj is the resulting Python object."
+                        ]
+                    }
                 },
                 "Contract": {
                     "general": [
@@ -9065,13 +9098,13 @@
         },
         "sdv.doc.waterloo.docitem_convert.to_string_legend_yaml": {
             "signature": {
-                "text": "to_string_legend_yaml(config: 'YamlConfig' = <sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7fc7ee188700>) -> 'str'",
+                "text": "to_string_legend_yaml(config: 'YamlConfig' = <sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7ff3ca4470d0>) -> 'str'",
                 "parameters": [
                     {
                         "name": "config",
                         "kind": "POSITIONAL_OR_KEYWORD",
                         "annotation": "YamlConfig",
-                        "default": "<sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7fc7ee188700>"
+                        "default": "<sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7ff3ca4470d0>"
                     }
                 ],
                 "returns": "str"
@@ -9108,7 +9141,7 @@
         },
         "sdv.doc.waterloo.docitem_convert.to_string_signature_yaml": {
             "signature": {
-                "text": "to_string_signature_yaml(obj: 'object', config: 'YamlConfig' = <sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7fc7ee1881c0>) -> 'str'",
+                "text": "to_string_signature_yaml(obj: 'object', config: 'YamlConfig' = <sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7ff3ca444700>) -> 'str'",
                 "parameters": [
                     {
                         "name": "obj",
@@ -9120,7 +9153,7 @@
                         "name": "config",
                         "kind": "POSITIONAL_OR_KEYWORD",
                         "annotation": "YamlConfig",
-                        "default": "<sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7fc7ee1881c0>"
+                        "default": "<sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7ff3ca444700>"
                     }
                 ],
                 "returns": "str"
@@ -9190,7 +9223,7 @@
         },
         "sdv.doc.waterloo.docitem_convert.to_string_yaml": {
             "signature": {
-                "text": "to_string_yaml(tree: 'DocstringTree', flavour: 'Flavour', config: 'YamlConfig' = <sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7fc7ee188190>) -> 'str'",
+                "text": "to_string_yaml(tree: 'DocstringTree', flavour: 'Flavour', config: 'YamlConfig' = <sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7ff3ca4446a0>) -> 'str'",
                 "parameters": [
                     {
                         "name": "tree",
@@ -9208,7 +9241,7 @@
                         "name": "config",
                         "kind": "POSITIONAL_OR_KEYWORD",
                         "annotation": "YamlConfig",
-                        "default": "<sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7fc7ee188190>"
+                        "default": "<sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7ff3ca4446a0>"
                     }
                 ],
                 "returns": "str"

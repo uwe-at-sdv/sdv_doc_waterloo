@@ -831,8 +831,10 @@ def build_sphinx_nodes(ctx : context,obj: object,doc: mod_docitem.docitem_docstr
 					n_lines += 1
 					if i_item + n_lines >= len(items):
 						break
-# At least two items are required for safe pattern recognition.
-				if n_lines >= 2:
+# Originally at least two items are required for safe pattern recognition,
+# but the normative rules are getting too complex in that case, so let's
+# simplify this:
+				if n_lines >= 1:
 # For nested itemizations we need a stack.
 					node_stack: List[nodes.Element] = []
 					symb_stack: List[str] = []
@@ -1040,19 +1042,48 @@ def build_sphinx_nodes(ctx : context,obj: object,doc: mod_docitem.docitem_docstr
 					dli += dd
 					dl += dli
 
-			for term, item_subsection in item_section.items().items():
-				dli = nodes.definition_list_item()
+			if label == "Definitions":
+				seen: Dict[Any,List[str]] = {}
+				term_str = ""
+# Collect terms having the same content (we have a DAG, not a tree!)
+				for term, item_subsection in item_section.items().items():
+					if item_subsection in seen:
+						seen[item_subsection].append(term)
+						continue
+					seen[item_subsection] = [term]
+# Now render
+				for item_subsection,terms in seen.items():
+					if not terms:
+						continue
+					dli = nodes.definition_list_item()
 # Term
-				dt = nodes.term()
-				dt.extend(ctx.parse(dt, 0, ctx.add_role_dfn(term)))
-				dli += dt
-					# Definition
-				dd = nodes.definition()
+					dt = nodes.term()
+					if len(terms) > 1:
+						dt.extend(ctx.parse(dt, 0, ctx.add_role_dfn(terms[0] + " [" + ", ".join(terms[1:]) + "]")))
+					else:
+						dt.extend(ctx.parse(dt, 0, ctx.add_role_dfn(terms[0])))
+					dli += dt
+						# Definition
+					dd = nodes.definition()
 # Content
-				for paragraph in build_paragraphs_from_items(item_subsection.items()):
-					dd += paragraph
-				dli += dd
-				dl += dli
+					for paragraph in build_paragraphs_from_items(item_subsection.items()):
+						dd += paragraph
+					dli += dd
+					dl += dli
+			else:
+				for term, item_subsection in item_section.items().items():
+					dli = nodes.definition_list_item()
+# Term
+					dt = nodes.term()
+					dt.extend(ctx.parse(dt, 0, ctx.add_role_dfn(term)))
+					dli += dt
+						# Definition
+					dd = nodes.definition()
+# Content
+					for paragraph in build_paragraphs_from_items(item_subsection.items()):
+						dd += paragraph
+					dli += dd
+					dl += dli
 			node_entry += dl
 		elif label in ("Description",):
 # Content

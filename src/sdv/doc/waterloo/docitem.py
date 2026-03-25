@@ -258,7 +258,9 @@ try:
 except ImportError:
 	from sdv.doc.waterloo.docitem_validator import *
 
-__version__ = "0.5.5"
+__version__ = "0.6.0"
+# - 0.6.0 [2026-03-25]	Definitions now Term plus Variations.
+# - 0.5.6 [2026-03-20]	Rule SEE-006 restricted to documentable objects.
 # - 0.5.5 [2026-03-03]	Clickable nodes in Sphinx output.
 # - 0.5.4 [2026-02-25]	Doctests; Documentation review
 # - 0.5.3 [2026-02-24]	Doctests; Documentation review

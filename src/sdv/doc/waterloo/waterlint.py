@@ -27,7 +27,11 @@ from jsonschema import Draft202012Validator
 #from jsonschema import JSONDecodeError
 import jsonschema.exceptions
 
-__version__ = "0.6.0"
+__version__ = "0.6.4"
+# - 0.6.4 [2026-03-20]	Analyze --ignore parameter upfront, no commas allowed.
+# - 0.6.3 [2026-03-19]	Subcommand render-html5: Option --no-render-preamble
+# - 0.6.2 [2026-03-19]	Subcommand render-html5: Types, Constants, Variables
+# - 0.6.1 [2026-03-19]	Subcommand render-html5: JS-code separated and moved to special directory.
 # - 0.6.0 [2026-03-18]	Subcommand add-example-json
 # - 0.5.0 [2026-03-05]	__WTRL_SCOPES__ in JSON which allows future customization of scopes.
 # - 0.4.0 [2026-02-22]	Subcommand render-json: Node "definition_inherited_from_module", see also sdv.doc.waterloo.docitem_convert.
@@ -84,7 +88,7 @@ with contextlib.redirect_stdout(sys.stderr):
 #===== Constants ==============================================#
 
 #----- Schema versions, keep up to date -----------------------#
-WTRL_JSON_SCHEMA_VERSION = "0.0.6"
+WTRL_JSON_SCHEMA_VERSION = "0.1.0"
 
 #----- Add subcommands here -----------------------------------#
 SUBCOMMANDS = (
@@ -372,7 +376,7 @@ def _add_example_json_command(args: argparse.Namespace) -> int:
 		doc["__WTRL_EXAMPLES__"] = examples
 		version_obj = doc.get("__WTRL_VERSION__")
 		if isinstance(version_obj, dict):
-			version_obj["schema"] = "0.0.6"
+			version_obj["schema"] = WTRL_JSON_SCHEMA_VERSION
 
 		basedir_abs: Path | None = None
 		if getattr(args, "basedir", None):
@@ -584,6 +588,9 @@ def _validate_command(args: argparse.Namespace) -> int:
 	out_diag_json	=  getattr(args, "out_diag_json", None)
 #--------------------------------------------------------------#
 	if getattr(args, "ignore", None):
+		if "," in args.ignore:
+			print(f"Commas are not allowed in --ignore; expect a single rule or a space-separated list of rules, e.g \"VLII-001 SEE-006\"")
+			return 2
 		for rule in args.ignore.split():
 			try:
 				tr.add_ignore_rule(rule)
@@ -1317,6 +1324,7 @@ def _render_html5_command(args: argparse.Namespace) -> int:
 			out_dir=getattr(args, "out_dir", None),
 			css_path=getattr(args, "css_file", None),
 			pygments_theme=getattr(args, "pygments_theme", None),
+			no_render_preamble=getattr(args, "no_render_preamble", False),
 		)
 		tr.add_info(f"HTML5 documentation written to: {out_path}")
 	except SOURCE_CODE_ERRORS:
@@ -1775,6 +1783,7 @@ def _build_parser() -> argparse.ArgumentParser:
 	rh_out.add_argument("--out-dir", dest="out_dir", metavar="DIR", help="Write HTML to DIR with generated filename.")
 	render_html5.add_argument("--css", dest="css_file", metavar="FILE", help="Additional CSS file to embed into output HTML.")
 	render_html5.add_argument("--pygments-theme", dest="pygments_theme", default="gruvbox-light", metavar="THEME", help="Pygments style name for rendered examples (default: gruvbox-light).")
+	render_html5.add_argument("--no-render-preamble", dest="no_render_preamble", action="store_true", help="Do not render section 'Preamble' in HTML output.")
 	render_html5.add_argument("--debug", action="store_true", help="Emit debugging data to stderr (reserved)")
 
 #----- gen-minimal --------------------------------------------#

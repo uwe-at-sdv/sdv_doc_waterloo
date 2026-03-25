@@ -254,6 +254,13 @@ def expect_label_qualified_identifier(tr : tracer,subtree : DocstringSubtree,pos
 		raise_parsing_error_expected_but_got(tr,tr.get_rule_on_fail(),'qualified identifier', f'{make_got_tag(subtree,cur)}')
 	return s,pos
 
+def expect_label_csv_identifiers(tr : tracer,subtree : DocstringSubtree,pos : int) -> Tuple[str,int]:
+	cur = pos
+	s,pos = expect_label(tr,subtree,pos)
+	if not RE_CSV_IDENTIFIERS_COMPILED.fullmatch(s):
+		raise_parsing_error_expected_but_got(tr,tr.get_rule_on_fail(),'comma-separated list of identifiers', f'{make_got_tag(subtree,cur)}')
+	return s,pos
+
 def expect_text(tr : tracer,subtree : DocstringSubtree,pos : int) -> Tuple[str,int]:
 	cur = pos
 	if pos >= len(subtree):

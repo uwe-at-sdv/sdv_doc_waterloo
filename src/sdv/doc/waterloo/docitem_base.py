@@ -280,11 +280,27 @@ Method_overview:
 				raise_parsing_error(tr,"PRSR-002",f"Label '{label}' appears more than once.")
 # This is the only point where we create a node and add it as a child.
 # All node classes which may have node-like children must be derived
-# from this class.
+# from this class. UPDATE: there's another location in add_child_multilabel.
 			child = cls()
 			child.set_parent(self)
 			child.parse(tr,items)
 			self._items[label] = child
+
+# This method is currently used by docitem_definitions only.
+	def add_child_multilabel(self, tr : tracer, labels: List[str], cls: Type[docitem_base], items: DocstringSubtree) -> None:
+# This is the parent label. We need to know.
+		with traced_section(tr, "{" + ",".join(labels) + "}"):
+# This is the other location where we create a node.
+# Since we can assign a child note to more than one item,
+# the entire construction is no longer a tree.
+			child = cls()
+			child.set_parent(self)
+			child.parse(tr,items)
+			for label in labels:
+				if label in self._items:
+					raise_parsing_error(tr,"PRSR-002",f"Label '{label}' appears more than once.")
+				self._items[label] = child
+
 	def items(self) -> Dict[str,docitem_base]:
 		"""
 Preamble:

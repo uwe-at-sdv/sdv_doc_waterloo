@@ -254,6 +254,16 @@ def build_node_json(node_docstring: docitem_docstring_base, flavour: Flavour) ->
 						"source": None,
 						"terms": cast(WtrlJsonNode_t, [_render_token(t, flavour) for t in inherited_terms]),
 					}
+				def_map: dict[str, WtrlJsonNode_t] = {}
+				for term, variations in node_definitions.map_term_to_variations().items():
+					node_term = node_definitions.item(term)
+					text_node = build_node_section_json(term, node_term, flavour)
+					def_map[term] = {
+						"variations": cast(WtrlJsonNode_t, [_render_token(v, flavour) for v in variations]),
+						"text": text_node,
+					}
+				m[label] = def_map
+				continue
 		m[label] = build_node_section_json(label,node_docstring.item(label),flavour)
 	return m
 

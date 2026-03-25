@@ -1233,6 +1233,8 @@ Method_overview:
 	def __init__(self) -> None:
 		super().__init__()
 		self._inherited_defitems = docitem_inherited_defitems()
+# This helps us to validate DEF-018 and DEF-021.
+		self._map_term_to_variations: Dict[str,List[str]] = {}
 	def label(self) -> str:
 		return "Definitions"
 	def parse(self,tr : tracer,entries : DocstringSubtree) -> None:
@@ -1260,22 +1262,33 @@ Raises:
 		pos = 0
 		while pos < len(entries):
 			with rule_on_fail(tr,"DEF-004"):
-				label,pos = expect_label_identifier(tr,entries,pos)
+				label,pos = expect_label_csv_identifiers(tr,entries,pos)
 # DEF-010: "_inherit" is special:
 			if label == "_inherit":
 				if found_inherited:
 # "_inherit" only once.
 					raise raise_parsing_error(tr,"PRSR-008","Duplicate subsection '_inherit'.")
+				items,pos = expect_list(tr,entries,pos)
 				with traced_section(tr, "_inherit"):
-					self._inherited_defitems.parse(tr,entries[pos])
-				pos += 1
+					self._inherited_defitems.parse(tr,items)
 				found_inherited = True
 			else:
 				items,pos = expect_list(tr,entries,pos)
 				with rule_on_fail(tr,"DEF-006"):
-					self.add_child(tr,label, docitem_definitions_entry, items)
+					labels = list(map(str.strip,label.split(",")))
+					if not labels:
+						continue
+					self.add_child_multilabel(tr,labels, docitem_definitions_entry, items)
+					self._map_term_to_variations[labels[0]] = labels[1:]
 	def inherited(self) -> List[str]:
 		return self._inherited_defitems.items()
+	def terms(self) -> set[str]:
+		return set(self._map_term_to_variations.keys())
+	def map_term_to_variations(self) -> Dict[str, List[str]]:
+		return {term: vars_ for term, vars_ in self._map_term_to_variations.items()}
+# Map set of terms into set of terms and variations.
+	def terms_and_variations(self,terms: set[str]) -> set[str]:
+		return set(sum([list(self._map_term_to_variations[term]) for term in terms],list(self._map_term_to_variations.keys())))
 
 #----- docitem class Terminology ------------------------------#
 

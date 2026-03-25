@@ -165,6 +165,10 @@ RE_QUALIFIED_IDENTIFIER_COMPILED : Final[re.Pattern[str]] = re.compile(RE_QUALIF
 RE_LABEL : Final[str] = RE_QUALIFIED_IDENTIFIER + ":"
 RE_LABEL_COMPILED : Final[re.Pattern[str]] = re.compile(RE_LABEL)
 
+# Required for Definitions
+RE_CSV_IDENTIFIERS = r"[A-Za-z_][A-Za-z0-9_]*(\s*[,]\s*[A-Za-z_][A-Za-z0-9_]*)*"
+RE_CSV_IDENTIFIERS_COMPILED = re.compile(RE_CSV_IDENTIFIERS)
+
 # ANSI SGR escape sequences, e.g. "\x1b[31m"
 RE_ANSI_SGR: Final[str] = r"\x1b\[[0-9;]*m"
 RE_ANSI_SGR_COMPILED: Final[re.Pattern[str]] = re.compile(RE_ANSI_SGR)

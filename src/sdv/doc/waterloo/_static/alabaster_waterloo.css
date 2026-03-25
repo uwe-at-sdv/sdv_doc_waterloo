@@ -204,6 +204,27 @@ div.code-block-caption span.caption-text {
 	font-style:italic;
 	font-weight:normal;
 	}
+
+/*----- table stuff ------------------------------------------*/
+
+/* Prevent docstring boxes from expanding horizontally due to long pre/code
+    elements (e.g. long Literal["..."] type annotations).
+    max-width:82% keeps the right td in the intended table proportion;
+    pre-wrap + break-all then wraps verbatim content at any character. */
+
+table.wtrl-box td:nth-child(2) {
+	max-width: 82%;
+	}
+
+table.wtrl-box td:nth-child(2) pre,
+table.wtrl-box td:nth-child(2) span.pre,
+table.wtrl-box td:nth-child(2) code.literal {
+	white-space: pre-wrap;
+	overflow-wrap: anywhere;
+	word-break: break-all;
+	}
+
+
 table caption {
 	text-align:center;
 	font-size:80%;

@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import json
 import html
+import importlib.resources as importlib_resources
 from pathlib import Path
 from typing import Any, Dict, List, Tuple
 
@@ -53,6 +54,26 @@ def _load_one_json(path: str) -> Dict[str, Any]:
 	if not isinstance(doc, dict):
 		raise RuntimeError(f"input is not a JSON object: {path}")
 	return doc
+
+
+def _load_render_js_source() -> str:
+	"""Load JavaScript source for render-html5 from packaged data."""
+	rel_path = Path("js") / "waterlint_render_html5.js"
+	candidates: list[Path] = []
+	candidates.append(Path(__file__).resolve().parent / rel_path)
+	try:
+		p = importlib_resources.files("sdv.doc.waterloo") / "js" / "waterlint_render_html5.js"
+		candidates.append(Path(str(p)))
+	except Exception:
+		pass
+	for p in candidates:
+		if p.is_file():
+			return p.read_text(encoding="utf-8")
+	raise RuntimeError(
+		"Cannot load JavaScript asset 'js/waterlint_render_html5.js'. "
+		+ "Tried: "
+		+ ", ".join(str(p) for p in candidates)
+	)
 
 
 def _build_examples_html_map(merged: Dict[str, Any], pygments_theme: str | None = None) -> Tuple[Dict[str, str], str]:
@@ -216,6 +237,19 @@ def _build_ui_index(merged: Dict[str, Any]) -> List[Dict[str, str]]:
 	return index
 
 
+def _drop_preamble_sections(merged: Dict[str, Any]) -> None:
+	"""Remove top-level doc section 'Preamble' from all rendered object nodes."""
+	objects = _require_dict("objects", merged.get("objects"))
+	for _, node in objects.items():
+		if not isinstance(node, dict):
+			continue
+		doc = node.get("doc")
+		if not isinstance(doc, dict):
+			continue
+		if "Preamble" in doc:
+			doc.pop("Preamble", None)
+
+
 def _build_html_doc(merged: Dict[str, Any]) -> str:
 	meta = _require_dict("meta", merged.get("meta"))
 	index = _build_ui_index(merged)
@@ -271,658 +305,8 @@ html, body { margin:0; padding:0; font-family: ui-sans-serif, system-ui, -apple-
 a.wtrl-func:visited, a.wtrl-type:visited, a.wtrl-var:visited, a.wtrl-ref:visited { color:inherit; }
 """
 
-	js = """
-const WTRL_DATA = __DATA_JSON__;
-const WTRL_INDEX = __INDEX_JSON__;
-const WTRL_EXAMPLES_HTML = __EXAMPLES_HTML_JSON__;
+	js = _load_render_js_source()
 
-function byId(id) { return document.getElementById(id); }
-const TARGET_TO_ANCHOR = new Map();
-for (const e of WTRL_INDEX) {
-  if (e.anchor) TARGET_TO_ANCHOR.set(e.target, e.anchor);
-}
-const NORM_RE = /\\|(?:Must|must|Must_not|must_not|Should|should|Should_not|should_not|May|may)\\|/g;
-const TOK_RE = /(\\|(?:Must|must|Must_not|must_not|Should|should|Should_not|should_not|May|may)\\|)|(\\|(?:None|Self|True|False)\\|)|(\\|([A-Za-z_][A-Za-z0-9_]*)\\|`([^`]*)`)/g;
-const ROLE_CLASS = {
-  "func": "wtrl-func wtrl_func",
-  "type": "wtrl-type wtrl_type",
-  "var": "wtrl-var wtrl_var",
-  "label": "wtrl-label wtrl_label",
-  "value": "wtrl-value wtrl_value",
-  "mod": "wtrl-mod wtrl_mod",
-  "attr": "wtrl-attr wtrl_attr",
-  "lit": "wtrl-lit wtrl_lit",
-  "dfn": "wtrl-dfn wtrl_dfn",
-  "term": "wtrl-term wtrl_term",
-  "op": "wtrl-op wtrl_op",
-  "file": "wtrl-file wtrl_file",
-  "cmd": "wtrl-cmd wtrl_cmd",
-  "opt": "wtrl-opt wtrl_opt",
-  "tag": "wtrl-tag wtrl_tag",
-  "ref": "wtrl-ref wtrl_ref"
-};
-
-function buildAnchorMap() {
-  const m = new Map();
-  for (const e of WTRL_INDEX) {
-    if (e.anchor) m.set(e.anchor, e.target);
-  }
-  return m;
-}
-
-const anchorMap = buildAnchorMap();
-
-function parseRefBody(body) {
-  const m = body.match(/^(.*)\\s<([^>]+)>$/);
-  if (!m) return { label: body, target: "" };
-  return { label: m[1].trim(), target: m[2].trim() };
-}
-
-function stripOuterQuotes(s) {
-  const t = String(s || "");
-  if ((t.startsWith("'") && t.endsWith("'")) || (t.startsWith('"') && t.endsWith('"'))) {
-    return t.slice(1, -1);
-  }
-  return t;
-}
-
-function inferSigName(node, targetQid) {
-  const sig = (node && typeof node.signature === "object") ? node.signature : null;
-  const txt = sig && typeof sig.text === "string" ? sig.text : "";
-  const i = txt.indexOf("(");
-  if (i > 0) return txt.slice(0, i).trim();
-  return String(targetQid || "").split(".").slice(-1)[0] || "callable";
-}
-
-function makeSigLine() {
-  const d = document.createElement("div");
-  d.className = "wtrl-signature-line";
-  return d;
-}
-
-function renderSignature(node, targetQid, container) {
-  container.innerHTML = "";
-  const sig = (node && typeof node.signature === "object") ? node.signature : null;
-  if (!sig) return;
-
-  const decorators = Array.isArray(node.decorators) ? node.decorators : [];
-  for (const deco of decorators) {
-    const line = makeSigLine();
-    const sp = document.createElement("span");
-    sp.className = "wtrl-attr wtrl_attr";
-    sp.textContent = String(deco);
-    line.appendChild(sp);
-    container.appendChild(line);
-  }
-
-  const head = makeSigLine();
-  const fn = document.createElement("span");
-  fn.className = "wtrl-func wtrl_func";
-  fn.textContent = inferSigName(node, targetQid);
-  head.appendChild(fn);
-  head.appendChild(document.createTextNode("("));
-  container.appendChild(head);
-
-  const params = Array.isArray(sig.parameters) ? sig.parameters : [];
-  for (const p of params) {
-    const line = makeSigLine();
-    const kind = String(p && p.kind || "");
-    const rawName = String((p && p.name) || "");
-    let pname = rawName;
-    if (kind === "VAR_POSITIONAL") pname = "*" + pname;
-    if (kind === "VAR_KEYWORD") pname = "**" + pname;
-
-    line.appendChild(document.createTextNode("    "));
-    const psp = document.createElement("span");
-    psp.className = "wtrl-var wtrl_var";
-    psp.textContent = pname;
-    line.appendChild(psp);
-
-    const ann = p && p.annotation;
-    if (ann !== null && ann !== undefined && String(ann).trim() !== "") {
-      line.appendChild(document.createTextNode(": "));
-      const asp = document.createElement("span");
-      asp.className = "wtrl-type wtrl_type";
-      asp.textContent = stripOuterQuotes(String(ann));
-      line.appendChild(asp);
-    }
-    if (p && p.default !== null && p.default !== undefined) {
-      line.appendChild(document.createTextNode(" = " + String(p.default)));
-    }
-    container.appendChild(line);
-  }
-
-  const tail = makeSigLine();
-  tail.appendChild(document.createTextNode(")"));
-  const ret = sig.returns;
-  if (ret !== null && ret !== undefined && String(ret).trim() !== "") {
-    tail.appendChild(document.createTextNode(" -> "));
-    const rsp = document.createElement("span");
-    rsp.className = "wtrl-type wtrl_type";
-    rsp.textContent = stripOuterQuotes(String(ret));
-    tail.appendChild(rsp);
-  }
-  container.appendChild(tail);
-}
-
-function formatSectionHead(key) {
-  return String(key || "").replaceAll("_", " ");
-}
-
-function getRoleClassForSubsectionHead(path, key) {
-  const section = String((path && path.length > 0) ? path[0] : "");
-  if (section === "Public_types") return "wtrl-type wtrl_type";
-  if (section === "Public_variables" || section === "Public_constants") return "wtrl-var wtrl_var";
-  if (section === "Class_overview") return "wtrl-type wtrl_type";
-  if (section === "Function_overview" || section === "Method_overview") return "wtrl-func wtrl_func";
-  if (section === "Raises") return "wtrl-type wtrl_type";
-  if (section === "Parameters") return "wtrl-var wtrl_var";
-  return "";
-}
-
-function getRoleClassForLeaf(path) {
-  const section = String((path && path.length > 0) ? path[0] : "");
-  const subsection = String((path && path.length > 1) ? path[1] : "");
-  if (section === "Public_functions" || section === "Public_methods") return "wtrl-func wtrl_func";
-  if (section === "Public_classes") return "wtrl-type wtrl_type";
-  if (section === "Derived_from") return "wtrl-type wtrl_type";
-  if (section === "Contract" && subsection === "base") return "wtrl-func wtrl_func";
-  if (section === "Preamble" && (subsection === "profile" || subsection === "scope" || subsection === "status")) {
-    return "wtrl-value wtrl_value";
-  }
-  if (section === "Preamble" && subsection === "normative_sections") return "wtrl-label wtrl_label";
-  return "";
-}
-
-function appendMaybeStyledText(parent, txt, roleCls) {
-  if (!roleCls) {
-    appendInlineTokens(parent, txt);
-    return;
-  }
-  const sp = document.createElement("span");
-  sp.className = roleCls;
-  appendInlineTokens(sp, txt);
-  parent.appendChild(sp);
-}
-
-const FREEFORM_SECTIONS = new Set(["Description", "Definitions", "Terminology", "Returns", "Notes"]);
-
-function isFreeformPath(path) {
-  const section = String((path && path.length > 0) ? path[0] : "");
-  return FREEFORM_SECTIONS.has(section);
-}
-
-function renderFreeformText(container, txt) {
-  const lines = String(txt).split(/\\r?\\n/);
-  const paras = [];
-  let cur = [];
-  for (const raw of lines) {
-    if (raw.trim() === "|") {
-      if (cur.length > 0) {
-        paras.push(cur.join(" "));
-        cur = [];
-      }
-      continue;
-    }
-    const t = raw.trim();
-    if (t) cur.push(t);
-  }
-  if (cur.length > 0) paras.push(cur.join(" "));
-  if (paras.length === 0) paras.push(String(txt).trim());
-
-  for (const para of paras) {
-    const p = document.createElement("p");
-    p.className = "wtrl-text";
-    appendInlineTokens(p, para);
-    container.appendChild(p);
-  }
-}
-
-function isNormativeSectionsPath(path) {
-  return (
-    Array.isArray(path) &&
-    path.length >= 2 &&
-    String(path[0]) === "Preamble" &&
-    String(path[1]) === "normative_sections"
-  );
-}
-
-function renderCompactNormativeSections(container, items) {
-  const vals = items.map(v => String(v));
-  for (let i = 0; i < vals.length; i += 4) {
-    const row = vals.slice(i, i + 4);
-    const p = document.createElement("p");
-    p.className = "wtrl-text";
-    for (let j = 0; j < row.length; j += 1) {
-      const sp = document.createElement("span");
-      sp.className = "wtrl-label wtrl_label";
-      sp.textContent = row[j];
-      p.appendChild(sp);
-      if (j < row.length - 1) p.appendChild(document.createTextNode(", "));
-    }
-    container.appendChild(p);
-  }
-}
-
-function _sourcePointerToQid(src) {
-  const pfx = "/__WTRL_OBJECTS__/";
-  const s = String(src || "");
-  if (s.startsWith(pfx)) return s.slice(pfx.length);
-  return "";
-}
-
-function isDefinitionsInheritedSubsectionPath(path) {
-  return (
-    Array.isArray(path) &&
-    path.length >= 2 &&
-    String(path[0]) === "Definitions" &&
-    String(path[1]) === "Definitions inherited from module"
-  );
-}
-
-function renderDefinitionsInheritedContent(container, value) {
-  const obj = (value && typeof value === "object" && !Array.isArray(value)) ? value : {};
-  const srcQid = _sourcePointerToQid(obj.source || "");
-  const anchor = srcQid ? TARGET_TO_ANCHOR.get(srcQid) : "";
-  const terms = Array.isArray(obj.terms) ? obj.terms : [];
-
-  const ul = document.createElement("ul");
-  ul.className = "wtrl-list";
-  for (const term of terms) {
-    const li = document.createElement("li");
-    if (anchor) {
-      const a = document.createElement("a");
-      a.className = "wtrl-ref wtrl_ref wtrl-dfn wtrl_dfn";
-      a.href = "#" + anchor;
-      a.textContent = String(term);
-      li.appendChild(a);
-    } else {
-      const sp = document.createElement("span");
-      sp.className = "wtrl-dfn wtrl_dfn";
-      sp.textContent = String(term);
-      li.appendChild(sp);
-    }
-    ul.appendChild(li);
-  }
-  container.appendChild(ul);
-}
-
-function isSeeAlsoPath(path) {
-  return Array.isArray(path) && path.length >= 1 && String(path[0]) === "See_also";
-}
-
-function resolveSeeAlsoTarget(entry, currentQid) {
-  const raw = String(entry || "").trim();
-  if (!raw) return "";
-  if (TARGET_TO_ANCHOR.has(raw)) return raw;
-
-  const cur = String(currentQid || "");
-  const curParts = cur.split(".").filter(Boolean);
-  if (raw.indexOf(".") < 0 && curParts.length > 1) {
-    for (let i = curParts.length - 1; i >= 1; i -= 1) {
-      const cand = curParts.slice(0, i).concat([raw]).join(".");
-      if (TARGET_TO_ANCHOR.has(cand)) return cand;
-    }
-  }
-
-  let hit = "";
-  for (const qid of TARGET_TO_ANCHOR.keys()) {
-    if (qid.endsWith("." + raw)) {
-      if (hit && hit !== qid) return "";
-      hit = qid;
-    }
-  }
-  return hit;
-}
-
-function appendSeeAlsoEntry(parent, entry, currentQid) {
-  const raw = String(entry || "").trim();
-  if (!raw) return;
-  const targetQid = resolveSeeAlsoTarget(raw, currentQid);
-  if (!targetQid) {
-    appendMaybeStyledText(parent, raw, "wtrl-func wtrl_func");
-    return;
-  }
-  const anchor = TARGET_TO_ANCHOR.get(targetQid);
-  if (!anchor) {
-    appendMaybeStyledText(parent, raw, "wtrl-func wtrl_func");
-    return;
-  }
-  const a = document.createElement("a");
-  a.className = "wtrl-ref wtrl_ref wtrl-func wtrl_func";
-  a.href = "#" + anchor;
-  a.textContent = raw;
-  parent.appendChild(a);
-}
-
-function appendInlineTokens(parent, txt) {
-  let cur = 0;
-  let m;
-  TOK_RE.lastIndex = 0;
-  while ((m = TOK_RE.exec(txt)) !== null) {
-    if (m.index > cur) parent.appendChild(document.createTextNode(txt.slice(cur, m.index)));
-    if (m[1]) {
-      const s = document.createElement("span");
-      s.className = "wtrl-norm wtrl_norm";
-      s.textContent = m[1];
-      parent.appendChild(s);
-    } else if (m[2]) {
-      const s = document.createElement("span");
-      s.className = "wtrl-value wtrl_value";
-      s.textContent = m[2];
-      parent.appendChild(s);
-    } else if (m[3]) {
-      const role = m[4];
-      const body = m[5];
-      const cls = ROLE_CLASS[role];
-      if (!cls) {
-        parent.appendChild(document.createTextNode(m[3]));
-      } else if (role === "ref") {
-        const rb = parseRefBody(body);
-        const a = document.createElement("a");
-        a.className = cls;
-        a.textContent = rb.label || body;
-        if (rb.target.startsWith("http://") || rb.target.startsWith("https://")) {
-          a.href = rb.target;
-          a.target = "_blank";
-          a.rel = "noopener noreferrer";
-        } else if (rb.target.startsWith("wtrl://")) {
-          const qid = rb.target.slice("wtrl://".length);
-          const anchor = TARGET_TO_ANCHOR.get(qid);
-          if (anchor) a.href = "#" + anchor;
-        }
-        if (!a.getAttribute("href")) {
-          const sp = document.createElement("span");
-          sp.className = cls;
-          sp.textContent = m[3];
-          parent.appendChild(sp);
-        } else {
-          parent.appendChild(a);
-        }
-      } else if (role === "lit" && (body === "None" || body === "Self" || body === "True" || body === "False")) {
-        const s = document.createElement("span");
-        s.className = "wtrl-value wtrl_value";
-        s.textContent = body;
-        parent.appendChild(s);
-      } else {
-        const s = document.createElement("span");
-        s.className = cls;
-        s.textContent = body;
-        parent.appendChild(s);
-      }
-    }
-    cur = TOK_RE.lastIndex;
-  }
-  if (cur < txt.length) parent.appendChild(document.createTextNode(txt.slice(cur)));
-}
-
-function renderValue(value, container, depth, path, currentQid) {
-  const pth = Array.isArray(path) ? path : [];
-  const leafRoleCls = getRoleClassForLeaf(pth);
-  if (value === null || value === undefined) {
-    const p = document.createElement("p");
-    p.className = "wtrl-text";
-    appendMaybeStyledText(p, "null", leafRoleCls);
-    container.appendChild(p);
-    return;
-  }
-  if (typeof value === "string") {
-    if (isSeeAlsoPath(pth)) {
-      const p = document.createElement("p");
-      p.className = "wtrl-text";
-      const vals = value.split(",").map(s => s.trim()).filter(Boolean);
-      for (let i = 0; i < vals.length; i += 1) {
-        appendSeeAlsoEntry(p, vals[i], currentQid);
-        if (i < vals.length - 1) p.appendChild(document.createTextNode(", "));
-      }
-      container.appendChild(p);
-      return;
-    }
-    if (isNormativeSectionsPath(pth)) {
-      const vals = value.split(",").map(s => s.trim()).filter(Boolean);
-      renderCompactNormativeSections(container, vals);
-      return;
-    }
-    if (isFreeformPath(pth)) {
-      renderFreeformText(container, value);
-      return;
-    }
-    const p = document.createElement("p");
-    p.className = "wtrl-text";
-    appendMaybeStyledText(p, value, leafRoleCls);
-    container.appendChild(p);
-    return;
-  }
-  if (Array.isArray(value)) {
-    if (isSeeAlsoPath(pth) && value.every(item => typeof item === "string")) {
-      const ul = document.createElement("ul");
-      ul.className = "wtrl-list";
-      for (const item of value) {
-        const li = document.createElement("li");
-        appendSeeAlsoEntry(li, String(item), currentQid);
-        ul.appendChild(li);
-      }
-      container.appendChild(ul);
-      return;
-    }
-    if (isNormativeSectionsPath(pth) && value.every(item => typeof item === "string")) {
-      renderCompactNormativeSections(container, value);
-      return;
-    }
-    if (isFreeformPath(pth) && value.every(item => typeof item === "string")) {
-      renderFreeformText(container, value.join("\\n"));
-      return;
-    }
-    const ul = document.createElement("ul");
-    ul.className = "wtrl-list";
-    for (const item of value) {
-      const li = document.createElement("li");
-      if (typeof item === "string") appendMaybeStyledText(li, item, leafRoleCls);
-      else renderValue(item, li, depth + 1, pth, currentQid);
-      ul.appendChild(li);
-    }
-    container.appendChild(ul);
-    return;
-  }
-  if (typeof value === "object") {
-    if (isDefinitionsInheritedSubsectionPath(pth)) {
-      renderDefinitionsInheritedContent(container, value);
-      return;
-    }
-
-    let entries = Object.entries(value);
-    if (depth === 0 && pth.length === 0) {
-      let inheritedNode;
-      entries = entries.filter(([k, v]) => {
-        if (k === "definitions_inherited_from_module") {
-          inheritedNode = v;
-          return false;
-        }
-        return true;
-      });
-      if (inheritedNode !== undefined) {
-        let injected = false;
-        entries = entries.map(([k, v]) => {
-          if (k !== "Definitions") return [k, v];
-          injected = true;
-          if (v && typeof v === "object" && !Array.isArray(v)) {
-            const vv = Object.assign({}, v);
-            vv["Definitions inherited from module"] = inheritedNode;
-            return [k, vv];
-          }
-          return [k, { "Definitions inherited from module": inheritedNode }];
-        });
-        if (!injected) {
-          entries.push(["Definitions", { "Definitions inherited from module": inheritedNode }]);
-        }
-      }
-    }
-
-    for (const [k, v] of entries) {
-      const block = document.createElement("div");
-      block.className = depth === 0 ? "wtrl-section" : "wtrl-subsection";
-      const h = document.createElement("div");
-      h.className = depth === 0 ? "wtrl-section-head" : "wtrl-subsection-head";
-      if (depth === 0) {
-        h.textContent = formatSectionHead(k);
-      } else {
-        if (k === "normative_sections") h.textContent = formatSectionHead(k);
-        else h.textContent = k;
-        const roleCls = getRoleClassForSubsectionHead(pth, k);
-        if (roleCls) h.className += " " + roleCls;
-      }
-      block.appendChild(h);
-      renderValue(v, block, depth + 1, pth.concat([k]), currentQid);
-      container.appendChild(block);
-    }
-    return;
-  }
-  const p = document.createElement("p");
-  p.className = "wtrl-text";
-  appendMaybeStyledText(p, String(value), leafRoleCls);
-  container.appendChild(p);
-}
-
-function renderHitList(entries) {
-  const host = byId("wtrl-hitlist");
-  host.innerHTML = "";
-  for (const e of entries) {
-    const btn = document.createElement("button");
-    btn.className = "wtrl-hit";
-    btn.type = "button";
-    btn.innerHTML = `<span class="wtrl-kind">${e.kind}</span>${e.label}`;
-    btn.addEventListener("click", () => selectTarget(e.target, true));
-    host.appendChild(btn);
-  }
-}
-
-function renderDoc(targetQid) {
-  const objects = WTRL_DATA.objects || {};
-  const examples = WTRL_DATA.examples || {};
-  const node = objects[targetQid];
-  byId("wtrl-title").textContent = targetQid || "(no selection)";
-  if (!node) {
-    byId("wtrl-sub").textContent = "No object found.";
-    byId("wtrl-signature").innerHTML = "";
-    byId("wtrl-doc").innerHTML = "";
-    byId("wtrl-examples").innerHTML = "";
-    byId("wtrl-obj").textContent = "";
-    return;
-  }
-  byId("wtrl-sub").textContent = "Waterloo docstring";
-  renderSignature(node, targetQid, byId("wtrl-signature"));
-  const docHost = byId("wtrl-doc");
-  docHost.innerHTML = "";
-  if (node.doc && typeof node.doc === "object") {
-    renderValue(node.doc, docHost, 0, [], targetQid);
-  } else {
-    const p = document.createElement("p");
-    p.className = "wtrl-text";
-    p.textContent = "(no doc node)";
-    docHost.appendChild(p);
-  }
-  const exHost = byId("wtrl-examples");
-  exHost.innerHTML = "";
-  const exPtrs = Array.isArray(node.examples) ? node.examples : [];
-  for (const ptr of exPtrs) {
-    if (typeof ptr !== "string") continue;
-    const pfx = "/__WTRL_EXAMPLES__/";
-    if (!ptr.startsWith(pfx)) continue;
-    const exKey = ptr.slice(pfx.length);
-    const exNode = examples[exKey];
-    if (!exNode || typeof exNode !== "object") continue;
-    const sec = document.createElement("div");
-    sec.className = "wtrl-section wtrl-examples";
-    const h = document.createElement("div");
-    h.className = "wtrl-section-head";
-    h.textContent = "Example";
-    sec.appendChild(h);
-    if (typeof exNode.path === "string" && exNode.path) {
-      const head = document.createElement("div");
-      head.className = "wtrl-example-head";
-      const sp = document.createElement("span");
-      sp.className = "wtrl-file wtrl_file";
-      sp.textContent = exNode.path;
-      head.appendChild(sp);
-      sec.appendChild(head);
-    }
-    const code = document.createElement("div");
-    code.className = "wtrl-example-code";
-    code.innerHTML = WTRL_EXAMPLES_HTML[exKey] || "<pre><code>(no code)</code></pre>";
-    sec.appendChild(code);
-    exHost.appendChild(sec);
-  }
-  byId("wtrl-obj").textContent = JSON.stringify(node, null, 2);
-}
-
-function selectTarget(targetQid, updateHash) {
-  if (updateHash) {
-    const hit = WTRL_INDEX.find(x => x.target === targetQid && x.anchor);
-    if (hit && hit.anchor) {
-      location.hash = hit.anchor;
-    } else {
-      location.hash = "";
-    }
-  }
-  byId("wtrl-search").value = targetQid;
-  renderDoc(targetQid);
-}
-
-function handleHashNavigation() {
-  const h = (location.hash || "").replace(/^#/, "");
-  if (!h) return false;
-  const target = anchorMap.get(h);
-  if (!target) return false;
-  selectTarget(target, false);
-  return true;
-}
-
-function setupSearch() {
-  const inp = byId("wtrl-search");
-  const clr = byId("wtrl-search-clear");
-  const dl = byId("wtrl-search-list");
-  for (const e of WTRL_INDEX) {
-    const o = document.createElement("option");
-    o.value = e.label;
-    dl.appendChild(o);
-  }
-  inp.addEventListener("input", () => {
-    const q = inp.value.trim().toLowerCase();
-    if (!q) {
-      renderHitList(WTRL_INDEX);
-      return;
-    }
-    const hit = WTRL_INDEX.filter(e => e.label.toLowerCase().includes(q));
-    renderHitList(hit);
-    const exact = WTRL_INDEX.find(e => e.label === inp.value);
-    if (exact) {
-      selectTarget(exact.target, true);
-    }
-  });
-  if (clr) {
-    clr.addEventListener("click", () => {
-      inp.value = "";
-      renderHitList(WTRL_INDEX);
-      inp.focus();
-    });
-  }
-}
-
-window.addEventListener("hashchange", () => { handleHashNavigation(); });
-window.addEventListener("DOMContentLoaded", () => {
-  byId("wtrl-scope").textContent = String((WTRL_DATA.meta || {}).scope || "");
-  byId("wtrl-flavour").textContent = String((WTRL_DATA.meta || {}).flavour || "");
-  byId("wtrl-modules").textContent = ((WTRL_DATA.meta || {}).modules || []).join(", ");
-  byId("wtrl-num-classes").textContent = String(Object.keys(WTRL_DATA.toc_classes || {}).length);
-  byId("wtrl-num-callables").textContent = String(Object.keys(WTRL_DATA.toc_callables || {}).length);
-  setupSearch();
-  renderHitList(WTRL_INDEX);
-  if (!handleHashNavigation()) {
-    const first = WTRL_INDEX.find(e => e.kind === "mod") || WTRL_INDEX[0];
-    if (first) selectTarget(first.target, true);
-  }
-});
-"""
 
 	css_extra = str(merged.get("meta", {}).get("css_extra", ""))
 	css_override = bool(merged.get("meta", {}).get("css_override", False))
@@ -987,8 +371,11 @@ def render_html5(
 	out_dir: str | None,
 	css_path: str | None = None,
 	pygments_theme: str | None = None,
+	no_render_preamble: bool = False,
 ) -> str:
 	merged, scope, flavour = _merge_docs_strict(input_paths)
+	if no_render_preamble:
+		_drop_preamble_sections(merged)
 	if css_path:
 		with open(css_path, "r", encoding="utf-8") as fh:
 			merged["meta"]["css_extra"] = fh.read()
