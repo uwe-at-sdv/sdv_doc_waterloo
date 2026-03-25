@@ -38,7 +38,8 @@ from pygments.token import Error, Generic, Keyword, Name, String, Literal, Numbe
 
 #----- Changelog ----------------------------------------------#
 
-__version__ = "0.3.0"
+__version__ = "0.4.0"
+# - 0.4.0 [2026-03-25]	Refactoring "Definitions": Labels are now CSV-lists of identifiers.
 # - 0.3.0 [2026-03-14]	Added handling for bullet list markers (lines starting with "-", "+", or "*")
 # 			in the `highlight_line` method, treating them as keywords for syntax highlighting.
 # - 0.2.0 [2026-03-10]	Added comprehensive comments and documentation to the code,
@@ -143,6 +144,10 @@ RE_REF_ARG = re.compile(r"^(.*?)\s*<([^<>]+)>\s*$")
 SUBSECTIONS_WITH_FREE_FORM_LABELS = (
 	"Notes",
 	"Terminology"
+	)
+
+SUBSECTIONS_WITH_CSV_IDENTIFIER_LABELS = (
+	"Definitions"
 	)
 
 PREAMBLE_BUILTIN_SUBSECTIONS = frozenset(("profile", "normative_sections", "status", "scope"))
@@ -355,6 +360,8 @@ class PythonWaterlooLexer(PythonLexer):
 
 	def _find_subsection_match(self, stripped: str) -> re.Match[str] | None:
 		if self._current_section in SUBSECTIONS_WITH_FREE_FORM_LABELS:
+			return RE_SUBSECTION_ANY.match(stripped)
+		elif self._current_section in SUBSECTIONS_WITH_CSV_IDENTIFIER_LABELS:
 			return RE_SUBSECTION_ANY.match(stripped)
 		return RE_SUBSECTION_QUALIFIED_IDENTIFIER.match(stripped)
 
