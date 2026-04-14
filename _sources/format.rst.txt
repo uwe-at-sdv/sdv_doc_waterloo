@@ -433,7 +433,7 @@ The set of tokens currently available is:
 		- Renderers |should| translate this token to a suitable representation in the target format.
 		- Tools |must| preserve the token text if no translation is available.
 
-	* Tokens :wtrl_lit:`|attr|`, :wtrl_lit:`|cmd|`, :wtrl_lit:`|dfn|`, :wtrl_lit:`|file|`, :wtrl_lit:`|func|`, :wtrl_lit:`|label|`, :wtrl_lit:`|lit|`, :wtrl_lit:`|mod|`, :wtrl_lit:`|op|`, :wtrl_lit:`|opt|`, :wtrl_lit:`|ref|`, :wtrl_lit:`|tag|`, :wtrl_lit:`|type|`, :wtrl_lit:`|value|`, :wtrl_lit:`|var|`, :wtrl_lit:`|var_type|`
+	* Tokens :wtrl_lit:`|attr|`, :wtrl_lit:`|cmd|`, :wtrl_lit:`|dfn|`, :wtrl_lit:`|file|`, :wtrl_lit:`|func|`, :wtrl_lit:`|label|`, :wtrl_lit:`|key|`, :wtrl_lit:`|lit|`, :wtrl_lit:`|mod|`, :wtrl_lit:`|op|`, :wtrl_lit:`|opt|`, :wtrl_lit:`|ref|`, :wtrl_lit:`|tag|`, :wtrl_lit:`|type|`, :wtrl_lit:`|value|`, :wtrl_lit:`|var|`, :wtrl_lit:`|var_type|`
 		- Usage: Tools |must| accept the form :wtrl_lit:`|role|\`content\``,
 		  where :wtrl_lit:`role` is one of the above tokens and
 		  :wtrl_lit:`content` is a non-empty string that does not contain backticks.
