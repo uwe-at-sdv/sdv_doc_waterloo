@@ -174,7 +174,7 @@ RE_ANSI_SGR: Final[str] = r"\x1b\[[0-9;]*m"
 RE_ANSI_SGR_COMPILED: Final[re.Pattern[str]] = re.compile(RE_ANSI_SGR)
 
 # Markup tokens for Waterloo roles, e.g. |type|`int` -> :wtrl_type:`int`
-WTRL_MARKUP_ROLES: Final[str] = r"(attr|cmd|dfn|file|func|label|lit|mod|norm|op|opt|ref|tag|term|type|value|var|var_type)"
+WTRL_MARKUP_ROLES: Final[str] = r"(attr|cmd|dfn|file|func|key|label|lit|mod|norm|op|opt|ref|tag|term|type|value|var|var_type)"
 RE_WTRL_MARKUP_BACKTICK: Final[str] = rf"\|{WTRL_MARKUP_ROLES}\|`([^`]+)`"
 RE_WTRL_MARKUP_BACKTICK_COMPILED: Final[re.Pattern[str]] = re.compile(RE_WTRL_MARKUP_BACKTICK)
 

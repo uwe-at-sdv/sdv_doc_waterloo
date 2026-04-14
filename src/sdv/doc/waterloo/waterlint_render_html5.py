@@ -75,6 +75,25 @@ def _load_render_js_source() -> str:
 		+ ", ".join(str(p) for p in candidates)
 	)
 
+def _load_default_css_source() -> str:
+	"""Load default CSS source for render-html5 from packaged data."""
+	rel_path = Path("css") / "wtrl-style.css"
+	candidates: list[Path] = []
+	candidates.append(Path(__file__).resolve().parent / rel_path)
+	try:
+		p = importlib_resources.files("sdv.doc.waterloo") / "css" / "wtrl-style.css"
+		candidates.append(Path(str(p)))
+	except Exception:
+		pass
+	for p in candidates:
+		if p.is_file():
+			return p.read_text(encoding="utf-8")
+	raise RuntimeError(
+		"Cannot load default CSS asset 'css/wtrl-style.css'. "
+		+ "Tried: "
+		+ ", ".join(str(p) for p in candidates)
+	)
+
 
 def _build_examples_html_map(merged: Dict[str, Any], pygments_theme: str | None = None) -> Tuple[Dict[str, str], str]:
 	"""Build HTML-rendered example code map and CSS (via pygments if available)."""
@@ -267,6 +286,11 @@ html, body { margin:0; padding:0; font-family: ui-sans-serif, system-ui, -apple-
 .wtrl-main { padding:20px 24px; }
 .wtrl-meta { font-size:12px; color:#666; margin-bottom:12px; }
 .wtrl-search-row { display:flex; gap:8px; align-items:center; }
+.wtrl-nav { flex:0 0 auto; width:32px; min-width:32px; padding:9px 0; border:1px solid #bbb; border-radius:8px; background:#fff; color:#334155; cursor:pointer; }
+.wtrl-nav:hover { background:#f3f6fa; }
+.wtrl-nav:disabled { opacity:0.45; cursor:default; background:#fff; }
+.wtrl-nav-history { flex:0 0 280px; min-width:180px; max-width:320px; box-sizing:border-box; padding:9px 10px; border:1px solid #bbb; border-radius:8px; background:#fff; color:#334155; font-size:13px; }
+.wtrl-nav-history:disabled { opacity:0.55; background:#f8fafc; }
 .wtrl-input { flex:1 1 auto; min-width:0; box-sizing:border-box; padding:10px 12px; border:1px solid #bbb; border-radius:8px; font-size:14px; }
 .wtrl-clear { flex:0 0 auto; padding:9px 12px; border:1px solid #bbb; border-radius:8px; background:#fff; color:#334155; cursor:pointer; }
 .wtrl-clear:hover { background:#f3f6fa; }
@@ -332,7 +356,11 @@ a.wtrl-func:visited, a.wtrl-type:visited, a.wtrl-var:visited, a.wtrl-ref:visited
       <div class="wtrl-meta"><strong>Classes:</strong> <span id="wtrl-num-classes"></span></div>
       <div class="wtrl-meta"><strong>Callables:</strong> <span id="wtrl-num-callables"></span></div>
       <div class="wtrl-search-row">
-        <input id="wtrl-search" class="wtrl-input" list="wtrl-search-list" placeholder="Search qid / type / var / const">
+        <button id="wtrl-nav-back" class="wtrl-nav" type="button" aria-label="Back"></button>
+        <button id="wtrl-nav-forward" class="wtrl-nav" type="button" aria-label="Forward"></button>
+        <select id="wtrl-nav-history" class="wtrl-nav-history" aria-label="History"></select>
+<!--        <input id="wtrl-search" class="wtrl-input" list="wtrl-search-list" placeholder="Search qid / type / var / const" autocomplete="off" spellcheck="false"> -->
+        <input id="wtrl-search" class="wtrl-input" placeholder="Search qid / type / var / const">
         <button id="wtrl-search-clear" class="wtrl-clear" type="button" aria-label="Clear search">Clear</button>
       </div>
       <datalist id="wtrl-search-list"></datalist>
@@ -379,6 +407,9 @@ def render_html5(
 	if css_path:
 		with open(css_path, "r", encoding="utf-8") as fh:
 			merged["meta"]["css_extra"] = fh.read()
+		merged["meta"]["css_override"] = True
+	else:
+		merged["meta"]["css_extra"] = _load_default_css_source()
 		merged["meta"]["css_override"] = True
 	if pygments_theme:
 		merged["meta"]["pygments_theme"] = pygments_theme

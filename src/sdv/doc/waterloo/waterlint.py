@@ -27,7 +27,9 @@ from jsonschema import Draft202012Validator
 #from jsonschema import JSONDecodeError
 import jsonschema.exceptions
 
-__version__ = "0.6.4"
+__version__ = "0.7.0"
+# - 0.7.0 [2026-04-14]	Anchors for Definition Terms in render-html5.
+# - 0.6.5 [2026-03-26]	Navigation buttons in render-html5
 # - 0.6.4 [2026-03-20]	Analyze --ignore parameter upfront, no commas allowed.
 # - 0.6.3 [2026-03-19]	Subcommand render-html5: Option --no-render-preamble
 # - 0.6.2 [2026-03-19]	Subcommand render-html5: Types, Constants, Variables

@@ -234,7 +234,7 @@ Description:
 				for item in self.items():
 					with traced_section(tr,f"[{i}]"):
 						if p.search(item):
-							warn_parsing(tr,"PNB-002","Bad normativity pattern detected: one of {|must| not, |should| not}.")
+							warn_parsing(tr,"PNB-002","Bad normativity pattern detected: one of {|must| not, |should| not}; use |must_not| or |should_not| instead.")
 							ok = False
 					i += 1
 			for p in RE_PARTIAL_NORMATIVITY_PATTERN_B_COMPILED:

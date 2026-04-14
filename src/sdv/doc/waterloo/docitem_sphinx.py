@@ -775,6 +775,7 @@ def build_sphinx_nodes(ctx : context,obj: object,doc: mod_docitem.docitem_docstr
 		parent += _build_internal_ref(ctx, exc_obj, exc_name, "wtrl_type")
 
 # Contract.*
+	RE_DOC_BULLET_LIST = re.compile(r"^[%-+*#]\s")
 	def build_bullet_list_from_subsection_items(items: Iterable[str]) -> nodes.bullet_list:
 		node_bullet_list = nodes.bullet_list()
 		for content in items:
@@ -811,10 +812,15 @@ def build_sphinx_nodes(ctx : context,obj: object,doc: mod_docitem.docitem_docstr
 				node_any_list = nodes.bullet_list()
 			return node_any_list
 
-		RE_DOC_BULLET_LIST = re.compile(r"^[-+*#]\s")
-		node_paragraph = nodes.paragraph()
 		restart = True
+# Here we collect the paragraph nodes to be returned.
 		out: List[nodes.paragraph] = []
+# This is the current object we append content to. Whenever we
+# find a paragraph token "|" we push this to `out` and create
+# a new one. After the loop the current paragraph is appended
+# to `out`.
+		node_paragraph = nodes.paragraph()
+
 		i_item = 0
 		while i_item < len(items):
 			content = items[i_item]
@@ -1006,7 +1012,6 @@ def build_sphinx_nodes(ctx : context,obj: object,doc: mod_docitem.docitem_docstr
 					node2_bullet_list = build_bullet_list_from_subsection_items(item_subsection.items())
 				else:
 					raise NotImplementedError("dude",label1)
-
 				node_list_item += node1_paragraph
 				node_list_item += node2_bullet_list
 				node_bullet_list += node_list_item

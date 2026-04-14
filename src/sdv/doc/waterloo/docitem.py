@@ -258,13 +258,14 @@ try:
 except ImportError:
 	from sdv.doc.waterloo.docitem_validator import *
 
-__version__ = "0.6.0"
+__version__ = "0.6.1"
+# - 0.6.1 [2026-04-02]	Semantic role 'key' for keyboard
 # - 0.6.0 [2026-03-25]	Definitions now Term plus Variations.
 # - 0.5.6 [2026-03-20]	Rule SEE-006 restricted to documentable objects.
 # - 0.5.5 [2026-03-03]	Clickable nodes in Sphinx output.
 # - 0.5.4 [2026-02-25]	Doctests; Documentation review
 # - 0.5.3 [2026-02-24]	Doctests; Documentation review
-# - 0.5.2 [2026-02-22]	Sections "Definitions" and "Termiinology": Rules tightened
+# - 0.5.2 [2026-02-22]	Sections "Definitions" and "Terminology": Rules tightened
 # - 0.5.1 [2026-02-22]	Subsection "_inherited" in "Definitions": JSON rendering implemented.
 # - 0.5.0 [2026-02-21]	Subsection "_inherited" in "Definitions"; Specification, Sphinx, examples.
 # - 0.4.1 [2026-02-20]	Improved rendering of "Factory" in sphinx extension; Tests for matching profile vs object, e.g. PRE-019.
