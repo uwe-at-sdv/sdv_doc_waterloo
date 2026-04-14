@@ -39,19 +39,6 @@ from pygments.token import Error, Generic, Keyword, Name, String, Literal, Numbe
 #----- Changelog ----------------------------------------------#
 
 __version__ = "0.4.0"
-# - 0.4.0 [2026-03-25]	Refactoring "Definitions": Labels are now CSV-lists of identifiers.
-# - 0.3.0 [2026-03-14]	Added handling for bullet list markers (lines starting with "-", "+", or "*")
-# 			in the `highlight_line` method, treating them as keywords for syntax highlighting.
-# - 0.2.0 [2026-03-10]	Added comprehensive comments and documentation to the code,
-# 			explaining the purpose and functionality of each method and
-# 			section of the lexer. This includes detailed descriptions
-# 			of the parameters, return values, and potential exceptions
-# 			for each method, as well as explanations of the regular
-# 			expressions used for tokenization.
-#			* Careful handling of edge cases, such as docstrings that do not
-# 			conform to the expected structure or contain mixed indentation,
-# 			to ensure that the lexer behaves robustly in a variety of scenarios.
-# - 0.1.0 [2026-03-05]	Versioning starts now.
 
 #----- Constants ----------------------------------------------#
 RE_SECTION = re.compile(
@@ -787,3 +774,7 @@ class PythonWaterlooLexer(PythonLexer):
 					return False
 				return True
 		return False
+
+if __name__ == "__main__":
+	print(__version__)
+

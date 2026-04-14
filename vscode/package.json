@@ -1,91 +1,96 @@
 {
-	"name": "waterloo-docstrings",
-	"displayName": "Waterloo Docstrings",
-	"description": "Tools for Waterloo docstrings in Python.",
-	"version": "0.1.0",
-	"publisher": "local",
-	"engines": {
-		"vscode": "^1.80.0"
-	},
-	"main": "./extension.js", 
-	"activationEvents": [
-		"onCommand:waterloo.generateMinimalDocstring",
-		"onCommand:waterloo.generateFullDocstring",
-		"onCommand:waterloo.validateDocstring",
-		"onLanguage:python"
-	],
-	"categories": [
-		"Programming Languages"
-	],
-	"scripts": {
-		"use:stable": "python3 ./tools/select_grammar.py stable",
-		"use:experimental": "python3 ./tools/select_grammar.py experimental"
-	},
-	"contributes": {
-		"configuration": {
-			"title": "Waterloo",
-			"properties": {
-				"waterloo.showSuccessNotifications": {
-					"type": "boolean",
-					"default": false,
-					"description": "Show information notifications after successful Waterloo actions."
-				}
-			}
-		},
-		"grammars": [
-			{
-				"scopeName": "waterloo.injection",
-				"path": "./syntaxes/waterloo.injection.tmLanguage.json",
-				"injectTo": [
-					"source.python"
-				]
-			}
-		],
-			"commands": [
-				{
-					"command": "waterloo.generateMinimalDocstring",
-					"title": "Waterloo: Generate Minimal Docstring"
-				},
-				{
-					"command": "waterloo.generateFullDocstring",
-					"title": "Waterloo: Generate Full Docstring"
-				},
-				{
-					"command": "waterloo.validateDocstring",
-					"title": "Waterloo: Validate Docstring"
-				}
-			],
-		"submenus": [
-			{
-				"id": "waterloo.context",
-				"label": "Waterloo"
-			}
-		],
-		"menus": {
-				"editor/context": [
-					{
-						"submenu": "waterloo.context",
-						"group": "navigation@50",
-						"when": "resourceLangId == python && editorTextFocus && waterloo.backendReady && waterloo.cap.any && waterloo.isFuncClassOrModuleLine"
-					}
-				],
-				"waterloo.context": [
-					{
-						"command": "waterloo.generateMinimalDocstring",
-						"group": "1_generate@10",
-						"when": "resourceLangId == python && editorTextFocus && waterloo.backendReady && waterloo.cap.generateMinimalDocstring && waterloo.isFuncClassOrModuleLine"
-					},
-					{
-						"command": "waterloo.generateFullDocstring",
-						"group": "1_generate@20",
-						"when": "resourceLangId == python && editorTextFocus && waterloo.backendReady && waterloo.cap.generateFullDocstring && waterloo.isFuncClassOrModuleLine"
-					},
-					{
-						"command": "waterloo.validateDocstring",
-						"group": "2_validate@10",
-						"when": "resourceLangId == python && editorTextFocus && waterloo.backendReady && waterloo.cap.validateDocstring && waterloo.isFuncClassOrModuleLine"
-					}
-				]
-			}
-		}
-	}
+  "name": "waterloo-docstrings",
+  "displayName": "Waterloo Docstrings",
+  "description": "Tools for Waterloo docstrings in Python.",
+  "version": "0.1.0",
+  "publisher": "local",
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "main": "./extension.js",
+  "activationEvents": [
+    "onCommand:waterloo.generateMinimalDocstring",
+    "onCommand:waterloo.generateFullDocstring",
+    "onCommand:waterloo.validateDocstring",
+    "onLanguage:python"
+  ],
+  "categories": [
+    "Programming Languages"
+  ],
+  "scripts": {
+    "use:stable": "python3 ./tools/select_grammar.py stable",
+    "use:experimental": "python3 ./tools/select_grammar.py experimental"
+  },
+  "contributes": {
+    "configuration": {
+      "title": "Waterloo",
+      "properties": {
+        "waterloo.showSuccessNotifications": {
+          "type": "boolean",
+          "default": false,
+          "description": "Show information notifications after successful Waterloo actions."
+        }
+      }
+    },
+    "grammars": [
+      {
+        "scopeName": "waterloo.injection",
+        "path": "./syntaxes/waterloo.injection.tmLanguage.json",
+        "injectTo": [
+          "source.python"
+        ]
+      }
+    ],
+    "commands": [
+      {
+        "command": "waterloo.generateMinimalDocstring",
+        "title": "Waterloo: Generate Minimal Docstring"
+      },
+      {
+        "command": "waterloo.generateFullDocstring",
+        "title": "Waterloo: Generate Full Docstring"
+      },
+      {
+        "command": "waterloo.validateDocstring",
+        "title": "Waterloo: Validate Docstring"
+      }
+    ],
+    "submenus": [
+      {
+        "id": "waterloo.context",
+        "label": "Waterloo"
+      }
+    ],
+    "menus": {
+      "editor/context": [
+        {
+          "submenu": "waterloo.context",
+          "group": "navigation@50",
+          "when": "resourceLangId == python && editorTextFocus && waterloo.backendReady && waterloo.cap.any && waterloo.isFuncClassOrModuleLine"
+        }
+      ],
+      "waterloo.context": [
+        {
+          "command": "waterloo.generateMinimalDocstring",
+          "group": "1_generate@10",
+          "when": "resourceLangId == python && editorTextFocus && waterloo.backendReady && waterloo.cap.generateMinimalDocstring && waterloo.isFuncClassOrModuleLine"
+        },
+        {
+          "command": "waterloo.generateFullDocstring",
+          "group": "1_generate@20",
+          "when": "resourceLangId == python && editorTextFocus && waterloo.backendReady && waterloo.cap.generateFullDocstring && waterloo.isFuncClassOrModuleLine"
+        },
+        {
+          "command": "waterloo.validateDocstring",
+          "group": "2_validate@10",
+          "when": "resourceLangId == python && editorTextFocus && waterloo.backendReady && waterloo.cap.validateDocstring && waterloo.isFuncClassOrModuleLine"
+        }
+      ]
+    }
+  },
+  "license": "BSD-3-Clause",
+  "repository": {
+    "type": "git",
+    "url": "https://example.invalid/waterloo-docstrings.git"
+  }
+}

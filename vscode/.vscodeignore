@@ -1,0 +1,12 @@
+# Exclude development and packaging artifacts
+*.vsix
+*.pyc
+__pycache__/
+
+# Local helper/source variants not needed in VSIX
+obsolete/**
+tools/**
+
+# VCS / editor noise
+.git/**
+.gitignore

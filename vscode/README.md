@@ -1,36 +1,77 @@
-# VS Code Minimal Waterloo Highlighting
+# Waterloo Docstrings for VS Code
 
-This folder contains a minimal extension that injects one rule into Python highlighting.
+VS Code extension for Waterloo docstrings in Python.
 
-## Test
+This package provides:
 
-Run VS Code with this extension loaded from source:
+- Waterloo syntax highlighting (TextMate injection into `source.python`)
+- context menu commands for docstring generation and validation
+- Python backend bridge used by the extension commands
+
+## Repository
+
+Development branch:
+
+- <https://github.com/uwe-at-sdv/sdv_doc_waterloo/tree/ide-plugins>
+
+## Install (VSIX)
+
+From this directory:
 
 ```bash
-code --extensionDevelopmentPath=/server/devel/sdv/privat/uwe/source/sdv_doc_waterloo/ide-plugins/vscode
+code --install-extension ./waterloo-docstrings-0.1.0.vsix
 ```
 
-In VS Code, open a Python file with Waterloo docstrings and run:
-
-- `Developer: Inspect Editor Tokens and Scopes`
-
-The words `Preamble`, `Contract`, and `Definitions` before `:` should get the scope:
-
-- `keyword.other.waterloo.section`
-
-## Switch Grammar
-
-Use exactly one active injection grammar in `package.json`:
+Uninstall:
 
 ```bash
-cd /server/devel/sdv/privat/uwe/source/sdv_doc_waterloo/ide-plugins/vscode
+code --uninstall-extension local.waterloo-docstrings
+```
+
+## Run from Source (Extension Development Host)
+
+```bash
+code --extensionDevelopmentPath=/server/devel/sdv/privat/uwe/source/sdv_doc_waterloo/package_ide-plugins/vscode
+```
+
+Then open a Python file and use:
+
+- right-click editor context menu -> `Waterloo`
+- or Command Palette commands starting with `Waterloo:`
+
+## Available Commands
+
+- `Waterloo: Generate Minimal Docstring`
+- `Waterloo: Generate Full Docstring`
+- `Waterloo: Validate Docstring`
+
+The context menu appears for Python when the backend is available and the current line matches a supported location (`def`, `class`, or module docstring position).
+
+## Configuration
+
+Extension setting:
+
+- `waterloo.showSuccessNotifications` (default: `false`)
+
+If set to `true`, successful operations show VS Code information messages.
+
+## Files
+
+- `extension.js` - VS Code entry point and UI wiring
+- `extension_waterloo_commands.py` - backend command dispatcher
+- `funcdef_parser.py` - parser helpers for function/class headers
+- `syntaxes/waterloo.injection.tmLanguage.json` - TextMate grammar
+- `tools/select_grammar.py` - switch stable/experimental grammar variants
+
+## Grammar Variant Switching (Source Workflow)
+
+```bash
+cd /server/devel/sdv/privat/uwe/source/sdv_doc_waterloo/package_ide-plugins/vscode
 python3 ./tools/select_grammar.py stable
 python3 ./tools/select_grammar.py experimental
 ```
 
-Equivalent npm scripts:
+## Notes
 
-```bash
-npm run use:stable
-npm run use:experimental
-```
+- This package is licensed under `BSD-3-Clause`.
+- Tested against VS Code engine constraint from `package.json` (`^1.80.0`).
