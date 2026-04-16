@@ -16,6 +16,9 @@
 * Additional utilities
   * Lexer for ``pygments``
     * ``pygmentize/python_waterloo_lexer.py``
+  * Extension for ``vscode``
+    * Waterloo syntax highlighting
+    * Context menu commands for docstring generation and validation
 
 #### Branch main
 
