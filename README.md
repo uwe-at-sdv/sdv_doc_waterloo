@@ -1,3 +1,7 @@
+<p align="center">
+	<img src="docs/wtrl_logo.svg" alt="Waterloo Logo" width="240">
+</p>
+
 ## README
 
 ### Sitemap
