@@ -63,14 +63,6 @@ If set to `true`, successful operations show VS Code information messages.
 - `syntaxes/waterloo.injection.tmLanguage.json` - TextMate grammar
 - `tools/select_grammar.py` - switch stable/experimental grammar variants
 
-## Grammar Variant Switching (Source Workflow)
-
-```bash
-cd /server/devel/sdv/privat/uwe/source/sdv_doc_waterloo/package_ide-plugins/vscode
-python3 ./tools/select_grammar.py stable
-python3 ./tools/select_grammar.py experimental
-```
-
 ## Notes
 
 - This package is licensed under `BSD-3-Clause`.
