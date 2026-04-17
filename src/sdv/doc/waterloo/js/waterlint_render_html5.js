@@ -458,6 +458,10 @@ function isFreeformPath(path) {
   return FREEFORM_SECTIONS.has(section);
 }
 
+// This is similar to sdv_doc_docitem_sphinx.build_sphinx_nodes.build_paragraphs_from_items.
+// We look for leading (after left ws-strip) itemization markers and build nested
+// bullet lists or enumerations. This code must be updated whenever the related
+// sphinx code is modified.
 function renderFreeformText(container, txt) {
   const lines = String(txt).split(/\r?\n/);
   const RE_BULLET = /^([*+\-#])\s(.*)$/;
@@ -660,6 +664,33 @@ function isSeeAlsoPath(path) {
   return Array.isArray(path) && path.length >= 1 && String(path[0]) === "See_also";
 }
 
+function isPublicApiDetailPath(path) {
+  return (
+    Array.isArray(path) &&
+    path.length >= 2 &&
+    (
+      String(path[0]) === "Public_types" ||
+      String(path[0]) === "Public_variables" ||
+      String(path[0]) === "Public_constants"
+    )
+  );
+}
+
+// Public_types/Public_variables/Public_constants entries are rendered as
+// freeform content in HTML5 (same behavior as in Sphinx), not as default UL/LI.
+function tryRenderPublicApiFreeform(container, value, path) {
+  if (!isPublicApiDetailPath(path)) return false;
+  if (typeof value === "string") {
+    renderFreeformText(container, value);
+    return true;
+  }
+  if (Array.isArray(value) && value.every(item => typeof item === "string")) {
+    renderFreeformText(container, value.join("\n"));
+    return true;
+  }
+  return false;
+}
+
 function resolveSeeAlsoTarget(entry, currentQid) {
   const raw = String(entry || "").trim();
   if (!raw) return "";
@@ -768,6 +799,9 @@ function appendInlineTokens(parent, txt) {
 function renderValue(value, container, depth, path, currentQid) {
   const pth = Array.isArray(path) ? path : [];
   const leafRoleCls = getRoleClassForLeaf(pth);
+  // Keep this check at top-level for value branches (string/array) to ensure
+  // Public_* details use freeform parsing before generic list rendering kicks in.
+  if (tryRenderPublicApiFreeform(container, value, pth)) return;
   if (value === null || value === undefined) {
     const p = document.createElement("p");
     p.className = "wtrl-text";
@@ -974,14 +1008,9 @@ function renderDocLines(node, targetQid, host) {
   }
   sec.appendChild(h);
 
-  const ul = document.createElement("ul");
-  ul.className = "wtrl-list";
-  for (const line of lines) {
-    const li = document.createElement("li");
-    appendInlineTokens(li, String(line));
-    ul.appendChild(li);
-  }
-  sec.appendChild(ul);
+  // Render doc_lines as true freeform text so explicit list markers
+  // (*, +, -, #) are interpreted the same way as in other freeform sections.
+  renderFreeformText(sec, lines.map(line => String(line)).join("\n"));
   host.appendChild(sec);
   return true;
 }

@@ -27,7 +27,8 @@ from jsonschema import Draft202012Validator
 #from jsonschema import JSONDecodeError
 import jsonschema.exceptions
 
-__version__ = "0.7.0"
+__version__ = "0.7.1"
+# - 0.7.1 [2026-04-17]	Public_types/constants/variables are now rendered as free-form text.
 # - 0.7.0 [2026-04-14]	Anchors for Definition Terms in render-html5.
 # - 0.6.5 [2026-03-26]	Navigation buttons in render-html5
 # - 0.6.4 [2026-03-20]	Analyze --ignore parameter upfront, no commas allowed.

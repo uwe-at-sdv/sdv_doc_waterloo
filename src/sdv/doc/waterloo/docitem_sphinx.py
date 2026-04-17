@@ -138,6 +138,7 @@ except ImportError:
 	mod_docitem = sdv.doc.waterloo.docitem
 
 __version__ = "0.1.0"
+# - 0.1.0 [2026-04-17]	Public_types/constants/variables are now rendered as free-form text, not bullet list.
 
 #===== Typechecking ===========================================#
 

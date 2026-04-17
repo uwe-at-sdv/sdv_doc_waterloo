@@ -15,7 +15,7 @@ const ROLE_CLASS = {
   "dfn": "wtrl-dfn wtrl_dfn",
   "file": "wtrl-file wtrl_file",
   "func": "wtrl-func wtrl_func",
-  "key": "wtrl-key wtrl_key"
+  "key": "wtrl-key wtrl_key",
   "label": "wtrl-label wtrl_label",
   "lit": "wtrl-lit wtrl_lit",
   "mod": "wtrl-mod wtrl_mod",
@@ -39,6 +39,48 @@ function buildAnchorMap() {
 
 const anchorMap = buildAnchorMap();
 
+function encodeAnchorSegments(parts) {
+  const out = [];
+  for (const part of parts) {
+    const seg = String(part || "").trim();
+    if (!seg) continue;
+    out.push(`${seg.length}:${seg}`);
+  }
+  return out.join("-");
+}
+
+function buildTermAnchor(targetQid, term) {
+  const qid = String(targetQid || "");
+  const t = String(term || "").trim();
+  if (!qid || !t) return "";
+  const parts = qid.split(".").filter(Boolean);
+  if (parts.length === 0) return "";
+  return `wtrl-term-${encodeAnchorSegments(parts.concat([t]))}`;
+}
+
+function buildDefinitionTermAnchorMap() {
+  const m = new Map();
+  const objects = (WTRL_DATA && WTRL_DATA.objects && typeof WTRL_DATA.objects === "object")
+    ? WTRL_DATA.objects
+    : {};
+  for (const [qid, node] of Object.entries(objects)) {
+    if (!node || typeof node !== "object") continue;
+    const doc = node.doc;
+    if (!doc || typeof doc !== "object" || Array.isArray(doc)) continue;
+    const defs = doc.Definitions;
+    if (!defs || typeof defs !== "object" || Array.isArray(defs)) continue;
+    for (const [term, defNode] of Object.entries(defs)) {
+      if (term === "Definitions inherited from module") continue;
+      if (!defNode || typeof defNode !== "object" || Array.isArray(defNode)) continue;
+      const a = buildTermAnchor(qid, term);
+      if (a) m.set(a, qid);
+    }
+  }
+  return m;
+}
+
+const definitionTermAnchorMap = buildDefinitionTermAnchorMap();
+
 const NAV_BACK_LABEL = "←";
 const NAV_FORWARD_LABEL = "→";
 const HISTORY_SELECT_PLACEHOLDER = "History";
@@ -46,6 +88,74 @@ const HISTORY_MAX = 20;
 const historyTargets = [];
 let historyCursor = -1;
 let currentTargetQid = "";
+
+const DEBUG_REFS_ENABLED = (() => {
+  try {
+    return new URLSearchParams(window.location.search).get("wtrl_debug_refs") === "1";
+  } catch (_) {
+    return false;
+  }
+})();
+const DEBUG_REFS_MAX = 200;
+const debugRefEvents = [];
+let debugRefHost = null;
+
+function ensureDebugRefHost() {
+  if (!DEBUG_REFS_ENABLED) return null;
+  if (debugRefHost) return debugRefHost;
+
+  const side = document.querySelector(".wtrl-side");
+  if (!side) return null;
+
+  const details = document.createElement("details");
+  details.id = "wtrl-debug-refs";
+  details.className = "wtrl-section";
+
+  const summary = document.createElement("summary");
+  summary.textContent = "Debug refs";
+  details.appendChild(summary);
+
+  const pre = document.createElement("pre");
+  pre.id = "wtrl-debug-refs-pre";
+  pre.className = "wtrl-obj";
+  pre.textContent = "[]";
+  details.appendChild(pre);
+
+  const hitlist = byId("wtrl-hitlist");
+  if (hitlist && hitlist.parentNode === side) {
+    side.insertBefore(details, hitlist);
+  } else {
+    side.appendChild(details);
+  }
+  debugRefHost = pre;
+  return debugRefHost;
+}
+
+function pushDebugRefEvent(kind, data) {
+  if (!DEBUG_REFS_ENABLED) return;
+  const host = ensureDebugRefHost();
+  if (!host) return;
+
+  const evt = {
+    ts: new Date().toISOString(),
+    kind: String(kind || ""),
+    current_object_qid: String(currentTargetQid || ""),
+    ...(data && typeof data === "object" ? data : {}),
+  };
+
+  debugRefEvents.push(evt);
+  if (debugRefEvents.length > DEBUG_REFS_MAX) {
+    debugRefEvents.splice(0, debugRefEvents.length - DEBUG_REFS_MAX);
+  }
+  host.textContent = JSON.stringify(debugRefEvents, null, 2);
+}
+
+function clearDebugRefEvents() {
+  if (!DEBUG_REFS_ENABLED) return;
+  debugRefEvents.splice(0, debugRefEvents.length);
+  const host = ensureDebugRefHost();
+  if (host) host.textContent = "[]";
+}
 
 function updateNavigationUi() {
   const btnBack = byId("wtrl-nav-back");
@@ -348,6 +458,10 @@ function isFreeformPath(path) {
   return FREEFORM_SECTIONS.has(section);
 }
 
+// This is similar to sdv_doc_docitem_sphinx.build_sphinx_nodes.build_paragraphs_from_items.
+// We look for leading (after left ws-strip) itemization markers and build nested
+// bullet lists or enumerations. This code must be updated whenever the related
+// sphinx code is modified.
 function renderFreeformText(container, txt) {
   const lines = String(txt).split(/\r?\n/);
   const RE_BULLET = /^([*+\-#])\s(.*)$/;
@@ -487,23 +601,47 @@ function isDefinitionsInheritedSubsectionPath(path) {
 function renderDefinitionsInheritedContent(container, value) {
   const obj = (value && typeof value === "object" && !Array.isArray(value)) ? value : {};
   const srcQid = _sourcePointerToQid(obj.source || "");
-  const anchor = srcQid ? TARGET_TO_ANCHOR.get(srcQid) : "";
+  const moduleAnchor = srcQid ? TARGET_TO_ANCHOR.get(srcQid) : "";
   const terms = Array.isArray(obj.terms) ? obj.terms : [];
 
   const ul = document.createElement("ul");
   ul.className = "wtrl-list";
   for (const term of terms) {
     const li = document.createElement("li");
-    if (anchor) {
+    const termTxt = String(term);
+    const termAnchor = srcQid ? buildTermAnchor(srcQid, termTxt) : "";
+    const linkAnchor = (termAnchor && definitionTermAnchorMap.has(termAnchor)) ? termAnchor : moduleAnchor;
+    const linkTargetQid = linkAnchor
+      ? (definitionTermAnchorMap.get(linkAnchor) || anchorMap.get(linkAnchor) || "")
+      : "";
+
+    pushDebugRefEvent("inherited-definition-link-resolved", {
+      source_qid: srcQid || "",
+      term: termTxt,
+      term_anchor: termAnchor || null,
+      module_anchor: moduleAnchor || null,
+      chosen_anchor: linkAnchor || null,
+      chosen_target_qid: linkTargetQid || null,
+    });
+
+    if (linkAnchor) {
       const a = document.createElement("a");
       a.className = "wtrl-ref wtrl_ref wtrl-dfn wtrl_dfn";
-      a.href = "#" + anchor;
-      a.textContent = String(term);
+      a.href = "#" + linkAnchor;
+      a.textContent = termTxt;
+      a.addEventListener("click", () => {
+        pushDebugRefEvent("inherited-definition-link-click", {
+          source_qid: srcQid || "",
+          term: termTxt,
+          chosen_anchor: linkAnchor || null,
+          chosen_target_qid: linkTargetQid || null,
+        });
+      });
       li.appendChild(a);
     } else {
       const sp = document.createElement("span");
       sp.className = "wtrl-dfn wtrl_dfn";
-      sp.textContent = String(term);
+      sp.textContent = termTxt;
       li.appendChild(sp);
     }
     ul.appendChild(li);
@@ -738,6 +876,8 @@ function renderValue(value, container, depth, path, currentQid) {
         const vv = v;
         const block = document.createElement("div");
         block.className = "wtrl-subsection";
+        const termAnchor = buildTermAnchor(currentQid, k);
+        if (termAnchor) block.id = termAnchor;
 
         const h = document.createElement("div");
         h.className = "wtrl-subsection-head";
@@ -943,13 +1083,58 @@ function selectTarget(targetQid, updateHash, opts) {
   renderDoc(targetQid);
 }
 
+// User has clicked a link which might lead to a different
+// object in this document. We strip the leading hash and
+// look for the target in our anchor map.
 function handleHashNavigation() {
   const h = (location.hash || "").replace(/^#/, "");
   if (!h) return false;
-  const target = anchorMap.get(h);
-  if (!target) return false;
-  if (target === currentTargetQid) return true;
-  selectTarget(target, false, { recordHistory: false });
+
+  clearDebugRefEvents();
+  pushDebugRefEvent("hash-navigation-attempt", { hash: h });
+
+  // Find object of the link target.
+  const targetObj = anchorMap.get(h);
+  // Are we already there? In case of a clicked
+  // Definition Term: no, see segment below.
+  if (targetObj) {
+    pushDebugRefEvent("hash-navigation-object-anchor", {
+      hash: h,
+      target_qid: targetObj,
+      already_selected: targetObj === currentTargetQid,
+    });
+    if (targetObj === currentTargetQid) return true;
+    // Navigate to target object.
+    selectTarget(targetObj, false, { recordHistory: false });
+    return true;
+  }
+
+  // Now let's handle Definition Terms. We have a separate
+  // anchor map for these. Again, find the object and navigate.
+  const targetTerm = definitionTermAnchorMap.get(h);
+  if (!targetTerm) {
+    pushDebugRefEvent("hash-navigation-unresolved", { hash: h });
+    return false;
+  }
+  pushDebugRefEvent("hash-navigation-term-anchor", {
+    hash: h,
+    target_qid: targetTerm,
+    already_selected: targetTerm === currentTargetQid,
+  });
+  if (targetTerm !== currentTargetQid) {
+    selectTarget(targetTerm, false, { recordHistory: false });
+  }
+  // Ensure scroll also works when the anchor appeared only after re-render.
+  setTimeout(() => {
+    // Scroll to the clicked Definition Term.
+    const el = document.getElementById(h);
+    const found = !!el;
+    if (el) el.scrollIntoView({ block: "start", behavior: "auto" });
+    pushDebugRefEvent("hash-navigation-term-scroll", {
+      hash: h,
+      found_element: found,
+    });
+  }, 0);
   return true;
 }
 
@@ -1012,6 +1197,7 @@ function setupSearch() {
 
 window.addEventListener("hashchange", () => { handleHashNavigation(); });
 window.addEventListener("DOMContentLoaded", () => {
+  if (DEBUG_REFS_ENABLED) pushDebugRefEvent("debug-enabled", { query: window.location.search || "" });
   byId("wtrl-scope").textContent = String((WTRL_DATA.meta || {}).scope || "");
   byId("wtrl-flavour").textContent = String((WTRL_DATA.meta || {}).flavour || "");
   byId("wtrl-modules").textContent = ((WTRL_DATA.meta || {}).modules || []).join(", ");
