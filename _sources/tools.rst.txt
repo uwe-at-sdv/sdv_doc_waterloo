@@ -45,6 +45,26 @@ within a minor version of the tool.
 * [AXMPL-003] -- Mapping contains an invalid list shape or non-string example path.
 * [AXMPL-004] -- Example file path, file access, base directory, or UTF-8 decoding failed.
 * [AXMPL-005] -- Input or mapping file is not valid JSON.
+* [AXMPL-006] -- Mapping JSON failed schema validation or schema auto-detection.
+
+
+JSON document categories and ``$id`` conventions
+------------------------------------------------
+
+The reference tooling emits category-specific ``$id`` values.
+
+* Waterloo API JSON (from :wtrl_cmd:`render-json`):
+	``urn:waterlint:wtrl-json:<waterlint-version>:<scope>:<flavour>:<hash>``
+* Tracer diagnostics JSON:
+	``urn:waterlint:wtrl-tracer-json:<waterlint-version>:<timestamp>``
+* Example-reference mapping JSON:
+	Recommended pattern:
+	``urn:<org-or-project>:<domain>:wtrl-example-refs-json:<schema-version>``
+
+The ``$id`` value should be globally unique for each produced document.
+For interoperability and diagnostics, the category marker
+(``wtrl-json``, ``wtrl-tracer-json``, ``wtrl-example-refs-json``)
+|should| be present.
 
 
 .. rubric:: General tool errors
