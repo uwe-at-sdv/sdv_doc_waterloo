@@ -137,7 +137,7 @@ except ImportError:
 	import sdv.doc.waterloo.docitem
 	mod_docitem = sdv.doc.waterloo.docitem
 
-__version__ = "0.0.1"
+__version__ = "0.1.0"
 
 #===== Typechecking ===========================================#
 
@@ -1141,17 +1141,41 @@ def build_sphinx_nodes(ctx : context,obj: object,doc: mod_docitem.docitem_docstr
 			)
 			node_entry += node_bullet_list
 		elif label in ("Public_types"):
-			node_bullet_list = build_bullet_list_from_section_items(
-				item_section.items(),
-				lambda p, lbl: p.extend(ctx.parse(p, 0, ctx.add_role_type(lbl))),
-			)
+# Bullet list where each item is the name of a public type plus some free-form content.
+			node_bullet_list = nodes.bullet_list()
+			for label1, item_subsection in item_section.items().items():
+# The list item.
+				node_list_item = nodes.list_item()
+# First paragraph of the list item: clickable type label.
+				node_label_paragraph = nodes.paragraph()
+# Add a clickable label with semantic role "|type|". Pass "Public_types" as label for warnings.
+				render_linked_public_entry(node_label_paragraph,label1,objname,"wtrl_type",ctx.add_role_type,label)
+				node_list_item += node_label_paragraph
+# Iterate over logical lines in the public type's content and add each paragraph as sibling node in the list item.
+				for paragraph in build_paragraphs_from_items(item_subsection.items()):
+					paragraph["classes"].append("wtrl-public-type-content")
+					node_list_item += paragraph
+				node_bullet_list += node_list_item
 			node_entry += node_bullet_list
+
 		elif label in ("Public_constants", "Public_variables"):
-			node_bullet_list = build_bullet_list_from_section_items(
-				item_section.items(),
-				lambda p, lbl: p.extend(ctx.parse(p, 0, ctx.add_role_var(lbl))),
-			)
+# Bullet list where each item is the name of a public constant/variable plus some free-form content.
+			node_bullet_list = nodes.bullet_list()
+			for label1, item_subsection in item_section.items().items():
+# The list item.
+				node_list_item = nodes.list_item()
+# First paragraph of the list item: clickable constant/variable label.
+				node_label_paragraph = nodes.paragraph()
+# Add a clickable label with semantic role "|var|". Pass "Public_constants"/"Public_variables" as label for warnings.
+				render_linked_public_entry(node_label_paragraph,label1,objname,"wtrl_var",ctx.add_role_var,label)
+				node_list_item += node_label_paragraph
+# Iterate over logical lines in the public constant's/variable's content and add each paragraph as sibling node in the list item.
+				for paragraph in build_paragraphs_from_items(item_subsection.items()):
+					paragraph["classes"].append("wtrl-public-var-content")
+					node_list_item += paragraph
+				node_bullet_list += node_list_item
 			node_entry += node_bullet_list
+
 		elif label in ("Parameters"):
 			if len(item_section.items()) == 0:
 				node_entry.extend(parse_text(node1_paragraph,"|empty|"))
@@ -2470,6 +2494,10 @@ def wtrl_func_role(name: str, rawtext: str, text: str, lineno: int, inliner: Inl
 	node = nodes.literal(text, text, classes=["wtrl_func"])
 	return [node], []
 
+def wtrl_key_role(name: str, rawtext: str, text: str, lineno: int, inliner: InlinerProtocol, options: Mapping[str,Any] | None=None, content: list[str] | None=None) -> tuple[List[nodes.Node], list[nodes.Node]]:
+	node = nodes.literal(text, text, classes=["wtrl_key"])
+	return [node], []
+
 def wtrl_label_role(name: str, rawtext: str, text: str, lineno: int, inliner: InlinerProtocol, options: Mapping[str,Any] | None=None, content: list[str] | None=None) -> tuple[List[nodes.Node], list[nodes.Node]]:
 	node = nodes.literal(text, text, classes=["wtrl_label"])
 	return [node], []
@@ -2596,6 +2624,7 @@ def setup(app: Any) -> dict[str, Any]:
 	 "wtrl_dfn":wtrl_dfn_role,
 	 "wtrl_file":wtrl_file_role,
 	 "wtrl_func":wtrl_func_role,
+	 "wtrl_key":wtrl_key_role,
 	 "wtrl_label":wtrl_label_role,
 	 "wtrl_lit":wtrl_lit_role,
 	 "wtrl_mod":wtrl_mod_role,
