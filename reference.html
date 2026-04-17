@@ -413,60 +413,48 @@
 </td>
 </tr>
 <tr class="wtrl-section row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Public</span> <span class="pre">types</span></code></p></td>
-<td><ul class="simple">
-<li><p><code class="wtrl_type docutils literal notranslate"><span class="pre">DocstringTree</span></code><ul>
-<li><p>The type alias for docstring trees.</p></li>
-</ul>
-</p></li>
-<li><p><code class="wtrl_type docutils literal notranslate"><span class="pre">Documentable</span></code><ul>
-<li><p>Type for objects that can have a docstring.</p></li>
-</ul>
-</p></li>
-<li><p><code class="wtrl_type docutils literal notranslate"><span class="pre">Profile</span></code><ul>
-<li><p>The string literals representing values in the <code class="wtrl_label docutils literal notranslate"><span class="pre">Preamble.profile</span></code> subsection.</p></li>
-</ul>
-</p></li>
-<li><p><code class="wtrl_type docutils literal notranslate"><span class="pre">Scopes</span></code><ul>
-<li><p>Type alias for a set of scopes.</p></li>
-</ul>
-</p></li>
+<td><ul>
+<li><p><a class="wtrl_type reference internal" href="#wtrl-obj-6:typing-4:List" title="typing.List"><span>DocstringTree</span></a></p>
+<p class="wtrl-public-type-content">The type alias for docstring trees.</p>
+</li>
+<li><p><a class="wtrl_type reference internal" href="#wtrl-obj-6:typing-5:Union" title="typing.Union"><span>Documentable</span></a></p>
+<p class="wtrl-public-type-content">Type for objects that can have a docstring.</p>
+</li>
+<li><p><a class="wtrl_type reference internal" href="#wtrl-obj-6:typing-7:Literal" title="typing.Literal"><span>Profile</span></a></p>
+<p class="wtrl-public-type-content">The string literals representing values in the <code class="wtrl_label docutils literal notranslate"><span class="pre">Preamble.profile</span></code> subsection.</p>
+</li>
+<li><p><a class="wtrl_type reference internal" href="#wtrl-obj-6:typing-3:Set" title="typing.Set"><span>Scopes</span></a></p>
+<p class="wtrl-public-type-content">Type alias for a set of scopes.</p>
+</li>
 </ul>
 </td>
 </tr>
 <tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Public</span> <span class="pre">constants</span></code></p></td>
-<td><ul class="simple">
-<li><p><code class="wtrl_var docutils literal notranslate"><span class="pre">RE_IDENTIFIER</span></code><ul>
-<li><p>Regular expression for identifiers: <code class="wtrl_value docutils literal notranslate"><span class="pre">[A-Za-z_][A-Za-z0-9_]*</span></code></p></li>
-</ul>
-</p></li>
-<li><p><code class="wtrl_var docutils literal notranslate"><span class="pre">RE_QUALIFIED_IDENTIFIER</span></code><ul>
-<li><p>Regular expression for qualified identifiers: <code class="wtrl_value docutils literal notranslate"><span class="pre">[A-Za-z_][A-Za-z0-9_]*([.][A-Za-z_][A-Za-z0-9_]*)*</span></code></p></li>
-</ul>
-</p></li>
-<li><p><code class="wtrl_var docutils literal notranslate"><span class="pre">KEYWORDS_OF_NORMATIVITY</span></code><ul>
-<li><p>The set of normative keywords.</p></li>
-</ul>
-</p></li>
-<li><p><code class="wtrl_var docutils literal notranslate"><span class="pre">CANONICAL_ORDER_OF_SECTIONS</span></code><ul>
-<li><p>A canonical order for sections and subsection in order to reduce permutative noise for LLMs.</p></li>
-</ul>
-</p></li>
-<li><p><code class="wtrl_var docutils literal notranslate"><span class="pre">SCOPE_TAG_MAP</span></code><ul>
-<li><p>Map string representations of scopes to symbolic/numeric values.</p></li>
-</ul>
-</p></li>
-<li><p><code class="wtrl_var docutils literal notranslate"><span class="pre">FLAVOUR_TAG_MAP</span></code><ul>
-<li><p>Map string representations of flavours to symbolic/numeric values.</p></li>
-</ul>
-</p></li>
-<li><p><code class="wtrl_var docutils literal notranslate"><span class="pre">FORMAT_TAG_MAP</span></code><ul>
-<li><p>Map string representations of output formats to symbolic/numeric values.</p></li>
-</ul>
-</p></li>
-<li><p><code class="wtrl_var docutils literal notranslate"><span class="pre">STATUS_TAG_MAP</span></code><ul>
-<li><p>Map string representations of <code class="wtrl_label docutils literal notranslate"><span class="pre">Contract.status</span></code> values to symbolic values.</p></li>
-</ul>
-</p></li>
+<td><ul>
+<li><p><a class="wtrl_var reference internal" href="#wtrl-obj-22:[A-Za-z_][A-Za-z0-9_]*" title="[A-Za-z_][A-Za-z0-9_]*"><span>RE_IDENTIFIER</span></a></p>
+<p class="wtrl-public-var-content">Regular expression for identifiers: <code class="wtrl_value docutils literal notranslate"><span class="pre">[A-Za-z_][A-Za-z0-9_]*</span></code></p>
+</li>
+<li><p><a class="wtrl_var reference internal" href="#wtrl-obj-24:[A-Za-z_][A-Za-z0-9_]*([-25:][A-Za-z_][A-Za-z0-9_]*)*" title="[A-Za-z_][A-Za-z0-9_]*([.][A-Za-z_][A-Za-z0-9_]*)*"><span>RE_QUALIFIED_IDENTIFIER</span></a></p>
+<p class="wtrl-public-var-content">Regular expression for qualified identifiers: <code class="wtrl_value docutils literal notranslate"><span class="pre">[A-Za-z_][A-Za-z0-9_]*([.][A-Za-z_][A-Za-z0-9_]*)*</span></code></p>
+</li>
+<li><p><a class="wtrl_var reference internal" href="#wtrl-obj-5:tuple" title="tuple"><span>KEYWORDS_OF_NORMATIVITY</span></a></p>
+<p class="wtrl-public-var-content">The set of normative keywords.</p>
+</li>
+<li><p><a class="wtrl_var reference internal" href="#wtrl-obj-4:dict" title="dict"><span>CANONICAL_ORDER_OF_SECTIONS</span></a></p>
+<p class="wtrl-public-var-content">A canonical order for sections and subsection in order to reduce permutative noise for LLMs.</p>
+</li>
+<li><p><a class="wtrl_var reference internal" href="#wtrl-obj-12:mappingproxy" title="mappingproxy"><span>SCOPE_TAG_MAP</span></a></p>
+<p class="wtrl-public-var-content">Map string representations of scopes to symbolic/numeric values.</p>
+</li>
+<li><p><a class="wtrl_var reference internal" href="#wtrl-obj-12:mappingproxy" title="mappingproxy"><span>FLAVOUR_TAG_MAP</span></a></p>
+<p class="wtrl-public-var-content">Map string representations of flavours to symbolic/numeric values.</p>
+</li>
+<li><p><a class="wtrl_var reference internal" href="#wtrl-obj-12:mappingproxy" title="mappingproxy"><span>FORMAT_TAG_MAP</span></a></p>
+<p class="wtrl-public-var-content">Map string representations of output formats to symbolic/numeric values.</p>
+</li>
+<li><p><a class="wtrl_var reference internal" href="#wtrl-obj-12:mappingproxy" title="mappingproxy"><span>STATUS_TAG_MAP</span></a></p>
+<p class="wtrl-public-var-content">Map string representations of <code class="wtrl_label docutils literal notranslate"><span class="pre">Contract.status</span></code> values to symbolic values.</p>
+</li>
 </ul>
 </td>
 </tr>
@@ -3435,19 +3423,16 @@
 </td>
 </tr>
 <tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Public</span> <span class="pre">constants</span></code></p></td>
-<td><ul class="simple">
-<li><p><code class="wtrl_var docutils literal notranslate"><span class="pre">PUBLIC</span></code><ul>
-<li><p>Selects the public API.</p></li>
-</ul>
-</p></li>
-<li><p><code class="wtrl_var docutils literal notranslate"><span class="pre">EXTENSION</span></code><ul>
-<li><p>Selects the API for developers of plugin and extensions.</p></li>
-</ul>
-</p></li>
-<li><p><code class="wtrl_var docutils literal notranslate"><span class="pre">CORE</span></code><ul>
-<li><p>Selects the API for core developers.</p></li>
-</ul>
-</p></li>
+<td><ul>
+<li><p><code class="wtrl_var docutils literal notranslate"><span class="pre">PUBLIC</span></code></p>
+<p class="wtrl-public-var-content">Selects the public API.</p>
+</li>
+<li><p><code class="wtrl_var docutils literal notranslate"><span class="pre">EXTENSION</span></code></p>
+<p class="wtrl-public-var-content">Selects the API for developers of plugin and extensions.</p>
+</li>
+<li><p><code class="wtrl_var docutils literal notranslate"><span class="pre">CORE</span></code></p>
+<p class="wtrl-public-var-content">Selects the API for core developers.</p>
+</li>
 </ul>
 </td>
 </tr>
@@ -3501,19 +3486,16 @@
 </td>
 </tr>
 <tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Public</span> <span class="pre">constants</span></code></p></td>
-<td><ul class="simple">
-<li><p><code class="wtrl_var docutils literal notranslate"><span class="pre">RAW</span></code><ul>
-<li><p>Example: |Must|</p></li>
-</ul>
-</p></li>
-<li><p><code class="wtrl_var docutils literal notranslate"><span class="pre">RFC_2119</span></code><ul>
-<li><p>Example: <code class="wtrl_lit docutils literal notranslate"><span class="pre">MUST</span></code></p></li>
-</ul>
-</p></li>
-<li><p><code class="wtrl_var docutils literal notranslate"><span class="pre">MARKDOWN</span></code><ul>
-<li><p>Example: <code class="wtrl_lit docutils literal notranslate"><span class="pre">**MUST**</span></code></p></li>
-</ul>
-</p></li>
+<td><ul>
+<li><p><code class="wtrl_var docutils literal notranslate"><span class="pre">RAW</span></code></p>
+<p class="wtrl-public-var-content">Example: |Must|</p>
+</li>
+<li><p><code class="wtrl_var docutils literal notranslate"><span class="pre">RFC_2119</span></code></p>
+<p class="wtrl-public-var-content">Example: <code class="wtrl_lit docutils literal notranslate"><span class="pre">MUST</span></code></p>
+</li>
+<li><p><code class="wtrl_var docutils literal notranslate"><span class="pre">MARKDOWN</span></code></p>
+<p class="wtrl-public-var-content">Example: <code class="wtrl_lit docutils literal notranslate"><span class="pre">**MUST**</span></code></p>
+</li>
 </ul>
 </td>
 </tr>
@@ -3560,19 +3542,16 @@
 </td>
 </tr>
 <tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Public</span> <span class="pre">constants</span></code></p></td>
-<td><ul class="simple">
-<li><p><code class="wtrl_var docutils literal notranslate"><span class="pre">JSON</span></code><ul>
-<li><p>Javascript Object Notation</p></li>
-</ul>
-</p></li>
-<li><p><code class="wtrl_var docutils literal notranslate"><span class="pre">YAML</span></code><ul>
-<li><p>YAML Ain’t Markup Language</p></li>
-</ul>
-</p></li>
-<li><p><code class="wtrl_var docutils literal notranslate"><span class="pre">MD</span></code><ul>
-<li><p>Markdown.</p></li>
-</ul>
-</p></li>
+<td><ul>
+<li><p><code class="wtrl_var docutils literal notranslate"><span class="pre">JSON</span></code></p>
+<p class="wtrl-public-var-content">Javascript Object Notation</p>
+</li>
+<li><p><code class="wtrl_var docutils literal notranslate"><span class="pre">YAML</span></code></p>
+<p class="wtrl-public-var-content">YAML Ain’t Markup Language</p>
+</li>
+<li><p><code class="wtrl_var docutils literal notranslate"><span class="pre">MD</span></code></p>
+<p class="wtrl-public-var-content">Markdown.</p>
+</li>
 </ul>
 </td>
 </tr>
@@ -3619,27 +3598,22 @@
 </td>
 </tr>
 <tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Public</span> <span class="pre">constants</span></code></p></td>
-<td><ul class="simple">
-<li><p><code class="wtrl_var docutils literal notranslate"><span class="pre">EXPERIMENTAL</span></code><ul>
-<li><p>See rule <a class="reference internal" href="format.html#section-function-pramble"><span class="std std-ref">STA-004</span></a>.</p></li>
-</ul>
-</p></li>
-<li><p><code class="wtrl_var docutils literal notranslate"><span class="pre">STABLE</span></code><ul>
-<li><p>See rule <a class="reference internal" href="format.html#section-function-pramble"><span class="std std-ref">STA-004</span></a>.</p></li>
-</ul>
-</p></li>
-<li><p><code class="wtrl_var docutils literal notranslate"><span class="pre">FROZEN</span></code><ul>
-<li><p>See rule <a class="reference internal" href="format.html#section-function-pramble"><span class="std std-ref">STA-004</span></a>.</p></li>
-</ul>
-</p></li>
-<li><p><code class="wtrl_var docutils literal notranslate"><span class="pre">DEPRECATED</span></code><ul>
-<li><p>See rule <a class="reference internal" href="format.html#section-function-pramble"><span class="std std-ref">STA-004</span></a>.</p></li>
-</ul>
-</p></li>
-<li><p><code class="wtrl_var docutils literal notranslate"><span class="pre">DRAFT</span></code><ul>
-<li><p>See rule <a class="reference internal" href="format.html#section-function-pramble"><span class="std std-ref">STA-004</span></a>.</p></li>
-</ul>
-</p></li>
+<td><ul>
+<li><p><code class="wtrl_var docutils literal notranslate"><span class="pre">EXPERIMENTAL</span></code></p>
+<p class="wtrl-public-var-content">See rule <a class="reference internal" href="format.html#section-function-pramble"><span class="std std-ref">STA-004</span></a>.</p>
+</li>
+<li><p><code class="wtrl_var docutils literal notranslate"><span class="pre">STABLE</span></code></p>
+<p class="wtrl-public-var-content">See rule <a class="reference internal" href="format.html#section-function-pramble"><span class="std std-ref">STA-004</span></a>.</p>
+</li>
+<li><p><code class="wtrl_var docutils literal notranslate"><span class="pre">FROZEN</span></code></p>
+<p class="wtrl-public-var-content">See rule <a class="reference internal" href="format.html#section-function-pramble"><span class="std std-ref">STA-004</span></a>.</p>
+</li>
+<li><p><code class="wtrl_var docutils literal notranslate"><span class="pre">DEPRECATED</span></code></p>
+<p class="wtrl-public-var-content">See rule <a class="reference internal" href="format.html#section-function-pramble"><span class="std std-ref">STA-004</span></a>.</p>
+</li>
+<li><p><code class="wtrl_var docutils literal notranslate"><span class="pre">DRAFT</span></code></p>
+<p class="wtrl-public-var-content">See rule <a class="reference internal" href="format.html#section-function-pramble"><span class="std std-ref">STA-004</span></a>.</p>
+</li>
 </ul>
 </td>
 </tr>
@@ -3720,11 +3694,10 @@
 </td>
 </tr>
 <tr class="wtrl-section row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Public</span> <span class="pre">types</span></code></p></td>
-<td><ul class="simple">
-<li><p><code class="wtrl_type docutils literal notranslate"><span class="pre">Context</span></code><ul>
-<li><p>A list of strings built per context manager during parsing and validation. Entries can be module, class or function names, or labels.</p></li>
-</ul>
-</p></li>
+<td><ul>
+<li><p><code class="wtrl_type docutils literal notranslate"><span class="pre">Context</span></code></p>
+<p class="wtrl-public-type-content">A list of strings built per context manager during parsing and validation. Entries can be module, class or function names, or labels.</p>
+</li>
 </ul>
 </td>
 </tr>
@@ -4813,15 +4786,13 @@
 </td>
 </tr>
 <tr class="wtrl-section row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Public</span> <span class="pre">constants</span></code></p></td>
-<td><ul class="simple">
-<li><p><code class="wtrl_var docutils literal notranslate"><span class="pre">IDENTIFIER</span></code><ul>
-<li><p><code class="wtrl_norm docutils literal notranslate"><span class="pre">Must</span></code> represent the pattern of an <code class="wtrl_term docutils literal notranslate"><span class="pre">Identifier</span></code>.</p></li>
-</ul>
-</p></li>
-<li><p><code class="wtrl_var docutils literal notranslate"><span class="pre">QUALIFIED_IDENTIFIER</span></code><ul>
-<li><p><code class="wtrl_norm docutils literal notranslate"><span class="pre">Must</span></code> represent the pattern of a <code class="wtrl_term docutils literal notranslate"><span class="pre">Qualified_Identifier</span></code>.</p></li>
-</ul>
-</p></li>
+<td><ul>
+<li><p><a class="wtrl_var reference internal" href="#wtrl-obj-3:sdv-3:doc-8:waterloo-12:docitem_base-12:ValuePattern" title="sdv.doc.waterloo.docitem_base.ValuePattern"><span>IDENTIFIER</span></a></p>
+<p class="wtrl-public-var-content"><code class="wtrl_norm docutils literal notranslate"><span class="pre">Must</span></code> represent the pattern of an <code class="wtrl_term docutils literal notranslate"><span class="pre">Identifier</span></code>.</p>
+</li>
+<li><p><a class="wtrl_var reference internal" href="#wtrl-obj-3:sdv-3:doc-8:waterloo-12:docitem_base-12:ValuePattern" title="sdv.doc.waterloo.docitem_base.ValuePattern"><span>QUALIFIED_IDENTIFIER</span></a></p>
+<p class="wtrl-public-var-content"><code class="wtrl_norm docutils literal notranslate"><span class="pre">Must</span></code> represent the pattern of a <code class="wtrl_term docutils literal notranslate"><span class="pre">Qualified_Identifier</span></code>.</p>
+</li>
 </ul>
 </td>
 </tr>
@@ -11984,11 +11955,10 @@
 <td><p><a class="wtrl_func reference internal" href="#wtrl-func-3:sdv-3:doc-8:waterloo-15:docitem_convert-19:to_node_legend_json" title="sdv.doc.waterloo.docitem_convert.to_node_legend_json"><span>to_node_legend_json</span></a>, <a class="wtrl_func reference internal" href="#wtrl-func-3:sdv-3:doc-8:waterloo-15:docitem_convert-27:to_node_docstring_tree_json" title="sdv.doc.waterloo.docitem_convert.to_node_docstring_tree_json"><span>to_node_docstring_tree_json</span></a>, <a class="wtrl_func reference internal" href="#wtrl-func-3:sdv-3:doc-8:waterloo-15:docitem_convert-22:to_node_signature_json" title="sdv.doc.waterloo.docitem_convert.to_node_signature_json"><span>to_node_signature_json</span></a>, <a class="wtrl_func reference internal" href="#wtrl-func-3:sdv-3:doc-8:waterloo-15:docitem_convert-21:to_string_legend_yaml" title="sdv.doc.waterloo.docitem_convert.to_string_legend_yaml"><span>to_string_legend_yaml</span></a>, <a class="wtrl_func reference internal" href="#wtrl-func-3:sdv-3:doc-8:waterloo-15:docitem_convert-14:to_string_yaml" title="sdv.doc.waterloo.docitem_convert.to_string_yaml"><span>to_string_yaml</span></a>, <a class="wtrl_func reference internal" href="#wtrl-func-3:sdv-3:doc-8:waterloo-15:docitem_convert-24:to_string_signature_yaml" title="sdv.doc.waterloo.docitem_convert.to_string_signature_yaml"><span>to_string_signature_yaml</span></a>, <a class="wtrl_func reference internal" href="#wtrl-func-3:sdv-3:doc-8:waterloo-15:docitem_convert-12:to_string_md" title="sdv.doc.waterloo.docitem_convert.to_string_md"><span>to_string_md</span></a>, <a class="wtrl_func reference internal" href="#wtrl-func-3:sdv-3:doc-8:waterloo-15:docitem_convert-15:build_node_json" title="sdv.doc.waterloo.docitem_convert.build_node_json"><span>build_node_json</span></a></p></td>
 </tr>
 <tr class="wtrl-section row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Public</span> <span class="pre">types</span></code></p></td>
-<td><ul class="simple">
-<li><p><code class="wtrl_type docutils literal notranslate"><span class="pre">WtrlJsonNode_t</span></code><ul>
-<li><p>Type for JSON nodes. This type <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span></code> be public because <code class="wtrl_func docutils literal notranslate"><span class="pre">to_node_docstring_tree_json</span></code> and <code class="wtrl_func docutils literal notranslate"><span class="pre">to_node_signature_json</span></code> are.</p></li>
-</ul>
-</p></li>
+<td><ul>
+<li><p><a class="wtrl_type reference internal" href="#wtrl-obj-6:typing-5:Union" title="typing.Union"><span>WtrlJsonNode_t</span></a></p>
+<p class="wtrl-public-type-content">Type for JSON nodes. This type <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span></code> be public because <code class="wtrl_func docutils literal notranslate"><span class="pre">to_node_docstring_tree_json</span></code> and <code class="wtrl_func docutils literal notranslate"><span class="pre">to_node_signature_json</span></code> are.</p>
+</li>
 </ul>
 </td>
 </tr>
@@ -12337,7 +12307,7 @@
 <tbody>
 <tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Signature</span></code></p></td>
 <td><div class="wtrl-signature-head line"><span class="wtrl_mod">sdv.doc.waterloo.docitem_convert</span><span class="wtrl_op">.</span><span class="wtrl_func">to_string_legend_yaml</span><span class="wtrl_op">(</span></div>
-<div class="wtrl-signature-param line"><span class="wtrl_var">config</span><span class="wtrl_op">: </span><span class="wtrl_type">YamlConfig</span><span class="wtrl_op"> = </span><span class="wtrl_lit">&lt;sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f2cc70ace50&gt;</span></div>
+<div class="wtrl-signature-param line"><span class="wtrl_var">config</span><span class="wtrl_op">: </span><span class="wtrl_type">YamlConfig</span><span class="wtrl_op"> = </span><span class="wtrl_lit">&lt;sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f1a85b575b0&gt;</span></div>
 <div class="wtrl-signature-ret line"><span class="wtrl_op">)</span><span class="wtrl_op"> -&gt; </span><span class="wtrl_type">str</span></div>
 </td>
 </tr>
@@ -12402,7 +12372,7 @@
 <td><div class="wtrl-signature-head line"><span class="wtrl_mod">sdv.doc.waterloo.docitem_convert</span><span class="wtrl_op">.</span><span class="wtrl_func">to_string_yaml</span><span class="wtrl_op">(</span></div>
 <div class="wtrl-signature-param line"><span class="wtrl_var">tree</span><span class="wtrl_op">: </span><span class="wtrl_type">DocstringTree</span></div>
 <div class="wtrl-signature-param line"><span class="wtrl_var">flavour</span><span class="wtrl_op">: </span><span class="wtrl_type">Flavour</span></div>
-<div class="wtrl-signature-param line"><span class="wtrl_var">config</span><span class="wtrl_op">: </span><span class="wtrl_type">YamlConfig</span><span class="wtrl_op"> = </span><span class="wtrl_lit">&lt;sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f2cc70ad180&gt;</span></div>
+<div class="wtrl-signature-param line"><span class="wtrl_var">config</span><span class="wtrl_op">: </span><span class="wtrl_type">YamlConfig</span><span class="wtrl_op"> = </span><span class="wtrl_lit">&lt;sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f1a8532fe50&gt;</span></div>
 <div class="wtrl-signature-ret line"><span class="wtrl_op">)</span><span class="wtrl_op"> -&gt; </span><span class="wtrl_type">str</span></div>
 </td>
 </tr>
@@ -12501,7 +12471,7 @@
 <tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Signature</span></code></p></td>
 <td><div class="wtrl-signature-head line"><span class="wtrl_mod">sdv.doc.waterloo.docitem_convert</span><span class="wtrl_op">.</span><span class="wtrl_func">to_string_signature_yaml</span><span class="wtrl_op">(</span></div>
 <div class="wtrl-signature-param line"><span class="wtrl_var">obj</span><span class="wtrl_op">: </span><span class="wtrl_type">object</span></div>
-<div class="wtrl-signature-param line"><span class="wtrl_var">config</span><span class="wtrl_op">: </span><span class="wtrl_type">YamlConfig</span><span class="wtrl_op"> = </span><span class="wtrl_lit">&lt;sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f2cc70ad120&gt;</span></div>
+<div class="wtrl-signature-param line"><span class="wtrl_var">config</span><span class="wtrl_op">: </span><span class="wtrl_type">YamlConfig</span><span class="wtrl_op"> = </span><span class="wtrl_lit">&lt;sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f1a8532fdf0&gt;</span></div>
 <div class="wtrl-signature-ret line"><span class="wtrl_op">)</span><span class="wtrl_op"> -&gt; </span><span class="wtrl_type">str</span></div>
 </td>
 </tr>
@@ -13247,14 +13217,10 @@
 <td><p><a class="wtrl_type reference internal" href="#wtrl-cls-21:python_waterloo_lexer-19:PythonWaterlooLexer" title="python_waterloo_lexer.PythonWaterlooLexer"><span>PythonWaterlooLexer</span></a></p></td>
 </tr>
 <tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Public</span> <span class="pre">constants</span></code></p></td>
-<td><ul class="simple">
-<li><p><code class="wtrl_var docutils literal notranslate"><span class="pre">RE_SECTION_ALLOWED_NORMATIVE</span></code><ul>
-<li><p>A regular expression pattern that matches section names allowed or mandatory in the “normative_sections” subsection of the Preamble. This expression is governed by the normative rules and must be kept up to date.</p></li>
-<li><p>Mandatory : CON-002, CON-005, CON-020, CON-034, CPCL-002, CPCON-002, CPMT-002, CPTYP-002, CPVAR-002, DEF-002, DER-004, FAC-009, MPCL-002, MPCON-002, MPFN-002, MPTYP-002, MPVAR-002, PAR-002, RAI-002, RET-002.</p></li>
-<li><p>Accepted : DESC-002, SEE-011.</p></li>
-<li><p>Refused : NOTE-002, PRE-002, TERM-002.</p></li>
-</ul>
-</p></li>
+<td><ul>
+<li><p><a class="wtrl_var reference internal" href="#wtrl-obj-2:re-7:Pattern" title="re.Pattern"><span>RE_SECTION_ALLOWED_NORMATIVE</span></a></p>
+<p class="wtrl-public-var-content">A regular expression pattern that matches section names allowed or mandatory in the “normative_sections” subsection of the Preamble. This expression is governed by the normative rules and must be kept up to date. Mandatory : CON-002, CON-005, CON-020, CON-034, CPCL-002, CPCON-002, CPMT-002, CPTYP-002, CPVAR-002, DEF-002, DER-004, FAC-009, MPCL-002, MPCON-002, MPFN-002, MPTYP-002, MPVAR-002, PAR-002, RAI-002, RET-002. Accepted : DESC-002, SEE-011. Refused : NOTE-002, PRE-002, TERM-002.</p>
+</li>
 </ul>
 </td>
 </tr>
