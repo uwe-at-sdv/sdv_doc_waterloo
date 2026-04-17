@@ -27,7 +27,11 @@ from jsonschema import Draft202012Validator
 #from jsonschema import JSONDecodeError
 import jsonschema.exceptions
 
-__version__ = "0.7.1"
+__version__ = "0.8.0"
+# - 0.8.0 [2026-04-17]	JSON Schema for example references: this affects
+#			waterlint add-example-json
+#			waterlint validate-json
+#			Automatic JSON Schema inference
 # - 0.7.1 [2026-04-17]	Public_types/constants/variables are now rendered as free-form text.
 # - 0.7.0 [2026-04-14]	Anchors for Definition Terms in render-html5.
 # - 0.6.5 [2026-03-26]	Navigation buttons in render-html5
@@ -92,6 +96,7 @@ with contextlib.redirect_stdout(sys.stderr):
 
 #----- Schema versions, keep up to date -----------------------#
 WTRL_JSON_SCHEMA_VERSION = "0.1.0"
+WTRL_EXAMPLE_REFS_JSON_SCHEMA_VERSION = "0.1.0"
 
 #----- Add subcommands here -----------------------------------#
 SUBCOMMANDS = (
@@ -135,7 +140,7 @@ def _emit_diagnostics(tr: tracer, dest: io.TextIOBase, strip_ansi: bool = False)
 def _build_tracer_json_doc(tr: tracer) -> dict[str, Any]:
 	doc: dict[str, Any] = {
 		"$schema": f"https://sci-d-vis.com/schema/wtrl-tracer-json-{docitem.WTRL_TRACER_JSON_SCHEMA_VERSION}.schema.json",
-		"$id": f"urn:waterlint:{__version__}:diag:{datetime.now().strftime('%Y%m%d%H%M%S')}",
+		"$id": f"urn:waterlint:wtrl-tracer-json:{__version__}:{datetime.now().strftime('%Y%m%d%H%M%S')}",
 		"__WTRL_VERSION__": {
 			"waterloo": docitem.__version__,
 			"schema": docitem.WTRL_TRACER_JSON_SCHEMA_VERSION,
@@ -242,6 +247,40 @@ def _validate_json_against_schema(tr: tracer, doc: cvrt.WtrlJsonNode_t, schema_p
 			tr.add_error("JSCH-005", "tool",  "[" + docitem.get_obj_fully_qualified_name(e) + "] " + e.message,details)
 		else:
 			tr.add_error("JSCH-800", "tool",  "[" + docitem.get_obj_fully_qualified_name(e) + "] " + e.message,{})
+
+
+def _validate_example_refs_map_against_schema(tr: tracer, ex_map: cvrt.WtrlJsonNode_t) -> bool:
+	"""Validate --examples mapping JSON against the dedicated example-refs schema.
+
+	Schema path is inferred from __WTRL_VERSION__.schema to match the mapping document.
+	"""
+	try:
+		if not isinstance(ex_map, dict):
+			tr.add_error("AXMPL-006", "tool", "Mapping JSON must be an object.")
+			return False
+		version_obj_raw = ex_map["__WTRL_VERSION__"]
+		if not isinstance(version_obj_raw, dict) or "schema" not in version_obj_raw:
+			raise KeyError
+		schema_version = str(version_obj_raw["schema"])
+		schema_path = Path(__file__).resolve().parent / "schema" / f"wtrl-example-refs-json-{schema_version}.schema.json"
+	except Exception as exc:
+		tr.add_error("AXMPL-006", "tool", "[" + docitem.get_obj_fully_qualified_name(exc) + "] Cannot infer example-refs schema path; __WTRL_VERSION__.schema missing or malformed.")
+		return False
+	try:
+		schema = _load_json(str(schema_path))
+		validator = Draft202012Validator(schema)
+		errors = sorted(validator.iter_errors(ex_map), key=lambda e: list(e.path))
+		for e in errors:
+			path_tokens = list(e.path)
+			ptr = _tokens_to_json_pointer(path_tokens) or "/"
+			tr.add_error("AXMPL-006", "tool", f"[{ptr}] {e.message}")
+		return len(errors) == 0
+	except OSError as exc:
+		tr.add_error("AXMPL-006", "tool", f"Cannot load example-refs schema: {exc}")
+		return False
+	except Exception as exc:
+		tr.add_error("AXMPL-006", "tool", f"Example-refs schema validation failed: {exc}")
+		return False
 
 
 def _check_toc_pointers_json(tr: tracer, doc: cvrt.WtrlJsonNode_t, toc_key: str, rule_id: str) -> None:
@@ -364,6 +403,14 @@ def _add_example_json_command(args: argparse.Namespace) -> int:
 			tr.add_error("AXMPL-001", "tool", "Mapping JSON must be an object.")
 			_emit_tracer(tr, out_diag, out_diag_json)
 			return 1
+		if not _validate_example_refs_map_against_schema(tr, ex_map):
+			_emit_tracer(tr, out_diag, out_diag_json)
+			return 1
+		ex_refs = ex_map.get("__WTRL_EXAMPLE_REFS__", {})
+		if not isinstance(ex_refs, dict):
+			tr.add_error("AXMPL-001", "tool", "__WTRL_EXAMPLE_REFS__ is missing or not an object.")
+			_emit_tracer(tr, out_diag, out_diag_json)
+			return 1
 
 		objects = doc.get("__WTRL_OBJECTS__", {})
 		if not isinstance(objects, dict):
@@ -381,87 +428,87 @@ def _add_example_json_command(args: argparse.Namespace) -> int:
 		if isinstance(version_obj, dict):
 			version_obj["schema"] = WTRL_JSON_SCHEMA_VERSION
 
-		basedir_abs: Path | None = None
-		if getattr(args, "basedir", None):
-			basedir_abs = Path(str(args.basedir)).resolve()
-			if not basedir_abs.is_dir():
-				tr.add_error("AXMPL-004", "tool", f"basedir is not a directory: {args.basedir}")
-				_emit_tracer(tr, out_diag, out_diag_json)
-				return 1
+			basedir_abs: Path | None = None
+			if getattr(args, "basedir", None):
+				basedir_abs = Path(str(args.basedir)).resolve()
+				if not basedir_abs.is_dir():
+					tr.add_error("AXMPL-004", "tool", f"basedir is not a directory: {args.basedir}")
+					_emit_tracer(tr, out_diag, out_diag_json)
+					return 1
 
-		for obj_qid, files_any in ex_map.items():
-			if not isinstance(obj_qid, str):
-				tr.add_error("AXMPL-002", "tool", "Mapping contains non-string object key.")
-				continue
-			if obj_qid not in objects:
-				tr.add_error("AXMPL-002", "tool", f"Unknown object: {obj_qid}")
-				continue
-			if not isinstance(files_any, list):
-				tr.add_error("AXMPL-003", "tool", f"Mapping value for {obj_qid} must be a list.")
-				continue
-
-			obj_node = objects.get(obj_qid)
-			if not isinstance(obj_node, dict):
-				tr.add_error("AXMPL-001", "tool", f"Object node must be object: __WTRL_OBJECTS__.{obj_qid}")
-				continue
-			obj_examples = obj_node.get("examples", [])
-			if not isinstance(obj_examples, list):
-				obj_examples = []
-			obj_node["examples"] = obj_examples
-
-			for file_any in files_any:
-				if not isinstance(file_any, str):
-					tr.add_error("AXMPL-003", "tool", f"Example path for {obj_qid} is not a string.")
+			for obj_qid, files_any in ex_refs.items():
+				if not isinstance(obj_qid, str):
+					tr.add_error("AXMPL-002", "tool", "Mapping contains non-string object key.")
 					continue
-				file_raw = Path(file_any)
-				if file_raw.is_absolute():
-					file_abs = file_raw
-				elif basedir_abs is not None:
-					file_abs = (basedir_abs / file_raw).resolve()
-				else:
-					file_abs = file_raw.resolve()
-				if not file_abs.is_file():
-					tr.add_error("AXMPL-004", "tool", f"Example file does not exist: {file_any}")
+				if obj_qid not in objects:
+					tr.add_error("AXMPL-002", "tool", f"Unknown object: {obj_qid}")
+					continue
+				if not isinstance(files_any, list):
+					tr.add_error("AXMPL-003", "tool", f"Mapping value for {obj_qid} must be a list.")
 					continue
 
-				code_bytes = file_abs.read_bytes()
-				hash_hex = hashlib.sha256(code_bytes).hexdigest()
-				ex_key = f"sha256_{hash_hex}"
-				ex_ptr = f"/__WTRL_EXAMPLES__/{ex_key}"
-				try:
-					code_txt = code_bytes.decode("utf-8")
-				except UnicodeDecodeError:
-					tr.add_error("AXMPL-004", "tool", f"Example file is not valid UTF-8: {file_abs}")
+				obj_node = objects.get(obj_qid)
+				if not isinstance(obj_node, dict):
+					tr.add_error("AXMPL-001", "tool", f"Object node must be object: __WTRL_OBJECTS__.{obj_qid}")
 					continue
+				obj_examples = obj_node.get("examples", [])
+				if not isinstance(obj_examples, list):
+					obj_examples = []
+				obj_node["examples"] = obj_examples
 
-				ex_node = examples.get(ex_key)
-				if ex_node is None:
-					ex_node = {
-						"lang": "python",
-						"hash": hash_hex,
-						"code": code_txt,
-						"referenced_by": [],
-					}
-					examples[ex_key] = ex_node
-				if not isinstance(ex_node, dict):
-					tr.add_error("AXMPL-001", "tool", f"Example entry must be object: __WTRL_EXAMPLES__.{ex_key}")
-					continue
-				ref_by = ex_node.get("referenced_by", [])
-				if not isinstance(ref_by, list):
-					ref_by = []
-				ex_node["referenced_by"] = ref_by
-				ex_node["lang"] = "python"
-				ex_node["hash"] = hash_hex
-				ex_node["code"] = code_txt
-				if getattr(args, "allow_local_paths", False):
-					ex_node["path"] = _compute_example_path_for_json(file_abs, basedir_abs)
-				else:
-					ex_node.pop("path", None)
+				for file_any in files_any:
+					if not isinstance(file_any, str):
+						tr.add_error("AXMPL-003", "tool", f"Example path for {obj_qid} is not a string.")
+						continue
+					file_raw = Path(file_any)
+					if file_raw.is_absolute():
+						file_abs = file_raw
+					elif basedir_abs is not None:
+						file_abs = (basedir_abs / file_raw).resolve()
+					else:
+						file_abs = file_raw.resolve()
+					if not file_abs.is_file():
+						tr.add_error("AXMPL-004", "tool", f"Example file does not exist: {file_any}")
+						continue
 
-				if obj_qid not in ref_by:
-					ref_by.append(obj_qid)
-				if ex_ptr not in obj_examples:
-					obj_examples.append(ex_ptr)
+					code_bytes = file_abs.read_bytes()
+					hash_hex = hashlib.sha256(code_bytes).hexdigest()
+					ex_key = f"sha256_{hash_hex}"
+					ex_ptr = f"/__WTRL_EXAMPLES__/{ex_key}"
+					try:
+						code_txt = code_bytes.decode("utf-8")
+					except UnicodeDecodeError:
+						tr.add_error("AXMPL-004", "tool", f"Example file is not valid UTF-8: {file_abs}")
+						continue
+
+					ex_node = examples.get(ex_key)
+					if ex_node is None:
+						ex_node = {
+							"lang": "python",
+							"hash": hash_hex,
+							"code": code_txt,
+							"referenced_by": [],
+						}
+						examples[ex_key] = ex_node
+					if not isinstance(ex_node, dict):
+						tr.add_error("AXMPL-001", "tool", f"Example entry must be object: __WTRL_EXAMPLES__.{ex_key}")
+						continue
+					ref_by = ex_node.get("referenced_by", [])
+					if not isinstance(ref_by, list):
+						ref_by = []
+					ex_node["referenced_by"] = ref_by
+					ex_node["lang"] = "python"
+					ex_node["hash"] = hash_hex
+					ex_node["code"] = code_txt
+					if getattr(args, "allow_local_paths", False):
+						ex_node["path"] = _compute_example_path_for_json(file_abs, basedir_abs)
+					else:
+						ex_node.pop("path", None)
+
+					if obj_qid not in ref_by:
+						ref_by.append(obj_qid)
+					if ex_ptr not in obj_examples:
+						obj_examples.append(ex_ptr)
 
 		for ex_any in examples.values():
 			if isinstance(ex_any, dict):
@@ -780,6 +827,55 @@ def _extract_command(args: argparse.Namespace) -> int:
 
 #===== Validate JSON ==========================================#
 
+def _infer_json_doc_category(doc: cvrt.WtrlJsonNode_t) -> str:
+	"""Infer JSON document category from structural __WTRL_*__ markers."""
+	if not isinstance(doc, dict):
+		raise ValueError("Input JSON must be an object.")
+	matches: list[str] = []
+	if "__WTRL_OBJECTS__" in doc:
+		matches.append("wtrl-json")
+	if any(k in doc for k in ("__WTRL_INFO__", "__WTRL_WARNING__", "__WTRL_ERROR__", "__WTRL_DEBUG__")):
+		matches.append("wtrl-tracer-json")
+	if "__WTRL_EXAMPLE_REFS__" in doc:
+		matches.append("wtrl-example-refs-json")
+	if len(matches) == 0:
+		raise ValueError("Cannot infer JSON category from structural __WTRL_*__ keys.")
+	if len(matches) > 1:
+		raise ValueError("Ambiguous JSON category: multiple structural __WTRL_*__ marker sets detected.")
+	return matches[0]
+
+
+def _infer_schema_path_from_doc(doc: cvrt.WtrlJsonNode_t) -> tuple[Path, str]:
+	"""Infer local schema path from category markers + __WTRL_VERSION__.schema and cross-check metadata."""
+	category = _infer_json_doc_category(doc)
+	if not isinstance(doc, dict):
+		raise ValueError("Input JSON must be an object.")
+	schema_version: str | None = None
+	version_obj_raw = doc.get("__WTRL_VERSION__")
+	if isinstance(version_obj_raw, dict) and ("schema" in version_obj_raw):
+		schema_version = str(version_obj_raw["schema"])
+	else:
+		declared_schema_fallback = doc.get("$schema")
+		if isinstance(declared_schema_fallback, str):
+			m = re.search(r"(wtrl-(?:json|tracer-json|example-refs-json))-([0-9]+(?:\.[0-9]+)*)\.schema\.json", declared_schema_fallback)
+			if m is not None:
+				category_from_schema = m.group(1)
+				schema_version = m.group(2)
+				if category_from_schema != category:
+					raise ValueError(f"$schema conflicts with inferred category ({category}).")
+	if schema_version is None:
+		raise KeyError("__WTRL_VERSION__.schema missing or malformed (and $schema fallback unavailable).")
+	schema_basename = f"{category}-{schema_version}.schema.json"
+	schema_path = Path(__file__).resolve().parent / "schema" / schema_basename
+
+	declared_schema = doc.get("$schema")
+	if isinstance(declared_schema, str) and (schema_basename not in declared_schema):
+		raise ValueError(f"$schema conflicts with inferred category/version ({category}, {schema_version}).")
+	declared_id = doc.get("$id")
+	if isinstance(declared_id, str) and (category not in declared_id):
+		raise ValueError(f"$id conflicts with inferred category ({category}).")
+	return schema_path, category
+
 def _validate_json_command(args: argparse.Namespace) -> int:
 	tr = tracer()
 #----- output spec --------------------------------------------#
@@ -788,25 +884,31 @@ def _validate_json_command(args: argparse.Namespace) -> int:
 #--------------------------------------------------------------#
 	try:
 		doc: Dict[str,cvrt.WtrlJsonNode_t] = cast(Dict[str,cvrt.WtrlJsonNode_t],_load_json(getattr(args, "input_file", None)))
+		doc_category: str | None = None
 # Try schema path from argparse.
 		schema_path = args.schema
 		if not schema_path:
 			try:
-# Determine schema version from JSON.
-				version_obj_raw = doc["__WTRL_VERSION__"]
-				if not isinstance(version_obj_raw, dict) or "schema" not in version_obj_raw:
-					raise KeyError
-				schema_version = str(version_obj_raw["schema"])
-				schema_path = Path(__file__).resolve().parent / "schema" / f"wtrl-json-{schema_version}.schema.json"
+# Determine schema path from mixed strategy:
+# 1) category from structural __WTRL_*__ keys
+# 2) version from __WTRL_VERSION__.schema
+# 3) metadata consistency checks against $schema/$id
+				schema_path, doc_category = _infer_schema_path_from_doc(doc)
 			except Exception as exc:
-				tr.add_error("JSCH-003", "tool", "[" + docitem.get_obj_fully_qualified_name(exc) + "] " + "Cannot infer schema path; __WTRL_VERSION__.schema missing or malformed.")
+				tr.add_error("JSCH-003", "tool", "[" + docitem.get_obj_fully_qualified_name(exc) + "] " + f"Cannot infer schema path automatically: {exc}")
 				_emit_tracer(tr, out_diag, out_diag_json)
 				return _final_exit_code(1, tr, args.fail_on_warning)
+		if doc_category is None:
+			try:
+				doc_category = _infer_json_doc_category(doc)
+			except Exception:
+				doc_category = None
 		_validate_json_against_schema(tr, doc, str(schema_path))
-		_check_toc_pointers_json(tr, doc, "__WTRL_TOC_MODULES__", "JPTR-001")
-		_check_toc_pointers_json(tr, doc, "__WTRL_TOC_CLASSES__", "JPTR-002")
-		_check_toc_pointers_json(tr, doc, "__WTRL_TOC_CALLABLES__", "JPTR-003")
-		_validate_examples_consistency_json(tr, doc)
+		if doc_category == "wtrl-json":
+			_check_toc_pointers_json(tr, doc, "__WTRL_TOC_MODULES__", "JPTR-001")
+			_check_toc_pointers_json(tr, doc, "__WTRL_TOC_CLASSES__", "JPTR-002")
+			_check_toc_pointers_json(tr, doc, "__WTRL_TOC_CALLABLES__", "JPTR-003")
+			_validate_examples_consistency_json(tr, doc)
 	except (IndexError, NameError, AssertionError, NotImplementedError, AttributeError):
 		raise
 	except OSError as exc:  # pragma: no cover - defensive
@@ -1249,7 +1351,7 @@ def _render_json_command(args: argparse.Namespace) -> int:
 		qnames_rendered = sorted(cast(dict[str, Any], tree_full["__WTRL_OBJECTS__"]).keys())
 		qnames_blob = "\n".join(qnames_rendered).encode("utf-8")
 		render_hash = hashlib.md5(qnames_blob).hexdigest()
-		tree_full["$id"] = f"urn:waterlint:{__version__}:render-json:{scope_str}:{flavour_str}:{render_hash}"
+		tree_full["$id"] = f"urn:waterlint:wtrl-json:{__version__}:{scope_str}:{flavour_str}:{render_hash}"
 
 #----- Store diagnostics. Don't change without updating pytest #
 		tr.add_info(f"Num modules skipped (no docstring / invalid)  : {num_modules_skipped_no_doc} / {num_modules_skipped_invalid}.")
@@ -1726,14 +1828,14 @@ def _build_parser() -> argparse.ArgumentParser:
 		"--schema",
 		required=False,
 		metavar="FILE",
-		help="Path to JSON Schema file. If omitted, waterlint uses schema/wtrl-json-<version>.schema.json from __WTRL_VERSION__.schema.",
+		help="Path to JSON Schema file. If omitted, waterlint infers category from __WTRL_*__ keys and version from __WTRL_VERSION__.schema.",
 	)
 	validate_json.add_argument("--debug", action="store_true", help="Emit debugging data to stderr (reserved)")
 
 #----- add-example-json ---------------------------------------#
 	add_example_json = subparsers.add_parser("add-example-json", help="Add example code mapping to Waterloo JSON", parents=[global_opts])
 	add_example_json.add_argument("--in", dest="input_file", required=True, metavar="FILE", help="Input Waterloo JSON file.")
-	add_example_json.add_argument("--examples", dest="examples_file", required=True, metavar="FILE", help="Mapping JSON: object QID -> list of example files.")
+	add_example_json.add_argument("--examples", dest="examples_file", required=True, metavar="FILE", help="Mapping JSON with __WTRL_EXAMPLE_REFS__ (QID -> list of example files).")
 	add_example_json.add_argument("--basedir", metavar="DIR", help="Base directory for resolving relative example file paths.")
 	add_example_json.add_argument("--allow-local-paths", dest="allow_local_paths", action="store_true", default=False, help="Include local example path in __WTRL_EXAMPLES__.path.")
 	add_example_json.add_argument("--no-allow-local-paths", dest="allow_local_paths", action="store_false", help="Do not include local path in __WTRL_EXAMPLES__.path (default).")
