@@ -664,33 +664,6 @@ function isSeeAlsoPath(path) {
   return Array.isArray(path) && path.length >= 1 && String(path[0]) === "See_also";
 }
 
-function isPublicApiDetailPath(path) {
-  return (
-    Array.isArray(path) &&
-    path.length >= 2 &&
-    (
-      String(path[0]) === "Public_types" ||
-      String(path[0]) === "Public_variables" ||
-      String(path[0]) === "Public_constants"
-    )
-  );
-}
-
-// Public_types/Public_variables/Public_constants entries are rendered as
-// freeform content in HTML5 (same behavior as in Sphinx), not as default UL/LI.
-function tryRenderPublicApiFreeform(container, value, path) {
-  if (!isPublicApiDetailPath(path)) return false;
-  if (typeof value === "string") {
-    renderFreeformText(container, value);
-    return true;
-  }
-  if (Array.isArray(value) && value.every(item => typeof item === "string")) {
-    renderFreeformText(container, value.join("\n"));
-    return true;
-  }
-  return false;
-}
-
 function resolveSeeAlsoTarget(entry, currentQid) {
   const raw = String(entry || "").trim();
   if (!raw) return "";
@@ -733,74 +706,6 @@ function appendSeeAlsoEntry(parent, entry, currentQid) {
   a.href = "#" + anchor;
   a.textContent = raw;
   parent.appendChild(a);
-}
-
-function _extractSeeAlsoEntries(value) {
-  if (typeof value === "string") {
-    return value.split(",").map(s => s.trim()).filter(Boolean);
-  }
-  if (Array.isArray(value)) {
-    return value.map(v => String(v).trim()).filter(Boolean);
-  }
-  return [];
-}
-
-function _getSeeAlsoEntriesFromDocNode(docNode) {
-  if (!docNode || typeof docNode !== "object" || Array.isArray(docNode)) return [];
-  return _extractSeeAlsoEntries(docNode.See_also);
-}
-
-function buildReferencedByIndex() {
-  const idx = new Map();
-  const objects = (WTRL_DATA && WTRL_DATA.objects && typeof WTRL_DATA.objects === "object")
-    ? WTRL_DATA.objects
-    : {};
-
-  for (const [sourceQid, node] of Object.entries(objects)) {
-    if (!node || typeof node !== "object") continue;
-    const doc = node.doc;
-    const entries = _getSeeAlsoEntriesFromDocNode(doc);
-    for (const entry of entries) {
-      const targetQid = resolveSeeAlsoTarget(entry, sourceQid);
-      if (!targetQid) continue;
-      if (!idx.has(targetQid)) idx.set(targetQid, new Set());
-      idx.get(targetQid).add(sourceQid);
-    }
-  }
-  return idx;
-}
-
-const REFERENCED_BY_INDEX = buildReferencedByIndex();
-
-function renderReferencedBySection(container, currentQid) {
-  const refs = REFERENCED_BY_INDEX.get(String(currentQid || ""));
-  if (!refs || refs.size === 0) return;
-
-  const sec = document.createElement("div");
-  sec.className = "wtrl-section";
-  const h = document.createElement("div");
-  h.className = "wtrl-section-head";
-  h.textContent = "Referenced by";
-  sec.appendChild(h);
-
-  const ul = document.createElement("ul");
-  ul.className = "wtrl-list";
-  for (const sourceQid of Array.from(refs).sort()) {
-    const li = document.createElement("li");
-    const anchor = TARGET_TO_ANCHOR.get(sourceQid);
-    if (anchor) {
-      const a = document.createElement("a");
-      a.className = "wtrl-ref wtrl_ref wtrl-func wtrl_func";
-      a.href = "#" + anchor;
-      a.textContent = sourceQid;
-      li.appendChild(a);
-    } else {
-      appendMaybeStyledText(li, sourceQid, "wtrl-func wtrl_func");
-    }
-    ul.appendChild(li);
-  }
-  sec.appendChild(ul);
-  container.appendChild(sec);
 }
 
 function appendInlineTokens(parent, txt) {
@@ -867,9 +772,6 @@ function appendInlineTokens(parent, txt) {
 function renderValue(value, container, depth, path, currentQid) {
   const pth = Array.isArray(path) ? path : [];
   const leafRoleCls = getRoleClassForLeaf(pth);
-  // Keep this check at top-level for value branches (string/array) to ensure
-  // Public_* details use freeform parsing before generic list rendering kicks in.
-  if (tryRenderPublicApiFreeform(container, value, pth)) return;
   if (value === null || value === undefined) {
     const p = document.createElement("p");
     p.className = "wtrl-text";
@@ -1016,9 +918,6 @@ function renderValue(value, container, depth, path, currentQid) {
       block.appendChild(h);
       renderValue(v, block, depth + 1, pth.concat([k]), currentQid);
       container.appendChild(block);
-      if (depth === 0 && String(k) === "See_also") {
-        renderReferencedBySection(container, currentQid);
-      }
     }
     return;
   }
@@ -1079,9 +978,14 @@ function renderDocLines(node, targetQid, host) {
   }
   sec.appendChild(h);
 
-  // Render doc_lines as true freeform text so explicit list markers
-  // (*, +, -, #) are interpreted the same way as in other freeform sections.
-  renderFreeformText(sec, lines.map(line => String(line)).join("\n"));
+  const ul = document.createElement("ul");
+  ul.className = "wtrl-list";
+  for (const line of lines) {
+    const li = document.createElement("li");
+    appendInlineTokens(li, String(line));
+    ul.appendChild(li);
+  }
+  sec.appendChild(ul);
   host.appendChild(sec);
   return true;
 }
