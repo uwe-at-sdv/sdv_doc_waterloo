@@ -13,6 +13,7 @@ Waterloo
 	misc.rst
 	format.rst
 	tools.rst
+	json_io.rst
 	reference.rst
 
 Indices and tables

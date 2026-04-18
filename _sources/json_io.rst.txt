@@ -1,0 +1,24 @@
+JSON I/O
+========
+
+This section is normative.
+
+JSON document categories and :wtrl_attr:`$id` conventions
+---------------------------------------------------------
+
+The reference tooling emits and expects category-specific :wtrl_attr:`$id` values.
+
+* Waterloo API JSON (from :wtrl_cmd:`render-json`):
+	:wtrl_value:`urn:waterlint:wtrl-json:<waterlint-version>:<scope>:<flavour>:<hash>`
+* Tracer diagnostics JSON:
+	:wtrl_value:`urn:waterlint:wtrl-tracer-json:<waterlint-version>:<timestamp>`
+* Example-reference mapping JSON:
+	Recommended pattern:
+	:wtrl_value:`urn:<org-or-project>:<domain>:wtrl-example-refs-json:<schema-version>`
+
+The hash digest |should| be SHA256.
+The :wtrl_attr:`$id` value |should| be globally unique for each produced document.
+For interoperability and diagnostics, the category marker
+(:wtrl_value:`wtrl-json`, :wtrl_value:`wtrl-tracer-json`, :wtrl_value:`wtrl-example-refs-json`)
+|should| be present.
+

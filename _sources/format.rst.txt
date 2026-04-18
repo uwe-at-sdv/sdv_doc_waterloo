@@ -161,11 +161,16 @@ The following list explains the mnemonic prefixes and their semantics.
 * STA: All profiles: Subsection :wtrl_label:`status`
 * TERM: All profiles: Section :wtrl_label:`Terminology`
 
+.. rubric:: Tools and extensions
+
+* TOOL: Error messages from :wtrl_cmd:`waterlint` (or other tools)
+* JSCH: Error messages related to JSON and JSON Schema
+* AXMPL: Error messages related to example mapping (e.g. for :wtrl_cmd:`waterlint add-example-json`)
+* RHTM: Error messages related to rendering HTML (e.g. for :wtrl_cmd:`waterlint render-html5`)
+* XTNSN: Error messages related to extensions (e.g. for IDEs)
+
 .. rubric:: Miscellaneous
 
-* JSCH: Error messages related to JSON and JSON Schema
-* TOOL: Error messages from :wtrl_cmd:`waterlint` (or other tools)
-* XTNSN: Error messages related to extensions (e.g. for IDEs)
 * VLII: Warning for a section or subsection that violates the LoII principle.
   The warning will remain in place until the section or subsection is generally accepted
   and recognized as having practical benefits that outweigh the LoII principle.

@@ -16,7 +16,7 @@
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="8. Reference - Core View" href="reference.html" />
+    <link rel="next" title="8. JSON I/O" href="json_io.html" />
     <link rel="prev" title="6. Docstring format" href="format.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
@@ -37,7 +37,7 @@
             
   <section id="tools">
 <h1><span class="section-number">7. </span>Tools<a class="headerlink" href="#tools" title="Link to this heading">¶</a></h1>
-<p>This section is informative.</p>
+<p>This section is informative. Subsections are informative unless explicitly stated otherwise.</p>
 <p>The reference implementation provides the command-line tool
 <code class="wtrl_cmd docutils literal notranslate"><span class="pre">waterlint</span></code>. The error codes listed below are used by this tool.
 These codes are specific to the reference implementation and do not
@@ -52,6 +52,14 @@ within a minor version of the tool.</p>
 </section>
 <section id="waterlint-error-codes">
 <h2><span class="section-number">7.2. </span><code class="wtrl_cmd docutils literal notranslate"><span class="pre">waterlint</span></code> error codes<a class="headerlink" href="#waterlint-error-codes" title="Link to this heading">¶</a></h2>
+<p class="rubric">General tool errors</p>
+<ul class="simple">
+<li><p>[TOOL-001] – Cannot resolve an object passed via option <code class="wtrl_opt docutils literal notranslate"><span class="pre">--obj</span></code>.</p></li>
+<li><p>[TOOL-800] – Unspecified runtime error during analysis.
+This code is used when an unexpected exception escapes the validation process.
+The tracer diagnostic output should provide sufficient detail to identify
+the underlying cause.</p></li>
+</ul>
 <p class="rubric">JSON processing</p>
 <ul class="simple">
 <li><p>[JSCH-000] – Unspecified catch-all error during JSON processing.</p></li>
@@ -76,44 +84,18 @@ within a minor version of the tool.</p>
 <li><p>[AXMPL-005] – Input or mapping file is not valid JSON.</p></li>
 <li><p>[AXMPL-006] – Mapping JSON failed schema validation or schema auto-detection.</p></li>
 </ul>
-</section>
-<section id="json-document-categories-and-id-conventions">
-<h2><span class="section-number">7.3. </span>JSON document categories and <code class="docutils literal notranslate"><span class="pre">$id</span></code> conventions<a class="headerlink" href="#json-document-categories-and-id-conventions" title="Link to this heading">¶</a></h2>
-<p>The reference tooling emits category-specific <code class="docutils literal notranslate"><span class="pre">$id</span></code> values.</p>
+<p class="rubric">Rendering HTML (render-html5)</p>
 <ul class="simple">
-<li><dl class="simple">
-<dt>Waterloo API JSON (from <code class="wtrl_cmd docutils literal notranslate"><span class="pre">render-json</span></code>):</dt><dd><p><code class="docutils literal notranslate"><span class="pre">urn:waterlint:wtrl-json:&lt;waterlint-version&gt;:&lt;scope&gt;:&lt;flavour&gt;:&lt;hash&gt;</span></code></p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>Tracer diagnostics JSON:</dt><dd><p><code class="docutils literal notranslate"><span class="pre">urn:waterlint:wtrl-tracer-json:&lt;waterlint-version&gt;:&lt;timestamp&gt;</span></code></p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>Example-reference mapping JSON:</dt><dd><p>Recommended pattern:
-<code class="docutils literal notranslate"><span class="pre">urn:&lt;org-or-project&gt;:&lt;domain&gt;:wtrl-example-refs-json:&lt;schema-version&gt;</span></code></p>
-</dd>
-</dl>
-</li>
-</ul>
-<p>The <code class="docutils literal notranslate"><span class="pre">$id</span></code> value should be globally unique for each produced document.
-For interoperability and diagnostics, the category marker
-(<code class="docutils literal notranslate"><span class="pre">wtrl-json</span></code>, <code class="docutils literal notranslate"><span class="pre">wtrl-tracer-json</span></code>, <code class="docutils literal notranslate"><span class="pre">wtrl-example-refs-json</span></code>)
-<code class="wtrl_norm docutils literal notranslate"><span class="pre">should</span></code> be present.</p>
-<p class="rubric">General tool errors</p>
-<ul class="simple">
-<li><p>[TOOL-001] – Cannot resolve an object passed via option <code class="wtrl_opt docutils literal notranslate"><span class="pre">--obj</span></code>.</p></li>
-<li><p>[TOOL-800] – Unspecified runtime error during analysis.
-This code is used when an unexpected exception escapes the validation process.
-The tracer diagnostic output should provide sufficient detail to identify
-the underlying cause.</p></li>
 <li><p>[RHTM-001] – General error while rendering HTML5.</p></li>
+<li><p>[RHTM-002] – Invalid render-html5 output arguments or output directory state.</p></li>
+<li><p>[RHTM-003] – Input JSON documents cannot be merged (inconsistent metadata, missing structure, collisions).</p></li>
+<li><p>[RHTM-004] – CSS asset loading failed (default CSS or user-provided <code class="docutils literal notranslate"><span class="pre">--css</span></code>).</p></li>
+<li><p>[RHTM-005] – HTML assembly or output file writing failed.</p></li>
+<li><p>[RHTM-006] – Optional preprocessing failed (currently: dropping <code class="docutils literal notranslate"><span class="pre">Preamble</span></code> via <code class="docutils literal notranslate"><span class="pre">--no-render-preamble</span></code>).</p></li>
 </ul>
 </section>
 <section id="extension-error-codes">
-<h2><span class="section-number">7.4. </span>Extension error codes<a class="headerlink" href="#extension-error-codes" title="Link to this heading">¶</a></h2>
+<h2><span class="section-number">7.3. </span>Extension error codes<a class="headerlink" href="#extension-error-codes" title="Link to this heading">¶</a></h2>
 <ul class="simple">
 <li><p>[XTNSN-001] – Invalid JSON input</p></li>
 <li><p>[XTNSN-002] – Unsupported command</p></li>
@@ -130,7 +112,7 @@ the underlying cause.</p></li>
 </ul>
 </section>
 <section id="json-protocol-shape-vscode-extension-backend">
-<h2><span class="section-number">7.5. </span>JSON protocol shape (VSCode extension backend)<a class="headerlink" href="#json-protocol-shape-vscode-extension-backend" title="Link to this heading">¶</a></h2>
+<h2><span class="section-number">7.4. </span>JSON protocol shape (VSCode extension backend)<a class="headerlink" href="#json-protocol-shape-vscode-extension-backend" title="Link to this heading">¶</a></h2>
 <p>The Python backend used by the VSCode extension returns a unified
 JSON envelope for all commands.</p>
 <p>Minimal response shape:</p>
@@ -172,9 +154,9 @@ For successful calls, the client may request full diagnostics by setting
 <code class="docutils literal notranslate"><span class="pre">include_diagnostics=true</span></code> in the request.</p>
 </section>
 <section id="extension-command-examples">
-<h2><span class="section-number">7.6. </span>Extension command examples<a class="headerlink" href="#extension-command-examples" title="Link to this heading">¶</a></h2>
+<h2><span class="section-number">7.5. </span>Extension command examples<a class="headerlink" href="#extension-command-examples" title="Link to this heading">¶</a></h2>
 <section id="common-request-fields-non-ping">
-<h3><span class="section-number">7.6.1. </span>Common request fields (non-<code class="docutils literal notranslate"><span class="pre">ping</span></code>)<a class="headerlink" href="#common-request-fields-non-ping" title="Link to this heading">¶</a></h3>
+<h3><span class="section-number">7.5.1. </span>Common request fields (non-<code class="docutils literal notranslate"><span class="pre">ping</span></code>)<a class="headerlink" href="#common-request-fields-non-ping" title="Link to this heading">¶</a></h3>
 <p>The following fields are accepted for all non-<code class="docutils literal notranslate"><span class="pre">ping</span></code> commands:</p>
 <div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
@@ -208,7 +190,7 @@ For successful calls, the client may request full diagnostics by setting
 </ul>
 </section>
 <section id="command-ping">
-<h3><span class="section-number">7.6.2. </span>Command <code class="docutils literal notranslate"><span class="pre">ping</span></code><a class="headerlink" href="#command-ping" title="Link to this heading">¶</a></h3>
+<h3><span class="section-number">7.5.2. </span>Command <code class="docutils literal notranslate"><span class="pre">ping</span></code><a class="headerlink" href="#command-ping" title="Link to this heading">¶</a></h3>
 <p>Request:</p>
 <div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
@@ -242,7 +224,7 @@ For successful calls, the client may request full diagnostics by setting
 </div>
 </section>
 <section id="command-generate-minimal-docstring-to-tmp">
-<h3><span class="section-number">7.6.3. </span>Command <code class="docutils literal notranslate"><span class="pre">generate_minimal_docstring_to_tmp</span></code><a class="headerlink" href="#command-generate-minimal-docstring-to-tmp" title="Link to this heading">¶</a></h3>
+<h3><span class="section-number">7.5.3. </span>Command <code class="docutils literal notranslate"><span class="pre">generate_minimal_docstring_to_tmp</span></code><a class="headerlink" href="#command-generate-minimal-docstring-to-tmp" title="Link to this heading">¶</a></h3>
 <p>Request (function):</p>
 <div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
@@ -272,7 +254,7 @@ For successful calls, the client may request full diagnostics by setting
 </div>
 </section>
 <section id="command-generate-full-docstring-to-tmp">
-<h3><span class="section-number">7.6.4. </span>Command <code class="docutils literal notranslate"><span class="pre">generate_full_docstring_to_tmp</span></code><a class="headerlink" href="#command-generate-full-docstring-to-tmp" title="Link to this heading">¶</a></h3>
+<h3><span class="section-number">7.5.4. </span>Command <code class="docutils literal notranslate"><span class="pre">generate_full_docstring_to_tmp</span></code><a class="headerlink" href="#command-generate-full-docstring-to-tmp" title="Link to this heading">¶</a></h3>
 <p>Request (method):</p>
 <div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
@@ -302,7 +284,7 @@ For successful calls, the client may request full diagnostics by setting
 </div>
 </section>
 <section id="command-validate-docstring">
-<h3><span class="section-number">7.6.5. </span>Command <code class="docutils literal notranslate"><span class="pre">validate_docstring</span></code><a class="headerlink" href="#command-validate-docstring" title="Link to this heading">¶</a></h3>
+<h3><span class="section-number">7.5.5. </span>Command <code class="docutils literal notranslate"><span class="pre">validate_docstring</span></code><a class="headerlink" href="#command-validate-docstring" title="Link to this heading">¶</a></h3>
 <p>Request (function):</p>
 <div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
@@ -401,20 +383,20 @@ For successful calls, the client may request full diagnostics by setting
 <li class="toctree-l1 current"><a class="current reference internal" href="#">7. Tools</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#error-code-structure">7.1. Error code structure</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#waterlint-error-codes">7.2. <code class="wtrl_cmd docutils literal notranslate"><span class="pre">waterlint</span></code> error codes</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#json-document-categories-and-id-conventions">7.3. JSON document categories and <code class="docutils literal notranslate"><span class="pre">$id</span></code> conventions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#extension-error-codes">7.4. Extension error codes</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#json-protocol-shape-vscode-extension-backend">7.5. JSON protocol shape (VSCode extension backend)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#extension-command-examples">7.6. Extension command examples</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#common-request-fields-non-ping">7.6.1. Common request fields (non-<code class="docutils literal notranslate"><span class="pre">ping</span></code>)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#command-ping">7.6.2. Command <code class="docutils literal notranslate"><span class="pre">ping</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#command-generate-minimal-docstring-to-tmp">7.6.3. Command <code class="docutils literal notranslate"><span class="pre">generate_minimal_docstring_to_tmp</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#command-generate-full-docstring-to-tmp">7.6.4. Command <code class="docutils literal notranslate"><span class="pre">generate_full_docstring_to_tmp</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#command-validate-docstring">7.6.5. Command <code class="docutils literal notranslate"><span class="pre">validate_docstring</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#extension-error-codes">7.3. Extension error codes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#json-protocol-shape-vscode-extension-backend">7.4. JSON protocol shape (VSCode extension backend)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#extension-command-examples">7.5. Extension command examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#common-request-fields-non-ping">7.5.1. Common request fields (non-<code class="docutils literal notranslate"><span class="pre">ping</span></code>)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#command-ping">7.5.2. Command <code class="docutils literal notranslate"><span class="pre">ping</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#command-generate-minimal-docstring-to-tmp">7.5.3. Command <code class="docutils literal notranslate"><span class="pre">generate_minimal_docstring_to_tmp</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#command-generate-full-docstring-to-tmp">7.5.4. Command <code class="docutils literal notranslate"><span class="pre">generate_full_docstring_to_tmp</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#command-validate-docstring">7.5.5. Command <code class="docutils literal notranslate"><span class="pre">validate_docstring</span></code></a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="reference.html">8. Reference - Core View</a></li>
+<li class="toctree-l1"><a class="reference internal" href="json_io.html">8. JSON I/O</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reference.html">9. Reference - Core View</a></li>
 </ul>
 
 <div class="relations">
@@ -422,7 +404,7 @@ For successful calls, the client may request full diagnostics by setting
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
       <li>Previous: <a href="format.html" title="previous chapter"><span class="section-number">6. </span>Docstring format</a></li>
-      <li>Next: <a href="reference.html" title="next chapter"><span class="section-number">8. </span>Reference - Core View</a></li>
+      <li>Next: <a href="json_io.html" title="next chapter"><span class="section-number">8. </span>JSON I/O</a></li>
   </ul></li>
 </ul>
 </div>
