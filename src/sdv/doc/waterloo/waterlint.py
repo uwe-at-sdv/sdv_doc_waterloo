@@ -27,7 +27,8 @@ from jsonschema import Draft202012Validator
 #from jsonschema import JSONDecodeError
 import jsonschema.exceptions
 
-__version__ = "0.8.0"
+__version__ = "0.8.1"
+# - 0.8.1 [2026-04-18]	Unique $id in add-example-json; MD5 replaced by SHA256 in JSON-artifacts.
 # - 0.8.0 [2026-04-17]	JSON Schema for example references: this affects
 #			waterlint add-example-json
 #			waterlint validate-json
@@ -385,6 +386,7 @@ def _add_example_json_command(args: argparse.Namespace) -> int:
 	tr = tracer()
 	out_diag = getattr(args, "out_diag", None)
 	out_diag_json = getattr(args, "out_diag_json", None)
+
 	try:
 		in_path = getattr(args, "input_file", None)
 		examples_map_path = getattr(args, "examples_file", None)
@@ -394,6 +396,7 @@ def _add_example_json_command(args: argparse.Namespace) -> int:
 			raise RuntimeError("--examples is required.")
 
 		doc = cast(dict[str, Any], _load_json(in_path))
+
 		ex_map = cast(dict[str, Any], _load_json(examples_map_path))
 		if not isinstance(doc, dict):
 			tr.add_error("AXMPL-001", "tool", "Input JSON must be an object.")
@@ -406,6 +409,15 @@ def _add_example_json_command(args: argparse.Namespace) -> int:
 		if not _validate_example_refs_map_against_schema(tr, ex_map):
 			_emit_tracer(tr, out_diag, out_diag_json)
 			return 1
+
+		# In order to set $id we need to extract scope and flavour from the input document,
+		# but we don't want to fail with an exception if they are missing or malformed,
+		# as we can still add examples and update $id based on the content hash.
+		# We will just use empty strings for scope and flavour in that case.
+		meta = doc.get("__WTRL_META__", {})
+		scope = str(meta.get("scope", ""))
+		flavour = str(meta.get("flavour", ""))
+
 		ex_refs = ex_map.get("__WTRL_EXAMPLE_REFS__", {})
 		if not isinstance(ex_refs, dict):
 			tr.add_error("AXMPL-001", "tool", "__WTRL_EXAMPLE_REFS__ is missing or not an object.")
@@ -537,7 +549,16 @@ def _add_example_json_command(args: argparse.Namespace) -> int:
 			if not od.is_dir():
 				raise RuntimeError(f"output path is not a directory: {out_dir}")
 			out_file = str(od / Path(str(in_path)).name)
-
+		# Set a new $id from the canonical final document (without existing $id).
+		doc_for_digest = {k: v for k, v in doc.items() if k != "$id"}
+		canonical_doc = json.dumps(
+			doc_for_digest,
+			sort_keys=True,
+			separators=(",", ":"),
+			ensure_ascii=False,
+		).encode("utf-8")
+		digest = hashlib.sha256(canonical_doc).hexdigest()
+		doc["$id"] = f"urn:waterlint:wtrl-json:{__version__}:{scope}:{flavour}:{digest}"
 		with open(str(out_file), "w", encoding="utf-8") as fh:
 			json.dump(doc, fh, indent=4)
 			fh.write("\n")
@@ -1350,7 +1371,7 @@ def _render_json_command(args: argparse.Namespace) -> int:
 #----- Build deterministic document id ------------------------#
 		qnames_rendered = sorted(cast(dict[str, Any], tree_full["__WTRL_OBJECTS__"]).keys())
 		qnames_blob = "\n".join(qnames_rendered).encode("utf-8")
-		render_hash = hashlib.md5(qnames_blob).hexdigest()
+		render_hash = hashlib.sha256(qnames_blob).hexdigest()
 		tree_full["$id"] = f"urn:waterlint:wtrl-json:{__version__}:{scope_str}:{flavour_str}:{render_hash}"
 
 #----- Store diagnostics. Don't change without updating pytest #
@@ -1424,6 +1445,7 @@ def _render_html5_command(args: argparse.Namespace) -> int:
 		if not in_files:
 			raise RuntimeError("at least one --in must be provided")
 		out_path = rhtml5.render_html5(
+			tr,
 			input_paths=in_files,
 			out_file=getattr(args, "out_file", None),
 			out_dir=getattr(args, "out_dir", None),
@@ -1431,6 +1453,9 @@ def _render_html5_command(args: argparse.Namespace) -> int:
 			pygments_theme=getattr(args, "pygments_theme", None),
 			no_render_preamble=getattr(args, "no_render_preamble", False),
 		)
+		if not out_path:
+			_emit_tracer(tr, out_diag, out_diag_json)
+			return 1
 		tr.add_info(f"HTML5 documentation written to: {out_path}")
 	except SOURCE_CODE_ERRORS:
 		if not out_diag:
@@ -1439,7 +1464,7 @@ def _render_html5_command(args: argparse.Namespace) -> int:
 			return 1
 		raise
 	except Exception as exc:
-		tr.add_error("RHTM-001", "tool", f"[{docitem.get_obj_fully_qualified_name(exc)}] {exc}")
+		tr.add_error("RHTM-001", "tool", f"[{docitem.get_obj_fully_qualified_name(exc)}] Unexpected failure in render-html5 command: {exc}")
 		_emit_tracer(tr, out_diag, out_diag_json)
 		return 1
 	_emit_tracer(tr, out_diag, out_diag_json)

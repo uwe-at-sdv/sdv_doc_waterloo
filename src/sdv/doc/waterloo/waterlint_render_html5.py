@@ -9,7 +9,12 @@ import json
 import html
 import importlib.resources as importlib_resources
 from pathlib import Path
-from typing import Any, Dict, List, Tuple
+from typing import Any, Dict, List, Literal, Tuple, TypeAlias
+
+#===== Typing ================================================#
+# "obj" is a fallback, not sure if it occurs in practice.
+Kind_t: TypeAlias = Literal["mod", "cls", "func", "obj"]
+#=============================================================#
 
 try:
 	from pygments import highlight
@@ -30,7 +35,7 @@ def _infer_kind_for_qid(
 	toc_modules: Dict[str, Any],
 	toc_classes: Dict[str, Any],
 	toc_callables: Dict[str, Any],
-) -> str:
+) -> Kind_t:
 	if qid in toc_modules:
 		return "mod"
 	if qid in toc_classes:
@@ -152,6 +157,8 @@ def _merge_docs_strict(input_paths: List[str]) -> Tuple[Dict[str, Any], str, str
 		meta = _require_dict("__WTRL_META__", doc.get("__WTRL_META__"))
 		ver = _require_dict("__WTRL_VERSION__", doc.get("__WTRL_VERSION__"))
 
+		# We make sure not to mix scopes, flavours, or schema versions across inputs,
+		# as this would indicate a likely error in the input documents or an unsupported use case for merging.
 		scope = str(meta.get("scope", ""))
 		flavour = str(meta.get("flavour", ""))
 		schema_version = str(ver.get("schema", ""))
@@ -166,6 +173,9 @@ def _merge_docs_strict(input_paths: List[str]) -> Tuple[Dict[str, Any], str, str
 		elif flavour != base_flavour:
 			raise RuntimeError(f"flavour mismatch across inputs: '{flavour}' != '{base_flavour}'")
 
+		# We should consider implementing a waterlint command like `update-json-schema`
+		# that can update input documents to a common schema version if needed,
+		# but for now we require all inputs to already be on the same version.
 		if base_schema_version is None:
 			base_schema_version = schema_version
 		elif schema_version != base_schema_version:
@@ -331,7 +341,6 @@ a.wtrl-func:visited, a.wtrl-type:visited, a.wtrl-var:visited, a.wtrl-ref:visited
 
 	js = _load_render_js_source()
 
-
 	css_extra = str(merged.get("meta", {}).get("css_extra", ""))
 	css_override = bool(merged.get("meta", {}).get("css_override", False))
 	if css_override:
@@ -393,6 +402,7 @@ a.wtrl-func:visited, a.wtrl-type:visited, a.wtrl-var:visited, a.wtrl-ref:visited
 
 
 def render_html5(
+	tr: Any,
 	*,
 	input_paths: List[str],
 	out_file: str | None,
@@ -401,31 +411,78 @@ def render_html5(
 	pygments_theme: str | None = None,
 	no_render_preamble: bool = False,
 ) -> str:
-	merged, scope, flavour = _merge_docs_strict(input_paths)
-	if no_render_preamble:
-		_drop_preamble_sections(merged)
-	if css_path:
-		with open(css_path, "r", encoding="utf-8") as fh:
-			merged["meta"]["css_extra"] = fh.read()
-		merged["meta"]["css_override"] = True
-	else:
-		merged["meta"]["css_extra"] = _load_default_css_source()
-		merged["meta"]["css_override"] = True
-	if pygments_theme:
-		merged["meta"]["pygments_theme"] = pygments_theme
-	html = _build_html_doc(merged)
+	"""
+	Render merged Waterloo JSON input to a bundled HTML5 document.
 
-	if (out_file is None and out_dir is None) or (out_file is not None and out_dir is not None):
-		raise RuntimeError("exactly one of --out or --out-dir must be provided")
+	The function reports operational failures via the provided tracer and returns
+	an empty string on error.
+	"""
+	def _add_error(rule_id: str, msg: str) -> None:
+		try:
+			tr.add_error(rule_id, "tool", msg)
+		except Exception:
+			pass
 
-	if out_file is None:
-		od = Path(str(out_dir))
-		if not od.exists():
-			raise RuntimeError(f"output directory does not exist: {out_dir}")
-		if not od.is_dir():
-			raise RuntimeError(f"output path is not a directory: {out_dir}")
-		out_file = str(od / f"waterloo-docs.{scope}.{flavour}.html")
+	try:
+		if (out_file is None and out_dir is None) or (out_file is not None and out_dir is not None):
+			_add_error("RHTM-002", "Exactly one of --out or --out-dir must be provided.")
+			return ""
 
-	with open(out_file, "w", encoding="utf-8") as fh:
-		fh.write(html)
-	return out_file
+		try:
+			merged, scope, flavour = _merge_docs_strict(input_paths)
+		except Exception as exc:
+			_add_error("RHTM-003", f"Cannot merge input JSON documents: {exc}")
+			return ""
+
+		if no_render_preamble:
+			try:
+				_drop_preamble_sections(merged)
+			except Exception as exc:
+				_add_error("RHTM-006", f"Cannot drop Preamble sections: {exc}")
+				return ""
+
+		if css_path:
+			try:
+				with open(css_path, "r", encoding="utf-8") as fh:
+					merged["meta"]["css_extra"] = fh.read()
+				merged["meta"]["css_override"] = True
+			except Exception as exc:
+				_add_error("RHTM-004", f"Cannot read CSS file '{css_path}': {exc}")
+				return ""
+		else:
+			try:
+				merged["meta"]["css_extra"] = _load_default_css_source()
+				merged["meta"]["css_override"] = True
+			except Exception as exc:
+				_add_error("RHTM-004", f"Cannot load default CSS asset: {exc}")
+				return ""
+
+		if pygments_theme:
+			merged["meta"]["pygments_theme"] = pygments_theme
+
+		try:
+			html = _build_html_doc(merged)
+		except Exception as exc:
+			_add_error("RHTM-005", f"Cannot build HTML output: {exc}")
+			return ""
+
+		if out_file is None:
+			od = Path(str(out_dir))
+			if not od.exists():
+				_add_error("RHTM-002", f"Output directory does not exist: {out_dir}")
+				return ""
+			if not od.is_dir():
+				_add_error("RHTM-002", f"Output path is not a directory: {out_dir}")
+				return ""
+			out_file = str(od / f"waterloo-docs.{scope}.{flavour}.html")
+
+		try:
+			with open(out_file, "w", encoding="utf-8") as fh:
+				fh.write(html)
+		except Exception as exc:
+			_add_error("RHTM-005", f"Cannot write HTML output '{out_file}': {exc}")
+			return ""
+		return out_file
+	except Exception as exc:
+		_add_error("RHTM-001", f"Unexpected render-html5 failure: {exc}")
+		return ""
