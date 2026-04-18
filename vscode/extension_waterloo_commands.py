@@ -6,27 +6,39 @@ import ast
 import json
 import tempfile
 from pathlib import Path
-from typing import Any, cast
+from typing import Any, Generator, cast
+from ast import AsyncFunctionDef, ClassDef, FunctionDef, Module
 
-import sdv.doc.waterloo.docitem as wtrl
-import sdv.doc.waterloo.docitem_genutil as genutil
+try:
+	import sdv.doc.waterloo.docitem as wtrl
+	import sdv.doc.waterloo.docitem_genutil as genutil
+except ImportError as e:
+	print(f"Error importing Waterloo modules: {e}", file=sys.stderr)
+	print("Please download and install sdv_doc_waterloo from https://github.com/uwe-at-sdv/sdv_doc_waterloo", file=sys.stderr)
+	sys.exit(1)
+
 
 COMMAND_PING = "ping"
 COMMAND_GENERATE_MINIMAL = "generate_minimal_docstring_to_tmp"
 COMMAND_GENERATE_FULL = "generate_full_docstring_to_tmp"
 COMMAND_VALIDATE = "validate_docstring"
 
+HeaderNode_t = Module | ClassDef | FunctionDef | AsyncFunctionDef
+DocstringOwnerNode_t = Module | ClassDef | FunctionDef | AsyncFunctionDef
 
-def _parse_file_to_ast(filename):
+
+def _parse_file_to_ast(filename: str) -> Module:
 	with open(filename, "r", encoding="utf-8") as f:
 		source = f.read()
 	tree = ast.parse(source)
 	return tree
 
-def _gen_qis_and_nodes(nd_parent,prefix):
-	name = getattr(nd_parent, 'name', None)
+def _gen_qis_and_nodes(nd_parent: ast.AST, prefix: str) -> Generator[tuple[str, DocstringOwnerNode_t], None, None]:
 # Only consider objects which can have a docstring as per Python standard.
-	if isinstance(nd_parent, (ast.ClassDef, ast.FunctionDef, ast.AsyncFunctionDef)):
+	if isinstance(nd_parent, ast.Module):
+		qi = prefix
+		yield qi, nd_parent
+	elif isinstance(nd_parent, (ast.ClassDef, ast.FunctionDef, ast.AsyncFunctionDef)):
 		qi = f"{prefix}.{nd_parent.name}"
 		yield qi,nd_parent
 	else:
@@ -34,7 +46,7 @@ def _gen_qis_and_nodes(nd_parent,prefix):
 	for nd in ast.iter_child_nodes(nd_parent):
 		yield from _gen_qis_and_nodes(nd, qi)
 
-def _qualify_documented_object(module_filename,name,line):
+def _qualify_documented_object(module_filename: str, name: str, line: int) -> str:
 	tree = _parse_file_to_ast(module_filename)
 	module_name = Path(module_filename).stem
 	for qi,nd in _gen_qis_and_nodes(tree,module_name):
@@ -43,19 +55,20 @@ def _qualify_documented_object(module_filename,name,line):
 		if doc:
 #			print(qi,"<->",name)
 			if qi.split(".")[-1] == name:
-				beg_line = getattr(nd, "lineno", -1)
-#				print("beg_line:",beg_line,"line:",line)
-				if beg_line > -1:
-					end_line = getattr(nd, "end_lineno", -1)
-# Check agains full range for better robustness.
-# Important because decaorators might shift beg_line.
-					if line in range(beg_line,end_line + 1):
-						return qi
+# Module node has no lineno/end_lineno and does not represent the selected header.
+				if isinstance(nd, ast.Module):
+					continue
+# Check against full range for better robustness.
+# Important because decorators might shift beg_line.
+				beg_line = nd.lineno
+				end_line = nd.end_lineno if nd.end_lineno is not None else beg_line
+				if line in range(beg_line,end_line + 1):
+					return qi
 	return ""
 
-def _validate_source_fragment(tr: wtrl.tracer,kind: str, source_fragment: str) -> ast.AST | None:
+def _validate_source_fragment(tr: wtrl.tracer,kind: str, source_fragment: str) -> HeaderNode_t:
 	try:
-		return genutil.parse_source_fragment(cast(genutil.Profile, kind), source_fragment)
+		return cast(HeaderNode_t, genutil.parse_source_fragment(cast(genutil.Profile, kind), source_fragment))
 	except SyntaxError as e:
 		tr.add_error("XTNSN-007","extension","error parsing source_fragment.",{"ast":f"{str(e)}"})
 		raise RuntimeError() from e
@@ -149,8 +162,9 @@ def _handle_validate(
 		tr.add_error("XTNSN-005","extension","Source fragment must be a string")
 	if not isinstance(source_file, str) or not source_file.strip():
 		tr.add_error("XTNSN-010","extension","Source file must be a non-empty string.")
-	if not isinstance(line, int):
-		tr.add_error("XTNSN-011","extension","Line must be an integer.")
+# unreachable says mypy.
+#	if not isinstance(line, int):
+#		tr.add_error("XTNSN-011","extension","Line must be an integer.")
 	if tr.has_errors():
 		raise RuntimeError()
 
@@ -161,6 +175,9 @@ def _handle_validate(
 # Parse source fragment
 		node = _validate_source_fragment(tr,kind, source_fragment)
 		if tr.has_errors():
+			raise RuntimeError()
+		if not isinstance(node, (ast.ClassDef, ast.FunctionDef, ast.AsyncFunctionDef)):
+			tr.add_error("XTNSN-006","extension","Source fragment does not define a class/function header.")
 			raise RuntimeError()
 # Parse complete module and qualify the selected object.
 		try:
