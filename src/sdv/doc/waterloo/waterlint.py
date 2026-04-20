@@ -97,7 +97,11 @@ with contextlib.redirect_stdout(sys.stderr):
 
 #----- Schema versions, keep up to date -----------------------#
 WTRL_JSON_SCHEMA_VERSION = "0.1.0"
-WTRL_EXAMPLE_REFS_JSON_SCHEMA_VERSION = "0.1.0"
+WTRL_EXAMPLE_REFS_JSON_SCHEMA_VERSION = "0.1.1"
+
+WTRL_DOCITEM_VERSION = docitem.__version__
+
+WTRL_SCHEMA_URI_BASE = "https://sci-d-vis.com/schema"
 
 #----- Add subcommands here -----------------------------------#
 SUBCOMMANDS = (
@@ -106,6 +110,7 @@ SUBCOMMANDS = (
 	"extract",
 	"validate-json",
 	"add-example-json",
+	"gen-example-template-json",
 	"render-json",
 	"render-html5",
 	"gen-minimal",
@@ -140,10 +145,10 @@ def _emit_diagnostics(tr: tracer, dest: io.TextIOBase, strip_ansi: bool = False)
 
 def _build_tracer_json_doc(tr: tracer) -> dict[str, Any]:
 	doc: dict[str, Any] = {
-		"$schema": f"https://sci-d-vis.com/schema/wtrl-tracer-json-{docitem.WTRL_TRACER_JSON_SCHEMA_VERSION}.schema.json",
+		"$schema": f"{WTRL_SCHEMA_URI_BASE}/wtrl-tracer-json-{docitem.WTRL_TRACER_JSON_SCHEMA_VERSION}.schema.json",
 		"$id": f"urn:waterlint:wtrl-tracer-json:{__version__}:{datetime.now().strftime('%Y%m%d%H%M%S')}",
 		"__WTRL_VERSION__": {
-			"waterloo": docitem.__version__,
+			"waterloo": WTRL_DOCITEM_VERSION,
 			"schema": docitem.WTRL_TRACER_JSON_SCHEMA_VERSION,
 		},
 		"__WTRL_INFO__": [],
@@ -381,6 +386,45 @@ def _compute_example_path_for_json(path_abs: Path, basedir_abs: Path | None) -> 
 			pass
 	return str(path_abs)
 
+def _render_example_refs_template(tr: tracer, org_or_project: str = "none", domain: str = "local") -> dict[str,Any]:
+	nodes: dict[str, Any] = {}
+	nodes["$schema"] = f"{WTRL_SCHEMA_URI_BASE}/wtrl-example-refs-json-{WTRL_EXAMPLE_REFS_JSON_SCHEMA_VERSION}.schema.json"
+	nodes["$id"] = f"urn:{org_or_project}:{domain}:wtrl-example-refs-json:{WTRL_EXAMPLE_REFS_JSON_SCHEMA_VERSION}"
+	nodes["__WTRL_VERSION__"] = {
+		"waterloo": WTRL_DOCITEM_VERSION,
+		"waterlint_min": __version__,
+		"schema": WTRL_EXAMPLE_REFS_JSON_SCHEMA_VERSION
+		}
+	nodes["__WTRL_EXAMPLE_REFS__"] = {}
+	return nodes
+
+def _gen_example_template_json_command(args: argparse.Namespace) -> int:
+	tr = tracer()
+	out_diag = getattr(args, "out_diag", None)
+	out_diag_json = getattr(args, "out_diag_json", None)
+	try:
+		org_or_project = str(getattr(args, "org_or_project", "none"))
+		domain = str(getattr(args, "domain", "local"))
+		nodes = _render_example_refs_template(tr, org_or_project=org_or_project, domain=domain)
+		out_file = getattr(args, "out_file", None)
+		if out_file:
+			with open(out_file, "w", encoding="utf-8") as fh:
+				json.dump(nodes, fh, indent=4)
+				fh.write("\n")
+			tr.add_info(f"Example refs template written to: {out_file}", "tool")
+		else:
+			json.dump(nodes, sys.stdout, indent=4)
+			sys.stdout.write("\n")
+	except OSError as exc:
+		tr.add_error("AXMPL-004", "tool", str(exc))
+		_emit_tracer(tr, out_diag, out_diag_json)
+		return 1
+	except Exception as exc:
+		tr.add_error("AXMPL-000", "tool", f"[{docitem.get_obj_fully_qualified_name(exc)}] {exc}")
+		_emit_tracer(tr, out_diag, out_diag_json)
+		return 1
+	_emit_tracer(tr, out_diag, out_diag_json)
+	return _final_exit_code(0, tr, args.fail_on_warning)
 
 def _add_example_json_command(args: argparse.Namespace) -> int:
 	tr = tracer()
@@ -1061,12 +1105,12 @@ def _render_json_command(args: argparse.Namespace) -> int:
 
 #----- Build version, legend and table of contents ------------#
 		tree_full: dict[str, Any] = {}
-		tree_full["$schema"] = f"https://sci-d-vis.com/schema/wtrl-json-{WTRL_JSON_SCHEMA_VERSION}.schema.json"
+		tree_full["$schema"] = f"{WTRL_SCHEMA_URI_BASE}/wtrl-json-{WTRL_JSON_SCHEMA_VERSION}.schema.json"
 		tree_full["$id"] = ""
 		
 #..... VERSION ................................................#
 		tree_full["__WTRL_VERSION__"] = {
-			"waterloo": docitem.__version__,
+			"waterloo": WTRL_DOCITEM_VERSION,
 			"schema": WTRL_JSON_SCHEMA_VERSION,
 			}
 #..... META ...................................................#
@@ -1658,6 +1702,9 @@ def _help_validate_json() -> None:
 def _help_add_example_json() -> None:
 	print("Add/update __WTRL_EXAMPLES__ and object-level examples pointers in Waterloo JSON.")
 
+def _help_gen_example_template_json() -> None:
+	print("Generate template JSON for __WTRL_EXAMPLE_REFS__ mappings.")
+
 def _help_render_json() -> None:
 	print("Render Waterloo objects (module) to Waterloo JSON.")
 
@@ -1699,6 +1746,8 @@ def _help_topic_command(args: argparse.Namespace) -> int:
 						_help_validate_json()
 					if cmd == "add-example-json":
 						_help_add_example_json()
+					if cmd == "gen-example-template-json":
+						_help_gen_example_template_json()
 					if cmd == "render-json":
 						_help_render_json()
 					if cmd == "render-html5":
@@ -1869,6 +1918,32 @@ def _build_parser() -> argparse.ArgumentParser:
 	aex_out.add_argument("--out-dir", dest="out_dir", metavar="DIR", help="Write updated JSON to DIR using input filename.")
 	add_example_json.add_argument("--debug", action="store_true", help="Emit debugging data to stderr (reserved)")
 
+#----- gen-example-template-json ------------------------------#
+	gen_example_template_json = subparsers.add_parser(
+		"gen-example-template-json",
+		help="Generate JSON template for __WTRL_EXAMPLE_REFS__ mappings",
+		parents=[global_opts],
+	)
+	gen_example_template_json.add_argument(
+		"--org-or-project",
+		default="none",
+		metavar="TEXT",
+		help="Value for $id segment <org-or-project> (default: none).",
+	)
+	gen_example_template_json.add_argument(
+		"--domain",
+		default="local",
+		metavar="TEXT",
+		help="Value for $id segment <domain> (default: local).",
+	)
+	gen_example_template_json.add_argument(
+		"--out",
+		dest="out_file",
+		metavar="FILE",
+		help="Write template JSON to FILE instead of stdout.",
+	)
+	gen_example_template_json.add_argument("--debug", action="store_true", help="Emit debugging data to stderr (reserved)")
+
 #----- render-json --------------------------------------------#
 	render_json = subparsers.add_parser("render-json", help="Render module to Waterloo JSON", parents=[global_opts])
 	render_json.add_argument(
@@ -1994,6 +2069,8 @@ def main(argv: Optional[list[str]] = None) -> int:
 		return _validate_json_command(args)
 	if args.command == "add-example-json":
 		return _add_example_json_command(args)
+	if args.command == "gen-example-template-json":
+		return _gen_example_template_json_command(args)
 	if args.command == "render-json":
 		return _render_json_command(args)
 	if args.command == "render-html5":

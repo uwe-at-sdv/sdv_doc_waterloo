@@ -1,6 +1,6 @@
 {
     "$schema": "https://sci-d-vis.com/schema/wtrl-json-0.0.4.schema.json",
-    "$id": "urn:waterlint:0.2.4:render-json:core:rfc-2119:c992279d4887f9389c95e0e4a1d3efc3",
+    "$id": "urn:waterlint:0.2.4:wtrl-json:core:rfc-2119:c992279d4887f9389c95e0e4a1d3efc3",
     "__WTRL_META__": {
         "generated_at": "2026-02-19T14:44:11+01:00",
         "generator": "waterlint",

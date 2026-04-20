@@ -1,0 +1,12 @@
+{
+	"$schema": "https://sci-d-vis.com/schema/wtrl-example-refs-json-0.1.0.schema.json",
+	"$id": "urn:sdv:wtrl-example-refs-json.0.1.0",
+	"__WTRL_VERSION__": {
+		"waterlint": "0.8.1",
+		"schema": "0.1.0"
+	},
+	"__WTRL_EXAMPLE_REFS__": {"mymod.X":[
+			"example_mymod_X.py"
+		]
+	}
+}
