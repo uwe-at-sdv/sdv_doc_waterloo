@@ -1,9 +1,6 @@
 Introduction
 ============
 
-Informative: The final phrasing of the English text benefits from
-LLM-assisted polishing.
-
 About Waterloo Docstrings
 -------------------------
 
