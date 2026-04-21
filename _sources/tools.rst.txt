@@ -1,7 +1,7 @@
 Tools
 =====
 
-This section is informative.
+This section is informative. Subsections are informative unless explicitly stated otherwise.
 
 The reference implementation provides the command-line tool
 :wtrl_cmd:`waterlint`. The error codes listed below are used by this tool.
@@ -21,6 +21,14 @@ within a minor version of the tool.
 
 :wtrl_cmd:`waterlint` error codes
 ---------------------------------
+
+.. rubric:: General tool errors
+
+* [TOOL-001] -- Cannot resolve an object passed via option :wtrl_opt:`--obj`.
+* [TOOL-800] -- Unspecified runtime error during analysis.
+  This code is used when an unexpected exception escapes the validation process.
+  The tracer diagnostic output should provide sufficient detail to identify
+  the underlying cause.
 
 .. rubric:: JSON processing
 
@@ -45,17 +53,16 @@ within a minor version of the tool.
 * [AXMPL-003] -- Mapping contains an invalid list shape or non-string example path.
 * [AXMPL-004] -- Example file path, file access, base directory, or UTF-8 decoding failed.
 * [AXMPL-005] -- Input or mapping file is not valid JSON.
+* [AXMPL-006] -- Mapping JSON failed schema validation or schema auto-detection.
 
-
-.. rubric:: General tool errors
-
-* [TOOL-001] -- Cannot resolve an object passed via option :wtrl_opt:`--obj`.
-* [TOOL-800] -- Unspecified runtime error during analysis.
-  This code is used when an unexpected exception escapes the validation process.
-  The tracer diagnostic output should provide sufficient detail to identify
-  the underlying cause.
+.. rubric:: Rendering HTML (render-html5)
 
 * [RHTM-001] -- General error while rendering HTML5.
+* [RHTM-002] -- Invalid render-html5 output arguments or output directory state.
+* [RHTM-003] -- Input JSON documents cannot be merged (inconsistent metadata, missing structure, collisions).
+* [RHTM-004] -- CSS asset loading failed (default CSS or user-provided ``--css``).
+* [RHTM-005] -- HTML assembly or output file writing failed.
+* [RHTM-006] -- Optional preprocessing failed (currently: dropping ``Preamble`` via ``--no-render-preamble``).
 
 Extension error codes
 ---------------------

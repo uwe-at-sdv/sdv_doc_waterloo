@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>8. JSON I/O &#8212; Waterloo Docstrings 0 documentation</title>
+    <title>8. The JSON I/O Layer &#8212; Waterloo Docstrings 0 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5f771d8e" />
     <link rel="stylesheet" type="text/css" href="_static/basic.css?v=686e5160" />
     <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=27fed22d" />
@@ -16,7 +16,7 @@
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="9. Reference - Core View" href="reference.html" />
+    <link rel="next" title="9. The HTML Output Layer" href="html_output_layer.html" />
     <link rel="prev" title="7. Tools" href="tools.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
@@ -35,11 +35,482 @@
 
           <div class="body" role="main">
             
-  <section id="json-i-o">
-<h1><span class="section-number">8. </span>JSON I/O<a class="headerlink" href="#json-i-o" title="Link to this heading">¶</a></h1>
+  <section id="the-json-i-o-layer">
+<h1><span class="section-number">8. </span>The JSON I/O Layer<a class="headerlink" href="#the-json-i-o-layer" title="Link to this heading">¶</a></h1>
+<p>Subsections in this chapter are informative unless normativity is explicitly stated.</p>
+<section id="introduction">
+<h2><span class="section-number">8.1. </span>Introduction<a class="headerlink" href="#introduction" title="Link to this heading">¶</a></h2>
+<p>While the original Waterloo docstring format is already designed to be
+machine-readable – both comprehensible to an LLM and parsable by a simple
+state machine – practical experience shows that JSON is the most suitable
+format for providing structured information to LLMs (last verified April 2026).</p>
+<p>Compared to HTML, JSON avoids a significant amount of structural overhead.
+Even when presentation, layout, and functionality are strictly separated,
+HTML artifacts still contain a considerable amount of information that is
+irrelevant for machine interpretation (often referred to as “human-oriented noise”).</p>
+<p>More notably, JSON is typically preferred over XML, even when XML is
+reduced to its essential content without styling or presentation-related
+elements. YAML is generally accepted, but is in practice considered less robust
+due to its indentation-based syntax.</p>
+<p>The following exchange (translated from German) illustrates a typical
+assessment of common data formats with respect to their suitability
+for large language models.</p>
+<blockquote>
+<div><p><strong>Question.</strong> Which format is best suited for LLM consumption when choosing
+between HTML (for human-readable browser output), XML (without styling),
+YAML, and JSON? Assume that all four formats can be transformed into each
+other by a suitable state machine, i.e. the information content is identical.</p>
+<p><strong>Answer.</strong></p>
+<p><strong>1. JSON: The clear recommendation for LLMs</strong></p>
+<p><em>Advantages:</em></p>
+<ul class="simple">
+<li><p>Structured hierarchy: JSON is natively hierarchical and supports nested
+objects, which is ideal for docstrings with normative sections, variables,
+and conditions.</p></li>
+<li><p>LLM optimization: Most LLMs are heavily exposed to JSON during training
+and tend to parse it more reliably than XML or YAML. JSON schemas can also
+serve as formal specifications.</p></li>
+<li><p>Tooling: Straightforward integration (e.g. <code class="docutils literal notranslate"><span class="pre">json.loads</span></code> in Python),
+validation via JSON Schema, and direct use in APIs.</p></li>
+<li><p>Minimalism: No markup overhead as in HTML or XML, while remaining fully
+machine-readable.</p></li>
+</ul>
+<p><em>Disadvantages:</em></p>
+<ul class="simple">
+<li><p>Less intuitive for human readers compared to rendered HTML.</p></li>
+</ul>
+<p><strong>2. XML: Structured but unnecessarily complex</strong></p>
+<p><em>Advantages:</em></p>
+<ul class="simple">
+<li><p>Expressive: Supports attributes and namespaces.</p></li>
+<li><p>Validatable: DTD and XSD schemas are available.</p></li>
+</ul>
+<p><em>Disadvantages:</em></p>
+<ul class="simple">
+<li><p>Overhead: Tags and attributes increase token count and parsing effort.</p></li>
+<li><p>LLM practice: Less robust handling of deeply nested structures.</p></li>
+<li><p>Tooling: More complex parsing compared to JSON.</p></li>
+</ul>
+<p><strong>3. YAML: Human-friendly but risky for LLMs</strong></p>
+<p><em>Advantages:</em></p>
+<ul class="simple">
+<li><p>Readable for humans.</p></li>
+<li><p>Compact syntax without brackets or tags.</p></li>
+</ul>
+<p><em>Disadvantages:</em></p>
+<ul class="simple">
+<li><p>Whitespace-sensitive: Prone to indentation errors.</p></li>
+<li><p>No universally enforced schema system.</p></li>
+<li><p>Ambiguities (e.g. <code class="docutils literal notranslate"><span class="pre">yes</span></code> vs. <code class="docutils literal notranslate"><span class="pre">&quot;yes&quot;</span></code>).</p></li>
+</ul>
+<p><strong>4. HTML: Unsuitable for LLMs</strong></p>
+<p><em>Advantages:</em></p>
+<ul class="simple">
+<li><p>Ideal for human-facing rendering.</p></li>
+</ul>
+<p><em>Disadvantages:</em></p>
+<ul class="simple">
+<li><p>High noise level due to markup.</p></li>
+<li><p>Large token overhead.</p></li>
+<li><p>Structural complexity (DOM) that is irrelevant for semantic extraction.</p></li>
+</ul>
+</div></blockquote>
+<p>This observation is consistent across multiple LLMs and informal tests.</p>
+<p>For these reasons, the Waterloo toolkit provides JSON output for documentation
+artifacts and diagnostic data, and supports JSON input for more complex tasks.
+This chapter demonstrates how machine-readable normative documentation is
+generated from Waterloo docstrings, how it can be enriched with informative
+example code, and how the resulting JSON artifacts can be used to generate
+a conventional, human-readable interactive HTML documentation site.</p>
+</section>
+<section id="validating-json-input-output-and-diagnostics">
+<h2><span class="section-number">8.2. </span>Validating JSON input, output and diagnostics<a class="headerlink" href="#validating-json-input-output-and-diagnostics" title="Link to this heading">¶</a></h2>
+<p>Any <code class="wtrl_cmd docutils literal notranslate"><span class="pre">waterlint</span></code>-related JSON data can be validated using
+<code class="wtrl_cmd docutils literal notranslate"><span class="pre">waterlint</span></code>:</p>
+<blockquote>
+<div><p><code class="wtrl_cmd docutils literal notranslate"><span class="pre">waterlint</span> <span class="pre">validate-json</span></code> <code class="wtrl_opt docutils literal notranslate"><span class="pre">--in</span></code> <code class="wtrl_file docutils literal notranslate"><span class="pre">path/to/validate.json</span></code></p>
+</div></blockquote>
+<p>This command attempts to infer the category of the input data
+(documentation, diagnostics, or example references) and validates it
+against the corresponding schema:</p>
+<ul class="simple">
+<li><p><code class="wtrl_file docutils literal notranslate"><span class="pre">schema/wtrl-json-*.*.*.schema.json</span></code> for documentation</p></li>
+<li><p><code class="wtrl_file docutils literal notranslate"><span class="pre">schema/wtrl-tracer-json-*.*.*.schema.json</span></code> for diagnostics</p></li>
+<li><p><code class="wtrl_file docutils literal notranslate"><span class="pre">schema/wtrl-example-refs-json-*.*.*.schema.json</span></code> for example references</p></li>
+</ul>
+<p>The JSON file to be validated contains the version number of the schema
+to validate against. If the category cannot be inferred, the schema can
+be specified explicitly using</p>
+<blockquote>
+<div><p><code class="wtrl_opt docutils literal notranslate"><span class="pre">--schema</span></code> <code class="wtrl_file docutils literal notranslate"><span class="pre">path/to/schema.json</span></code>.</p>
+</div></blockquote>
+<p>The directory <code class="wtrl_file docutils literal notranslate"><span class="pre">schema</span></code> is a resource located in the package
+directory of <code class="wtrl_mod docutils literal notranslate"><span class="pre">sdv.doc.waterloo</span></code>. A list of available schemas
+and their locations can be obtained with</p>
+<blockquote>
+<div><p><code class="wtrl_cmd docutils literal notranslate"><span class="pre">waterlint</span> <span class="pre">list-schemas</span></code></p>
+</div></blockquote>
+<p>The command supports the following options:</p>
+<blockquote>
+<div><p><code class="wtrl_opt docutils literal notranslate"><span class="pre">--out-diag</span></code> <code class="wtrl_file docutils literal notranslate"><span class="pre">path/to/diagnostics</span></code></p>
+</div></blockquote>
+<p>for human-readable diagnostics, and</p>
+<blockquote>
+<div><p><code class="wtrl_opt docutils literal notranslate"><span class="pre">--out-diag-json</span></code> <code class="wtrl_file docutils literal notranslate"><span class="pre">path/to/diagnostics.json</span></code></p>
+</div></blockquote>
+<p>for machine-readable diagnostics.</p>
+<p>A summary of these options is displayed by</p>
+<blockquote>
+<div><p><code class="wtrl_cmd docutils literal notranslate"><span class="pre">waterlint</span> <span class="pre">help</span></code> <code class="wtrl_opt docutils literal notranslate"><span class="pre">--topic</span></code> <code class="wtrl_value docutils literal notranslate"><span class="pre">validate-json</span></code></p>
+</div></blockquote>
+</section>
+<section id="creating-llm-readable-documentation">
+<h2><span class="section-number">8.3. </span>Creating LLM-readable documentation<a class="headerlink" href="#creating-llm-readable-documentation" title="Link to this heading">¶</a></h2>
+<p>Given a module or a set of modules with Waterloo Docstrings, an LLM-readable JSON artifact can be created
+using the following command:</p>
+<blockquote>
+<div><p><code class="wtrl_cmd docutils literal notranslate"><span class="pre">waterlint</span> <span class="pre">render-json</span></code> <code class="wtrl_opt docutils literal notranslate"><span class="pre">--basedir</span></code> <code class="wtrl_file docutils literal notranslate"><span class="pre">path/to/basedir</span></code> <code class="wtrl_opt docutils literal notranslate"><span class="pre">--obj</span></code> <code class="wtrl_mod docutils literal notranslate"><span class="pre">module1</span> <span class="pre">[module2...]</span></code></p>
+</div></blockquote>
+<p>The output path is specified either by option</p>
+<blockquote>
+<div><p><code class="wtrl_opt docutils literal notranslate"><span class="pre">--out</span></code> <code class="wtrl_file docutils literal notranslate"><span class="pre">path/to/output.json</span></code></p>
+</div></blockquote>
+<p>or by</p>
+<blockquote>
+<div><p><code class="wtrl_opt docutils literal notranslate"><span class="pre">--out-dir</span></code> <code class="wtrl_file docutils literal notranslate"><span class="pre">path/to/dir/</span></code></p>
+</div></blockquote>
+<p>In this case, <code class="wtrl_cmd docutils literal notranslate"><span class="pre">waterlint</span></code> generates a filename
+which contains the scope (e.g. “core”, “public”) and the flavour (mostly “rfc-2119”)
+as substrings, according to a fixed scheme.
+If multiple modules are provided, an option <code class="wtrl_opt docutils literal notranslate"><span class="pre">--out-prefix</span></code> <code class="wtrl_value docutils literal notranslate"><span class="pre">myprefix</span></code> is required
+for <code class="wtrl_opt docutils literal notranslate"><span class="pre">--out-dir</span></code> because the filename cannot be inferred uniquely in case of more than one input module.</p>
+<p>Option <code class="wtrl_opt docutils literal notranslate"><span class="pre">--scope</span></code> allows restricting the content to docstrings
+with the given scope, taking into account the monotonicity rules
+for scopes (e.g. the set of “core” docstrings contains “extension”
+docstrings, which in turn contain “public” docstrings).</p>
+<p>Option <code class="wtrl_opt docutils literal notranslate"><span class="pre">--flavour</span></code> allows specifying how normativity keywords are rendered.
+Since normativity in Waterloo Docstrings is defined by structure instead of typography,
+this is mainly a matter of taste. Since the target audience – LLMs – is familiar with RFC 2119,
+passing <code class="wtrl_value docutils literal notranslate"><span class="pre">rfc-2119</span></code> (the default) is usually a good choice.</p>
+<p>Diagnostics are written in human-readable form by default. The target directories for human- and machine-readable formats
+are specified by</p>
+<blockquote>
+<div><p><code class="wtrl_opt docutils literal notranslate"><span class="pre">--out-diag</span></code> <code class="wtrl_file docutils literal notranslate"><span class="pre">path/to/diagnostics</span></code>
+<code class="wtrl_opt docutils literal notranslate"><span class="pre">--out-diag-json</span></code> <code class="wtrl_file docutils literal notranslate"><span class="pre">path/to/diagnostics.json</span></code></p>
+</div></blockquote>
+<p>A summary of these options is displayed by</p>
+<blockquote>
+<div><p><code class="wtrl_cmd docutils literal notranslate"><span class="pre">waterlint</span> <span class="pre">help</span></code> <code class="wtrl_opt docutils literal notranslate"><span class="pre">--topic</span></code> <code class="wtrl_value docutils literal notranslate"><span class="pre">render-json</span></code></p>
+</div></blockquote>
+<p class="rubric">Example</p>
+<p>Consider the following minimal module:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="gh">Preamble:</span>
+<span class="sd">	</span><span class="gu">profile:</span>
+<span class="sd">		</span><span class="no">module</span>
+<span class="sd">	</span><span class="gu">normative_sections:</span>
+<span class="sd">		</span><span class="no">Contract</span>
+<span class="gh">Contract:</span>
+<span class="sd">	</span><span class="gu">general:</span>
+<span class="sd">		</span><span class="k">|Must|</span><span class="sd"> demonstrate the minimal module docstring.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+</pre></div>
+</div>
+<p>located for instance in <code class="wtrl_file docutils literal notranslate"><span class="pre">doc/input-python</span></code></p>
+<p>We render this as JSON by</p>
+<blockquote>
+<div><dl>
+<dt><code class="wtrl_cmd docutils literal notranslate"><span class="pre">waterlint</span> <span class="pre">render-json</span></code></dt><dd><div class="line-block">
+<div class="line"><code class="wtrl_opt docutils literal notranslate"><span class="pre">--basedir</span></code> <code class="wtrl_file docutils literal notranslate"><span class="pre">doc/input-python</span></code></div>
+<div class="line"><code class="wtrl_opt docutils literal notranslate"><span class="pre">--obj</span></code> <code class="wtrl_mod docutils literal notranslate"><span class="pre">test_module_minimal</span></code></div>
+<div class="line"><code class="wtrl_opt docutils literal notranslate"><span class="pre">--out-dir</span></code> <code class="wtrl_file docutils literal notranslate"><span class="pre">doc/output-json/</span></code></div>
+</div>
+</dd>
+</dl>
+</div></blockquote>
+<p>Since we did not explicitly specify a target file name, scope, or flavour, the resulting file is</p>
+<blockquote>
+<div><p><code class="wtrl_file docutils literal notranslate"><span class="pre">doc/output-json/test_module_minimal.wtrl.core.rfc-2119.json</span></code></p>
+</div></blockquote>
+<p>Let us have a look at the details. The header provides a reference to the JSON Schema
+for the output and a unique hashed identifier. Node <code class="wtrl_value docutils literal notranslate"><span class="pre">__WTRL_VERSION__</span></code>
+contains the version of module <code class="wtrl_mod docutils literal notranslate"><span class="pre">sdv.doc.waterloo</span></code> and the JSON Schema version
+to validate against.</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="nt">&quot;$schema&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://sci-d-vis.com/schema/wtrl-json-0.1.0.schema.json&quot;</span><span class="p">,</span>
+<span class="nt">&quot;$id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;urn:waterlint:wtrl-json:0.8.1:core:rfc-2119:3e64950b9b650...&quot;</span><span class="p">,</span>
+<span class="nt">&quot;__WTRL_VERSION__&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;waterloo&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0.6.1&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;schema&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0.1.0&quot;</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="nt">&quot;...&quot;</span><span class="p">:</span><span class="s2">&quot;...&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The next node contains metadata such as creation time, scope and flavour.</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="nt">&quot;...&quot;</span><span class="p">:</span><span class="s2">&quot;...&quot;</span><span class="p">,</span>
+<span class="nt">&quot;__WTRL_META__&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;generated_at&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2026-04-20T11:26:41+02:00&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;generator&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;waterlint&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;scope&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;core&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;flavour&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;rfc-2119&quot;</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="nt">&quot;...&quot;</span><span class="p">:</span><span class="s2">&quot;...&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Since docstrings are meant to be rendered as human-readable HTML
+(be it interactive or as Sphinx output), they contain semantic roles,
+and we should allow the LLM to understand the meaning of these roles:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="nt">&quot;...&quot;</span><span class="p">:</span><span class="s2">&quot;...&quot;</span><span class="p">,</span>
+<span class="nt">&quot;__WTRL_ROLES__&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;attr&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Attribute name&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;cmd&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Shell or CLI command&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;dfn&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Definition of a term&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;file&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;File or path&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;func&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Function or callable&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;key&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Key on the keyboard&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;label&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Section/Subsection label&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;lit&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Literal text or code&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;mod&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Module name&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;op&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Operator symbol&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;opt&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Command-line option or flag&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;tag&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Tag or marker&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;term&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Domain-specific term&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Type name or annotation&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Concrete value&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;var&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Variable name&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;var_type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Variable and type, like &#39;var:type&#39;&quot;</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="nt">&quot;...&quot;</span><span class="p">:</span><span class="s2">&quot;...&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>In principle, Waterloo allows user-defined scopes, although this
+is not yet fully supported. The JSON artifact already reflects
+this capability by embedding the scope specification:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="nt">&quot;...&quot;</span><span class="p">:</span><span class="s2">&quot;...&quot;</span><span class="p">,</span>
+<span class="nt">&quot;__WTRL_SCOPES__&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;public&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="w"> </span><span class="p">},</span>
+<span class="w">        </span><span class="nt">&quot;extension&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">20</span><span class="p">,</span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="w"> </span><span class="p">},</span>
+<span class="w">        </span><span class="nt">&quot;core&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">30</span><span class="p">,</span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="nt">&quot;...&quot;</span><span class="p">:</span><span class="s2">&quot;...&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The next block is the table of contents.
+Documented objects are grouped by their category, and each entry points
+to an entry in subtree <code class="wtrl_value docutils literal notranslate"><span class="pre">__WTRL_OBJECTS__</span></code>.
+In our minimal case there is only a single module and no other objects, so we have:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="nt">&quot;...&quot;</span><span class="p">:</span><span class="s2">&quot;...&quot;</span><span class="p">,</span>
+<span class="nt">&quot;__WTRL_TOC_MODULES__&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;test_module_minimal&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/__WTRL_OBJECTS__/test_module_minimal&quot;</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="nt">&quot;__WTRL_TOC_CLASSES__&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span>
+<span class="nt">&quot;__WTRL_TOC_CALLABLES__&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span>
+<span class="nt">&quot;__WTRL_TOC_TYPES__&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span>
+<span class="nt">&quot;__WTRL_TOC_VARIABLES__&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span>
+<span class="nt">&quot;__WTRL_TOC_CONSTANTS__&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span>
+<span class="nt">&quot;...&quot;</span><span class="p">:</span><span class="s2">&quot;...&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Node <code class="wtrl_value docutils literal notranslate"><span class="pre">__WTRL_OBJECTS__</span></code>, finally, contains the docstring
+in LLM-friendly form, i.e. sections and subsections are encoded as JSON nodes.</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="nt">&quot;...&quot;</span><span class="p">:</span><span class="s2">&quot;...&quot;</span><span class="p">,</span>
+<span class="nt">&quot;__WTRL_OBJECTS__&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;test_module_minimal&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="nt">&quot;path&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/path/to/doc/input-python/test_module_minimal.py&quot;</span><span class="p">,</span>
+<span class="w">                </span><span class="nt">&quot;doc&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                        </span><span class="nt">&quot;Preamble&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                                </span><span class="nt">&quot;profile&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;module&quot;</span><span class="p">,</span>
+<span class="w">                                </span><span class="nt">&quot;normative_sections&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s2">&quot;Contract&quot;</span><span class="w"> </span><span class="p">]</span>
+<span class="w">                                </span><span class="p">},</span>
+<span class="w">                        </span><span class="nt">&quot;Contract&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                                </span><span class="nt">&quot;general&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s2">&quot;MUST demonstrate the minimal module docstring.&quot;</span><span class="w"> </span><span class="p">]</span>
+<span class="w">                                </span><span class="p">}</span>
+<span class="w">                        </span><span class="p">}</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="adding-examples-to-a-json-document">
+<h2><span class="section-number">8.4. </span>Adding examples to a JSON document<a class="headerlink" href="#adding-examples-to-a-json-document" title="Link to this heading">¶</a></h2>
+<p>When documentation based on Waterloo docstrings is rendered by Sphinx,
+code examples can easily be added in the reST code base. This raises
+the question of how to include code examples in the JSON output.</p>
+<p>The solution is to introduce a JSON node <code class="wtrl_value docutils literal notranslate"><span class="pre">__WTRL_EXAMPLES__</span></code>,
+added at the same level in the JSON tree as <code class="wtrl_value docutils literal notranslate"><span class="pre">__WTRL_OBJECTS__</span></code>.
+In this section, we show how this can be done with <code class="wtrl_cmd docutils literal notranslate"><span class="pre">waterlint</span></code>.</p>
+<p>Assume you have example programs or snippets for some of the objects
+documented in the JSON output. These examples are located in your project directory,
+and each file is an example for one or more Python objects.
+Technically, there is an m-to-n relation between documented objects and examples:
+any documented module, class, or function can have zero or more examples,
+and each example can be associated with one or more documented objects.</p>
+<p>This relation is represented using a dedicated JSON format.
+A template can be generated with the following command:</p>
+<blockquote>
+<div><p><code class="wtrl_cmd docutils literal notranslate"><span class="pre">waterlint</span> <span class="pre">gen-example-template-json</span></code></p>
+</div></blockquote>
+<p>Apart from version numbers, the result should look like this:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="nt">&quot;$schema&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://sci-d-vis.com/schema/wtrl-example-refs-json-0.1.0.schema.json&quot;</span><span class="p">,</span>
+<span class="nt">&quot;$id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;urn:none:local:wtrl-example-refs-json:0.1.0&quot;</span><span class="p">,</span>
+<span class="nt">&quot;__WTRL_VERSION__&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;waterloo&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0.6.1&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;waterlint_min&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0.8.1&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;schema&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0.1.0&quot;</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="nt">&quot;__WTRL_EXAMPLE_REFS__&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Examples are added to node <code class="wtrl_value docutils literal notranslate"><span class="pre">__WTRL_EXAMPLE_REFS__</span></code>
+by creating one entry per documented object and mapping it to a list
+of paths pointing to example files.</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="nt">&quot;...&quot;</span><span class="p">:</span><span class="s2">&quot;...&quot;</span><span class="p">,</span>
+<span class="nt">&quot;__WTRL_EXAMPLE_REFS__&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;mymod.myfunc_1&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">                </span><span class="s2">&quot;path/to/example_1_1.py&quot;</span><span class="p">,</span>
+<span class="w">                </span><span class="s2">&quot;path/to/example_1_2.py&quot;</span><span class="p">,</span>
+<span class="w">                </span><span class="s2">&quot;...&quot;</span>
+<span class="w">                </span><span class="p">],</span>
+<span class="w">        </span><span class="nt">&quot;mymod.myfunc_2&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">                </span><span class="s2">&quot;path/to/example_2_1.py&quot;</span><span class="p">,</span>
+<span class="w">                </span><span class="s2">&quot;path/to/example_2_2.py&quot;</span><span class="p">,</span>
+<span class="w">                </span><span class="s2">&quot;...&quot;</span>
+<span class="w">                </span><span class="p">],</span>
+<span class="w">        </span><span class="nt">&quot;...&quot;</span><span class="p">:</span><span class="s2">&quot;...&quot;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The examples are then added to the JSON document using the following command:</p>
+<blockquote>
+<div><dl>
+<dt><code class="wtrl_cmd docutils literal notranslate"><span class="pre">waterlint</span> <span class="pre">add-example-json</span></code></dt><dd><div class="line-block">
+<div class="line"><code class="wtrl_opt docutils literal notranslate"><span class="pre">--in</span></code> <code class="wtrl_file docutils literal notranslate"><span class="pre">path/to/doc.json</span></code></div>
+<div class="line"><code class="wtrl_opt docutils literal notranslate"><span class="pre">--out</span></code> <code class="wtrl_file docutils literal notranslate"><span class="pre">path/to/doc_with_examples.json</span></code></div>
+<div class="line"><code class="wtrl_opt docutils literal notranslate"><span class="pre">--examples</span></code> <code class="wtrl_file docutils literal notranslate"><span class="pre">path/to/examples.json</span></code></div>
+<div class="line"><code class="wtrl_opt docutils literal notranslate"><span class="pre">--basedir</span></code> <code class="wtrl_file docutils literal notranslate"><span class="pre">path/to/examples/</span></code></div>
+</div>
+</dd>
+</dl>
+</div></blockquote>
+<p class="rubric">Example</p>
+<p>In the following example, we add a Python example to the JSON document
+from the previous section. Let us assume our files are located
+in the filesystem as follows:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>doc
+├── input-python
+│   └── test_module_minimal.py
+├── input-json
+│   └── test_module_minimal_examples.json
+├── output-json
+│   └── test_module_minimal.wtrl.core.rfc-2119.json
+└── examples-python
+    └── example_module_minimal.py
+</pre></div>
+</div>
+<p>Here, <code class="wtrl_file docutils literal notranslate"><span class="pre">test_module_minimal.py</span></code> is the original module.
+<code class="wtrl_file docutils literal notranslate"><span class="pre">test_module_minimal.wtrl.core.rfc-2119.json</span></code> is the JSON document
+generated in the previous section.
+<code class="wtrl_file docutils literal notranslate"><span class="pre">example_module_minimal.py</span></code> is a corresponding Python example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">test_module_minimal</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">m</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+	<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Module test_module_minimal imported.&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="wtrl_file docutils literal notranslate"><span class="pre">test_module_minimal_examples.json</span></code> is the specification file
+containing the mapping from documented objects to example paths:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;$schema&quot;</span><span class="p">:</span> <span class="s2">&quot;https://sci-d-vis.com/schema/wtrl-example-refs-json-0.1.1.schema.json&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;$id&quot;</span><span class="p">:</span> <span class="s2">&quot;urn:none:local:wtrl-example-refs-json:0.1.1&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;__WTRL_VERSION__&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;waterloo&quot;</span><span class="p">:</span> <span class="s2">&quot;0.6.1&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;waterlint_min&quot;</span><span class="p">:</span> <span class="s2">&quot;0.8.1&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;schema&quot;</span><span class="p">:</span> <span class="s2">&quot;0.1.1&quot;</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;__WTRL_EXAMPLE_REFS__&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;test_module_minimal&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="s2">&quot;example_module_minimal.py&quot;</span>
+	<span class="p">]</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The specification file should be validated with</p>
+<blockquote>
+<div><p><code class="wtrl_cmd docutils literal notranslate"><span class="pre">waterlint</span> <span class="pre">validate-json</span></code> <code class="wtrl_opt docutils literal notranslate"><span class="pre">--in</span></code> <code class="wtrl_file docutils literal notranslate"><span class="pre">doc/input-json/test_module_minimal_examples.json</span></code></p>
+</div></blockquote>
+<p>Then we embed the examples using the following command:</p>
+<blockquote>
+<div><dl>
+<dt><code class="wtrl_cmd docutils literal notranslate"><span class="pre">waterlint</span> <span class="pre">add-example-json</span></code></dt><dd><div class="line-block">
+<div class="line"><code class="wtrl_opt docutils literal notranslate"><span class="pre">--basedir</span></code> <code class="wtrl_file docutils literal notranslate"><span class="pre">doc/examples-python</span></code></div>
+<div class="line"><code class="wtrl_opt docutils literal notranslate"><span class="pre">--in</span></code> <code class="wtrl_file docutils literal notranslate"><span class="pre">doc/output-json/test_module_minimal.wtrl.core.rfc-2119.json</span></code></div>
+<div class="line"><code class="wtrl_opt docutils literal notranslate"><span class="pre">--out</span></code> <code class="wtrl_file docutils literal notranslate"><span class="pre">doc/output-json/test_module_minimal.with_examples.wtrl.core.rfc-2119.json</span></code></div>
+<div class="line"><code class="wtrl_opt docutils literal notranslate"><span class="pre">--examples</span></code> <code class="wtrl_file docutils literal notranslate"><span class="pre">doc/input-json/test_module_minimal_examples.json</span></code></div>
+</div>
+</dd>
+</dl>
+</div></blockquote>
+<p>Option <code class="wtrl_opt docutils literal notranslate"><span class="pre">--basedir</span></code> specifies the path to the Python examples referenced in <code class="wtrl_file docutils literal notranslate"><span class="pre">test_module_minimal_examples.json</span></code>.</p>
+<p>The resulting JSON file <code class="wtrl_file docutils literal notranslate"><span class="pre">test_module_minimal.with_examples.wtrl.core.rfc-2119.json</span></code>
+looks similar to the input <code class="wtrl_file docutils literal notranslate"><span class="pre">test_module_minimal.wtrl.core.rfc-2119.json</span></code>
+but the documented object is now equipped with a reference to the example node:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="nt">&quot;...&quot;</span><span class="p">:</span><span class="s2">&quot;...&quot;</span><span class="p">,</span>
+<span class="nt">&quot;__WTRL_OBJECTS__&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;test_module_minimal&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="nt">&quot;path&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;...&quot;</span><span class="p">,</span>
+<span class="w">                </span><span class="nt">&quot;doc&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                        </span><span class="nt">&quot;Preamble&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;...&quot;</span><span class="p">:</span><span class="s2">&quot;...&quot;</span><span class="w"> </span><span class="p">},</span>
+<span class="w">                        </span><span class="nt">&quot;Contract&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;...&quot;</span><span class="p">:</span><span class="s2">&quot;...&quot;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">                        </span><span class="p">},</span>
+<span class="w">                </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">                        </span><span class="s2">&quot;/__WTRL_EXAMPLES__/sha256_0a50ade00ffbebea...&quot;</span>
+<span class="w">                        </span><span class="p">]</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="nt">&quot;...&quot;</span><span class="p">:</span><span class="s2">&quot;...&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The document also contains an additional node <code class="wtrl_value docutils literal notranslate"><span class="pre">__WTRL_EXAMPLES__</span></code> with the example code
+(formatted below for readability):</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="nt">&quot;...&quot;</span><span class="p">:</span><span class="s2">&quot;...&quot;</span><span class="p">,</span>
+<span class="nt">&quot;__WTRL_EXAMPLES__&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;sha256_0a50ade00ffbebea...&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="nt">&quot;lang&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;python&quot;</span><span class="p">,</span>
+<span class="w">                </span><span class="nt">&quot;hash&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0a50ade00ffbebea...&quot;</span><span class="p">,</span>
+<span class="w">                </span><span class="nt">&quot;code&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;import test_module_minimal as m\\n\\nif __name__ == \\\&quot;__main__\\\&quot;:\\n\\tprint(\\\&quot;Module test_module_minimal imported.\\\&quot;)\\n&quot;</span><span class="p">,</span>
+<span class="w">                </span><span class="nt">&quot;referenced_by&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">                        </span><span class="s2">&quot;test_module_minimal&quot;</span>
+<span class="w">                        </span><span class="p">]</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Note that the example code is fully embedded in the JSON output.
+The resulting LLM-readable document therefore remains a single file.</p>
+</section>
+<section id="json-document-categories-and-conventions">
+<h2><span class="section-number">8.5. </span>JSON document categories and conventions<a class="headerlink" href="#json-document-categories-and-conventions" title="Link to this heading">¶</a></h2>
 <p>This section is normative.</p>
-<section id="json-document-categories-and-id-conventions">
-<h2><span class="section-number">8.1. </span>JSON document categories and <code class="wtrl_attr docutils literal notranslate"><span class="pre">$id</span></code> conventions<a class="headerlink" href="#json-document-categories-and-id-conventions" title="Link to this heading">¶</a></h2>
 <p>The reference tooling emits and expects category-specific <code class="wtrl_attr docutils literal notranslate"><span class="pre">$id</span></code> values.</p>
 <ul class="simple">
 <li><dl class="simple">
@@ -102,11 +573,16 @@ For interoperability and diagnostics, the category marker
 <li class="toctree-l1"><a class="reference internal" href="misc.html">5. Miscellaneous</a></li>
 <li class="toctree-l1"><a class="reference internal" href="format.html">6. Docstring format</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tools.html">7. Tools</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">8. JSON I/O</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#json-document-categories-and-id-conventions">8.1. JSON document categories and <code class="wtrl_attr docutils literal notranslate"><span class="pre">$id</span></code> conventions</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">8. The JSON I/O Layer</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#introduction">8.1. Introduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#validating-json-input-output-and-diagnostics">8.2. Validating JSON input, output and diagnostics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#creating-llm-readable-documentation">8.3. Creating LLM-readable documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#adding-examples-to-a-json-document">8.4. Adding examples to a JSON document</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#json-document-categories-and-conventions">8.5. JSON document categories and conventions</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="reference.html">9. Reference - Core View</a></li>
+<li class="toctree-l1"><a class="reference internal" href="html_output_layer.html">9. The HTML Output Layer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reference.html">10. Reference - Core View</a></li>
 </ul>
 
 <div class="relations">
@@ -114,7 +590,7 @@ For interoperability and diagnostics, the category marker
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
       <li>Previous: <a href="tools.html" title="previous chapter"><span class="section-number">7. </span>Tools</a></li>
-      <li>Next: <a href="reference.html" title="next chapter"><span class="section-number">9. </span>Reference - Core View</a></li>
+      <li>Next: <a href="html_output_layer.html" title="next chapter"><span class="section-number">9. </span>The HTML Output Layer</a></li>
   </ul></li>
 </ul>
 </div>
