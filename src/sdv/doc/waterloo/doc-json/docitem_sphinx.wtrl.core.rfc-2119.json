@@ -1,12 +1,12 @@
 {
     "$schema": "https://sci-d-vis.com/schema/wtrl-json-0.1.0.schema.json",
-    "$id": "urn:waterlint:wtrl-json:0.8.1:core:rfc-2119:b470b72abf2628bf596ea2847c4a31a7392266a12d0a38dbb58da2e856f153ea",
+    "$id": "urn:waterlint:0.7.0:render-json:core:rfc-2119:180153be799aabe27be122cf4ee494d6",
     "__WTRL_VERSION__": {
         "waterloo": "0.6.1",
         "schema": "0.1.0"
     },
     "__WTRL_META__": {
-        "generated_at": "2026-04-22T11:36:04+02:00",
+        "generated_at": "2026-04-16T18:27:51+02:00",
         "generator": "waterlint",
         "scope": "core",
         "flavour": "rfc-2119"
@@ -17,10 +17,10 @@
         "dfn": "Definition of a term",
         "file": "File or path",
         "func": "Function or callable",
-        "key": "Key on the keyboard",
         "label": "Section/Subsection label",
         "lit": "Literal text or code",
         "mod": "Module name",
+        "norm": "Normativity keyword",
         "op": "Operator symbol",
         "opt": "Command-line option or flag",
         "tag": "Tag or marker",
@@ -9260,13 +9260,13 @@
         },
         "sdv.doc.waterloo.docitem_convert.to_string_legend_yaml": {
             "signature": {
-                "text": "to_string_legend_yaml(config: 'YamlConfig' = <sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7fe3c230e3b0>) -> 'str'",
+                "text": "to_string_legend_yaml(config: 'YamlConfig' = <sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f98ef585e70>) -> 'str'",
                 "parameters": [
                     {
                         "name": "config",
                         "kind": "POSITIONAL_OR_KEYWORD",
                         "annotation": "YamlConfig",
-                        "default": "<sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7fe3c230e3b0>"
+                        "default": "<sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f98ef585e70>"
                     }
                 ],
                 "returns": "str"
@@ -9303,7 +9303,7 @@
         },
         "sdv.doc.waterloo.docitem_convert.to_string_signature_yaml": {
             "signature": {
-                "text": "to_string_signature_yaml(obj: 'object', config: 'YamlConfig' = <sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7fe3c230e800>) -> 'str'",
+                "text": "to_string_signature_yaml(obj: 'object', config: 'YamlConfig' = <sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f98ef5862c0>) -> 'str'",
                 "parameters": [
                     {
                         "name": "obj",
@@ -9315,7 +9315,7 @@
                         "name": "config",
                         "kind": "POSITIONAL_OR_KEYWORD",
                         "annotation": "YamlConfig",
-                        "default": "<sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7fe3c230e800>"
+                        "default": "<sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f98ef5862c0>"
                     }
                 ],
                 "returns": "str"
@@ -9385,7 +9385,7 @@
         },
         "sdv.doc.waterloo.docitem_convert.to_string_yaml": {
             "signature": {
-                "text": "to_string_yaml(tree: 'DocstringTree', flavour: 'Flavour', config: 'YamlConfig' = <sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7fe3c230e830>) -> 'str'",
+                "text": "to_string_yaml(tree: 'DocstringTree', flavour: 'Flavour', config: 'YamlConfig' = <sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f98ef5862f0>) -> 'str'",
                 "parameters": [
                     {
                         "name": "tree",
@@ -9403,7 +9403,7 @@
                         "name": "config",
                         "kind": "POSITIONAL_OR_KEYWORD",
                         "annotation": "YamlConfig",
-                        "default": "<sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7fe3c230e830>"
+                        "default": "<sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f98ef5862f0>"
                     }
                 ],
                 "returns": "str"
