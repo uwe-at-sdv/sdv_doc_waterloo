@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import json
 import html
+import re
 import importlib.resources as importlib_resources
 from pathlib import Path
 from typing import Any, Dict, List, Literal, Tuple, TypeAlias
@@ -279,6 +280,16 @@ def _drop_preamble_sections(merged: Dict[str, Any]) -> None:
 			doc.pop("Preamble", None)
 
 
+def _validate_header_fragment(fragment: str) -> None:
+	"""Apply a minimal safety and binding contract to custom header HTML."""
+	if not re.search(r"""id\s*=\s*["']wtrl-title["']""", fragment, re.IGNORECASE):
+		raise KeyError("custom header fragment does not contain required element '#wtrl-title'")
+	if re.search(r"""<\s*script\b""", fragment, re.IGNORECASE):
+		raise RuntimeError("custom header fragment must not contain <script> elements")
+	if re.search(r"""<\s*/?\s*(?:html|head|body|main)\b""", fragment, re.IGNORECASE):
+		raise RuntimeError("custom header fragment must not contain document-level elements (<html>, <head>, <body>, <main>)")
+
+
 def _build_html_doc(merged: Dict[str, Any]) -> str:
 	meta = _require_dict("meta", merged.get("meta"))
 	index = _build_ui_index(merged)
@@ -341,12 +352,18 @@ a.wtrl-func:visited, a.wtrl-type:visited, a.wtrl-var:visited, a.wtrl-ref:visited
 
 	js = _load_render_js_source()
 
-	css_extra = str(merged.get("meta", {}).get("css_extra", ""))
-	css_override = bool(merged.get("meta", {}).get("css_override", False))
-	if css_override:
-		css = css_extra + ("\n" + pygments_css if pygments_css else "")
+	css_primary = str(merged.get("meta", {}).get("css_primary", ""))
+	css_append = str(merged.get("meta", {}).get("css_append", ""))
+	header_html = str(merged.get("meta", {}).get("header_html", "")).strip()
+	if css_primary:
+		css = css_primary + ("\n" + css_append if css_append else "") + ("\n" + pygments_css if pygments_css else "")
 	else:
-		css = css_base + ("\n" + css_extra if css_extra else "") + ("\n" + pygments_css if pygments_css else "")
+		css = css_base + ("\n" + css_append if css_append else "") + ("\n" + pygments_css if pygments_css else "")
+
+	if not header_html:
+		header_html = """
+      <h1 id="wtrl-title" class="wtrl-title"></h1>
+      <p id="wtrl-sub" class="wtrl-sub"></p>"""
 
 	html = f"""<!doctype html>
 <html lang="en">
@@ -376,8 +393,7 @@ a.wtrl-func:visited, a.wtrl-type:visited, a.wtrl-var:visited, a.wtrl-ref:visited
       <div id="wtrl-hitlist" class="wtrl-hitlist"></div>
     </aside>
     <main class="wtrl-main">
-      <h1 id="wtrl-title" class="wtrl-title"></h1>
-      <p id="wtrl-sub" class="wtrl-sub"></p>
+{header_html}
       <section class="wtrl-block">
         <div class="wtrl-section">
           <div class="wtrl-section-head">Signature</div>
@@ -408,6 +424,8 @@ def render_html5(
 	out_file: str | None,
 	out_dir: str | None,
 	css_path: str | None = None,
+	additional_css_path: str | None = None,
+	header_html_path: str | None = None,
 	pygments_theme: str | None = None,
 	no_render_preamble: bool = False,
 ) -> str:
@@ -444,18 +462,43 @@ def render_html5(
 		if css_path:
 			try:
 				with open(css_path, "r", encoding="utf-8") as fh:
-					merged["meta"]["css_extra"] = fh.read()
-				merged["meta"]["css_override"] = True
+					merged["meta"]["css_primary"] = fh.read()
+				merged["meta"]["css_append"] = ""
 			except Exception as exc:
 				_add_error("RHTM-004", f"Cannot read CSS file '{css_path}': {exc}")
 				return ""
 		else:
 			try:
-				merged["meta"]["css_extra"] = _load_default_css_source()
-				merged["meta"]["css_override"] = True
+				merged["meta"]["css_primary"] = _load_default_css_source()
+				merged["meta"]["css_append"] = ""
 			except Exception as exc:
 				_add_error("RHTM-004", f"Cannot load default CSS asset: {exc}")
 				return ""
+
+		if additional_css_path:
+			try:
+				with open(additional_css_path, "r", encoding="utf-8") as fh:
+					merged["meta"]["css_append"] = fh.read()
+			except Exception as exc:
+				_add_error("RHTM-004", f"Cannot read additional CSS file '{additional_css_path}': {exc}")
+				return ""
+
+		if header_html_path:
+			try:
+				with open(header_html_path, "r", encoding="utf-8") as fh:
+					header_html = fh.read()
+			except Exception as exc:
+				_add_error("RHTM-007", f"Cannot read custom header fragment '{header_html_path}': {exc}")
+				return ""
+			try:
+				_validate_header_fragment(header_html)
+			except KeyError as exc:
+				_add_error("RHTM-008", str(exc))
+				return ""
+			except Exception as exc:
+				_add_error("RHTM-009", f"Cannot embed custom header fragment safely: {exc}")
+				return ""
+			merged["meta"]["header_html"] = header_html
 
 		if pygments_theme:
 			merged["meta"]["pygments_theme"] = pygments_theme

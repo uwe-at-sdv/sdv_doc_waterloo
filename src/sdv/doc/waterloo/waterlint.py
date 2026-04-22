@@ -27,7 +27,8 @@ from jsonschema import Draft202012Validator
 #from jsonschema import JSONDecodeError
 import jsonschema.exceptions
 
-__version__ = "0.8.1"
+__version__ = "0.8.2"
+# - 0.8.2 [2026-04-22]	Options --header-html und --additional-css for subcommand render-html5.
 # - 0.8.1 [2026-04-18]	Unique $id in add-example-json; MD5 replaced by SHA256 in JSON-artifacts.
 # - 0.8.0 [2026-04-17]	JSON Schema for example references: this affects
 #			waterlint add-example-json
@@ -1494,6 +1495,8 @@ def _render_html5_command(args: argparse.Namespace) -> int:
 			out_file=getattr(args, "out_file", None),
 			out_dir=getattr(args, "out_dir", None),
 			css_path=getattr(args, "css_file", None),
+			additional_css_path=getattr(args, "additional_css_file", None),
+			header_html_path=getattr(args, "header_html_file", None),
 			pygments_theme=getattr(args, "pygments_theme", None),
 			no_render_preamble=getattr(args, "no_render_preamble", False),
 		)
@@ -1986,7 +1989,10 @@ def _build_parser() -> argparse.ArgumentParser:
 	rh_out = render_html5.add_mutually_exclusive_group(required=True)
 	rh_out.add_argument("--out", dest="out_file", metavar="HTML", help="Write HTML to HTML.")
 	rh_out.add_argument("--out-dir", dest="out_dir", metavar="DIR", help="Write HTML to DIR with generated filename.")
-	render_html5.add_argument("--css", dest="css_file", metavar="FILE", help="Additional CSS file to embed into output HTML.")
+	rh_css = render_html5.add_mutually_exclusive_group()
+	rh_css.add_argument("--css", dest="css_file", metavar="FILE", help="CSS file to embed instead of the built-in default CSS.")
+	rh_css.add_argument("--additional-css", dest="additional_css_file", metavar="FILE", help="Additional CSS file to append after the built-in default CSS.")
+	render_html5.add_argument("--header-html", dest="header_html_file", metavar="FILE", help="HTML fragment file used instead of the built-in header markup.")
 	render_html5.add_argument("--pygments-theme", dest="pygments_theme", default="gruvbox-light", metavar="THEME", help="Pygments style name for rendered examples (default: gruvbox-light).")
 	render_html5.add_argument("--no-render-preamble", dest="no_render_preamble", action="store_true", help="Do not render section 'Preamble' in HTML output.")
 	render_html5.add_argument("--debug", action="store_true", help="Emit debugging data to stderr (reserved)")

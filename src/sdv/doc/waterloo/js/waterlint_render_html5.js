@@ -1091,15 +1091,16 @@ function renderDoc(targetQid) {
   const examples = WTRL_DATA.examples || {};
   const node = objects[targetQid];
   byId("wtrl-title").textContent = targetQid || "(no selection)";
+  const subEl = byId("wtrl-sub");
   if (!node) {
-    byId("wtrl-sub").textContent = "No object found.";
+    if (subEl) subEl.textContent = "No object found.";
     byId("wtrl-signature").innerHTML = "";
     byId("wtrl-doc").innerHTML = "";
     byId("wtrl-examples").innerHTML = "";
     byId("wtrl-obj").textContent = "";
     return;
   }
-  byId("wtrl-sub").textContent = "Waterloo docstring";
+  if (subEl) subEl.textContent = "Waterloo docstring";
   renderSignature(node, targetQid, byId("wtrl-signature"));
   const docHost = byId("wtrl-doc");
   docHost.innerHTML = "";
