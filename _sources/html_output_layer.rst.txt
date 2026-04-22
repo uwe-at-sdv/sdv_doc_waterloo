@@ -91,6 +91,61 @@ If the visual style should be adapted, an additional stylesheet can be embedded:
 		| :wtrl_opt:`--out` :wtrl_file:`doc/output-html/test_module_minimal.with_examples.wtrl.core.rfc-2119.html`
 		| :wtrl_opt:`--css` :wtrl_file:`path/to/custom.css`
 
+The header area above the rendered documentation can also be customized by
+passing an HTML fragment file:
+
+	:wtrl_cmd:`waterlint render-html5`
+		| :wtrl_opt:`--in` :wtrl_file:`doc/output-json/test_module_minimal.with_examples.wtrl.core.rfc-2119.json`
+		| :wtrl_opt:`--out` :wtrl_file:`doc/output-html/test_module_minimal.with_examples.wtrl.core.rfc-2119.html`
+		| :wtrl_opt:`--header-html` :wtrl_file:`doc/input-html/test_header_minimal.html`
+
+The fragment |must| contain an element with ID :wtrl_value:`wtrl-title`.
+This element is populated dynamically with the qualified identifier of the
+currently selected object.
+An element with ID :wtrl_value:`wtrl-sub` is optional and, if present, is used
+for a subtitle.
+
+For example:
+
+.. literalinclude:: ../input-html/test_header_minimal.html
+	:language: html
+
+If the header fragment refers to external assets, for example via
+:wtrl_tag:`img src="..."`, the single-file property of the generated HTML
+documentation is lost.
+If this property should be preserved, small assets such as project logos can be
+embedded directly into the header fragment as :wtrl_value:`data:` URIs.
+For binary formats such as PNG, this is typically done with
+:wtrl_value:`data:image/png;base64,...`.
+
+On Unix-like systems, the Base64 payload can conveniently be generated on the
+command line.
+This approach is practical for small logos and keeps the resulting
+documentation self-contained and usable offline.
+
+A more elaborate example with embedded logo and project link is shown in
+
+	:wtrl_file:`doc/input-html/test_header_tde4.html`
+	:wtrl_file:`doc/input-html/test_header_tde4.css`
+
+and can be used as follows:
+
+	:wtrl_cmd:`waterlint render-html5`
+		| :wtrl_opt:`--in` :wtrl_file:`doc/output-json/test_module_minimal.with_examples.wtrl.core.rfc-2119.json`
+		| :wtrl_opt:`--out` :wtrl_file:`doc/output-html/test_module_minimal.with_examples.wtrl.core.rfc-2119.html`
+		| :wtrl_opt:`--header-html` :wtrl_file:`doc/input-html/test_header_tde4.html`
+		| :wtrl_opt:`--css` :wtrl_file:`doc/input-html/test_header_tde4.css`
+
+Header fragment:
+
+.. literalinclude:: ../input-html/test_header_tde4.html
+	:language: html
+
+Additional CSS:
+
+.. literalinclude:: ../input-html/test_header_tde4.css
+	:language: css
+
 Implementation Notes
 --------------------
 

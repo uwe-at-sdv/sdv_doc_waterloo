@@ -1,20 +1,19 @@
-
 <!DOCTYPE html>
 
-<html>
+<html lang="en" data-content_root="./">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>6. Docstring format &#8212; Waterloo Docstrings 0 documentation</title>
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
-    <link rel="stylesheet" type="text/css" href="_static/common_styles.css" />
-    <link rel="stylesheet" type="text/css" href="_static/alabaster_waterloo.css" />
-    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-    <script src="_static/jquery.js"></script>
-    <script src="_static/underscore.js"></script>
-    <script src="_static/doctools.js"></script>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5f771d8e" />
+    <link rel="stylesheet" type="text/css" href="_static/basic.css?v=686e5160" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=27fed22d" />
+    <link rel="stylesheet" type="text/css" href="_static/common_styles.css?v=27e4112a" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster_waterloo.css?v=774a9f0b" />
+    <script src="_static/documentation_options.js?v=8dde47fa"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="7. Tools" href="tools.html" />
@@ -22,8 +21,9 @@
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
+
   
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+  
 
   </head><body>
   
@@ -36,10 +36,10 @@
           <div class="body" role="main">
             
   <section id="docstring-format">
-<span id="chapter-format"></span><h1><span class="section-number">6. </span>Docstring format<a class="headerlink" href="#docstring-format" title="Permalink to this headline">¶</a></h1>
+<span id="chapter-format"></span><h1><span class="section-number">6. </span>Docstring format<a class="headerlink" href="#docstring-format" title="Link to this heading">¶</a></h1>
 <p>This section is normative.</p>
 <section id="definitions">
-<span id="section-definitions"></span><h2><span class="section-number">6.1. </span>Definitions<a class="headerlink" href="#definitions" title="Permalink to this headline">¶</a></h2>
+<span id="section-definitions"></span><h2><span class="section-number">6.1. </span>Definitions<a class="headerlink" href="#definitions" title="Link to this heading">¶</a></h2>
 <p>This section is normative.</p>
 <p class="rubric" id="rubric-normativity-keywords">Normativity Keyword</p>
 <p>A <code class="wtrl_dfn docutils literal notranslate"><span class="pre">Normativity</span> <span class="pre">Keyword</span></code> is a typographically distinct word from the following set:
@@ -52,7 +52,7 @@ Whenever we talk about Normativity Keywords (with capitals), we always mean the 
 <p>A <code class="wtrl_dfn docutils literal notranslate"><span class="pre">Qualified</span> <span class="pre">Identifier</span></code> is a string formed by concatenating Identifiers (at least one) with a dot as separator.</p>
 </section>
 <section id="terminology">
-<h2><span class="section-number">6.2. </span>Terminology<a class="headerlink" href="#terminology" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">6.2. </span>Terminology<a class="headerlink" href="#terminology" title="Link to this heading">¶</a></h2>
 <p>This section is informative.</p>
 <p class="rubric">Documentation Coverage</p>
 <p><code class="wtrl_dfn docutils literal notranslate"><span class="pre">Documentation</span> <span class="pre">Coverage</span></code> is the property of a documented code base
@@ -82,7 +82,7 @@ a <code class="wtrl_value docutils literal notranslate"><span class="pre">public
 to the smaller group of <code class="wtrl_value docutils literal notranslate"><span class="pre">core</span></code> users, which does not make sense.</p>
 </section>
 <section id="meta">
-<span id="section-meta"></span><h2><span class="section-number">6.3. </span>Meta<a class="headerlink" href="#meta" title="Permalink to this headline">¶</a></h2>
+<span id="section-meta"></span><h2><span class="section-number">6.3. </span>Meta<a class="headerlink" href="#meta" title="Link to this heading">¶</a></h2>
 <p>This section is normative.</p>
 <p>In this section, we specify that all normative rules for defining the Waterloo project are given IDs, and how we construct these IDs.
 We do this by the following set of rules.</p>
@@ -104,7 +104,7 @@ and another space (ASCII 32) between the braced Rule ID and the rule free-form t
 </ul>
 </section>
 <section id="rule-taxonomy">
-<h2><span class="section-number">6.4. </span>Rule taxonomy<a class="headerlink" href="#rule-taxonomy" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">6.4. </span>Rule taxonomy<a class="headerlink" href="#rule-taxonomy" title="Link to this heading">¶</a></h2>
 <p>The prefixes of rule IDs have a mnemonic function.
 The following list explains the mnemonic prefixes and their semantics.</p>
 <p class="rubric">Meta</p>
@@ -153,11 +153,16 @@ The following list explains the mnemonic prefixes and their semantics.</p>
 <li><p>STA: All profiles: Subsection <code class="wtrl_label docutils literal notranslate"><span class="pre">status</span></code></p></li>
 <li><p>TERM: All profiles: Section <code class="wtrl_label docutils literal notranslate"><span class="pre">Terminology</span></code></p></li>
 </ul>
+<p class="rubric">Tools and extensions</p>
+<ul class="simple">
+<li><p>TOOL: Error messages from <code class="wtrl_cmd docutils literal notranslate"><span class="pre">waterlint</span></code> (or other tools)</p></li>
+<li><p>JSCH: Error messages related to JSON and JSON Schema</p></li>
+<li><p>AXMPL: Error messages related to example mapping (e.g. for <code class="wtrl_cmd docutils literal notranslate"><span class="pre">waterlint</span> <span class="pre">add-example-json</span></code>)</p></li>
+<li><p>RHTM: Error messages related to rendering HTML (e.g. for <code class="wtrl_cmd docutils literal notranslate"><span class="pre">waterlint</span> <span class="pre">render-html5</span></code>)</p></li>
+<li><p>XTNSN: Error messages related to extensions (e.g. for IDEs)</p></li>
+</ul>
 <p class="rubric">Miscellaneous</p>
 <ul class="simple">
-<li><p>JSCH: Error messages related to JSON and JSON Schema</p></li>
-<li><p>TOOL: Error messages from <code class="wtrl_cmd docutils literal notranslate"><span class="pre">waterlint</span></code> (or other tools)</p></li>
-<li><p>XTNSN: Error messages related to extensions (e.g. for IDEs)</p></li>
 <li><p>VLII: Warning for a section or subsection that violates the LoII principle.
 The warning will remain in place until the section or subsection is generally accepted
 and recognized as having practical benefits that outweigh the LoII principle.</p></li>
@@ -170,7 +175,7 @@ and recognized as having practical benefits that outweigh the LoII principle.</p
 </ul>
 </section>
 <section id="the-structure-of-waterloo-docstrings">
-<h2><span class="section-number">6.5. </span>The structure of Waterloo docstrings<a class="headerlink" href="#the-structure-of-waterloo-docstrings" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">6.5. </span>The structure of Waterloo docstrings<a class="headerlink" href="#the-structure-of-waterloo-docstrings" title="Link to this heading">¶</a></h2>
 <p>This section defines the structure of Waterloo docstrings.
 in human-readable form. The structure is presented as lists for the various sections
 with embedded lists for subsections. The following patterns occur in any order:</p>
@@ -207,11 +212,11 @@ parsed greedily and closed by colon.</p>
 <p>The indentation in the patterns above reflects the (relative) indentation for sections, subsections, and content in the docstring.</p>
 </section>
 <section id="conventions">
-<h2><span class="section-number">6.6. </span>Conventions<a class="headerlink" href="#conventions" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">6.6. </span>Conventions<a class="headerlink" href="#conventions" title="Link to this heading">¶</a></h2>
 <p>We shall use a simple dot notation in order to refer to subsections in the docstring format, like <code class="wtrl_label docutils literal notranslate"><span class="pre">Preamble.normative_sections</span></code> or <code class="wtrl_label docutils literal notranslate"><span class="pre">Definitions.&lt;DefItem&gt;</span></code>.</p>
 </section>
 <section id="building-the-ast">
-<h2><span class="section-number">6.7. </span>Building the AST<a class="headerlink" href="#building-the-ast" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">6.7. </span>Building the AST<a class="headerlink" href="#building-the-ast" title="Link to this heading">¶</a></h2>
 <p>The Abstract Syntax Tree (AST) is created in two steps. In the first step (“tokenization”)
 the docstring is transformed into an intermediate tree representation
 as defined in this section. In the second step (“parsing”),
@@ -353,7 +358,7 @@ is compatible with the section and subsection requirements
 specified in section <a class="reference internal" href="#common-sections"><span class="std std-ref">Sections and subsections</span></a> ff.</p>
 </section>
 <section id="inline-markup-in-free-form-content">
-<h2><span class="section-number">6.8. </span>Inline markup in free-form content<a class="headerlink" href="#inline-markup-in-free-form-content" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">6.8. </span>Inline markup in free-form content<a class="headerlink" href="#inline-markup-in-free-form-content" title="Link to this heading">¶</a></h2>
 <p>This subsection is normative.</p>
 <p>Waterloo docstrings are primarily plain text. However, a small set of inline markup tokens is defined to allow
 machine-verifiable references and consistent rendering in target formats (e.g. reST/Sphinx).</p>
@@ -367,7 +372,7 @@ Inline markup tokens <code class="wtrl_norm docutils literal notranslate"><span 
 </ul>
 </div></blockquote>
 <section id="tokens">
-<h3><span class="section-number">6.8.1. </span>Tokens<a class="headerlink" href="#tokens" title="Permalink to this headline">¶</a></h3>
+<h3><span class="section-number">6.8.1. </span>Tokens<a class="headerlink" href="#tokens" title="Link to this heading">¶</a></h3>
 <p>The set of tokens currently available is:</p>
 <blockquote>
 <div><ul class="simple">
@@ -459,7 +464,7 @@ The Waterloo Sphinx extension additionally defines equivalent roles
 in native reST form, e.g. <code class="wtrl_lit docutils literal notranslate"><span class="pre">:wtrl_file:`path/to/file`</span></code>.</p>
 </section>
 <section id="textflow-tokens">
-<h3><span class="section-number">6.8.2. </span>Textflow tokens<a class="headerlink" href="#textflow-tokens" title="Permalink to this headline">¶</a></h3>
+<h3><span class="section-number">6.8.2. </span>Textflow tokens<a class="headerlink" href="#textflow-tokens" title="Link to this heading">¶</a></h3>
 <p>This subsection is informative.</p>
 <p>Textflow tokens are interpreted at the rendering stage and influence the
 visual structure of the output without affecting the logical structure
@@ -488,7 +493,7 @@ implementation, ordered lists are rendered using Arabic numerals
 followed by a period.</p>
 </section>
 <section id="semantic-role-ref">
-<h3><span class="section-number">6.8.3. </span>Semantic role <code class="wtrl_lit docutils literal notranslate"><span class="pre">|ref|</span></code><a class="headerlink" href="#semantic-role-ref" title="Permalink to this headline">¶</a></h3>
+<h3><span class="section-number">6.8.3. </span>Semantic role <code class="wtrl_lit docutils literal notranslate"><span class="pre">|ref|</span></code><a class="headerlink" href="#semantic-role-ref" title="Link to this heading">¶</a></h3>
 <p>Semantic role <code class="wtrl_lit docutils literal notranslate"><span class="pre">|ref|</span></code> is used to create references.
 The following forms are supported:</p>
 <blockquote>
@@ -513,7 +518,7 @@ the document containing the reference.</p>
 </div></blockquote>
 </section>
 <section id="examples-informative">
-<h3><span class="section-number">6.8.4. </span>Examples (informative)<a class="headerlink" href="#examples-informative" title="Permalink to this headline">¶</a></h3>
+<h3><span class="section-number">6.8.4. </span>Examples (informative)<a class="headerlink" href="#examples-informative" title="Link to this heading">¶</a></h3>
 <blockquote>
 <div><ul class="simple">
 <li><p><code class="wtrl_lit docutils literal notranslate"><span class="pre">|Must|</span> <span class="pre">return</span> <span class="pre">|None|</span> <span class="pre">if</span> <span class="pre">no</span> <span class="pre">result</span> <span class="pre">is</span> <span class="pre">available.</span></code></p></li>
@@ -524,7 +529,7 @@ the document containing the reference.</p>
 </section>
 </section>
 <section id="rules-not-bound-to-a-particular-section">
-<h2><span class="section-number">6.9. </span>Rules not bound to a particular section<a class="headerlink" href="#rules-not-bound-to-a-particular-section" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">6.9. </span>Rules not bound to a particular section<a class="headerlink" href="#rules-not-bound-to-a-particular-section" title="Link to this heading">¶</a></h2>
 <ul class="simple">
 <li><p>[DOC-001] – Each module, class, function, or method object subject to validation <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span></code> have a docstring.</p></li>
 <li><p>[DOC-007] – The docstring <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span> <span class="pre">not</span></code> be empty after whitespace-stripping.</p></li>
@@ -555,7 +560,7 @@ not deprecated unless explicitly stated.</p></li>
 </ul>
 </section>
 <section id="normativity-keyword-handling">
-<h2><span class="section-number">6.10. </span>Normativity keyword handling<a class="headerlink" href="#normativity-keyword-handling" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">6.10. </span>Normativity keyword handling<a class="headerlink" href="#normativity-keyword-handling" title="Link to this heading">¶</a></h2>
 <p>The following rules apply to free-form textual content
 within normative sections. They ensure that normativity
 keywords are used in a machine-detectable and unambiguous way.
@@ -574,9 +579,9 @@ and <code class="wtrl_norm docutils literal notranslate"><span class="pre">shoul
 </ul>
 </section>
 <section id="sections-and-subsections">
-<span id="common-sections"></span><h2><span class="section-number">6.11. </span>Sections and subsections<a class="headerlink" href="#sections-and-subsections" title="Permalink to this headline">¶</a></h2>
+<span id="common-sections"></span><h2><span class="section-number">6.11. </span>Sections and subsections<a class="headerlink" href="#sections-and-subsections" title="Link to this heading">¶</a></h2>
 <section id="specification-conventions">
-<h3><span class="section-number">6.11.1. </span>Specification conventions<a class="headerlink" href="#specification-conventions" title="Permalink to this headline">¶</a></h3>
+<h3><span class="section-number">6.11.1. </span>Specification conventions<a class="headerlink" href="#specification-conventions" title="Link to this heading">¶</a></h3>
 <p>This section is informative.</p>
 <p>The specification of individual sections throughout this document
 follows a common structural pattern. The purpose of this pattern is to
@@ -611,7 +616,7 @@ of this specification. It is intended to promote uniformity without
 constraining future refinement.</p>
 </section>
 <section id="common-sections-for-all-profiles">
-<h3><span class="section-number">6.11.2. </span>Common sections for all profiles<a class="headerlink" href="#common-sections-for-all-profiles" title="Permalink to this headline">¶</a></h3>
+<h3><span class="section-number">6.11.2. </span>Common sections for all profiles<a class="headerlink" href="#common-sections-for-all-profiles" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><dl class="simple">
 <dt><code class="wtrl_label docutils literal notranslate"><span class="pre">Preamble:</span></code></dt><dd><ul>
@@ -857,7 +862,7 @@ allows arbitrary human-readable labels and is intended solely for explanatory pu
 </ul>
 </section>
 <section id="sections-for-module-docstrings">
-<h3><span class="section-number">6.11.3. </span>Sections for module docstrings<a class="headerlink" href="#sections-for-module-docstrings" title="Permalink to this headline">¶</a></h3>
+<h3><span class="section-number">6.11.3. </span>Sections for module docstrings<a class="headerlink" href="#sections-for-module-docstrings" title="Link to this heading">¶</a></h3>
 <p>In addition to the sections described in <a class="reference internal" href="#common-sections"><span class="std std-ref">Sections and subsections</span></a>
 a module docstring <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span></code> have the following structure:</p>
 <ul class="simple">
@@ -1064,7 +1069,7 @@ whether the module is applicable to a given use case.</p></li>
 </ul>
 </section>
 <section id="sections-for-class-docstrings">
-<h3><span class="section-number">6.11.4. </span>Sections for class docstrings<a class="headerlink" href="#sections-for-class-docstrings" title="Permalink to this headline">¶</a></h3>
+<h3><span class="section-number">6.11.4. </span>Sections for class docstrings<a class="headerlink" href="#sections-for-class-docstrings" title="Link to this heading">¶</a></h3>
 <p>In addition to the sections described in <a class="reference internal" href="#common-sections"><span class="std std-ref">Sections and subsections</span></a>
 a class docstring <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span></code> have the following structure:</p>
 <ul class="simple">
@@ -1349,7 +1354,7 @@ whether the class is applicable to a given use case.</p></li>
 </ul>
 </section>
 <section id="sections-for-function-method-docstrings">
-<span id="function-sections"></span><h3><span class="section-number">6.11.5. </span>Sections for function/method docstrings<a class="headerlink" href="#sections-for-function-method-docstrings" title="Permalink to this headline">¶</a></h3>
+<span id="function-sections"></span><h3><span class="section-number">6.11.5. </span>Sections for function/method docstrings<a class="headerlink" href="#sections-for-function-method-docstrings" title="Link to this heading">¶</a></h3>
 <p>In addition to the sections described in <a class="reference internal" href="#common-sections"><span class="std std-ref">Sections and subsections</span></a>
 a function or method docstring <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span></code> have the following structure:</p>
 <ul class="simple" id="section-function-pramble">
@@ -1522,7 +1527,7 @@ is annotated to return <code class="wtrl_type docutils literal notranslate"><spa
 </ul>
 </section>
 <section id="sections-for-inherited-method-docstrings">
-<h3><span class="section-number">6.11.6. </span>Sections for inherited method docstrings<a class="headerlink" href="#sections-for-inherited-method-docstrings" title="Permalink to this headline">¶</a></h3>
+<h3><span class="section-number">6.11.6. </span>Sections for inherited method docstrings<a class="headerlink" href="#sections-for-inherited-method-docstrings" title="Link to this heading">¶</a></h3>
 <p>In addition to the sections described in <a class="reference internal" href="#common-sections"><span class="std std-ref">Sections and subsections</span></a>
 an inherited method docstring <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span></code> have the following structure:</p>
 <ul class="simple">
@@ -1586,7 +1591,7 @@ whether the method is applicable to a given use case.</p></li>
 </section>
 </section>
 <section id="rules-for-exceptions-not-supposed-to-occur">
-<h2><span class="section-number">6.12. </span>Rules for exceptions not supposed to occur<a class="headerlink" href="#rules-for-exceptions-not-supposed-to-occur" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">6.12. </span>Rules for exceptions not supposed to occur<a class="headerlink" href="#rules-for-exceptions-not-supposed-to-occur" title="Link to this heading">¶</a></h2>
 <p>The rule declarations in this section describe error conditions that correspond
 to logically unreachable branches in the implementation. Under correct
 implementation of both the specification and the analyzed code, these cases
@@ -1604,7 +1609,7 @@ an internal inconsistency or an implementation defect.</p>
 </ul>
 </section>
 <section id="coverage-rules-and-intended-workflow">
-<h2><span class="section-number">6.13. </span>Coverage rules and intended workflow<a class="headerlink" href="#coverage-rules-and-intended-workflow" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">6.13. </span>Coverage rules and intended workflow<a class="headerlink" href="#coverage-rules-and-intended-workflow" title="Link to this heading">¶</a></h2>
 <p>This section is informative.</p>
 <p>The Waterloo specification contains a set of rules that connect docstring validity and public API listings
 in sections such as <code class="wtrl_label docutils literal notranslate"><span class="pre">Public_classes</span></code>, <code class="wtrl_label docutils literal notranslate"><span class="pre">Public_functions</span></code>, and <code class="wtrl_label docutils literal notranslate"><span class="pre">Public_methods</span></code>.
@@ -1616,7 +1621,7 @@ the specification requires the object to exist, and requires the object to have 
 The specification recommends listing documented objects in <code class="wtrl_label docutils literal notranslate"><span class="pre">Public_*</span></code> sections, but does not require it.
 This supports incremental documentation work, experimentation, and internal documentation without forcing immediate API exposure.</p>
 <section id="module-level-coverage">
-<h3><span class="section-number">6.13.1. </span>Module-level coverage<a class="headerlink" href="#module-level-coverage" title="Permalink to this headline">¶</a></h3>
+<h3><span class="section-number">6.13.1. </span>Module-level coverage<a class="headerlink" href="#module-level-coverage" title="Link to this heading">¶</a></h3>
 <p>At module level, the specification expresses the following principles:</p>
 <blockquote>
 <div><ul class="simple">
@@ -1638,7 +1643,7 @@ This supports incremental documentation work, experimentation, and internal docu
 </div></blockquote>
 </section>
 <section id="class-level-coverage">
-<h3><span class="section-number">6.13.2. </span>Class-level coverage<a class="headerlink" href="#class-level-coverage" title="Permalink to this headline">¶</a></h3>
+<h3><span class="section-number">6.13.2. </span>Class-level coverage<a class="headerlink" href="#class-level-coverage" title="Link to this heading">¶</a></h3>
 <p>At class level, the specification expresses the following principles:</p>
 <blockquote>
 <div><ul class="simple">
@@ -1658,21 +1663,21 @@ This supports incremental documentation work, experimentation, and internal docu
 </div></blockquote>
 </section>
 <section id="practical-consequence">
-<h3><span class="section-number">6.13.3. </span>Practical consequence<a class="headerlink" href="#practical-consequence" title="Permalink to this headline">¶</a></h3>
+<h3><span class="section-number">6.13.3. </span>Practical consequence<a class="headerlink" href="#practical-consequence" title="Link to this heading">¶</a></h3>
 <p>These rules allow authors to write many valid docstrings without immediately declaring the documented objects as public.
 Only objects explicitly listed in <code class="wtrl_label docutils literal notranslate"><span class="pre">Public_*</span></code> sections are treated as part of the public API surface
 (for the given scope) and are therefore subject to strict coverage expectations.</p>
 </section>
 </section>
 <section id="scopes-and-visibility">
-<span id="chapter-scopes-and-visibility"></span><h2><span class="section-number">6.14. </span>Scopes and visibility<a class="headerlink" href="#scopes-and-visibility" title="Permalink to this headline">¶</a></h2>
+<span id="chapter-scopes-and-visibility"></span><h2><span class="section-number">6.14. </span>Scopes and visibility<a class="headerlink" href="#scopes-and-visibility" title="Link to this heading">¶</a></h2>
 <p>This chapter defines the semantics of the <code class="wtrl_label docutils literal notranslate"><span class="pre">scope</span></code> attribute and the
 rules governing visibility, rendering, and validation across different scopes.</p>
 <p>The purpose of scopes is to allow a single codebase and documentation set to be
 rendered consistently for different audiences, such as public users, extension
 developers, or core developers.</p>
 <section id="conceptual-model">
-<h3><span class="section-number">6.14.1. </span>Conceptual model<a class="headerlink" href="#conceptual-model" title="Permalink to this headline">¶</a></h3>
+<h3><span class="section-number">6.14.1. </span>Conceptual model<a class="headerlink" href="#conceptual-model" title="Link to this heading">¶</a></h3>
 <p>Each documented object (module, class, function, or method) is assigned one or
 more scope values via the <code class="wtrl_label docutils literal notranslate"><span class="pre">Preamble.scope</span></code> subsection.</p>
 <p>Scopes do not represent access control. Instead, they describe the intended
@@ -1680,7 +1685,7 @@ audience and contractual visibility of an object.
 Scopes are interpreted uniformly by validators, renderers, and coverage tools.</p>
 </section>
 <section id="scope-values">
-<span id="section-scope-values"></span><h3><span class="section-number">6.14.2. </span>Scope values<a class="headerlink" href="#scope-values" title="Permalink to this headline">¶</a></h3>
+<span id="section-scope-values"></span><h3><span class="section-number">6.14.2. </span>Scope values<a class="headerlink" href="#scope-values" title="Link to this heading">¶</a></h3>
 <p>This section is normative.</p>
 <p>Any tool <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span></code> recognize and dispatch the following scope identifiers:</p>
 <ul class="simple">
@@ -1702,7 +1707,7 @@ Scopes are interpreted uniformly by validators, renderers, and coverage tools.</
 <p>This order expresses increasing internality and decreasing audience size.</p>
 </section>
 <section id="scope-sets">
-<h3><span class="section-number">6.14.3. </span>Scope sets<a class="headerlink" href="#scope-sets" title="Permalink to this headline">¶</a></h3>
+<h3><span class="section-number">6.14.3. </span>Scope sets<a class="headerlink" href="#scope-sets" title="Link to this heading">¶</a></h3>
 <p>This section is informative. Rules SCP-002 and SCP-010 describe the properties listed here in a normative way.</p>
 <p>The <code class="wtrl_label docutils literal notranslate"><span class="pre">scope</span></code> subsection may list zero or more scope identifiers.
 The scope of an object is therefore a set of scope values.
@@ -1710,7 +1715,7 @@ If the <code class="wtrl_label docutils literal notranslate"><span class="pre">s
 { <code class="wtrl_value docutils literal notranslate"><span class="pre">public</span></code> }.</p>
 </section>
 <section id="visibility">
-<h3><span class="section-number">6.14.4. </span>Visibility<a class="headerlink" href="#visibility" title="Permalink to this headline">¶</a></h3>
+<h3><span class="section-number">6.14.4. </span>Visibility<a class="headerlink" href="#visibility" title="Link to this heading">¶</a></h3>
 <p>An object is considered visible for a given rendering or validation context if
 at least one of its scope values is visible in that context.</p>
 <p>Let S be a set of scope values selected by a tool (for example, for rendering or
@@ -1724,7 +1729,7 @@ such that:</p>
 less than or equal to at least one selected scope.</p>
 </section>
 <section id="scope-monotonicity-rule">
-<span id="section-scope-monotonicity-rule"></span><h3><span class="section-number">6.14.5. </span>Scope Monotonicity Rule<a class="headerlink" href="#scope-monotonicity-rule" title="Permalink to this headline">¶</a></h3>
+<span id="section-scope-monotonicity-rule"></span><h3><span class="section-number">6.14.5. </span>Scope Monotonicity Rule<a class="headerlink" href="#scope-monotonicity-rule" title="Link to this heading">¶</a></h3>
 <p>Documented objects form a directed reference graph. A directed edge from object A
 to object B exists if and only if A establishes a reference to B.
 Reference edges arise exclusively from the following constructs:</p>
@@ -1745,7 +1750,7 @@ if and only if there exist s_A in scopes(A) and s_B in scopes(B) such that:</p>
 <p>This rule is referred to as the <code class="wtrl_term docutils literal notranslate"><span class="pre">Scope</span> <span class="pre">Monotonicity</span> <span class="pre">Rule</span></code>.</p>
 </section>
 <section id="non-referential-relationships">
-<h3><span class="section-number">6.14.6. </span>Non-referential relationships<a class="headerlink" href="#non-referential-relationships" title="Permalink to this headline">¶</a></h3>
+<h3><span class="section-number">6.14.6. </span>Non-referential relationships<a class="headerlink" href="#non-referential-relationships" title="Link to this heading">¶</a></h3>
 <p>Certain structural relationships do not introduce reference edges
 for the purposes of scope validation.
 In particular, entries in the <code class="wtrl_label docutils literal notranslate"><span class="pre">Factory</span></code> section do not
@@ -1765,7 +1770,7 @@ visible under <code class="wtrl_value docutils literal notranslate"><span class=
 Therefore, factory declarations do not participate in the reference graph.</p>
 </section>
 <section id="rendering-and-validation">
-<h3><span class="section-number">6.14.7. </span>Rendering and validation<a class="headerlink" href="#rendering-and-validation" title="Permalink to this headline">¶</a></h3>
+<h3><span class="section-number">6.14.7. </span>Rendering and validation<a class="headerlink" href="#rendering-and-validation" title="Link to this heading">¶</a></h3>
 <p>When rendering documentation for a selected scope set S, tools <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span></code>:</p>
 <ul class="simple">
 <li><p>render only objects that are visible under S, and</p></li>
@@ -1778,7 +1783,7 @@ consistent and closed under references.</p>
 </section>
 </section>
 <section id="rationale-ssot-for-normative-statements">
-<h2><span class="section-number">6.15. </span>Rationale: SSoT for Normative Statements<a class="headerlink" href="#rationale-ssot-for-normative-statements" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">6.15. </span>Rationale: SSoT for Normative Statements<a class="headerlink" href="#rationale-ssot-for-normative-statements" title="Link to this heading">¶</a></h2>
 <p>This section is informative.</p>
 <p>This rationale provides the motivation for rules MCLO-007, MFNO-007,
 CCLO-007, and CMTO-007. Waterloo follows the principle of <strong>Single Source of Truth (SSoT)</strong> for
@@ -1805,7 +1810,7 @@ a single authoritative specification for each documented object, and that
 normative changes are localized, explicit, and unambiguous.</p>
 </section>
 <section id="distinction-description-vs-notes">
-<h2><span class="section-number">6.16. </span>Distinction <code class="wtrl_label docutils literal notranslate"><span class="pre">Description</span></code> vs <code class="wtrl_label docutils literal notranslate"><span class="pre">Notes</span></code><a class="headerlink" href="#distinction-description-vs-notes" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">6.16. </span>Distinction <code class="wtrl_label docutils literal notranslate"><span class="pre">Description</span></code> vs <code class="wtrl_label docutils literal notranslate"><span class="pre">Notes</span></code><a class="headerlink" href="#distinction-description-vs-notes" title="Link to this heading">¶</a></h2>
 <p>This section is informative.</p>
 <p>The <code class="wtrl_label docutils literal notranslate"><span class="pre">Description</span></code> and <code class="wtrl_label docutils literal notranslate"><span class="pre">Notes</span></code> sections overlap thematically. We would like
 to suggest the following semantics: <code class="wtrl_label docutils literal notranslate"><span class="pre">Description</span></code> describes the object to be documented for normal use,
@@ -1814,7 +1819,7 @@ We have deliberately implemented <code class="wtrl_label docutils literal notran
 of self-defined normative sections. Notes of a normative nature should be added to the <code class="wtrl_label docutils literal notranslate"><span class="pre">Contract</span></code> section instead.</p>
 </section>
 <section id="distinction-general-vs-invariants">
-<h2><span class="section-number">6.17. </span>Distinction <code class="wtrl_label docutils literal notranslate"><span class="pre">general</span></code> vs <code class="wtrl_label docutils literal notranslate"><span class="pre">invariants</span></code><a class="headerlink" href="#distinction-general-vs-invariants" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">6.17. </span>Distinction <code class="wtrl_label docutils literal notranslate"><span class="pre">general</span></code> vs <code class="wtrl_label docutils literal notranslate"><span class="pre">invariants</span></code><a class="headerlink" href="#distinction-general-vs-invariants" title="Link to this heading">¶</a></h2>
 <p>This section is informative.</p>
 <p>The <code class="wtrl_label docutils literal notranslate"><span class="pre">Contract.general</span></code> and <code class="wtrl_label docutils literal notranslate"><span class="pre">Contract.invariants</span></code> subsections overlap thematically.
 We would like to suggest the following semantics: <code class="wtrl_label docutils literal notranslate"><span class="pre">Contract.general</span></code> describes the object to be documented
@@ -1827,7 +1832,7 @@ throughout free-form prose.</p>
 <p>Invariants may be more technical in nature and may refer to internal representations such as an AST or a DocstringTree.</p>
 </section>
 <section id="distinction-ensures-vs-invariants">
-<h2><span class="section-number">6.18. </span>Distinction <code class="wtrl_label docutils literal notranslate"><span class="pre">ensures</span></code> vs <code class="wtrl_label docutils literal notranslate"><span class="pre">invariants</span></code><a class="headerlink" href="#distinction-ensures-vs-invariants" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">6.18. </span>Distinction <code class="wtrl_label docutils literal notranslate"><span class="pre">ensures</span></code> vs <code class="wtrl_label docutils literal notranslate"><span class="pre">invariants</span></code><a class="headerlink" href="#distinction-ensures-vs-invariants" title="Link to this heading">¶</a></h2>
 <p>This section is informative.</p>
 <p>The subsections <code class="wtrl_label docutils literal notranslate"><span class="pre">ensures</span></code> and <code class="wtrl_label docutils literal notranslate"><span class="pre">invariants</span></code> overlap thematically, but serve different purposes.
 <code class="wtrl_label docutils literal notranslate"><span class="pre">ensures</span></code> describes postconditions that hold after a successful call of the documented function.
@@ -1841,7 +1846,7 @@ for automated testing, such as idempotence, non-mutation of inputs, or round-tri
           
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper">
 <h1 class="logo"><a href="index.html">Waterloo Docstrings</a></h1>
 
@@ -1852,7 +1857,16 @@ for automated testing, such as idempotence, non-mutation of inputs, or round-tri
 
 
 
-<h3>Navigation</h3>
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
 <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="introduction.html">1. Introduction</a></li>
@@ -1910,7 +1924,9 @@ for automated testing, such as idempotence, non-mutation of inputs, or round-tri
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="tools.html">7. Tools</a></li>
-<li class="toctree-l1"><a class="reference internal" href="reference.html">8. Reference - Core View</a></li>
+<li class="toctree-l1"><a class="reference internal" href="json_io.html">8. The JSON I/O Layer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="html_output_layer.html">9. The HTML Output Layer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reference.html">10. Reference - Core View</a></li>
 </ul>
 
 <div class="relations">
@@ -1922,16 +1938,6 @@ for automated testing, such as idempotence, non-mutation of inputs, or round-tri
   </ul></li>
 </ul>
 </div>
-<div id="searchbox" style="display: none" role="search">
-  <h3 id="searchlabel">Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
-      <input type="submit" value="Go" />
-    </form>
-    </div>
-</div>
-<script>$('#searchbox').show(0);</script>
 
 
 
@@ -1945,11 +1951,11 @@ for automated testing, such as idempotence, non-mutation of inputs, or round-tri
       <div class="clearer"></div>
     </div>
     <div class="footer">
-      &copy;2026, Uwe.
+      &#169;2026, Uwe.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.3.2</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.1.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
       
       |
       <a href="_sources/format.rst.txt"

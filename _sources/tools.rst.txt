@@ -1,7 +1,7 @@
 Tools
 =====
 
-This section is informative.
+This section is informative. Subsections are informative unless explicitly stated otherwise.
 
 The reference implementation provides the command-line tool
 :wtrl_cmd:`waterlint`. The error codes listed below are used by this tool.
@@ -22,6 +22,14 @@ within a minor version of the tool.
 :wtrl_cmd:`waterlint` error codes
 ---------------------------------
 
+.. rubric:: General tool errors
+
+* [TOOL-001] -- Cannot resolve an object passed via option :wtrl_opt:`--obj`.
+* [TOOL-800] -- Unspecified runtime error during analysis.
+  This code is used when an unexpected exception escapes the validation process.
+  The tracer diagnostic output should provide sufficient detail to identify
+  the underlying cause.
+
 .. rubric:: JSON processing
 
 * [JSCH-000] -- Unspecified catch-all error during JSON processing.
@@ -29,10 +37,10 @@ within a minor version of the tool.
 * [JSCH-003] -- Cannot determine the applicable schema from the input JSON file.
 * [JSCH-004] -- Input is not valid JSON.
 * [JSCH-005] -- Validation against the JSON Schema failed.
-* [JSCH-006] -- Entry ``__WTRL_OBJECTS__.<QID>.examples`` contains an invalid pointer, a missing target example, or an invalid list shape.
-* [JSCH-007] -- Entry ``__WTRL_EXAMPLES__.<ID>.referenced_by`` contains an invalid value or an unknown object identifier.
-* [JSCH-008] -- Back-reference mismatch: an object points to an example, but the example does not list that object in ``referenced_by``.
-* [JSCH-009] -- Forward-reference mismatch: an example lists an object in ``referenced_by``, but the object does not point back via ``examples``.
+* [JSCH-006] -- Entry :wtrl_attr:`__WTRL_OBJECTS__.<QID>.examples` contains an invalid pointer, a missing target example, or an invalid list shape.
+* [JSCH-007] -- Entry :wtrl_attr:`__WTRL_EXAMPLES__.<ID>.referenced_by` contains an invalid value or an unknown object identifier.
+* [JSCH-008] -- Back-reference mismatch: an object points to an example, but the example does not list that object in :wtrl_attr:`referenced_by`.
+* [JSCH-009] -- Forward-reference mismatch: an example lists an object in :wtrl_attr:`referenced_by`, but the object does not point back via :wtrl_attr:`examples`.
 
 * [JSCH-700] -- Unspecified error during JSON rendering.
 * [JSCH-800] -- Unspecified JSON schema exception.
@@ -45,17 +53,21 @@ within a minor version of the tool.
 * [AXMPL-003] -- Mapping contains an invalid list shape or non-string example path.
 * [AXMPL-004] -- Example file path, file access, base directory, or UTF-8 decoding failed.
 * [AXMPL-005] -- Input or mapping file is not valid JSON.
+* [AXMPL-006] -- Mapping JSON failed schema validation or schema auto-detection.
 
-
-.. rubric:: General tool errors
-
-* [TOOL-001] -- Cannot resolve an object passed via option :wtrl_opt:`--obj`.
-* [TOOL-800] -- Unspecified runtime error during analysis.
-  This code is used when an unexpected exception escapes the validation process.
-  The tracer diagnostic output should provide sufficient detail to identify
-  the underlying cause.
+.. rubric:: Rendering HTML (render-html5)
 
 * [RHTM-001] -- General error while rendering HTML5.
+* [RHTM-002] -- Invalid render-html5 output arguments or output directory state.
+* [RHTM-003] -- Input JSON documents cannot be merged (inconsistent metadata, missing structure, collisions).
+* [RHTM-004] -- CSS asset loading failed (default CSS or user-provided :wtrl_opt:`--css`).
+* [RHTM-005] -- HTML assembly or output file writing failed.
+* [RHTM-006] -- Optional preprocessing failed (currently: dropping ``Preamble`` via :wtrl_opt:`--no-render-preamble`).
+* [RHTM-007] -- Custom header fragment given via :wtrl_opt:`--header-html` cannot be read.
+* [RHTM-008] -- Custom header fragment given via :wtrl_opt:`--header-html` does not contain the required element :wtrl_value:`#wtrl-title`.
+* [RHTM-009] -- Custom header fragment given via :wtrl_opt:`--header-html` cannot be embedded safely into the generated HTML document.
+  This includes active content such as ``<script>`` and disallowed document-level elements such as
+  :wtrl_tag:`html`, :wtrl_tag:`head`, :wtrl_tag:`body`, and :wtrl_tag:`main`.
 
 Extension error codes
 ---------------------
@@ -120,7 +132,7 @@ Error response shape:
 	  }
 	}
 
-The field ``diagnostics`` is always included for ``ok=false``.
+The field :wtrl_attr:`diagnostics` is always included for :wtrl_attr:`ok` = :wtrl_value:`false`.
 For successful calls, the client may request full diagnostics by setting
 ``include_diagnostics=true`` in the request.
 
