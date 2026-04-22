@@ -17,7 +17,7 @@
     <script src="_static/doctools.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="8. Reference - Core View" href="reference.html" />
+    <link rel="next" title="8. The JSON I/O Layer" href="json_io.html" />
     <link rel="prev" title="6. Docstring format" href="format.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
@@ -37,7 +37,7 @@
             
   <section id="tools">
 <h1><span class="section-number">7. </span>Tools<a class="headerlink" href="#tools" title="Permalink to this headline">¶</a></h1>
-<p>This section is informative.</p>
+<p>This section is informative. Subsections are informative unless explicitly stated otherwise.</p>
 <p>The reference implementation provides the command-line tool
 <code class="wtrl_cmd docutils literal notranslate"><span class="pre">waterlint</span></code>. The error codes listed below are used by this tool.
 These codes are specific to the reference implementation and do not
@@ -52,6 +52,14 @@ within a minor version of the tool.</p>
 </section>
 <section id="waterlint-error-codes">
 <h2><span class="section-number">7.2. </span><code class="wtrl_cmd docutils literal notranslate"><span class="pre">waterlint</span></code> error codes<a class="headerlink" href="#waterlint-error-codes" title="Permalink to this headline">¶</a></h2>
+<p class="rubric">General tool errors</p>
+<ul class="simple">
+<li><p>[TOOL-001] – Cannot resolve an object passed via option <code class="wtrl_opt docutils literal notranslate"><span class="pre">--obj</span></code>.</p></li>
+<li><p>[TOOL-800] – Unspecified runtime error during analysis.
+This code is used when an unexpected exception escapes the validation process.
+The tracer diagnostic output should provide sufficient detail to identify
+the underlying cause.</p></li>
+</ul>
 <p class="rubric">JSON processing</p>
 <ul class="simple">
 <li><p>[JSCH-000] – Unspecified catch-all error during JSON processing.</p></li>
@@ -59,10 +67,10 @@ within a minor version of the tool.</p>
 <li><p>[JSCH-003] – Cannot determine the applicable schema from the input JSON file.</p></li>
 <li><p>[JSCH-004] – Input is not valid JSON.</p></li>
 <li><p>[JSCH-005] – Validation against the JSON Schema failed.</p></li>
-<li><p>[JSCH-006] – Entry <code class="docutils literal notranslate"><span class="pre">__WTRL_OBJECTS__.&lt;QID&gt;.examples</span></code> contains an invalid pointer, a missing target example, or an invalid list shape.</p></li>
-<li><p>[JSCH-007] – Entry <code class="docutils literal notranslate"><span class="pre">__WTRL_EXAMPLES__.&lt;ID&gt;.referenced_by</span></code> contains an invalid value or an unknown object identifier.</p></li>
-<li><p>[JSCH-008] – Back-reference mismatch: an object points to an example, but the example does not list that object in <code class="docutils literal notranslate"><span class="pre">referenced_by</span></code>.</p></li>
-<li><p>[JSCH-009] – Forward-reference mismatch: an example lists an object in <code class="docutils literal notranslate"><span class="pre">referenced_by</span></code>, but the object does not point back via <code class="docutils literal notranslate"><span class="pre">examples</span></code>.</p></li>
+<li><p>[JSCH-006] – Entry <code class="wtrl_attr docutils literal notranslate"><span class="pre">__WTRL_OBJECTS__.&lt;QID&gt;.examples</span></code> contains an invalid pointer, a missing target example, or an invalid list shape.</p></li>
+<li><p>[JSCH-007] – Entry <code class="wtrl_attr docutils literal notranslate"><span class="pre">__WTRL_EXAMPLES__.&lt;ID&gt;.referenced_by</span></code> contains an invalid value or an unknown object identifier.</p></li>
+<li><p>[JSCH-008] – Back-reference mismatch: an object points to an example, but the example does not list that object in <code class="wtrl_attr docutils literal notranslate"><span class="pre">referenced_by</span></code>.</p></li>
+<li><p>[JSCH-009] – Forward-reference mismatch: an example lists an object in <code class="wtrl_attr docutils literal notranslate"><span class="pre">referenced_by</span></code>, but the object does not point back via <code class="wtrl_attr docutils literal notranslate"><span class="pre">examples</span></code>.</p></li>
 <li><p>[JSCH-700] – Unspecified error during JSON rendering.</p></li>
 <li><p>[JSCH-800] – Unspecified JSON schema exception.</p></li>
 </ul>
@@ -74,15 +82,21 @@ within a minor version of the tool.</p>
 <li><p>[AXMPL-003] – Mapping contains an invalid list shape or non-string example path.</p></li>
 <li><p>[AXMPL-004] – Example file path, file access, base directory, or UTF-8 decoding failed.</p></li>
 <li><p>[AXMPL-005] – Input or mapping file is not valid JSON.</p></li>
+<li><p>[AXMPL-006] – Mapping JSON failed schema validation or schema auto-detection.</p></li>
 </ul>
-<p class="rubric">General tool errors</p>
+<p class="rubric">Rendering HTML (render-html5)</p>
 <ul class="simple">
-<li><p>[TOOL-001] – Cannot resolve an object passed via option <code class="wtrl_opt docutils literal notranslate"><span class="pre">--obj</span></code>.</p></li>
-<li><p>[TOOL-800] – Unspecified runtime error during analysis.
-This code is used when an unexpected exception escapes the validation process.
-The tracer diagnostic output should provide sufficient detail to identify
-the underlying cause.</p></li>
 <li><p>[RHTM-001] – General error while rendering HTML5.</p></li>
+<li><p>[RHTM-002] – Invalid render-html5 output arguments or output directory state.</p></li>
+<li><p>[RHTM-003] – Input JSON documents cannot be merged (inconsistent metadata, missing structure, collisions).</p></li>
+<li><p>[RHTM-004] – CSS asset loading failed (built-in CSS, user-provided <code class="wtrl_opt docutils literal notranslate"><span class="pre">--css</span></code>, or user-provided <code class="wtrl_opt docutils literal notranslate"><span class="pre">--additional-css</span></code>).</p></li>
+<li><p>[RHTM-005] – HTML assembly or output file writing failed.</p></li>
+<li><p>[RHTM-006] – Optional preprocessing failed (currently: dropping <code class="docutils literal notranslate"><span class="pre">Preamble</span></code> via <code class="wtrl_opt docutils literal notranslate"><span class="pre">--no-render-preamble</span></code>).</p></li>
+<li><p>[RHTM-007] – Custom header fragment given via <code class="wtrl_opt docutils literal notranslate"><span class="pre">--header-html</span></code> cannot be read.</p></li>
+<li><p>[RHTM-008] – Custom header fragment given via <code class="wtrl_opt docutils literal notranslate"><span class="pre">--header-html</span></code> does not contain the required element <code class="wtrl_value docutils literal notranslate"><span class="pre">#wtrl-title</span></code>.</p></li>
+<li><p>[RHTM-009] – Custom header fragment given via <code class="wtrl_opt docutils literal notranslate"><span class="pre">--header-html</span></code> cannot be embedded safely into the generated HTML document.
+This includes active content such as <code class="docutils literal notranslate"><span class="pre">&lt;script&gt;</span></code> and disallowed document-level elements such as
+<code class="wtrl_tag docutils literal notranslate"><span class="pre">html</span></code>, <code class="wtrl_tag docutils literal notranslate"><span class="pre">head</span></code>, <code class="wtrl_tag docutils literal notranslate"><span class="pre">body</span></code>, and <code class="wtrl_tag docutils literal notranslate"><span class="pre">main</span></code>.</p></li>
 </ul>
 </section>
 <section id="extension-error-codes">
@@ -140,7 +154,7 @@ JSON envelope for all commands.</p>
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>The field <code class="docutils literal notranslate"><span class="pre">diagnostics</span></code> is always included for <code class="docutils literal notranslate"><span class="pre">ok=false</span></code>.
+<p>The field <code class="wtrl_attr docutils literal notranslate"><span class="pre">diagnostics</span></code> is always included for <code class="wtrl_attr docutils literal notranslate"><span class="pre">ok</span></code> = <code class="wtrl_value docutils literal notranslate"><span class="pre">false</span></code>.
 For successful calls, the client may request full diagnostics by setting
 <code class="docutils literal notranslate"><span class="pre">include_diagnostics=true</span></code> in the request.</p>
 </section>
@@ -377,7 +391,9 @@ For successful calls, the client may request full diagnostics by setting
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="reference.html">8. Reference - Core View</a></li>
+<li class="toctree-l1"><a class="reference internal" href="json_io.html">8. The JSON I/O Layer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="html_output_layer.html">9. The HTML Output Layer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reference.html">10. Reference - Core View</a></li>
 </ul>
 
 <div class="relations">
@@ -385,7 +401,7 @@ For successful calls, the client may request full diagnostics by setting
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
       <li>Previous: <a href="format.html" title="previous chapter"><span class="section-number">6. </span>Docstring format</a></li>
-      <li>Next: <a href="reference.html" title="next chapter"><span class="section-number">8. </span>Reference - Core View</a></li>
+      <li>Next: <a href="json_io.html" title="next chapter"><span class="section-number">8. </span>The JSON I/O Layer</a></li>
   </ul></li>
 </ul>
 </div>

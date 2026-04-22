@@ -43,10 +43,15 @@ in particular the scope and flavour stored in the JSON document.
 The following options are particularly relevant:
 
 	:wtrl_opt:`--css` :wtrl_file:`path/to/custom.css`
+	:wtrl_opt:`--additional-css` :wtrl_file:`path/to/additional.css`
 	:wtrl_opt:`--pygments-theme` :wtrl_value:`theme-name`
 	:wtrl_opt:`--no-render-preamble`
 
-Option :wtrl_opt:`--css` allows embedding additional CSS into the generated HTML file.
+Option :wtrl_opt:`--css` replaces the built-in default stylesheet with a custom CSS file.
+This is useful if the full visual presentation should be controlled externally.
+
+Option :wtrl_opt:`--additional-css` preserves the built-in default stylesheet and
+appends the given CSS file to it.
 This is useful if the default rendering should be adapted to a project-specific visual style.
 
 Option :wtrl_opt:`--pygments-theme` selects the syntax-highlighting theme used for
@@ -89,7 +94,10 @@ If the visual style should be adapted, an additional stylesheet can be embedded:
 	:wtrl_cmd:`waterlint render-html5`
 		| :wtrl_opt:`--in` :wtrl_file:`doc/output-json/test_module_minimal.with_examples.wtrl.core.rfc-2119.json`
 		| :wtrl_opt:`--out` :wtrl_file:`doc/output-html/test_module_minimal.with_examples.wtrl.core.rfc-2119.html`
-		| :wtrl_opt:`--css` :wtrl_file:`path/to/custom.css`
+		| :wtrl_opt:`--additional-css` :wtrl_file:`path/to/additional.css`
+
+Adding a custom header
+----------------------
 
 The header area above the rendered documentation can also be customized by
 passing an HTML fragment file:
@@ -134,7 +142,7 @@ and can be used as follows:
 		| :wtrl_opt:`--in` :wtrl_file:`doc/output-json/test_module_minimal.with_examples.wtrl.core.rfc-2119.json`
 		| :wtrl_opt:`--out` :wtrl_file:`doc/output-html/test_module_minimal.with_examples.wtrl.core.rfc-2119.html`
 		| :wtrl_opt:`--header-html` :wtrl_file:`doc/input-html/test_header_tde4.html`
-		| :wtrl_opt:`--css` :wtrl_file:`doc/input-html/test_header_tde4.css`
+		| :wtrl_opt:`--additional-css` :wtrl_file:`doc/input-html/test_header_tde4.css`
 
 Header fragment:
 

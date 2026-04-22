@@ -334,29 +334,26 @@ sections would contain a mixture of normative and informative content.</p></li>
 </td>
 </tr>
 <tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Public</span> <span class="pre">types</span></code></p></td>
-<td><ul class="simple">
-<li><p><code class="wtrl_type docutils literal notranslate"><span class="pre">MyTypeAlias_t</span></code><ul>
-<li><p><code class="wtrl_norm docutils literal notranslate"><span class="pre">Must</span></code> represent a union of <code class="wtrl_type docutils literal notranslate"><span class="pre">float</span></code> and <code class="wtrl_type docutils literal notranslate"><span class="pre">int</span></code>. This section is always normative. All relevant information about the type alias is specified here, as type aliases do not provide their own machine-verifiable docstrings.</p></li>
-</ul>
-</p></li>
+<td><ul>
+<li><p><a class="wtrl_type reference internal" href="#wtrl-obj-5:types-9:UnionType" title="types.UnionType"><span>MyTypeAlias_t</span></a></p>
+<p class="wtrl-public-type-content"><code class="wtrl_norm docutils literal notranslate"><span class="pre">Must</span></code> represent a union of <code class="wtrl_type docutils literal notranslate"><span class="pre">float</span></code> and <code class="wtrl_type docutils literal notranslate"><span class="pre">int</span></code>. This section is always normative. All relevant information about the type alias is specified here, as type aliases do not provide their own machine-verifiable docstrings.</p>
+</li>
 </ul>
 </td>
 </tr>
 <tr class="wtrl-section row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Public</span> <span class="pre">variables</span></code></p></td>
-<td><ul class="simple">
-<li><p><code class="wtrl_var docutils literal notranslate"><span class="pre">my_variable</span></code><ul>
-<li><p><code class="wtrl_norm docutils literal notranslate"><span class="pre">Must</span></code> represent a value for this and that. This section is always normative. All relevant information is specified here, since variables do not have standardized, machine-verifiable docstrings.</p></li>
-</ul>
-</p></li>
+<td><ul>
+<li><p><a class="wtrl_var reference internal" href="#wtrl-obj-5:float" title="float"><span>my_variable</span></a></p>
+<p class="wtrl-public-var-content"><code class="wtrl_norm docutils literal notranslate"><span class="pre">Must</span></code> represent a value for this and that. This section is always normative. All relevant information is specified here, since variables do not have standardized, machine-verifiable docstrings.</p>
+</li>
 </ul>
 </td>
 </tr>
 <tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Public</span> <span class="pre">constants</span></code></p></td>
-<td><ul class="simple">
-<li><p><code class="wtrl_var docutils literal notranslate"><span class="pre">MY_CONSTANT</span></code><ul>
-<li><p><code class="wtrl_norm docutils literal notranslate"><span class="pre">Must</span></code> represent a constant value annotated as <code class="wtrl_type docutils literal notranslate"><span class="pre">Final</span></code>. This section is always normative. All relevant information is specified here, as constants do not provide their own machine-verifiable docstrings.</p></li>
-</ul>
-</p></li>
+<td><ul>
+<li><p><a class="wtrl_var reference internal" href="#wtrl-obj-3:int" title="int"><span>MY_CONSTANT</span></a></p>
+<p class="wtrl-public-var-content"><code class="wtrl_norm docutils literal notranslate"><span class="pre">Must</span></code> represent a constant value annotated as <code class="wtrl_type docutils literal notranslate"><span class="pre">Final</span></code>. This section is always normative. All relevant information is specified here, as constants do not provide their own machine-verifiable docstrings.</p>
+</li>
 </ul>
 </td>
 </tr>
@@ -663,29 +660,26 @@ usage. This section may only be present if section
 </td>
 </tr>
 <tr class="wtrl-section row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Public</span> <span class="pre">types</span></code></p></td>
-<td><ul class="simple">
-<li><p><code class="wtrl_type docutils literal notranslate"><span class="pre">MyTypeAlias_t</span></code><ul>
-<li><p>Important type for annotations</p></li>
-</ul>
-</p></li>
+<td><ul>
+<li><p><code class="wtrl_type docutils literal notranslate"><span class="pre">MyTypeAlias_t</span></code></p>
+<p class="wtrl-public-type-content">Important type for annotations</p>
+</li>
 </ul>
 </td>
 </tr>
 <tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Public</span> <span class="pre">variables</span></code></p></td>
-<td><ul class="simple">
-<li><p><code class="wtrl_var docutils literal notranslate"><span class="pre">my_variable</span></code><ul>
-<li><p>A variable</p></li>
-</ul>
-</p></li>
+<td><ul>
+<li><p><code class="wtrl_var docutils literal notranslate"><span class="pre">my_variable</span></code></p>
+<p class="wtrl-public-var-content">A variable</p>
+</li>
 </ul>
 </td>
 </tr>
 <tr class="wtrl-section row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Public</span> <span class="pre">constants</span></code></p></td>
-<td><ul class="simple">
-<li><p><code class="wtrl_var docutils literal notranslate"><span class="pre">MY_CONSTANT</span></code><ul>
-<li><p>Another constant</p></li>
-</ul>
-</p></li>
+<td><ul>
+<li><p><code class="wtrl_var docutils literal notranslate"><span class="pre">MY_CONSTANT</span></code></p>
+<p class="wtrl-public-var-content">Another constant</p>
+</li>
 </ul>
 </td>
 </tr>
@@ -1327,7 +1321,9 @@ the base preconditions, unless they are explicitly permitted by the base contrac
 <li class="toctree-l1"><a class="reference internal" href="misc.html">5. Miscellaneous</a></li>
 <li class="toctree-l1"><a class="reference internal" href="format.html">6. Docstring format</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tools.html">7. Tools</a></li>
-<li class="toctree-l1"><a class="reference internal" href="reference.html">8. Reference - Core View</a></li>
+<li class="toctree-l1"><a class="reference internal" href="json_io.html">8. The JSON I/O Layer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="html_output_layer.html">9. The HTML Output Layer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reference.html">10. Reference - Core View</a></li>
 </ul>
 
 <div class="relations">
