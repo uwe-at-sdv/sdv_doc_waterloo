@@ -83,7 +83,7 @@ Meta
 
 This section is normative.
 
-In this section, we specify that all normative rules for defining the Waterloo project are given IDs, and how we construct these IDs.
+In this section, we specify that all normative rules and error codes for defining the Waterloo project are given IDs, and how we construct these IDs.
 We do this by the following set of rules.
 
 * [META-000] -- Each normative rule that is intended to be enforced by tools (a "lint rule") |must|

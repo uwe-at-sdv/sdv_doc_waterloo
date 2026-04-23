@@ -1,3 +1,5 @@
+.. _html_output_layer:
+
 The HTML Output Layer
 =====================
 
@@ -107,7 +109,7 @@ passing an HTML fragment file:
 		| :wtrl_opt:`--out` :wtrl_file:`doc/output-html/test_module_minimal.with_examples.wtrl.core.rfc-2119.html`
 		| :wtrl_opt:`--header-html` :wtrl_file:`doc/input-html/test_header_minimal.html`
 
-The fragment |must| contain an element with ID :wtrl_value:`wtrl-title`.
+The fragment must contain an element with ID :wtrl_value:`wtrl-title`, see rule RTHM-008 in :ref:`rendering_html`.
 This element is populated dynamically with the qualified identifier of the
 currently selected object.
 An element with ID :wtrl_value:`wtrl-sub` is optional and, if present, is used
