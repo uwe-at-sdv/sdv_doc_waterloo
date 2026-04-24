@@ -27,7 +27,9 @@ from jsonschema import Draft202012Validator
 #from jsonschema import JSONDecodeError
 import jsonschema.exceptions
 
-__version__ = "0.8.2"
+__version__ = "0.8.3"
+# - 0.8.3 [2026-04-24]	Subcommand render-html5: --css and --additional-css are now independent options.
+#			Subcommand extract: diagnostics now aligned with other subcommands.
 # - 0.8.2 [2026-04-22]	Options --header-html und --additional-css for subcommand render-html5.
 # - 0.8.1 [2026-04-18]	Unique $id in add-example-json; MD5 replaced by SHA256 in JSON-artifacts.
 # - 0.8.0 [2026-04-17]	JSON Schema for example references: this affects
@@ -844,14 +846,16 @@ def _extract_command(args: argparse.Namespace) -> int:
 #--------------------------------------------------------------#
 	try:
 		if args.subsection and not args.section:
-			print("Error: --subsection requires --section.", file=sys.stderr)
-			return 2
+			tr.add_error("TOOL-002", "tool", "Option --subsection requires --section.")
+			_emit_tracer(tr, out_diag, out_diag_json)
+			return 1
 		if args.obj:
 			_apply_basedir(getattr(args, "basedir", None), args.obj)
 			obj = _resolve_object(args.obj)
 			doc_txt = getattr(obj, "__doc__", None)
 			if not isinstance(doc_txt, str):
-				print("Error: resolved object has no docstring.", file=sys.stderr)
+				tr.add_error("TOOL-003", "tool", "Resolved object has no docstring.")
+				_emit_tracer(tr, out_diag, out_diag_json)
 				return 1
 		elif args.input_file:
 			doc_txt = _read_docstring_from_file(args.input_file)
@@ -859,7 +863,7 @@ def _extract_command(args: argparse.Namespace) -> int:
 			doc_txt = _read_docstring_from_stdin()
 
 		tree = tokenizer.parse_indent_docstring(tr, doc_txt)
-
+# Extract section or subsection if requested, otherwise use the whole tree.
 		if args.section:
 			if args.subsection:
 				subtree = tokenizer.get_tree_of_subsection(tr, tree, args.section, args.subsection)
@@ -870,21 +874,37 @@ def _extract_command(args: argparse.Namespace) -> int:
 		else:
 			out = tokenizer.to_string_tree(tree)
 
-		sys.stdout.write(out)
-	except (SectionNotFoundError, SubsectionNotFoundError) as exc:
-#		print(str(exc), file=sys.stderr)
+		if getattr(args, "out_file", None):
+			with open(args.out_file, "w", encoding="utf-8") as fh:
+				fh.write(out)
+		else:
+			sys.stdout.write(out)
+	except SectionNotFoundError as exc:
+		tr.add_error("TOOL-004", "tool", str(exc))
+		_emit_tracer(tr, out_diag, out_diag_json)
+		return 1
+	except SubsectionNotFoundError as exc:
+		tr.add_error("TOOL-005", "tool", str(exc))
+		_emit_tracer(tr, out_diag, out_diag_json)
+		return 1
+	except ImportError as exc:
+		tr.add_error("TOOL-001", "tool", str(exc))
 		_emit_tracer(tr, out_diag, out_diag_json)
 		return 1
 	except ValidationError as exc:
-#		print(str(exc), file=sys.stderr)
+		tr.add_error("TOOL-007", "tool", str(exc))
 		_emit_tracer(tr, out_diag, out_diag_json)
 		return 1
 	except ParseError as exc:
-#		print(str(exc), file=sys.stderr)
+		tr.add_error("TOOL-006", "tool", str(exc))
+		_emit_tracer(tr, out_diag, out_diag_json)
+		return 1
+	except RuntimeError as exc:
+		tr.add_error("TOOL-001", "tool", str(exc))
 		_emit_tracer(tr, out_diag, out_diag_json)
 		return 1
 	except Exception as exc:  # pragma: no cover - defensive
-		print(f"Error: {exc}", file=sys.stderr)
+		tr.add_error("TOOL-800", "tool", f"[{docitem.get_obj_fully_qualified_name(exc)}] Unexpected failure in extract command: {exc}")
 		_emit_tracer(tr, out_diag, out_diag_json)
 		return 1
 
@@ -1069,7 +1089,8 @@ def _render_json_command(args: argparse.Namespace) -> int:
 		flavour = cvrt.flavour_tag_map.get(flavour_str)
 		if flavour is None:
 			flavour = cvrt.Flavour.RFC_2119
-
+# Build a flat list of object qualified names from the --obj arguments, which may be repeated and/or grouped.
+# This is related to argparse's handling of nargs='+' with multiple occurrences, which results in a list of lists.
 		obj_qnames: list[str] = []
 		if args.obj:
 			for grp in args.obj:
@@ -1080,7 +1101,7 @@ def _render_json_command(args: argparse.Namespace) -> int:
 		if not obj_qnames:
 			print("Error: --obj is required for render-json.", file=sys.stderr)
 			return 2
-
+# Each qualified name must resolve to a module, and we need the module objects for traversal, so resolve them all upfront.
 		modules: list[ModuleType] = []
 		for qname in obj_qnames:
 			_apply_basedir(getattr(args, "basedir", None), qname)
@@ -1090,7 +1111,7 @@ def _render_json_command(args: argparse.Namespace) -> int:
 				return 2
 			modules.append(mod_obj)
 
-#----- Object traversal and config
+#----- Object traversal and config ----------------------------#
 		config = docitem.ConfigTraversal()
 		if args.include_imported:
 			config.enable_include_imported()
@@ -1199,6 +1220,7 @@ def _render_json_command(args: argparse.Namespace) -> int:
 						num_unknown_skipped_invalid += 1
 					objects_counted.add(name_key)
 				continue
+# Filter by scope.
 			if not cast(Any, tree).is_visible(scopes_filter):
 				continue
 # All entries are based on the qualified name, which is delivered by our helper.
@@ -1894,6 +1916,7 @@ def _build_parser() -> argparse.ArgumentParser:
 		metavar="DIR",
 		help="Base directory for resolving objects passed to --obj.",
 	)
+	extract.add_argument("--out", dest="out_file", metavar="FILE", help="Write extracted text to FILE instead of stdout.")
 	extract.add_argument("--section", metavar="SECTION", help="Section label to extract")
 	extract.add_argument("--subsection", metavar="SUBSECTION", help="Subsection label to extract (requires --section)")
 	extract.add_argument("--debug", action="store_true", help="Emit debugging data to stderr (reserved)")
@@ -1989,9 +2012,8 @@ def _build_parser() -> argparse.ArgumentParser:
 	rh_out = render_html5.add_mutually_exclusive_group(required=True)
 	rh_out.add_argument("--out", dest="out_file", metavar="HTML", help="Write HTML to HTML.")
 	rh_out.add_argument("--out-dir", dest="out_dir", metavar="DIR", help="Write HTML to DIR with generated filename.")
-	rh_css = render_html5.add_mutually_exclusive_group()
-	rh_css.add_argument("--css", dest="css_file", metavar="FILE", help="CSS file to embed instead of the built-in default CSS.")
-	rh_css.add_argument("--additional-css", dest="additional_css_file", metavar="FILE", help="Additional CSS file to append after the built-in default CSS.")
+	render_html5.add_argument("--css", dest="css_file", metavar="FILE", help="Primary CSS file to embed instead of the built-in default CSS.")
+	render_html5.add_argument("--additional-css", dest="additional_css_file", metavar="FILE", help="Additional CSS file to append after the primary CSS.")
 	render_html5.add_argument("--header-html", dest="header_html_file", metavar="FILE", help="HTML fragment file used instead of the built-in header markup.")
 	render_html5.add_argument("--pygments-theme", dest="pygments_theme", default="gruvbox-light", metavar="THEME", help="Pygments style name for rendered examples (default: gruvbox-light).")
 	render_html5.add_argument("--no-render-preamble", dest="no_render_preamble", action="store_true", help="Do not render section 'Preamble' in HTML output.")

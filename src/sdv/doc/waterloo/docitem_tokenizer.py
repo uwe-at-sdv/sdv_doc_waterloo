@@ -420,7 +420,7 @@ Preamble:
 Contract:
 	general:
 		|Must| render the docstring tree to a string, using the indentation scheme passed.
-		|Must| generate a watrloo docstring, provided the input is a docstring tree from a waterloo docstring.
+		|Must| generate a waterloo docstring, provided the input is a docstring tree from a waterloo docstring.
 Parameters:
 	tree:
 		The docstring tre to render
@@ -433,6 +433,8 @@ Returns:
 Raises:
 Description:
 	This function is helpful for idempotence tests.
+	It is invoked e.g. in `waterlint extract` in order to extract
+	sections or subsections from a docstring.
 	"""
 	indent_unit = "\t" if indent_scheme == INDENT_SCHEME_TAB else "    "
 	doc = ""

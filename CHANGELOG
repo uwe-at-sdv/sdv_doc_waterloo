@@ -1,3 +1,4 @@
+# - 0.9.4 [2026-04-24]	Documentation: Overview output layers; Minor refactorings in waterlint.
 # - 0.9.3 [2026-04-22]	Documentation: HTML Output Layer; HTML options in waterlint
 # - 0.9.2 [2026-04-21]	Documentation: JSON I/O Layer, HTML Output Layer
 # - 0.9.1 [2026-04-18]	waterlint updated (JSON artifacts); docu new chapter "JSON I/O"
