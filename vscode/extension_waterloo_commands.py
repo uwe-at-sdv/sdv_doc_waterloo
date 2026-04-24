@@ -13,9 +13,17 @@ try:
 	import sdv.doc.waterloo.docitem as wtrl
 	import sdv.doc.waterloo.docitem_genutil as genutil
 except ImportError as e:
-	print(f"Error importing Waterloo modules: {e}", file=sys.stderr)
-	print("Please download and install sdv_doc_waterloo from https://github.com/uwe-at-sdv/sdv_doc_waterloo", file=sys.stderr)
-	sys.exit(1)
+	ROOT = Path(__file__).resolve().parents[2]
+	for p in (str(ROOT), str(ROOT / "package" / "src")):
+		if p not in sys.path:
+			sys.path.insert(0, p)
+	try:
+		import sdv_doc_docitem as wtrl
+		import sdv_doc_docitem_genutil as genutil
+	except ImportError:
+		print(f"Error importing Waterloo modules: {e}", file=sys.stderr)
+		print("Please download and install sdv_doc_waterloo from https://github.com/uwe-at-sdv/sdv_doc_waterloo", file=sys.stderr)
+		sys.exit(1)
 
 
 COMMAND_PING = "ping"
@@ -162,9 +170,8 @@ def _handle_validate(
 		tr.add_error("XTNSN-005","extension","Source fragment must be a string")
 	if not isinstance(source_file, str) or not source_file.strip():
 		tr.add_error("XTNSN-010","extension","Source file must be a non-empty string.")
-# unreachable says mypy.
-#	if not isinstance(line, int):
-#		tr.add_error("XTNSN-011","extension","Line must be an integer.")
+	if not isinstance(line, int):
+		tr.add_error("XTNSN-011","extension","Line must be an integer.")
 	if tr.has_errors():
 		raise RuntimeError()
 
