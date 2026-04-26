@@ -18,6 +18,7 @@ Waterloo
 	json_io.rst
 	html_output_layer.rst
 	reference.rst
+	_test_freeform.rst
 
 Indices and tables
 ==================

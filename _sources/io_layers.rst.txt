@@ -1,6 +1,8 @@
 Overview: I/O Layers
 ====================
 
+This section is informative.
+
 The following diagram illustrates the typical workflow for generating
 both LLM-readable and human-readable documentation, including the
 integration of code examples. It highlights the transformation from

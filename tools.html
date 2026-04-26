@@ -10,7 +10,7 @@
     <link rel="stylesheet" type="text/css" href="_static/basic.css?v=686e5160" />
     <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=27fed22d" />
     <link rel="stylesheet" type="text/css" href="_static/common_styles.css?v=27e4112a" />
-    <link rel="stylesheet" type="text/css" href="_static/alabaster_waterloo.css?v=774a9f0b" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster_waterloo.css?v=6f971854" />
     <script src="_static/documentation_options.js?v=8dde47fa"></script>
     <script src="_static/doctools.js?v=9bcbadda"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
@@ -59,6 +59,12 @@ documentation.</p>
 <p class="rubric">General tool errors</p>
 <ul class="simple">
 <li><p>[TOOL-001] – Cannot resolve an object passed via option <code class="wtrl_opt docutils literal notranslate"><span class="pre">--obj</span></code>.</p></li>
+<li><p>[TOOL-002] – Option <code class="wtrl_opt docutils literal notranslate"><span class="pre">--subsection</span></code> was given without <code class="wtrl_opt docutils literal notranslate"><span class="pre">--section</span></code>.</p></li>
+<li><p>[TOOL-003] – The object resolved via option <code class="wtrl_opt docutils literal notranslate"><span class="pre">--obj</span></code> has no docstring.</p></li>
+<li><p>[TOOL-004] – The section requested by <code class="wtrl_opt docutils literal notranslate"><span class="pre">--section</span></code> was not found during extraction.</p></li>
+<li><p>[TOOL-005] – The subsection requested by <code class="wtrl_opt docutils literal notranslate"><span class="pre">--subsection</span></code> was not found during extraction.</p></li>
+<li><p>[TOOL-006] – The input docstring cannot be parsed for extraction.</p></li>
+<li><p>[TOOL-007] – The input docstring is not valid for the requested extraction operation.</p></li>
 <li><p>[TOOL-800] – Unspecified runtime error during analysis.
 This code is used when an unexpected exception escapes the validation process.
 The tracer diagnostic output should provide sufficient detail to identify
@@ -170,6 +176,7 @@ separately in chapter <a class="reference internal" href="vscode_extension_backe
 <li class="toctree-l1"><a class="reference internal" href="json_io.html">10. The JSON I/O Layer</a></li>
 <li class="toctree-l1"><a class="reference internal" href="html_output_layer.html">11. The HTML Output Layer</a></li>
 <li class="toctree-l1"><a class="reference internal" href="reference.html">12. Reference - Core View</a></li>
+<li class="toctree-l1"><a class="reference internal" href="_test_freeform.html">13. Flow control in freeform sections</a></li>
 </ul>
 
 <div class="relations">

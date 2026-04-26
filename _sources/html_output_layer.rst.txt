@@ -51,10 +51,12 @@ The following options are particularly relevant:
 
 Option :wtrl_opt:`--css` replaces the built-in default stylesheet with a custom CSS file.
 This is useful if the full visual presentation should be controlled externally.
+If :wtrl_opt:`--additional-css` is also given, the additional stylesheet is appended
+after the CSS provided via :wtrl_opt:`--css`.
 
-Option :wtrl_opt:`--additional-css` preserves the built-in default stylesheet and
-appends the given CSS file to it.
-This is useful if the default rendering should be adapted to a project-specific visual style.
+Option :wtrl_opt:`--additional-css` appends the given CSS file after the primary stylesheet.
+If :wtrl_opt:`--css` is not given, the built-in default stylesheet acts as the primary stylesheet.
+This is useful if a shared base stylesheet should be adapted to a project-specific visual style.
 
 Option :wtrl_opt:`--pygments-theme` selects the syntax-highlighting theme used for
 embedded code examples.
