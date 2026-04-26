@@ -137,7 +137,8 @@ except ImportError:
 	import sdv.doc.waterloo.docitem
 	mod_docitem = sdv.doc.waterloo.docitem
 
-__version__ = "0.1.0"
+__version__ = "0.1.1"
+# - 0.1.1 [2026-04-25]	Parameters is now rendered as free-form text, not bullet list.
 # - 0.1.0 [2026-04-17]	Public_types/constants/variables are now rendered as free-form text, not bullet list.
 
 #===== Typechecking ===========================================#
@@ -672,6 +673,16 @@ def build_sphinx_nodes(ctx : context,obj: object,doc: mod_docitem.docitem_docstr
 	def render_linked_base_entry(parent: nodes.paragraph,entry: str,objname: str,css_class: str,role_fn: Callable[[str], str]) -> None:
 		return render_linked_factory_entry(parent,entry,objname,css_class,role_fn)
 
+# Not all parameters are used but we leave them in for future compatibility.
+	def render_plain_entry(
+		parent: nodes.paragraph,
+		entry: str,
+		css_class: str,
+		role_fn: Callable[[str], str],
+		warn_label: str,
+	) -> None:
+		parent.extend(ctx.parse(parent,0,role_fn(entry)))
+
 	def render_linked_public_entry(
 		parent: nodes.paragraph,
 		entry: str,
@@ -1091,11 +1102,10 @@ def build_sphinx_nodes(ctx : context,obj: object,doc: mod_docitem.docitem_docstr
 					dli += dd
 					dl += dli
 			node_entry += dl
-		elif label in ("Description",):
-# Content
-			for paragraph in build_paragraphs_from_items(item_section.items()):
-				node_entry += paragraph
-		elif label in ("Returns",):
+# Both a freeform. "Description" is non-normative. "Returns" is normative,
+# yet we msut provide tools  like itemization and enumeration in order to
+# resolve the inner structure of the returned object, therefore freeform.
+		elif label in ("Description", "Returns"):
 # Content
 			for paragraph in build_paragraphs_from_items(item_section.items()):
 				node_entry += paragraph
@@ -1107,8 +1117,9 @@ def build_sphinx_nodes(ctx : context,obj: object,doc: mod_docitem.docitem_docstr
 				node_entry += rub
 # Content
 				for paragraph in build_paragraphs_from_items(item_subsection.items()):
-					paragraph["classes"].append("wtrl-note-content")
+					paragraph["classes"].append("wtrl-freeform-paragraph-content")
 					node_entry += paragraph
+# Factory: List of function names, each with a line-by-line executable contract.
 		elif label in ("Factory"):
 			node_bullet_list = build_bullet_list_from_section_items(
 				item_section.items(),
@@ -1117,49 +1128,13 @@ def build_sphinx_nodes(ctx : context,obj: object,doc: mod_docitem.docitem_docstr
 				),
 			)
 			node_entry += node_bullet_list
-		elif label in ("Method_overview"):
-			node_bullet_list = build_bullet_list_from_section_items(
-				item_section.items(),
-				lambda p, lbl: render_linked_public_entry(
-					p, lbl, objname, "wtrl_func", ctx.add_role_func, "Method_overview"
-				),
-			)
-			node_entry += node_bullet_list
-		elif label in ("Function_overview"):
-			node_bullet_list = build_bullet_list_from_section_items(
-				item_section.items(),
-				lambda p, lbl: render_linked_public_entry(
-					p, lbl, objname, "wtrl_func", ctx.add_role_func, "Function_overview"
-				),
-			)
-			node_entry += node_bullet_list
-		elif label in ("Class_overview"):
-			node_bullet_list = build_bullet_list_from_section_items(
-				item_section.items(),
-				lambda p, lbl: render_linked_public_entry(
-					p, lbl, objname, "wtrl_type", ctx.add_role_type, "Class_overview"
-				),
-			)
-			node_entry += node_bullet_list
-		elif label in ("Public_types"):
-# Bullet list where each item is the name of a public type plus some free-form content.
-			node_bullet_list = nodes.bullet_list()
-			for label1, item_subsection in item_section.items().items():
-# The list item.
-				node_list_item = nodes.list_item()
-# First paragraph of the list item: clickable type label.
-				node_label_paragraph = nodes.paragraph()
-# Add a clickable label with semantic role "|type|". Pass "Public_types" as label for warnings.
-				render_linked_public_entry(node_label_paragraph,label1,objname,"wtrl_type",ctx.add_role_type,label)
-				node_list_item += node_label_paragraph
-# Iterate over logical lines in the public type's content and add each paragraph as sibling node in the list item.
-				for paragraph in build_paragraphs_from_items(item_subsection.items()):
-					paragraph["classes"].append("wtrl-public-type-content")
-					node_list_item += paragraph
-				node_bullet_list += node_list_item
-			node_entry += node_bullet_list
-
-		elif label in ("Public_constants", "Public_variables"):
+# New in 0.1.1: Parameters and Class/Method/Function_overview are rendered as freeform, like Public_...
+# The reason for parameters is that we must have tools like itemization and enumeration
+# in order to resolve the inner structure of single parameters.
+# The reason for Class/Method/Function_overview is that it makes little sense
+# to enforce a line-by-line executable conract style for non-normative sections.
+# From an aesthetic point of view we get rid of many bullets of non-items.
+		elif label in ("Public_constants", "Public_variables", "Public_types", "Parameters", "Class_overview", "Method_overview", "Function_overview"):
 # Bullet list where each item is the name of a public constant/variable plus some free-form content.
 			node_bullet_list = nodes.bullet_list()
 			for label1, item_subsection in item_section.items().items():
@@ -1167,26 +1142,30 @@ def build_sphinx_nodes(ctx : context,obj: object,doc: mod_docitem.docitem_docstr
 				node_list_item = nodes.list_item()
 # First paragraph of the list item: clickable constant/variable label.
 				node_label_paragraph = nodes.paragraph()
-# Add a clickable label with semantic role "|var|". Pass "Public_constants"/"Public_variables" as label for warnings.
-				render_linked_public_entry(node_label_paragraph,label1,objname,"wtrl_var",ctx.add_role_var,label)
+# Add a clickable label. Pass "Public_constants"/"Public_variables"/"Public_types" as label for warnings.
+				if label in ("Public_constants", "Public_variables"):
+					render_linked_public_entry(node_label_paragraph,label1,objname,"wtrl_var",ctx.add_role_var,label)
+				elif label in ("Public_types",):
+					render_linked_public_entry(node_label_paragraph,label1,objname,"wtrl_type",ctx.add_role_type,label)
+# Add a label with semantic role |var|.
+				elif label in ("Parameters",):
+					render_plain_entry(node_label_paragraph,label1,"wtrl_var",ctx.add_role_var,label)
+				elif label in ("Class_overview",):
+					render_plain_entry(node_label_paragraph,label1,"wtrl_type",ctx.add_role_type,label)
+				elif label in ("Method_overview",):
+					render_plain_entry(node_label_paragraph,label1,"wtrl_func",ctx.add_role_func,label)
+				elif label in ("Function_overview",):
+					render_plain_entry(node_label_paragraph,label1,"wtrl_func",ctx.add_role_func,label)
 				node_list_item += node_label_paragraph
 # Iterate over logical lines in the public constant's/variable's content and add each paragraph as sibling node in the list item.
 				for paragraph in build_paragraphs_from_items(item_subsection.items()):
-					paragraph["classes"].append("wtrl-public-var-content")
+					paragraph["classes"].append("wtrl-freeform-paragraph-content")
 					node_list_item += paragraph
 				node_bullet_list += node_list_item
 			node_entry += node_bullet_list
 
-		elif label in ("Parameters"):
-			if len(item_section.items()) == 0:
-				node_entry.extend(parse_text(node1_paragraph,"|empty|"))
-			else:
-				node_bullet_list = build_bullet_list_from_section_items(
-					item_section.items(),
-					lambda p, lbl: p.extend(ctx.parse(p, 0, ctx.add_role_var(lbl))),
-				)
-				node_entry += node_bullet_list
 		elif label in ("Raises"):
+# For section "Raises" we enforce the line-by-line style and interpret the contant as an executable contract.
 			if len(item_section.items()) == 0:
 				node_entry.extend(parse_text(node1_paragraph,"|empty|"))
 			else:
@@ -1212,28 +1191,24 @@ def build_sphinx_nodes(ctx : context,obj: object,doc: mod_docitem.docitem_docstr
 				is_normative_section("See_also"),
 			)
 			node_entry += node1_paragraph
+# The following three, Public_classes/functions/methods have the
+# same structure, only different semantic roles and style classes.
+# The content is simply a list of resolvable clickable objects.
 		elif label in ("Public_classes",):
 			node1_paragraph = nodes.paragraph()
 			render_linked_public_entries(
 				node1_paragraph,
 				cast(Sequence[str], item_section.items()),
-				objname,
-				"wtrl_type",
-				ctx.add_role_type,
-				"Public_classes",
-			)
+				objname, "wtrl_type", ctx.add_role_type, label)
 			node_entry += node1_paragraph
 		elif label in ("Public_functions","Public_methods"):
 			node1_paragraph = nodes.paragraph()
 			render_linked_public_entries(
 				node1_paragraph,
 				cast(Sequence[str], item_section.items()),
-				objname,
-				"wtrl_func",
-				ctx.add_role_func,
-				label,
-			)
+				objname, "wtrl_func", ctx.add_role_func, label)
 			node_entry += node1_paragraph
+# Catch-all. Scan HTML for "TBD" in order to detect bugs.
 		else:
 			node_paragraph = nodes.paragraph(text="TBD")
 			node_entry += node_paragraph

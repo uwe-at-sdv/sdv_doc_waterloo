@@ -211,6 +211,7 @@ Raises:
 # We know it's as string, so let's chill mypy here.
 			assert isinstance(last_line,str)
 			stack[cur_indent][-1] = last_line[:-1].rstrip() + " " + content
+# To be revised. Most likely ok.
 		if "\t" in content:
 			warn_parsing(tr,"TKN-009",'Line contains inner TABs. Please connect lines with escaped \\ or use a raw string notation like r"""..."""')
 	return target

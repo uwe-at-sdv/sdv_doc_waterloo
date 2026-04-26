@@ -451,17 +451,52 @@ function appendMaybeStyledText(parent, txt, roleCls) {
   parent.appendChild(sp);
 }
 
-const FREEFORM_SECTIONS = new Set(["Description", "Definitions", "Terminology", "Returns", "Notes"]);
-
 function isFreeformPath(path) {
-  const section = String((path && path.length > 0) ? path[0] : "");
-  return FREEFORM_SECTIONS.has(section);
+  if (!Array.isArray(path) || path.length === 0) return false;
+  const section = String(path[0]);
+
+  // Whole-section freeform:
+  // some sections store their complete content directly as a single string
+  // or list of strings. These are rendered as freeform text blocks rather
+  // than as automatically generated bullet lists.
+  if ((section === "Description" || section === "Returns") && path.length === 1) {
+    return true;
+  }
+
+  // Entry freeform:
+  // other sections are maps from subsection/item labels to textual content.
+  // For these, only the entry content (path length >= 2) is rendered as
+  // freeform. The surrounding section/subsection headings are still built
+  // structurally by renderValue().
+  if (
+    path.length >= 2 &&
+    (
+      section === "Terminology" ||
+      section === "Notes" ||
+      section === "Class_overview" ||
+      section === "Method_overview" ||
+      section === "Function_overview" ||
+      section === "Public_types" ||
+      section === "Public_variables" ||
+      section === "Public_constants" ||
+      section === "Parameters"
+    )
+  ) {
+    return true;
+  }
+
+  return false;
 }
 
-// This is similar to sdv_doc_docitem_sphinx.build_sphinx_nodes.build_paragraphs_from_items.
-// We look for leading (after left ws-strip) itemization markers and build nested
-// bullet lists or enumerations. This code must be updated whenever the related
-// sphinx code is modified.
+// Render a Waterloo freeform text block.
+//
+// This is intentionally close to the corresponding Sphinx-side rendering:
+// - "|" on a line by itself splits paragraphs
+// - leading "*", "+", "-", "#" introduce list items
+// - inline Waterloo tokens are resolved by appendInlineTokens()
+//
+// Keep this function in sync with the Sphinx output layer whenever the
+// semantics of freeform text change.
 function renderFreeformText(container, txt) {
   const lines = String(txt).split(/\r?\n/);
   const RE_BULLET = /^([*+\-#])\s(.*)$/;
@@ -664,33 +699,6 @@ function isSeeAlsoPath(path) {
   return Array.isArray(path) && path.length >= 1 && String(path[0]) === "See_also";
 }
 
-function isPublicApiDetailPath(path) {
-  return (
-    Array.isArray(path) &&
-    path.length >= 2 &&
-    (
-      String(path[0]) === "Public_types" ||
-      String(path[0]) === "Public_variables" ||
-      String(path[0]) === "Public_constants"
-    )
-  );
-}
-
-// Public_types/Public_variables/Public_constants entries are rendered as
-// freeform content in HTML5 (same behavior as in Sphinx), not as default UL/LI.
-function tryRenderPublicApiFreeform(container, value, path) {
-  if (!isPublicApiDetailPath(path)) return false;
-  if (typeof value === "string") {
-    renderFreeformText(container, value);
-    return true;
-  }
-  if (Array.isArray(value) && value.every(item => typeof item === "string")) {
-    renderFreeformText(container, value.join("\n"));
-    return true;
-  }
-  return false;
-}
-
 function resolveSeeAlsoTarget(entry, currentQid) {
   const raw = String(entry || "").trim();
   if (!raw) return "";
@@ -867,9 +875,13 @@ function appendInlineTokens(parent, txt) {
 function renderValue(value, container, depth, path, currentQid) {
   const pth = Array.isArray(path) ? path : [];
   const leafRoleCls = getRoleClassForLeaf(pth);
-  // Keep this check at top-level for value branches (string/array) to ensure
-  // Public_* details use freeform parsing before generic list rendering kicks in.
-  if (tryRenderPublicApiFreeform(container, value, pth)) return;
+
+  // Rendering strategy:
+  // 1. Handle special semantic paths first (See_also, normative_sections,
+  //    inherited definitions, Definitions entries with variations).
+  // 2. For plain strings / string-arrays, ask isFreeformPath() whether the
+  //    current JSON path should be interpreted as freeform text.
+  // 3. Otherwise fall back to the generic list / object rendering.
   if (value === null || value === undefined) {
     const p = document.createElement("p");
     p.className = "wtrl-text";

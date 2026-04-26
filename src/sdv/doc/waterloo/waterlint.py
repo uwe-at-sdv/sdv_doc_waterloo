@@ -27,7 +27,8 @@ from jsonschema import Draft202012Validator
 #from jsonschema import JSONDecodeError
 import jsonschema.exceptions
 
-__version__ = "0.8.3"
+__version__ = "0.9.0"
+# - 0.9.0 [2026-04-25]	Refactoring render-html5: freeform sections
 # - 0.8.3 [2026-04-24]	Subcommand render-html5: --css and --additional-css are now independent options.
 #			Subcommand extract: diagnostics now aligned with other subcommands.
 # - 0.8.2 [2026-04-22]	Options --header-html und --additional-css for subcommand render-html5.
@@ -1202,24 +1203,31 @@ def _render_json_command(args: argparse.Namespace) -> int:
 						num_unknown_skipped_no_doc += 1
 					objects_counted.add(name_key)
 				continue
+# Build a distinct tracer for parsing in order
+# to keep the subcommand robust against malformed docstrings.
 			tr_obj = tracer()
-			try:
+			with docitem.traced_section(tr_obj,name_key):
+				try:
 # Build docstring tree from docstring.
-				tree_parsed = docitem.parse_indent_docstring(tr_obj, doc_txt)
-				tree = docitem.make_docitem_tree_from_docstring_tree(tr_obj, tree_parsed)
-			except docitem.ParseError:
+					tree_parsed = docitem.parse_indent_docstring(tr_obj, doc_txt)
+					tree = docitem.make_docitem_tree_from_docstring_tree(tr_obj, tree_parsed)
+# It is the caller's responsability to provide clean docstrings,
+# but we can at least log problems as warnings. This helps a lot
+# detecting missing a literal qualifier like r"""
+					tr.append_and_defuse(tr_obj)
+				except docitem.ParseError:
 # Invalid docstring -> skip. Count safely.
-				if name_key not in objects_counted:
-					if cvrt.is_obj_module(o):
-						num_modules_skipped_invalid += 1
-					elif cvrt.is_obj_class(o):
-						num_classes_skipped_invalid += 1
-					elif cvrt.is_obj_function(o):
-						num_callables_skipped_invalid += 1
-					else:
-						num_unknown_skipped_invalid += 1
-					objects_counted.add(name_key)
-				continue
+					if name_key not in objects_counted:
+						if cvrt.is_obj_module(o):
+							num_modules_skipped_invalid += 1
+						elif cvrt.is_obj_class(o):
+							num_classes_skipped_invalid += 1
+						elif cvrt.is_obj_function(o):
+							num_callables_skipped_invalid += 1
+						else:
+							num_unknown_skipped_invalid += 1
+						objects_counted.add(name_key)
+					continue
 # Filter by scope.
 			if not cast(Any, tree).is_visible(scopes_filter):
 				continue

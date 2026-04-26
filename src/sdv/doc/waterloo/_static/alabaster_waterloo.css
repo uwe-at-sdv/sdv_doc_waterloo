@@ -154,6 +154,10 @@ table.wtrl-box p + p {
 	margin-top: 0.5lh;
 	}
 
+table.wtrl-box p.wtrl-freeform-paragraph-content {
+	margin-top: 0lh;
+	}
+
 .wtrl-code-ansi pre {
 	padding: 7px 30px;
 	}

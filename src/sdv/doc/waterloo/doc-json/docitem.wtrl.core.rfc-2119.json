@@ -1,12 +1,12 @@
 {
     "$schema": "https://sci-d-vis.com/schema/wtrl-json-0.1.0.schema.json",
-    "$id": "urn:waterlint:wtrl-json:0.8.2:core:rfc-2119:9da50ee274d511db7fc90e3045c4dee22339ffe34b26480d8171c87ba284e40f",
+    "$id": "urn:waterlint:wtrl-json:0.9.0:core:rfc-2119:9da50ee274d511db7fc90e3045c4dee22339ffe34b26480d8171c87ba284e40f",
     "__WTRL_VERSION__": {
         "waterloo": "0.6.1",
         "schema": "0.1.0"
     },
     "__WTRL_META__": {
-        "generated_at": "2026-04-23T10:39:39+02:00",
+        "generated_at": "2026-04-26T08:53:04+02:00",
         "generator": "waterlint",
         "scope": "core",
         "flavour": "rfc-2119"
@@ -2518,7 +2518,7 @@
                 "Contract": {
                     "general": [
                         "MUST render the docstring tree to a string, using the indentation scheme passed.",
-                        "MUST generate a watrloo docstring, provided the input is a docstring tree from a waterloo docstring."
+                        "MUST generate a waterloo docstring, provided the input is a docstring tree from a waterloo docstring."
                     ]
                 },
                 "Parameters": {
@@ -2537,7 +2537,9 @@
                 ],
                 "Raises": {},
                 "Description": [
-                    "This function is helpful for idempotence tests."
+                    "This function is helpful for idempotence tests.",
+                    "It is invoked e.g. in `waterlint extract` in order to extract",
+                    "sections or subsections from a docstring."
                 ]
             }
         },
@@ -9098,13 +9100,13 @@
         },
         "sdv.doc.waterloo.docitem_convert.to_string_legend_yaml": {
             "signature": {
-                "text": "to_string_legend_yaml(config: 'YamlConfig' = <sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f4c3467a590>) -> 'str'",
+                "text": "to_string_legend_yaml(config: 'YamlConfig' = <sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7fd80a248b50>) -> 'str'",
                 "parameters": [
                     {
                         "name": "config",
                         "kind": "POSITIONAL_OR_KEYWORD",
                         "annotation": "YamlConfig",
-                        "default": "<sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f4c3467a590>"
+                        "default": "<sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7fd80a248b50>"
                     }
                 ],
                 "returns": "str"
@@ -9141,7 +9143,7 @@
         },
         "sdv.doc.waterloo.docitem_convert.to_string_signature_yaml": {
             "signature": {
-                "text": "to_string_signature_yaml(obj: 'object', config: 'YamlConfig' = <sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f4c3467a9e0>) -> 'str'",
+                "text": "to_string_signature_yaml(obj: 'object', config: 'YamlConfig' = <sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7fd80a2482e0>) -> 'str'",
                 "parameters": [
                     {
                         "name": "obj",
@@ -9153,7 +9155,7 @@
                         "name": "config",
                         "kind": "POSITIONAL_OR_KEYWORD",
                         "annotation": "YamlConfig",
-                        "default": "<sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f4c3467a9e0>"
+                        "default": "<sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7fd80a2482e0>"
                     }
                 ],
                 "returns": "str"
@@ -9223,7 +9225,7 @@
         },
         "sdv.doc.waterloo.docitem_convert.to_string_yaml": {
             "signature": {
-                "text": "to_string_yaml(tree: 'DocstringTree', flavour: 'Flavour', config: 'YamlConfig' = <sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f4c3467aa10>) -> 'str'",
+                "text": "to_string_yaml(tree: 'DocstringTree', flavour: 'Flavour', config: 'YamlConfig' = <sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7fd80a248310>) -> 'str'",
                 "parameters": [
                     {
                         "name": "tree",
@@ -9241,7 +9243,7 @@
                         "name": "config",
                         "kind": "POSITIONAL_OR_KEYWORD",
                         "annotation": "YamlConfig",
-                        "default": "<sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f4c3467aa10>"
+                        "default": "<sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7fd80a248310>"
                     }
                 ],
                 "returns": "str"

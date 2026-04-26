@@ -1260,6 +1260,18 @@ Public_types:
 		t += "Warnings:\n" + self.to_string_warnings() + "\n"
 		t += "Error:\n" + self.to_string_errors() + "\n"
 		return t
+# Refcopy debug, infos, warnings from tr to self.
+# Refcopy errors from tr to self as warnings.
+# We use this e.g. in waterlint render-json.
+	def append_and_defuse(self,tr: tracer) -> None:
+		for msg in tr._debug:
+			self._debug.append(msg)
+		for msg in tr._infos:
+			self._infos.append(msg)
+		for msg in tr._warnings:
+			self._warnings.append(msg)
+		for msg in tr._warnings:
+			self._warnings.append(msg)
 # For humans
 	def str_by_severity(self,severity: Severity) -> str:
 		t = ""
