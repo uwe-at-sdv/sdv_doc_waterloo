@@ -371,7 +371,7 @@ def get_profile_of_tree_nothrow(tr : tracer,tree : DocstringTree) -> str:
 		return ""
 
 def get_scopes_of_tree(tr : tracer,tree : DocstringTree) -> Scopes:
-	"""
+	r"""
 	Preamble:
 		profile:
 			function

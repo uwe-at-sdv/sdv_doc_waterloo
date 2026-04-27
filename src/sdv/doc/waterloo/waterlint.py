@@ -49,6 +49,7 @@ __version__ = "0.9.0"
 # - 0.4.0 [2026-02-22]	Subcommand render-json: Node "definition_inherited_from_module", see also sdv.doc.waterloo.docitem_convert.
 # - 0.3.0 [2026-02-19]	Several refactorings concerning error handling, raw and JSON.
 # - 0.2.4 [2026-02-12]	Subcommand render-json: traits, decorators, default output filename.
+# - 0.9.1 [2026-04-27]	Subcommand version-json now prints JSON with all schema categories.
 # - 0.2.3 [2026-02-12]	Subcommand version-json: prints only the JSON-schema version string.
 # - 0.2.2 [2026-02-12]	Subcommand version: prints only the waterlint version string.
 # - 0.2.1 [2026-02-12]	Subcommand validate-json: --schema is now optional; automatic detection applies.
@@ -1757,7 +1758,7 @@ def _help_version() -> None:
 	print(f"Print waterlint version string only, e.g. {__version__}.")
 
 def _help_version_json() -> None:
-	print(f"Print JSON schema version string only, e.g. {WTRL_JSON_SCHEMA_VERSION}.")
+	print("Print JSON with waterlint and Waterloo JSON Schema versions.")
 
 def _help_topic_command(args: argparse.Namespace) -> int:
 	global parser
@@ -1838,8 +1839,15 @@ def _version_command(args: argparse.Namespace) -> int:
 	return 0
 
 def _version_json_command(args: argparse.Namespace) -> int:
-	"""Print only the JSON schema version string."""
-	print(WTRL_JSON_SCHEMA_VERSION)
+	"""Print JSON with waterlint and Waterloo JSON Schema versions."""
+	doc = {
+		"waterlint": __version__,
+		"wtrl-json": WTRL_JSON_SCHEMA_VERSION,
+		"wtrl-tracer-json": docitem.WTRL_TRACER_JSON_SCHEMA_VERSION,
+		"wtrl-example-refs-json": WTRL_EXAMPLE_REFS_JSON_SCHEMA_VERSION,
+	}
+	json.dump(doc, sys.stdout, indent=2)
+	sys.stdout.write("\n")
 	return 0
 
 parser: argparse.ArgumentParser
@@ -2070,7 +2078,7 @@ def _build_parser() -> argparse.ArgumentParser:
 	version.add_argument("--debug", action="store_true", help="Emit debugging data to stderr (reserved)")
 
 #----- version-json -------------------------------------------#
-	version = subparsers.add_parser("version-json", help="Print JSON schema version string", parents=[global_opts])
+	version = subparsers.add_parser("version-json", help="Print JSON with Waterloo schema versions", parents=[global_opts])
 	version.add_argument("--debug", action="store_true", help="Emit debugging data to stderr (reserved)")
 
 	return parser

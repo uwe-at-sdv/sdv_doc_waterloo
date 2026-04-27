@@ -1264,14 +1264,15 @@ Public_types:
 # Refcopy errors from tr to self as warnings.
 # We use this e.g. in waterlint render-json.
 	def append_and_defuse(self,tr: tracer) -> None:
-		for msg in tr._debug:
-			self._debug.append(msg)
-		for msg in tr._infos:
-			self._infos.append(msg)
-		for msg in tr._warnings:
-			self._warnings.append(msg)
-		for msg in tr._warnings:
-			self._warnings.append(msg)
+		for msg_dbg in tr._debug:
+			self._debug.append(msg_dbg)
+		for msg_inf in tr._infos:
+			self._infos.append(msg_inf)
+		for msg_wrn in tr._warnings:
+			self._warnings.append(msg_wrn)
+# Defusing: errors in tr become warnings in self.
+		for msg_err in tr._errors:
+			self._warnings.append(msg_err)
 # For humans
 	def str_by_severity(self,severity: Severity) -> str:
 		t = ""
