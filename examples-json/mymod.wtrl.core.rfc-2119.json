@@ -1,0 +1,113 @@
+{
+	"$schema": "https://sci-d-vis.com/schema/wtrl-json-0.0.6.schema.json",
+	"$id": "urn:waterlint:0.5.0:wtrl-json:core:rfc-2119:1008056e874c0fffa259537033f47aff",
+	"__WTRL_VERSION__": {
+		"waterloo": "0.5.5",
+		"schema": "0.0.6"
+	},
+	"__WTRL_META__": {
+		"generated_at": "2026-03-17T21:55:34+01:00",
+		"generator": "waterlint",
+		"scope": "core",
+		"flavour": "rfc-2119"
+	},
+	"__WTRL_ROLES__": {
+		"attr": "Attribute name",
+		"cmd": "Shell or CLI command",
+		"dfn": "Definition of a term",
+		"file": "File or path",
+		"func": "Function or callable",
+		"label": "Section/Subsection label",
+		"lit": "Literal text or code",
+		"mod": "Module name",
+		"norm": "Normativity keyword",
+		"op": "Operator symbol",
+		"opt": "Command-line option or flag",
+		"tag": "Tag or marker",
+		"term": "Domain-specific term",
+		"type": "Type name or annotation",
+		"value": "Concrete value",
+		"var": "Variable name",
+		"var_type": "Variable and type, like 'var:type'"
+	},
+	"__WTRL_SCOPES__": {
+		"public": {
+			"value": 10,
+			"description": ""
+		},
+		"extension": {
+			"value": 20,
+			"description": ""
+		},
+		"core": {
+			"value": 30,
+			"description": ""
+		}
+	},
+	"__WTRL_TOC_MODULES__": {
+		"mymod": "/__WTRL_OBJECTS__/mymod"
+	},
+	"__WTRL_TOC_CLASSES__": {
+		"mymod.X": "/__WTRL_OBJECTS__/mymod.X"
+	},
+	"__WTRL_TOC_CALLABLES__": {},
+	"__WTRL_TOC_TYPES__": {},
+	"__WTRL_TOC_VARIABLES__": {},
+	"__WTRL_TOC_CONSTANTS__": {},
+	"__WTRL_OBJECTS__": {
+		"mymod.X": {
+			"signature": {
+				"text": "object.__init__(self, /, *args, **kwargs)",
+				"parameters": [
+					{
+						"name": "args",
+						"kind": "VAR_POSITIONAL",
+						"annotation": null,
+						"default": null
+					},
+					{
+						"name": "kwargs",
+						"kind": "VAR_KEYWORD",
+						"annotation": null,
+						"default": null
+					}
+				],
+				"returns": null
+			},
+			"doc": {
+				"Preamble": {
+					"profile": "class",
+					"normative_sections": [
+						"Contract"
+					]
+				},
+				"Contract": {
+					"general": [
+						"MUST be equipped with an example pointer in JSON export."
+					],
+					"constructor": [
+						"default"
+					]
+				}
+			},
+			"examples":[
+				"/__WTRL_EXAMPLES__/example_mymod_X_py_fd66b74b7b9848b4fda3218d40196f15"
+			]
+		},
+		"mymod": {
+			"path": "/server/devel/sdv/privat/uwe/source/sdv_doc_waterloo/draft/mymod.py",
+			"doc": {}
+		}
+	},
+	"__WTRL_EXAMPLES__": {
+		"example_mymod_X_py_fd66b74b7b9848b4fda3218d40196f15": {
+			"lang":"python",
+			"path":"./example_mymod_X.py",
+			"hash":"fd66b74b7b9848b4fda3218d40196f15",
+			"code":"import mymod\\n\\nprint(\"This is how to use class X\")\\nx = mymod.X()\\n",
+			"referenced_by":[
+				"mymod.X"
+			]
+		}
+	}
+}
