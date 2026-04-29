@@ -8,17 +8,16 @@ from pathlib import Path
 
 import pytest
 
-from pytest_common import ROOT, PATH_EXAMPLES
+from pytest_common import ROOT, PATH_EXAMPLES, PATH_PYGMENTS
 
 GOLDEN_IN = PATH_EXAMPLES / "golden_files" / "in"
 GOLDEN_OUT = PATH_EXAMPLES / "golden_files" / "out"
-LEXER_PATH = ROOT / "ide-plugins" / "pygments" / "python_waterloo_lexer.py"
 
 
 def _load_python_waterloo_lexer_class():
-	spec = importlib.util.spec_from_file_location("python_waterloo_lexer_local", LEXER_PATH)
+	spec = importlib.util.spec_from_file_location("python_waterloo_lexer_local", PATH_PYGMENTS / "python_waterloo_lexer.py")
 	if spec is None or spec.loader is None:
-		raise RuntimeError(f"Could not load lexer module from {LEXER_PATH}")
+		raise RuntimeError(f"Could not load lexer module from {PATH_PYGMENTS}")
 	module = importlib.util.module_from_spec(spec)
 	spec.loader.exec_module(module)
 	return module.PythonWaterlooLexer

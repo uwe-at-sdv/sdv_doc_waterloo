@@ -6,7 +6,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from pytest_common import ROOT, run_waterlint, DIR_EXAMPLES, PATH_EXAMPLES, DIR_EXAMPLES_JSON, PATH_EXAMPLES_JSON
+from pytest_common import ROOT, run_waterlint, DIR_EXAMPLES, PATH_EXAMPLES, DIR_EXAMPLES_JSON, PATH_EXAMPLES_JSON, DIR_MODULE, DIR_SCHEMA
 
 
 def _run_waterlint_validate_json(path: str, schema: str | None = None):
@@ -23,8 +23,8 @@ def test_validate_json_selftest() -> None:
 
 	render = run_waterlint(
 		"render-json",
-		"--obj",
-		"sdv_doc_docitem",
+		"--basedir",DIR_MODULE,
+		"--obj","docitem",
 		"--out",
 		tmp_json,
 	)
@@ -32,7 +32,7 @@ def test_validate_json_selftest() -> None:
 
 	result = _run_waterlint_validate_json(
 		tmp_json,
-		"schema/wtrl-json-0.0.5.schema.json",
+		DIR_SCHEMA + "/wtrl-json-0.0.5.schema.json",
 	)
 	assert result.returncode == 0, f"validate-json failed: {result.stderr}"
 
@@ -58,7 +58,7 @@ def test_validate_json_bad_missing_legend() -> None:
 def test_validate_json_draft_examples_ok() -> None:
 	result = _run_waterlint_validate_json(
 		DIR_EXAMPLES_JSON + "/mymod.wtrl.core.rfc-2119.json",
-		"schema/wtrl-json-0.0.6.schema.json",
+		DIR_SCHEMA + "/wtrl-json-0.0.6.schema.json",
 	)
 	assert result.returncode == 0, f"expected exit code 0, got {result.returncode}"
 
@@ -71,7 +71,7 @@ def test_validate_json_draft_examples_missing_pointer() -> None:
 	doc["__WTRL_OBJECTS__"][obj_qid]["examples"] = ["/__WTRL_EXAMPLES__/does_not_exist"]
 	tmp.write_text(json.dumps(doc, ensure_ascii=False), encoding="utf-8")
 	try:
-		result = _run_waterlint_validate_json(str(tmp), "schema/wtrl-json-0.0.6.schema.json")
+		result = _run_waterlint_validate_json(str(tmp), DIR_SCHEMA + "/wtrl-json-0.0.6.schema.json")
 		assert result.returncode == 1, f"expected exit code 1, got {result.returncode}"
 		assert "JSCH-006" in result.stderr, result.stderr
 	finally:
@@ -87,7 +87,7 @@ def test_validate_json_draft_examples_unknown_referenced_by() -> None:
 	doc["__WTRL_EXAMPLES__"][ex_key]["referenced_by"] = ["mymod.DoesNotExist"]
 	tmp.write_text(json.dumps(doc, ensure_ascii=False), encoding="utf-8")
 	try:
-		result = _run_waterlint_validate_json(str(tmp), "schema/wtrl-json-0.0.6.schema.json")
+		result = _run_waterlint_validate_json(str(tmp), DIR_SCHEMA + "/wtrl-json-0.0.6.schema.json")
 		assert result.returncode == 1, f"expected exit code 1, got {result.returncode}"
 		assert "JSCH-007" in result.stderr, result.stderr
 	finally:
@@ -103,7 +103,7 @@ def test_validate_json_draft_examples_missing_back_reference() -> None:
 	doc["__WTRL_EXAMPLES__"][ex_key]["referenced_by"] = []
 	tmp.write_text(json.dumps(doc, ensure_ascii=False), encoding="utf-8")
 	try:
-		result = _run_waterlint_validate_json(str(tmp), "schema/wtrl-json-0.0.6.schema.json")
+		result = _run_waterlint_validate_json(str(tmp), DIR_SCHEMA + "/wtrl-json-0.0.6.schema.json")
 		assert result.returncode == 1, f"expected exit code 1, got {result.returncode}"
 		assert "JSCH-008" in result.stderr, result.stderr
 	finally:
@@ -119,7 +119,7 @@ def test_validate_json_draft_examples_missing_forward_reference() -> None:
 	doc["__WTRL_OBJECTS__"][obj_qid]["examples"] = []
 	tmp.write_text(json.dumps(doc, ensure_ascii=False), encoding="utf-8")
 	try:
-		result = _run_waterlint_validate_json(str(tmp), "schema/wtrl-json-0.0.6.schema.json")
+		result = _run_waterlint_validate_json(str(tmp), DIR_SCHEMA + "/wtrl-json-0.0.6.schema.json")
 		assert result.returncode == 1, f"expected exit code 1, got {result.returncode}"
 		assert "JSCH-009" in result.stderr, result.stderr
 	finally:

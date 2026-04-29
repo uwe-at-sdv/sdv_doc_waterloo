@@ -7,15 +7,15 @@ import subprocess
 import sys
 from pathlib import Path
 
-from pytest_common import WATERLINT, ROOT, DIR_EXAMPLES
+from pytest_common import WATERLINT, ROOT, DIR_EXAMPLES, PATH_VSCODE
 
 import pytest
 
-BACKEND = ROOT / "ide-plugins" / "vscode" / "extension_waterloo_commands.py"
+BACKEND = PATH_VSCODE / "extension_waterloo_commands.py"
 
 def _build_env() -> dict[str, str]:
 	env = os.environ.copy()
-	parts = [str(ROOT / "package" / "src"), str(ROOT)]
+	parts = [str(ROOT / "package_main" / "src"), str(ROOT)]
 	if env.get("PYTHONPATH"):
 		parts.append(env["PYTHONPATH"])
 	env["PYTHONPATH"] = os.pathsep.join(parts)
@@ -115,7 +115,7 @@ def _validate_structural_only(tmp_path: Path, generated_docstring_literal: str) 
 	in_file = tmp_path / "generated_docstring.txt"
 	in_file.write_text(doc_for_validate, encoding="utf-8")
 	res = subprocess.run(
-		[sys.executable, str(WATERLINT), "validate", "--in", str(in_file)],
+		[str(WATERLINT), "validate", "--in", str(in_file)],
 		stdout=subprocess.PIPE,
 		stderr=subprocess.PIPE,
 		text=True,

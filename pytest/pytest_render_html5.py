@@ -6,7 +6,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from pytest_common import ROOT, run_waterlint, DIR_EXAMPLES, DIR_EXAMPLES_JSON, PATH_EXAMPLES_JSON
+from pytest_common import ROOT, run_waterlint, DIR_DOC, DIR_EXAMPLES, DIR_EXAMPLES_JSON, PATH_EXAMPLES_JSON
 
 
 def test_render_html5_lists_in_freeform_smoketest(tmp_path: Path) -> None:
@@ -141,7 +141,7 @@ def test_render_html5_accepts_custom_header_fragment(tmp_path: Path) -> None:
 		"--in",
 		DIR_EXAMPLES_JSON + "/test_docitem_method_property.wtrl.core.rfc-2119.json",
 		"--header-html",
-		"doc/input-html/test_header_minimal.html",
+		DIR_DOC + "/input-html/test_header_minimal.html",
 		"--out",
 		str(out_file),
 	)
