@@ -9,7 +9,6 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-print(ROOT)
 
 PATH_MAIN =		ROOT
 PATH_EXAMPLES =		PATH_MAIN / "examples-python"

@@ -63,40 +63,22 @@ SOURCE_CODE_ERRORS = (AttributeError,IndexError,KeyError,NameError,AssertionErro
 # Import project modules while redirecting noisy stdout prints to stderr to
 # satisfy the requirement that stdout stays clean unless explicitly written.
 with contextlib.redirect_stdout(sys.stderr):
-	try:
-		import sdv_doc_docitem as docitem
-		import sdv_doc_docitem_convert as cvrt
-		import sdv_doc_docitem_genutil as genutil
-		import waterlint_render_html5 as rhtml5
-		import sdv_doc_docitem_tokenizer as tokenizer
-		from sdv_doc_docitem_helper import (
-			tracer,
-			get_obj_name,
-			get_obj_fully_qualified_name,
-			RE_ANSI_SGR_COMPILED,
-			ValidationError,
-			ParseError,
-			SectionNotFoundError,
-			SubsectionNotFoundError,
-			SCOPE_TAG_MAP,
-		)
-	except ImportError:
-		import sdv.doc.waterloo.docitem as docitem		# type: ignore[no-redef]
-		import sdv.doc.waterloo.docitem_convert as cvrt		# type: ignore[no-redef]
-		import sdv.doc.waterloo.docitem_genutil as genutil	# type: ignore[no-redef]
-		import sdv.doc.waterloo.waterlint_render_html5 as rhtml5	# type: ignore[no-redef]
-		import sdv.doc.waterloo.docitem_tokenizer as tokenizer	# type: ignore[no-redef]
-		from sdv.doc.waterloo.docitem_helper import (		# type: ignore[no-redef]
-			tracer,
-			get_obj_name,
-			get_obj_fully_qualified_name,
-			RE_ANSI_SGR_COMPILED,
-			ValidationError,
-			ParseError,
-			SectionNotFoundError,
-			SubsectionNotFoundError,
-			SCOPE_TAG_MAP,
-		)
+	import sdv.doc.waterloo.docitem as docitem
+	import sdv.doc.waterloo.docitem_convert as cvrt
+	import sdv.doc.waterloo.docitem_genutil as genutil
+	import sdv.doc.waterloo.waterlint_render_html5 as rhtml5
+	import sdv.doc.waterloo.docitem_tokenizer as tokenizer
+	from sdv.doc.waterloo.docitem_helper import (
+		tracer,
+		get_obj_name,
+		get_obj_fully_qualified_name,
+		RE_ANSI_SGR_COMPILED,
+		ValidationError,
+		ParseError,
+		SectionNotFoundError,
+		SubsectionNotFoundError,
+		SCOPE_TAG_MAP,
+	)
 
 #===== Constants ==============================================#
 
@@ -1857,7 +1839,7 @@ parser: argparse.ArgumentParser
 def _build_parser() -> argparse.ArgumentParser:
 #----- Main parser --------------------------------------------#
 	global parser
-	parser = argparse.ArgumentParser(prog="waterlint.py")
+	parser = argparse.ArgumentParser(prog="waterlint")
 	subparsers = parser.add_subparsers(dest="command", required=True)
 	parser.add_argument(
 		"--help-all",
@@ -2132,7 +2114,6 @@ def main(argv: Optional[list[str]] = None) -> int:
 	if args.command == "help":
 		return _help_topic_command(args)
 	return 1
-
 
 if __name__ == "__main__":
 	sys.exit(main())

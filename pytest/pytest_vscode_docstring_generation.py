@@ -15,7 +15,7 @@ BACKEND = PATH_VSCODE / "extension_waterloo_commands.py"
 
 def _build_env() -> dict[str, str]:
 	env = os.environ.copy()
-	parts = [str(ROOT / "package_main" / "src"), str(ROOT)]
+	parts = [str(ROOT / "src"), str(ROOT)]
 	if env.get("PYTHONPATH"):
 		parts.append(env["PYTHONPATH"])
 	env["PYTHONPATH"] = os.pathsep.join(parts)
