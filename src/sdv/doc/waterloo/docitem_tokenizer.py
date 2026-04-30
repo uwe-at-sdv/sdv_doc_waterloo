@@ -2,10 +2,7 @@ from __future__ import annotations
 from types import FunctionType, ModuleType
 from typing import Any, Callable, Dict, Final, get_type_hints, get_origin, get_args, Generator, Iterable, Iterator, List, NewType, NoReturn, Sequence, Set, Tuple, Type, TypeAlias, TypeGuard, Union, cast
 
-try:
-	from sdv_doc_docitem_helper import *
-except ImportError:
-	from sdv.doc.waterloo.docitem_helper import *
+from sdv.doc.waterloo.docitem_helper import *
 
 #===== Tokenizer ==============================================#
 
@@ -450,4 +447,3 @@ Description:
 # Unreachable by static type checking.
 #			else: ...
 	return doc
-

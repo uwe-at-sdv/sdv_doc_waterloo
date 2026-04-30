@@ -26,10 +26,7 @@ import ast
 from types import ModuleType
 from typing import Any, Callable, Literal
 
-try:
-	from sdv_doc_docitem_helper import *
-except ImportError:
-	from sdv.doc.waterloo.docitem_helper import *
+from sdv.doc.waterloo.docitem_helper import *
 
 def parse_source_fragment(profile: Profile, source_fragment: str) -> ast.AST | None:
 	r"""

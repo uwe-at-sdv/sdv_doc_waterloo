@@ -1,0 +1,86 @@
+{
+    "$schema": "https://sci-d-vis.com/schema/wtrl-json-0.1.0.schema.json",
+    "$id": "urn:waterlint:wtrl-json:0.8.1:core:rfc-2119:02c7a97fe17fce8c2de140435e740c6200c2ab0a6264de294a78bb4714436cfc",
+    "__WTRL_VERSION__": {
+        "waterloo": "0.6.1",
+        "schema": "0.1.0"
+    },
+    "__WTRL_META__": {
+        "generated_at": "2026-04-21T08:07:03+02:00",
+        "generator": "waterlint",
+        "scope": "core",
+        "flavour": "rfc-2119"
+    },
+    "__WTRL_ROLES__": {
+        "attr": "Attribute name",
+        "cmd": "Shell or CLI command",
+        "dfn": "Definition of a term",
+        "file": "File or path",
+        "func": "Function or callable",
+        "key": "Key on the keyboard",
+        "label": "Section/Subsection label",
+        "lit": "Literal text or code",
+        "mod": "Module name",
+        "op": "Operator symbol",
+        "opt": "Command-line option or flag",
+        "tag": "Tag or marker",
+        "term": "Domain-specific term",
+        "type": "Type name or annotation",
+        "value": "Concrete value",
+        "var": "Variable name",
+        "var_type": "Variable and type, like 'var:type'"
+    },
+    "__WTRL_SCOPES__": {
+        "public": {
+            "value": 10,
+            "description": ""
+        },
+        "extension": {
+            "value": 20,
+            "description": ""
+        },
+        "core": {
+            "value": 30,
+            "description": ""
+        }
+    },
+    "__WTRL_TOC_MODULES__": {
+        "test_module_minimal": "/__WTRL_OBJECTS__/test_module_minimal"
+    },
+    "__WTRL_TOC_CLASSES__": {},
+    "__WTRL_TOC_CALLABLES__": {},
+    "__WTRL_TOC_TYPES__": {},
+    "__WTRL_TOC_VARIABLES__": {},
+    "__WTRL_TOC_CONSTANTS__": {},
+    "__WTRL_OBJECTS__": {
+        "test_module_minimal": {
+            "path": "/server/devel/sdv/privat/uwe/source/sdv_doc_waterloo/doc/input-python/test_module_minimal.py",
+            "doc": {
+                "Preamble": {
+                    "profile": "module",
+                    "normative_sections": [
+                        "Contract"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST demonstrate the minimal module docstring."
+                    ]
+                }
+            },
+            "examples": [
+                "/__WTRL_EXAMPLES__/sha256_071228df2341dd5d45b5c92a5f2dbdb3469a3f346d7266c88fd4e1513afdc23a"
+            ]
+        }
+    },
+    "__WTRL_EXAMPLES__": {
+        "sha256_071228df2341dd5d45b5c92a5f2dbdb3469a3f346d7266c88fd4e1513afdc23a": {
+            "lang": "python",
+            "hash": "071228df2341dd5d45b5c92a5f2dbdb3469a3f346d7266c88fd4e1513afdc23a",
+            "code": "import test_module_minimal as m\n\nif __name__ == \"__main__\":\n\tprint(\"Module test_module_minimal imported.\")\n",
+            "referenced_by": [
+                "test_module_minimal"
+            ]
+        }
+    }
+}

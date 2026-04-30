@@ -130,12 +130,7 @@ from docutils.parsers.rst.states import Struct as RstStruct  # type: ignore[attr
 from typing import Sequence, TypeAlias, cast, no_type_check
 from sphinx.util.nodes import make_refnode
 
-try:
-	import sdv_doc_docitem
-	mod_docitem = sdv_doc_docitem
-except ImportError:
-	import sdv.doc.waterloo.docitem
-	mod_docitem = sdv.doc.waterloo.docitem
+import sdv.doc.waterloo.docitem as mod_docitem
 
 __version__ = "0.1.1"
 # - 0.1.1 [2026-04-25]	Parameters is now rendered as free-form text, not bullet list.

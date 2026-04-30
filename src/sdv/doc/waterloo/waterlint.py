@@ -13,7 +13,7 @@ import hashlib
 import io
 import importlib.util
 import importlib.resources as importlib_resources
-import sys,inspect,os
+import sys,inspect,os,re
 import traceback
 from datetime import datetime
 from pathlib import Path
@@ -429,14 +429,16 @@ def _add_example_json_command(args: argparse.Namespace) -> int:
 		doc = cast(dict[str, Any], _load_json(in_path))
 
 		ex_map = cast(dict[str, Any], _load_json(examples_map_path))
-		if not isinstance(doc, dict):
-			tr.add_error("AXMPL-001", "tool", "Input JSON must be an object.")
-			_emit_tracer(tr, out_diag, out_diag_json)
-			return 1
-		if not isinstance(ex_map, dict):
-			tr.add_error("AXMPL-001", "tool", "Mapping JSON must be an object.")
-			_emit_tracer(tr, out_diag, out_diag_json)
-			return 1
+# Ruled out by typing
+#		if not isinstance(doc, dict):
+#			tr.add_error("AXMPL-001", "tool", "Input JSON must be an object.")
+#			_emit_tracer(tr, out_diag, out_diag_json)
+#			return 1
+# Ruled out by typing
+#		if not isinstance(ex_map, dict):
+#			tr.add_error("AXMPL-001", "tool", "Mapping JSON must be an object.")
+#			_emit_tracer(tr, out_diag, out_diag_json)
+#			return 1
 		if not _validate_example_refs_map_against_schema(tr, ex_map):
 			_emit_tracer(tr, out_diag, out_diag_json)
 			return 1
@@ -1512,6 +1514,7 @@ def _render_html5_command(args: argparse.Namespace) -> int:
 			header_html_path=getattr(args, "header_html_file", None),
 			pygments_theme=getattr(args, "pygments_theme", None),
 			no_render_preamble=getattr(args, "no_render_preamble", False),
+			allow_raw_object_node=getattr(args, "allow_raw_object_node", True),
 		)
 		if not out_path:
 			_emit_tracer(tr, out_diag, out_diag_json)
@@ -2015,6 +2018,8 @@ def _build_parser() -> argparse.ArgumentParser:
 	render_html5.add_argument("--header-html", dest="header_html_file", metavar="FILE", help="HTML fragment file used instead of the built-in header markup.")
 	render_html5.add_argument("--pygments-theme", dest="pygments_theme", default="gruvbox-light", metavar="THEME", help="Pygments style name for rendered examples (default: gruvbox-light).")
 	render_html5.add_argument("--no-render-preamble", dest="no_render_preamble", action="store_true", help="Do not render section 'Preamble' in HTML output.")
+	render_html5.add_argument("--allow-raw-object-node", dest="allow_raw_object_node", action="store_true", default=True, help="Include collapsible section 'Raw object node' in HTML output (default).")
+	render_html5.add_argument("--no-allow-raw-object-node", dest="allow_raw_object_node", action="store_false", help="Do not include section 'Raw object node' in HTML output.")
 	render_html5.add_argument("--debug", action="store_true", help="Emit debugging data to stderr (reserved)")
 
 #----- gen-minimal --------------------------------------------#

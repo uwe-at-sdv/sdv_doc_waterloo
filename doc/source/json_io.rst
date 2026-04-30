@@ -1,0 +1,505 @@
+.. _json_io_layer:
+
+The JSON I/O Layer
+==================
+
+Subsections in this chapter are informative unless normativity is explicitly stated.
+
+Introduction
+------------
+
+While the original Waterloo docstring format is already designed to be
+machine-readable -- both comprehensible to an LLM and parsable by a simple
+state machine -- practical experience shows that JSON is the most suitable
+format for providing structured information to LLMs (last verified April 2026).
+
+Compared to HTML, JSON avoids a significant amount of structural overhead.
+Even when presentation, layout, and functionality are strictly separated,
+HTML artifacts still contain a considerable amount of information that is
+irrelevant for machine interpretation (often referred to as "human-oriented noise").
+
+More notably, JSON is typically preferred over XML, even when XML is
+reduced to its essential content without styling or presentation-related
+elements. YAML is generally accepted, but is in practice considered less robust
+due to its indentation-based syntax.
+
+The following exchange (translated from German) illustrates a typical
+assessment of common data formats with respect to their suitability
+for large language models.
+
+    **Question.** Which format is best suited for LLM consumption when choosing
+    between HTML (for human-readable browser output), XML (without styling),
+    YAML, and JSON? Assume that all four formats can be transformed into each
+    other by a suitable state machine, i.e. the information content is identical.
+
+    **Answer.**
+
+    **1. JSON: The clear recommendation for LLMs**
+
+    *Advantages:*
+
+    - Structured hierarchy: JSON is natively hierarchical and supports nested
+      objects, which is ideal for docstrings with normative sections, variables,
+      and conditions.
+    - LLM optimization: Most LLMs are heavily exposed to JSON during training
+      and tend to parse it more reliably than XML or YAML. JSON schemas can also
+      serve as formal specifications.
+    - Tooling: Straightforward integration (e.g. ``json.loads`` in Python),
+      validation via JSON Schema, and direct use in APIs.
+    - Minimalism: No markup overhead as in HTML or XML, while remaining fully
+      machine-readable.
+
+    *Disadvantages:*
+
+    - Less intuitive for human readers compared to rendered HTML.
+
+    **2. XML: Structured but unnecessarily complex**
+
+    *Advantages:*
+
+    - Expressive: Supports attributes and namespaces.
+    - Validatable: DTD and XSD schemas are available.
+
+    *Disadvantages:*
+
+    - Overhead: Tags and attributes increase token count and parsing effort.
+    - LLM practice: Less robust handling of deeply nested structures.
+    - Tooling: More complex parsing compared to JSON.
+
+    **3. YAML: Human-friendly but risky for LLMs**
+
+    *Advantages:*
+
+    - Readable for humans.
+    - Compact syntax without brackets or tags.
+
+    *Disadvantages:*
+
+    - Whitespace-sensitive: Prone to indentation errors.
+    - No universally enforced schema system.
+    - Ambiguities (e.g. ``yes`` vs. ``"yes"``).
+
+    **4. HTML: Unsuitable for LLMs**
+
+    *Advantages:*
+
+    - Ideal for human-facing rendering.
+
+    *Disadvantages:*
+
+    - High noise level due to markup.
+    - Large token overhead.
+    - Structural complexity (DOM) that is irrelevant for semantic extraction.
+
+This observation is consistent across multiple LLMs and informal tests.
+
+For these reasons, the Waterloo toolkit provides JSON output for documentation
+artifacts and diagnostic data, and supports JSON input for more complex tasks.
+This chapter demonstrates how machine-readable normative documentation is
+generated from Waterloo docstrings, how it can be enriched with informative
+example code, and how the resulting JSON artifacts can be used to generate
+a conventional, human-readable interactive HTML documentation site.
+
+Validating JSON input, output and diagnostics
+---------------------------------------------
+
+Any :wtrl_cmd:`waterlint`-related JSON data can be validated using
+:wtrl_cmd:`waterlint`:
+
+	:wtrl_cmd:`waterlint validate-json` :wtrl_opt:`--in` :wtrl_file:`path/to/validate.json`
+
+This command attempts to infer the category of the input data
+(documentation, diagnostics, or example references) and validates it
+against the corresponding schema:
+
+* :wtrl_file:`schema/wtrl-json-*.*.*.schema.json` for documentation
+* :wtrl_file:`schema/wtrl-tracer-json-*.*.*.schema.json` for diagnostics
+* :wtrl_file:`schema/wtrl-example-refs-json-*.*.*.schema.json` for example references
+
+The JSON file to be validated contains the version number of the schema
+to validate against. If the category cannot be inferred, the schema can
+be specified explicitly using
+
+	:wtrl_opt:`--schema` :wtrl_file:`path/to/schema.json`.
+
+The directory :wtrl_file:`schema` is a resource located in the package
+directory of :wtrl_mod:`sdv.doc.waterloo`. A list of available schemas
+and their locations can be obtained with
+
+	:wtrl_cmd:`waterlint list-schemas`
+
+The command supports the following options:
+
+	:wtrl_opt:`--out-diag` :wtrl_file:`path/to/diagnostics`
+
+for human-readable diagnostics, and
+
+	:wtrl_opt:`--out-diag-json` :wtrl_file:`path/to/diagnostics.json`
+
+for machine-readable diagnostics.
+
+A summary of these options is displayed by
+
+	:wtrl_cmd:`waterlint help` :wtrl_opt:`--topic` :wtrl_value:`validate-json`
+
+
+Creating LLM-readable documentation
+-----------------------------------
+
+Given a module or a set of modules with Waterloo Docstrings, an LLM-readable JSON artifact can be created
+using the following command:
+
+	:wtrl_cmd:`waterlint render-json` :wtrl_opt:`--basedir` :wtrl_file:`path/to/basedir` :wtrl_opt:`--obj` :wtrl_mod:`module1 [module2...]`
+
+The output path is specified either by option
+
+	:wtrl_opt:`--out` :wtrl_file:`path/to/output.json`
+
+or by
+
+	:wtrl_opt:`--out-dir` :wtrl_file:`path/to/dir/`
+
+In this case, :wtrl_cmd:`waterlint` generates a filename
+which contains the scope (e.g. "core", "public") and the flavour (mostly "rfc-2119")
+as substrings, according to a fixed scheme.
+If multiple modules are provided, an option :wtrl_opt:`--out-prefix` :wtrl_value:`myprefix` is required
+for :wtrl_opt:`--out-dir` because the filename cannot be inferred uniquely in case of more than one input module.
+
+Option :wtrl_opt:`--scope` allows restricting the content to docstrings
+with the given scope, taking into account the monotonicity rules
+for scopes (e.g. the set of "core" docstrings contains "extension"
+docstrings, which in turn contain "public" docstrings).
+
+Option :wtrl_opt:`--flavour` allows specifying how normativity keywords are rendered.
+Since normativity in Waterloo Docstrings is defined by structure instead of typography,
+this is mainly a matter of taste. Since the target audience -- LLMs -- is familiar with RFC 2119,
+passing :wtrl_value:`rfc-2119` (the default) is usually a good choice.
+
+Diagnostics are written in human-readable form by default. The target directories for human- and machine-readable formats
+are specified by
+
+	:wtrl_opt:`--out-diag` :wtrl_file:`path/to/diagnostics`
+	:wtrl_opt:`--out-diag-json` :wtrl_file:`path/to/diagnostics.json`
+
+A summary of these options is displayed by
+
+	:wtrl_cmd:`waterlint help` :wtrl_opt:`--topic` :wtrl_value:`render-json`
+
+.. rubric:: Example
+
+Consider the following minimal module:
+
+.. literalinclude:: ../input-python/test_module_minimal.py
+
+located for instance in :wtrl_file:`doc/input-python`
+
+We render this as JSON by
+
+	:wtrl_cmd:`waterlint render-json`
+		| :wtrl_opt:`--basedir` :wtrl_file:`doc/input-python`
+		| :wtrl_opt:`--obj` :wtrl_mod:`test_module_minimal`
+		| :wtrl_opt:`--out-dir` :wtrl_file:`doc/output-json/`
+
+Since we did not explicitly specify a target file name, scope, or flavour, the resulting file is
+
+	:wtrl_file:`doc/output-json/test_module_minimal.wtrl.core.rfc-2119.json`
+
+Let us have a look at the details. The header provides a reference to the JSON Schema
+for the output and a unique hashed identifier. Node :wtrl_value:`__WTRL_VERSION__`
+contains the version of module :wtrl_mod:`sdv.doc.waterloo` and the JSON Schema version
+to validate against.
+
+.. code-block:: json
+
+	{
+	"$schema": "https://sci-d-vis.com/schema/wtrl-json-0.1.0.schema.json",
+	"$id": "urn:waterlint:wtrl-json:0.8.1:core:rfc-2119:3e64950b9b650...",
+	"__WTRL_VERSION__": {
+		"waterloo": "0.6.1",
+		"schema": "0.1.0"
+		},
+	"...":"..."
+	}
+
+The next node contains metadata such as creation time, scope and flavour.
+
+.. code-block:: json
+
+	{
+	"...":"...",
+	"__WTRL_META__": {
+		"generated_at": "2026-04-20T11:26:41+02:00",
+		"generator": "waterlint",
+		"scope": "core",
+		"flavour": "rfc-2119"
+		},
+	"...":"..."
+	}
+
+Since docstrings are meant to be rendered as human-readable HTML
+(be it interactive or as Sphinx output), they contain semantic roles,
+and we should allow the LLM to understand the meaning of these roles:
+
+.. code-block:: json
+
+	{
+	"...":"...",
+	"__WTRL_ROLES__": {
+		"attr": "Attribute name",
+		"cmd": "Shell or CLI command",
+		"dfn": "Definition of a term",
+		"file": "File or path",
+		"func": "Function or callable",
+		"key": "Key on the keyboard",
+		"label": "Section/Subsection label",
+		"lit": "Literal text or code",
+		"mod": "Module name",
+		"op": "Operator symbol",
+		"opt": "Command-line option or flag",
+		"tag": "Tag or marker",
+		"term": "Domain-specific term",
+		"type": "Type name or annotation",
+		"value": "Concrete value",
+		"var": "Variable name",
+		"var_type": "Variable and type, like 'var:type'"
+		},
+	"...":"..."
+	}
+
+In principle, Waterloo allows user-defined scopes, although this
+is not yet fully supported. The JSON artifact already reflects
+this capability by embedding the scope specification:
+
+.. code-block:: json
+
+	{
+	"...":"...",
+	"__WTRL_SCOPES__": {
+		"public": { "value": 10,"description": "" },
+		"extension": { "value": 20,"description": "" },
+		"core": { "value": 30,"description": "" }
+		},
+	"...":"..."
+	}
+
+The next block is the table of contents.
+Documented objects are grouped by their category, and each entry points
+to an entry in subtree :wtrl_value:`__WTRL_OBJECTS__`.
+In our minimal case there is only a single module and no other objects, so we have:
+
+.. code-block:: json
+
+	{
+	"...":"...",
+	"__WTRL_TOC_MODULES__": {
+		"test_module_minimal": "/__WTRL_OBJECTS__/test_module_minimal"
+		},
+	"__WTRL_TOC_CLASSES__": {},
+	"__WTRL_TOC_CALLABLES__": {},
+	"__WTRL_TOC_TYPES__": {},
+	"__WTRL_TOC_VARIABLES__": {},
+	"__WTRL_TOC_CONSTANTS__": {},
+	"...":"..."
+	}
+
+Node :wtrl_value:`__WTRL_OBJECTS__`, finally, contains the docstring
+in LLM-friendly form, i.e. sections and subsections are encoded as JSON nodes.
+
+.. code-block:: json
+
+	{
+	"...":"...",
+	"__WTRL_OBJECTS__": {
+		"test_module_minimal": {
+			"path": "/path/to/doc/input-python/test_module_minimal.py",
+			"doc": {
+				"Preamble": {
+					"profile": "module",
+					"normative_sections": [	"Contract" ]
+					},
+				"Contract": {
+					"general": [ "MUST demonstrate the minimal module docstring." ]
+					}
+				}
+			}
+		}
+	}
+
+Adding examples to a JSON document
+----------------------------------
+
+When documentation based on Waterloo docstrings is rendered by Sphinx,
+code examples can easily be added in the reST code base. This raises
+the question of how to include code examples in the JSON output.
+
+The solution is to introduce a JSON node :wtrl_value:`__WTRL_EXAMPLES__`,
+added at the same level in the JSON tree as :wtrl_value:`__WTRL_OBJECTS__`.
+In this section, we show how this can be done with :wtrl_cmd:`waterlint`.
+
+Assume you have example programs or snippets for some of the objects
+documented in the JSON output. These examples are located in your project directory,
+and each file is an example for one or more Python objects.
+Technically, there is an m-to-n relation between documented objects and examples:
+any documented module, class, or function can have zero or more examples,
+and each example can be associated with one or more documented objects.
+
+This relation is represented using a dedicated JSON format.
+A template can be generated with the following command:
+
+	:wtrl_cmd:`waterlint gen-example-template-json`
+
+Apart from version numbers, the result should look like this:
+
+.. code-block:: json
+
+	{
+	"$schema": "https://sci-d-vis.com/schema/wtrl-example-refs-json-0.1.0.schema.json",
+	"$id": "urn:none:local:wtrl-example-refs-json:0.1.0",
+	"__WTRL_VERSION__": {
+		"waterloo": "0.6.1",
+		"waterlint_min": "0.8.1",
+		"schema": "0.1.0"
+		},
+	"__WTRL_EXAMPLE_REFS__": {}
+	}
+
+Examples are added to node :wtrl_value:`__WTRL_EXAMPLE_REFS__`
+by creating one entry per documented object and mapping it to a list
+of paths pointing to example files.
+
+.. code-block:: json
+
+	{
+	"...":"...",
+	"__WTRL_EXAMPLE_REFS__": {
+		"mymod.myfunc_1": [
+			"path/to/example_1_1.py",
+			"path/to/example_1_2.py",
+			"..."
+			],
+		"mymod.myfunc_2": [
+			"path/to/example_2_1.py",
+			"path/to/example_2_2.py",
+			"..."
+			],
+		"...":"..."
+		}
+	}
+
+The examples are then added to the JSON document using the following command:
+
+	:wtrl_cmd:`waterlint add-example-json`
+		| :wtrl_opt:`--in` :wtrl_file:`path/to/doc.json`
+		| :wtrl_opt:`--out` :wtrl_file:`path/to/doc_with_examples.json`
+		| :wtrl_opt:`--examples` :wtrl_file:`path/to/examples.json`
+		| :wtrl_opt:`--basedir` :wtrl_file:`path/to/examples/`
+
+.. rubric:: Example
+
+In the following example, we add a Python example to the JSON document
+from the previous section. Let us assume our files are located
+in the filesystem as follows:
+
+.. code-block:: text
+
+	doc
+	├── input-python
+	│   └── test_module_minimal.py
+	├── input-json
+	│   └── test_module_minimal_examples.json
+	├── output-json
+	│   └── test_module_minimal.wtrl.core.rfc-2119.json
+	└── examples-python
+	    └── example_module_minimal.py
+
+Here, :wtrl_file:`test_module_minimal.py` is the original module.
+:wtrl_file:`test_module_minimal.wtrl.core.rfc-2119.json` is the JSON document
+generated in the previous section.
+:wtrl_file:`example_module_minimal.py` is a corresponding Python example:
+
+.. literalinclude:: ../examples-python/example_module_minimal.py
+
+:wtrl_file:`test_module_minimal_examples.json` is the specification file
+containing the mapping from documented objects to example paths:
+
+.. literalinclude:: ../input-json/test_module_minimal_examples.json
+
+The specification file should be validated with
+
+	:wtrl_cmd:`waterlint validate-json` :wtrl_opt:`--in` :wtrl_file:`doc/input-json/test_module_minimal_examples.json`
+
+Then we embed the examples using the following command:
+
+	:wtrl_cmd:`waterlint add-example-json`
+		| :wtrl_opt:`--basedir` :wtrl_file:`doc/examples-python`
+		| :wtrl_opt:`--in` :wtrl_file:`doc/output-json/test_module_minimal.wtrl.core.rfc-2119.json`
+		| :wtrl_opt:`--out` :wtrl_file:`doc/output-json/test_module_minimal.with_examples.wtrl.core.rfc-2119.json`
+		| :wtrl_opt:`--examples` :wtrl_file:`doc/input-json/test_module_minimal_examples.json`
+
+Option :wtrl_opt:`--basedir` specifies the path to the Python examples referenced in :wtrl_file:`test_module_minimal_examples.json`.
+
+The resulting JSON file :wtrl_file:`test_module_minimal.with_examples.wtrl.core.rfc-2119.json`
+looks similar to the input :wtrl_file:`test_module_minimal.wtrl.core.rfc-2119.json`
+but the documented object is now equipped with a reference to the example node:
+
+.. code-block:: json
+
+	{
+	"...":"...",
+	"__WTRL_OBJECTS__": {
+		"test_module_minimal": {
+			"path": "...",
+			"doc": {
+				"Preamble": { "...":"..." },
+				"Contract": { "...":"..." }
+				},
+			"examples": [
+				"/__WTRL_EXAMPLES__/sha256_0a50ade00ffbebea..."
+				]
+			}
+		},
+	"...":"..."
+	}
+
+The document also contains an additional node :wtrl_value:`__WTRL_EXAMPLES__` with the example code
+(formatted below for readability):
+
+.. code-block:: json
+
+	{
+	"...":"...",
+	"__WTRL_EXAMPLES__": {
+		"sha256_0a50ade00ffbebea...": {
+			"lang": "python",
+			"hash": "0a50ade00ffbebea...",
+			"code": "import test_module_minimal as m\\n\\nif __name__ == \\\"__main__\\\":\\n\\tprint(\\\"Module test_module_minimal imported.\\\")\\n",
+			"referenced_by": [
+				"test_module_minimal"
+				]
+			}
+		}
+	}
+
+Note that the example code is fully embedded in the JSON output.
+The resulting LLM-readable document therefore remains a single file.
+
+JSON document categories and conventions
+----------------------------------------
+
+This section is normative.
+
+The reference tooling emits and expects category-specific :wtrl_attr:`$id` values.
+
+* Waterloo API JSON (from :wtrl_cmd:`render-json`):
+	:wtrl_value:`urn:waterlint:wtrl-json:<waterlint-version>:<scope>:<flavour>:<hash>`
+* Tracer diagnostics JSON:
+	:wtrl_value:`urn:waterlint:wtrl-tracer-json:<waterlint-version>:<timestamp>`
+* Example-reference mapping JSON:
+	Recommended pattern:
+	:wtrl_value:`urn:<org-or-project>:<domain>:wtrl-example-refs-json:<schema-version>`
+
+The hash digest |should| be SHA256.
+The :wtrl_attr:`$id` value |should| be globally unique for each produced document.
+For interoperability and diagnostics, the category marker
+(:wtrl_value:`wtrl-json`, :wtrl_value:`wtrl-tracer-json`, :wtrl_value:`wtrl-example-refs-json`)
+|should| be present.

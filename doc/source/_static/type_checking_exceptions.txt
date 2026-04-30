@@ -1,0 +1,6 @@
+docitem_convert.py:649 # pragma: no cover - defensive
+docitem_helper.py:13 # type: ignore[attr-defined]
+docitem_helper.py:15 # type: ignore[no-redef]
+docitem_sphinx.py:129 # type: ignore[attr-defined]
+docitem_validator.py:9 # type: ignore
+docitem_validator.py:10 # pragma: no cover - older Python

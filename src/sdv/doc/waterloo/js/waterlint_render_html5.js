@@ -3,6 +3,10 @@ const WTRL_INDEX = __INDEX_JSON__;
 const WTRL_EXAMPLES_HTML = __EXAMPLES_HTML_JSON__;
 
 function byId(id) { return document.getElementById(id); }
+function setTextIfPresent(id, text) {
+  const el = byId(id);
+  if (el) el.textContent = text;
+}
 const TARGET_TO_ANCHOR = new Map();
 for (const e of WTRL_INDEX) {
   if (e.anchor) TARGET_TO_ANCHOR.set(e.target, e.anchor);
@@ -1109,7 +1113,7 @@ function renderDoc(targetQid) {
     byId("wtrl-signature").innerHTML = "";
     byId("wtrl-doc").innerHTML = "";
     byId("wtrl-examples").innerHTML = "";
-    byId("wtrl-obj").textContent = "";
+    setTextIfPresent("wtrl-obj", "");
     return;
   }
   if (subEl) subEl.textContent = "Waterloo docstring";
@@ -1172,7 +1176,7 @@ function renderDoc(targetQid) {
 // Done. Append to examples block.
     exHost.appendChild(sec);
   }
-  byId("wtrl-obj").textContent = JSON.stringify(node, null, 2);
+  setTextIfPresent("wtrl-obj", JSON.stringify(node, null, 2));
 }
 
 function selectTarget(targetQid, updateHash, opts) {

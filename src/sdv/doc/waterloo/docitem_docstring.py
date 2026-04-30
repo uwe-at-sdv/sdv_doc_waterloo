@@ -2,26 +2,12 @@ from __future__ import annotations
 from types import FunctionType, ModuleType
 from typing import Any, Callable, Dict, Final, get_type_hints, get_origin, get_args, Generator, Iterable, Iterator, List, NewType, NoReturn, Sequence, Set, Tuple, Type, TypeAlias, TypeGuard, Union, cast
 
-try:
-	from sdv_doc_docitem_tokenizer import *
-except ImportError:
-	from sdv.doc.waterloo.docitem_tokenizer import *
+from sdv.doc.waterloo.docitem_tokenizer import *
 
 # Import section modules
-try:
-	from sdv_doc_docitem_sections import *
-except ImportError:
-	from sdv.doc.waterloo.docitem_sections import *
-
-try:
-	from sdv_doc_docitem_preamble import *
-except ImportError:
-	from sdv.doc.waterloo.docitem_preamble import *
-
-try:
-	from sdv_doc_docitem_contract import *
-except ImportError:
-	from sdv.doc.waterloo.docitem_contract import *
+from sdv.doc.waterloo.docitem_sections import *
+from sdv.doc.waterloo.docitem_preamble import *
+from sdv.doc.waterloo.docitem_contract import *
 
 
 #===== begin Docstring ========================================#

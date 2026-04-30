@@ -248,15 +248,8 @@ import typing
 from types import FunctionType, ModuleType
 from contextlib import contextmanager
 
-try:
-	from sdv_doc_docitem_docstring import *
-except ImportError:
-	from sdv.doc.waterloo.docitem_docstring import *
-
-try:
-	from sdv_doc_docitem_validator import *
-except ImportError:
-	from sdv.doc.waterloo.docitem_validator import *
+from sdv.doc.waterloo.docitem_docstring import *
+from sdv.doc.waterloo.docitem_validator import *
 
 __version__ = "0.6.1"
 # - 0.6.1 [2026-04-02]	Semantic role 'key' for keyboard

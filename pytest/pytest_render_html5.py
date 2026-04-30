@@ -133,6 +133,23 @@ def test_render_html5_invalid_pygments_theme_falls_back(tmp_path: Path) -> None:
 	assert ".wtrl-code" in txt
 
 
+def test_render_html5_can_omit_raw_object_node(tmp_path: Path) -> None:
+	"""The raw JSON object details block can be suppressed explicitly."""
+	out_file = tmp_path / "no_raw_object_node.html"
+	res = run_waterlint(
+		"render-html5",
+		"--in",
+		DIR_EXAMPLES_JSON + "/test_docitem_method_property.wtrl.core.rfc-2119.json",
+		"--no-allow-raw-object-node",
+		"--out",
+		str(out_file),
+	)
+	assert res.returncode == 0, res.stderr
+	txt = out_file.read_text(encoding="utf-8")
+	assert "Raw object node" not in txt
+	assert 'id="wtrl-obj"' not in txt
+
+
 def test_render_html5_accepts_custom_header_fragment(tmp_path: Path) -> None:
 	"""A valid custom header fragment is embedded into the generated HTML."""
 	out_file = tmp_path / "custom_header.html"

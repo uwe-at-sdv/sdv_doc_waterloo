@@ -290,7 +290,7 @@ def _validate_header_fragment(fragment: str) -> None:
 		raise RuntimeError("custom header fragment must not contain document-level elements (<html>, <head>, <body>, <main>)")
 
 
-def _build_html_doc(merged: Dict[str, Any]) -> str:
+def _build_html_doc(merged: Dict[str, Any], allow_raw_object_node: bool = True) -> str:
 	meta = _require_dict("meta", merged.get("meta"))
 	index = _build_ui_index(merged)
 	pygments_theme = merged.get("meta", {}).get("pygments_theme", None)
@@ -365,6 +365,14 @@ a.wtrl-func:visited, a.wtrl-type:visited, a.wtrl-var:visited, a.wtrl-ref:visited
       <h1 id="wtrl-title" class="wtrl-title"></h1>
       <p id="wtrl-sub" class="wtrl-sub"></p>"""
 
+	raw_object_html = ""
+	if allow_raw_object_node:
+		raw_object_html = """
+        <details style="margin-top:12px">
+          <summary>Raw object node</summary>
+          <pre id="wtrl-obj" class="wtrl-obj"></pre>
+        </details>"""
+
 	html = f"""<!doctype html>
 <html lang="en">
 <head>
@@ -401,10 +409,7 @@ a.wtrl-func:visited, a.wtrl-type:visited, a.wtrl-var:visited, a.wtrl-ref:visited
         </div>
         <div id="wtrl-doc"></div>
         <div id="wtrl-examples"></div>
-        <details style="margin-top:12px">
-          <summary>Raw object node</summary>
-          <pre id="wtrl-obj" class="wtrl-obj"></pre>
-        </details>
+{raw_object_html}
       </section>
     </main>
   </div>
@@ -428,6 +433,7 @@ def render_html5(
 	header_html_path: str | None = None,
 	pygments_theme: str | None = None,
 	no_render_preamble: bool = False,
+	allow_raw_object_node: bool = True,
 ) -> str:
 	"""
 	Render merged Waterloo JSON input to a bundled HTML5 document.
@@ -504,7 +510,7 @@ def render_html5(
 			merged["meta"]["pygments_theme"] = pygments_theme
 
 		try:
-			html = _build_html_doc(merged)
+			html = _build_html_doc(merged, allow_raw_object_node=allow_raw_object_node)
 		except Exception as exc:
 			_add_error("RHTM-005", f"Cannot build HTML output: {exc}")
 			return ""

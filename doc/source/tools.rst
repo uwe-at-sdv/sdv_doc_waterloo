@@ -1,0 +1,105 @@
+Tools
+=====
+
+This section is informative. Subsections are informative unless explicitly stated otherwise.
+
+The reference implementation provides the command-line tool
+:wtrl_cmd:`waterlint`. The error codes listed below are used by this tool.
+These codes are specific to the reference implementation and do not
+form part of the normative Waterloo language specification.
+
+
+Error code structure
+--------------------
+
+The general structure and stability requirements for rule IDs are specified
+normatively in chapter :ref:`section_meta`.
+The error codes listed in this chapter follow the same basic pattern:
+a mnemonic uppercase ASCII prefix, a hyphenation character, and a
+three-digit numeric identifier.
+
+Within the reference implementation, these error codes are intended to be
+treated as stable external references for tooling, diagnostics, and
+documentation.
+
+
+:wtrl_cmd:`waterlint` error codes
+---------------------------------
+
+This section is normative.
+
+.. rubric:: General tool errors
+
+* [TOOL-001] -- Cannot resolve an object passed via option :wtrl_opt:`--obj`.
+* [TOOL-002] -- Option :wtrl_opt:`--subsection` was given without :wtrl_opt:`--section`.
+* [TOOL-003] -- The object resolved via option :wtrl_opt:`--obj` has no docstring.
+* [TOOL-004] -- The section requested by :wtrl_opt:`--section` was not found during extraction.
+* [TOOL-005] -- The subsection requested by :wtrl_opt:`--subsection` was not found during extraction.
+* [TOOL-006] -- The input docstring cannot be parsed for extraction.
+* [TOOL-007] -- The input docstring is not valid for the requested extraction operation.
+* [TOOL-800] -- Unspecified runtime error during analysis.
+  This code is used when an unexpected exception escapes the validation process.
+  The tracer diagnostic output should provide sufficient detail to identify
+  the underlying cause.
+
+.. rubric:: JSON processing
+
+* [JSCH-000] -- Unspecified catch-all error during JSON processing.
+* [JSCH-002] -- Cannot open the input JSON file for validation.
+* [JSCH-003] -- Cannot determine the applicable schema from the input JSON file.
+* [JSCH-004] -- Input is not valid JSON.
+* [JSCH-005] -- Validation against the JSON Schema failed.
+* [JSCH-006] -- Entry :wtrl_attr:`__WTRL_OBJECTS__.<QID>.examples` contains an invalid pointer, a missing target example, or an invalid list shape.
+* [JSCH-007] -- Entry :wtrl_attr:`__WTRL_EXAMPLES__.<ID>.referenced_by` contains an invalid value or an unknown object identifier.
+* [JSCH-008] -- Back-reference mismatch: an object points to an example, but the example does not list that object in :wtrl_attr:`referenced_by`.
+* [JSCH-009] -- Forward-reference mismatch: an example lists an object in :wtrl_attr:`referenced_by`, but the object does not point back via :wtrl_attr:`examples`.
+
+* [JSCH-700] -- Unspecified error during JSON rendering.
+* [JSCH-800] -- Unspecified JSON schema exception.
+
+.. rubric:: Example mapping (add-example-json)
+
+* [AXMPL-000] -- Unspecified catch-all error during example mapping.
+* [AXMPL-001] -- Invalid JSON envelope structure for input or example entries.
+* [AXMPL-002] -- Mapping contains an unknown or invalid object identifier.
+* [AXMPL-003] -- Mapping contains an invalid list shape or non-string example path.
+* [AXMPL-004] -- Example file path, file access, base directory, or UTF-8 decoding failed.
+* [AXMPL-005] -- Input or mapping file is not valid JSON.
+* [AXMPL-006] -- Mapping JSON failed schema validation or schema auto-detection.
+
+.. _rendering_html:
+
+.. rubric:: Rendering HTML (render-html5)
+
+* [RHTM-001] -- General error while rendering HTML5.
+* [RHTM-002] -- Invalid render-html5 output arguments or output directory state.
+* [RHTM-003] -- Input JSON documents cannot be merged (inconsistent metadata, missing structure, collisions).
+* [RHTM-004] -- CSS asset loading failed (built-in CSS, user-provided :wtrl_opt:`--css`, or user-provided :wtrl_opt:`--additional-css`).
+* [RHTM-005] -- HTML assembly or output file writing failed.
+* [RHTM-006] -- Optional preprocessing failed (currently: dropping ``Preamble`` via :wtrl_opt:`--no-render-preamble`).
+* [RHTM-007] -- Custom header fragment given via :wtrl_opt:`--header-html` cannot be read.
+* [RHTM-008] -- Custom header fragment given via :wtrl_opt:`--header-html` does not contain the required element :wtrl_value:`#wtrl-title`.
+* [RHTM-009] -- Custom header fragment given via :wtrl_opt:`--header-html` cannot be embedded safely into the generated HTML document.
+  This includes active content such as ``<script>`` and disallowed document-level elements such as
+  :wtrl_tag:`html`, :wtrl_tag:`head`, :wtrl_tag:`body`, and :wtrl_tag:`main`.
+
+Extension error codes
+---------------------
+
+This section is normative.
+
+* [XTNSN-001] -- Invalid JSON input
+* [XTNSN-002] -- Unsupported command
+* [XTNSN-003] -- Unsupported protocol
+* [XTNSN-004] -- Unsupported subcommand
+* [XTNSN-005] -- JSON input type mismatch
+* [XTNSN-006] -- Source fragment mismatch
+* [XTNSN-007] -- Error parsing source fragment
+* [XTNSN-008] -- Error parsing module file
+* [XTNSN-009] -- Cannot resolve source fragment
+* [XTNSN-010] -- No source file given
+* [XTNSN-011] -- Line number not specified properly
+* [XTNSN-012] -- Cannot qualify documented object
+
+The JSON protocol used by the VSCode editor integration is documented
+separately in chapter :doc:`vscode_extension_backend`.

@@ -31,10 +31,7 @@ import re,copy,inspect
 import json
 import textwrap
 
-try:
-	from sdv_doc_docitem import *
-except ImportError:
-	from sdv.doc.waterloo.docitem import *
+from sdv.doc.waterloo.docitem import *
 
 #===== Constants ==============================================#
 RE_YAML_SIMPLE_KEY_COMPILED = re.compile(r'^[A-Za-z_][A-Za-z0-9_-]*$')

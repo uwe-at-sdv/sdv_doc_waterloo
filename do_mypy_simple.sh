@@ -1,4 +1,5 @@
 #!/usr/bin/bash
 
-mypy --config-file mypy.ini -m sdv.doc.waterloo.waterlint
-mypy --config-file mypy.ini -m sdv.doc.waterloo.waterlint_render_html5
+PATH_MYPY_INI=$(realpath $(dirname $0)/mypy.ini)
+
+mypy --config-file ${PATH_MYPY_INI} -p sdv.doc.waterloo

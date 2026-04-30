@@ -1,0 +1,14 @@
+{
+    "$schema": "https://sci-d-vis.com/schema/wtrl-example-refs-json-0.1.1.schema.json",
+    "$id": "urn:none:local:wtrl-example-refs-json:0.1.1",
+    "__WTRL_VERSION__": {
+        "waterloo": "0.6.1",
+        "waterlint_min": "0.8.1",
+        "schema": "0.1.1"
+    },
+    "__WTRL_EXAMPLE_REFS__": {
+        "test_module_minimal": [
+            "example_module_minimal.py"
+	]
+    }
+}

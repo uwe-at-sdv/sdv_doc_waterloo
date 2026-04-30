@@ -1,0 +1,140 @@
+# We support two indentation schemes:
+Symbolic constants: TAB SPC4
+
+spc            = "\x20" ;
+tab            = "\x09" ;
+
+# An indent in tab-scheme is a TAB-character (ASCII 9) 
+indent<tab>	: tab
+		;
+# An indent in spc4-scheme consists of four space characters (ASCII 32)
+indent<spc4>	: spc^4
+		;
+
+# Definition of the WL-Docstring format.
+# The start rule says: decide for an indentation scheme
+# and use it consistently.
+wldocstring	: wldocstring<TAB>
+		| wldocstring<SPC4>
+		;
+wldocstring(T)	: {section(T,0)}+
+		;
+# We define `section` over an indentation scheme T and
+# recursively for an integer value I which represents
+# the indentation level. The following definition can
+# be simplified to a single line, but this form is more
+# appropriate in order to define the tokenizer's behaviour.
+section(T,I)	: indent(T,I) line {section(T,I+1)}
+		| indent(T,I) line
+		;
+# A line |must_not| start with SPC or TAB.
+line		: [^ \t].*$
+		;
+The tokenizer |must| create a List[...] from a wldocstring. This list is defined as follows:
+- Each successfully parsed `line` is appended as a string.
+- Each successfully parsed `{section(T,I+1)}+` is appended as a List,
+  the elements of which result from recursively parsing section(T,I+1).
+The resulting list is called a docstring tree.
+
+#----- EBNF ---------------------------------------------------#
+
+CHAR_NO_NL     = ? any unicode scalar value except "\n" ? ;
+NL             = "\n" ;
+SPC            = "\x20" ;
+TAB            = "\x09" ;
+
+# The tokenizer uses exactly one INDENT_UNIT for the entire docstring.
+# The concrete choice is implementation-defined, but must be applied
+# consistently once established.
+INDENT_UNIT    = TAB ;
+# or:
+INDENT_UNIT    = SPC, SPC, SPC, SPC ;
+
+LINE_TEXT      = { CHAR_NO_NL } ;
+LINE           = ( ? first char is neither SPC nor TAB ? ), LINE_TEXT, (NL | EOF) ;
+
+WLDOCSTRING  = TOPLEVEL ;
+TOPLEVEL     = BLOCK(0) ;
+
+SECTION(k)   = INDENT(k), LINE, [ BLOCK(k+1) ] ;
+BLOCK(k)     = { SECTION(k) }+ ;
+
+INDENT(k)    = INDENT_UNIT^k ;
+
+#----- EBNF ---------------------------------------------------#
+
+(* Possible ways to indent *)
+spc		= "\x20" ;
+tab		= "\x09" ;
+newline		= "\n" | "\r\n" ;
+non_ws_char	= ? All characters but tab and spc ? ;
+non_nl_char	= ? All character but newline ? ;
+
+(* either *)
+indent_unit	= tab ;
+(* or *)
+indent_unit	= spc, spc, spc, spc ;
+(* must be fixed ahead of or during parsing *)
+
+(* A docstring consists of a set of sections *)
+wldocstring	= { section } ;
+
+(* A section consists of an indentation, a line and possibly an indented block *)
+section		= indent_token , line , [ block ] ;
+
+(* A block increasses indentation by one unit *)
+block		= indent_increase , { section } , indent_decrease ;
+
+(* A line must not start with tab or spc *)
+line		= non_ws_char , { non_nl_char } , newline ;
+
+(* Abstraction of indentation *)
+indent_increase = ? matches {indent_unit} if indentation increases by one indent_unit ? ;
+indent_decrease = ? matches {indent_unit} if indentation decreases by one indent_unit ? ;
+indent_token    = ? current indentation string, a multiple of indent_unit ? ;
+
+
+
+
+#----- Tokenizer Semantics ------------------------------------#
+
+Output
+======
+
+Definition: A `docstring tree` is a value of the following recursive type:
+
+Tree := List[Node]
+Node := str | Tree
+
+The tokenizer |must| produce a docstring tree.
+
+Input
+=====
+
+The input is a docstring (a sequence of lines). Each line ends with NL or end-of-input.
+
+Indentation unit
+----------------
+
+
+* The tokenizer operates with a single INDENT_UNIT for the entire docstring.
+* INDENT_UNIT is either TAB or SPC SPC SPC SPC, as shown in the EBNF segment above.
+* How INDENT_UNIT is chosen is implementation-defined, but once established it |must| be used consistently for the entire docstring.
+
+Line classification
+-------------------
+
+For each physical line:
+1. The tokenizer |must| ignore empty lines
+2. 
+
+
+
+
+
+
+
+
+
+
+
