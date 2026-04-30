@@ -1,0 +1,417 @@
+r"""
+Preamble:
+	profile:
+		module
+	scope:
+		core, nonexistent
+	status:
+		frozen
+	normative_sections:
+		Contract, Definitions, Parameters, BadSection, See_also
+	bad_subsection:
+		Content
+Definitions:
+	Identifier:
+		A string matching the regex |lit|`[a-zA-Z_][a-zA-Z0-9_]*`.
+	_inherit:
+		Term_A, Term_B
+	bad term
+		bad because colon is missing and it doesn't follow the identifier format.
+Terminology:
+	Un!corn:
+		Fancy animal. Test roles: |mod|`ABC`
+Bad Section:
+	All sections are predefined, and "Bad Section" is not one of them.
+Contract:
+	general:
+		|Must| do this and that. Test roles: |term|`ABC`
+		|Should_not| do other things. Test roles: |term|`ABC`
+		|ref|`label <target_in_rst>`
+		|ref|`label <wtrl://qi.of.documented.object>`
+		|ref|`label <https://link.com>`
+	constructor:
+		default - this is freeform text describing the constructor contract. Test roles: |func|`__init__`
+	requires:
+		|var|`x` > 0. Test roles: |var|`x`
+	ensures:
+		The result is positive. Test roles: |value|`positive`
+	invariants:
+		Idempotent. Test roles: |term|`idempotent`
+	traits:
+		abstract
+	base:
+		MyBaseClassA, MyBaseClassB
+	bad_subsection:
+		Contract only contains predefined subsections, and "bad_subsection" is not one of them.
+Description:
+	This is a logical line consisting of two\
+	physical lines.
+	|
+	This is another logical line. Test roles: |label|`ABC`
+	* This is a bullet point in the description. Test roles: |label|`ABC`
+	* This is another bullet point in the description. Test roles: |label|`ABC`
+	- This is a sub bullet point in the description. Test roles: |label|`ABC`
+	- Another sub bullet list item. Test roles: |label|`ABC`
+	* This is a continuation of the previous bullet point. Test roles: |label|`ABC`
+Derived_from:
+	MyBaseClassA, MyBaseClassB
+Factory:
+	my_factory:
+		Each entry in this section describes a factory function.\
+		The entry name is the name of the factory function,\
+		and the content is freeform text describing the factory contract.
+Public_classes:
+	ClassOne, ClassTwo
+Class_overview:
+	class_one:
+		Brief description of class one. Test roles: |type|`class_one`
+	class_two:
+		Brief description of class two. Test roles: |type|`class_two`
+Public_functions:
+	function_one, function_two
+Function_overview:
+	function_one:
+		Brief description of function one. Test roles: |func|`function_one`
+	function_two:
+		Brief description of function two. Test roles: |func|`function_two`
+Public_methods:
+	method_one, method_two
+Method_overview:
+	method_one:
+		Brief description of method one. Test roles: |func|`method_one`
+	method_two:
+		Brief description of method two. Test roles: |func|`method_two`
+Public_types:
+	type_one:
+		Description of type one. Test roles: |type|`type_one`
+	type_two:
+		Description of type two. Test roles: |type|`type_two`
+Public_variables:
+	VAR_ONE:
+		Description of variable one. Test roles: |value|`1`
+	VAR_TWO:
+		Description of variable two. Test roles: |value|`2`
+Public_constants:
+	CONST_ONE:
+		Description of constant one. Test roles: |value|`1`
+	CONST_TWO:
+		Description of constant two. Test roles: |value|`2`
+Parameters:
+	x:
+		Description of parameter x. Test roles: |var|`x`
+	y:
+		Description of parameter y. Test roles: |var|`y`
+	not a par:
+		Invalid because it doesn't follow the identifier format\
+		and cannot be used as a parameter name.
+Returns:
+	|Must| return |Self|, due to fluent interface. Test roles: |type|`ABC`
+Raises:
+	ValueError:
+		|Must| raise if the input is invalid. Test roles: |type|`ValueError`
+	CustomError:
+		|May| propagate from function |func|`some_function`. Test roles: |type|`CustomError`.
+Notes:
+	Roles:
+		|attr|`ABC`
+		|cmd|`ABC`
+		|dfn|`ABC`
+		|file|`/path/to/ABC`
+		|func|`ABC`
+		|key|`F4`
+		|label|`ABC`
+		|lit|`ABC`
+		|mod|`ABC`
+		|op|`>>`
+		|opt|`--abc`
+		|tag|`ABC`
+		|term|`ABC`
+		|type|`ABC`
+		|value|`12345`
+		|var|`ABC`
+See_also:
+	other.class, other.function
+"""
+import sys
+
+class MyClassA:
+	"""
+	Preamble:
+		profile:
+			class
+		scope:
+			core
+	Notes:
+		Not a docstring:
+			Missing Contract - Testing edge case in pygemnts lexer.
+	"""
+
+class MyClassB:
+	def __init__(self):
+# Trying to confuse the lexer with a string which is not a valid docstring.
+		a = "Preamble:\n\tprofile:\n\t\tfunction\nContract:\n"
+
+def bar():
+	"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+	Contract:
+		general:
+	Parameters:
+	Returns:
+	Raises:
+	"""
+	pass
+
+#----- Pygments Lexer edge cases -----------------------------#
+
+def foo_no_preamble(a: int) -> float:
+	"""
+	Notes:
+		Not a valid docstring:
+			The content looks like a docstring but has no Preamble.
+	Returns:
+		float: The input converted to a float.
+	"""
+	return float(a)
+
+def foo_no_contract(a: int) -> float:
+	"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+	Notes:
+		Not a valid docstring:
+			The content looks like a docstring but has no Contract.
+	Returns:
+		float: The input converted to a float.
+	"""
+	return float(a)
+
+def foo_mixed_indent(a: int) -> float:
+	"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+	Contract:
+		general:
+			|Must| provide a test case with mixed indentation
+			(tabs and spaces) in the Contract section.
+	Notes:
+		Not a valid docstring:
+		    This line is indented with spaces, while
+			the previous line is indented with a tab.
+			This is valid in Python (because it's inside
+			a docstring) but invalid as a docstring
+			according to the waterloo specification.
+	Returns:
+		float: The input converted to a float.
+	"""
+	return float(a)
+
+def foo_empty_lines(a: int) -> float:
+	"""
+	Preamble:   
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters
+			
+			Returns, Raises
+	Contract:
+		general:
+			|Must| provide a test case with empty lines in CSV-like sections.
+			Tools |must| accept these empty lines as part of the section content.
+			|Must| provide a test for deliberately inserted whitespace in
+			ref-directives, which should be preserved as part of the content.
+			|Must| provide a test for semantics roles not defined in waterloo.
+			|Must| provide a test for linesline connectors followed by whitespace.
+	Notes:
+		Trailing whitespace in Section labels:
+			"Preamble:" in this docstring has trailing spaces,
+			which should be ignored when parsing the section label.
+		Testing ref:
+			|ref|`label < target_in_rst>`
+			|ref|` label <wtrl://qi.of.documented.object>`
+			|ref|`label <https://link.com> `
+			|ref|`label https://link.com`
+			|ref|`label`
+		Testing undefined roles:
+			|my_fancy_role|`some content` <- should be treated as literal text, not a role.
+			|not_valid| <- should be treated as literal text, not a role.
+		Testing line connectors with whitespace:
+			This is a line with a connector at the end, followed by three spaces. \   
+			This is the continuation of the previous line.
+	Returns:
+		float: The input converted to a float.
+	"""
+	return float(a)
+
+def foo_state_leak_a():
+	"""
+	Not a waterloo docstring
+	"""
+def foo_state_leak_b():
+	"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+	Contract:
+		general:
+			|Must| provide test cases for state leak between functions.
+	"""
+def foo_state_leak_c():
+	"""
+	Not a waterloo docstring
+	"""
+
+
+#----- VSCode generateDocstring edge cases -------------------#
+
+def func_with_comment_edgecase() -> None: # todo
+	"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+	Contract:
+		general:
+			|Must| provide an edge case for an inline comment in the function signature.
+	Parameters:
+	Returns:
+		|None|
+	Raises:
+	Notes:
+		Edge case:
+			The function signature contains an inline comment,
+			which should not interfere with synthesizing a function
+			definition by appending "pass".
+	"""
+	pass
+
+#----- Extension playground ----------------------------------#
+
+class X:
+	"""
+	Preamble:
+		profile:
+			class
+		normative_sections:
+			Definitions, Contract, Derived_from, Public_classes, Public_methods, Public_types, Public_variables, Public_constants, Factory, See_also
+		scope:
+			public
+	Definitions:
+		ExampleTerm:
+			...
+	Terminology:
+		Example term:
+			...
+	Contract:
+		general:
+			...
+		constructor:
+			...
+		traits:
+	Description:
+		...
+	Derived_from:
+	Notes:
+		General note:
+			...
+	Public_classes:
+	Class_overview:
+	Public_methods:
+	Method_overview:
+	Public_types:
+	Public_variables:
+	Public_constants:
+	Factory:
+	See_also:
+	"""
+	@classmethod
+	def spam(cls,a: int,b: float,/,c: str,*,d: bool):
+		"""
+		Preamble:
+			profile:
+				method
+			normative_sections:
+				Definitions, Contract, Parameters, Returns, Raises, See_also
+			status:
+				stable
+			scope:
+				public
+		Definitions:
+			ExampleTerm:
+				...
+		Terminology:
+			Example term:
+				...
+		Contract:
+			general:
+				|Must| define the externally visible behavior of this method.
+			invariants:
+				|Must| preserve all documented invariants across valid calls.
+			requires:
+				|Must| define preconditions for valid input.
+			ensures:
+				|Must| define postconditions for successful execution.
+		Description:
+			...
+		Parameters:
+			a:
+				...
+			b:
+				...
+			c:
+				...
+			d:
+				...
+		Returns:
+			|Must| return ...
+		Raises:
+			BaseException:
+				|Must| raise if...
+		Notes:
+			General note:
+				...
+		See_also:
+		"""
+		pass
+
+def pow(a: float, b: int) -> float:
+	"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+	Contract:
+		general:
+			|Must| compute the power of |var|`a` to |var|`b`.
+		requires:
+			(a) If |var|`b` is non-integer, |var|`a` |must| be >= 0.
+			(b) If |var|`a` is < 0, |var|`b` |must| be integer.
+		ensures:
+			The result is a real number.
+			For |var|`a` = |var|`b` = 0 the result is |value|`1`.
+	Parameters:
+		a:
+			The base
+		b:
+			The expontent
+	Returns:
+	Raises:
+		ValueError:
+			|Must| raise if any of the requirements are not fulfilled.
+	"""
+	pass
