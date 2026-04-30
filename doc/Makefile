@@ -12,7 +12,7 @@ STATICDIR     := $(abspath $(SOURCEDIR)/_static)
 
 do_mypy:
 	# @../do_mypy.sh --echo --out-dir $(STATICDIR) --out-hash type_checking.hash --out-report type_checking_report.txt --out-ignore type_checking_exceptions.txt $(ROOT)/docitem*.py
-	@../do_mypy_simple.sh $(ROOT)/docitem*.py > $(STATICDIR)/type_checking_report.txt
+	@../do_mypy_simple.sh $(ROOT)/docitem*.py
 
 # Run type checking before building HTML.
 html: do_mypy
