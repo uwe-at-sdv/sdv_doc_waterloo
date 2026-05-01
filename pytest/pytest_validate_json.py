@@ -46,7 +46,7 @@ def test_validate_json_bad_not_even() -> None:
 def test_validate_json_bad_missing_version() -> None:
 	result = _run_waterlint_validate_json(DIR_EXAMPLES_JSON + "/bad_missing_version.json")
 	assert result.returncode == 1, f"expected exit code 1, got {result.returncode}"
-	assert "JSCH-003" in result.stderr, result.stderr
+	assert "JSCH-005" in result.stderr, result.stderr
 
 
 def test_validate_json_bad_missing_legend() -> None:

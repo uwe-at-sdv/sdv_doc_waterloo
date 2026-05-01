@@ -27,7 +27,8 @@ from jsonschema import Draft202012Validator
 #from jsonschema import JSONDecodeError
 import jsonschema.exceptions
 
-__version__ = "0.9.0"
+__version__ = "0.9.1"
+# - 0.9.1 [2026-05-01]	Minor changes in static typing
 # - 0.9.0 [2026-04-25]	Refactoring render-html5: freeform sections
 # - 0.8.3 [2026-04-24]	Subcommand render-html5: --css and --additional-css are now independent options.
 #			Subcommand extract: diagnostics now aligned with other subcommands.
@@ -426,19 +427,16 @@ def _add_example_json_command(args: argparse.Namespace) -> int:
 		if not examples_map_path:
 			raise RuntimeError("--examples is required.")
 
-		doc = cast(dict[str, Any], _load_json(in_path))
-
-		ex_map = cast(dict[str, Any], _load_json(examples_map_path))
-# Ruled out by typing
-#		if not isinstance(doc, dict):
-#			tr.add_error("AXMPL-001", "tool", "Input JSON must be an object.")
-#			_emit_tracer(tr, out_diag, out_diag_json)
-#			return 1
-# Ruled out by typing
-#		if not isinstance(ex_map, dict):
-#			tr.add_error("AXMPL-001", "tool", "Mapping JSON must be an object.")
-#			_emit_tracer(tr, out_diag, out_diag_json)
-#			return 1
+		doc =_load_json(in_path)
+		ex_map = _load_json(examples_map_path)
+		if not isinstance(doc, dict):
+			tr.add_error("AXMPL-001", "tool", "Input JSON must be an object.")
+			_emit_tracer(tr, out_diag, out_diag_json)
+			return 1
+		if not isinstance(ex_map, dict):
+			tr.add_error("AXMPL-001", "tool", "Mapping JSON must be an object.")
+			_emit_tracer(tr, out_diag, out_diag_json)
+			return 1
 		if not _validate_example_refs_map_against_schema(tr, ex_map):
 			_emit_tracer(tr, out_diag, out_diag_json)
 			return 1
@@ -448,6 +446,11 @@ def _add_example_json_command(args: argparse.Namespace) -> int:
 		# as we can still add examples and update $id based on the content hash.
 		# We will just use empty strings for scope and flavour in that case.
 		meta = doc.get("__WTRL_META__", {})
+		# We assume that the input document is valid
+		if not isinstance(meta,dict):
+			tr.add_error("AXMPL-000", "tool", "Input must be a valid document (__WTRL_META__ is not an object).")
+			_emit_tracer(tr, out_diag, out_diag_json)
+			return 1
 		scope = str(meta.get("scope", ""))
 		flavour = str(meta.get("flavour", ""))
 
@@ -482,9 +485,10 @@ def _add_example_json_command(args: argparse.Namespace) -> int:
 					return 1
 
 			for obj_qid, files_any in ex_refs.items():
-				if not isinstance(obj_qid, str):
-					tr.add_error("AXMPL-002", "tool", "Mapping contains non-string object key.")
-					continue
+# Ruled out by typechecking. We know ex_refs is a JSON object and a dict, so th ekey is a string.
+#				if not isinstance(obj_qid, str):
+#					tr.add_error("AXMPL-002", "tool", "Mapping contains non-string object key.")
+#					continue
 				if obj_qid not in objects:
 					tr.add_error("AXMPL-002", "tool", f"Unknown object: {obj_qid}")
 					continue
@@ -559,12 +563,14 @@ def _add_example_json_command(args: argparse.Namespace) -> int:
 			if isinstance(ex_any, dict):
 				ref_by = ex_any.get("referenced_by")
 				if isinstance(ref_by, list):
-					ex_any["referenced_by"] = sorted({str(x) for x in ref_by})
+					# cast: a list of strings is a JSON node.
+					ex_any["referenced_by"] = cast(cvrt.WtrlJsonNode_t,sorted({str(x) for x in ref_by}))
 		for obj_any in objects.values():
 			if isinstance(obj_any, dict):
 				ex_list = obj_any.get("examples")
 				if isinstance(ex_list, list):
-					obj_any["examples"] = sorted({str(x) for x in ex_list})
+					# cast: a list of strings is a JSON node.
+					obj_any["examples"] = cast(cvrt.WtrlJsonNode_t,sorted({str(x) for x in ex_list}))
 
 		_validate_examples_consistency_json(tr, doc)
 		if tr.has_errors():

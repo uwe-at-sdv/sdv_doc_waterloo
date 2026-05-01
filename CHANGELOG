@@ -1,3 +1,4 @@
+# - 0.10.1 [2026-05-01]	Minor changes in waterlint.
 # - 0.10.0 [2026-04-25]	Refactoring of waterlint render-html5: freeform sections.
 # - 0.9.5 [2026-04-25]	Sphinx: Parameters are now rendered as freeform, not bullet-list.
 # - 0.9.4 [2026-04-24]	Documentation: Overview output layers; Minor refactorings in waterlint.

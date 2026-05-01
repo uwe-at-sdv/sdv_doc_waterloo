@@ -11,7 +11,7 @@ Public_classes:
 	MyClass
 Class_overview:
 	MyClass:
-		An empty class
+		A simple class
 """
 class MyClass:
 	"""
@@ -22,7 +22,7 @@ class MyClass:
 			Contract, Public_methods
 	Contract:
 		general:
-			|Must| provide nothing.
+			|Must| provide a greeting function.
 		constructor:
 			|Must| be default-constructible.
 	Public_methods:

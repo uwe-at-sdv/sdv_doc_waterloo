@@ -1,12 +1,18 @@
 #!/usr/bin/bash
 
+# Highly simplified version of do_mypy.sh in order to bridge
+# problems occured during refactoring git-branch 'main'.
+# The script is invoked by `make html` for building the Sphinx
+# document, see doc/Makefile.
+
 set -euo pipefail
 
+# We presuppose that the script is located on repository level.
 SCRIPT_DIR=$(realpath $(dirname $0))
-PATH_MYPY_INI=$(realpath $(dirname $0)/mypy.ini)
-PATH_SRC_DIR=$(realpath $(dirname $0)/src/sdv/doc/waterloo)
-PATH_CHK_OUT=$(realpath $(dirname $0)/doc/source/_static/type_checking_report.txt)
-PATH_EXC_OUT=$(realpath $(dirname $0)/doc/source/_static/type_checking_exceptions.txt)
+PATH_MYPY_INI="${SCRIPT_DIR}/mypy.ini"
+PATH_SRC_DIR="${SCRIPT_DIR}/src/sdv/doc/waterloo"
+PATH_CHK_OUT="${SCRIPT_DIR}/doc/source/_static/type_checking_report.txt"
+PATH_EXC_OUT="${SCRIPT_DIR}/doc/source/_static/type_checking_exceptions.txt"
 
 MYPYPATH="${SCRIPT_DIR}/src" mypy --config-file "${PATH_MYPY_INI}" \
 	--namespace-packages \
