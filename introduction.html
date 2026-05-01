@@ -375,7 +375,7 @@ complete verification in all contexts.</p>
 <li><p><code class="wtrl_file docutils literal notranslate"><span class="pre">sdv.doc.waterloo.docitem_validator</span></code></p></li>
 </ul>
 <p>are validated on a regular basis. The current status is</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Success: no issues found in 12 source files
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Success: no issues found in 14 source files
 </pre></div>
 </div>
 <p>Our <code class="wtrl_lit docutils literal notranslate"><span class="pre">mypy</span></code>-configuration is:</p>
@@ -398,12 +398,19 @@ complete verification in all contexts.</p>
 </pre></div>
 </div>
 <p>Exceptions from typechecking are:</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>sdv_doc_docitem_convert.py:652 # pragma: no cover - defensive
-sdv_doc_docitem_helper.py:13 # type: ignore[attr-defined]
-sdv_doc_docitem_helper.py:15 # type: ignore[no-redef]
-sdv_doc_docitem_sphinx.py:129 # type: ignore[attr-defined]
-sdv_doc_docitem_validator.py:12 # type: ignore
-sdv_doc_docitem_validator.py:13 # pragma: no cover - older Python
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>docitem_convert.py:649 # pragma: no cover - defensive
+docitem_helper.py:13 # type: ignore[attr-defined]
+docitem_helper.py:15 # type: ignore[no-redef]
+docitem_sphinx.py:129 # type: ignore[attr-defined]
+docitem_validator.py:9 # type: ignore
+docitem_validator.py:10 # pragma: no cover - older Python
+waterlint.py:750 # pragma: no cover - defensive
+waterlint.py:817 # pragma: no cover - defensive
+waterlint.py:892 # pragma: no cover - defensive
+waterlint.py:986 # pragma: no cover - defensive
+waterlint.py:990 # pragma: no cover - defensive
+waterlint.py:994 # pragma: no cover - defensive
+waterlint.py:1483 # pragma: no cover - defensive
 </pre></div>
 </div>
 </section>
