@@ -54,16 +54,12 @@ code --uninstall-extension local.waterloo-docstrings
 
 ## Run from source
 
-For quick local testing without packaging a VSIX:
+For quick local testing without packaging a VSIX, start VS Code from this
+directory:
 
 ```bash
 code --extensionDevelopmentPath="$(pwd)"
 ```
-
-Then open a Python file, place the cursor at an appropriate position and use:
-
-- right-click editor context menu -> `Waterloo`
-- or Command Palette commands starting with `Waterloo:`
 
 This launches an Extension Development Host and loads the extension directly
 from the source tree.
@@ -75,6 +71,28 @@ from the source tree.
 - `Waterloo: Validate Docstring`
 
 The context menu appears for Python when the backend is available and the current line matches a supported location (`def`, `class`, or module docstring position).
+
+## Quick tutorial
+
+After launching the Extension Development Host, open the example file from the
+repository root, for example in a separate terminal:
+
+```bash
+code examples-python/example_function_full.py
+```
+
+Then try the following:
+
+1. Place the cursor on the function header `def test()`.
+2. Open the editor context menu and select `Waterloo -> Validate Docstring`.
+3. A confirmation message such as `Waterloo: Validation passed for example_function_full.test.` should appear near the bottom of the editor window.
+4. Delete the docstring of function `test`.
+5. Place the cursor again on the function header `def test()`.
+6. Open the editor context menu and select `Waterloo -> Generate Full Docstring`.
+7. A docstring template should appear directly below the function header.
+
+The same commands are also available from the Command Palette under names
+starting with `Waterloo:`.
 
 ## Configuration
 
