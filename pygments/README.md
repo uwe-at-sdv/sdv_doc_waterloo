@@ -41,8 +41,13 @@ pip install -e ./pygments
 If the repository is reachable by `pip`, the package can also be installed
 directly from a Git URL:
 
+HTTPS:
 ```bash
 pip install "git+https://github.com/uwe-at-sdv/sdv_doc_waterloo.git@ide-plugins#subdirectory=pygments"
+```
+SSH:
+```bash
+pip install "git+ssh://git@github.com/uwe-at-sdv/sdv_doc_waterloo.git@ide-plugins#subdirectory=pygments"
 ```
 
 ## Use after installation
