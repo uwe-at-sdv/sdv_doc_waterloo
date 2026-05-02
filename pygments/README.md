@@ -1,6 +1,17 @@
 # Python-Waterloo Lexer (Pygments)
 
-This folder contains a custom lexer for Python files with Waterloo docstrings.
+This folder contains a custom Pygments lexer for Python files with Waterloo docstrings.
+
+> **Branch note (`ide-plugins`)**
+>
+> The Pygments lexer package lives on the `ide-plugins` branch. Installation from Git must
+> reference `@ide-plugins` (see below). General repository documentation is in `main/README.md`.
+
+## Prerequisites
+
+- Python >= 3.10
+- `pip`
+- `pygmentize` (provided by the `Pygments` package)
 
 ## Clone the correct branch
 
@@ -19,6 +30,8 @@ cd sdv_doc_waterloo
 ```
 
 ## Quick test (no install)
+
+Run `pygmentize` directly against the lexer source file (no packaging/install needed):
 
 ```bash
 pygmentize -x \
@@ -41,10 +54,26 @@ For development, an editable install can be convenient:
 pip install -e ./pygments
 ```
 
+### Sanity check (after install)
+
+The lexer should be discoverable by its alias:
+
+```bash
+pygmentize -l python-waterloo -f terminal16m examples-python/example_function_full.py
+```
+
+Tip: You can also check whether Pygments lists the lexer:
+
+```bash
+pygmentize -L lexers | grep -i waterloo || true
+```
+
 ## Install directly from Git
 
 If the repository is reachable by `pip`, the package can also be installed
-directly from a Git URL:
+directly from a Git URL.
+
+**Important:** The `@ide-plugins` ref is required because this package is maintained on that branch.
 
 HTTPS:
 ```bash
@@ -53,13 +82,4 @@ pip install "git+https://github.com/uwe-at-sdv/sdv_doc_waterloo.git@ide-plugins#
 SSH:
 ```bash
 pip install "git+ssh://git@github.com/uwe-at-sdv/sdv_doc_waterloo.git@ide-plugins#subdirectory=pygments"
-```
-
-## Use after installation
-
-The lexer class defines `aliases = ["python-waterloo"]`.
-After installation, you can use:
-
-```bash
-pygmentize -l python-waterloo -f terminal16m examples-python/example_function_full.py
 ```
