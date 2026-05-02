@@ -7,9 +7,14 @@ This folder contains a custom lexer for Python files with Waterloo docstrings.
 The plugin sources live on branch `ide-plugins`. If you want to work from a
 fresh checkout, clone that branch explicitly:
 
+HTTPS:
 ```bash
-git clone --branch ide-plugins --single-branch \
-  https://github.com/uwe-at-sdv/sdv_doc_waterloo.git
+git clone --branch ide-plugins --single-branch https://github.com/uwe-at-sdv/sdv_doc_waterloo.git
+cd sdv_doc_waterloo
+```
+SSH:
+```bash
+git clone --branch ide-plugins --single-branch git+ssh://git@github.com/uwe-at-sdv/sdv_doc_waterloo.git
 cd sdv_doc_waterloo
 ```
 
