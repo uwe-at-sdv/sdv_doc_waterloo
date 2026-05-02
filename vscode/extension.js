@@ -1,3 +1,5 @@
+// version: see package.json
+
 const vscode = require('vscode');
 const { execFile, execFileSync } = require('child_process');
 const fs = require('fs');
