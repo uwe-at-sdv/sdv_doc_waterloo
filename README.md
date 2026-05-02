@@ -15,7 +15,7 @@
 
 * Additional utilities
   * Clone directly:
-    * ``git clone --branch ide-plugins --single-branch git@github.com:uwe-at-sdv/sdv_doc_waterloo.git``
+    * ``git clone --branch ide-plugins --single-branch https://github.com/uwe-at-sdv/sdv_doc_waterloo.git``
   * Lexer for ``pygments``
     * ``pygments/python_waterloo_lexer.py``
   * Extension for ``vscode``
@@ -39,4 +39,3 @@
 * Change logs:
   * ``src/sdv/doc/waterloo/docitem.py`` following the definition of ``__version__``
   * ``src/sdv/doc/waterloo/waterlint.py`` following the definition of ``__version__``
-
