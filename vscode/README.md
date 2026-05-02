@@ -15,7 +15,7 @@ fresh checkout, clone that branch explicitly:
 
 ```bash
 git clone --branch ide-plugins --single-branch \
-  git@github.com:uwe-at-sdv/sdv_doc_waterloo.git
+  https://github.com/uwe-at-sdv/sdv_doc_waterloo.git
 cd sdv_doc_waterloo/vscode
 ```
 

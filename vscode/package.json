@@ -92,6 +92,6 @@
   "license": "BSD-3-Clause",
   "repository": {
     "type": "git",
-    "url": "https://example.invalid/waterloo-docstrings.git"
+    "url": "https://github.com/uwe-at-sdv/sdv_doc_waterloo.git"
   }
 }

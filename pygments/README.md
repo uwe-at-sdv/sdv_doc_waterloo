@@ -9,7 +9,7 @@ fresh checkout, clone that branch explicitly:
 
 ```bash
 git clone --branch ide-plugins --single-branch \
-  git@github.com:uwe-at-sdv/sdv_doc_waterloo.git
+  https://github.com/uwe-at-sdv/sdv_doc_waterloo.git
 cd sdv_doc_waterloo
 ```
 
@@ -19,7 +19,7 @@ cd sdv_doc_waterloo
 pygmentize -x \
   -l pygments/python_waterloo_lexer.py:PythonWaterlooLexer \
   -f terminal16m \
-  doc/examples/test_docitem_function_full.py
+  examples-python/example_function_full.py
 ```
 
 ## Install from a local checkout
@@ -42,10 +42,8 @@ If the repository is reachable by `pip`, the package can also be installed
 directly from a Git URL:
 
 ```bash
-pip install "git+URL@ide-plugins#subdirectory=pygments"
+pip install "git+https://github.com/uwe-at-sdv/sdv_doc_waterloo.git@ide-plugins#subdirectory=pygments"
 ```
-
-Replace `URL` with the repository URL, for example an HTTPS or SSH Git URL.
 
 ## Use after installation
 
@@ -53,5 +51,5 @@ The lexer class defines `aliases = ["python-waterloo"]`.
 After installation, you can use:
 
 ```bash
-pygmentize -l python-waterloo -f terminal16m <file.py>
+pygmentize -l python-waterloo -f terminal16m examples-python/example_function_full.py
 ```
