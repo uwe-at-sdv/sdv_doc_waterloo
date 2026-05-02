@@ -60,7 +60,7 @@ For quick local testing without packaging a VSIX:
 code --extensionDevelopmentPath="$(pwd)"
 ```
 
-Then open a Python file and use:
+Then open a Python file, place the cursor at an appropriate position and use:
 
 - right-click editor context menu -> `Waterloo`
 - or Command Palette commands starting with `Waterloo:`

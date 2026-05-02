@@ -5,7 +5,7 @@ This folder contains a custom Pygments lexer for Python files with Waterloo docs
 > **Branch note (`ide-plugins`)**
 >
 > The Pygments lexer package lives on the `ide-plugins` branch. Installation from Git must
-> reference `@ide-plugins` (see below). General repository documentation is in `main/README.md`.
+> reference `@ide-plugins` (see below). General repository documentation is in `@main/README.md`.
 
 ## Prerequisites
 
