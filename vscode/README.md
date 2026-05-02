@@ -8,11 +8,16 @@ This package provides:
 - context menu commands for docstring generation and validation
 - Python backend bridge used by the extension commands
 
-## Repository
+## Clone the correct branch
 
-Development branch:
+The plugin sources live on branch `ide-plugins`. If you want to work from a
+fresh checkout, clone that branch explicitly:
 
-- <https://github.com/uwe-at-sdv/sdv_doc_waterloo/tree/ide-plugins>
+```bash
+git clone --branch ide-plugins --single-branch \
+  git@github.com:uwe-at-sdv/sdv_doc_waterloo.git
+cd sdv_doc_waterloo/vscode
+```
 
 ## Build VSIX
 
@@ -47,7 +52,7 @@ code --uninstall-extension local.waterloo-docstrings
 For quick local testing without packaging a VSIX:
 
 ```bash
-code --extensionDevelopmentPath=/server/devel/sdv/privat/uwe/source/sdv_doc_waterloo/package_ide-plugins/vscode
+code --extensionDevelopmentPath="$(pwd)"
 ```
 
 Then open a Python file and use:
