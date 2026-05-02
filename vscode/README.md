@@ -14,12 +14,26 @@ Development branch:
 
 - <https://github.com/uwe-at-sdv/sdv_doc_waterloo/tree/ide-plugins>
 
-## Install (VSIX)
+## Build VSIX
 
 From this directory:
 
 ```bash
-code --install-extension ./waterloo-docstrings-0.1.0.vsix
+npx @vscode/vsce package
+```
+
+This creates a file like:
+
+```text
+waterloo-docstrings-<version>.vsix
+```
+
+## Install VSIX
+
+From this directory:
+
+```bash
+code --install-extension ./waterloo-docstrings-<version>.vsix --force
 ```
 
 Uninstall:
@@ -28,7 +42,9 @@ Uninstall:
 code --uninstall-extension local.waterloo-docstrings
 ```
 
-## Run from Source (Extension Development Host)
+## Run from source
+
+For quick local testing without packaging a VSIX:
 
 ```bash
 code --extensionDevelopmentPath=/server/devel/sdv/privat/uwe/source/sdv_doc_waterloo/package_ide-plugins/vscode
@@ -38,6 +54,9 @@ Then open a Python file and use:
 
 - right-click editor context menu -> `Waterloo`
 - or Command Palette commands starting with `Waterloo:`
+
+This launches an Extension Development Host and loads the extension directly
+from the source tree.
 
 ## Available Commands
 
@@ -55,6 +74,13 @@ Extension setting:
 
 If set to `true`, successful operations show VS Code information messages.
 
+## What the VSIX contains
+
+The VSIX bundles both major parts of this extension:
+
+- Waterloo syntax highlighting via TextMate grammar injection
+- editor commands for docstring generation and validation
+
 ## Files
 
 - `extension.js` - VS Code entry point and UI wiring
@@ -67,3 +93,4 @@ If set to `true`, successful operations show VS Code information messages.
 
 - This package is licensed under `BSD-3-Clause`.
 - Tested against VS Code engine constraint from `package.json` (`^1.80.0`).
+- Before publishing to a public registry, update `repository.url` in `package.json`.
