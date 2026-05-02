@@ -115,7 +115,6 @@ The VSIX bundles both major parts of this extension:
 - `extension_waterloo_commands.py` - backend command dispatcher
 - `funcdef_parser.py` - parser helpers for function/class headers
 - `syntaxes/waterloo.injection.tmLanguage.json` - TextMate grammar
-- `tools/select_grammar.py` - switch stable/experimental grammar variants
 
 ## Notes
 
