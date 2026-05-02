@@ -33,13 +33,13 @@ cd sdv_doc_waterloo
 
 Run `pygmentize` directly against the lexer source file (no packaging/install needed):
 
-Dark terminal theme
+Dark terminal theme:
 ```bash
 pygmentize -x \
   -l pygments/python_waterloo_lexer.py:PythonWaterlooLexer -f terminal16m -O style=monokai \
   examples-python/example_function_full.py
 ```
-Light terminal theme
+Light terminal theme:
 ```bash
 pygmentize -x \
   -l pygments/python_waterloo_lexer.py:PythonWaterlooLexer -f terminal16m -O style=friendly \
