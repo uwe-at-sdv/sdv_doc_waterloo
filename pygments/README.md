@@ -74,6 +74,12 @@ Tip: You can also check whether Pygments lists the lexer:
 pygmentize -L lexers | grep -i waterloo || true
 ```
 
+## Install from PyPI (once available)
+
+```bash
+pip install python-waterloo-lexer
+```
+
 ## Install directly from Git
 
 If the repository is reachable by `pip`, the package can also be installed
