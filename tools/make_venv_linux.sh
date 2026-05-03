@@ -8,6 +8,9 @@
 # Using this venv you can set up your own Waterloo documentation
 # project with output in HTML/Sphinx, HTML/Interactive or JSON.
 
+# This script is not installed - you can simply run it from the
+# cloned git repository for an easier startup.
+
 set -euo pipefail
 
 PYTHON_VERSION=$(python3 --version)
@@ -31,7 +34,15 @@ DIR_VENV=venv-${PYTHON_MAJOR}.${PYTHON_MINOR}-wtrl
 echo "Building python virtual environment in directory ${DIR_VENV}"
 echo "In case of problems see log in ${PATH_TO_LOG}"
 
-rm -rf "${DIR_VENV}"
+if [ -d "${DIR_VENV}" ]; then
+	read -p "A directory ${DIR_VENV} already exists in ${PWD}. Replace? [Y/n] " choice
+	if [[ -z "$choice" || "$choice" =~ ^[Yy]$ ]]; then
+		rm -rf "${DIR_VENV}"
+	else
+		echo "Cancelled."
+		exit 0
+	fi
+fi
 python3 -m venv "${DIR_VENV}"
 
 source "${DIR_VENV}/bin/activate"
