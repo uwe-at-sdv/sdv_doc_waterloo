@@ -4,6 +4,8 @@ Format:
 
 - VERSION [YYYY-MM-DD]: Summary.
 
+- 0.4.2 [2026-05-03]:
+  - Minor changes in packaging;
 - 0.4.1 [2026-05-03]:
   - Minor changes in packaging; prepare for PyPI.
 - 0.4.0 [2026-03-25]:
