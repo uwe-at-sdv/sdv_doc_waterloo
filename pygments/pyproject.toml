@@ -25,4 +25,4 @@ version = { attr = "python_waterloo_lexer.__version__" }
 
 [tool.setuptools]
 py-modules = ["python_waterloo_lexer"]
- 
+
