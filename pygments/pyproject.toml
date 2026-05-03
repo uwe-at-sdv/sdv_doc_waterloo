@@ -1,13 +1,13 @@
 [build-system]
-requires = ["setuptools>=67", "wheel"]
+requires = ["setuptools>=70"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "python-waterloo-lexer"
-description = "A pygments lexer derived from the Python lexer, for WWaterloo docstrings"
+description = "A pygments lexer derived from the Python lexer, for Waterloo docstrings"
 readme = "README.md"
 dependencies = ["pygments"]
-requires-python = ">=3.8"
+requires-python = ">=3.10"
 authors = [{ name = "Uwe" }]
 license = { text = "BSD-2-Clause" }
 classifiers = [
