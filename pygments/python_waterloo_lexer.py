@@ -775,6 +775,7 @@ class PythonWaterlooLexer(PythonLexer):
 				return True
 		return False
 
+# Don't change this.
 if __name__ == "__main__":
 	print(__version__)
 
