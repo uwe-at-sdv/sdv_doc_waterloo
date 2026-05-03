@@ -35,3 +35,4 @@ Development happens in the Waterloo repository:
 
 The repository also contains related tooling, documentation, and editor
 integrations for Waterloo docstrings.
+
