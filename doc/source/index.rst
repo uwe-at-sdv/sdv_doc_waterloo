@@ -10,7 +10,6 @@ Waterloo
 	getting_started.rst
 	examples_minimax.rst
 	examples.rst
-	misc.rst
 	format.rst
 	tools.rst
 	vscode_extension_backend.rst
