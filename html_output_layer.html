@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>11. The HTML Output Layer &#8212; Waterloo Docstrings 0 documentation</title>
+    <title>10. The HTML Output Layer &#8212; Waterloo Docstrings 0 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5f771d8e" />
     <link rel="stylesheet" type="text/css" href="_static/basic.css?v=686e5160" />
     <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=27fed22d" />
@@ -16,8 +16,8 @@
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="12. Reference - Core View" href="reference.html" />
-    <link rel="prev" title="10. The JSON I/O Layer" href="json_io.html" />
+    <link rel="next" title="11. Reference - Core View" href="reference.html" />
+    <link rel="prev" title="9. The JSON I/O Layer" href="json_io.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
@@ -36,10 +36,10 @@
           <div class="body" role="main">
             
   <section id="the-html-output-layer">
-<span id="html-output-layer"></span><h1><span class="section-number">11. </span>The HTML Output Layer<a class="headerlink" href="#the-html-output-layer" title="Link to this heading">¶</a></h1>
+<span id="html-output-layer"></span><h1><span class="section-number">10. </span>The HTML Output Layer<a class="headerlink" href="#the-html-output-layer" title="Link to this heading">¶</a></h1>
 <p>Subsections in this chapter are informative unless normativity is explicitly stated.</p>
 <section id="introduction">
-<h2><span class="section-number">11.1. </span>Introduction<a class="headerlink" href="#introduction" title="Link to this heading">¶</a></h2>
+<h2><span class="section-number">10.1. </span>Introduction<a class="headerlink" href="#introduction" title="Link to this heading">¶</a></h2>
 <p>The command <code class="wtrl_cmd docutils literal notranslate"><span class="pre">waterlint</span> <span class="pre">render-html5</span></code> converts a Waterloo JSON document
 into a bundled, human-readable HTML5 artifact.
 The input is therefore not a Python module and not a Waterloo docstring directly,
@@ -55,7 +55,7 @@ It is therefore possible that this functionality will later evolve toward
 a plugin-like architecture with interchangeable renderers.</p>
 </section>
 <section id="rendering-html5-documentation">
-<h2><span class="section-number">11.2. </span>Rendering HTML5 Documentation<a class="headerlink" href="#rendering-html5-documentation" title="Link to this heading">¶</a></h2>
+<h2><span class="section-number">10.2. </span>Rendering HTML5 Documentation<a class="headerlink" href="#rendering-html5-documentation" title="Link to this heading">¶</a></h2>
 <p>The basic call is</p>
 <blockquote>
 <div><dl>
@@ -141,7 +141,7 @@ and is located at</p>
 </div></blockquote>
 </section>
 <section id="adding-a-custom-header">
-<h2><span class="section-number">11.3. </span>Adding a custom header<a class="headerlink" href="#adding-a-custom-header" title="Link to this heading">¶</a></h2>
+<h2><span class="section-number">10.3. </span>Adding a custom header<a class="headerlink" href="#adding-a-custom-header" title="Link to this heading">¶</a></h2>
 <p>The header area above the rendered documentation can also be customized by
 passing an HTML fragment file:</p>
 <blockquote>
@@ -287,7 +287,7 @@ documentation self-contained and usable offline.</p>
 </div>
 </section>
 <section id="implementation-notes">
-<h2><span class="section-number">11.4. </span>Implementation Notes<a class="headerlink" href="#implementation-notes" title="Link to this heading">¶</a></h2>
+<h2><span class="section-number">10.4. </span>Implementation Notes<a class="headerlink" href="#implementation-notes" title="Link to this heading">¶</a></h2>
 <p>The current implementation is distributed across three components:</p>
 <ul class="simple">
 <li><p>the Python command implementation in <code class="wtrl_file docutils literal notranslate"><span class="pre">waterlint_render_html5.py</span></code></p></li>
@@ -336,29 +336,28 @@ toward a more explicit plugin or renderer architecture easier.</p>
 <li class="toctree-l1"><a class="reference internal" href="getting_started.html">2. Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples_minimax.html">3. Docstrings - minimal and full examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples.html">4. Examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="misc.html">5. Miscellaneous</a></li>
-<li class="toctree-l1"><a class="reference internal" href="format.html">6. Docstring format</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tools.html">7. Tools</a></li>
-<li class="toctree-l1"><a class="reference internal" href="vscode_extension_backend.html">8. VSCode Extension Backend</a></li>
-<li class="toctree-l1"><a class="reference internal" href="io_layers.html">9. Overview: I/O Layers</a></li>
-<li class="toctree-l1"><a class="reference internal" href="json_io.html">10. The JSON I/O Layer</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">11. The HTML Output Layer</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#introduction">11.1. Introduction</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#rendering-html5-documentation">11.2. Rendering HTML5 Documentation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#adding-a-custom-header">11.3. Adding a custom header</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#implementation-notes">11.4. Implementation Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="format.html">5. Docstring format</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tools.html">6. Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="vscode_extension_backend.html">7. VSCode Extension Backend</a></li>
+<li class="toctree-l1"><a class="reference internal" href="io_layers.html">8. Overview: I/O Layers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="json_io.html">9. The JSON I/O Layer</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">10. The HTML Output Layer</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#introduction">10.1. Introduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#rendering-html5-documentation">10.2. Rendering HTML5 Documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#adding-a-custom-header">10.3. Adding a custom header</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#implementation-notes">10.4. Implementation Notes</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="reference.html">12. Reference - Core View</a></li>
-<li class="toctree-l1"><a class="reference internal" href="_test_freeform.html">13. Flow control in freeform sections</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reference.html">11. Reference - Core View</a></li>
+<li class="toctree-l1"><a class="reference internal" href="_test_freeform.html">12. Flow control in freeform sections</a></li>
 </ul>
 
 <div class="relations">
 <h3>Related Topics</h3>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="json_io.html" title="previous chapter"><span class="section-number">10. </span>The JSON I/O Layer</a></li>
-      <li>Next: <a href="reference.html" title="next chapter"><span class="section-number">12. </span>Reference - Core View</a></li>
+      <li>Previous: <a href="json_io.html" title="previous chapter"><span class="section-number">9. </span>The JSON I/O Layer</a></li>
+      <li>Next: <a href="reference.html" title="next chapter"><span class="section-number">11. </span>Reference - Core View</a></li>
   </ul></li>
 </ul>
 </div>

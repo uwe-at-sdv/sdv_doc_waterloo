@@ -373,6 +373,8 @@ complete verification in all contexts.</p>
 <li><p><code class="wtrl_file docutils literal notranslate"><span class="pre">sdv.doc.waterloo.docitem_sphinx</span></code></p></li>
 <li><p><code class="wtrl_file docutils literal notranslate"><span class="pre">sdv.doc.waterloo.docitem_tokenizer</span></code></p></li>
 <li><p><code class="wtrl_file docutils literal notranslate"><span class="pre">sdv.doc.waterloo.docitem_validator</span></code></p></li>
+<li><p><code class="wtrl_file docutils literal notranslate"><span class="pre">sdv.doc.waterloo.waterlint</span></code></p></li>
+<li><p><code class="wtrl_file docutils literal notranslate"><span class="pre">sdv.doc.waterloo.waterlint_render_html5</span></code></p></li>
 </ul>
 <p>are validated on a regular basis. The current status is</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Success: no issues found in 14 source files
@@ -404,19 +406,19 @@ docitem_helper.py:15 # type: ignore[no-redef]
 docitem_sphinx.py:129 # type: ignore[attr-defined]
 docitem_validator.py:9 # type: ignore
 docitem_validator.py:10 # pragma: no cover - older Python
-waterlint.py:750 # pragma: no cover - defensive
-waterlint.py:817 # pragma: no cover - defensive
-waterlint.py:892 # pragma: no cover - defensive
-waterlint.py:986 # pragma: no cover - defensive
-waterlint.py:990 # pragma: no cover - defensive
-waterlint.py:994 # pragma: no cover - defensive
-waterlint.py:1483 # pragma: no cover - defensive
+waterlint.py:756 # pragma: no cover - defensive
+waterlint.py:823 # pragma: no cover - defensive
+waterlint.py:898 # pragma: no cover - defensive
+waterlint.py:992 # pragma: no cover - defensive
+waterlint.py:996 # pragma: no cover - defensive
+waterlint.py:1000 # pragma: no cover - defensive
+waterlint.py:1489 # pragma: no cover - defensive
 </pre></div>
 </div>
 </section>
 <section id="pytest">
 <h3><span class="section-number">1.7.2. </span>Pytest<a class="headerlink" href="#pytest" title="Link to this heading">¶</a></h3>
-<p>Pytest files are</p>
+<p>Pytest files are located in <code class="wtrl_file docutils literal notranslate"><span class="pre">pytest</span></code> at repository level.</p>
 <ul class="simple">
 <li><p><code class="wtrl_file docutils literal notranslate"><span class="pre">pytest_lexer_golden.py</span></code></p></li>
 <li><p><code class="wtrl_file docutils literal notranslate"><span class="pre">pytest_validation.py</span></code></p></li>
@@ -737,7 +739,7 @@ part of the public API of the module:</p>
 <span class="sd">	</span><span class="nc">MyClass</span>
 <span class="gh">Class_overview:</span>
 <span class="sd">	</span><span class="nc">MyClass:</span>
-<span class="sd">		An empty class</span>
+<span class="sd">		A simple class</span>
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">MyClass</span><span class="p">:</span>
 <span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
@@ -748,7 +750,7 @@ part of the public API of the module:</p>
 <span class="sd">			</span><span class="no">Contract</span><span class="sd">, </span><span class="no">Public_methods</span>
 <span class="gh">	Contract:</span>
 <span class="sd">		</span><span class="gu">general:</span>
-<span class="sd">			</span><span class="k">|Must|</span><span class="sd"> provide nothing.</span>
+<span class="sd">			</span><span class="k">|Must|</span><span class="sd"> provide a greeting function.</span>
 <span class="sd">		</span><span class="gu">constructor:</span>
 <span class="sd">			</span><span class="k">|Must|</span><span class="sd"> be default-constructible.</span>
 <span class="gh">	Public_methods:</span>
@@ -812,7 +814,7 @@ part of the public API of the module:</p>
 <tr class="wtrl-section row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Class</span> <span class="pre">overview</span></code></p></td>
 <td><ul>
 <li><p><code class="wtrl_type docutils literal notranslate"><span class="pre">MyClass</span></code></p>
-<p class="wtrl-freeform-paragraph-content">An empty class</p>
+<p class="wtrl-freeform-paragraph-content">A simple class</p>
 </li>
 </ul>
 </td>
@@ -840,7 +842,7 @@ part of the public API of the module:</p>
 <td><ul class="simple">
 <li><p><code class="wtrl_label docutils literal notranslate"><span class="pre">general</span></code></p>
 <ul>
-<li><p><code class="wtrl_norm docutils literal notranslate"><span class="pre">Must</span></code> provide nothing.</p></li>
+<li><p><code class="wtrl_norm docutils literal notranslate"><span class="pre">Must</span></code> provide a greeting function.</p></li>
 </ul>
 </li>
 <li><p><code class="wtrl_label docutils literal notranslate"><span class="pre">constructor</span></code></p>
@@ -1021,15 +1023,14 @@ of methods. The push-command reads:</p>
 <li class="toctree-l1"><a class="reference internal" href="getting_started.html">2. Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples_minimax.html">3. Docstrings - minimal and full examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples.html">4. Examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="misc.html">5. Miscellaneous</a></li>
-<li class="toctree-l1"><a class="reference internal" href="format.html">6. Docstring format</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tools.html">7. Tools</a></li>
-<li class="toctree-l1"><a class="reference internal" href="vscode_extension_backend.html">8. VSCode Extension Backend</a></li>
-<li class="toctree-l1"><a class="reference internal" href="io_layers.html">9. Overview: I/O Layers</a></li>
-<li class="toctree-l1"><a class="reference internal" href="json_io.html">10. The JSON I/O Layer</a></li>
-<li class="toctree-l1"><a class="reference internal" href="html_output_layer.html">11. The HTML Output Layer</a></li>
-<li class="toctree-l1"><a class="reference internal" href="reference.html">12. Reference - Core View</a></li>
-<li class="toctree-l1"><a class="reference internal" href="_test_freeform.html">13. Flow control in freeform sections</a></li>
+<li class="toctree-l1"><a class="reference internal" href="format.html">5. Docstring format</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tools.html">6. Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="vscode_extension_backend.html">7. VSCode Extension Backend</a></li>
+<li class="toctree-l1"><a class="reference internal" href="io_layers.html">8. Overview: I/O Layers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="json_io.html">9. The JSON I/O Layer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="html_output_layer.html">10. The HTML Output Layer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reference.html">11. Reference - Core View</a></li>
+<li class="toctree-l1"><a class="reference internal" href="_test_freeform.html">12. Flow control in freeform sections</a></li>
 </ul>
 
 <div class="relations">

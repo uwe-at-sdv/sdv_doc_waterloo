@@ -406,6 +406,8 @@ We use :wtrl_lit:`mypy` for static typechecking. The modules
 * :wtrl_file:`sdv.doc.waterloo.docitem_sphinx`
 * :wtrl_file:`sdv.doc.waterloo.docitem_tokenizer`
 * :wtrl_file:`sdv.doc.waterloo.docitem_validator`
+* :wtrl_file:`sdv.doc.waterloo.waterlint`
+* :wtrl_file:`sdv.doc.waterloo.waterlint_render_html5`
 
 are validated on a regular basis. The current status is
 
@@ -424,7 +426,7 @@ Exceptions from typechecking are:
 Pytest
 ......
 
-Pytest files are
+Pytest files are located in :wtrl_file:`pytest` at repository level.
 
 * :wtrl_file:`pytest_lexer_golden.py`
 * :wtrl_file:`pytest_validation.py`
