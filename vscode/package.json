@@ -4,7 +4,7 @@
   "icon": "img/wtrl_logo_128x128.png",
   "description": "Tools for Waterloo docstrings in Python.",
   "version": "0.1.2",
-  "publisher": "local",
+  "publisher": "uwe-at-sdv",
   "engines": {
     "vscode": "^1.80.0"
   },
