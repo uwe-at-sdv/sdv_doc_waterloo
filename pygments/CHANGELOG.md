@@ -4,6 +4,8 @@ Format:
 
 - VERSION [YYYY-MM-DD]: Summary.
 
+- 0.4.3 [2026-05-05]:
+  - Clean handling of Windows line ending "\r\n".
 - 0.4.2 [2026-05-03]:
   - Minor changes in packaging;
 - 0.4.1 [2026-05-03]:

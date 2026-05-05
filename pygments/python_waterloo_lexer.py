@@ -38,7 +38,7 @@ from pygments.token import Error, Generic, Keyword, Name, String, Literal, Numbe
 
 #----- Changelog ----------------------------------------------#
 
-__version__ = "0.4.2"
+__version__ = "0.4.3"
 
 #----- Constants ----------------------------------------------#
 RE_SECTION = re.compile(
@@ -381,6 +381,8 @@ class PythonWaterlooLexer(PythonLexer):
 		return Generic.Heading
 
 	def _emit_subsection_line(self, base: int, line: str, match: re.Match[str]) -> Iterable[tuple[int, object, str]]:
+		stripped_no_nl = line.rstrip("\r\n")
+		line_ending = line[len(stripped_no_nl):]
 		prefix, label, suffix = match.groups()
 		self._current_subsection = label[:-1].strip()
 		cur = base
@@ -393,8 +395,8 @@ class PythonWaterlooLexer(PythonLexer):
 		if suffix:
 			yield cur, String.Doc, suffix
 			cur += len(suffix)
-		if line.endswith("\n"):
-			yield cur, String.Doc, "\n"
+		if line_ending:
+			yield cur, String.Doc, line_ending
 
 	def _emit_normative_sections_line(self, base: int, line: str) -> Iterable[tuple[int, object, str]]:
 		stripped_no_nl = line.rstrip("\r\n")
@@ -609,7 +611,8 @@ class PythonWaterlooLexer(PythonLexer):
 			yield base, Keyword, line
 			return
 # Analyze for bullet list marker
-		line_no_nl = line[:-1] if line.endswith("\n") else line
+		line_no_nl = line.rstrip("\r\n")
+		line_ending = line[len(line_no_nl):]
 		m_bullet = RE_LIST_MARKER.match(line_no_nl)
 		if m_bullet is not None:
 			indent = m_bullet.group(1)
@@ -624,8 +627,8 @@ class PythonWaterlooLexer(PythonLexer):
 				yield base + len(indent) + len(marker), String.Doc, gap
 			if rest:
 				yield from self._emit_inline_line(base + prefix_len, rest)
-			if line.endswith("\n"):
-				yield base + len(line_no_nl), String.Doc, "\n"
+			if line_ending:
+				yield base + len(line_no_nl), String.Doc, line_ending
 			return
 
 # Special handling of "normative_sections"
