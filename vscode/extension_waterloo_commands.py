@@ -100,6 +100,8 @@ def _write_docstring_to_tmp(content: str) -> str:
 		return str(Path(handle.name))
 
 
+# A ping is sent by VSCode when the extension is activated,
+# e.g. when a Python file is loaded in the Editor panel.
 def _handle_ping(tr: wtrl.tracer,version: Any) -> dict[str, Any]:
 	if version != 1:
 		tr.add_error("XTNSN-003","extension","Unsupported protocol version",{"version":f"{version!r}"})
@@ -114,6 +116,10 @@ def _handle_ping(tr: wtrl.tracer,version: Any) -> dict[str, Any]:
 			"generateFullDocstring",
 			"validateDocstring",
 		],
+		"sdv_doc_waterloo": {
+			"file":wtrl.__file__,
+			"version":wtrl.__version__,
+		}
 	}
 
 

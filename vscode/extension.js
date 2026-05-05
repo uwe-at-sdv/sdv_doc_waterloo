@@ -687,6 +687,9 @@ async function activate(context) {
 			}
 			// Build the context with the supported capabilities reported by the backend.
 			setCapabilities(pong.capabilities);
+			// Details about installed waterloo module
+			fout.appendLine("sdv.doc.waterloo    file: " + pong.sdv_doc_waterloo.file)
+			fout.appendLine("sdv.doc.waterloo version: " + pong.sdv_doc_waterloo.version)
 		}
 		catch (err) {
 			emitFatalActivationError(FATAL_BACKEND_PING_FAILED, String(err));
