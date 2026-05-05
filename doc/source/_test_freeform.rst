@@ -1,9 +1,11 @@
+.. _flow_control:
+
 Flow control in freeform sections
 ---------------------------------
 
 This section is informative.
 
-Here, we are testing how the Sphinx renderer handles free-form sections and list-like sections.
+Here, we are testing how the Sphinx renderer handles free-form-content sections and itemized-content sections.
 
 .. wtrl_push_current_module:: test_flow_control
 

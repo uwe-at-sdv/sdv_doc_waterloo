@@ -4,6 +4,7 @@ Format:
 
 - VERSION [YYYY-MM-DD]: Summary.
 
+- 0.10.3 [2026-05-05]: Significant progress in documentation: `format.rst`.
 - 0.10.2 [2026-05-01]: Minor changes in repository administration.
 - 0.10.1 [2026-05-01]: Minor changes in `waterlint` and documentation.
 - 0.10.0 [2026-04-25]: Refactoring of `waterlint render-html5`: freeform sections.

@@ -8,9 +8,6 @@
 Docstring format
 ================
 
-This section is normative.
-
-
 .. _section_definitions: 
 
 Definitions
@@ -76,6 +73,47 @@ cannot have nested classes or methods with the scope :wtrl_value:`public` -- If 
 a :wtrl_value:`public` user would have to deal with objects that are explicitly restricted
 to the smaller group of :wtrl_value:`core` users, which does not make sense.
 
+Specification conventions
+-------------------------
+
+This section is informative.
+
+The specification of rule-based normative topics throughout this document
+follows a common structural pattern. The purpose of this pattern is to ensure
+consistency, readability, and long-term maintainability of the specification
+text.
+
+A specification block may consist of the following components, in the order
+listed below:
+
+* **Normative rules**
+
+  One or more rules identified by rule IDs.
+  These define the formal semantics and validation requirements.
+
+* **Obsolete rules** (optional)
+
+  A list of previously defined rules that have been superseded.
+  Each obsolete rule should indicate the version in which it became obsolete
+  and, if applicable, the rule that replaces it.
+
+* **Rationale** (informative, optional)
+
+  Explanatory text describing the intent, design considerations, or background
+  of the preceding rules.
+  The rationale does not introduce additional normative requirements.
+
+* |LastReview| (editorial, optional)
+
+  A date indicating the most recent editorial review of the section.
+  This item has no normative effect.
+
+Not all components are mandatory. Their presence depends on the complexity,
+maturity, and historical evolution of the topic under consideration.
+This structural pattern serves as a guideline for authors and editors of this
+specification. It is intended to promote uniformity without constraining future
+refinement.
+
 .. _section_meta: 
 
 Meta
@@ -107,6 +145,8 @@ We do this by the following set of rules.
 
 Rule taxonomy
 -------------
+
+This section is informative.
 
 The prefixes of rule IDs have a mnemonic function.
 The following list explains the mnemonic prefixes and their semantics.
@@ -186,7 +226,7 @@ The structure of Waterloo docstrings
 ------------------------------------
 
 This section defines the structure of Waterloo docstrings.
-in human-readable form. The structure is presented as lists for the various sections
+It does so in human-readable form. The structure is presented as lists for the various sections
 with embedded lists for subsections. The following patterns occur in any order:
 
 .. code:: none
@@ -194,6 +234,9 @@ with embedded lists for subsections. The following patterns occur in any order:
 	<Section>:
 		<Subsection>:
 			<Free-Form-Content>
+		...
+		<Subsection>:
+			<Itemized-Content>
 		...
 		<Subsection>:
 			<List-Of-Identifiers>
@@ -210,14 +253,34 @@ and also, in any order
 		<Free-Form-Content>
 	...
 	<Section>:
+		<Itemized-Content>
+	...
+	<Section>:
 		<List-Of-Identifiers>
 	...
 	<Section>:
 		<List-Of-Qualified-Identifiers>
 
+In the patterns above, :code:`<Free-Form-Content>` denotes paragraph-capable
+text. It may contain ordinary prose as well as explicitly marked bullet lists
+or enumerations. This form is typically used where explanation, descriptive
+structure, or more flexible text layout is required.
+
+:code:`<Itemized-Content>` denotes line-oriented content that is interpreted as
+a sequence of individual items. In practice, this form is often used for
+contract-like statements such as obligations, preconditions, postconditions, or
+other entries that are naturally read item by item rather than as connected
+prose.
+
+On the docstring level, both forms are represented as indented text blocks.
+They differ primarily in their intended interpretation and in the way tools and
+output layers are expected to present them.
+For systematic examples and test cases that illustrate this distinction, see
+:ref:`flow_control`.
+
 The label string is defined as the substring between the first non-indentation character of the line and the last colon in the line.
-Since a label line |must_not| contain any non-whitespace characters after that last colon, this rule is unambiguous.
-Tools |must| reject a label line that contains any non-whitespace characters after the last colon.
+Since a label line must not contain any non-whitespace characters after that last colon, this rule is unambiguous.
+Tools must reject a label line that contains any non-whitespace characters after the last colon.
 
 A section label is always an identifier followed by a colon. Subsection labels may be identifiers,
 qualified identifiers or plain non-empty human-readable string followed by a colon. The precise form
@@ -228,6 +291,8 @@ The indentation in the patterns above reflects the (relative) indentation for se
 
 Conventions
 -----------
+
+This section is informative.
 
 We shall use a simple dot notation in order to refer to subsections in the docstring format, like :wtrl_label:`Preamble.normative_sections` or :wtrl_label:`Definitions.<DefItem>`.
 
@@ -371,15 +436,17 @@ The tokenizer |must| produce a DocstringTree in which each nested list
 corresponds to exactly one indentation increase relative to its parent.
 
 The parser then transforms the DocstringTree into an Abstract Syntax Tree (AST).
-The parser |must| treat the top-level DocstringTree as a sequence of sections,
-each beginning with a label line.
+The parser |must| treat the top-level DocstringTree as a sequence of candidate
+sections and interpret strings and nested lists according to the section and
+subsection rules defined below.
 
-Labels are parsed from strings, and sets of strings or subsections
-are parsed from lists in the DocstringTree.
+In particular, the tokenizer does not decide whether a given logical line is a
+valid section label, subsection label, or content line. These classifications
+are determined only during parsing, based on the rule-based section and
+subsection specifications in section :ref:`common_sections` ff.
 
-Parsing is successful if and only if the structure of the DocstringTree
-is compatible with the section and subsection requirements
-specified in section :ref:`common_sections` ff.
+Parsing is successful if and only if the structure of the DocstringTree is
+compatible with those section and subsection requirements.
 
 Inline markup in free-form content
 ----------------------------------
@@ -398,6 +465,8 @@ Inline markup tokens |must_not| occur in:
 
 Tokens
 ^^^^^^
+
+This subsection is normative.
 
 The set of tokens currently available is:
 
@@ -462,6 +531,8 @@ Textflow tokens
 ^^^^^^^^^^^^^^^
 
 This subsection is informative.
+It describes the current interpretation used by output layers, but the
+description is not yet intended as a complete normative definition.
 
 Textflow tokens are interpreted at the rendering stage and influence the
 visual structure of the output without affecting the logical structure
@@ -503,6 +574,8 @@ followed by a period.
 Semantic role :wtrl_lit:`|ref|`
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+This subsection is normative.
+
 Semantic role :wtrl_lit:`|ref|` is used to create references.
 The following forms are supported:
 
@@ -526,8 +599,10 @@ Current implementation limitation:
 	the document containing the reference.
 
 
-Examples (informative)
-^^^^^^^^^^^^^^^^^^^^^^
+Examples
+^^^^^^^^
+
+This subsection is informative.
 
 	* :wtrl_lit:`|Must| return |None| if no result is available.`
 	* :wtrl_lit:`|Must| return |Self| to support fluent APIs.`
@@ -537,11 +612,13 @@ Examples (informative)
 Rules not bound to a particular section
 ---------------------------------------
 
+This section is normative.
+
 * [DOC-001] -- Each module, class, function, or method object subject to validation |must| have a docstring.
 * [DOC-007] -- The docstring |must_not| be empty after whitespace-stripping.
 * [DOC-002] -- Validation |must| only be applied to modules, classes, functions, or methods; other object types |must_not| be validated.
 
-* [PRSR-001] -- Sections and subsections |must| start with a label line, as specified in the following
+* [PRSR-001] -- Sections and subsections |must| start with a label line, as specified below.
 * [PRSR-002] -- The line containing the section or subsection label |must| start with a non-empty label string after stripping indentation.
 * [PRSR-003] -- The label string |must| be followed by a colon (ASCII 58).
 * [PRSR-004] -- No characters other than optional whitespace |may| follow the colon on a label line.
@@ -569,6 +646,8 @@ state whether it applies to Identifiers or to Qualified Identifiers.
 Normativity keyword handling
 ----------------------------
 
+This section is normative.
+
 The following rules apply to free-form textual content
 within normative sections. They ensure that normativity
 keywords are used in a machine-detectable and unambiguous way.
@@ -589,51 +668,160 @@ In the following rules "WS" stands for one or more whitespace characters.
 
 
 
-.. _common_sections:
-
 Sections and subsections
 ------------------------
 
-Specification conventions
+This section is normative.
+
+Section property overview
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
-This section is informative.
+This subsection is informative.
 
-The specification of individual sections throughout this document
-follows a common structural pattern. The purpose of this pattern is to
-ensure consistency, readability, and long-term maintainability of the
-specification text.
+The following table gives an overview of common structural properties of
+sections and subsections. In particular, it summarizes:
 
-A section specification may consist of the following components,
-in the order listed below:
+* the expected content kind,
+* the typical normativity status, and
+* the main rationale for using that form.
 
-* **Normative rules**
+The table is intended as an orientation aid and as a preview of the more
+detailed rule-based specifications below. The rules in the following
+subsections remain the single source of truth.
 
-  One or more rules identified by rule IDs.
-  These define the formal semantics and validation requirements.
+In the `Normativity` column, `Not applicable` means that the specification does
+not assign a normativity status because the corresponding subsection belongs to
+the preamble and serves as metadata.
 
-* **Obsolete rules** (optional)
+.. list-table::
+   :header-rows: 1
 
-  A list of previously defined rules that have been superseded.
-  Each obsolete rule should indicate the version in which it became
-  obsolete and, if applicable, the rule that replaces it.
+   * - Section or subsection
+     - Content kind
+     - Normativity
+     - Rationale
+   * - :wtrl_label:`Preamble.profile`
+     - identifier
+     - Not applicable
+     - Implied by content kind
+   * - :wtrl_label:`Preamble.normative_sections`
+     - list of identifiers
+     - Not applicable
+     - Implied by content kind
+   * - :wtrl_label:`Preamble.status`
+     - identifier
+     - Not applicable
+     - Implied by content kind
+   * - :wtrl_label:`Preamble.scope`
+     - list of identifiers
+     - Not applicable
+     - Implied by content kind
+   * - :wtrl_label:`Definitions.<item>`
+     - free-form text
+     - Normative
+     - Needs paragraph-capable text
+   * - :wtrl_label:`Terminology.<item>`
+     - free-form text
+     - Non-normative
+     - Needs paragraph-capable text
+   * - :wtrl_label:`Contract.general`
+     - itemized text
+     - Normative
+     - Line-by-line contract
+   * - :wtrl_label:`Contract.constructor`
+     - itemized text
+     - Normative
+     - Line-by-line contract
+   * - :wtrl_label:`Contract.base`
+     - qualified identifier
+     - Normative
+     - Implied by content kind
+   * - :wtrl_label:`Contract.traits`
+     - list of identifiers
+     - Normative
+     - Implied by content kind
+   * - :wtrl_label:`Contract.invariants`
+     - itemized text
+     - Normative
+     - Line-by-line contract
+   * - :wtrl_label:`Contract.requires`
+     - itemized text
+     - Normative
+     - Line-by-line contract
+   * - :wtrl_label:`Contract.ensures`
+     - itemized text
+     - Normative
+     - Line-by-line contract
+   * - :wtrl_label:`Description`
+     - free-form text
+     - Can be both
+     - Needs paragraph-capable text
+   * - :wtrl_label:`Derived_from.<item>`
+     - list of qualified identifiers
+     - Normative
+     - Implied by content kind
+   * - :wtrl_label:`Factory.<item>`
+     - itemized text
+     - Normative
+     - Line-by-line contract
+   * - :wtrl_label:`Public_classes`
+     - list of qualified identifiers
+     - Normative
+     - Implied by content kind
+   * - :wtrl_label:`Public_functions`
+     - list of qualified identifiers
+     - Normative
+     - Implied by content kind
+   * - :wtrl_label:`Public_methods`
+     - list of qualified identifiers
+     - Normative
+     - Implied by content kind
+   * - :wtrl_label:`Class_overview.<item>`
+     - free-form text
+     - Non-normative
+     - Descriptive text preferred
+   * - :wtrl_label:`Method_overview.<item>`
+     - free-form text
+     - Non-normative
+     - Descriptive text preferred
+   * - :wtrl_label:`Function_overview.<item>`
+     - free-form text
+     - Non-normative
+     - Descriptive text preferred
+   * - :wtrl_label:`Public_types.<item>`
+     - free-form text
+     - Normative
+     - Needs paragraph-capable text
+   * - :wtrl_label:`Public_variables.<item>`
+     - free-form text
+     - Normative
+     - Needs paragraph-capable text
+   * - :wtrl_label:`Public_constants.<item>`
+     - free-form text
+     - Normative
+     - Needs paragraph-capable text
+   * - :wtrl_label:`Parameters.<item>`
+     - free-form text
+     - Normative
+     - Needs paragraph-capable text
+   * - :wtrl_label:`Returns`
+     - free-form text
+     - Normative
+     - Needs paragraph-capable text
+   * - :wtrl_label:`Raises.<item>`
+     - itemized text
+     - Normative
+     - Line-by-line contract
+   * - :wtrl_label:`Notes.<item>`
+     - free-form text
+     - Non-normative
+     - Needs paragraph-capable text
+   * - :wtrl_label:`See_also`
+     - list of qualified identifiers
+     - Can be both
+     - Implied by content kind
 
-* **Rationale** (informative, optional)
-
-  Explanatory text describing the intent, design considerations,
-  or background of the preceding rules.
-  The rationale does not introduce additional normative requirements.
-
-* |LastReview| (editorial, optional)
-
-  A date indicating the most recent editorial review of the section.
-  This item has no normative effect.
-
-Not all components are mandatory. Their presence depends on the
-complexity, maturity, and historical evolution of the section.
-This structural pattern serves as a guideline for authors and editors
-of this specification. It is intended to promote uniformity without
-constraining future refinement.
+.. _common_sections:
 
 Common sections for all profiles
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -1180,6 +1368,8 @@ an inherited method docstring |must| have the following structure:
 Rules for exceptions not supposed to occur
 ------------------------------------------
 
+This section is normative.
+
 The rule declarations in this section describe error conditions that correspond
 to logically unreachable branches in the implementation. Under correct
 implementation of both the specification and the analyzed code, these cases
@@ -1277,7 +1467,9 @@ Only objects explicitly listed in :wtrl_label:`Public_*` sections are treated as
 Scopes and visibility
 ---------------------
 
-This chapter defines the semantics of the :wtrl_label:`scope` attribute and the
+This section is normative.
+
+This section defines the semantics of the :wtrl_label:`scope` attribute and the
 rules governing visibility, rendering, and validation across different scopes.
 
 The purpose of scopes is to allow a single codebase and documentation set to be
@@ -1308,7 +1500,7 @@ Any tool |must| recognize and dispatch the following scope identifiers:
 * :wtrl_value:`extension`
 * :wtrl_value:`core`
 
-with the the following semantics:
+with the following semantics:
 
 * :wtrl_value:`public` -- stable API intended for general external users.
 * :wtrl_value:`extension` -- API intended for extension, plugin, or application developers.

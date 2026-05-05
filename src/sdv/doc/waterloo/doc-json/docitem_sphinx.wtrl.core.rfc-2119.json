@@ -1,12 +1,12 @@
 {
     "$schema": "https://sci-d-vis.com/schema/wtrl-json-0.1.0.schema.json",
-    "$id": "urn:waterlint:wtrl-json:0.9.0:core:rfc-2119:b470b72abf2628bf596ea2847c4a31a7392266a12d0a38dbb58da2e856f153ea",
+    "$id": "urn:waterlint:wtrl-json:0.9.1:core:rfc-2119:dc3cf1064cb91f14dfd6d60e4aebab2786df3b90aee6524dce428184ccdef3e1",
     "__WTRL_VERSION__": {
         "waterloo": "0.6.1",
         "schema": "0.1.0"
     },
     "__WTRL_META__": {
-        "generated_at": "2026-04-30T08:37:34+02:00",
+        "generated_at": "2026-05-05T11:49:43+02:00",
         "generator": "waterlint",
         "scope": "core",
         "flavour": "rfc-2119"
@@ -46,6 +46,7 @@
     },
     "__WTRL_TOC_MODULES__": {
         "sdv.doc.waterloo.docitem_sphinx": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_sphinx",
+        "sdv.doc.waterloo.docitem": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem",
         "sdv.doc.waterloo.docitem_helper": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper",
         "sdv.doc.waterloo.docitem_tokenizer": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_tokenizer",
         "sdv.doc.waterloo.docitem_base": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_base",
@@ -53,10 +54,7 @@
         "sdv.doc.waterloo.docitem_preamble": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_preamble",
         "sdv.doc.waterloo.docitem_contract": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_contract",
         "sdv.doc.waterloo.docitem_docstring": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_docstring",
-        "sdv.doc.waterloo.docitem_validator": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_validator",
-        "sdv.doc.waterloo.docitem": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem",
-        "sdv.doc.waterloo.docitem_convert": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_convert",
-        "sdv.doc.waterloo.docitem_genutil": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_genutil"
+        "sdv.doc.waterloo.docitem_validator": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_validator"
     },
     "__WTRL_TOC_CLASSES__": {
         "sdv.doc.waterloo.docitem_helper.Trait": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.Trait",
@@ -219,20 +217,6 @@
         "sdv.doc.waterloo.docitem_validator.validate_module_variable_coverage": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_validator.validate_module_variable_coverage",
         "sdv.doc.waterloo.docitem_validator.validate_class_coverage": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_validator.validate_class_coverage",
         "sdv.doc.waterloo.docitem_validator.validate_module_coverage": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_validator.validate_module_coverage",
-        "sdv.doc.waterloo.docitem_convert.to_node_signature_json": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_convert.to_node_signature_json",
-        "sdv.doc.waterloo.docitem_convert.build_node_json": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_convert.build_node_json",
-        "sdv.doc.waterloo.docitem_convert.to_node_docstring_tree_json": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_convert.to_node_docstring_tree_json",
-        "sdv.doc.waterloo.docitem_convert.to_node_legend_json": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_convert.to_node_legend_json",
-        "sdv.doc.waterloo.docitem_convert.to_string_md": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_convert.to_string_md",
-        "sdv.doc.waterloo.docitem_convert.to_string_legend_yaml": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_convert.to_string_legend_yaml",
-        "sdv.doc.waterloo.docitem_convert.to_string_signature_yaml": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_convert.to_string_signature_yaml",
-        "sdv.doc.waterloo.docitem_convert.to_string_yaml": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_convert.to_string_yaml",
-        "sdv.doc.waterloo.docitem_genutil.parse_source_fragment": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_genutil.parse_source_fragment",
-        "sdv.doc.waterloo.docitem_genutil.infer_docstring_profile": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_genutil.infer_docstring_profile",
-        "sdv.doc.waterloo.docitem_genutil.generate_minimal_docstring": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_genutil.generate_minimal_docstring",
-        "sdv.doc.waterloo.docitem_genutil.generate_full_docstring": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_genutil.generate_full_docstring",
-        "sdv.doc.waterloo.docitem_genutil.generate_minimal_docstring_from_node": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_genutil.generate_minimal_docstring_from_node",
-        "sdv.doc.waterloo.docitem_genutil.generate_full_docstring_from_node": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_genutil.generate_full_docstring_from_node",
         "sdv.doc.waterloo.docitem_sphinx.build_sphinx_nodes": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_sphinx.build_sphinx_nodes",
         "sdv.doc.waterloo.docitem_sphinx.build_sphinx_nodes_full": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_sphinx.build_sphinx_nodes_full",
         "sdv.doc.waterloo.docitem_sphinx.resolve_qualified_name": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_sphinx.resolve_qualified_name",
@@ -252,15 +236,22 @@
         "sdv.doc.waterloo.docitem_sphinx.wtrl_build_function_signature_block_nodes": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_sphinx.wtrl_build_function_signature_block_nodes"
     },
     "__WTRL_TOC_TYPES__": {
-        "sdv.doc.waterloo.docitem_helper.tracer.Context": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.tracer.Context",
         "sdv.doc.waterloo.docitem.DocstringTree": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem.DocstringTree",
         "sdv.doc.waterloo.docitem.Documentable": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem.Documentable",
         "sdv.doc.waterloo.docitem.Profile": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem.Profile",
         "sdv.doc.waterloo.docitem.Scopes": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem.Scopes",
-        "sdv.doc.waterloo.docitem_convert.WtrlJsonNode_t": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_convert.WtrlJsonNode_t"
+        "sdv.doc.waterloo.docitem_helper.tracer.Context": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.tracer.Context"
     },
     "__WTRL_TOC_VARIABLES__": {},
     "__WTRL_TOC_CONSTANTS__": {
+        "sdv.doc.waterloo.docitem.RE_IDENTIFIER": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem.RE_IDENTIFIER",
+        "sdv.doc.waterloo.docitem.RE_QUALIFIED_IDENTIFIER": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem.RE_QUALIFIED_IDENTIFIER",
+        "sdv.doc.waterloo.docitem.KEYWORDS_OF_NORMATIVITY": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem.KEYWORDS_OF_NORMATIVITY",
+        "sdv.doc.waterloo.docitem.CANONICAL_ORDER_OF_SECTIONS": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem.CANONICAL_ORDER_OF_SECTIONS",
+        "sdv.doc.waterloo.docitem.SCOPE_TAG_MAP": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem.SCOPE_TAG_MAP",
+        "sdv.doc.waterloo.docitem.FLAVOUR_TAG_MAP": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem.FLAVOUR_TAG_MAP",
+        "sdv.doc.waterloo.docitem.FORMAT_TAG_MAP": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem.FORMAT_TAG_MAP",
+        "sdv.doc.waterloo.docitem.STATUS_TAG_MAP": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem.STATUS_TAG_MAP",
         "sdv.doc.waterloo.docitem_helper.Trait.ABSTRACT": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.Trait.ABSTRACT",
         "sdv.doc.waterloo.docitem_helper.Trait.FINAL": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.Trait.FINAL",
         "sdv.doc.waterloo.docitem_helper.Scope.PUBLIC": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.Scope.PUBLIC",
@@ -278,15 +269,7 @@
         "sdv.doc.waterloo.docitem_helper.Status.DEPRECATED": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.Status.DEPRECATED",
         "sdv.doc.waterloo.docitem_helper.Status.DRAFT": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.Status.DRAFT",
         "sdv.doc.waterloo.docitem_base.docitem_list_of_symbols_base.ValuePattern.IDENTIFIER": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_base.docitem_list_of_symbols_base.ValuePattern.IDENTIFIER",
-        "sdv.doc.waterloo.docitem_base.docitem_list_of_symbols_base.ValuePattern.QUALIFIED_IDENTIFIER": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_base.docitem_list_of_symbols_base.ValuePattern.QUALIFIED_IDENTIFIER",
-        "sdv.doc.waterloo.docitem.RE_IDENTIFIER": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem.RE_IDENTIFIER",
-        "sdv.doc.waterloo.docitem.RE_QUALIFIED_IDENTIFIER": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem.RE_QUALIFIED_IDENTIFIER",
-        "sdv.doc.waterloo.docitem.KEYWORDS_OF_NORMATIVITY": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem.KEYWORDS_OF_NORMATIVITY",
-        "sdv.doc.waterloo.docitem.CANONICAL_ORDER_OF_SECTIONS": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem.CANONICAL_ORDER_OF_SECTIONS",
-        "sdv.doc.waterloo.docitem.SCOPE_TAG_MAP": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem.SCOPE_TAG_MAP",
-        "sdv.doc.waterloo.docitem.FLAVOUR_TAG_MAP": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem.FLAVOUR_TAG_MAP",
-        "sdv.doc.waterloo.docitem.FORMAT_TAG_MAP": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem.FORMAT_TAG_MAP",
-        "sdv.doc.waterloo.docitem.STATUS_TAG_MAP": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem.STATUS_TAG_MAP"
+        "sdv.doc.waterloo.docitem_base.docitem_list_of_symbols_base.ValuePattern.QUALIFIED_IDENTIFIER": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_base.docitem_list_of_symbols_base.ValuePattern.QUALIFIED_IDENTIFIER"
     },
     "__WTRL_OBJECTS__": {
         "sdv.doc.waterloo.docitem_sphinx": {
@@ -421,6 +404,496 @@
                     ],
                     "wtrl_build_pop_current_scope_nodes": [
                         "Implementation of directive |attr|`.. wtrl_pop_current_scope::`"
+                    ]
+                }
+            }
+        },
+        "sdv.doc.waterloo.docitem.DocstringTree": {
+            "doc": {},
+            "doc_lines": [
+                "The type alias for docstring trees."
+            ]
+        },
+        "sdv.doc.waterloo.docitem.Documentable": {
+            "doc": {},
+            "doc_lines": [
+                "Type for objects that can have a docstring."
+            ]
+        },
+        "sdv.doc.waterloo.docitem.Profile": {
+            "doc": {},
+            "doc_lines": [
+                "The string literals representing values in the |label|`Preamble.profile` subsection."
+            ]
+        },
+        "sdv.doc.waterloo.docitem.Scopes": {
+            "doc": {},
+            "doc_lines": [
+                "Type alias for a set of scopes."
+            ]
+        },
+        "sdv.doc.waterloo.docitem.RE_IDENTIFIER": {
+            "doc": {},
+            "doc_lines": [
+                "Regular expression for identifiers: |value|`[A-Za-z_][A-Za-z0-9_]*`"
+            ]
+        },
+        "sdv.doc.waterloo.docitem.RE_QUALIFIED_IDENTIFIER": {
+            "doc": {},
+            "doc_lines": [
+                "Regular expression for qualified identifiers: |value|`[A-Za-z_][A-Za-z0-9_]*([.][A-Za-z_][A-Za-z0-9_]*)*`"
+            ]
+        },
+        "sdv.doc.waterloo.docitem.KEYWORDS_OF_NORMATIVITY": {
+            "doc": {},
+            "doc_lines": [
+                "The set of normative keywords."
+            ]
+        },
+        "sdv.doc.waterloo.docitem.CANONICAL_ORDER_OF_SECTIONS": {
+            "doc": {},
+            "doc_lines": [
+                "A canonical order for sections and subsection in order to reduce permutative noise for LLMs."
+            ]
+        },
+        "sdv.doc.waterloo.docitem.SCOPE_TAG_MAP": {
+            "doc": {},
+            "doc_lines": [
+                "Map string representations of scopes to symbolic/numeric values."
+            ]
+        },
+        "sdv.doc.waterloo.docitem.FLAVOUR_TAG_MAP": {
+            "doc": {},
+            "doc_lines": [
+                "Map string representations of flavours to symbolic/numeric values."
+            ]
+        },
+        "sdv.doc.waterloo.docitem.FORMAT_TAG_MAP": {
+            "doc": {},
+            "doc_lines": [
+                "Map string representations of output formats to symbolic/numeric values."
+            ]
+        },
+        "sdv.doc.waterloo.docitem.STATUS_TAG_MAP": {
+            "doc": {},
+            "doc_lines": [
+                "Map string representations of |label|`Contract.status` values to symbolic values."
+            ]
+        },
+        "sdv.doc.waterloo.docitem": {
+            "doc": {
+                "Preamble": {
+                    "profile": "module",
+                    "normative_sections": [
+                        "Contract",
+                        "Definitions",
+                        "Public_classes",
+                        "Public_functions",
+                        "Public_types",
+                        "Public_constants"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST provide node classes and parsing/validation utilities for Waterloo docstrings. In detail:",
+                        "MUST provide a node class for each type of section and subsection in a Waterloo docstring.",
+                        "MUST provide an appropriate base class hierarchy with a single base class as root of this hierarchy.",
+                        "MUST be able to represent any valid docstring by a single node which is the root of a tree of nodes.",
+                        "MUST provide validator functions for docstrings for modules, classes and callables.",
+                        "MUST provide functions for verifying coverage where applicable."
+                    ]
+                },
+                "Definitions": {
+                    "Identifier": {
+                        "variations": [],
+                        "text": [
+                            "A string that matches the regular expression |var|`RE_IDENTIFIER` (see |label|`Public_constants`)."
+                        ]
+                    },
+                    "Qualified_Identifier": {
+                        "variations": [],
+                        "text": [
+                            "A string that matches the regular expression |var|`RE_QUALIFIED_IDENTIFIER` (see |label|`Public_constants`)."
+                        ]
+                    }
+                },
+                "Public_functions": [
+                    "is_obj_module",
+                    "is_obj_class",
+                    "is_obj_function",
+                    "is_obj_method_like",
+                    "is_attr_annotated",
+                    "is_attr_final",
+                    "get_obj_name",
+                    "get_obj_path",
+                    "get_obj_annotations",
+                    "resolve_object",
+                    "get_status",
+                    "get_profile",
+                    "get_num_indent",
+                    "parse_indent_docstring",
+                    "get_tree_of_section",
+                    "get_tree_of_subsection",
+                    "to_string_tree",
+                    "validate_docstring_method",
+                    "validate_docstring_inherited_method",
+                    "validate_docstring_class",
+                    "validate_docstring_module",
+                    "validate_docstring",
+                    "validate_class_class_coverage",
+                    "validate_class_method_coverage",
+                    "validate_class_constant_coverage",
+                    "validate_class_variable_coverage",
+                    "validate_class_coverage",
+                    "validate_module_class_coverage",
+                    "validate_module_function_coverage",
+                    "validate_module_type_coverage",
+                    "validate_module_constant_coverage",
+                    "validate_module_variable_coverage",
+                    "validate_module_coverage",
+                    "gen_documentable_objects",
+                    "make_docitem_tree"
+                ],
+                "Function_overview": {
+                    "is_attr_annotated": [
+                        "Find out if an attribute of a class or module is annotated."
+                    ],
+                    "is_attr_final": [
+                        "Find out if an attribute of a class or module is annotated as 'Final'."
+                    ],
+                    "resolve_object": [
+                        "Resolve an object by its |term|`Qualified_Identifier`"
+                    ],
+                    "get_status": [
+                        "Extract documented object status from docitem tree"
+                    ],
+                    "get_profile": [
+                        "Extract documented profile from docitem tree"
+                    ],
+                    "get_num_indent": [
+                        "Count number of leading indent units of a string."
+                    ],
+                    "parse_indent_docstring": [
+                        "The fundamental parsing function which creates docstring trees from Waterloo docstrings."
+                    ],
+                    "get_tree_of_section": [
+                        "Get tree assigned to a section label from a docstring tree."
+                    ],
+                    "get_tree_of_subsection": [
+                        "Get tree assigned to a subsection label from a docstring tree."
+                    ],
+                    "to_string_tree": [
+                        "Render docstring to string"
+                    ],
+                    "validate_docstring_method": [
+                        "Validator for method and function docstrings"
+                    ],
+                    "validate_docstring_inherited_method": [
+                        "Validator for inherited method docstrings"
+                    ],
+                    "validate_docstring_class": [
+                        "Validator for class docstrings"
+                    ],
+                    "validate_docstring_module": [
+                        "Validator for module docstrings"
+                    ],
+                    "validate_docstring": [
+                        "Validator for docstrings for generic objects."
+                    ],
+                    "validate_class_class_coverage": [
+                        "Validate mutual coverage of nested classes and class docstring entries."
+                    ],
+                    "validate_class_method_coverage": [
+                        "Validate mutual coverage of methods and class docstring entries."
+                    ],
+                    "validate_class_constant_coverage": [
+                        "Verify constant existence and 'Final' annotation."
+                    ],
+                    "validate_class_variable_coverage": [
+                        "Verify variable existence."
+                    ],
+                    "validate_class_coverage": [
+                        "Verify existence (and mutual coverage were applicable) of methods mentioned in the class docstring."
+                    ],
+                    "validate_module_class_coverage": [
+                        "Validate mutual coverage of classes and module docstring entries."
+                    ],
+                    "validate_module_function_coverage": [
+                        "Validate mutual coverage of functions and module docstring entries."
+                    ],
+                    "validate_module_type_coverage": [
+                        "Verify existence of types mentioned in the module docstring."
+                    ],
+                    "validate_module_constant_coverage": [
+                        "Verify constant existence and 'Final' annotation."
+                    ],
+                    "validate_module_variable_coverage": [
+                        "Verify variable existence."
+                    ],
+                    "validate_module_coverage": [
+                        "Verify existence (and mutual coverage were applicable) of classes, functions, types, constants mentioned in the module docstring."
+                    ],
+                    "gen_documentable_objects": [
+                        "Iterate over objects which may have a docstring."
+                    ],
+                    "make_docitem_tree": [
+                        "Generate a docitem tree from a docstring."
+                    ]
+                },
+                "Public_classes": [
+                    "tracer",
+                    "docitem_base",
+                    "docitem_list_base",
+                    "docitem_map_base",
+                    "docitem_free_text_entry_base",
+                    "docitem_list_of_symbols_base",
+                    "docitem_profile",
+                    "docitem_normative_sections",
+                    "docitem_status",
+                    "docitem_preamble",
+                    "docitem_constructor",
+                    "docitem_general",
+                    "docitem_invariants",
+                    "docitem_requires",
+                    "docitem_ensures",
+                    "docitem_base_to_inherit_from",
+                    "docitem_traits",
+                    "docitem_contract_module",
+                    "docitem_contract_class",
+                    "docitem_contract_method",
+                    "docitem_contract_inherited_method",
+                    "docitem_derived_from",
+                    "docitem_factory_functions",
+                    "docitem_factory",
+                    "docitem_class_overview_entry",
+                    "docitem_class_overview",
+                    "docitem_public_types_entry",
+                    "docitem_public_types",
+                    "docitem_public_assignables_entry",
+                    "docitem_public_assignables_base",
+                    "docitem_method_overview_entry",
+                    "docitem_method_overview",
+                    "docitem_function_overview_entry",
+                    "docitem_function_overview",
+                    "docitem_returns",
+                    "docitem_parameters_entry",
+                    "docitem_parameters",
+                    "docitem_raises_entry",
+                    "docitem_raises",
+                    "docitem_definitions_entry",
+                    "docitem_definitions",
+                    "docitem_terminology_entry",
+                    "docitem_terminology",
+                    "docitem_notes_entry",
+                    "docitem_notes",
+                    "docitem_description",
+                    "docitem_see_also",
+                    "docitem_docstring_base",
+                    "docitem_docstring_module",
+                    "docitem_docstring_class",
+                    "docitem_docstring_method",
+                    "docitem_docstring_inherited_method",
+                    "Scope",
+                    "Flavour",
+                    "Format",
+                    "Status"
+                ],
+                "Class_overview": {
+                    "tracer": [
+                        "Context and helper for exceptions and warnings."
+                    ],
+                    "docitem_base": [
+                        "The base class for all docitem classes which form the docstring tree."
+                    ],
+                    "docitem_list_base": [
+                        "The base class for docitem classes managing a list of strings."
+                    ],
+                    "docitem_map_base": [
+                        "The base class for docitem classes managing a map from strings to docitem nodes"
+                    ],
+                    "docitem_free_text_entry_base": [
+                        "The base class for nodes which consist of free-text string."
+                    ],
+                    "docitem_list_of_symbols_base": [
+                        "The base class for nodes which contein a list of identifiers."
+                    ],
+                    "docitem_profile": [
+                        "Node class for section |label|`profile`"
+                    ],
+                    "docitem_normative_sections": [
+                        "Node class for subsection |label|`normative_sections`"
+                    ],
+                    "docitem_status": [
+                        "Node class for subsection |label|`status`"
+                    ],
+                    "docitem_preamble": [
+                        "Node class for section |label|`Preamble`"
+                    ],
+                    "docitem_constructor": [
+                        "Node class for subsection |label|`constructor`"
+                    ],
+                    "docitem_general": [
+                        "Node class for subsection |label|`general`"
+                    ],
+                    "docitem_invariants": [
+                        "Node class for subsection |label|`invariants`"
+                    ],
+                    "docitem_requires": [
+                        "Node class for subsection |label|`requires`"
+                    ],
+                    "docitem_ensures": [
+                        "Node class for subsection |label|`ensures`"
+                    ],
+                    "docitem_base_to_inherit_from": [
+                        "Node class for subsection |label|`base`"
+                    ],
+                    "docitem_traits": [
+                        "Node class for subsection |label|`traits`"
+                    ],
+                    "docitem_contract_module": [
+                        "Node class for section |label|`Contract`, profile |value|`module`."
+                    ],
+                    "docitem_contract_class": [
+                        "Node class for section |label|`Contract`, profile |value|`class`."
+                    ],
+                    "docitem_contract_method": [
+                        "Node class for section |label|`Contract`, profile |value|`method` or |value|`function`."
+                    ],
+                    "docitem_contract_inherited_method": [
+                        "Node class for section |label|`Contract`, profile |value|`inherited_method`."
+                    ],
+                    "docitem_derived_from": [
+                        "Node class for section |label|`Derived_from`."
+                    ],
+                    "docitem_factory_functions": [
+                        "Node class for entries in section |label|`Factory`."
+                    ],
+                    "docitem_factory": [
+                        "Node class for section |label|`Factory`."
+                    ],
+                    "docitem_class_overview_entry": [
+                        "Node class for entries in section |label|`Class_overview`."
+                    ],
+                    "docitem_class_overview": [
+                        "Node class for section |label|`Class_overview`."
+                    ],
+                    "docitem_public_types_entry": [
+                        "Node class for entries in section |label|`Public_types`."
+                    ],
+                    "docitem_public_types": [
+                        "Node class for section |label|`Public_types`."
+                    ],
+                    "docitem_public_assignables_entry": [
+                        "Node class for entries in section |label|`Public_constants` and |label|`Public_variables`."
+                    ],
+                    "docitem_public_assignables_base": [
+                        "Node base class for sections |label|`Public_constants` and |label|`Public_variables`."
+                    ],
+                    "docitem_method_overview_entry": [
+                        "Node class for entries in section |label|`Method_overview`."
+                    ],
+                    "docitem_method_overview": [
+                        "Node class for section |label|`Method_overview`."
+                    ],
+                    "docitem_function_overview_entry": [
+                        "Node class for entries in section |label|`Function_overview`."
+                    ],
+                    "docitem_function_overview": [
+                        "Node class for section |label|`Function_overview`."
+                    ],
+                    "docitem_returns": [
+                        "Node class for section |label|`Returns`."
+                    ],
+                    "docitem_parameters_entry": [
+                        "Node class for a parameter description"
+                    ],
+                    "docitem_parameters": [
+                        "Node class for section |label|`Parameters`"
+                    ],
+                    "docitem_raises_entry": [
+                        "Node class for entries in section |label|`Raises`."
+                    ],
+                    "docitem_raises": [
+                        "Node class for section |label|`Raises`"
+                    ],
+                    "docitem_definitions_entry": [
+                        "Node class for entries in section |label|`Definitions`."
+                    ],
+                    "docitem_definitions": [
+                        "Node class for section |label|`Definitions`"
+                    ],
+                    "docitem_terminology_entry": [
+                        "Node class for entries in section |label|`Terminology`."
+                    ],
+                    "docitem_terminology": [
+                        "Node class for section |label|`Terminology`"
+                    ],
+                    "docitem_notes_entry": [
+                        "Node class for entries in section |label|`Notes`."
+                    ],
+                    "docitem_notes": [
+                        "Node class for section |label|`Notes`"
+                    ],
+                    "docitem_description": [
+                        "Node class for section |label|`Description`."
+                    ],
+                    "docitem_see_also": [
+                        "Node class for section |label|`See_also`"
+                    ],
+                    "docitem_docstring_base": [
+                        "Base class for docstring nodes"
+                    ],
+                    "docitem_docstring_module": [
+                        "Node class for a module docstring"
+                    ],
+                    "docitem_docstring_class": [
+                        "Node class for a class docstring"
+                    ],
+                    "docitem_docstring_method": [
+                        "Node class for a function or method docstring"
+                    ],
+                    "docitem_docstring_inherited_method": [
+                        "Node class for an inherited method docstring"
+                    ]
+                },
+                "Public_types": {
+                    "DocstringTree": [
+                        "The type alias for docstring trees."
+                    ],
+                    "Documentable": [
+                        "Type for objects that can have a docstring."
+                    ],
+                    "Profile": [
+                        "The string literals representing values in the |label|`Preamble.profile` subsection."
+                    ],
+                    "Scopes": [
+                        "Type alias for a set of scopes."
+                    ]
+                },
+                "Public_constants": {
+                    "RE_IDENTIFIER": [
+                        "Regular expression for identifiers: |value|`[A-Za-z_][A-Za-z0-9_]*`"
+                    ],
+                    "RE_QUALIFIED_IDENTIFIER": [
+                        "Regular expression for qualified identifiers: |value|`[A-Za-z_][A-Za-z0-9_]*([.][A-Za-z_][A-Za-z0-9_]*)*`"
+                    ],
+                    "KEYWORDS_OF_NORMATIVITY": [
+                        "The set of normative keywords."
+                    ],
+                    "CANONICAL_ORDER_OF_SECTIONS": [
+                        "A canonical order for sections and subsection in order to reduce permutative noise for LLMs."
+                    ],
+                    "SCOPE_TAG_MAP": [
+                        "Map string representations of scopes to symbolic/numeric values."
+                    ],
+                    "FLAVOUR_TAG_MAP": [
+                        "Map string representations of flavours to symbolic/numeric values."
+                    ],
+                    "FORMAT_TAG_MAP": [
+                        "Map string representations of output formats to symbolic/numeric values."
+                    ],
+                    "STATUS_TAG_MAP": [
+                        "Map string representations of |label|`Contract.status` values to symbolic values."
                     ]
                 }
             }
@@ -2215,37 +2688,6 @@
                 ]
             }
         },
-        "sdv.doc.waterloo.docitem_base": {
-            "doc": {
-                "Preamble": {
-                    "profile": "module",
-                    "normative_sections": [
-                        "Contract",
-                        "Definitions"
-                    ]
-                },
-                "Contract": {
-                    "general": [
-                        "MUST provide bases classes for the Abstract Syntax Tree.",
-                        "SHOULD NOT be imported directly. Import |mod|`sdv.doc.waterloo.docitem` instead."
-                    ]
-                },
-                "Definitions": {
-                    "Identifier": {
-                        "variations": [],
-                        "text": [
-                            "As defined in |mod|`sdv.doc.waterloo.docitem`."
-                        ]
-                    },
-                    "Qualified_Identifier": {
-                        "variations": [],
-                        "text": [
-                            "As defined in |mod|`sdv.doc.waterloo.docitem`."
-                        ]
-                    }
-                }
-            }
-        },
         "sdv.doc.waterloo.docitem_base.docitem_base": {
             "signature": {
                 "text": "docitem_base.__init__(self) -> 'None'",
@@ -2290,6 +2732,37 @@
                     "items": [
                         "Return an iterable over the child items."
                     ]
+                }
+            }
+        },
+        "sdv.doc.waterloo.docitem_base": {
+            "doc": {
+                "Preamble": {
+                    "profile": "module",
+                    "normative_sections": [
+                        "Contract",
+                        "Definitions"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST provide bases classes for the Abstract Syntax Tree.",
+                        "SHOULD NOT be imported directly. Import |mod|`sdv.doc.waterloo.docitem` instead."
+                    ]
+                },
+                "Definitions": {
+                    "Identifier": {
+                        "variations": [],
+                        "text": [
+                            "As defined in |mod|`sdv.doc.waterloo.docitem`."
+                        ]
+                    },
+                    "Qualified_Identifier": {
+                        "variations": [],
+                        "text": [
+                            "As defined in |mod|`sdv.doc.waterloo.docitem`."
+                        ]
+                    }
                 }
             }
         },
@@ -8408,1445 +8881,6 @@
                 "Raises": {
                     "ValidationError": [
                         "MUST raise if validation fails."
-                    ]
-                }
-            }
-        },
-        "sdv.doc.waterloo.docitem.DocstringTree": {
-            "doc": {},
-            "doc_lines": [
-                "The type alias for docstring trees."
-            ]
-        },
-        "sdv.doc.waterloo.docitem.Documentable": {
-            "doc": {},
-            "doc_lines": [
-                "Type for objects that can have a docstring."
-            ]
-        },
-        "sdv.doc.waterloo.docitem.Profile": {
-            "doc": {},
-            "doc_lines": [
-                "The string literals representing values in the |label|`Preamble.profile` subsection."
-            ]
-        },
-        "sdv.doc.waterloo.docitem.Scopes": {
-            "doc": {},
-            "doc_lines": [
-                "Type alias for a set of scopes."
-            ]
-        },
-        "sdv.doc.waterloo.docitem.RE_IDENTIFIER": {
-            "doc": {},
-            "doc_lines": [
-                "Regular expression for identifiers: |value|`[A-Za-z_][A-Za-z0-9_]*`"
-            ]
-        },
-        "sdv.doc.waterloo.docitem.RE_QUALIFIED_IDENTIFIER": {
-            "doc": {},
-            "doc_lines": [
-                "Regular expression for qualified identifiers: |value|`[A-Za-z_][A-Za-z0-9_]*([.][A-Za-z_][A-Za-z0-9_]*)*`"
-            ]
-        },
-        "sdv.doc.waterloo.docitem.KEYWORDS_OF_NORMATIVITY": {
-            "doc": {},
-            "doc_lines": [
-                "The set of normative keywords."
-            ]
-        },
-        "sdv.doc.waterloo.docitem.CANONICAL_ORDER_OF_SECTIONS": {
-            "doc": {},
-            "doc_lines": [
-                "A canonical order for sections and subsection in order to reduce permutative noise for LLMs."
-            ]
-        },
-        "sdv.doc.waterloo.docitem.SCOPE_TAG_MAP": {
-            "doc": {},
-            "doc_lines": [
-                "Map string representations of scopes to symbolic/numeric values."
-            ]
-        },
-        "sdv.doc.waterloo.docitem.FLAVOUR_TAG_MAP": {
-            "doc": {},
-            "doc_lines": [
-                "Map string representations of flavours to symbolic/numeric values."
-            ]
-        },
-        "sdv.doc.waterloo.docitem.FORMAT_TAG_MAP": {
-            "doc": {},
-            "doc_lines": [
-                "Map string representations of output formats to symbolic/numeric values."
-            ]
-        },
-        "sdv.doc.waterloo.docitem.STATUS_TAG_MAP": {
-            "doc": {},
-            "doc_lines": [
-                "Map string representations of |label|`Contract.status` values to symbolic values."
-            ]
-        },
-        "sdv.doc.waterloo.docitem": {
-            "doc": {
-                "Preamble": {
-                    "profile": "module",
-                    "normative_sections": [
-                        "Contract",
-                        "Definitions",
-                        "Public_classes",
-                        "Public_functions",
-                        "Public_types",
-                        "Public_constants"
-                    ]
-                },
-                "Contract": {
-                    "general": [
-                        "MUST provide node classes and parsing/validation utilities for Waterloo docstrings. In detail:",
-                        "MUST provide a node class for each type of section and subsection in a Waterloo docstring.",
-                        "MUST provide an appropriate base class hierarchy with a single base class as root of this hierarchy.",
-                        "MUST be able to represent any valid docstring by a single node which is the root of a tree of nodes.",
-                        "MUST provide validator functions for docstrings for modules, classes and callables.",
-                        "MUST provide functions for verifying coverage where applicable."
-                    ]
-                },
-                "Definitions": {
-                    "Identifier": {
-                        "variations": [],
-                        "text": [
-                            "A string that matches the regular expression |var|`RE_IDENTIFIER` (see |label|`Public_constants`)."
-                        ]
-                    },
-                    "Qualified_Identifier": {
-                        "variations": [],
-                        "text": [
-                            "A string that matches the regular expression |var|`RE_QUALIFIED_IDENTIFIER` (see |label|`Public_constants`)."
-                        ]
-                    }
-                },
-                "Public_functions": [
-                    "is_obj_module",
-                    "is_obj_class",
-                    "is_obj_function",
-                    "is_obj_method_like",
-                    "is_attr_annotated",
-                    "is_attr_final",
-                    "get_obj_name",
-                    "get_obj_path",
-                    "get_obj_annotations",
-                    "resolve_object",
-                    "get_status",
-                    "get_profile",
-                    "get_num_indent",
-                    "parse_indent_docstring",
-                    "get_tree_of_section",
-                    "get_tree_of_subsection",
-                    "to_string_tree",
-                    "validate_docstring_method",
-                    "validate_docstring_inherited_method",
-                    "validate_docstring_class",
-                    "validate_docstring_module",
-                    "validate_docstring",
-                    "validate_class_class_coverage",
-                    "validate_class_method_coverage",
-                    "validate_class_constant_coverage",
-                    "validate_class_variable_coverage",
-                    "validate_class_coverage",
-                    "validate_module_class_coverage",
-                    "validate_module_function_coverage",
-                    "validate_module_type_coverage",
-                    "validate_module_constant_coverage",
-                    "validate_module_variable_coverage",
-                    "validate_module_coverage",
-                    "gen_documentable_objects",
-                    "make_docitem_tree"
-                ],
-                "Function_overview": {
-                    "is_attr_annotated": [
-                        "Find out if an attribute of a class or module is annotated."
-                    ],
-                    "is_attr_final": [
-                        "Find out if an attribute of a class or module is annotated as 'Final'."
-                    ],
-                    "resolve_object": [
-                        "Resolve an object by its |term|`Qualified_Identifier`"
-                    ],
-                    "get_status": [
-                        "Extract documented object status from docitem tree"
-                    ],
-                    "get_profile": [
-                        "Extract documented profile from docitem tree"
-                    ],
-                    "get_num_indent": [
-                        "Count number of leading indent units of a string."
-                    ],
-                    "parse_indent_docstring": [
-                        "The fundamental parsing function which creates docstring trees from Waterloo docstrings."
-                    ],
-                    "get_tree_of_section": [
-                        "Get tree assigned to a section label from a docstring tree."
-                    ],
-                    "get_tree_of_subsection": [
-                        "Get tree assigned to a subsection label from a docstring tree."
-                    ],
-                    "to_string_tree": [
-                        "Render docstring to string"
-                    ],
-                    "validate_docstring_method": [
-                        "Validator for method and function docstrings"
-                    ],
-                    "validate_docstring_inherited_method": [
-                        "Validator for inherited method docstrings"
-                    ],
-                    "validate_docstring_class": [
-                        "Validator for class docstrings"
-                    ],
-                    "validate_docstring_module": [
-                        "Validator for module docstrings"
-                    ],
-                    "validate_docstring": [
-                        "Validator for docstrings for generic objects."
-                    ],
-                    "validate_class_class_coverage": [
-                        "Validate mutual coverage of nested classes and class docstring entries."
-                    ],
-                    "validate_class_method_coverage": [
-                        "Validate mutual coverage of methods and class docstring entries."
-                    ],
-                    "validate_class_constant_coverage": [
-                        "Verify constant existence and 'Final' annotation."
-                    ],
-                    "validate_class_variable_coverage": [
-                        "Verify variable existence."
-                    ],
-                    "validate_class_coverage": [
-                        "Verify existence (and mutual coverage were applicable) of methods mentioned in the class docstring."
-                    ],
-                    "validate_module_class_coverage": [
-                        "Validate mutual coverage of classes and module docstring entries."
-                    ],
-                    "validate_module_function_coverage": [
-                        "Validate mutual coverage of functions and module docstring entries."
-                    ],
-                    "validate_module_type_coverage": [
-                        "Verify existence of types mentioned in the module docstring."
-                    ],
-                    "validate_module_constant_coverage": [
-                        "Verify constant existence and 'Final' annotation."
-                    ],
-                    "validate_module_variable_coverage": [
-                        "Verify variable existence."
-                    ],
-                    "validate_module_coverage": [
-                        "Verify existence (and mutual coverage were applicable) of classes, functions, types, constants mentioned in the module docstring."
-                    ],
-                    "gen_documentable_objects": [
-                        "Iterate over objects which may have a docstring."
-                    ],
-                    "make_docitem_tree": [
-                        "Generate a docitem tree from a docstring."
-                    ]
-                },
-                "Public_classes": [
-                    "tracer",
-                    "docitem_base",
-                    "docitem_list_base",
-                    "docitem_map_base",
-                    "docitem_free_text_entry_base",
-                    "docitem_list_of_symbols_base",
-                    "docitem_profile",
-                    "docitem_normative_sections",
-                    "docitem_status",
-                    "docitem_preamble",
-                    "docitem_constructor",
-                    "docitem_general",
-                    "docitem_invariants",
-                    "docitem_requires",
-                    "docitem_ensures",
-                    "docitem_base_to_inherit_from",
-                    "docitem_traits",
-                    "docitem_contract_module",
-                    "docitem_contract_class",
-                    "docitem_contract_method",
-                    "docitem_contract_inherited_method",
-                    "docitem_derived_from",
-                    "docitem_factory_functions",
-                    "docitem_factory",
-                    "docitem_class_overview_entry",
-                    "docitem_class_overview",
-                    "docitem_public_types_entry",
-                    "docitem_public_types",
-                    "docitem_public_assignables_entry",
-                    "docitem_public_assignables_base",
-                    "docitem_method_overview_entry",
-                    "docitem_method_overview",
-                    "docitem_function_overview_entry",
-                    "docitem_function_overview",
-                    "docitem_returns",
-                    "docitem_parameters_entry",
-                    "docitem_parameters",
-                    "docitem_raises_entry",
-                    "docitem_raises",
-                    "docitem_definitions_entry",
-                    "docitem_definitions",
-                    "docitem_terminology_entry",
-                    "docitem_terminology",
-                    "docitem_notes_entry",
-                    "docitem_notes",
-                    "docitem_description",
-                    "docitem_see_also",
-                    "docitem_docstring_base",
-                    "docitem_docstring_module",
-                    "docitem_docstring_class",
-                    "docitem_docstring_method",
-                    "docitem_docstring_inherited_method",
-                    "Scope",
-                    "Flavour",
-                    "Format",
-                    "Status"
-                ],
-                "Class_overview": {
-                    "tracer": [
-                        "Context and helper for exceptions and warnings."
-                    ],
-                    "docitem_base": [
-                        "The base class for all docitem classes which form the docstring tree."
-                    ],
-                    "docitem_list_base": [
-                        "The base class for docitem classes managing a list of strings."
-                    ],
-                    "docitem_map_base": [
-                        "The base class for docitem classes managing a map from strings to docitem nodes"
-                    ],
-                    "docitem_free_text_entry_base": [
-                        "The base class for nodes which consist of free-text string."
-                    ],
-                    "docitem_list_of_symbols_base": [
-                        "The base class for nodes which contein a list of identifiers."
-                    ],
-                    "docitem_profile": [
-                        "Node class for section |label|`profile`"
-                    ],
-                    "docitem_normative_sections": [
-                        "Node class for subsection |label|`normative_sections`"
-                    ],
-                    "docitem_status": [
-                        "Node class for subsection |label|`status`"
-                    ],
-                    "docitem_preamble": [
-                        "Node class for section |label|`Preamble`"
-                    ],
-                    "docitem_constructor": [
-                        "Node class for subsection |label|`constructor`"
-                    ],
-                    "docitem_general": [
-                        "Node class for subsection |label|`general`"
-                    ],
-                    "docitem_invariants": [
-                        "Node class for subsection |label|`invariants`"
-                    ],
-                    "docitem_requires": [
-                        "Node class for subsection |label|`requires`"
-                    ],
-                    "docitem_ensures": [
-                        "Node class for subsection |label|`ensures`"
-                    ],
-                    "docitem_base_to_inherit_from": [
-                        "Node class for subsection |label|`base`"
-                    ],
-                    "docitem_traits": [
-                        "Node class for subsection |label|`traits`"
-                    ],
-                    "docitem_contract_module": [
-                        "Node class for section |label|`Contract`, profile |value|`module`."
-                    ],
-                    "docitem_contract_class": [
-                        "Node class for section |label|`Contract`, profile |value|`class`."
-                    ],
-                    "docitem_contract_method": [
-                        "Node class for section |label|`Contract`, profile |value|`method` or |value|`function`."
-                    ],
-                    "docitem_contract_inherited_method": [
-                        "Node class for section |label|`Contract`, profile |value|`inherited_method`."
-                    ],
-                    "docitem_derived_from": [
-                        "Node class for section |label|`Derived_from`."
-                    ],
-                    "docitem_factory_functions": [
-                        "Node class for entries in section |label|`Factory`."
-                    ],
-                    "docitem_factory": [
-                        "Node class for section |label|`Factory`."
-                    ],
-                    "docitem_class_overview_entry": [
-                        "Node class for entries in section |label|`Class_overview`."
-                    ],
-                    "docitem_class_overview": [
-                        "Node class for section |label|`Class_overview`."
-                    ],
-                    "docitem_public_types_entry": [
-                        "Node class for entries in section |label|`Public_types`."
-                    ],
-                    "docitem_public_types": [
-                        "Node class for section |label|`Public_types`."
-                    ],
-                    "docitem_public_assignables_entry": [
-                        "Node class for entries in section |label|`Public_constants` and |label|`Public_variables`."
-                    ],
-                    "docitem_public_assignables_base": [
-                        "Node base class for sections |label|`Public_constants` and |label|`Public_variables`."
-                    ],
-                    "docitem_method_overview_entry": [
-                        "Node class for entries in section |label|`Method_overview`."
-                    ],
-                    "docitem_method_overview": [
-                        "Node class for section |label|`Method_overview`."
-                    ],
-                    "docitem_function_overview_entry": [
-                        "Node class for entries in section |label|`Function_overview`."
-                    ],
-                    "docitem_function_overview": [
-                        "Node class for section |label|`Function_overview`."
-                    ],
-                    "docitem_returns": [
-                        "Node class for section |label|`Returns`."
-                    ],
-                    "docitem_parameters_entry": [
-                        "Node class for a parameter description"
-                    ],
-                    "docitem_parameters": [
-                        "Node class for section |label|`Parameters`"
-                    ],
-                    "docitem_raises_entry": [
-                        "Node class for entries in section |label|`Raises`."
-                    ],
-                    "docitem_raises": [
-                        "Node class for section |label|`Raises`"
-                    ],
-                    "docitem_definitions_entry": [
-                        "Node class for entries in section |label|`Definitions`."
-                    ],
-                    "docitem_definitions": [
-                        "Node class for section |label|`Definitions`"
-                    ],
-                    "docitem_terminology_entry": [
-                        "Node class for entries in section |label|`Terminology`."
-                    ],
-                    "docitem_terminology": [
-                        "Node class for section |label|`Terminology`"
-                    ],
-                    "docitem_notes_entry": [
-                        "Node class for entries in section |label|`Notes`."
-                    ],
-                    "docitem_notes": [
-                        "Node class for section |label|`Notes`"
-                    ],
-                    "docitem_description": [
-                        "Node class for section |label|`Description`."
-                    ],
-                    "docitem_see_also": [
-                        "Node class for section |label|`See_also`"
-                    ],
-                    "docitem_docstring_base": [
-                        "Base class for docstring nodes"
-                    ],
-                    "docitem_docstring_module": [
-                        "Node class for a module docstring"
-                    ],
-                    "docitem_docstring_class": [
-                        "Node class for a class docstring"
-                    ],
-                    "docitem_docstring_method": [
-                        "Node class for a function or method docstring"
-                    ],
-                    "docitem_docstring_inherited_method": [
-                        "Node class for an inherited method docstring"
-                    ]
-                },
-                "Public_types": {
-                    "DocstringTree": [
-                        "The type alias for docstring trees."
-                    ],
-                    "Documentable": [
-                        "Type for objects that can have a docstring."
-                    ],
-                    "Profile": [
-                        "The string literals representing values in the |label|`Preamble.profile` subsection."
-                    ],
-                    "Scopes": [
-                        "Type alias for a set of scopes."
-                    ]
-                },
-                "Public_constants": {
-                    "RE_IDENTIFIER": [
-                        "Regular expression for identifiers: |value|`[A-Za-z_][A-Za-z0-9_]*`"
-                    ],
-                    "RE_QUALIFIED_IDENTIFIER": [
-                        "Regular expression for qualified identifiers: |value|`[A-Za-z_][A-Za-z0-9_]*([.][A-Za-z_][A-Za-z0-9_]*)*`"
-                    ],
-                    "KEYWORDS_OF_NORMATIVITY": [
-                        "The set of normative keywords."
-                    ],
-                    "CANONICAL_ORDER_OF_SECTIONS": [
-                        "A canonical order for sections and subsection in order to reduce permutative noise for LLMs."
-                    ],
-                    "SCOPE_TAG_MAP": [
-                        "Map string representations of scopes to symbolic/numeric values."
-                    ],
-                    "FLAVOUR_TAG_MAP": [
-                        "Map string representations of flavours to symbolic/numeric values."
-                    ],
-                    "FORMAT_TAG_MAP": [
-                        "Map string representations of output formats to symbolic/numeric values."
-                    ],
-                    "STATUS_TAG_MAP": [
-                        "Map string representations of |label|`Contract.status` values to symbolic values."
-                    ]
-                }
-            }
-        },
-        "sdv.doc.waterloo.docitem_convert.WtrlJsonNode_t": {
-            "doc": {},
-            "doc_lines": [
-                "Type for JSON nodes. This type |must| be public because |func|`to_node_docstring_tree_json` and |func|`to_node_signature_json` are."
-            ]
-        },
-        "sdv.doc.waterloo.docitem_convert": {
-            "doc": {
-                "Preamble": {
-                    "profile": "module",
-                    "normative_sections": [
-                        "Contract",
-                        "Public_functions",
-                        "Public_types"
-                    ],
-                    "scope": [
-                        "public"
-                    ]
-                },
-                "Contract": {
-                    "general": [
-                        "MUST provide converter functions for all flavours and formats in |mod|`sdv.doc.waterloo.helper`."
-                    ]
-                },
-                "Public_functions": [
-                    "to_node_legend_json",
-                    "to_node_docstring_tree_json",
-                    "to_node_signature_json",
-                    "to_string_legend_yaml",
-                    "to_string_yaml",
-                    "to_string_signature_yaml",
-                    "to_string_md",
-                    "build_node_json"
-                ],
-                "Public_types": {
-                    "WtrlJsonNode_t": [
-                        "Type for JSON nodes. This type MUST be public because |func|`to_node_docstring_tree_json` and |func|`to_node_signature_json` are."
-                    ]
-                }
-            }
-        },
-        "sdv.doc.waterloo.docitem_convert.to_node_signature_json": {
-            "signature": {
-                "text": "to_node_signature_json(obj: 'object') -> 'dict[str, WtrlJsonNode_t]'",
-                "parameters": [
-                    {
-                        "name": "obj",
-                        "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "object",
-                        "default": null
-                    }
-                ],
-                "returns": "dict[str, WtrlJsonNode_t]"
-            },
-            "doc": {
-                "Preamble": {
-                    "profile": "function",
-                    "normative_sections": [
-                        "Contract",
-                        "Parameters",
-                        "Returns",
-                        "Raises"
-                    ],
-                    "scope": [
-                        "public"
-                    ],
-                    "status": "experimental"
-                },
-                "Contract": {
-                    "general": [
-                        "MUST render a JSON object as configured in |var|`config`, representing the signature of the callable |var|`obj`.",
-                        "The root **property** MUST be |attr|`signature`.",
-                        "This object MUST contain the **keys** |attr|`text`, |attr|`parameters`, and |attr|`returns`.",
-                        "|attr|`text` MUST be a string representation of the signature.",
-                        "|attr|`parameters` MUST be an **array** of objects, each containing:",
-                        "|attr|`name`: The parameter identifier string.",
-                        "|attr|`kind`: The Python parameter mode as a string constant.",
-                        "|attr|`annotation`: The type hint string or |value|`null`.",
-                        "|attr|`default`: The default value as a string or |value|`null`.",
-                        "The **key** |attr|`returns` MUST represent the return type."
-                    ]
-                },
-                "Parameters": {
-                    "obj": [
-                        "The callable whose signature is to be inspected and rendered."
-                    ]
-                },
-                "Returns": [
-                    "The generated JSON node"
-                ],
-                "Raises": {
-                    "TypeError": [
-                        "MUST be raised if |var|`obj` is not callable or if the signature",
-                        "cannot be inspected."
-                    ],
-                    "ValueError": [
-                        "MAY be raised if the signature includes parameter kinds that",
-                        "cannot be serialized."
-                    ],
-                    "Exception": [
-                        "MAY propagate exceptions from |func|`inspect.signature` or |func|`repr` during default value rendering; callers should treat these as unexpected errors."
-                    ]
-                },
-                "Notes": {
-                    "Standard values for \"kind\"": [
-                        "Derived from |type|`inspect.Parameter`: |value|`POSITIONAL_ONLY`, |value|`POSITIONAL_OR_KEYWORD`, |value|`VAR_POSITIONAL`, |value|`KEYWORD_ONLY`, |value|`VAR_KEYWORD`"
-                    ]
-                }
-            }
-        },
-        "sdv.doc.waterloo.docitem_convert.build_node_json": {
-            "signature": {
-                "text": "build_node_json(node_docstring: 'docitem_docstring_base', flavour: 'Flavour') -> 'WtrlJsonNode_t'",
-                "parameters": [
-                    {
-                        "name": "node_docstring",
-                        "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "docitem_docstring_base",
-                        "default": null
-                    },
-                    {
-                        "name": "flavour",
-                        "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "Flavour",
-                        "default": null
-                    }
-                ],
-                "returns": "WtrlJsonNode_t"
-            },
-            "doc": {
-                "Preamble": {
-                    "profile": "function",
-                    "normative_sections": [
-                        "Contract",
-                        "Parameters",
-                        "Returns",
-                        "Raises"
-                    ],
-                    "scope": [
-                        "public"
-                    ],
-                    "status": "experimental"
-                },
-                "Contract": {
-                    "general": [
-                        "MUST build a JSON node from the Abstract Syntax Tree |var|`node_docstring`.",
-                        "MUST convert Normativity Keywords in free-form text according to the given flavour."
-                    ],
-                    "requires": [
-                        "|var|`node_docstring` MUST be a formatlly correct AST node representing the docstring item of a module, class, function, method, or inherited method."
-                    ]
-                },
-                "Parameters": {
-                    "node_docstring": [
-                        "The AST node"
-                    ],
-                    "flavour": [
-                        "Normativity Keyword style."
-                    ]
-                },
-                "Returns": [
-                    "The JSON node, a |type|`dict` in our case, which represents the AST node."
-                ],
-                "Raises": {
-                    "NotImplementedError": [
-                        "MAY raise in case |var|`node_docstring` has some unexpected type."
-                    ],
-                    "BaseException": [
-                        "MAY propagate from underlying modules such as |mod|`re`."
-                    ]
-                }
-            }
-        },
-        "sdv.doc.waterloo.docitem_convert.to_node_docstring_tree_json": {
-            "signature": {
-                "text": "to_node_docstring_tree_json(tree: 'DocstringTree', flavour: 'Flavour') -> 'WtrlJsonNode_t'",
-                "parameters": [
-                    {
-                        "name": "tree",
-                        "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "DocstringTree",
-                        "default": null
-                    },
-                    {
-                        "name": "flavour",
-                        "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "Flavour",
-                        "default": null
-                    }
-                ],
-                "returns": "WtrlJsonNode_t"
-            },
-            "doc": {
-                "Preamble": {
-                    "profile": "function",
-                    "normative_sections": [
-                        "Contract",
-                        "Parameters",
-                        "Returns",
-                        "Raises",
-                        "See_also"
-                    ],
-                    "scope": [
-                        "public"
-                    ],
-                    "status": "experimental"
-                },
-                "Contract": {
-                    "general": [
-                        "MUST render the tree as JSON-Node using the given flavour.",
-                        "MUST reproduce the tree structure by appropriate subobjects in JSON.",
-                        "In RFC_2199 flavour, Normativity Keywords MUST be capitalized and the pipe delimiters MUST be dropped.",
-                        "In RAW flavour, Normativity Keywords MUST be rendered without modification, i.e. including pipe delimiters.",
-                        "In MARKUP flavour, Normativity Keywords MUST be rendered with double asterisk |lit|`**...**` instead of pipe delimiters."
-                    ],
-                    "requires": [
-                        "|var|`tree` MUST be a formally correct docstring tree."
-                    ]
-                },
-                "Notes": {
-                    "Details": [
-                        "The docstring tree is rendered exactly as nested JSON arrays; no additional restructuring is performed."
-                    ]
-                },
-                "Parameters": {
-                    "tree": [
-                        "The tree to render as string."
-                    ],
-                    "flavour": [
-                        "The style to render Normativity Keywords in"
-                    ]
-                },
-                "Returns": [
-                    "The JSON node"
-                ],
-                "Raises": {
-                    "ParseError": [
-                        "MUST propagate from |func|`make_docitem_tree_from_docstring_tree`."
-                    ],
-                    "BaseException": [
-                        "MAY propagate from |func|`make_docitem_tree_from_docstring_tree`.",
-                        "MAY propagate from nested function calls."
-                    ]
-                },
-                "See_also": [
-                    "sdv.doc.waterloo.docitem.Flavour",
-                    "sdv.doc.waterloo.docitem.Format"
-                ]
-            }
-        },
-        "sdv.doc.waterloo.docitem_convert.to_node_legend_json": {
-            "signature": {
-                "text": "to_node_legend_json() -> 'Dict[str, WtrlJsonNode_t]'",
-                "parameters": [],
-                "returns": "Dict[str, WtrlJsonNode_t]"
-            },
-            "doc": {
-                "Preamble": {
-                    "profile": "function",
-                    "normative_sections": [
-                        "Contract",
-                        "Parameters",
-                        "Returns",
-                        "Raises"
-                    ],
-                    "scope": [
-                        "public"
-                    ],
-                    "status": "stable"
-                },
-                "Contract": {
-                    "general": [
-                        "MUST return a JSON-serializable mapping from Waterloo role names to short descriptions."
-                    ]
-                },
-                "Parameters": {},
-                "Returns": [
-                    "Mapping of role-name -> human-readable description."
-                ],
-                "Raises": {}
-            }
-        },
-        "sdv.doc.waterloo.docitem_convert.to_string_md": {
-            "signature": {
-                "text": "to_string_md(tree: 'DocstringTree', flavour: 'Flavour' = <Flavour.MARKDOWN: 2>, headings: 'bool' = True) -> 'str'",
-                "parameters": [
-                    {
-                        "name": "tree",
-                        "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "DocstringTree",
-                        "default": null
-                    },
-                    {
-                        "name": "flavour",
-                        "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "Flavour",
-                        "default": "<Flavour.MARKDOWN: 2>"
-                    },
-                    {
-                        "name": "headings",
-                        "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "bool",
-                        "default": "True"
-                    }
-                ],
-                "returns": "str"
-            },
-            "doc": {
-                "Preamble": {
-                    "profile": "function",
-                    "normative_sections": [
-                        "Contract",
-                        "Parameters",
-                        "Returns",
-                        "Raises",
-                        "See_also"
-                    ],
-                    "scope": [
-                        "public"
-                    ],
-                    "status": "draft"
-                },
-                "Contract": {
-                    "general": [
-                        "MUST render the tree as Markdown using the given flavour (default: MARKDOWN).",
-                        "MUST preserve the sequence structure as nested unordered lists.",
-                        "MUST render normativity tokens according to |var|`flavour` (e.g. **MUST** for MARKDOWN)."
-                    ],
-                    "requires": [
-                        "|var|`tree` MUST be a formally correct docstring tree."
-                    ]
-                },
-                "Parameters": {
-                    "tree": [
-                        "The docstring tree to render."
-                    ],
-                    "flavour": [
-                        "The formatting style for normativity tokens."
-                    ],
-                    "headings": [
-                        "If |True|, section-like items (strings ending with ':' that precede a list)",
-                        "are rendered as Markdown headings instead of plain bullets."
-                    ]
-                },
-                "Returns": [
-                    "A Markdown string."
-                ],
-                "Raises": {
-                    "TypeError": [
-                        "MUST raise if |var|`tree` is not a sequence made only of strings and lists, or if |var|`flavour` is not a |type|`Flavour`."
-                    ]
-                },
-                "See_also": [
-                    "sdv.doc.waterloo.docitem.Flavour",
-                    "sdv.doc.waterloo.docitem.Format"
-                ]
-            }
-        },
-        "sdv.doc.waterloo.docitem_convert.to_string_legend_yaml": {
-            "signature": {
-                "text": "to_string_legend_yaml(config: 'YamlConfig' = <sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7fb2a77c6230>) -> 'str'",
-                "parameters": [
-                    {
-                        "name": "config",
-                        "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "YamlConfig",
-                        "default": "<sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7fb2a77c6230>"
-                    }
-                ],
-                "returns": "str"
-            },
-            "doc": {
-                "Preamble": {
-                    "profile": "function",
-                    "normative_sections": [
-                        "Contract",
-                        "Parameters",
-                        "Returns",
-                        "Raises"
-                    ],
-                    "scope": [
-                        "public"
-                    ],
-                    "status": "stable"
-                },
-                "Contract": {
-                    "general": [
-                        "MUST render the Waterloo roles legend as YAML using the existing emitter."
-                    ]
-                },
-                "Parameters": {
-                    "config": [
-                        "How to render the YAML code."
-                    ]
-                },
-                "Returns": [
-                    "The YAML string containing the legend."
-                ],
-                "Raises": {}
-            }
-        },
-        "sdv.doc.waterloo.docitem_convert.to_string_signature_yaml": {
-            "signature": {
-                "text": "to_string_signature_yaml(obj: 'object', config: 'YamlConfig' = <sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7fb2a77c6680>) -> 'str'",
-                "parameters": [
-                    {
-                        "name": "obj",
-                        "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "object",
-                        "default": null
-                    },
-                    {
-                        "name": "config",
-                        "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "YamlConfig",
-                        "default": "<sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7fb2a77c6680>"
-                    }
-                ],
-                "returns": "str"
-            },
-            "doc": {
-                "Preamble": {
-                    "profile": "function",
-                    "normative_sections": [
-                        "Contract",
-                        "Parameters",
-                        "Returns",
-                        "Raises"
-                    ],
-                    "scope": [
-                        "public"
-                    ],
-                    "status": "draft"
-                },
-                "Contract": {
-                    "general": [
-                        "MUST render a YAML snippet as defined by |var|`config`, representing the",
-                        "signature of the callable |var|`obj`.",
-                        "The root key MUST be |attr|`signature`, containing the subkeys",
-                        "|attr|`text`, |attr|`parameters`, and |attr|`returns`.",
-                        "|attr|`text` MUST provide an inline-style representation of the signature.",
-                        "|attr|`parameters` MUST contain a sequence of elements, each providing:",
-                        "|attr|`name`: The parameter identifier.",
-                        "|attr|`kind`: The slot-filling strategy (e.g., positional-only, keyword-only,",
-                        "or variadic) as defined by the Python |func|`inspect` semantics.",
-                        "|attr|`annotation`: The parameter's type hint or annotation.",
-                        "|attr|`default`: |value|`null` if no default value is defined; otherwise,",
-                        "a string representation of the default value.",
-                        "The subkey |attr|`returns` MUST represent the return type of the callable."
-                    ]
-                },
-                "Parameters": {
-                    "obj": [
-                        "The callable whose signature is to be inspected and rendered."
-                    ],
-                    "config": [
-                        "Configuration object controlling indentation, line folding, and",
-                        "the embedding of the emitted YAML."
-                    ]
-                },
-                "Returns": [
-                    "The generated YAML string."
-                ],
-                "Raises": {
-                    "TypeError": [
-                        "MUST be raised if |var|`obj` is not callable or if the signature",
-                        "cannot be inspected."
-                    ],
-                    "ValueError": [
-                        "MAY be raised if the signature includes parameter kinds that",
-                        "cannot be serialized."
-                    ],
-                    "Exception": [
-                        "MAY propagate exceptions from |func|`inspect.signature` or |func|`repr` during default value rendering; callers should treat these as unexpected errors."
-                    ]
-                },
-                "Notes": {
-                    "Standard values for \"kind\"": [
-                        "Derived from |type|`inspect.Parameter`: |value|`POSITIONAL_ONLY`, |value|`POSITIONAL_OR_KEYWORD`, |value|`VAR_POSITIONAL`, |value|`KEYWORD_ONLY`, |value|`VAR_KEYWORD`"
-                    ]
-                }
-            }
-        },
-        "sdv.doc.waterloo.docitem_convert.to_string_yaml": {
-            "signature": {
-                "text": "to_string_yaml(tree: 'DocstringTree', flavour: 'Flavour', config: 'YamlConfig' = <sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7fb2a77c66b0>) -> 'str'",
-                "parameters": [
-                    {
-                        "name": "tree",
-                        "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "DocstringTree",
-                        "default": null
-                    },
-                    {
-                        "name": "flavour",
-                        "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "Flavour",
-                        "default": null
-                    },
-                    {
-                        "name": "config",
-                        "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "YamlConfig",
-                        "default": "<sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7fb2a77c66b0>"
-                    }
-                ],
-                "returns": "str"
-            },
-            "doc": {
-                "Preamble": {
-                    "profile": "function",
-                    "normative_sections": [
-                        "Contract",
-                        "Parameters",
-                        "Returns",
-                        "Raises",
-                        "See_also"
-                    ],
-                    "scope": [
-                        "public"
-                    ],
-                    "status": "draft"
-                },
-                "Contract": {
-                    "general": [
-                        "MUST render the tree as YAML-string using the given flavour.",
-                        "MUST reproduce the tree structure by indentation in YAML.",
-                        "In RFC_2199 flavour, Normativity Keywords MUST be capitalized and the pipe delimiters MUST be dropped.",
-                        "In RAW flavour, Normativity Keywords MUST be rendered without modification, i.e. including pipe delimiters.",
-                        "In MARKUP flavour, Normativity Keywords MUST be rendered with double asterisk |lit|`**...**` instead of pipe delimiters."
-                    ],
-                    "requires": [
-                        "|var|`tree` MUST be a formally correct docstring tree."
-                    ]
-                },
-                "Notes": {
-                    "Details": [
-                        "Each list element becomes a YAML sequence item (\\\"-\\\"), preserving the original nesting of the docstring tree. Long scalars are emitted as folded blocks (>-) to keep line lengths reasonable for linters."
-                    ]
-                },
-                "Parameters": {
-                    "tree": [
-                        "The tree to render as string."
-                    ],
-                    "flavour": [
-                        "The style to render Normativity Keywords in."
-                    ],
-                    "config": [
-                        "How to render the YAML code."
-                    ]
-                },
-                "Returns": [
-                    "The YAML string"
-                ],
-                "Raises": {
-                    "ParseError": [
-                        "MUST propagate if the docstring tree cannot be turned into a docitem AST."
-                    ],
-                    "TypeError": [
-                        "MUST raise if |var|`flavour` is not a |type|`Flavour`."
-                    ]
-                },
-                "See_also": [
-                    "sdv.doc.waterloo.docitem.Flavour",
-                    "sdv.doc.waterloo.docitem.Format"
-                ]
-            }
-        },
-        "sdv.doc.waterloo.docitem_genutil": {
-            "doc": {
-                "Preamble": {
-                    "profile": "module",
-                    "normative_sections": [
-                        "Contract",
-                        "Public_functions"
-                    ],
-                    "scope": [
-                        "extension"
-                    ]
-                },
-                "Contract": {
-                    "general": [
-                        "MUST provide functions for generating minimal and full waterloo docstring templates."
-                    ]
-                },
-                "Description": [
-                    "This module is intended for IDE-extension workflows.",
-                    "A typical use case is a VSCode context-menu action on a |lit|`class` or |lit|`def` line:",
-                    "parse the selected header fragment, infer/select a profile, and generate a minimal or full Waterloo docstring template."
-                ],
-                "Public_functions": [
-                    "parse_source_fragment",
-                    "infer_docstring_profile",
-                    "generate_minimal_docstring",
-                    "generate_full_docstring",
-                    "generate_minimal_docstring_from_node",
-                    "generate_full_docstring_from_node"
-                ]
-            }
-        },
-        "sdv.doc.waterloo.docitem_genutil.parse_source_fragment": {
-            "signature": {
-                "text": "parse_source_fragment(profile: 'Profile', source_fragment: 'str') -> 'ast.AST | None'",
-                "parameters": [
-                    {
-                        "name": "profile",
-                        "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "Profile",
-                        "default": null
-                    },
-                    {
-                        "name": "source_fragment",
-                        "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "str",
-                        "default": null
-                    }
-                ],
-                "returns": "ast.AST | None"
-            },
-            "doc": {
-                "Preamble": {
-                    "profile": "function",
-                    "normative_sections": [
-                        "Contract",
-                        "Parameters",
-                        "Returns",
-                        "Raises"
-                    ],
-                    "scope": [
-                        "extension"
-                    ]
-                },
-                "Contract": {
-                    "general": [
-                        "MUST return |None| if |var|`profile` is |value|`module`.",
-                        "MUST parse |var|`source_fragment` via |mod|`ast`.",
-                        "MUST return the first top-level AST node from the parsed tree.",
-                        "MUST ensure the returned node matches |var|`profile`:",
-                        "For |value|`class`, the node MUST be |type|`ast.ClassDef`.",
-                        "For |value|`function` or |value|`method`, the node MUST be |type|`ast.FunctionDef` or |type|`ast.AsyncFunctionDef`.",
-                        "MUST reject empty parses (no top-level nodes)."
-                    ]
-                },
-                "Parameters": {
-                    "profile": "Profile used for node-type validation.",
-                    "source_fragment": [
-                        "Source fragment containing a class/function header (or small stub).",
-                        "Ignored if |var|`profile` is |value|`module`."
-                    ]
-                },
-                "Returns": [
-                    "|None| for profile |value|`module`, otherwise the validated first AST node."
-                ],
-                "Raises": {
-                    "SyntaxError": [
-                        "MAY be raised by |func|`ast.parse` for invalid Python syntax."
-                    ],
-                    "RuntimeError": [
-                        "MUST raise if no top-level node exists after parsing.",
-                        "MUST raise if the parsed node type does not match |var|`profile`."
-                    ]
-                }
-            }
-        },
-        "sdv.doc.waterloo.docitem_genutil.infer_docstring_profile": {
-            "signature": {
-                "text": "infer_docstring_profile(obj: 'object') -> 'Profile'",
-                "parameters": [
-                    {
-                        "name": "obj",
-                        "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "object",
-                        "default": null
-                    }
-                ],
-                "returns": "Profile"
-            },
-            "doc": {
-                "Preamble": {
-                    "profile": "function",
-                    "normative_sections": [
-                        "Contract",
-                        "Parameters",
-                        "Returns",
-                        "Raises"
-                    ],
-                    "scope": [
-                        "extension"
-                    ]
-                },
-                "Contract": {
-                    "general": [
-                        "MUST derive the best matching waterloo docstring profile from the object."
-                    ]
-                },
-                "Parameters": {
-                    "obj": [
-                        "Object to inspect."
-                    ]
-                },
-                "Returns": [],
-                "Raises": {
-                    "RuntimeError": [
-                        "MUST raise if |var|`obj` does not match any of the categories |lit|`module`, |lit|`class`, |lit|`callable`."
-                    ]
-                },
-                "Notes": {
-                    "Result": [
-                        "The |value|`inherited_method` profile is never returned because it",
-                        "does not differ from the |value|`method` profile based solely on formal criteria."
-                    ]
-                }
-            }
-        },
-        "sdv.doc.waterloo.docitem_genutil.generate_minimal_docstring": {
-            "signature": {
-                "text": "generate_minimal_docstring(obj: 'object', *, profile: 'Profile | None' = None) -> 'str'",
-                "parameters": [
-                    {
-                        "name": "obj",
-                        "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "object",
-                        "default": null
-                    },
-                    {
-                        "name": "profile",
-                        "kind": "KEYWORD_ONLY",
-                        "annotation": "Profile | None",
-                        "default": "None"
-                    }
-                ],
-                "returns": "str"
-            },
-            "doc": {
-                "Preamble": {
-                    "profile": "function",
-                    "normative_sections": [
-                        "Contract",
-                        "Parameters",
-                        "Returns",
-                        "Raises"
-                    ],
-                    "status": "stable",
-                    "scope": [
-                        "extension"
-                    ]
-                },
-                "Contract": {
-                    "general": [
-                        "MUST generate a minimal Waterloo docstring template for |var|`obj`.",
-                        "MUST select the template by using |var|`profile` if provided.",
-                        "MUST infer the profile from |var|`obj` if |var|`profile` is |None|."
-                    ],
-                    "ensures": [
-                        "The resulting template MUST be structurally valid according to the Waterloo format."
-                    ]
-                },
-                "Parameters": {
-                    "obj": [
-                        "Object for which the docstring template is generated."
-                    ],
-                    "profile": "Optional explicit profile (`module`, `class`, `function`, `method`)."
-                },
-                "Returns": [
-                    "Generated minimal docstring template."
-                ],
-                "Raises": {
-                    "RuntimeError": [
-                        "MAY be raised if profile inference fails for |var|`obj`."
-                    ]
-                }
-            }
-        },
-        "sdv.doc.waterloo.docitem_genutil.generate_full_docstring": {
-            "signature": {
-                "text": "generate_full_docstring(obj: 'object', *, profile: 'Profile | None' = None) -> 'str'",
-                "parameters": [
-                    {
-                        "name": "obj",
-                        "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "object",
-                        "default": null
-                    },
-                    {
-                        "name": "profile",
-                        "kind": "KEYWORD_ONLY",
-                        "annotation": "Profile | None",
-                        "default": "None"
-                    }
-                ],
-                "returns": "str"
-            },
-            "doc": {
-                "Preamble": {
-                    "profile": "function",
-                    "normative_sections": [
-                        "Contract",
-                        "Parameters",
-                        "Returns",
-                        "Raises"
-                    ],
-                    "status": "stable",
-                    "scope": [
-                        "extension"
-                    ]
-                },
-                "Contract": {
-                    "general": [
-                        "MUST generate a full Waterloo docstring template for |var|`obj`.",
-                        "MUST include the extended section set for the resolved profile.",
-                        "MUST select the template by using |var|`profile` if provided.",
-                        "MUST infer the profile from |var|`obj` if |var|`profile` is |None|."
-                    ],
-                    "ensures": [
-                        "The resulting template MUST be structurally valid according to the Waterloo format."
-                    ]
-                },
-                "Parameters": {
-                    "obj": [
-                        "Object for which the docstring template is generated."
-                    ],
-                    "profile": "Optional explicit profile (`module`, `class`, `function`, `method`)."
-                },
-                "Returns": [
-                    "Generated full docstring template."
-                ],
-                "Raises": {
-                    "RuntimeError": [
-                        "MAY be raised if profile inference fails for |var|`obj`."
-                    ]
-                }
-            }
-        },
-        "sdv.doc.waterloo.docitem_genutil.generate_minimal_docstring_from_node": {
-            "signature": {
-                "text": "generate_minimal_docstring_from_node(profile: 'Profile', node: 'ast.AST | None') -> 'str'",
-                "parameters": [
-                    {
-                        "name": "profile",
-                        "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "Profile",
-                        "default": null
-                    },
-                    {
-                        "name": "node",
-                        "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "ast.AST | None",
-                        "default": null
-                    }
-                ],
-                "returns": "str"
-            },
-            "doc": {
-                "Preamble": {
-                    "profile": "function",
-                    "normative_sections": [
-                        "Contract",
-                        "Parameters",
-                        "Returns",
-                        "Raises"
-                    ],
-                    "status": "stable",
-                    "scope": [
-                        "extension"
-                    ]
-                },
-                "Contract": {
-                    "general": [
-                        "MUST generate a minimal Waterloo docstring template from a pre-parsed AST node.",
-                        "MUST use |var|`profile` to select the target template variant.",
-                        "MUST ignore |var|`node` if |var|`profile` is |value|`module` or |value|`class`.",
-                        "MUST require a function-like AST node for profiles |value|`function` and |value|`method`."
-                    ]
-                },
-                "Parameters": {
-                    "profile": "Target profile (`module`, `class`, `function`, `method`).",
-                    "node": [
-                        "Parsed AST node for function/method generation.",
-                        "May be |None| for profile |value|`module`."
-                    ]
-                },
-                "Returns": [
-                    "Generated minimal docstring template."
-                ],
-                "Raises": {
-                    "RuntimeError": [
-                        "MUST be raised if function/method generation is requested with an incompatible AST node."
-                    ]
-                }
-            }
-        },
-        "sdv.doc.waterloo.docitem_genutil.generate_full_docstring_from_node": {
-            "signature": {
-                "text": "generate_full_docstring_from_node(profile: 'Profile', node: 'ast.AST | None') -> 'str'",
-                "parameters": [
-                    {
-                        "name": "profile",
-                        "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "Profile",
-                        "default": null
-                    },
-                    {
-                        "name": "node",
-                        "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "ast.AST | None",
-                        "default": null
-                    }
-                ],
-                "returns": "str"
-            },
-            "doc": {
-                "Preamble": {
-                    "profile": "function",
-                    "normative_sections": [
-                        "Contract",
-                        "Parameters",
-                        "Returns",
-                        "Raises"
-                    ],
-                    "status": "stable",
-                    "scope": [
-                        "extension"
-                    ]
-                },
-                "Contract": {
-                    "general": [
-                        "MUST generate a full Waterloo docstring template from a pre-parsed AST node.",
-                        "MUST use |var|`profile` to select the target template variant.",
-                        "MUST ignore |var|`node` if |var|`profile` is |value|`module` or |value|`class`.",
-                        "MUST require a function-like AST node for profiles |value|`function` and |value|`method`."
-                    ]
-                },
-                "Parameters": {
-                    "profile": "Target profile (`module`, `class`, `function`, `method`).",
-                    "node": [
-                        "Parsed AST node for function/method generation.",
-                        "May be |None| for profile |value|`module`."
-                    ]
-                },
-                "Returns": [
-                    "Generated full docstring template."
-                ],
-                "Raises": {
-                    "RuntimeError": [
-                        "MUST be raised if function/method generation is requested with an incompatible AST node."
                     ]
                 }
             }

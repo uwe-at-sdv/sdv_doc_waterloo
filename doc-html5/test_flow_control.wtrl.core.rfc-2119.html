@@ -413,6 +413,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
         </div>
         <div id="wtrl-doc"></div>
         <div id="wtrl-examples"></div>
+
         <details style="margin-top:12px">
           <summary>Raw object node</summary>
           <pre id="wtrl-obj" class="wtrl-obj"></pre>
@@ -426,6 +427,10 @@ const WTRL_INDEX = [{"label": "test_flow_control", "target": "test_flow_control"
 const WTRL_EXAMPLES_HTML = {};
 
 function byId(id) { return document.getElementById(id); }
+function setTextIfPresent(id, text) {
+  const el = byId(id);
+  if (el) el.textContent = text;
+}
 const TARGET_TO_ANCHOR = new Map();
 for (const e of WTRL_INDEX) {
   if (e.anchor) TARGET_TO_ANCHOR.set(e.target, e.anchor);
@@ -1532,7 +1537,7 @@ function renderDoc(targetQid) {
     byId("wtrl-signature").innerHTML = "";
     byId("wtrl-doc").innerHTML = "";
     byId("wtrl-examples").innerHTML = "";
-    byId("wtrl-obj").textContent = "";
+    setTextIfPresent("wtrl-obj", "");
     return;
   }
   if (subEl) subEl.textContent = "Waterloo docstring";
@@ -1595,7 +1600,7 @@ function renderDoc(targetQid) {
 // Done. Append to examples block.
     exHost.appendChild(sec);
   }
-  byId("wtrl-obj").textContent = JSON.stringify(node, null, 2);
+  setTextIfPresent("wtrl-obj", JSON.stringify(node, null, 2));
 }
 
 function selectTarget(targetQid, updateHash, opts) {

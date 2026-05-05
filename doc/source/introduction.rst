@@ -709,3 +709,14 @@ which is rendered as:
 .. wtrl_pop_current_class:: test_docitem_module_3.MyClass
 
 
+Project Name
+------------
+
+This subsection is informative.
+
+The name of the project is loosely inspired by the song "Waterloo Sunset"
+by The Kinks, which refers to the London Underground station *Waterloo*.
+The station itself, in turn, is named after the Battle of Waterloo in Belgium.
+
+Any deeper semantic connection to the project should not be assumed.
+Nevertheless, the historical reference is not entirely inappropriate.

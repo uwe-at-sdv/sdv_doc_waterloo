@@ -1,12 +1,12 @@
 {
     "$schema": "https://sci-d-vis.com/schema/wtrl-json-0.1.0.schema.json",
-    "$id": "urn:waterlint:wtrl-json:0.9.0:core:rfc-2119:9da50ee274d511db7fc90e3045c4dee22339ffe34b26480d8171c87ba284e40f",
+    "$id": "urn:waterlint:wtrl-json:0.9.1:core:rfc-2119:9da50ee274d511db7fc90e3045c4dee22339ffe34b26480d8171c87ba284e40f",
     "__WTRL_VERSION__": {
         "waterloo": "0.6.1",
         "schema": "0.1.0"
     },
     "__WTRL_META__": {
-        "generated_at": "2026-04-30T08:37:33+02:00",
+        "generated_at": "2026-05-05T11:49:42+02:00",
         "generator": "waterlint",
         "scope": "core",
         "flavour": "rfc-2119"
@@ -9100,13 +9100,13 @@
         },
         "sdv.doc.waterloo.docitem_convert.to_string_legend_yaml": {
             "signature": {
-                "text": "to_string_legend_yaml(config: 'YamlConfig' = <sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f678ee62260>) -> 'str'",
+                "text": "to_string_legend_yaml(config: 'YamlConfig' = <sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f6b678a25c0>) -> 'str'",
                 "parameters": [
                     {
                         "name": "config",
                         "kind": "POSITIONAL_OR_KEYWORD",
                         "annotation": "YamlConfig",
-                        "default": "<sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f678ee62260>"
+                        "default": "<sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f6b678a25c0>"
                     }
                 ],
                 "returns": "str"
@@ -9143,7 +9143,7 @@
         },
         "sdv.doc.waterloo.docitem_convert.to_string_signature_yaml": {
             "signature": {
-                "text": "to_string_signature_yaml(obj: 'object', config: 'YamlConfig' = <sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f678ee626b0>) -> 'str'",
+                "text": "to_string_signature_yaml(obj: 'object', config: 'YamlConfig' = <sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f6b678a2a10>) -> 'str'",
                 "parameters": [
                     {
                         "name": "obj",
@@ -9155,7 +9155,7 @@
                         "name": "config",
                         "kind": "POSITIONAL_OR_KEYWORD",
                         "annotation": "YamlConfig",
-                        "default": "<sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f678ee626b0>"
+                        "default": "<sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f6b678a2a10>"
                     }
                 ],
                 "returns": "str"
@@ -9225,7 +9225,7 @@
         },
         "sdv.doc.waterloo.docitem_convert.to_string_yaml": {
             "signature": {
-                "text": "to_string_yaml(tree: 'DocstringTree', flavour: 'Flavour', config: 'YamlConfig' = <sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f678ee626e0>) -> 'str'",
+                "text": "to_string_yaml(tree: 'DocstringTree', flavour: 'Flavour', config: 'YamlConfig' = <sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f6b678a2a40>) -> 'str'",
                 "parameters": [
                     {
                         "name": "tree",
@@ -9243,7 +9243,7 @@
                         "name": "config",
                         "kind": "POSITIONAL_OR_KEYWORD",
                         "annotation": "YamlConfig",
-                        "default": "<sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f678ee626e0>"
+                        "default": "<sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f6b678a2a40>"
                     }
                 ],
                 "returns": "str"
