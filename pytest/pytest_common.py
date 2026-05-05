@@ -18,7 +18,7 @@ PATH_MODULE =		PATH_MAIN / "src" / "sdv" / "doc" / "waterloo"
 DIR_EXAMPLES =		str(PATH_EXAMPLES)
 DIR_EXAMPLES_JSON =	str(PATH_EXAMPLES_JSON)
 
-DIR_DOC =		str(ROOT / ".." / "doc")
+DIR_DOC =		str(ROOT / "doc")
 DIR_MODULE = 		str(PATH_MODULE)
 DIR_SCHEMA =		str(PATH_MODULE / "schema")
 
