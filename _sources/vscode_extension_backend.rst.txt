@@ -114,7 +114,11 @@ Successful response:
 	      "generateMinimalDocstring",
 	      "generateFullDocstring",
 	      "validateDocstring"
-	    ]
+	    ],
+	    "sdv_doc_waterloo": {
+		"file":wtrl.__file__,
+		"version":wtrl.__version__,
+	    }
 	  },
 	  "diagnostics_summary": {
 	    "debug": 0,
