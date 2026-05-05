@@ -8,10 +8,10 @@ from pathlib import Path
 
 import pytest
 
-from pytest_common import ROOT, PATH_EXAMPLES, PATH_PYGMENTS
+from pytest_common import ROOT, PATH_PYGMENTS
 
-GOLDEN_IN = PATH_EXAMPLES / "golden_files" / "in"
-GOLDEN_OUT = PATH_EXAMPLES / "golden_files" / "out"
+GOLDEN_IN = ROOT / "doc" / "examples" / "golden_files" / "in"
+GOLDEN_OUT = ROOT / "doc" / "examples" / "golden_files" / "out"
 
 
 def _load_python_waterloo_lexer_class():
