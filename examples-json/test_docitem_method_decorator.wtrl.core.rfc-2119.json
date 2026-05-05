@@ -6,7 +6,7 @@
         "schema": "0.1.0"
     },
     "__WTRL_META__": {
-        "generated_at": "2026-05-05T11:49:44+02:00",
+        "generated_at": "2026-05-05T21:29:01+02:00",
         "generator": "waterlint",
         "scope": "core",
         "flavour": "rfc-2119"
