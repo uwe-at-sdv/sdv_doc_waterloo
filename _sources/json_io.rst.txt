@@ -504,11 +504,8 @@ For interoperability and diagnostics, the category marker
 (:wtrl_value:`wtrl-json`, :wtrl_value:`wtrl-tracer-json`, :wtrl_value:`wtrl-example-refs-json`)
 |should| be present.
 
-Miscellaneous
--------------
-
 Inspecting JSON documents with :wtrl_cmd:`jq`
-.............................................
+---------------------------------------------
 
 In this section, we present a few examples of using the JSON
 command-line processor :wtrl_cmd:`jq` with Waterloo JSON files.
