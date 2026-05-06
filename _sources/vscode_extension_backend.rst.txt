@@ -116,8 +116,8 @@ Successful response:
 	      "validateDocstring"
 	    ],
 	    "sdv_doc_waterloo": {
-		"file":wtrl.__file__,
-		"version":wtrl.__version__,
+		"file":"/path/to/sdv/doc/waterloo/module.py",
+		"version":"1.2.3",
 	    }
 	  },
 	  "diagnostics_summary": {

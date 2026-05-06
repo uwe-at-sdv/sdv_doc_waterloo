@@ -1,29 +1,29 @@
-
 <!DOCTYPE html>
 
-<html>
+<html lang="en" data-content_root="./">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>1. Introduction &#8212; Waterloo Docstrings 0 documentation</title>
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
-    <link rel="stylesheet" type="text/css" href="_static/common_styles.css" />
-    <link rel="stylesheet" type="text/css" href="_static/alabaster_waterloo.css" />
-    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-    <script src="_static/jquery.js"></script>
-    <script src="_static/underscore.js"></script>
-    <script src="_static/doctools.js"></script>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5f771d8e" />
+    <link rel="stylesheet" type="text/css" href="_static/basic.css?v=686e5160" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=27fed22d" />
+    <link rel="stylesheet" type="text/css" href="_static/common_styles.css?v=27e4112a" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster_waterloo.css?v=6f971854" />
+    <script src="_static/documentation_options.js?v=8dde47fa"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="2. Getting Started" href="getting_started.html" />
-    <link rel="prev" title="Waterloo" href="index.html" />
+    <link rel="prev" title="Waterloo Docstrings" href="index.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
+
   
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+  
 
   </head><body>
   
@@ -36,11 +36,11 @@
           <div class="body" role="main">
             
   <section id="introduction">
-<h1><span class="section-number">1. </span>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h1>
+<h1><span class="section-number">1. </span>Introduction<a class="headerlink" href="#introduction" title="Link to this heading">¶</a></h1>
 <p>Informative: The final phrasing of the English text benefits from
 LLM-assisted polishing.</p>
 <section id="about-waterloo-docstrings">
-<h2><span class="section-number">1.1. </span>About Waterloo Docstrings<a class="headerlink" href="#about-waterloo-docstrings" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">1.1. </span>About Waterloo Docstrings<a class="headerlink" href="#about-waterloo-docstrings" title="Link to this heading">¶</a></h2>
 <p>Waterloo Docstrings (simply called “Waterloo” in this document)
 is a specification and tooling ecosystem for Python docstrings with a
 strong emphasis on <strong>machine-verifiable normativity</strong>.</p>
@@ -67,7 +67,7 @@ resistant to drift as code evolves, while remaining practical for real-world
 development workflows.</p>
 </section>
 <section id="why-normative-documentation">
-<h2><span class="section-number">1.2. </span>Why normative documentation?<a class="headerlink" href="#why-normative-documentation" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">1.2. </span>Why normative documentation?<a class="headerlink" href="#why-normative-documentation" title="Link to this heading">¶</a></h2>
 <p>Most documentation in software projects is written as free-form prose. This works well for humans:
 we infer intent from context, tolerate ambiguity, and fill gaps using experience. However,
 prose is inherently underspecified. It often answers what something roughly does,
@@ -91,7 +91,7 @@ while allowing free-form human explanation where appropriate. The goal is not to
 readable documentation, but to add a reliable contract layer that can be validated and used by tools.</p>
 </section>
 <section id="normativity-keywords-and-their-scope">
-<h2><span class="section-number">1.3. </span>Normativity keywords and their scope<a class="headerlink" href="#normativity-keywords-and-their-scope" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">1.3. </span>Normativity keywords and their scope<a class="headerlink" href="#normativity-keywords-and-their-scope" title="Link to this heading">¶</a></h2>
 <p>Waterloo uses normativity keywords such as <code class="wtrl_lit docutils literal notranslate"><span class="pre">|Must|</span></code>, <code class="wtrl_lit docutils literal notranslate"><span class="pre">|Must_not|</span></code>, <code class="wtrl_lit docutils literal notranslate"><span class="pre">|Should|</span></code>, and <code class="wtrl_lit docutils literal notranslate"><span class="pre">|May|</span></code>
 to express requirements, guarantees, and permissions in natural language.
 These keywords are inspired by RFC 2119, but Waterloo assigns them a stricter role
@@ -154,7 +154,7 @@ compositions.</p></li>
 </ul>
 </section>
 <section id="recipients-and-output-formats">
-<h2><span class="section-number">1.4. </span>Recipients and output formats<a class="headerlink" href="#recipients-and-output-formats" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">1.4. </span>Recipients and output formats<a class="headerlink" href="#recipients-and-output-formats" title="Link to this heading">¶</a></h2>
 <p>Docstrings or docstrings translated into other formats can
 in principle be processed by humans, LLMs (AI) and parsers (non-AI).
 For human readers and LLMs, the purpose is to use the documented
@@ -168,13 +168,13 @@ there are converters to HTML (via Sphinx), JSON, YAML and Markdown.</p>
 custom translators and integrations. The docstring subtree representation is
 stable, but the surrounding JSON/YAML envelope may evolve until a formal schema
 is published. The following table provides an overview of which format is suitable for whom:</p>
-<table class="colwidths-given docutils align-default" id="id1">
-<caption><span class="caption-text">Output format vs. recipient</span><a class="headerlink" href="#id1" title="Permalink to this table">¶</a></caption>
+<table class="docutils align-default" id="id1">
+<caption><span class="caption-text">Output format vs. recipient</span><a class="headerlink" href="#id1" title="Link to this table">¶</a></caption>
 <colgroup>
-<col style="width: 25%" />
-<col style="width: 25%" />
-<col style="width: 25%" />
-<col style="width: 25%" />
+<col style="width: 25.0%" />
+<col style="width: 25.0%" />
+<col style="width: 25.0%" />
+<col style="width: 25.0%" />
 </colgroup>
 <thead>
 <tr class="row-odd"><th class="head"></th>
@@ -226,7 +226,7 @@ The choice of flavour is less critical in Waterloo due to the <a class="referenc
 structure rather than typography.</p>
 </section>
 <section id="basic-principles-of-waterloo-docstrings">
-<span id="principles"></span><h2><span class="section-number">1.5. </span>Basic principles of Waterloo Docstrings<a class="headerlink" href="#basic-principles-of-waterloo-docstrings" title="Permalink to this headline">¶</a></h2>
+<span id="principles"></span><h2><span class="section-number">1.5. </span>Basic principles of Waterloo Docstrings<a class="headerlink" href="#basic-principles-of-waterloo-docstrings" title="Link to this heading">¶</a></h2>
 <p>This project follows a strict set of principles to transform documentation from
 passive text into a <strong>machine-verifiable specification</strong>. Our goal is to bridge
 the gap between human readability, AI assistance, and automated validation.</p>
@@ -267,7 +267,7 @@ an executable contract.</p></li>
 </ul>
 </section>
 <section id="scope-and-limits-of-the-principles">
-<h2><span class="section-number">1.6. </span>Scope and limits of the principles<a class="headerlink" href="#scope-and-limits-of-the-principles" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">1.6. </span>Scope and limits of the principles<a class="headerlink" href="#scope-and-limits-of-the-principles" title="Link to this heading">¶</a></h2>
 <p>The principles stated above describe the architectural intent of Waterloo Docstrings.
 They guide the design and usage of the format, but they are not themselves normative rules.
 Their applicability must be interpreted within practical and technical constraints.</p>
@@ -356,9 +356,9 @@ Waterloo enables machine-verifiable contracts but does not guarantee
 complete verification in all contexts.</p>
 </section>
 <section id="project-status">
-<h2><span class="section-number">1.7. </span>Project status<a class="headerlink" href="#project-status" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">1.7. </span>Project status<a class="headerlink" href="#project-status" title="Link to this heading">¶</a></h2>
 <section id="static-typechecking">
-<h3><span class="section-number">1.7.1. </span>Static typechecking<a class="headerlink" href="#static-typechecking" title="Permalink to this headline">¶</a></h3>
+<h3><span class="section-number">1.7.1. </span>Static typechecking<a class="headerlink" href="#static-typechecking" title="Link to this heading">¶</a></h3>
 <p>We use <code class="wtrl_lit docutils literal notranslate"><span class="pre">mypy</span></code> for static typechecking. The modules</p>
 <ul class="simple">
 <li><p><code class="wtrl_file docutils literal notranslate"><span class="pre">sdv.doc.waterloo.docitem</span></code></p></li>
@@ -417,7 +417,7 @@ waterlint.py:1489 # pragma: no cover - defensive
 </div>
 </section>
 <section id="pytest">
-<h3><span class="section-number">1.7.2. </span>Pytest<a class="headerlink" href="#pytest" title="Permalink to this headline">¶</a></h3>
+<h3><span class="section-number">1.7.2. </span>Pytest<a class="headerlink" href="#pytest" title="Link to this heading">¶</a></h3>
 <p>Pytest files are located in <code class="wtrl_file docutils literal notranslate"><span class="pre">pytest</span></code> at repository level.</p>
 <ul class="simple">
 <li><p><code class="wtrl_file docutils literal notranslate"><span class="pre">pytest_lexer_golden.py</span></code></p></li>
@@ -427,7 +427,7 @@ waterlint.py:1489 # pragma: no cover - defensive
 </section>
 </section>
 <section id="dependencies">
-<h2><span class="section-number">1.8. </span>Dependencies<a class="headerlink" href="#dependencies" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">1.8. </span>Dependencies<a class="headerlink" href="#dependencies" title="Link to this heading">¶</a></h2>
 <p class="rubric">Requires packages (will be installed by Pip)</p>
 <ul class="simple">
 <li><p><code class="wtrl_mod docutils literal notranslate"><span class="pre">jsonschema</span></code> – <code class="docutils literal notranslate"><span class="pre">python3</span> <span class="pre">-m</span> <span class="pre">pip</span> <span class="pre">install</span> <span class="pre">jsonschema</span></code></p></li>
@@ -449,7 +449,7 @@ for example to identify documented modules or objects, and to query associated m
 </ul>
 </section>
 <section id="versioning">
-<h2><span class="section-number">1.9. </span>Versioning<a class="headerlink" href="#versioning" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">1.9. </span>Versioning<a class="headerlink" href="#versioning" title="Link to this heading">¶</a></h2>
 <p>This section is informative.</p>
 <p>Waterloo consists of several components that may evolve independently.
 These currently include:</p>
@@ -471,7 +471,7 @@ toolchain.</p>
 A change of the major component indicates an intentional incompatibility
 with previously valid Waterloo documents or tools.</p>
 <section id="subsystem-versions">
-<h3><span class="section-number">1.9.1. </span>Subsystem versions<a class="headerlink" href="#subsystem-versions" title="Permalink to this headline">¶</a></h3>
+<h3><span class="section-number">1.9.1. </span>Subsystem versions<a class="headerlink" href="#subsystem-versions" title="Link to this heading">¶</a></h3>
 <p>Subsystems may evolve independently and therefore maintain their own
 version numbers. A version change in one subsystem does not directly
 modify the version numbers of other subsystems.</p>
@@ -479,7 +479,7 @@ modify the version numbers of other subsystems.</p>
 evolution of the individual components.</p>
 </section>
 <section id="main-version-derivation">
-<h3><span class="section-number">1.9.2. </span>Main version derivation<a class="headerlink" href="#main-version-derivation" title="Permalink to this headline">¶</a></h3>
+<h3><span class="section-number">1.9.2. </span>Main version derivation<a class="headerlink" href="#main-version-derivation" title="Link to this heading">¶</a></h3>
 <p>The main version reflects the highest-order change among the subsystem
 versions that occur within a release. The following interpretation is used:</p>
 <blockquote>
@@ -499,7 +499,7 @@ reflects the highest-order change (major overrides minor, minor overrides
 patch).</p>
 </section>
 <section id="compatibility-interpretation">
-<h3><span class="section-number">1.9.3. </span>Compatibility interpretation<a class="headerlink" href="#compatibility-interpretation" title="Permalink to this headline">¶</a></h3>
+<h3><span class="section-number">1.9.3. </span>Compatibility interpretation<a class="headerlink" href="#compatibility-interpretation" title="Link to this heading">¶</a></h3>
 <p>The major component of the main version represents the compatibility
 level of the Waterloo specification.</p>
 <p>As a design goal, the major version is expected to remain stable for as
@@ -519,13 +519,13 @@ features that remain compatible with existing Waterloo documents.</p>
 </section>
 </section>
 <section id="possible-future-enhancements">
-<h2><span class="section-number">1.10. </span>Possible future enhancements<a class="headerlink" href="#possible-future-enhancements" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">1.10. </span>Possible future enhancements<a class="headerlink" href="#possible-future-enhancements" title="Link to this heading">¶</a></h2>
 </section>
 <section id="introductory-examples">
-<h2><span class="section-number">1.11. </span>Introductory examples<a class="headerlink" href="#introductory-examples" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">1.11. </span>Introductory examples<a class="headerlink" href="#introductory-examples" title="Link to this heading">¶</a></h2>
 <p>This section is informative.</p>
 <section id="module">
-<h3><span class="section-number">1.11.1. </span>Module<a class="headerlink" href="#module" title="Permalink to this headline">¶</a></h3>
+<h3><span class="section-number">1.11.1. </span>Module<a class="headerlink" href="#module" title="Link to this heading">¶</a></h3>
 <p>Let us do an example: In directory <code class="wtrl_file docutils literal notranslate"><span class="pre">doc/examples</span></code> you see a file <code class="wtrl_file docutils literal notranslate"><span class="pre">test_docitem_module.py</span></code>.
 On module level this is equipped with a basic Waterloo docstring:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;</span>
@@ -548,10 +548,6 @@ On module level this is equipped with a basic Waterloo docstring:</p>
 </div>
 <p>at the position in the document where the docstring is supposed to be rendered, and get:</p>
 <table class="wtrl-box docutils align-default" id="wtrl-mod-19:test_docitem_module">
-<colgroup>
-<col style="width: 18%" />
-<col style="width: 82%" />
-</colgroup>
 <tbody>
 <tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Preamble</span></code></p></td>
 <td><ul class="simple">
@@ -609,7 +605,7 @@ and it must be declared normative.</p></li>
 </div></blockquote>
 </section>
 <section id="module-and-class">
-<h3><span class="section-number">1.11.2. </span>Module and class<a class="headerlink" href="#module-and-class" title="Permalink to this headline">¶</a></h3>
+<h3><span class="section-number">1.11.2. </span>Module and class<a class="headerlink" href="#module-and-class" title="Link to this heading">¶</a></h3>
 <p>In the next example we have a module and a class docstring, and we consider the class as
 part of the public API of the module:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;</span>
@@ -653,10 +649,6 @@ part of the public API of the module:</p>
 </div>
 <p>The result is:</p>
 <table class="wtrl-box docutils align-default" id="wtrl-mod-21:test_docitem_module_2">
-<colgroup>
-<col style="width: 18%" />
-<col style="width: 82%" />
-</colgroup>
 <tbody>
 <tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Preamble</span></code></p></td>
 <td><ul class="simple">
@@ -697,10 +689,6 @@ part of the public API of the module:</p>
 </thead>
 </table>
 <table class="wtrl-box docutils align-default" id="wtrl-cls-21:test_docitem_module_2-7:MyClass">
-<colgroup>
-<col style="width: 18%" />
-<col style="width: 82%" />
-</colgroup>
 <tbody>
 <tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Preamble</span></code></p></td>
 <td><ul class="simple">
@@ -736,7 +724,7 @@ part of the public API of the module:</p>
 </table>
 </section>
 <section id="module-class-and-method">
-<h3><span class="section-number">1.11.3. </span>Module, class and method<a class="headerlink" href="#module-class-and-method" title="Permalink to this headline">¶</a></h3>
+<h3><span class="section-number">1.11.3. </span>Module, class and method<a class="headerlink" href="#module-class-and-method" title="Link to this heading">¶</a></h3>
 <p>Finally, let us add a method to the class and attach a docstring.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="gh">Preamble:</span>
@@ -799,10 +787,6 @@ part of the public API of the module:</p>
 </div>
 <p>and the result is:</p>
 <table class="wtrl-box docutils align-default" id="wtrl-mod-21:test_docitem_module_3">
-<colgroup>
-<col style="width: 18%" />
-<col style="width: 82%" />
-</colgroup>
 <tbody>
 <tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Preamble</span></code></p></td>
 <td><ul class="simple">
@@ -843,10 +827,6 @@ part of the public API of the module:</p>
 </thead>
 </table>
 <table class="wtrl-box docutils align-default" id="wtrl-cls-21:test_docitem_module_3-7:MyClass">
-<colgroup>
-<col style="width: 18%" />
-<col style="width: 82%" />
-</colgroup>
 <tbody>
 <tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Preamble</span></code></p></td>
 <td><ul class="simple">
@@ -892,10 +872,6 @@ part of the public API of the module:</p>
 </thead>
 </table>
 <table class="wtrl-box docutils align-default" id="wtrl-func-21:test_docitem_module_3-7:MyClass-8:greeting">
-<colgroup>
-<col style="width: 18%" />
-<col style="width: 82%" />
-</colgroup>
 <tbody>
 <tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Signature</span></code></p></td>
 <td><div class="wtrl-signature-head line"><span class="wtrl_mod">test_docitem_module_3</span><span class="wtrl_op">.</span><span class="wtrl_type">MyClass</span><span class="wtrl_op">.</span><span class="wtrl_func">greeting</span><span class="wtrl_op">(</span></div>
@@ -943,7 +919,7 @@ part of the public API of the module:</p>
 </section>
 </section>
 <section id="convenience-module-and-class-stack">
-<h2><span class="section-number">1.12. </span>Convenience: module and class stack<a class="headerlink" href="#convenience-module-and-class-stack" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">1.12. </span>Convenience: module and class stack<a class="headerlink" href="#convenience-module-and-class-stack" title="Link to this heading">¶</a></h2>
 <p>Repeating the module and the class each time a function, method, type or constant
 is addressed by means of qualified identifier (dot notation) can become a little annoying.
 Therefore the extension is equipped with state stacks for modules and classes.</p>
@@ -986,7 +962,7 @@ of methods. The push-command reads:</p>
 <p class="wtrl-current-class-message wtrl-current-class-pop">Default class qualifier <code class="wtrl_var docutils literal notranslate"><span class="pre">test_docitem_module_3.MyClass</span></code> ends here. No default class active. </p>
 </section>
 <section id="project-name">
-<h2><span class="section-number">1.13. </span>Project Name<a class="headerlink" href="#project-name" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">1.13. </span>Project Name<a class="headerlink" href="#project-name" title="Link to this heading">¶</a></h2>
 <p>This subsection is informative.</p>
 <p>The name of the project is loosely inspired by the song “Waterloo Sunset”
 by The Kinks, which refers to the London Underground station <em>Waterloo</em>.
@@ -1001,7 +977,7 @@ Nevertheless, the historical reference is not entirely inappropriate.</p>
           
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper">
 <h1 class="logo"><a href="index.html">Waterloo Docstrings</a></h1>
 
@@ -1012,7 +988,16 @@ Nevertheless, the historical reference is not entirely inappropriate.</p>
 
 
 
-<h3>Navigation</h3>
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
 <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">1. Introduction</a><ul>
@@ -1062,21 +1047,11 @@ Nevertheless, the historical reference is not entirely inappropriate.</p>
 <h3>Related Topics</h3>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="index.html" title="previous chapter">Waterloo</a></li>
+      <li>Previous: <a href="index.html" title="previous chapter">Waterloo Docstrings</a></li>
       <li>Next: <a href="getting_started.html" title="next chapter"><span class="section-number">2. </span>Getting Started</a></li>
   </ul></li>
 </ul>
 </div>
-<div id="searchbox" style="display: none" role="search">
-  <h3 id="searchlabel">Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
-      <input type="submit" value="Go" />
-    </form>
-    </div>
-</div>
-<script>$('#searchbox').show(0);</script>
 
 
 
@@ -1090,11 +1065,11 @@ Nevertheless, the historical reference is not entirely inappropriate.</p>
       <div class="clearer"></div>
     </div>
     <div class="footer">
-      &copy;2026, Uwe.
+      &#169;2026, Uwe.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.3.2</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.1.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
       
       |
       <a href="_sources/introduction.rst.txt"
