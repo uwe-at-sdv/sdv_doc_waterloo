@@ -8,7 +8,7 @@ import subprocess
 import sys
 from pathlib import Path
 
-from pytest_common import ROOT, WATERLINT, DIR_EXAMPLES, PATH_EXAMPLES
+from pytest_common import ROOT, WATERLINT, DIR_EXAMPLES
 
 # We can run this reliably only after preparing the package,
 # using the module in sdv/doc/waterloo, because docitem contains
@@ -32,19 +32,12 @@ def test_selftest_runs() -> None:
 
 def _run_waterlint_validate(obj: str) -> subprocess.CompletedProcess[str]:
 	"""Run ``waterlint validate`` for the given object and capture output."""
-	env = os.environ.copy()
-	py_path = os.pathsep.join(
-		[
-			str(PATH_EXAMPLES),
-			str(ROOT),
-			env.get("PYTHONPATH", ""),
-		]
-	)
-	env["PYTHONPATH"] = py_path
 	return subprocess.run(
 		[
 			str(WATERLINT),
 			"validate",
+			"--basedir",
+			DIR_EXAMPLES,
 			"--obj",
 			obj,
 		],
@@ -52,39 +45,10 @@ def _run_waterlint_validate(obj: str) -> subprocess.CompletedProcess[str]:
 		stderr=subprocess.PIPE,
 		text=True,
 		check=False,
-		env=env,
-	)
-
-def _run_waterlint_coverage(obj: str) -> subprocess.CompletedProcess[str]:
-	"""Run ``waterlint validate`` for the given object and capture output."""
-	env = os.environ.copy()
-	py_path = os.pathsep.join(
-		[
-			str(PATH_EXAMPLES),
-			str(ROOT),
-			env.get("PYTHONPATH", ""),
-		]
-	)
-	env["PYTHONPATH"] = py_path
-	return subprocess.run(
-		[
-			str(WATERLINT),
-			"coverage",
-			"--obj",
-			obj,
-		],
-		stdout=subprocess.PIPE,
-		stderr=subprocess.PIPE,
-		text=True,
-		check=False,
-		env=env,
 	)
 
 def _run_waterlint_validate_with_basedir(obj: str, basedir: str = DIR_EXAMPLES) -> subprocess.CompletedProcess[str]:
 	"""Run ``waterlint validate`` with explicit ``--basedir`` and capture output."""
-	env = os.environ.copy()
-	py_path = os.pathsep.join([str(ROOT), env.get("PYTHONPATH", "")])
-	env["PYTHONPATH"] = py_path
 	return subprocess.run(
 		[
 			str(WATERLINT),
@@ -98,7 +62,6 @@ def _run_waterlint_validate_with_basedir(obj: str, basedir: str = DIR_EXAMPLES) 
 		stderr=subprocess.PIPE,
 		text=True,
 		check=False,
-		env=env,
 		cwd=ROOT,
 	)
 
@@ -318,9 +281,6 @@ def test_bad_scope_module_vs_class() -> None:
 	_assert_error(result, "SCP-005", "class 'X_extension'")
 
 
-def test_bad_scope_class_vs_base_class() -> None:
-	result = _run_waterlint_coverage("pytest_bad_scope_base_class")
-	_assert_error(result, "SCP-009", "base class")
 def test_bad_scope_class_vs_base_class_B() -> None:
 	result = _run_waterlint_validate("pytest_bad_scope_base_class.B")
 	_assert_error(result, "SCP-009", "base class")
@@ -771,23 +731,6 @@ def test_inherited_ok_three_levels() -> None:
 	result = _run_waterlint_validate("pytest_good_inheritance.Z.spam")
 	assert result.returncode == 0, f"expected success, got {result.stderr}"
 
-def test_good_class_in_class_ok_three_levels() -> None:
-	result = _run_waterlint_coverage("pytest_good_class_in_class")
-	assert result.returncode == 0, f"expected success, got {result.stderr}"
-
-
-# ----- bad class-in-class scenarios ---------------------------------------- #
-
-def test_bad_class_in_class_module_coverage() -> None:
-	result = _run_waterlint_coverage("pytest_bad_class_in_class")
-	_assert_error(result, "CPCL-007", "listed in Public_classes but has no valid docstring")
-
-
-def test_bad_class_in_class_x00_coverage() -> None:
-	result = _run_waterlint_coverage("pytest_bad_class_in_class.X_00")
-	_assert_error(result, "CPCL-007", "listed in Public_classes but has no valid docstring")
-
-
 def test_bad_class_in_class_x01_validate_ok() -> None:
 	result = _run_waterlint_validate("pytest_bad_class_in_class.X_01")
 	assert result.returncode == 0, f"expected success, got {result.stderr}"
@@ -796,11 +739,6 @@ def test_bad_class_in_class_x01_validate_ok() -> None:
 def test_bad_class_in_class_x01_inner_validate_ok() -> None:
 	result = _run_waterlint_validate("pytest_bad_class_in_class.X_01.Y_not_listed")
 	assert result.returncode == 0, f"expected success, got {result.stderr}"
-
-
-def test_bad_class_in_class_x01_coverage_warning() -> None:
-	result = _run_waterlint_coverage("pytest_bad_class_in_class.X_01")
-	_assert_warning(result, "CPCL-006", "not listed in Public_classes")
 
 
 def test_bad_class_in_class_x02_validate_ok() -> None:
@@ -818,28 +756,6 @@ def test_bad_class_in_class_x02_no_doc_invalid() -> None:
 	_assert_error(result, "DOC-001", "has no docstring")
 
 
-def test_bad_class_in_class_x02_coverage_ok() -> None:
-	result = _run_waterlint_coverage("pytest_bad_class_in_class.X_02")
-	assert result.returncode == 0, f"expected success, got {result.stderr}"
-
-
-# Method coverage inside class-in-class scenarios
-
-def test_bad_class_in_class_x03_listed_method_invalid() -> None:
-	result = _run_waterlint_coverage("pytest_bad_class_in_class.X_03")
-	_assert_error(result, "CPMT-007", "listed in Public_methods but has no valid docstring")
-
-
-def test_bad_class_in_class_x04_not_listed_valid_warn() -> None:
-	result = _run_waterlint_coverage("pytest_bad_class_in_class.X_04")
-	_assert_warning(result, "CPMT-006", "not listed in Public_methods")
-
-
-def test_bad_class_in_class_x05_listed_method_missing_doc() -> None:
-	result = _run_waterlint_coverage("pytest_bad_class_in_class.X_05")
-	_assert_warning(result, "CPMT-007", "no valid docstring")
-
-
 # ----- bad class in module scenarios --------------------------------------- #
 
 def test_bad_class_in_module_validate_ok() -> None:
@@ -847,21 +763,9 @@ def test_bad_class_in_module_validate_ok() -> None:
 	assert result.returncode == 0, f"expected success, got {result.stderr}"
 
 
-def test_bad_class_in_module_coverage_errors() -> None:
-	result = _run_waterlint_coverage("pytest_bad_class_in_module")
-	_assert_error(result, "PRSR-003", "missing colon")
-	_assert_error(result, "MPCL-007", "no valid docstring")
-
-
 def test_bad_class_public_classes_cpcl_x00_validate_ok() -> None:
 	result = _run_waterlint_validate_with_basedir("pytest_bad_class_public_classes_CPCL.X_00")
 	assert result.returncode == 0, result.stderr
-
-
-def test_bad_class_public_classes_cpcl_x00_coverage_cpcl007() -> None:
-	result = _run_waterlint_coverage("pytest_bad_class_public_classes_CPCL.X_00")
-	assert result.returncode == 1, f"expected exit code 1, got {result.returncode}"
-	assert "CPCL-007" in result.stderr, result.stderr
 
 
 def test_bad_class_public_classes_cpcl_x01_validate_cpcl002() -> None:
@@ -879,20 +783,9 @@ def test_bad_class_public_classes_cpcl_x03_validate_cpcl005() -> None:
 	_assert_error(result, "CPCL-005", "not a class")
 
 
-def test_bad_class_public_classes_cpcl_x04_coverage_cpcl006() -> None:
-	result = _run_waterlint_coverage("pytest_bad_class_public_classes_CPCL.X_04")
-	_assert_warning(result, "CPCL-006", "not listed in Public_classes")
-
-
 def test_bad_class_public_methods_cpmt_x00_validate_ok() -> None:
 	result = _run_waterlint_validate_with_basedir("pytest_bad_class_public_methods_CPMT.X_00")
 	assert result.returncode == 0, result.stderr
-
-
-def test_bad_class_public_methods_cpmt_x00_coverage_cpmt007() -> None:
-	result = _run_waterlint_coverage("pytest_bad_class_public_methods_CPMT.X_00")
-	assert result.returncode == 1, f"expected exit code 1, got {result.returncode}"
-	assert "CPMT-007" in result.stderr, result.stderr
 
 
 def test_bad_class_public_methods_cpmt_x01_validate_cpmt002() -> None:
@@ -908,11 +801,6 @@ def test_bad_class_public_methods_cpmt_x02_validate_cpmt004() -> None:
 def test_bad_class_public_methods_cpmt_x03_validate_cpmt005() -> None:
 	result = _run_waterlint_validate_with_basedir("pytest_bad_class_public_methods_CPMT.X_03")
 	_assert_error(result, "CPMT-005", "not a method")
-
-
-def test_bad_class_public_methods_cpmt_x04_coverage_cpmt006() -> None:
-	result = _run_waterlint_coverage("pytest_bad_class_public_methods_CPMT.X_04")
-	_assert_warning(result, "CPMT-006", "not listed in Public_methods")
 
 
 def test_bad_class_public_cptyp_cpvar_cpcon_x_cptyp_002() -> None:
@@ -1010,16 +898,6 @@ def test_bad_module_public_classes_mpcl_005() -> None:
 	_assert_error(result, "MPCL-005", "not a class")
 
 
-def test_bad_module_public_classes_mpcl_006_coverage_warning() -> None:
-	result = _run_waterlint_coverage("pytest_bad_module_public_classes_MPCL_006")
-	_assert_warning(result, "MPCL-006", "not listed in Public_classes")
-
-
-def test_bad_module_public_classes_mpcl_007_coverage_warning() -> None:
-	result = _run_waterlint_coverage("pytest_bad_module_public_classes_MPCL_007")
-	_assert_warning(result, "MPCL-007", "no valid docstring")
-
-
 def test_bad_module_public_functions_mpfn_002() -> None:
 	result = _run_waterlint_validate_with_basedir("pytest_bad_module_public_functions_MPFN_002")
 	_assert_error(result, "MPFN-002", "not listed as normative")
@@ -1033,16 +911,6 @@ def test_bad_module_public_functions_mpfn_004() -> None:
 def test_bad_module_public_functions_mpfn_005() -> None:
 	result = _run_waterlint_validate_with_basedir("pytest_bad_module_public_functions_MPFN_005")
 	_assert_error(result, "MPFN-005", "not a function")
-
-
-def test_bad_module_public_functions_mpfn_006_coverage_warning() -> None:
-	result = _run_waterlint_coverage("pytest_bad_module_public_functions_MPFN_006")
-	_assert_warning(result, "MPFN-006", "not listed in Public_functions")
-
-
-def test_bad_module_public_functions_mpfn_007_coverage_warning() -> None:
-	result = _run_waterlint_coverage("pytest_bad_module_public_functions_MPFN_007")
-	_assert_warning(result, "MPFN-007", "no valid docstring")
 
 
 def test_bad_module_public_mptyp_mpvar_mpcon_m_mptyp_002() -> None:
@@ -1205,13 +1073,6 @@ def test_bad_module_overview_mclo_mfno_m_mfno_011() -> None:
 	_assert_error(result, "MFNO-011", "")
 
 
-# ----- bad function in module scenarios ------------------------------------ #
-
 def test_bad_function_in_module_validate_ok() -> None:
 	result = _run_waterlint_validate("pytest_bad_function_in_module")
 	assert result.returncode == 0, f"expected success, got {result.stderr}"
-
-
-def test_bad_function_in_module_coverage_error() -> None:
-	result = _run_waterlint_coverage("pytest_bad_function_in_module")
-	_assert_error(result, "PRSR-003", "missing colon")

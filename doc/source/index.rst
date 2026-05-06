@@ -1,5 +1,5 @@
-Waterloo
-========
+Waterloo Docstrings
+===================
 
 .. toctree::
 	:maxdepth: 4

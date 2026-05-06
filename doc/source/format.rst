@@ -51,7 +51,7 @@ Documentation coverage is evaluated solely based on the presence, structure,
 and validity of docstrings, and is independent of the semantic correctness
 or completeness of their contents.
 
-.. rubric:: Lint rule (informative)
+.. rubric:: Lint rule
 
 A :wtrl_dfn:`lint rule` is a normative requirement that can be checked unambiguously by a tool against the docstring text
 and the available program context (e.g. signatures, importability, symbol tables).
@@ -225,6 +225,8 @@ The following list explains the mnemonic prefixes and their semantics.
 The structure of Waterloo docstrings
 ------------------------------------
 
+This section is informative.
+
 This section defines the structure of Waterloo docstrings.
 It does so in human-readable form. The structure is presented as lists for the various sections
 with embedded lists for subsections. The following patterns occur in any order:
@@ -298,6 +300,8 @@ We shall use a simple dot notation in order to refer to subsections in the docst
 
 Building the AST
 ----------------
+
+This section is normative.
 
 The Abstract Syntax Tree (AST) is created in two steps. In the first step ("tokenization")
 the docstring is transformed into an intermediate tree representation
@@ -1382,10 +1386,10 @@ consistently if they are encountered.
 If any of the rules listed below is triggered during validation, this indicates
 an internal inconsistency or an implementation defect.
 
-* [DOC-999] -- Should never occur.
-* [MCLO-999] -- Should never occur.
-* [MPTYP-999] -- Should never occur.
-* [MPVAR-999] -- Should never occur.
+* [DOC-999] -- |Should_not| occur.
+* [MCLO-999] -- |Should_not| occur.
+* [MPTYP-999] -- |Should_not| occur.
+* [MPVAR-999] -- |Should_not| occur.
 
 Coverage rules and intended workflow
 ------------------------------------
@@ -1617,20 +1621,23 @@ or obligations of an object are defined exclusively in the docstring of that
 object itself, in accordance with the principles of Locality of Information
 (LoII) and Single Source of Truth (SSoT).
 
-Sections such as :wtrl_label:`Class_overview`, :wtrl_label:`Function_overview`,
-and :wtrl_label:`Method_overview` serve a declarative purpose only. They
-enumerate which objects are part of the public API, but they do not redefine
-or qualify the behavior of those objects.
+Sections such as :wtrl_label:`Public_classes`, :wtrl_label:`Public_functions`,
+and :wtrl_label:`Public_methods` declare which objects belong to the documented
+public API surface. Sections such as :wtrl_label:`Class_overview`,
+:wtrl_label:`Function_overview`, and :wtrl_label:`Method_overview` may provide
+informative summaries for those objects. Neither kind of section is intended to
+redefine or qualify the behavior of the objects they mention.
 
-Allowing normativity keywords in these listing sections would introduce
+Allowing normativity keywords in API listing sections or overview sections would introduce
 multiple independent locations for normative statements about the same
 object. This would make it impossible to ensure consistency and would
 undermine automated validation, tooling, and long-term maintainability.
 
 Therefore, once an object is equipped with its own valid docstring, all
 normative statements concerning that object are required to appear there
-and nowhere else. Listing sections may provide descriptive or summarizing
-text, but they must not introduce additional normative requirements.
+and nowhere else. API listing sections may declare membership in the public API
+surface, and overview sections may provide descriptive or summarizing text, but
+neither may introduce additional normative requirements.
 
 This design ensures that tools, validators, and human readers can rely on
 a single authoritative specification for each documented object, and that
