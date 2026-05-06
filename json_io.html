@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>9. The JSON I/O Layer &#8212; Waterloo Docstrings 0 documentation</title>
+    <title>8. The JSON I/O Layer &#8212; Waterloo Docstrings 0 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5f771d8e" />
     <link rel="stylesheet" type="text/css" href="_static/basic.css?v=686e5160" />
     <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=27fed22d" />
@@ -16,8 +16,8 @@
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="10. The HTML Output Layer" href="html_output_layer.html" />
-    <link rel="prev" title="8. Overview: I/O Layers" href="io_layers.html" />
+    <link rel="next" title="9. The HTML Output Layer" href="html_output_layer.html" />
+    <link rel="prev" title="7. Overview: I/O Layers" href="io_layers.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
@@ -36,10 +36,10 @@
           <div class="body" role="main">
             
   <section id="the-json-i-o-layer">
-<span id="json-io-layer"></span><h1><span class="section-number">9. </span>The JSON I/O Layer<a class="headerlink" href="#the-json-i-o-layer" title="Link to this heading">¶</a></h1>
+<span id="json-io-layer"></span><h1><span class="section-number">8. </span>The JSON I/O Layer<a class="headerlink" href="#the-json-i-o-layer" title="Link to this heading">¶</a></h1>
 <p>Subsections in this chapter are informative unless normativity is explicitly stated.</p>
 <section id="introduction">
-<h2><span class="section-number">9.1. </span>Introduction<a class="headerlink" href="#introduction" title="Link to this heading">¶</a></h2>
+<h2><span class="section-number">8.1. </span>Introduction<a class="headerlink" href="#introduction" title="Link to this heading">¶</a></h2>
 <p>While the original Waterloo docstring format is already designed to be
 machine-readable – both comprehensible to an LLM and parsable by a simple
 state machine – practical experience shows that JSON is the most suitable
@@ -124,7 +124,7 @@ example code, and how the resulting JSON artifacts can be used to generate
 a conventional, human-readable interactive HTML documentation site.</p>
 </section>
 <section id="validating-json-input-output-and-diagnostics">
-<h2><span class="section-number">9.2. </span>Validating JSON input, output and diagnostics<a class="headerlink" href="#validating-json-input-output-and-diagnostics" title="Link to this heading">¶</a></h2>
+<h2><span class="section-number">8.2. </span>Validating JSON input, output and diagnostics<a class="headerlink" href="#validating-json-input-output-and-diagnostics" title="Link to this heading">¶</a></h2>
 <p>Any <code class="wtrl_cmd docutils literal notranslate"><span class="pre">waterlint</span></code>-related JSON data can be validated using
 <code class="wtrl_cmd docutils literal notranslate"><span class="pre">waterlint</span></code>:</p>
 <blockquote>
@@ -165,7 +165,7 @@ and their locations can be obtained with</p>
 </div></blockquote>
 </section>
 <section id="creating-llm-readable-documentation">
-<h2><span class="section-number">9.3. </span>Creating LLM-readable documentation<a class="headerlink" href="#creating-llm-readable-documentation" title="Link to this heading">¶</a></h2>
+<h2><span class="section-number">8.3. </span>Creating LLM-readable documentation<a class="headerlink" href="#creating-llm-readable-documentation" title="Link to this heading">¶</a></h2>
 <p>Given a module or a set of modules with Waterloo Docstrings, an LLM-readable JSON artifact can be created
 using the following command:</p>
 <blockquote>
@@ -343,7 +343,7 @@ in LLM-friendly form, i.e. sections and subsections are encoded as JSON nodes.</
 </div>
 </section>
 <section id="adding-examples-to-a-json-document">
-<h2><span class="section-number">9.4. </span>Adding examples to a JSON document<a class="headerlink" href="#adding-examples-to-a-json-document" title="Link to this heading">¶</a></h2>
+<h2><span class="section-number">8.4. </span>Adding examples to a JSON document<a class="headerlink" href="#adding-examples-to-a-json-document" title="Link to this heading">¶</a></h2>
 <p>When documentation based on Waterloo docstrings is rendered by Sphinx,
 code examples can easily be added in the reST code base. This raises
 the question of how to include code examples in the JSON output.</p>
@@ -509,7 +509,7 @@ but the documented object is now equipped with a reference to the example node:<
 The resulting LLM-readable document therefore remains a single file.</p>
 </section>
 <section id="json-document-categories-and-conventions">
-<h2><span class="section-number">9.5. </span>JSON document categories and conventions<a class="headerlink" href="#json-document-categories-and-conventions" title="Link to this heading">¶</a></h2>
+<h2><span class="section-number">8.5. </span>JSON document categories and conventions<a class="headerlink" href="#json-document-categories-and-conventions" title="Link to this heading">¶</a></h2>
 <p>This section is normative.</p>
 <p>The reference tooling emits and expects category-specific <code class="wtrl_attr docutils literal notranslate"><span class="pre">$id</span></code> values.</p>
 <ul class="simple">
@@ -537,7 +537,7 @@ For interoperability and diagnostics, the category marker
 <code class="wtrl_norm docutils literal notranslate"><span class="pre">should</span></code> be present.</p>
 </section>
 <section id="inspecting-json-documents-with-jq">
-<h2><span class="section-number">9.6. </span>Inspecting JSON documents with <code class="wtrl_cmd docutils literal notranslate"><span class="pre">jq</span></code><a class="headerlink" href="#inspecting-json-documents-with-jq" title="Link to this heading">¶</a></h2>
+<h2><span class="section-number">8.6. </span>Inspecting JSON documents with <code class="wtrl_cmd docutils literal notranslate"><span class="pre">jq</span></code><a class="headerlink" href="#inspecting-json-documents-with-jq" title="Link to this heading">¶</a></h2>
 <p>In this section, we present a few examples of using the JSON
 command-line processor <code class="wtrl_cmd docutils literal notranslate"><span class="pre">jq</span></code> with Waterloo JSON files.
 You can try these examples with the accompanying file
@@ -652,28 +652,27 @@ jq documentation at <a class="reference external" href="https://jqlang.github.io
 <li class="toctree-l1"><a class="reference internal" href="examples.html">4. Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="format.html">5. Docstring format</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tools.html">6. Tools</a></li>
-<li class="toctree-l1"><a class="reference internal" href="vscode_extension_backend.html">7. VSCode Extension Backend</a></li>
-<li class="toctree-l1"><a class="reference internal" href="io_layers.html">8. Overview: I/O Layers</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">9. The JSON I/O Layer</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#introduction">9.1. Introduction</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#validating-json-input-output-and-diagnostics">9.2. Validating JSON input, output and diagnostics</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#creating-llm-readable-documentation">9.3. Creating LLM-readable documentation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#adding-examples-to-a-json-document">9.4. Adding examples to a JSON document</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#json-document-categories-and-conventions">9.5. JSON document categories and conventions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#inspecting-json-documents-with-jq">9.6. Inspecting JSON documents with <code class="wtrl_cmd docutils literal notranslate"><span class="pre">jq</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="io_layers.html">7. Overview: I/O Layers</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">8. The JSON I/O Layer</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#introduction">8.1. Introduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#validating-json-input-output-and-diagnostics">8.2. Validating JSON input, output and diagnostics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#creating-llm-readable-documentation">8.3. Creating LLM-readable documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#adding-examples-to-a-json-document">8.4. Adding examples to a JSON document</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#json-document-categories-and-conventions">8.5. JSON document categories and conventions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#inspecting-json-documents-with-jq">8.6. Inspecting JSON documents with <code class="wtrl_cmd docutils literal notranslate"><span class="pre">jq</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="html_output_layer.html">10. The HTML Output Layer</a></li>
-<li class="toctree-l1"><a class="reference internal" href="reference.html">11. Reference - Core View</a></li>
-<li class="toctree-l1"><a class="reference internal" href="_test_freeform.html">12. Flow control in freeform sections</a></li>
+<li class="toctree-l1"><a class="reference internal" href="html_output_layer.html">9. The HTML Output Layer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reference.html">10. Reference - Core View</a></li>
+<li class="toctree-l1"><a class="reference internal" href="_test_freeform.html">11. Flow control in freeform sections</a></li>
 </ul>
 
 <div class="relations">
 <h3>Related Topics</h3>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="io_layers.html" title="previous chapter"><span class="section-number">8. </span>Overview: I/O Layers</a></li>
-      <li>Next: <a href="html_output_layer.html" title="next chapter"><span class="section-number">10. </span>The HTML Output Layer</a></li>
+      <li>Previous: <a href="io_layers.html" title="previous chapter"><span class="section-number">7. </span>Overview: I/O Layers</a></li>
+      <li>Next: <a href="html_output_layer.html" title="next chapter"><span class="section-number">9. </span>The HTML Output Layer</a></li>
   </ul></li>
 </ul>
 </div>

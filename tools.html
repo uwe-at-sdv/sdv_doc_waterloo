@@ -16,7 +16,7 @@
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="7. VSCode Extension Backend" href="vscode_extension_backend.html" />
+    <link rel="next" title="7. Overview: I/O Layers" href="io_layers.html" />
     <link rel="prev" title="5. Docstring format" href="format.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
@@ -129,6 +129,251 @@ This includes active content such as <code class="docutils literal notranslate">
 <p>The JSON protocol used by the VSCode editor integration is documented
 separately in chapter <a class="reference internal" href="vscode_extension_backend.html"><span class="doc">VSCode Extension Backend</span></a>.</p>
 </section>
+<section id="reference-vscode-extension-backend">
+<h2><span class="section-number">6.4. </span>Reference: VSCode Extension Backend<a class="headerlink" href="#reference-vscode-extension-backend" title="Link to this heading">¶</a></h2>
+<p>This chapter is informative.</p>
+<p>It documents the JSON protocol currently used between the VSCode editor
+integration and the Python backend. The material is primarily intended
+for extension developers and for debugging integration issues.</p>
+<section id="json-protocol-shape">
+<h3><span class="section-number">6.4.1. </span>JSON protocol shape<a class="headerlink" href="#json-protocol-shape" title="Link to this heading">¶</a></h3>
+<p>The Python backend used by the VSCode extension returns a unified
+JSON envelope for all commands.</p>
+<p>Minimal response shape:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;ok&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;command&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ping&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;data&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;...&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;command-specific payload&quot;</span><span class="w"> </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;diagnostics_summary&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;debug&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;info&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;warning&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Error response shape:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;ok&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;command&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;generate_minimal_docstring_to_tmp&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Unsupported subcommand&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;diagnostics_summary&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;debug&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;info&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;warning&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;diagnostics&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;$schema&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://sci-d-vis.com/schema/wtrl-tracer-json-0.0.2.schema.json&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;...&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;full tracer document&quot;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The field <code class="wtrl_attr docutils literal notranslate"><span class="pre">diagnostics</span></code> is always included for <code class="wtrl_attr docutils literal notranslate"><span class="pre">ok</span></code> = <code class="wtrl_value docutils literal notranslate"><span class="pre">false</span></code>.
+For successful calls, the client may request full diagnostics by setting
+<code class="wtrl_attr docutils literal notranslate"><span class="pre">include_diagnostics</span></code> = <code class="wtrl_value docutils literal notranslate"><span class="pre">true</span></code> in the request.</p>
+</section>
+<section id="extension-command-examples">
+<h3><span class="section-number">6.4.2. </span>Extension command examples<a class="headerlink" href="#extension-command-examples" title="Link to this heading">¶</a></h3>
+<section id="common-request-fields-non-ping">
+<h4><span class="section-number">6.4.2.1. </span>Common request fields (non-<code class="wtrl_value docutils literal notranslate"><span class="pre">ping</span></code>)<a class="headerlink" href="#common-request-fields-non-ping" title="Link to this heading">¶</a></h4>
+<p>The following fields are accepted for all non-<code class="wtrl_value docutils literal notranslate"><span class="pre">ping</span></code> commands:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;command&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;command-name&gt;&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;kind&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;module|class|function|method&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;source_fragment&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;python header fragment or empty string&gt;&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;source_file&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;absolute or relative file path&gt;&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;line&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;include_diagnostics&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Command-specific requirements:</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt><code class="wtrl_value docutils literal notranslate"><span class="pre">generate_minimal_docstring_to_tmp</span></code> and <code class="wtrl_value docutils literal notranslate"><span class="pre">generate_full_docstring_to_tmp</span></code></dt><dd><ul>
+<li><p>Required: <code class="wtrl_attr docutils literal notranslate"><span class="pre">version</span></code>, <code class="wtrl_attr docutils literal notranslate"><span class="pre">command</span></code>, <code class="wtrl_attr docutils literal notranslate"><span class="pre">kind</span></code>, <code class="wtrl_attr docutils literal notranslate"><span class="pre">source_fragment</span></code></p></li>
+<li><p>Optional/ignored: <code class="wtrl_attr docutils literal notranslate"><span class="pre">source_file</span></code>, <code class="wtrl_attr docutils literal notranslate"><span class="pre">line</span></code></p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><code class="wtrl_value docutils literal notranslate"><span class="pre">validate_docstring</span></code></dt><dd><ul>
+<li><p>Required: <code class="wtrl_attr docutils literal notranslate"><span class="pre">version</span></code>, <code class="wtrl_attr docutils literal notranslate"><span class="pre">command</span></code>, <code class="wtrl_attr docutils literal notranslate"><span class="pre">kind</span></code>, <code class="wtrl_attr docutils literal notranslate"><span class="pre">source_fragment</span></code>,
+<code class="wtrl_attr docutils literal notranslate"><span class="pre">source_file</span></code>, <code class="wtrl_attr docutils literal notranslate"><span class="pre">line</span></code></p></li>
+<li><p>Optional: <code class="wtrl_attr docutils literal notranslate"><span class="pre">include_diagnostics</span></code></p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</section>
+<section id="command-ping">
+<h4><span class="section-number">6.4.2.2. </span>Command <code class="wtrl_value docutils literal notranslate"><span class="pre">ping</span></code><a class="headerlink" href="#command-ping" title="Link to this heading">¶</a></h4>
+<p>Request:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;command&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ping&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Successful response:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;ok&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;command&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ping&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;data&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;ok&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;command&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;pong&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;capabilities&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="s2">&quot;generateMinimalDocstring&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;generateFullDocstring&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;validateDocstring&quot;</span>
+<span class="w">    </span><span class="p">],</span>
+<span class="w">    </span><span class="nt">&quot;sdv_doc_waterloo&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;file&quot;</span><span class="p">:</span><span class="s2">&quot;/path/to/sdv/doc/waterloo/module.py&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="s2">&quot;1.2.3&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;diagnostics_summary&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;debug&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;info&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;warning&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="command-generate-minimal-docstring-to-tmp">
+<h4><span class="section-number">6.4.2.3. </span>Command <code class="wtrl_value docutils literal notranslate"><span class="pre">generate_minimal_docstring_to_tmp</span></code><a class="headerlink" href="#command-generate-minimal-docstring-to-tmp" title="Link to this heading">¶</a></h4>
+<p>Request (function):</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;command&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;generate_minimal_docstring_to_tmp&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;kind&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;function&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;source_fragment&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;def f(x: int) -&gt; int: pass&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Successful response:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;ok&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;command&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;generate_minimal_docstring_to_tmp&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;data&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;kind&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;function&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;tmp_file&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;tempdir&gt;/waterloo-docstrings/waterloo-docstring-abc123.txt&quot;</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;diagnostics_summary&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;debug&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;info&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;warning&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="command-generate-full-docstring-to-tmp">
+<h4><span class="section-number">6.4.2.4. </span>Command <code class="wtrl_value docutils literal notranslate"><span class="pre">generate_full_docstring_to_tmp</span></code><a class="headerlink" href="#command-generate-full-docstring-to-tmp" title="Link to this heading">¶</a></h4>
+<p>Request (method):</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;command&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;generate_full_docstring_to_tmp&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;kind&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;method&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;source_fragment&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;def f(self, x: int) -&gt; None: pass&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Successful response:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;ok&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;command&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;generate_full_docstring_to_tmp&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;data&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;kind&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;method&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;tmp_file&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;tempdir&gt;/waterloo-docstrings/waterloo-docstring-xyz456.txt&quot;</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;diagnostics_summary&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;debug&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;info&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;warning&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="command-validate-docstring">
+<h4><span class="section-number">6.4.2.5. </span>Command <code class="wtrl_value docutils literal notranslate"><span class="pre">validate_docstring</span></code><a class="headerlink" href="#command-validate-docstring" title="Link to this heading">¶</a></h4>
+<p>Request (function):</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;command&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;validate_docstring&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;kind&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;function&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;source_fragment&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;def spam() -&gt; None: pass&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;source_file&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;doc/examples/test_docitem_function_minimal.py&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;line&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;include_diagnostics&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Successful response:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;ok&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;command&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;validate_docstring&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;data&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;kind&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;function&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;qualified_identifier&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;test_docitem_function_minimal.spam&quot;</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;diagnostics_summary&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;debug&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;info&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;warning&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;diagnostics&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;$schema&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://sci-d-vis.com/schema/wtrl-tracer-json-0.0.2.schema.json&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;...&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;full tracer document&quot;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Error response (shape):</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;ok&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;command&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;validate_docstring&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Could not qualify documented object.&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;diagnostics_summary&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;debug&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;info&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;warning&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;diagnostics&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;$schema&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://sci-d-vis.com/schema/wtrl-tracer-json-0.0.2.schema.json&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;__WTRL_ERROR__&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;rule-id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;XTNSN-012&quot;</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
 </section>
 
 
@@ -168,14 +413,25 @@ separately in chapter <a class="reference internal" href="vscode_extension_backe
 <li class="toctree-l2"><a class="reference internal" href="#error-code-structure">6.1. Error code structure</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#waterlint-error-codes">6.2. <code class="wtrl_cmd docutils literal notranslate"><span class="pre">waterlint</span></code> error codes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#extension-error-codes">6.3. Extension error codes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#reference-vscode-extension-backend">6.4. Reference: VSCode Extension Backend</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#json-protocol-shape">6.4.1. JSON protocol shape</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#extension-command-examples">6.4.2. Extension command examples</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#common-request-fields-non-ping">6.4.2.1. Common request fields (non-<code class="wtrl_value docutils literal notranslate"><span class="pre">ping</span></code>)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#command-ping">6.4.2.2. Command <code class="wtrl_value docutils literal notranslate"><span class="pre">ping</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#command-generate-minimal-docstring-to-tmp">6.4.2.3. Command <code class="wtrl_value docutils literal notranslate"><span class="pre">generate_minimal_docstring_to_tmp</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#command-generate-full-docstring-to-tmp">6.4.2.4. Command <code class="wtrl_value docutils literal notranslate"><span class="pre">generate_full_docstring_to_tmp</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#command-validate-docstring">6.4.2.5. Command <code class="wtrl_value docutils literal notranslate"><span class="pre">validate_docstring</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="vscode_extension_backend.html">7. VSCode Extension Backend</a></li>
-<li class="toctree-l1"><a class="reference internal" href="io_layers.html">8. Overview: I/O Layers</a></li>
-<li class="toctree-l1"><a class="reference internal" href="json_io.html">9. The JSON I/O Layer</a></li>
-<li class="toctree-l1"><a class="reference internal" href="html_output_layer.html">10. The HTML Output Layer</a></li>
-<li class="toctree-l1"><a class="reference internal" href="reference.html">11. Reference - Core View</a></li>
-<li class="toctree-l1"><a class="reference internal" href="_test_freeform.html">12. Flow control in freeform sections</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="io_layers.html">7. Overview: I/O Layers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="json_io.html">8. The JSON I/O Layer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="html_output_layer.html">9. The HTML Output Layer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reference.html">10. Reference - Core View</a></li>
+<li class="toctree-l1"><a class="reference internal" href="_test_freeform.html">11. Flow control in freeform sections</a></li>
 </ul>
 
 <div class="relations">
@@ -183,7 +439,7 @@ separately in chapter <a class="reference internal" href="vscode_extension_backe
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
       <li>Previous: <a href="format.html" title="previous chapter"><span class="section-number">5. </span>Docstring format</a></li>
-      <li>Next: <a href="vscode_extension_backend.html" title="next chapter"><span class="section-number">7. </span>VSCode Extension Backend</a></li>
+      <li>Next: <a href="io_layers.html" title="next chapter"><span class="section-number">7. </span>Overview: I/O Layers</a></li>
   </ul></li>
 </ul>
 </div>
