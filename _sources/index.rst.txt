@@ -17,6 +17,7 @@ Waterloo Docstrings
 	html_output_layer.rst
 	reference.rst
 	_test_freeform.rst
+	_test_scope.rst
 
 Indices and tables
 ==================

@@ -411,7 +411,7 @@ We use :wtrl_lit:`mypy` for static typechecking. The modules
 
 are validated on a regular basis. The current status is
 
-.. literalinclude:: _static/type_checking_report.txt
+.. literalinclude:: type_checking_report.txt
 	:language: none
 
 Our :wtrl_lit:`mypy`-configuration is:
@@ -420,7 +420,7 @@ Our :wtrl_lit:`mypy`-configuration is:
 
 Exceptions from typechecking are:
 
-.. literalinclude:: _static/type_checking_exceptions.txt
+.. literalinclude:: type_checking_exceptions.txt
 	:language: none
 
 Pytest
