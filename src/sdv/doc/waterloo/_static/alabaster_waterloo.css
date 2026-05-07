@@ -614,6 +614,12 @@ a.wtrl_var:visited
 
 	background-color:inherit;
 	}
+.wtrl_out_of_scope,
+.wtrl_out_of_scope *
+	{
+	color:#777 !important;
+	opacity:0.85;
+	}
 
 /*----- Docstring boxes for modules, classes, callables ------*/
 

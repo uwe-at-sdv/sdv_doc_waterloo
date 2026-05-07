@@ -11,8 +11,8 @@ set -euo pipefail
 SCRIPT_DIR=$(realpath $(dirname $0))
 PATH_MYPY_INI="${SCRIPT_DIR}/mypy.ini"
 PATH_SRC_DIR="${SCRIPT_DIR}/src/sdv/doc/waterloo"
-PATH_CHK_OUT="${SCRIPT_DIR}/doc/source/_static/type_checking_report.txt"
-PATH_EXC_OUT="${SCRIPT_DIR}/doc/source/_static/type_checking_exceptions.txt"
+PATH_CHK_OUT="${SCRIPT_DIR}/doc/source/type_checking_report.txt"
+PATH_EXC_OUT="${SCRIPT_DIR}/doc/source/type_checking_exceptions.txt"
 
 MYPYPATH="${SCRIPT_DIR}/src" mypy --config-file "${PATH_MYPY_INI}" \
 	--namespace-packages \

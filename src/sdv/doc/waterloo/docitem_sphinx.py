@@ -132,7 +132,8 @@ from sphinx.util.nodes import make_refnode
 
 import sdv.doc.waterloo.docitem as mod_docitem
 
-__version__ = "0.1.1"
+__version__ = "0.2.0"
+# - 0.2.0 [2026-05-06]	Scope awareness
 # - 0.1.1 [2026-04-25]	Parameters is now rendered as free-form text, not bullet list.
 # - 0.1.0 [2026-04-17]	Public_types/constants/variables are now rendered as free-form text, not bullet list.
 
@@ -205,6 +206,7 @@ Contract:
 		self.i_line = lineno
 # See make_context. We extract env from the SphinxApp instance.
 		self.env = None
+		self.wtrl_validated_doc_cache: dict[object, mod_docitem.docitem_docstring_base | None] = {}
 		self.add_role_attr = lambda t:f":wtrl_attr:`{t}`"
 		self.add_role_cmd = lambda t:f":wtrl_cmd:`{t}`"
 		self.add_role_dfn = lambda t:f":wtrl_dfn:`{t}`"
@@ -502,6 +504,54 @@ def get_current_scope(env: Any | None = None) -> mod_docitem.Scope:
 def has_current_scope(env: Any | None = None) -> bool:
 	return len(_get_scope_stack(env)) > 0
 
+def _get_current_scope_set(env: Any | None = None) -> mod_docitem.Scopes:
+	"""
+	Convert the current Sphinx rendering scope into a Waterloo scope set.
+
+	The Sphinx layer currently maintains a single active scope on a stack,
+	while the core visibility API expects a set of scopes. This helper
+	provides the bridge for scope-aware rendering decisions.
+	"""
+	if not has_current_scope(env):
+		return set([mod_docitem.Scope.PUBLIC])
+	return set([get_current_scope(env)])
+
+def _is_doc_visible_in_current_scope(ctx: context, doc: mod_docitem.docitem_docstring_base) -> bool:
+	"""
+	Return whether the documented object is visible under the current
+	Sphinx rendering scope.
+	"""
+	return doc.is_visible(_get_current_scope_set(ctx.env))
+
+def _get_validated_doc_for_object(
+	ctx: context,
+	obj: object,
+) -> mod_docitem.docitem_docstring_base | None:
+	"""
+	Best-effort lookup of a validated Waterloo docstring tree for an object.
+
+	Link rendering uses this to decide whether a resolved Waterloo object is
+	visible under the current Sphinx scope. Failures are treated as
+	non-linkable targets and handled by the caller via plain text fallback.
+	"""
+	cache = ctx.wtrl_validated_doc_cache
+	if obj in cache:
+		cached = cache[obj]
+		return cached if isinstance(cached, mod_docitem.docitem_docstring_base) else None
+	try:
+		doc = mod_docitem.validate_docstring(ctx.tr, obj)
+	except Exception:
+		cache[obj] = None
+		return None
+	cache[obj] = doc
+	return doc
+
+def _is_target_obj_visible_in_current_scope(ctx: context, obj: object) -> bool:
+	doc = _get_validated_doc_for_object(ctx, obj)
+	if doc is None:
+		return False
+	return doc.is_visible(_get_current_scope_set(ctx.env))
+
 #==============================================================#
 
 # Official markup resolver: converts |role|`text` into :wtrl_role:`text`
@@ -512,6 +562,8 @@ def resolve_markup(text : str, ctx: context) -> str:
 			target_obj, _, _, _ = resolve_qualified_name(ctx, qname)
 		except Exception as exc:
 			warnings.warn(f"WTRL ref target '{qname}' cannot be resolved: {exc}", RuntimeWarning)
+			return None
+		if not _is_target_obj_visible_in_current_scope(ctx, target_obj):
 			return None
 # Build anchor of object.
 		target_anchor = mod_docitem.build_anchor(target_obj)
@@ -639,6 +691,10 @@ def build_sphinx_nodes(ctx : context,obj: object,doc: mod_docitem.docitem_docstr
 		Last review:
 			2026-02-15
 		"""
+	if not _is_doc_visible_in_current_scope(ctx, doc):
+# Scope-aware rendering omits invisible objects entirely. If later
+# we need author-facing placeholders, this is the early return to adapt.
+		return []
 	node_root: List[nodes.Node] = []
 	def parse_text(parent: nodes.Element, text: str) -> List[nodes.Node]:
 		return ctx.parse(parent, 0, resolve_markup(text, ctx))
@@ -663,6 +719,9 @@ def build_sphinx_nodes(ctx : context,obj: object,doc: mod_docitem.docitem_docstr
 				warnings.warn(f"Factory entry '{entry}' cannot be resolved for linking: {exc}",RuntimeWarning)
 				parent.extend(ctx.parse(parent,0,role_fn(entry)))
 				return
+		if not _is_target_obj_visible_in_current_scope(ctx, target_obj):
+			render_out_of_scope_entry(parent, entry, role_fn)
+			return
 		parent += _build_internal_ref(ctx, target_obj, entry, css_class)
 
 	def render_linked_base_entry(parent: nodes.paragraph,entry: str,objname: str,css_class: str,role_fn: Callable[[str], str]) -> None:
@@ -678,6 +737,26 @@ def build_sphinx_nodes(ctx : context,obj: object,doc: mod_docitem.docitem_docstr
 	) -> None:
 		parent.extend(ctx.parse(parent,0,role_fn(entry)))
 
+	def render_out_of_scope_entry(
+		parent: nodes.Element,
+		entry: str,
+		role_fn: Callable[[str], str],
+	) -> None:
+		def _mark(node: nodes.Node) -> None:
+			if isinstance(node, nodes.literal):
+				classes = node.get("classes", [])
+				if "wtrl_out_of_scope" not in classes:
+					classes.append("wtrl_out_of_scope")
+					node["classes"] = classes
+			if isinstance(node, nodes.Element):
+				for child in node.children:
+					_mark(child)
+
+		nodes_out = ctx.parse(parent, 0, role_fn(entry))
+		for node_any in nodes_out:
+			_mark(node_any)
+			parent += node_any
+
 	def render_linked_public_entry(
 		parent: nodes.paragraph,
 		entry: str,
@@ -688,6 +767,9 @@ def build_sphinx_nodes(ctx : context,obj: object,doc: mod_docitem.docitem_docstr
 	) -> None:
 		try:
 			target_obj, _, _, _ = resolve_qualified_name(ctx, resolver_prefix + "." + entry)
+			if not _is_target_obj_visible_in_current_scope(ctx, target_obj):
+				render_out_of_scope_entry(parent, entry, role_fn)
+				return
 			parent += _build_internal_ref(ctx, target_obj, entry, css_class)
 		except Exception as exc:
 			warnings.warn(f"{warn_label} entry '{entry}' cannot be resolved for linking: {exc}",RuntimeWarning)
@@ -730,7 +812,10 @@ def build_sphinx_nodes(ctx : context,obj: object,doc: mod_docitem.docitem_docstr
 				parent += nodes.Text(", ")
 			base_obj = base_by_name.get(content_s)
 			if base_obj is not None:
-				parent += _build_internal_ref(ctx, base_obj, content_s, css_class)
+				if _is_target_obj_visible_in_current_scope(ctx, base_obj):
+					parent += _build_internal_ref(ctx, base_obj, content_s, css_class)
+				else:
+					render_out_of_scope_entry(parent, content_s, role_fn)
 			else:
 				warnings.warn(f"Derived_from entry '{content_s}' is not a direct base class of '{objname}'.",RuntimeWarning)
 				parent.extend(ctx.parse(parent,0,role_fn(content_s)))
@@ -746,7 +831,10 @@ def build_sphinx_nodes(ctx : context,obj: object,doc: mod_docitem.docitem_docstr
 				parent += nodes.Text(", ")
 			try:
 				target_obj, _, _, _ = resolve_qualified_name(ctx, content_s)
-				parent += _build_internal_ref(ctx, target_obj, content_s, "wtrl_var")
+				if _is_target_obj_visible_in_current_scope(ctx, target_obj):
+					parent += _build_internal_ref(ctx, target_obj, content_s, "wtrl_var")
+				else:
+					render_out_of_scope_entry(parent, content_s, ctx.add_role_var)
 			except Exception as exc:
 				if is_normative:
 					warnings.warn(f"See_also entry '{content_s}' cannot be resolved for linking: {exc}",RuntimeWarning)
@@ -778,6 +866,9 @@ def build_sphinx_nodes(ctx : context,obj: object,doc: mod_docitem.docitem_docstr
 		# For builtins we keep plain styled text (usually no local anchor target).
 		if getattr(exc_obj, "__module__", "") == "builtins":
 			parent.extend(ctx.parse(parent,0,ctx.add_role_type(exc_name)))
+			return
+		if not _is_target_obj_visible_in_current_scope(ctx, exc_obj):
+			render_out_of_scope_entry(parent, exc_name, ctx.add_role_type)
 			return
 		parent += _build_internal_ref(ctx, exc_obj, exc_name, "wtrl_type")
 
@@ -1261,6 +1352,10 @@ Raises:
 		di_cls = mod_docitem.docitem_docstring_class()
 		di_cls.parse(tr,tree_cls)
 		mod_docitem.validate_docstring(tr,class_obj,di_cls)
+		if not _is_doc_visible_in_current_scope(ctx, di_cls):
+# Scope-aware rendering omits invisible objects entirely. If later
+# we need author-facing placeholders, this is the class-level exit to adapt.
+			return []
 
 # Render class block
 		nodes_out.extend(build_sphinx_nodes(ctx, class_obj, di_cls))
@@ -1311,6 +1406,8 @@ Raises:
 
 					di_m.parse(tr,tree_m)
 					mod_docitem.validate_docstring(tr,func_obj,di_m)
+					if not _is_doc_visible_in_current_scope(ctx, di_m):
+						continue
 					nodes_out.extend(ctx.build_prolog_method_block(ctx, None, class_obj, func_obj))
 					nodes_out.extend(build_sphinx_nodes(ctx, func_obj, di_m))
 			except:
@@ -1348,6 +1445,8 @@ Raises:
 
 					di_prop_meth.parse(tr,tree_m)
 					mod_docitem.validate_docstring(tr,func_obj,di_prop_meth)
+					if not _is_doc_visible_in_current_scope(ctx, di_prop_meth):
+						continue
 #					nodes_out.extend(ctx.build_prolog_method_block(ctx, None, prop_obj, func_obj))
 					nodes_out.extend(build_sphinx_nodes(ctx, func_obj, di_prop_meth))
 		return nodes_out
@@ -2556,8 +2655,8 @@ def setup(app: Any) -> dict[str, Any]:
 	ext_static = str(here / "_static")
 
 # Official way to configure this extension.
-# conf.py defines "docitem_context_config" and we tell the app instance,
-# We cannot be sure if it exists, but that' how it is named.
+# conf.py defines "docitem_context_config" and we tell the app instance.
+# We cannot be sure if it exists, but that's how it is named.
 	app.add_config_value("docitem_context_config",None,"env")
 # Add a hook, so that we know when the builder is ready.
 	app.connect("config-inited", lambda app, config: _add_static_path(config, ext_static))

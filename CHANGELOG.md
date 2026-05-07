@@ -4,6 +4,7 @@ Format:
 
 - VERSION [YYYY-MM-DD]: Summary.
 
+- 0.11.0 [2026-05-07]: Sphinx: Scope awareness; Cleanup filesystem
 - 0.10.4 [2026-05-06]: Minor changes documentation: `format.rst`; Pytest-files splitted -> `pytest_coverage`.
 - 0.10.3 [2026-05-05]: Significant progress in documentation: `format.rst`.
 - 0.10.2 [2026-05-01]: Minor changes in repository administration.

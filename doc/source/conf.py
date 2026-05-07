@@ -25,9 +25,9 @@ from pathlib import Path
 CONF_DIR = Path(__file__).resolve().parent
 ROOT_DIR = CONF_DIR.parents[1]
 
-sys.path.insert(0, str((ROOT_DIR / "package_main" / "src").resolve()))
+sys.path.insert(0, str((ROOT_DIR / "src").resolve()))
 sys.path.insert(0, str((ROOT_DIR / "doc" / "examples").resolve()))
-sys.path.insert(0, str((ROOT_DIR / "ide-plugins" / "pygments").resolve()))
+sys.path.insert(0, str((ROOT_DIR.parents[0] / "package_ide-plugins" / "pygments").resolve()))
 
 # -- Syntax Highlighting -----------------------------------------------------
 from python_waterloo_lexer import PythonWaterlooLexer
