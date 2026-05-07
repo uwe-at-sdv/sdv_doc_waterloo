@@ -1,7 +1,7 @@
 .. _flow_control:
 
-Flow control in freeform sections
----------------------------------
+Test: Flow control in freeform sections
+----------------------------------------------------------------
 
 This section is informative.
 
