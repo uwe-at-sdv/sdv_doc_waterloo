@@ -107,6 +107,14 @@ First, ensure that you are using the latest version of pip:
 
 	pip install --upgrade pip
 
+.. note::
+	If :wtrl_cmd:`python3 -m pip` is not available inside the activated
+	environment, bootstrap pip first:
+
+	.. code-block:: bash
+
+		python3 -m ensurepip --upgrade
+
 Then install Sphinx and any extensions required for your project:
 
 .. code-block:: bash
