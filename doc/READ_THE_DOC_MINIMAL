@@ -1,0 +1,52 @@
+Purpose
+=======
+
+This file defines a low-context reading strategy for Waterloo Docstrings.
+It targets a hard budget of <= 20,000 tokens while preserving practical
+coverage for most implementation and tooling tasks.
+
+Token Baseline
+==============
+
+Measured with `tiktoken` using `o200k_base` (May 7, 2026).
+
+- Full recommended set from `READ_THE_DOC`: ~50,798 tokens
+- `source/format.rst` alone: ~22,913 tokens (cannot fit into a <=20k pass)
+
+Read Path (<=20k)
+=================
+
+Read these files in order:
+
+1. `source/index.rst` (123)
+2. `source/introduction.rst` (5,645)
+3. `source/examples_minimax.rst` (3,056)
+4. `source/examples.rst` (2,697)
+5. `source/tools.rst` (2,929)
+6. `source/json_io.rst` (5,152)
+7. `examples/test_docitem_module_minimal.py` (37)
+8. `examples/test_docitem_class_minimal.py` (58)
+9. `examples/test_docitem_function_minimal.py` (69)
+
+Total: ~19,766 tokens (remaining budget: ~234)
+
+When Format Spec Is Required
+============================
+
+If the task requires normative details from `source/format.rst`, read it in
+three chunks (balanced by token count):
+
+1. `source/format.rst:1` to `source/format.rst:702` (~7,586)
+2. `source/format.rst:703` to `source/format.rst:1141` (~7,693)
+3. `source/format.rst:1142` to `source/format.rst:1682` (~7,634)
+
+Combined `format.rst` total: ~22,913 tokens.
+
+Usage Guidance
+==============
+
+- Start with the <=20k path for quick orientation, lint/tooling work,
+  JSON/HTML pipeline tasks, and example-driven implementation.
+- Add `format.rst` chunk(s) only if you need strict rule semantics,
+  parser/validator edge behavior, or rule-ID level decisions.
+- Continue to ignore generated/cache folders as documented in `READ_THE_DOC`.
