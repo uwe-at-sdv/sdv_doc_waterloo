@@ -1,0 +1,99 @@
+Purpose
+=======
+
+This file tells LLM agents which documentation files are relevant for
+understanding Waterloo Docstrings, and which generated or auxiliary files
+should usually be ignored.
+
+Read first
+==========
+
+Read these files in this order:
+
+1. source/index.rst
+   Sphinx table of contents.
+
+2. source/introduction.rst
+   Project purpose, principles, normativity model, output formats.
+
+3. source/format.rst
+   Main specification. This is the most important file for implementation,
+   validation, parsing, and rule-ID related work.
+
+4. source/examples_minimax.rst
+   Minimal and full docstring examples for modules, classes, functions,
+   methods, and inherited methods.
+
+5. source/examples.rst
+   Additional examples: factories, properties, decorators, coroutines,
+   definitions, inherited definitions, nested classes, free-form flow.
+
+6. source/tools.rst
+   waterlint and diagnostic/error-code reference.
+
+7. source/json_io.rst
+   JSON output format and LLM-readable documentation workflow.
+
+8. source/html_output_layer.rst
+   HTML5 rendering from Waterloo JSON.
+
+Read examples selectively
+=========================
+
+When examples are referenced via literalinclude, read the corresponding file
+under examples/. The most useful examples are:
+
+- examples/test_docitem_module_minimal.py
+- examples/test_docitem_module_full.py
+- examples/test_docitem_class_minimal.py
+- examples/test_docitem_class_full.py
+- examples/test_docitem_function_minimal.py
+- examples/test_docitem_function_medium.py
+- examples/test_docitem_function_full.py
+- examples/test_docitem_factory_vec2d.py
+- examples/test_docitem_definitions_inherited.py
+- examples/test_scope_mix.py
+- examples/test_flow_control.py
+
+Read only when needed
+=====================
+
+- source/reference.rst
+  API reference entry points. Useful for finding documented functions/classes,
+  but not the first place to learn the format.
+
+- examples/pytest_bad_*.py
+  Negative validator cases. Read only when working on validator diagnostics
+  or a specific rule ID.
+
+Usually ignore
+==============
+
+Do not read these unless the task explicitly concerns generated output,
+schemas, rendering artifacts, or build/debug state:
+
+- build/
+- .mypy_cache/
+- examples/__pycache__/
+- output-html/
+- output-json/
+- examples/golden_files/
+- img/
+- input-html/
+- input-json/
+- input-python/
+- source/_static/
+
+Context note
+============
+
+The useful reST documentation is small compared to the whole doc directory.
+The full package_main/doc directory includes generated output and caches, so
+agents should not recursively ingest it without filtering.
+
+Maintenance note
+================
+
+This project is still evolving. Update this file occasionally when major
+documentation files, example groups, or generated-output directories are added,
+removed, or renamed.
