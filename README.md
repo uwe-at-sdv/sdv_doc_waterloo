@@ -1,5 +1,5 @@
 <p align="center">
-	<img src="img/wtrl_logo.svg" alt="Waterloo Logo" width="240">
+	<img src="img/wtrl_logo_color.svg" alt="Waterloo Logo" width="240">
 </p>
 
 ## README

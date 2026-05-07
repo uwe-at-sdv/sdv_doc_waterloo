@@ -68,6 +68,12 @@ exclude_patterns = []
 #
 html_theme = 'alabaster'
 
+html_theme_options = {
+    'logo': 'wtrl_logo_color_64x64.png',          # Filename in _static/
+    'logo_name': 'false',         # Display project name below logo
+    'logo_text_align': 'center', # Optional: center align the logo/text
+}
+
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
