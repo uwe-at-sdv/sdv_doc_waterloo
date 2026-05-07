@@ -549,7 +549,11 @@ def _get_validated_doc_for_object(
 def _is_target_obj_visible_in_current_scope(ctx: context, obj: object) -> bool:
 	doc = _get_validated_doc_for_object(ctx, obj)
 	if doc is None:
-		return False
+#		return False
+# We must return True here. A target should not be greyed out
+# just because of a missing docstring. It may remain unlinked
+# but it is not out of scope.
+		return True
 	return doc.is_visible(_get_current_scope_set(ctx.env))
 
 #==============================================================#
