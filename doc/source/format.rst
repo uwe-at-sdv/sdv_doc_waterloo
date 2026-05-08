@@ -855,28 +855,39 @@ Common sections for all profiles
 		* [SCP-004] -- Scope assignments and internal references |must| obey the :wtrl_term:`Scope Monotonicity Rule` as defined in :ref:`chapter_scopes_and_visibility`.
 		* [SCP-005] -- For every internal reference introduced by sections
 		  :wtrl_label:`Public_classes`, :wtrl_label:`Public_functions`, or :wtrl_label:`Public_methods`,
-		  validators |must| apply the scope compatibility test defined in
-		  :ref:`section_scope_monotonicity_rule`.
+		  the source object |must| be the documented module or class and the target object
+		  |must| be the referenced public class/function/method. The source object |must|
+		  be at least as public as the target object. Validators |must| apply the scope
+		  compatibility test defined in :ref:`section_scope_monotonicity_rule`.
 		  Any violation of the scope compatibility test in this case |must| be reported as an error.
 		* [SCP-006] -- If section :wtrl_label:`See_also` is listed in
 		  :wtrl_label:`Preamble.normative_sections`, then for every internal reference in
-		  :wtrl_label:`See_also` that resolves to a Waterloo-documented object, validators |must|
-		  apply the scope compatibility test defined in :ref:`section_scope_monotonicity_rule`.
+		  :wtrl_label:`See_also` that resolves to a Waterloo-documented object, the source object
+		  |must| be the documented module or class and the target object |must| be the referenced
+		  object. The source object |must| be at least as public as the target object.
+		  Validators |must| apply the scope compatibility test defined in
+		  :ref:`section_scope_monotonicity_rule`.
 		  Any violation of the scope compatibility test in this case |must| be reported as an error.
 		* [SCP-007] -- If section :wtrl_label:`See_also` is not listed in
 		  :wtrl_label:`Preamble.normative_sections`, then for every internal reference
-		  in :wtrl_label:`See_also` that resolves to a Waterloo-documented object,
-		  validators |must| apply the scope compatibility test defined in
+		  in :wtrl_label:`See_also` that resolves to a Waterloo-documented object, the source
+		  object |must| be the documented module or class and the target object |must| be the
+		  referenced object. The source object |must| be at least as public as the target object.
+		  Validators |must| apply the scope compatibility test defined in
 		  :ref:`section_scope_monotonicity_rule`.
 		  Any violation of the scope compatibility test in this case |must| be reported as a warning.
 		* [SCP-008] -- For profile :wtrl_value:`inherited_method`, subsection
 		  :wtrl_label:`Contract.base` introduces an internal reference from the derived
-		  method to the referenced base method. Validators |must| apply the scope
-		  compatibility test defined in :ref:`section_scope_monotonicity_rule` to this
+		  method to the referenced base method. The source object |must| be the derived
+		  method and the target object |must| be the referenced base method. The source
+		  object |must| be at least as public as the target object. Validators |must|
+		  apply the scope compatibility test defined in :ref:`section_scope_monotonicity_rule` to this
 		  reference. Any violation of the scope compatibility test in this case |must| be reported as an error.
 		* [SCP-009] -- Section :wtrl_label:`Derived_from` introduces internal references
-		  from the documented class to the referenced base classes. Validators |must|
-		  apply the scope compatibility test defined in
+		  from the documented class to the referenced base classes. The source object |must|
+		  be the documented class and the target object |must| be one of its referenced base
+		  classes. The source object |must| be at least as public as the target object.
+		  Validators |must| apply the scope compatibility test defined in
 		  :ref:`section_scope_monotonicity_rule` to each such reference that resolves to
 		  a Waterloo-documented object. Any scope-compatibility violation in this case
 		  |must| be reported as an error.
@@ -1554,21 +1565,32 @@ Scope Monotonicity Rule
 
 Documented objects form a directed reference graph. A directed edge from object A
 to object B exists if and only if A establishes a reference to B.
+For such an edge, A is the source object and B is the target object.
 Reference edges arise exclusively from the following constructs:
 
 * Entries in :wtrl_label:`Public_classes`
 * Entries in :wtrl_label:`Public_functions`
 * Entries in :wtrl_label:`Public_methods`
 * Subsection :wtrl_label:`Contract.base` in profile :wtrl_value:`inherited_method`
+* Entries in :wtrl_label:`Derived_from`
 * Entries in :wtrl_label:`See_also`
 
 No other structural or semantic relationship constitutes a reference edge
 for the purposes of scope validation.
 
-For every such reference from object A to object B, scope compatibility is given
-if and only if there exist s_A in scopes(A) and s_B in scopes(B) such that:
+Scope compatibility is directional. For containment-style references introduced by
+:wtrl_label:`Public_classes`, :wtrl_label:`Public_functions`, :wtrl_label:`Public_methods`,
+:wtrl_label:`Contract.base`, and :wtrl_label:`Derived_from`, the source object
+|must| be at least as public as the target object; equivalently, the target object
+|must| not be more public than the source object.
+For :wtrl_label:`See_also`, the target object |must| be at least as public as the
+source object; equivalently, the source object |must| not be more public than the
+target object.
 
-	s_A <= s_B
+In terms of the numeric scope order, this means:
+
+* for containment-style references, there exist s_A in scopes(A) and s_B in scopes(B) such that s_A <= s_B
+* for :wtrl_label:`See_also`, there exist s_A in scopes(A) and s_B in scopes(B) such that s_B <= s_A
 
 This rule is referred to as the :wtrl_term:`Scope Monotonicity Rule`.
 
