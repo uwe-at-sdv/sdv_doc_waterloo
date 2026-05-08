@@ -840,20 +840,41 @@ def build_sphinx_nodes(ctx : context,obj: object,doc: mod_docitem.docitem_docstr
 		parent: nodes.paragraph,
 		entries: Sequence[str],
 		is_normative: bool,
+		resolver_prefix: str | None,
 	) -> None:
+		obj_module_prefix = resolver_prefix
+		obj_qualname = getattr(obj, "__qualname__", "")
+		obj_class_prefix = None
+		if isinstance(obj_qualname, str) and "." in obj_qualname and not mod_docitem.is_obj_module(obj):
+			obj_class_prefix = f"{obj_module_prefix}.{obj_qualname.rsplit('.', 1)[0]}" if obj_module_prefix else None
 		for i_item, content in enumerate(entries):
 			content_s = str(content)
 			if i_item > 0:
 				parent += nodes.Text(", ")
-			try:
-				target_obj, _, _, _ = resolve_qualified_name(ctx, content_s)
-				if _is_target_obj_visible_in_current_scope(ctx, target_obj):
-					parent += _build_internal_ref(ctx, target_obj, content_s, "wtrl_var")
-				else:
-					render_out_of_scope_entry(parent, content_s, ctx.add_role_var)
-			except Exception as exc:
+			target_obj: object | None = None
+			last_exc: Exception | None = None
+			for cand in (
+				content_s,
+				f"{obj_module_prefix}.{content_s}" if obj_module_prefix else None,
+				f"{obj_class_prefix}.{content_s}" if obj_class_prefix else None,
+			):
+				if cand is None:
+					continue
+				try:
+					target_obj, _, _, _ = resolve_qualified_name(ctx, cand)
+					last_exc = None
+					break
+				except Exception as exc:
+					last_exc = exc
+					target_obj = None
+			if target_obj is not None and _is_target_obj_visible_in_current_scope(ctx, target_obj):
+				parent += _build_internal_ref(ctx, target_obj, content_s, "wtrl_var")
+			elif target_obj is not None:
+				render_out_of_scope_entry(parent, content_s, ctx.add_role_var)
+			else:
+				warn_exc: Exception = last_exc if last_exc is not None else ImportError(f"Could not resolve qualified name '{content_s}' with module/class context None/None.")
 				if is_normative:
-					warnings.warn(f"See_also entry '{content_s}' cannot be resolved for linking: {exc}",RuntimeWarning)
+					warnings.warn(f"See_also entry '{content_s}' cannot be resolved for linking: {warn_exc}",RuntimeWarning)
 				parent.extend(ctx.parse(parent,0,ctx.add_role_var(content_s)))
 
 	def render_linked_raises_entry_label(parent: nodes.paragraph, exc_name: str) -> None:
@@ -1268,7 +1289,7 @@ def build_sphinx_nodes(ctx : context,obj: object,doc: mod_docitem.docitem_docstr
 			node_entry += node_bullet_list
 
 		elif label in ("Raises"):
-# For section "Raises" we enforce the line-by-line style and interpret the contant as an executable contract.
+# For section "Raises" we enforce the line-by-line style and interpret the content as an executable contract.
 			if len(item_section.items()) == 0:
 				node_entry.extend(parse_text(node1_paragraph,"|empty|"))
 			else:
@@ -1292,6 +1313,7 @@ def build_sphinx_nodes(ctx : context,obj: object,doc: mod_docitem.docitem_docstr
 				node1_paragraph,
 				cast(Sequence[str], item_section.items()),
 				is_normative_section("See_also"),
+				obj.__name__ if mod_docitem.is_obj_module(obj) else getattr(obj, "__module__", None),
 			)
 			node_entry += node1_paragraph
 # The following three, Public_classes/functions/methods have the
