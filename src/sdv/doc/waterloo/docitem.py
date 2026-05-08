@@ -251,7 +251,8 @@ from contextlib import contextmanager
 from sdv.doc.waterloo.docitem_docstring import *
 from sdv.doc.waterloo.docitem_validator import *
 
-__version__ = "0.6.1"
+__version__ = "0.7.0"
+# - 0.7.0 [2026-05-08]	Rules DER-010 to DER-013 and implementation in docitem_validator.py "Derived_from"
 # - 0.6.1 [2026-04-02]	Semantic role 'key' for keyboard
 # - 0.6.0 [2026-03-25]	Definitions now Term plus Variations.
 # - 0.5.6 [2026-03-20]	Rule SEE-006 restricted to documentable objects.

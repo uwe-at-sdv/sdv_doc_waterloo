@@ -69,9 +69,12 @@ exclude_patterns = []
 html_theme = 'alabaster'
 
 html_theme_options = {
-    'logo': 'wtrl_logo_color_64x64.png',          # Filename in _static/
-    'logo_name': 'false',         # Display project name below logo
-    'logo_text_align': 'center', # Optional: center align the logo/text
+# Filename rel _static/
+    'logo': 'wtrl_logo_color_64x64.png',
+# Display project name below logo
+    'logo_name': 'false',
+# Optional: center align the logo/text
+    'logo_text_align': 'left',
 }
 
 # Add any paths that contain custom static files (such as style sheets) here,

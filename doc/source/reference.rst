@@ -236,6 +236,8 @@ Additional helpers
 Enum classes
 ------------
 
+.. wtrl_push_current_module:: sdv.doc.waterloo.docitem_helper
+
 :wtrl_type:`sdv.doc.waterloo.docitem_helper.Scope`
 ......................................................
 
@@ -255,6 +257,8 @@ Enum classes
 ......................................................
 
 .. wtrl_autodoc_class:: sdv.doc.waterloo.docitem_helper.Status
+
+.. wtrl_pop_current_module:: sdv.doc.waterloo.docitem_helper
 
 Helper classes
 --------------

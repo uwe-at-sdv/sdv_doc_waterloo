@@ -132,7 +132,8 @@ from sphinx.util.nodes import make_refnode
 
 import sdv.doc.waterloo.docitem as mod_docitem
 
-__version__ = "0.2.0"
+__version__ = "0.2.1"
+# - 0.2.1 [2026-05-08]	Bugfixes name resolution in link lists like "Public_methods"
 # - 0.2.0 [2026-05-06]	Scope awareness
 # - 0.1.1 [2026-04-25]	Parameters is now rendered as free-form text, not bullet list.
 # - 0.1.0 [2026-04-17]	Public_types/constants/variables are now rendered as free-form text, not bullet list.
@@ -206,7 +207,7 @@ Contract:
 		self.i_line = lineno
 # See make_context. We extract env from the SphinxApp instance.
 		self.env = None
-		self.wtrl_validated_doc_cache: dict[object, mod_docitem.docitem_docstring_base | None] = {}
+		self.wtrl_validated_doc_cache: dict[int, mod_docitem.docitem_docstring_base | None] = {}
 		self.add_role_attr = lambda t:f":wtrl_attr:`{t}`"
 		self.add_role_cmd = lambda t:f":wtrl_cmd:`{t}`"
 		self.add_role_dfn = lambda t:f":wtrl_dfn:`{t}`"
@@ -463,8 +464,10 @@ def _get_scope_stack(env: Any | None) -> List[mod_docitem.Scope]:
 def push_current_module(qualified_module_name : str, env: Any | None = None) -> None:
 	stack = _get_module_stack(env)
 	stack.append(qualified_module_name)
+	print(f"push_current_module: {stack[-1]}")
 def pop_current_module(env: Any | None = None) -> None:
 	stack = _get_module_stack(env)
+	print(f"pop_current_module: {stack[-1]}")
 	del stack[-1]
 def get_current_module(env: Any | None = None) -> str:
 	return _get_module_stack(env)[-1]
@@ -478,6 +481,7 @@ def push_current_class(qualified_class_name : str, env: Any | None = None) -> No
 	print(f"push_current_class: {stack[-1]}")
 def pop_current_class(env: Any | None = None) -> None:
 	stack = _get_class_stack(env)
+	print(f"pop_current_class: {stack[-1]}")
 	del stack[-1]
 def get_current_class(env: Any | None = None) -> str:
 	return _get_class_stack(env)[-1]
@@ -535,15 +539,23 @@ def _get_validated_doc_for_object(
 	non-linkable targets and handled by the caller via plain text fallback.
 	"""
 	cache = ctx.wtrl_validated_doc_cache
-	if obj in cache:
-		cached = cache[obj]
+	key = id(obj)
+	if key in cache:
+		cached = cache[key]
 		return cached if isinstance(cached, mod_docitem.docitem_docstring_base) else None
+	obj_doc = getattr(obj, "__doc__", None)
+	if not isinstance(obj_doc, str):
+# Objects without a Waterloo docstring cannot contribute scope metadata.
+# We treat them as scope-agnostic, so that documented constants and
+# similar values remain linkable without spurious warnings.
+		cache[key] = None
+		return None
 	try:
 		doc = mod_docitem.validate_docstring(ctx.tr, obj)
 	except Exception:
-		cache[obj] = None
+		cache[key] = None
 		return None
-	cache[obj] = doc
+	cache[key] = doc
 	return doc
 
 def _is_target_obj_visible_in_current_scope(ctx: context, obj: object) -> bool:
@@ -776,7 +788,7 @@ def build_sphinx_nodes(ctx : context,obj: object,doc: mod_docitem.docitem_docstr
 				return
 			parent += _build_internal_ref(ctx, target_obj, entry, css_class)
 		except Exception as exc:
-			warnings.warn(f"{warn_label} entry '{entry}' cannot be resolved for linking: {exc}",RuntimeWarning)
+			warnings.warn(f"{warn_label} resolver_prefix '{resolver_prefix}': entry '{entry}' cannot be resolved for linking: {exc}",RuntimeWarning)
 			parent.extend(ctx.parse(parent,0,role_fn(entry)))
 
 	def render_linked_public_entries(
@@ -1005,6 +1017,7 @@ def build_sphinx_nodes(ctx : context,obj: object,doc: mod_docitem.docitem_docstr
 		return out
 
 	objname = mod_docitem.get_obj_name(obj)
+	objname_q = mod_docitem.get_obj_fully_qualified_name(obj)
 	anchor = mod_docitem.build_anchor(obj)
 # Required for inter-page references.
 	_register_anchor(ctx, obj, anchor)
@@ -1234,9 +1247,9 @@ def build_sphinx_nodes(ctx : context,obj: object,doc: mod_docitem.docitem_docstr
 				node_label_paragraph = nodes.paragraph()
 # Add a clickable label. Pass "Public_constants"/"Public_variables"/"Public_types" as label for warnings.
 				if label in ("Public_constants", "Public_variables"):
-					render_linked_public_entry(node_label_paragraph,label1,objname,"wtrl_var",ctx.add_role_var,label)
+					render_linked_public_entry(node_label_paragraph,label1,objname_q,"wtrl_var",ctx.add_role_var,label)
 				elif label in ("Public_types",):
-					render_linked_public_entry(node_label_paragraph,label1,objname,"wtrl_type",ctx.add_role_type,label)
+					render_linked_public_entry(node_label_paragraph,label1,objname_q,"wtrl_type",ctx.add_role_type,label)
 # Add a label with semantic role |var|.
 				elif label in ("Parameters",):
 					render_plain_entry(node_label_paragraph,label1,"wtrl_var",ctx.add_role_var,label)
@@ -1289,14 +1302,14 @@ def build_sphinx_nodes(ctx : context,obj: object,doc: mod_docitem.docitem_docstr
 			render_linked_public_entries(
 				node1_paragraph,
 				cast(Sequence[str], item_section.items()),
-				objname, "wtrl_type", ctx.add_role_type, label)
+				objname_q, "wtrl_type", ctx.add_role_type, label)
 			node_entry += node1_paragraph
 		elif label in ("Public_functions","Public_methods"):
 			node1_paragraph = nodes.paragraph()
 			render_linked_public_entries(
 				node1_paragraph,
 				cast(Sequence[str], item_section.items()),
-				objname, "wtrl_func", ctx.add_role_func, label)
+				objname_q, "wtrl_func", ctx.add_role_func, label)
 			node_entry += node1_paragraph
 # Catch-all. Scan HTML for "TBD" in order to detect bugs.
 		else:

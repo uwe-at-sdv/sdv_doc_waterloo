@@ -551,11 +551,33 @@ Notes:
 # ...must be normative.
 			if "Derived_from" not in node_normative_sections.items():
 				raise_validation_error(tr,obj,"DER-004",f"Section 'Derived_from' is not listed in section 'Preamble.normative_sections'. We have {node_normative_sections.items()}.")
-# ...entries must refer to direct base classes
-			base_names = [b.__name__ for b in getattr(obj, "__bases__", ())]
+# ...entries must refer to direct base classes, but may do so using either
+# short or qualified names. We accept the canonical name of each direct base,
+# its qualname, and its fully qualified name.
+			base_objs = tuple(getattr(obj, "__bases__", ()))
+			base_desc = [get_obj_fully_qualified_name(b) for b in base_objs]
+			base_aliases: Dict[str, set[object]] = {}
+			for base_obj in base_objs:
+				for alias in (
+					getattr(base_obj, "__name__", ""),
+					getattr(base_obj, "__qualname__", ""),
+					get_obj_fully_qualified_name(base_obj),
+				):
+					if alias:
+						base_aliases.setdefault(alias, set()).add(base_obj)
 			for bname in node_derived.items():
-				if bname not in base_names:
-					raise_validation_error(tr,obj,"DER-003",f"Class '{bname}' is not a direct base; direct bases are {base_names}.")
+				matches = base_aliases.get(bname, set())
+				if len(matches) == 1:
+					continue
+				if len(matches) > 1:
+					raise_validation_error(tr,obj,"DER-013",f"Entry '{bname}' is ambiguous; please qualify it enough to resolve one of {base_desc}.")
+				try:
+					resolved_obj, _ = resolve_object(bname, obj)
+				except Exception:
+					resolved_obj = None
+				if resolved_obj in base_objs:
+					continue
+				raise_validation_error(tr,obj,"DER-003",f"Class '{bname}' is not a direct base; direct bases are {base_desc}.")
 #===== Classes/Functions/Methods/Public_* sections ============#
 	section_normativity = [
 		("Public_classes", "CPCL-002"),

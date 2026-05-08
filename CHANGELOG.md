@@ -4,6 +4,7 @@ Format:
 
 - VERSION [YYYY-MM-DD]: Summary.
 
+- 0.12.0 [2026-05-08]: Changes in `docitem_validator.py` and `docitem_sphinx.py`
 - 0.11.1 [2026-05-07]: File doc/READ_THE_DOC: a how-to-read for LLMs in order to avoid noise.
 - 0.11.0 [2026-05-07]: Sphinx: Scope awareness; Cleanup filesystem
 - 0.10.4 [2026-05-06]: Minor changes documentation: `format.rst`; Pytest-files splitted -> `pytest_coverage`.

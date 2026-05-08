@@ -731,6 +731,14 @@ def test_inherited_ok_three_levels() -> None:
 	result = _run_waterlint_validate("pytest_good_inheritance.Z.spam")
 	assert result.returncode == 0, f"expected success, got {result.stderr}"
 
+def test_inherited_ok_derived_from_mro() -> None:
+	result = _run_waterlint_validate_with_basedir("test_docitem_derived_from_mro.Y", basedir="doc/examples")
+	assert result.returncode == 0, f"expected success, got {result.stderr}"
+
+def test_inherited_bad_derived_from_mro_non_direct() -> None:
+	result = _run_waterlint_validate_with_basedir("test_docitem_derived_from_mro.Z", basedir="doc/examples")
+	_assert_error(result, "DER-003", "not a direct base")
+
 def test_bad_class_in_class_x01_validate_ok() -> None:
 	result = _run_waterlint_validate("pytest_bad_class_in_class.X_01")
 	assert result.returncode == 0, f"expected success, got {result.stderr}"
