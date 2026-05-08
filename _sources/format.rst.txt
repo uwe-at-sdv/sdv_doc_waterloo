@@ -1580,17 +1580,21 @@ for the purposes of scope validation.
 
 Scope compatibility is directional. For containment-style references introduced by
 :wtrl_label:`Public_classes`, :wtrl_label:`Public_functions`, :wtrl_label:`Public_methods`,
-:wtrl_label:`Contract.base`, and :wtrl_label:`Derived_from`, the source object
-|must| be at least as public as the target object; equivalently, the target object
-|must| not be more public than the source object.
-For :wtrl_label:`See_also`, the target object |must| be at least as public as the
+:wtrl_label:`Contract.base`, and :wtrl_label:`Derived_from`, the containing object
+|must| be at least as public as the contained object; equivalently, the contained object
+|must| not be more public than the containing object.
+For :wtrl_label:`See_also`, :wtrl_label:`Derived_from`, and :wtrl_label:`Contract.base`
+the target object |must| be at least as public as the
 source object; equivalently, the source object |must| not be more public than the
 target object.
 
 In terms of the numeric scope order, this means:
 
-* for containment-style references, there exist s_A in scopes(A) and s_B in scopes(B) such that s_A <= s_B
-* for :wtrl_label:`See_also`, there exist s_A in scopes(A) and s_B in scopes(B) such that s_B <= s_A
+* for containment-style references, there exist s_A in scopes(A) and s_B in scopes(B) such that s_B <= s_A,
+  where A represents the contained object and B represents the containing object
+* for :wtrl_label:`See_also`, there exist s_A in scopes(A) and s_B in scopes(B) such that s_B <= s_A,
+  where A represents the object with the :wtrl_label:`See_also`, :wtrl_label:`Derived_from`,
+  or :wtrl_label:`Contract.base` section and B represents the object pointed to from this section.
 
 This rule is referred to as the :wtrl_term:`Scope Monotonicity Rule`.
 
