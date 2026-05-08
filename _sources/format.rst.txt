@@ -1133,9 +1133,13 @@ a class docstring |must| have the following structure:
 * :wtrl_label:`Derived_from:`
 	- [DER-001] -- The section |may| exist.
 	- [DER-004] -- If it exists, it |must| be listed as normative in :wtrl_label:`Preamble.normative_sections`.
-	- [DER-009] -- If it exists, the content |must| be a list of Qualified Identifiers according to rule LQID-001.
+	- [DER-009] -- If it exists, the content |must| be a list of [Qualified] Identifiers according to rule LQID-001.
 	- [DER-002] -- |Must| list the base classes that contribute public functions, types, constants, attributes, or semantic guarantees.
 	- [DER-003] -- Each entry |must| refer to a direct base class of the documented class.
+	- [DER-010] -- Each entry |must| name one of the direct base classes either as a direct Identifier or as a Qualified Identifier.
+	- [DER-011] -- A direct Identifier entry |must| resolve unambiguously to exactly one direct base class.
+	- [DER-012] -- A Qualified Identifier entry |must| resolve to a direct base class by fully qualifying the name of that base class.
+	- [DER-013] -- If a direct Identifier would match more than one direct base class, the entry |must| be qualified enough to resolve the ambiguity.
 	- |ObsoleteRules|
 		* DER-005 -- Obsolete in version 0.5.5; superseded by DER-009.
 		* DER-006 -- Obsolete in version 0.5.5; superseded by DER-009.

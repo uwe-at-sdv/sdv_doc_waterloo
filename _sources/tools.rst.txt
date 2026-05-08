@@ -102,7 +102,9 @@ This section is normative.
 * [XTNSN-012] -- Cannot qualify documented object
 
 The JSON protocol used by the VSCode editor integration is documented
-separately in chapter :doc:`vscode_extension_backend`.
+separately in chapter :ref:`vscode_extension_backend`.
+
+.. _vscode_extension_backend:
 
 Reference: VSCode Extension Backend
 ----------------------------------------------------------------

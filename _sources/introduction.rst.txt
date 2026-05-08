@@ -641,7 +641,6 @@ and the result is:
 
 .. wtrl_autodoc_method:: test_docitem_module_3.MyClass.greeting
 
-
 Convenience: module and class stack
 -----------------------------------
 

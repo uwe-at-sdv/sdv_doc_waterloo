@@ -105,7 +105,7 @@ First, ensure that you are using the latest version of pip:
 
 .. code-block:: bash
 
-	pip install --upgrade pip
+	python3 -m pip install --upgrade pip
 
 .. note::
 	If :wtrl_cmd:`python3 -m pip` is not available inside the activated
@@ -119,7 +119,7 @@ Then install Sphinx and any extensions required for your project:
 
 .. code-block:: bash
 
-	pip install sphinx
+	python3 -m pip install sphinx
 
 You are still in the project's root directory.
 Create a directory for the human-readable documentation:
@@ -169,13 +169,13 @@ If you have not done so already, update :wtrl_lit:`pip`:
 
 .. code-block:: bash
 
-	pip install --upgrade pip
+	python3 -m pip install --upgrade pip
 
 Install Waterloo from :wtrl_file:`github.com`:
 
 .. code-block:: bash
 
-	pip install git+ssh://git@github.com:22/uwe-at-sdv/sdv_doc_waterloo.git
+	python3 -m pip install git+ssh://git@github.com:22/uwe-at-sdv/sdv_doc_waterloo.git
 
 Add the extension to :wtrl_file:`${ROOT}/doc/source/conf.py`:
 
