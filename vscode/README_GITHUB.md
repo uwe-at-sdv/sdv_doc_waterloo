@@ -29,7 +29,7 @@ cd sdv_doc_waterloo/vscode
 From this directory:
 
 ```bash
-npx @vscode/vsce package
+./package_vsix.sh local
 ```
 
 This creates a file like:
@@ -37,6 +37,15 @@ This creates a file like:
 ```text
 waterloo-docstrings-<version>.vsix
 ```
+
+For the release-style README badges, use:
+
+```bash
+./package_vsix.sh public
+```
+
+The build requires a local `vsce` installation on `PATH` or in
+`node_modules/.bin`.
 
 ## Install VSIX
 

@@ -4,6 +4,10 @@
 __pycache__/
 
 # Local helper/source variants not needed in VSIX
+README_AZURE.md
+README_BADGES_*.md
+README_GITHUB.md
+package_vsix.sh
 obsolete/**
 tools/**
 
