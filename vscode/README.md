@@ -1,7 +1,8 @@
 # Waterloo Docstrings for VS Code
 
 ![Version](https://img.shields.io/badge/version-0.1.9-blue)
-![Local test](https://img.shields.io/badge/build-local_test-green)
+
+VS Code Marketplace: ready
 
 VS Code extension for Waterloo docstrings in Python.
 

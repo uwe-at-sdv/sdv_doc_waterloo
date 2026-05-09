@@ -12,6 +12,7 @@ echo ${VERSION} > "VERSION"
 
 # Update (redundant) version file.
 echo "VERSION: ${VERSION}"
+echo "   MODE: ${MODE}"
 
 PATH_VERSION_BADGE_SVG="img/version-${VERSION}-blue.svg"
 # Download version badge. We will bake this into the vsix in order
