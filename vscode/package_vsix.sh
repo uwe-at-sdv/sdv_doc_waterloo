@@ -14,14 +14,24 @@ echo ${VERSION} > "VERSION"
 echo "VERSION: ${VERSION}"
 echo "   MODE: ${MODE}"
 
-PATH_VERSION_BADGE_SVG="img/version-${VERSION}-blue.svg"
+PATH_VERSION_BADGE_SVG="img/version-badge.svg"
+PATH_LOCATION_BADGE_SVG="img/location-badge.svg"
+PATH_VERSION_BADGE_PNG="img/version-badge.png"
+PATH_LOCATION_BADGE_PNG="img/location-badge.png"
 # Download version badge. We will bake this into the vsix in order
-# to display them in a robust wat instead of relying on network access.
+# to display them in a robust way instead of relying on network access.
 # Marketplace seems to have problems...
 echo "#----- Download badges from shields.io ------------------------#"
-rm img/version-*.*.*-*.svg
+rm -f img/version-badge.svg img/version-badge.png img/location-badge.svg img/location-badge.png
 curl "https://img.shields.io/badge/version-${VERSION}-blue" > "${PATH_VERSION_BADGE_SVG}"
+rsvg-convert -z 3 -f png "${PATH_VERSION_BADGE_SVG}" -o "${PATH_VERSION_BADGE_PNG}"
 git add "${PATH_VERSION_BADGE_SVG}"
+git add "${PATH_VERSION_BADGE_PNG}"
+
+curl "https://img.shields.io/badge/build-local_test-green" > "${PATH_LOCATION_BADGE_SVG}"
+rsvg-convert -z 3 -f png "${PATH_LOCATION_BADGE_SVG}" -o "${PATH_LOCATION_BADGE_PNG}"
+git add "${PATH_LOCATION_BADGE_SVG}"
+git add "${PATH_LOCATION_BADGE_PNG}"
 echo "#----- Done ---------------------------------------------------#"
 
 # Select badge file for local or public presentation.
