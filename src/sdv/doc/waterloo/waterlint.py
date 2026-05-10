@@ -27,7 +27,8 @@ from jsonschema import Draft202012Validator
 #from jsonschema import JSONDecodeError
 import jsonschema.exceptions
 
-__version__ = "0.9.1"
+__version__ = "0.9.2"
+# - 0.9.2 [2026-05-10]	Minor fixes/changes in subcommand render-html5.
 # - 0.9.1 [2026-05-01]	Minor changes in static typing
 # - 0.9.0 [2026-04-25]	Refactoring render-html5: freeform sections
 # - 0.8.3 [2026-04-24]	Subcommand render-html5: --css and --additional-css are now independent options.

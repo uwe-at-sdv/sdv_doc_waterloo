@@ -1,18 +1,30 @@
 const WTRL_DATA = __DATA_JSON__;
 const WTRL_INDEX = __INDEX_JSON__;
 const WTRL_EXAMPLES_HTML = __EXAMPLES_HTML_JSON__;
+// The above variables are injected by waterlint_render_html5.py, the script
+// responsible for waterlint subcommand render-html5. They contain the data and index
+// structures for the Waterloo documentation, as well as pre-rendered HTML snippets for examples.
 
 function byId(id) { return document.getElementById(id); }
 function setTextIfPresent(id, text) {
-  const el = byId(id);
-  if (el) el.textContent = text;
+  const elem = byId(id);
+  if (elem) elem.textContent = text;
 }
 const TARGET_TO_ANCHOR = new Map();
 for (const e of WTRL_INDEX) {
   if (e.anchor) TARGET_TO_ANCHOR.set(e.target, e.anchor);
 }
+
+// The NORM_RE regex represents the complete set of normativity keywords.
 const NORM_RE = /\|(?:Must|must|Must_not|must_not|Should|should|Should_not|should_not|May|may)\|/g;
+// The TOK_RE regex captures three types of tokens:
+// 1. Normativity keywords like |Must|, |should_not|, etc. (captured in group 1)
+// 2. Literal values like |None|, |True|, etc. (captured in group 2)
+// 3. Role-based tokens like |func|`foo.bar` (captured in group 3, with role in group 4 and body in group 5)
 const TOK_RE = /(\|(?:Must|must|Must_not|must_not|Should|should|Should_not|should_not|May|may)\|)|(\|(?:None|Self|True|False)\|)|(\|([A-Za-z_][A-Za-z0-9_]*)\|`([^`]*)`)/g;
+// The ROLE_CLASS mapping defines CSS classes for different Waterloo semantic roles.
+// The keys are the role names as they appear in the token syntax,
+// and the values are the corresponding CSS class strings to apply when rendering tokens of that role.
 const ROLE_CLASS = {
   "attr": "wtrl-attr wtrl_attr",
   "cmd": "wtrl-cmd wtrl_cmd",
@@ -119,26 +131,26 @@ function ensureDebugRefHost() {
   summary.textContent = "Debug refs";
   details.appendChild(summary);
 
-  const pre = document.createElement("pre");
-  pre.id = "wtrl-debug-refs-pre";
-  pre.className = "wtrl-obj";
-  pre.textContent = "[]";
-  details.appendChild(pre);
+  const elemDebugPre = document.createElement("pre");
+  elemDebugPre.id = "wtrl-debug-refs-pre";
+  elemDebugPre.className = "wtrl-obj";
+  elemDebugPre.textContent = "[]";
+  details.appendChild(elemDebugPre);
 
-  const hitlist = byId("wtrl-hitlist");
-  if (hitlist && hitlist.parentNode === side) {
-    side.insertBefore(details, hitlist);
+  const elemHitlist = byId("wtrl-hitlist");
+  if (elemHitlist && elemHitlist.parentNode === side) {
+    side.insertBefore(details, elemHitlist);
   } else {
     side.appendChild(details);
   }
-  debugRefHost = pre;
+  debugRefHost = elemDebugPre;
   return debugRefHost;
 }
 
 function pushDebugRefEvent(kind, data) {
   if (!DEBUG_REFS_ENABLED) return;
-  const host = ensureDebugRefHost();
-  if (!host) return;
+  const elemDebugRefHost = ensureDebugRefHost();
+  if (!elemDebugRefHost) return;
 
   const evt = {
     ts: new Date().toISOString(),
@@ -151,43 +163,43 @@ function pushDebugRefEvent(kind, data) {
   if (debugRefEvents.length > DEBUG_REFS_MAX) {
     debugRefEvents.splice(0, debugRefEvents.length - DEBUG_REFS_MAX);
   }
-  host.textContent = JSON.stringify(debugRefEvents, null, 2);
+  elemDebugRefHost.textContent = JSON.stringify(debugRefEvents, null, 2);
 }
 
 function clearDebugRefEvents() {
   if (!DEBUG_REFS_ENABLED) return;
   debugRefEvents.splice(0, debugRefEvents.length);
-  const host = ensureDebugRefHost();
-  if (host) host.textContent = "[]";
+  const elemDebugRefHost = ensureDebugRefHost();
+  if (elemDebugRefHost) elemDebugRefHost.textContent = "[]";
 }
 
 function updateNavigationUi() {
-  const btnBack = byId("wtrl-nav-back");
-  const btnFwd = byId("wtrl-nav-forward");
-  const sel = byId("wtrl-nav-history");
+  const elemNavBack = byId("wtrl-nav-back");
+  const elemNavForward = byId("wtrl-nav-forward");
+  const elemNavHistory = byId("wtrl-nav-history");
 
-  if (btnBack) btnBack.disabled = historyCursor <= 0;
-  if (btnFwd) btnFwd.disabled = historyCursor < 0 || historyCursor >= historyTargets.length - 1;
+  if (elemNavBack) elemNavBack.disabled = historyCursor <= 0;
+  if (elemNavForward) elemNavForward.disabled = historyCursor < 0 || historyCursor >= historyTargets.length - 1;
 
-  if (sel) {
-    sel.innerHTML = "";
-    const ph = document.createElement("option");
-    ph.value = "";
-    ph.textContent = HISTORY_SELECT_PLACEHOLDER;
-    ph.disabled = true;
-    sel.appendChild(ph);
+  if (elemNavHistory) {
+    elemNavHistory.innerHTML = "";
+    const elemPlaceholderOption = document.createElement("option");
+    elemPlaceholderOption.value = "";
+    elemPlaceholderOption.textContent = HISTORY_SELECT_PLACEHOLDER;
+    elemPlaceholderOption.disabled = true;
+    elemNavHistory.appendChild(elemPlaceholderOption);
 
     if (historyTargets.length === 0) {
-      sel.disabled = true;
-      sel.value = "";
+      elemNavHistory.disabled = true;
+      elemNavHistory.value = "";
     } else {
-      sel.disabled = false;
+      elemNavHistory.disabled = false;
       for (let i = historyTargets.length - 1; i >= 0; i -= 1) {
-        const opt = document.createElement("option");
-        opt.value = String(i);
-        opt.textContent = historyTargets[i];
-        if (i === historyCursor) opt.selected = true;
-        sel.appendChild(opt);
+        const elemHistoryOption = document.createElement("option");
+        elemHistoryOption.value = String(i);
+        elemHistoryOption.textContent = historyTargets[i];
+        if (i === historyCursor) elemHistoryOption.selected = true;
+        elemNavHistory.appendChild(elemHistoryOption);
       }
     }
   }
@@ -214,14 +226,17 @@ function pushHistory(targetQid) {
   updateNavigationUi();
 }
 
-function goHistory(delta) {
+// This handler is for both the "Back"/"Forward" buttons and the history dropdown.
+// The delta parameter is -1 for "Back", +1 for "Forward", and 0 for dropdown selection
+// (in which case the new cursor position is read from the dropdown value).
+function handlerHistoryDelta(delta) {
   if (historyTargets.length === 0) return;
   const next = historyCursor + delta;
   if (next < 0 || next >= historyTargets.length) return;
   historyCursor = next;
   const target = historyTargets[historyCursor];
   updateNavigationUi();
-  selectTarget(target, true, { recordHistory: false });
+  selectTarget(target, { updateHash: true, recordHistory: false });
 }
 
 function parseRefBody(body) {
@@ -292,9 +307,9 @@ function splitQidForSignature(targetQid) {
 }
 
 function makeSigLine() {
-  const d = document.createElement("div");
-  d.className = "wtrl-signature-line";
-  return d;
+  const elemSigLine = document.createElement("div");
+  elemSigLine.className = "wtrl-signature-line";
+  return elemSigLine;
 }
 
 function renderSignature(node, targetQid, container) {
@@ -308,16 +323,16 @@ function renderSignature(node, targetQid, container) {
     const parts = splitQidForSignature(targetQid);
 
     if (parts.mod) {
-      const mod = document.createElement("span");
-      mod.className = "wtrl-mod wtrl_mod";
-      mod.textContent = parts.mod + ".";
-      head.appendChild(mod);
+      const elemModule = document.createElement("span");
+      elemModule.className = "wtrl-mod wtrl_mod";
+      elemModule.textContent = parts.mod + ".";
+      head.appendChild(elemModule);
     }
     if (parts.cls) {
-      const cls = document.createElement("span");
-      cls.className = "wtrl-type wtrl_type";
-      cls.textContent = parts.cls + ".";
-      head.appendChild(cls);
+      const elemClass = document.createElement("span");
+      elemClass.className = "wtrl-type wtrl_type";
+      elemClass.textContent = parts.cls + ".";
+      head.appendChild(elemClass);
     }
 
     const name = document.createElement("span");
@@ -331,10 +346,10 @@ function renderSignature(node, targetQid, container) {
   const decorators = Array.isArray(node.decorators) ? node.decorators : [];
   for (const deco of decorators) {
     const line = makeSigLine();
-    const sp = document.createElement("span");
-    sp.className = "wtrl-attr wtrl_attr";
-    sp.textContent = String(deco);
-    line.appendChild(sp);
+    const elemDecorator = document.createElement("span");
+    elemDecorator.className = "wtrl-attr wtrl_attr";
+    elemDecorator.textContent = String(deco);
+    line.appendChild(elemDecorator);
     container.appendChild(line);
   }
 
@@ -351,25 +366,25 @@ function renderSignature(node, targetQid, container) {
 
 // Render module segment if we have one.
   if (mod_name) {
-    const mod = document.createElement("span");
-    mod.className = "wtrl-mod wtrl_mod";
-    mod.textContent = mod_name + ".";
-    head.appendChild(mod);
+    const elemModule = document.createElement("span");
+    elemModule.className = "wtrl-mod wtrl_mod";
+    elemModule.textContent = mod_name + ".";
+    head.appendChild(elemModule);
   }
 
 // Render class segment if we have one.
   if (class_name) {
-    const cls = document.createElement("span");
-    cls.className = "wtrl-type wtrl_type";
-    cls.textContent = class_name + ".";
-    head.appendChild(cls);
+    const elemClass = document.createElement("span");
+    elemClass.className = "wtrl-type wtrl_type";
+    elemClass.textContent = class_name + ".";
+    head.appendChild(elemClass);
   }
 
 
-  const fn = document.createElement("span");
-  fn.className = "wtrl-func wtrl_func";
-  fn.textContent = func_name;
-  head.appendChild(fn);
+  const elemFunction = document.createElement("span");
+  elemFunction.className = "wtrl-func wtrl_func";
+  elemFunction.textContent = func_name;
+  head.appendChild(elemFunction);
   head.appendChild(document.createTextNode("("));
   container.appendChild(head);
 
@@ -383,18 +398,18 @@ function renderSignature(node, targetQid, container) {
     if (kind === "VAR_KEYWORD") pname = "**" + pname;
 
     line.appendChild(document.createTextNode("    "));
-    const psp = document.createElement("span");
-    psp.className = "wtrl-var wtrl_var";
-    psp.textContent = pname;
-    line.appendChild(psp);
+    const elemParam = document.createElement("span");
+    elemParam.className = "wtrl-var wtrl_var";
+    elemParam.textContent = pname;
+    line.appendChild(elemParam);
 
     const ann = p && p.annotation;
     if (ann !== null && ann !== undefined && String(ann).trim() !== "") {
       line.appendChild(document.createTextNode(": "));
-      const asp = document.createElement("span");
-      asp.className = "wtrl-type wtrl_type";
-      asp.textContent = stripOuterQuotes(String(ann));
-      line.appendChild(asp);
+      const elemAnnotation = document.createElement("span");
+      elemAnnotation.className = "wtrl-type wtrl_type";
+      elemAnnotation.textContent = stripOuterQuotes(String(ann));
+      line.appendChild(elemAnnotation);
     }
     if (p && p.default !== null && p.default !== undefined) {
       line.appendChild(document.createTextNode(" = " + String(p.default)));
@@ -407,10 +422,10 @@ function renderSignature(node, targetQid, container) {
   const ret = sig.returns;
   if (ret !== null && ret !== undefined && String(ret).trim() !== "") {
     tail.appendChild(document.createTextNode(" -> "));
-    const rsp = document.createElement("span");
-    rsp.className = "wtrl-type wtrl_type";
-    rsp.textContent = stripOuterQuotes(String(ret));
-    tail.appendChild(rsp);
+    const elemReturnType = document.createElement("span");
+    elemReturnType.className = "wtrl-type wtrl_type";
+    elemReturnType.textContent = stripOuterQuotes(String(ret));
+    tail.appendChild(elemReturnType);
   }
   container.appendChild(tail);
 }
@@ -449,10 +464,10 @@ function appendMaybeStyledText(parent, txt, roleCls) {
     appendInlineTokens(parent, txt);
     return;
   }
-  const sp = document.createElement("span");
-  sp.className = roleCls;
-  appendInlineTokens(sp, txt);
-  parent.appendChild(sp);
+  const elemStyledText = document.createElement("span");
+  elemStyledText.className = roleCls;
+  appendInlineTokens(elemStyledText, txt);
+  parent.appendChild(elemStyledText);
 }
 
 function isFreeformPath(path) {
@@ -507,16 +522,16 @@ function renderFreeformText(container, txt) {
 
   function flushParagraph(parts) {
     if (!parts || parts.length === 0) return;
-    const p = document.createElement("p");
-    p.className = "wtrl-text";
-    appendInlineTokens(p, parts.join(" "));
-    container.appendChild(p);
+    const elemParagraph = document.createElement("p");
+    elemParagraph.className = "wtrl-text";
+    appendInlineTokens(elemParagraph, parts.join(" "));
+    container.appendChild(elemParagraph);
   }
 
   function genList(symbol) {
-    const node = document.createElement(symbol === "#" ? "ol" : "ul");
-    node.className = "wtrl-list";
-    return node;
+    const elemList = document.createElement(symbol === "#" ? "ol" : "ul");
+    elemList.className = "wtrl-list";
+    return elemList;
   }
 
   function renderListBlock(block) {
@@ -551,10 +566,10 @@ function renderFreeformText(container, txt) {
         }
       }
 
-      const li = document.createElement("li");
-      appendInlineTokens(li, text);
-      nodeStack[nodeStack.length - 1].appendChild(li);
-      lastItemStack[lastItemStack.length - 1] = li;
+      const elemListItem = document.createElement("li");
+      appendInlineTokens(elemListItem, text);
+      nodeStack[nodeStack.length - 1].appendChild(elemListItem);
+      lastItemStack[lastItemStack.length - 1] = elemListItem;
     }
 
     if (nodeStack.length > 0) container.appendChild(nodeStack[0]);
@@ -572,16 +587,16 @@ function renderFreeformText(container, txt) {
       continue;
     }
 
-    let m = raw.match(RE_BULLET);
-    if (m) {
+    let match = raw.match(RE_BULLET);
+    if (match) {
       flushParagraph(paragraphParts);
       paragraphParts = [];
 
       const block = [];
       while (i < lines.length) {
-        const mm = lines[i].match(RE_BULLET);
-        if (!mm) break;
-        block.push({ symbol: mm[1], text: mm[2] });
+        const lineMatch = lines[i].match(RE_BULLET);
+        if (!lineMatch) break;
+        block.push({ symbol: lineMatch[1], text: lineMatch[2] });
         i += 1;
       }
       renderListBlock(block);
@@ -608,16 +623,16 @@ function renderCompactNormativeSections(container, items) {
   const vals = items.map(v => String(v));
   for (let i = 0; i < vals.length; i += 6) {
     const row = vals.slice(i, i + 6);
-    const p = document.createElement("p");
-    p.className = "wtrl-text";
+    const elemRowParagraph = document.createElement("p");
+    elemRowParagraph.className = "wtrl-text";
     for (let j = 0; j < row.length; j += 1) {
-      const sp = document.createElement("span");
-      sp.className = "wtrl-label wtrl_label";
-      sp.textContent = row[j];
-      p.appendChild(sp);
-      if (j < row.length - 1) p.appendChild(document.createTextNode(", "));
+      const elemLabel = document.createElement("span");
+      elemLabel.className = "wtrl-label wtrl_label";
+      elemLabel.textContent = row[j];
+      elemRowParagraph.appendChild(elemLabel);
+      if (j < row.length - 1) elemRowParagraph.appendChild(document.createTextNode(", "));
     }
-    container.appendChild(p);
+    container.appendChild(elemRowParagraph);
   }
 }
 
@@ -643,10 +658,10 @@ function renderDefinitionsInheritedContent(container, value) {
   const moduleAnchor = srcQid ? TARGET_TO_ANCHOR.get(srcQid) : "";
   const terms = Array.isArray(obj.terms) ? obj.terms : [];
 
-  const ul = document.createElement("ul");
-  ul.className = "wtrl-list";
+  const elemTermsList = document.createElement("ul");
+  elemTermsList.className = "wtrl-list";
   for (const term of terms) {
-    const li = document.createElement("li");
+    const elemTermItem = document.createElement("li");
     const termTxt = String(term);
     const termAnchor = srcQid ? buildTermAnchor(srcQid, termTxt) : "";
     const linkAnchor = (termAnchor && definitionTermAnchorMap.has(termAnchor)) ? termAnchor : moduleAnchor;
@@ -664,11 +679,11 @@ function renderDefinitionsInheritedContent(container, value) {
     });
 
     if (linkAnchor) {
-      const a = document.createElement("a");
-      a.className = "wtrl-ref wtrl_ref wtrl-dfn wtrl_dfn";
-      a.href = "#" + linkAnchor;
-      a.textContent = termTxt;
-      a.addEventListener("click", () => {
+      const elemTermLink = document.createElement("a");
+      elemTermLink.className = "wtrl-ref wtrl_ref wtrl-dfn wtrl_dfn";
+      elemTermLink.href = "#" + linkAnchor;
+      elemTermLink.textContent = termTxt;
+      elemTermLink.addEventListener("click", () => {
         pushDebugRefEvent("inherited-definition-link-click", {
           source_qid: srcQid || "",
           term: termTxt,
@@ -676,16 +691,16 @@ function renderDefinitionsInheritedContent(container, value) {
           chosen_target_qid: linkTargetQid || null,
         });
       });
-      li.appendChild(a);
+      elemTermItem.appendChild(elemTermLink);
     } else {
-      const sp = document.createElement("span");
-      sp.className = "wtrl-dfn wtrl_dfn";
-      sp.textContent = termTxt;
-      li.appendChild(sp);
+      const elemTermText = document.createElement("span");
+      elemTermText.className = "wtrl-dfn wtrl_dfn";
+      elemTermText.textContent = termTxt;
+      elemTermItem.appendChild(elemTermText);
     }
-    ul.appendChild(li);
+    elemTermsList.appendChild(elemTermItem);
   }
-  container.appendChild(ul);
+  container.appendChild(elemTermsList);
 }
 
 function isDefinitionsEntryPath(path) {
@@ -740,11 +755,11 @@ function appendSeeAlsoEntry(parent, entry, currentQid) {
     appendMaybeStyledText(parent, raw, "wtrl-func wtrl_func");
     return;
   }
-  const a = document.createElement("a");
-  a.className = "wtrl-ref wtrl_ref wtrl-func wtrl_func";
-  a.href = "#" + anchor;
-  a.textContent = raw;
-  parent.appendChild(a);
+  const elemSeeAlsoLink = document.createElement("a");
+  elemSeeAlsoLink.className = "wtrl-ref wtrl_ref wtrl-func wtrl_func";
+  elemSeeAlsoLink.href = "#" + anchor;
+  elemSeeAlsoLink.textContent = raw;
+  parent.appendChild(elemSeeAlsoLink);
 }
 
 function _extractSeeAlsoEntries(value) {
@@ -788,31 +803,31 @@ function renderReferencedBySection(container, currentQid) {
   const refs = REFERENCED_BY_INDEX.get(String(currentQid || ""));
   if (!refs || refs.size === 0) return;
 
-  const sec = document.createElement("div");
-  sec.className = "wtrl-section";
-  const h = document.createElement("div");
-  h.className = "wtrl-section-head";
-  h.textContent = "Referenced by";
-  sec.appendChild(h);
+  const elemSection = document.createElement("div");
+  elemSection.className = "wtrl-section";
+  const elemSectionHead = document.createElement("div");
+  elemSectionHead.className = "wtrl-section-head";
+  elemSectionHead.textContent = "Referenced by";
+  elemSection.appendChild(elemSectionHead);
 
-  const ul = document.createElement("ul");
-  ul.className = "wtrl-list";
+  const elemRefsList = document.createElement("ul");
+  elemRefsList.className = "wtrl-list";
   for (const sourceQid of Array.from(refs).sort()) {
-    const li = document.createElement("li");
+    const elemRefItem = document.createElement("li");
     const anchor = TARGET_TO_ANCHOR.get(sourceQid);
     if (anchor) {
-      const a = document.createElement("a");
-      a.className = "wtrl-ref wtrl_ref wtrl-func wtrl_func";
-      a.href = "#" + anchor;
-      a.textContent = sourceQid;
-      li.appendChild(a);
+      const elemRefLink = document.createElement("a");
+      elemRefLink.className = "wtrl-ref wtrl_ref wtrl-func wtrl_func";
+      elemRefLink.href = "#" + anchor;
+      elemRefLink.textContent = sourceQid;
+      elemRefItem.appendChild(elemRefLink);
     } else {
-      appendMaybeStyledText(li, sourceQid, "wtrl-func wtrl_func");
+      appendMaybeStyledText(elemRefItem, sourceQid, "wtrl-func wtrl_func");
     }
-    ul.appendChild(li);
+    elemRefsList.appendChild(elemRefItem);
   }
-  sec.appendChild(ul);
-  container.appendChild(sec);
+  elemSection.appendChild(elemRefsList);
+  container.appendChild(elemSection);
 }
 
 function appendInlineTokens(parent, txt) {
@@ -822,15 +837,15 @@ function appendInlineTokens(parent, txt) {
   while ((m = TOK_RE.exec(txt)) !== null) {
     if (m.index > cur) parent.appendChild(document.createTextNode(txt.slice(cur, m.index)));
     if (m[1]) {
-      const s = document.createElement("span");
-      s.className = "wtrl-norm wtrl_norm";
-      s.textContent = m[1];
-      parent.appendChild(s);
+      const elemNorm = document.createElement("span");
+      elemNorm.className = "wtrl-norm wtrl_norm";
+      elemNorm.textContent = m[1];
+      parent.appendChild(elemNorm);
     } else if (m[2]) {
-      const s = document.createElement("span");
-      s.className = "wtrl-value wtrl_value";
-      s.textContent = m[2];
-      parent.appendChild(s);
+      const elemLiteralValue = document.createElement("span");
+      elemLiteralValue.className = "wtrl-value wtrl_value";
+      elemLiteralValue.textContent = m[2];
+      parent.appendChild(elemLiteralValue);
     } else if (m[3]) {
       const role = m[4];
       const body = m[5];
@@ -839,36 +854,36 @@ function appendInlineTokens(parent, txt) {
         parent.appendChild(document.createTextNode(m[3]));
       } else if (role === "ref") {
         const rb = parseRefBody(body);
-        const a = document.createElement("a");
-        a.className = cls;
-        a.textContent = rb.label || body;
+        const elemRefLink = document.createElement("a");
+        elemRefLink.className = cls;
+        elemRefLink.textContent = rb.label || body;
         if (rb.target.startsWith("http://") || rb.target.startsWith("https://")) {
-          a.href = rb.target;
-          a.target = "_blank";
-          a.rel = "noopener noreferrer";
+          elemRefLink.href = rb.target;
+          elemRefLink.target = "_blank";
+          elemRefLink.rel = "noopener noreferrer";
         } else if (rb.target.startsWith("wtrl://")) {
           const qid = rb.target.slice("wtrl://".length);
           const anchor = TARGET_TO_ANCHOR.get(qid);
-          if (anchor) a.href = "#" + anchor;
+          if (anchor) elemRefLink.href = "#" + anchor;
         }
-        if (!a.getAttribute("href")) {
-          const sp = document.createElement("span");
-          sp.className = cls;
-          sp.textContent = m[3];
-          parent.appendChild(sp);
+        if (!elemRefLink.getAttribute("href")) {
+          const elemFallback = document.createElement("span");
+          elemFallback.className = cls;
+          elemFallback.textContent = m[3];
+          parent.appendChild(elemFallback);
         } else {
-          parent.appendChild(a);
+          parent.appendChild(elemRefLink);
         }
       } else if (role === "lit" && (body === "None" || body === "Self" || body === "True" || body === "False")) {
-        const s = document.createElement("span");
-        s.className = "wtrl-value wtrl_value";
-        s.textContent = body;
-        parent.appendChild(s);
+        const elemSpecialLiteral = document.createElement("span");
+        elemSpecialLiteral.className = "wtrl-value wtrl_value";
+        elemSpecialLiteral.textContent = body;
+        parent.appendChild(elemSpecialLiteral);
       } else {
-        const s = document.createElement("span");
-        s.className = cls;
-        s.textContent = body;
-        parent.appendChild(s);
+        const elemRoleText = document.createElement("span");
+        elemRoleText.className = cls;
+        elemRoleText.textContent = body;
+        parent.appendChild(elemRoleText);
       }
     }
     cur = TOK_RE.lastIndex;
@@ -887,22 +902,22 @@ function renderValue(value, container, depth, path, currentQid) {
   //    current JSON path should be interpreted as freeform text.
   // 3. Otherwise fall back to the generic list / object rendering.
   if (value === null || value === undefined) {
-    const p = document.createElement("p");
-    p.className = "wtrl-text";
-    appendMaybeStyledText(p, "null", leafRoleCls);
-    container.appendChild(p);
+    const elemNullParagraph = document.createElement("p");
+    elemNullParagraph.className = "wtrl-text";
+    appendMaybeStyledText(elemNullParagraph, "null", leafRoleCls);
+    container.appendChild(elemNullParagraph);
     return;
   }
   if (typeof value === "string") {
     if (isSeeAlsoPath(pth)) {
-      const p = document.createElement("p");
-      p.className = "wtrl-text";
+      const elemSeeAlsoParagraph = document.createElement("p");
+      elemSeeAlsoParagraph.className = "wtrl-text";
       const vals = value.split(",").map(s => s.trim()).filter(Boolean);
       for (let i = 0; i < vals.length; i += 1) {
-        appendSeeAlsoEntry(p, vals[i], currentQid);
-        if (i < vals.length - 1) p.appendChild(document.createTextNode(", "));
+        appendSeeAlsoEntry(elemSeeAlsoParagraph, vals[i], currentQid);
+        if (i < vals.length - 1) elemSeeAlsoParagraph.appendChild(document.createTextNode(", "));
       }
-      container.appendChild(p);
+      container.appendChild(elemSeeAlsoParagraph);
       return;
     }
     if (isNormativeSectionsPath(pth)) {
@@ -914,22 +929,22 @@ function renderValue(value, container, depth, path, currentQid) {
       renderFreeformText(container, value);
       return;
     }
-    const p = document.createElement("p");
-    p.className = "wtrl-text";
-    appendMaybeStyledText(p, value, leafRoleCls);
-    container.appendChild(p);
+    const elemTextParagraph = document.createElement("p");
+    elemTextParagraph.className = "wtrl-text";
+    appendMaybeStyledText(elemTextParagraph, value, leafRoleCls);
+    container.appendChild(elemTextParagraph);
     return;
   }
   if (Array.isArray(value)) {
     if (isSeeAlsoPath(pth) && value.every(item => typeof item === "string")) {
-      const ul = document.createElement("ul");
-      ul.className = "wtrl-list";
+      const elemSeeAlsoList = document.createElement("ul");
+      elemSeeAlsoList.className = "wtrl-list";
       for (const item of value) {
-        const li = document.createElement("li");
-        appendSeeAlsoEntry(li, String(item), currentQid);
-        ul.appendChild(li);
+        const elemSeeAlsoItem = document.createElement("li");
+        appendSeeAlsoEntry(elemSeeAlsoItem, String(item), currentQid);
+        elemSeeAlsoList.appendChild(elemSeeAlsoItem);
       }
-      container.appendChild(ul);
+      container.appendChild(elemSeeAlsoList);
       return;
     }
     if (isNormativeSectionsPath(pth) && value.every(item => typeof item === "string")) {
@@ -940,15 +955,15 @@ function renderValue(value, container, depth, path, currentQid) {
       renderFreeformText(container, value.join("\n"));
       return;
     }
-    const ul = document.createElement("ul");
-    ul.className = "wtrl-list";
+    const elemGenericList = document.createElement("ul");
+    elemGenericList.className = "wtrl-list";
     for (const item of value) {
-      const li = document.createElement("li");
-      if (typeof item === "string") appendMaybeStyledText(li, item, leafRoleCls);
-      else renderValue(item, li, depth + 1, pth, currentQid);
-      ul.appendChild(li);
+      const elemGenericItem = document.createElement("li");
+      if (typeof item === "string") appendMaybeStyledText(elemGenericItem, item, leafRoleCls);
+      else renderValue(item, elemGenericItem, depth + 1, pth, currentQid);
+      elemGenericList.appendChild(elemGenericItem);
     }
-    container.appendChild(ul);
+    container.appendChild(elemGenericList);
     return;
   }
   if (typeof value === "object") {
@@ -988,72 +1003,72 @@ function renderValue(value, container, depth, path, currentQid) {
     for (const [k, v] of entries) {
       if (isDefinitionsEntryPath(pth) && isDefinitionsEntryValue(v)) {
         const vv = v;
-        const block = document.createElement("div");
-        block.className = "wtrl-subsection";
+        const elemDefBlock = document.createElement("div");
+        elemDefBlock.className = "wtrl-subsection";
         const termAnchor = buildTermAnchor(currentQid, k);
-        if (termAnchor) block.id = termAnchor;
+        if (termAnchor) elemDefBlock.id = termAnchor;
 
-        const h = document.createElement("div");
-        h.className = "wtrl-subsection-head";
+        const elemDefHead = document.createElement("div");
+        elemDefHead.className = "wtrl-subsection-head";
 
         const spTerm = document.createElement("span");
         spTerm.className = "wtrl-dfn wtrl_dfn";
         spTerm.textContent = String(k);
-        h.appendChild(spTerm);
+        elemDefHead.appendChild(spTerm);
 
         const vars = vv.variations.map(x => String(x)).filter(Boolean);
         if (vars.length > 0) {
-          h.appendChild(document.createTextNode(" ["));
+          elemDefHead.appendChild(document.createTextNode(" ["));
           const spVar = document.createElement("span");
           spVar.className = "wtrl-term wtrl_term";
           spVar.textContent = vars.join(", ");
-          h.appendChild(spVar);
-          h.appendChild(document.createTextNode("]"));
+          elemDefHead.appendChild(spVar);
+          elemDefHead.appendChild(document.createTextNode("]"));
         }
-        block.appendChild(h);
+        elemDefBlock.appendChild(elemDefHead);
 
-        renderFreeformText(block, vv.text.join("\n"));
-        container.appendChild(block);
+        renderFreeformText(elemDefBlock, vv.text.join("\n"));
+        container.appendChild(elemDefBlock);
         continue;
       }
 
-      const block = document.createElement("div");
-      block.className = depth === 0 ? "wtrl-section" : "wtrl-subsection";
-      const h = document.createElement("div");
-      h.className = depth === 0 ? "wtrl-section-head" : "wtrl-subsection-head";
+      const elemBlock = document.createElement("div");
+      elemBlock.className = depth === 0 ? "wtrl-section" : "wtrl-subsection";
+      const elemHead = document.createElement("div");
+      elemHead.className = depth === 0 ? "wtrl-section-head" : "wtrl-subsection-head";
       if (depth === 0) {
-        h.textContent = formatSectionHead(k);
+        elemHead.textContent = formatSectionHead(k);
       } else {
-        if (k === "normative_sections") h.textContent = formatSectionHead(k);
-        else h.textContent = k;
+        if (k === "normative_sections") elemHead.textContent = formatSectionHead(k);
+        else elemHead.textContent = k;
         const roleCls = getRoleClassForSubsectionHead(pth, k);
-        if (roleCls) h.className += " " + roleCls;
+        if (roleCls) elemHead.className += " " + roleCls;
       }
-      block.appendChild(h);
-      renderValue(v, block, depth + 1, pth.concat([k]), currentQid);
-      container.appendChild(block);
+      elemBlock.appendChild(elemHead);
+      renderValue(v, elemBlock, depth + 1, pth.concat([k]), currentQid);
+      container.appendChild(elemBlock);
       if (depth === 0 && String(k) === "See_also") {
         renderReferencedBySection(container, currentQid);
       }
     }
     return;
   }
-  const p = document.createElement("p");
-  p.className = "wtrl-text";
-  appendMaybeStyledText(p, String(value), leafRoleCls);
-  container.appendChild(p);
+  const elemFallbackParagraph = document.createElement("p");
+  elemFallbackParagraph.className = "wtrl-text";
+  appendMaybeStyledText(elemFallbackParagraph, String(value), leafRoleCls);
+  container.appendChild(elemFallbackParagraph);
 }
 
 function renderHitList(entries) {
-  const host = byId("wtrl-hitlist");
-  host.innerHTML = "";
+  const elemHitlistHost = byId("wtrl-hitlist");
+  elemHitlistHost.innerHTML = "";
   for (const e of entries) {
-    const btn = document.createElement("button");
-    btn.className = "wtrl-hit";
-    btn.type = "button";
-    btn.innerHTML = `<span class="wtrl-kind">${e.kind}</span>${e.label}`;
-    btn.addEventListener("click", () => selectTarget(e.target, true));
-    host.appendChild(btn);
+    const elemHitButton = document.createElement("button");
+    elemHitButton.className = "wtrl-hit";
+    elemHitButton.type = "button";
+    elemHitButton.innerHTML = `<span class="wtrl-kind">${e.kind}</span>${e.label}`;
+    elemHitButton.addEventListener("click", () => selectTarget(e.target, { updateHash: true }));
+    elemHitlistHost.appendChild(elemHitButton);
   }
 }
 
@@ -1071,34 +1086,34 @@ function inferDocLinesKind(targetQid) {
   return "";
 }
 
-function renderDocLines(node, targetQid, host) {
+function renderDocLines(node, targetQid, elemHost) {
   const lines = Array.isArray(node.doc_lines) ? node.doc_lines : [];
   if (lines.length === 0) return false;
 
   const kind = inferDocLinesKind(targetQid);
-  const sec = document.createElement("div");
-  sec.className = "wtrl-section";
+  const elemSection = document.createElement("div");
+  elemSection.className = "wtrl-section";
 
-  const h = document.createElement("div");
-  h.className = "wtrl-section-head";
+  const elemSectionHead = document.createElement("div");
+  elemSectionHead.className = "wtrl-section-head";
   if (kind === "type") {
-    h.textContent = "Type";
-    h.className += " wtrl-type wtrl_type";
+    elemSectionHead.textContent = "Type";
+    elemSectionHead.className += " wtrl-type wtrl_type";
   } else if (kind === "variable") {
-    h.textContent = "Variable";
-    h.className += " wtrl-var wtrl_var";
+    elemSectionHead.textContent = "Variable";
+    elemSectionHead.className += " wtrl-var wtrl_var";
   } else if (kind === "constant") {
-    h.textContent = "Constant";
-    h.className += " wtrl-var wtrl_var";
+    elemSectionHead.textContent = "Constant";
+    elemSectionHead.className += " wtrl-var wtrl_var";
   } else {
-    h.textContent = "Entry";
+    elemSectionHead.textContent = "Entry";
   }
-  sec.appendChild(h);
+  elemSection.appendChild(elemSectionHead);
 
   // Render doc_lines as true freeform text so explicit list markers
   // (*, +, -, #) are interpreted the same way as in other freeform sections.
-  renderFreeformText(sec, lines.map(line => String(line)).join("\n"));
-  host.appendChild(sec);
+  renderFreeformText(elemSection, lines.map(line => String(line)).join("\n"));
+  elemHost.appendChild(elemSection);
   return true;
 }
 
@@ -1107,32 +1122,32 @@ function renderDoc(targetQid) {
   const examples = WTRL_DATA.examples || {};
   const node = objects[targetQid];
   byId("wtrl-title").textContent = targetQid || "(no selection)";
-  const subEl = byId("wtrl-sub");
+  const elemSubtitle = byId("wtrl-sub");
   if (!node) {
-    if (subEl) subEl.textContent = "No object found.";
+    if (elemSubtitle) elemSubtitle.textContent = "No object found.";
     byId("wtrl-signature").innerHTML = "";
     byId("wtrl-doc").innerHTML = "";
     byId("wtrl-examples").innerHTML = "";
     setTextIfPresent("wtrl-obj", "");
     return;
   }
-  if (subEl) subEl.textContent = "Waterloo docstring";
+  if (elemSubtitle) elemSubtitle.textContent = "Waterloo docstring";
   renderSignature(node, targetQid, byId("wtrl-signature"));
-  const docHost = byId("wtrl-doc");
-  docHost.innerHTML = "";
-  const hasDocLines = renderDocLines(node, targetQid, docHost);
+  const elemDocHost = byId("wtrl-doc");
+  elemDocHost.innerHTML = "";
+  const hasDocLines = renderDocLines(node, targetQid, elemDocHost);
   if (node.doc && typeof node.doc === "object" && Object.keys(node.doc).length > 0) {
-    renderValue(node.doc, docHost, 0, [], targetQid);
+    renderValue(node.doc, elemDocHost, 0, [], targetQid);
   } else if (!hasDocLines) {
-    const p = document.createElement("p");
-    p.className = "wtrl-text";
-    p.textContent = "(no doc node)";
-    docHost.appendChild(p);
+    const elemNoDoc = document.createElement("p");
+    elemNoDoc.className = "wtrl-text";
+    elemNoDoc.textContent = "(no doc node)";
+    elemDocHost.appendChild(elemNoDoc);
   }
 /*----- render examples --------------------------------------*/
-  const exHost = byId("wtrl-examples");
+  const elemExamplesHost = byId("wtrl-examples");
 // All example blocks are appended to this element.
-  exHost.innerHTML = "";
+  elemExamplesHost.innerHTML = "";
   const exPtrs = Array.isArray(node.examples) ? node.examples : [];
 // Iterate over example entries of the current object
   for (const ptr of exPtrs) {
@@ -1149,38 +1164,50 @@ function renderDoc(targetQid) {
     const exNode = examples[exKey];
     if (!exNode || typeof exNode !== "object") continue;
 // For each example build a section box.
-    const sec = document.createElement("div");
-    sec.className = "wtrl-section wtrl-examples";
+    const elemExampleSection = document.createElement("div");
+    elemExampleSection.className = "wtrl-section wtrl-examples";
 // Render a headline
-    const h = document.createElement("div");
-    h.className = "wtrl-section-head";
-    h.textContent = "Example";
-    sec.appendChild(h);
+    const elemExampleHead = document.createElement("div");
+    elemExampleHead.className = "wtrl-section-head";
+    elemExampleHead.textContent = "Example";
+    elemExampleSection.appendChild(elemExampleHead);
 // If we know the path to the example source file, render the path
     if (typeof exNode.path === "string" && exNode.path) {
-      const head = document.createElement("div");
-      head.className = "wtrl-example-head";
-      const sp = document.createElement("span");
-      sp.className = "wtrl-file wtrl_file";
-      sp.textContent = exNode.path;
-      head.appendChild(sp);
-      sec.appendChild(head);
+      const elemPathHead = document.createElement("div");
+      elemPathHead.className = "wtrl-example-head";
+      const elemPath = document.createElement("span");
+      elemPath.className = "wtrl-file wtrl_file";
+      elemPath.textContent = exNode.path;
+      elemPathHead.appendChild(elemPath);
+      elemExampleSection.appendChild(elemPathHead);
     }
 // Finally render the code segment. The code is already HTML
 // from pygments, so we use innerHTML to embed it here.
-    const code = document.createElement("div");
-    code.className = "wtrl-example-code";
-    code.innerHTML = WTRL_EXAMPLES_HTML[exKey] || "<pre><code>(no code)</code></pre>";
+    const elemCode = document.createElement("div");
+    elemCode.className = "wtrl-example-code";
+    elemCode.innerHTML = WTRL_EXAMPLES_HTML[exKey] || "<pre><code>(no code)</code></pre>";
 // Append code segment to example section box.
-    sec.appendChild(code);
+    elemExampleSection.appendChild(elemCode);
 // Done. Append to examples block.
-    exHost.appendChild(sec);
+  elemExamplesHost.appendChild(elemExampleSection);
   }
   setTextIfPresent("wtrl-obj", JSON.stringify(node, null, 2));
 }
 
-function selectTarget(targetQid, updateHash, opts) {
+// Select a documentation object by its qualified id and bring all
+// related UI state in sync. Depending on the flags, this also updates
+// the browser hash, mirrors the selection into the search field,
+// records the jump in the local navigation history, and triggers rerendering.
+// Options used in this source file are:
+// - updateHash (default: false): whether to update the browser hash to match
+//   the new selection. This also triggers hash-based navigation,
+//   but that's handled by a separate event listener.
+// - recordHistory (default: true): whether to record this jump in the local
+//   navigation history, which is used for the back/forward buttons and the
+//   history dropdown. This does not affect the browser history.
+function selectTarget(targetQid, opts) {
   const options = opts || {};
+  const updateHash = options.updateHash === true;
   const recordHistory = options.recordHistory !== false;
   if (updateHash) {
     const hit = WTRL_INDEX.find(x => x.target === targetQid && x.anchor);
@@ -1199,7 +1226,7 @@ function selectTarget(targetQid, updateHash, opts) {
 // User has clicked a link which might lead to a different
 // object in this document. We strip the leading hash and
 // look for the target in our anchor map.
-function handleHashNavigation() {
+function handlerHashNavigation() {
   const h = (location.hash || "").replace(/^#/, "");
   if (!h) return false;
 
@@ -1218,7 +1245,7 @@ function handleHashNavigation() {
     });
     if (targetObj === currentTargetQid) return true;
     // Navigate to target object.
-    selectTarget(targetObj, false, { recordHistory: false });
+    selectTarget(targetObj, { recordHistory: false });
     return true;
   }
 
@@ -1235,14 +1262,14 @@ function handleHashNavigation() {
     already_selected: targetTerm === currentTargetQid,
   });
   if (targetTerm !== currentTargetQid) {
-    selectTarget(targetTerm, false, { recordHistory: false });
+    selectTarget(targetTerm, { recordHistory: false });
   }
   // Ensure scroll also works when the anchor appeared only after re-render.
   setTimeout(() => {
     // Scroll to the clicked Definition Term.
-    const el = document.getElementById(h);
-    const found = !!el;
-    if (el) el.scrollIntoView({ block: "start", behavior: "auto" });
+    const elemTarget = document.getElementById(h);
+    const found = !!elemTarget;
+    if (elemTarget) elemTarget.scrollIntoView({ block: "start", behavior: "auto" });
     pushDebugRefEvent("hash-navigation-term-scroll", {
       hash: h,
       found_element: found,
@@ -1252,63 +1279,66 @@ function handleHashNavigation() {
 }
 
 function setupSearch() {
-  const inp = byId("wtrl-search");
-  if (inp) inp.value = "";
-  const clr = byId("wtrl-search-clear");
-  const navBack = byId("wtrl-nav-back");
-  const navFwd = byId("wtrl-nav-forward");
-  const navHistory = byId("wtrl-nav-history");
-  const dl = byId("wtrl-search-list");
+  const elemSearchInput = byId("wtrl-search");
+  if (elemSearchInput) elemSearchInput.value = "";
+  const elemSearchClear = byId("wtrl-search-clear");
+  const elemNavBack = byId("wtrl-nav-back");
+  const elemNavForward = byId("wtrl-nav-forward");
+  const elemNavHistory = byId("wtrl-nav-history");
+  const elemSearchList = byId("wtrl-search-list");
 
-  if (navBack) {
-    navBack.textContent = NAV_BACK_LABEL;
-    navBack.addEventListener("click", () => goHistory(-1));
+  // Navigation event handlers. Note that we don't update the UI here directly;
+  // instead we just update the history cursor and trigger a selectTarget(),
+  // which will in turn trigger a re-render and an update of the navigation UI.
+  if (elemNavBack) {
+    elemNavBack.textContent = NAV_BACK_LABEL;
+    elemNavBack.addEventListener("click", () => handlerHistoryDelta(-1));
   }
-  if (navFwd) {
-    navFwd.textContent = NAV_FORWARD_LABEL;
-    navFwd.addEventListener("click", () => goHistory(1));
+  if (elemNavForward) {
+    elemNavForward.textContent = NAV_FORWARD_LABEL;
+    elemNavForward.addEventListener("click", () => handlerHistoryDelta(1));
   }
-  if (navHistory) {
-    navHistory.addEventListener("change", () => {
-      const raw = String(navHistory.value || "").trim();
+  if (elemNavHistory) {
+    elemNavHistory.addEventListener("change", () => {
+      const raw = String(elemNavHistory.value || "").trim();
       if (!raw) return;
       const idx = Number.parseInt(raw, 10);
       if (!Number.isInteger(idx) || idx < 0 || idx >= historyTargets.length) return;
       if (idx === historyCursor) return;
       historyCursor = idx;
       updateNavigationUi();
-      selectTarget(historyTargets[historyCursor], true, { recordHistory: false });
+      selectTarget(historyTargets[historyCursor], { updateHash: true, recordHistory: false });
     });
   }
   updateNavigationUi();
   for (const e of WTRL_INDEX) {
-    const o = document.createElement("option");
-    o.value = e.label;
-    dl.appendChild(o);
+    const elemOption = document.createElement("option");
+    elemOption.value = e.label;
+    elemSearchList.appendChild(elemOption);
   }
-  inp.addEventListener("input", () => {
-    const q = inp.value.trim().toLowerCase();
+  elemSearchInput.addEventListener("input", () => {
+    const q = elemSearchInput.value.trim().toLowerCase();
     if (!q) {
       renderHitList(WTRL_INDEX);
       return;
     }
     const hit = WTRL_INDEX.filter(e => e.label.toLowerCase().includes(q));
     renderHitList(hit);
-    const exact = WTRL_INDEX.find(e => e.label === inp.value);
+    const exact = WTRL_INDEX.find(e => e.label === elemSearchInput.value);
     if (exact) {
-      selectTarget(exact.target, true);
+      selectTarget(exact.target, { updateHash: true });
     }
   });
-  if (clr) {
-    clr.addEventListener("click", () => {
-      inp.value = "";
+  if (elemSearchClear) {
+    elemSearchClear.addEventListener("click", () => {
+      elemSearchInput.value = "";
       renderHitList(WTRL_INDEX);
-      inp.focus();
+      elemSearchInput.focus();
     });
   }
 }
 
-window.addEventListener("hashchange", () => { handleHashNavigation(); });
+window.addEventListener("hashchange", () => { handlerHashNavigation(); });
 window.addEventListener("DOMContentLoaded", () => {
   if (DEBUG_REFS_ENABLED) pushDebugRefEvent("debug-enabled", { query: window.location.search || "" });
   byId("wtrl-scope").textContent = String((WTRL_DATA.meta || {}).scope || "");
@@ -1318,8 +1348,8 @@ window.addEventListener("DOMContentLoaded", () => {
   byId("wtrl-num-callables").textContent = String(Object.keys(WTRL_DATA.toc_callables || {}).length);
   setupSearch();
   renderHitList(WTRL_INDEX);
-  if (!handleHashNavigation()) {
+  if (!handlerHashNavigation()) {
     const first = WTRL_INDEX.find(e => e.kind === "mod") || WTRL_INDEX[0];
-    if (first) selectTarget(first.target, true);
+    if (first) selectTarget(first.target, { updateHash: true });
   }
 });

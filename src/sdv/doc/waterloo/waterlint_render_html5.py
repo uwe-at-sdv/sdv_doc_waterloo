@@ -1,6 +1,31 @@
-#!/usr/bin/env python3
-"""
-Render Waterloo JSON documents into one self-contained HTML5 page.
+r"""
+Preamble:
+	profile:
+		module
+	normative_sections:
+		Contract, Public_functions, Public_classes
+	scope:
+		extension
+Contract:
+	general:
+		|Must| provide a function |func|`render_html5` that serves as\
+		the main entry point for the |cmd|`waterlint render-html5` subcommand.
+Public_functions:
+	render_html5
+Public_classes:
+	TracerProtocol
+Class_overview:
+	TracerProtocol:
+		A minimal public protocol defining the expected interface for the tracer instance passed
+		to |func|`render_html5`.
+Function_overview:
+	render_html5:
+		Main entry point for the `waterlint render-html5` subcommand.
+		This function takes in a list of input JSON document paths,
+		merges them, and generates a self-contained HTML5 file that
+		presents the documented objects in a clear and navigable format.
+		The function also handles error reporting via the provided
+		tracer instance and supports various customization options for the output HTML.
 """
 
 from __future__ import annotations
@@ -10,11 +35,44 @@ import html
 import re
 import importlib.resources as importlib_resources
 from pathlib import Path
-from typing import Any, Dict, List, Literal, Tuple, TypeAlias
+from typing import Any, Dict, List, Literal, Protocol, Tuple, TypeAlias
+
+# Not relevant yet, but in case we set up a plugin concept,
+# vendors should be encouraged to follow semantic versioning
+# for their plugins.
+__version__ = "0.1.0"
 
 #===== Typing ================================================#
 # "obj" is a fallback, not sure if it occurs in practice.
 Kind_t: TypeAlias = Literal["mod", "cls", "func", "obj"]
+Origin_t: TypeAlias = Literal["parsing", "validation", "tool", "extension"]
+
+class TracerProtocol(Protocol):
+	r"""
+	Preamble:
+		profile:
+			class
+		normative_sections:
+			Contract
+		scope:
+			extension
+	Contract:
+		general:
+			|Must| provide a minimal set of methods for reporting\
+			errors, warnings, and info messages with a consistent interface.
+		constructor:
+			Not relevant, as this is a protocol. Implementations may have their own constructors and internal state.
+	Description:
+		Methods are |func|`add_error`, |func|`add_warning`, and |func|`add_info`,
+		which allow reporting messages with a specified rule ID, origin, and optional details.
+		See class |type|`tracer` in |file|`docitem_helper.py`.
+	"""
+	def add_error(self, rule_id: str, origin: Origin_t, msg: str, details: Dict[str, Any] | None = None) -> None:
+		"""Report a tool error."""
+	def add_warning(self, rule_id: str, origin: Origin_t, msg: str, details: Dict[str, Any] | None = None) -> None:
+		"""Report a tool warning."""
+	def add_info(self, msg: str, origin: Origin_t = "tool") -> None:
+		"""Report a tool info message."""
 #=============================================================#
 
 try:
@@ -421,9 +479,13 @@ a.wtrl-func:visited, a.wtrl-type:visited, a.wtrl-var:visited, a.wtrl-ref:visited
 """
 	return html
 
-
+# In case we create a plugin-concept for rendering to some output format,
+# this function should serve as a blueprint for the expected interface and
+# contract of such a plugin. The function name should correlate to the
+# waterlint subcommand that invokes it, and the parameters should cover all
+# necessary inputs and options for the rendering process.
 def render_html5(
-	tr: Any,
+	tr: TracerProtocol,
 	*,
 	input_paths: List[str],
 	out_file: str | None,
@@ -435,11 +497,64 @@ def render_html5(
 	no_render_preamble: bool = False,
 	allow_raw_object_node: bool = True,
 ) -> str:
-	"""
-	Render merged Waterloo JSON input to a bundled HTML5 document.
-
-	The function reports operational failures via the provided tracer and returns
-	an empty string on error.
+	r"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+		scope:
+			extension
+	Notes:
+		About:
+			This is the main entry point for the render-html5 command. This function orchestrates the entire
+			rendering process, from loading and merging input JSON documents to building
+			the final HTML output and writing it to a file. It also handles error
+			reporting via the provided tracer instance.
+	Contract:
+		general:
+			|Must| render the provided Waterloo JSON documents into a single self-contained\
+			HTML5 file that presents the documented objects in a clear and navigable format.
+			|Must_not| raise exceptions.
+		requires:
+			Input JSON documents |must| all have the same "scope", "flavour", and schema version.
+			They |must| be valid against a Waterloo JSON schema version whose declared schema\
+			identifier and version are compatible with the installed |lit|`waterlint` version.
+		ensures:
+			On success, the output file |must| be written and its path |must| be returned as a string.
+			On failure, an output file |must_not| be generated and an empty string |must| be returned.
+			The rendered HTML |should| be self-contained, with all CSS and JavaScript embedded directly\
+			in the file, and |should_not| require any external assets to function correctly.
+	Description:
+		The rendered HTML will include a client-side search interface for navigating
+		the documented objects, as well as a clean presentation of doc sections and example code.
+	Parameters:
+		tr:
+			The tracer instance to report errors to. Errors will be reported with rule-ids in the form "RHTM-XXX" and a "tool" source.
+		input_paths:
+			A list of one or more paths to input JSON documents in the Waterloo format.
+			These documents will be merged together to form the basis of the rendered HTML output.
+		out_file:
+			The path to the output HTML file to generate. This parameter is mutually exclusive with `out_dir`.
+		out_dir:
+			The directory in which to place the output HTML file. This parameter is mutually exclusive with `out_file`.
+			If `out_dir` is provided, the output file will be named according to the pattern |file|`waterloo-docs.{scope}.{flavour}.html`
+			and placed inside the specified directory.
+		css_path:
+			The path to a custom CSS file to use for styling the HTML output. If not provided, a default CSS will be used.
+		additional_css_path:
+			The path to an additional CSS file to append to the primary CSS. This allows for further customization of the HTML output.
+		header_html_path:
+			The path to a custom HTML fragment to use as the header of the document. This allows for adding custom content or branding to the top of the HTML output.
+		pygments_theme:
+			The name of the Pygments theme to use for syntax highlighting in code examples. If not provided, a default theme will be used.
+		no_render_preamble:
+			If set to True, the |label|`Preamble` section of the input documents will not be rendered in the output HTML.
+		allow_raw_object_node:
+			If set to True, raw object nodes will be allowed in the output HTML. This can be useful for debugging or advanced customization.
+	Returns:
+		|Must| return the path to the generated HTML file on success, or an empty string on failure.
+	Raises:
 	"""
 	def _add_error(rule_id: str, msg: str) -> None:
 		try:
@@ -535,3 +650,7 @@ def render_html5(
 	except Exception as exc:
 		_add_error("RHTM-001", f"Unexpected render-html5 failure: {exc}")
 		return ""
+
+if __name__ == "__main__":
+	print(__version__)
+	exit(0)
