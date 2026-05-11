@@ -10,7 +10,7 @@
     <link rel="stylesheet" type="text/css" href="_static/basic.css?v=686e5160" />
     <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=27fed22d" />
     <link rel="stylesheet" type="text/css" href="_static/common_styles.css?v=27e4112a" />
-    <link rel="stylesheet" type="text/css" href="_static/alabaster_waterloo.css?v=cb25f13c" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster_waterloo.css?v=163535b2" />
     <script src="_static/documentation_options.js?v=8dde47fa"></script>
     <script src="_static/doctools.js?v=9bcbadda"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
@@ -134,7 +134,8 @@ derived from a normative rule.</p></li>
 <li><p>[META-004] – Rules, as free-form text in documentation, <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span></code> start with the Rule ID delimited by square brackets,
 followed by a whitespace character which allows simple, unique and robust parsing of the Rule ID.
 Informative: In this document which is written in reST, we insert a space (ASCII 32), a double-hyphen (en-dash),
-and another space (ASCII 32) between the braced Rule ID and the rule free-form text.</p></li>
+and another space (ASCII 32) between the braced Rule ID and the rule free-form text.
+When a rule is merely mentioned but not introduced, square brackets <code class="wtrl_norm docutils literal notranslate"><span class="pre">should</span> <span class="pre">not</span></code> be used.</p></li>
 </ul>
 </section>
 <section id="rule-taxonomy">
@@ -698,127 +699,132 @@ the preamble and serves as metadata.</p>
 <td><p>Normative</p></td>
 <td><p>Needs paragraph-capable text</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Terminology.&lt;item&gt;</span></code></p></td>
-<td><p>free-form text</p></td>
-<td><p>Non-normative</p></td>
-<td><p>Needs paragraph-capable text</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Contract.general</span></code></p></td>
-<td><p>itemized text</p></td>
-<td><p>Normative</p></td>
-<td><p>Line-by-line contract</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Contract.constructor</span></code></p></td>
-<td><p>itemized text</p></td>
-<td><p>Normative</p></td>
-<td><p>Line-by-line contract</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Contract.base</span></code></p></td>
-<td><p>qualified identifier</p></td>
-<td><p>Normative</p></td>
-<td><p>Implied by content kind</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Contract.traits</span></code></p></td>
+<tr class="row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Definitions._inherit</span></code></p></td>
 <td><p>list of identifiers</p></td>
 <td><p>Normative</p></td>
 <td><p>Implied by content kind</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Contract.invariants</span></code></p></td>
+<tr class="row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Terminology.&lt;item&gt;</span></code></p></td>
+<td><p>free-form text</p></td>
+<td><p>Non-normative</p></td>
+<td><p>Needs paragraph-capable text</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Contract.general</span></code></p></td>
 <td><p>itemized text</p></td>
 <td><p>Normative</p></td>
 <td><p>Line-by-line contract</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Contract.requires</span></code></p></td>
+<tr class="row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Contract.constructor</span></code></p></td>
 <td><p>itemized text</p></td>
 <td><p>Normative</p></td>
 <td><p>Line-by-line contract</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Contract.ensures</span></code></p></td>
+<tr class="row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Contract.base</span></code></p></td>
+<td><p>qualified identifier</p></td>
+<td><p>Normative</p></td>
+<td><p>Implied by content kind</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Contract.traits</span></code></p></td>
+<td><p>list of identifiers</p></td>
+<td><p>Normative</p></td>
+<td><p>Implied by content kind</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Contract.invariants</span></code></p></td>
 <td><p>itemized text</p></td>
 <td><p>Normative</p></td>
 <td><p>Line-by-line contract</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Description</span></code></p></td>
+<tr class="row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Contract.requires</span></code></p></td>
+<td><p>itemized text</p></td>
+<td><p>Normative</p></td>
+<td><p>Line-by-line contract</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Contract.ensures</span></code></p></td>
+<td><p>itemized text</p></td>
+<td><p>Normative</p></td>
+<td><p>Line-by-line contract</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Description</span></code></p></td>
 <td><p>free-form text</p></td>
 <td><p>Can be both</p></td>
 <td><p>Needs paragraph-capable text</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Derived_from.&lt;item&gt;</span></code></p></td>
+<tr class="row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Derived_from.&lt;item&gt;</span></code></p></td>
 <td><p>list of qualified identifiers</p></td>
 <td><p>Normative</p></td>
 <td><p>Implied by content kind</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Factory.&lt;item&gt;</span></code></p></td>
+<tr class="row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Factory.&lt;item&gt;</span></code></p></td>
 <td><p>itemized text</p></td>
 <td><p>Normative</p></td>
 <td><p>Line-by-line contract</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Public_classes</span></code></p></td>
+<tr class="row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Public_classes</span></code></p></td>
 <td><p>list of qualified identifiers</p></td>
 <td><p>Normative</p></td>
 <td><p>Implied by content kind</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Public_functions</span></code></p></td>
+<tr class="row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Public_functions</span></code></p></td>
 <td><p>list of qualified identifiers</p></td>
 <td><p>Normative</p></td>
 <td><p>Implied by content kind</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Public_methods</span></code></p></td>
+<tr class="row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Public_methods</span></code></p></td>
 <td><p>list of qualified identifiers</p></td>
 <td><p>Normative</p></td>
 <td><p>Implied by content kind</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Class_overview.&lt;item&gt;</span></code></p></td>
+<tr class="row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Class_overview.&lt;item&gt;</span></code></p></td>
 <td><p>free-form text</p></td>
 <td><p>Non-normative</p></td>
 <td><p>Descriptive text preferred</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Method_overview.&lt;item&gt;</span></code></p></td>
+<tr class="row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Method_overview.&lt;item&gt;</span></code></p></td>
 <td><p>free-form text</p></td>
 <td><p>Non-normative</p></td>
 <td><p>Descriptive text preferred</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Function_overview.&lt;item&gt;</span></code></p></td>
+<tr class="row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Function_overview.&lt;item&gt;</span></code></p></td>
 <td><p>free-form text</p></td>
 <td><p>Non-normative</p></td>
 <td><p>Descriptive text preferred</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Public_types.&lt;item&gt;</span></code></p></td>
+<tr class="row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Public_types.&lt;item&gt;</span></code></p></td>
 <td><p>free-form text</p></td>
 <td><p>Normative</p></td>
 <td><p>Needs paragraph-capable text</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Public_variables.&lt;item&gt;</span></code></p></td>
+<tr class="row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Public_variables.&lt;item&gt;</span></code></p></td>
 <td><p>free-form text</p></td>
 <td><p>Normative</p></td>
 <td><p>Needs paragraph-capable text</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Public_constants.&lt;item&gt;</span></code></p></td>
+<tr class="row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Public_constants.&lt;item&gt;</span></code></p></td>
 <td><p>free-form text</p></td>
 <td><p>Normative</p></td>
 <td><p>Needs paragraph-capable text</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Parameters.&lt;item&gt;</span></code></p></td>
+<tr class="row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Parameters.&lt;item&gt;</span></code></p></td>
 <td><p>free-form text</p></td>
 <td><p>Normative</p></td>
 <td><p>Needs paragraph-capable text</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Returns</span></code></p></td>
+<tr class="row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Returns</span></code></p></td>
 <td><p>free-form text</p></td>
 <td><p>Normative</p></td>
 <td><p>Needs paragraph-capable text</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Raises.&lt;item&gt;</span></code></p></td>
+<tr class="row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Raises.&lt;item&gt;</span></code></p></td>
 <td><p>itemized text</p></td>
 <td><p>Normative</p></td>
 <td><p>Line-by-line contract</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Notes.&lt;item&gt;</span></code></p></td>
+<tr class="row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Notes.&lt;item&gt;</span></code></p></td>
 <td><p>free-form text</p></td>
 <td><p>Non-normative</p></td>
 <td><p>Needs paragraph-capable text</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">See_also</span></code></p></td>
+<tr class="row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">See_also</span></code></p></td>
 <td><p>list of qualified identifiers</p></td>
 <td><p>Can be both</p></td>
 <td><p>Implied by content kind</p></td>
