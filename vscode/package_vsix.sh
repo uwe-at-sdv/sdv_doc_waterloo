@@ -4,16 +4,23 @@ set -euo pipefail
 MODE="${1:-public}"
 ROOT="$(cd "$(dirname "$0")" && pwd)"
 VSCE_BIN="npx @vscode/vsce"
-TEMPLATE="${ROOT}/README_AZURE.md"
-TARGET="${ROOT}/README.md"
-VERSION=$(jq ".version" package.json | tr -d '"')
+PATH_README_TEMPLATE="${ROOT}/README_AZURE.md"
+PATH_README_TARGET="${ROOT}/README.md"
 
+#----- begin requirements -------------------------------------#
+command -v jq >/dev/null 2>&1 ||		{ echo "jq not available, install with 'sudo apt-get install jq'."; exit 1; }
+command -v rsvg-convert >/dev/null 2>&1 ||	{ echo "rsvg-convert not available, install with... ask Gemini."; exit 1; }
+#----- end requirements ---------------------------------------#
+
+# package.json is the single source of truth.
+VERSION=$(jq ".version" package.json | tr -d '"')
 echo ${VERSION} > "VERSION"
 
 # Update (redundant) version file.
 echo "VERSION: ${VERSION}"
 echo "   MODE: ${MODE}"
 
+echo "#----- Download badges from shields.io ------------------------#"
 PATH_VERSION_BADGE_SVG="img/version-badge.svg"
 PATH_LOCATION_BADGE_SVG="img/location-badge.svg"
 PATH_VERSION_BADGE_PNG="img/version-badge.png"
@@ -21,7 +28,8 @@ PATH_LOCATION_BADGE_PNG="img/location-badge.png"
 # Download version badge. We will bake this into the vsix in order
 # to display them in a robust way instead of relying on network access.
 # Marketplace seems to have problems...
-echo "#----- Download badges from shields.io ------------------------#"
+# UPDATE: Nope, vsix seems to expect URLS like https:// Need to do some
+# research but leave the code for downloading the badges in here.
 rm -f img/version-badge.svg img/version-badge.png img/location-badge.svg img/location-badge.png
 curl "https://img.shields.io/badge/version-${VERSION}-blue" > "${PATH_VERSION_BADGE_SVG}"
 rsvg-convert -z 3 -f png "${PATH_VERSION_BADGE_SVG}" -o "${PATH_VERSION_BADGE_PNG}"
@@ -54,9 +62,9 @@ backup_ok=0
 
 cleanup() {
     if [[ "${backup_ok}" -eq 1 ]]; then
-        mv -f "${backup}" "${TARGET}"
+        mv -f "${backup}" "${PATH_README_TARGET}"
     elif [[ "${saw_target}" -eq 0 ]]; then
-        rm -f "${TARGET}"
+        rm -f "${PATH_README_TARGET}"
     fi
     rm -f "${backup}"
 }
@@ -64,16 +72,17 @@ cleanup() {
 # Do not cleanup, since we need to verify README.md
 #trap cleanup EXIT
 
-if [[ -f "${TARGET}" ]]; then
+if [[ -f "${PATH_README_TARGET}" ]]; then
     saw_target=1
-    cp -f "${TARGET}" "${backup}"
+    cp -f "${PATH_README_TARGET}" "${backup}"
     backup_ok=1
 else
     : > "${backup}"
 fi
 
 echo "#----- Building README.md from template -----------------------#"
-python3 - "${TEMPLATE}" "${BADGES}" "${TARGET}" "${VERSION}" <<'PY'
+echo "Using badge file '$BADGES'."
+python3 - "${PATH_README_TEMPLATE}" "${BADGES}" "${PATH_README_TARGET}" "${VERSION}" <<'PY'
 from pathlib import Path
 import sys
 
@@ -83,19 +92,10 @@ target = Path(sys.argv[3])
 version = sys.argv[4]
 target.write_text(template.replace("_BADGES_", badges, 1).replace("_VERSION_",version), encoding="utf-8")
 PY
-echo "README.md: $(wc -c < "${TARGET}") bytes"
+echo "README.md: $(wc -c < "${PATH_README_TARGET}") bytes"
 echo "#----- Done ---------------------------------------------------#"
 
 rm -f "${ROOT}"/waterloo-docstrings-*.vsix
-
-#if [[ -x "${ROOT}/node_modules/.bin/vsce" ]]; then
-#    VSCE_BIN="${ROOT}/node_modules/.bin/vsce"
-#elif command -v vsce >/dev/null 2>&1; then
-#    VSCE_BIN="$(command -v vsce)"
-#else
-#    echo "VSCE build tool not found. Install @vscode/vsce locally or put 'vsce' on PATH." >&2
-#    exit 1
-#fi
 
 echo "#----- Building VSIX package ----------------------------------#"
 if ! ${VSCE_BIN} package; then
