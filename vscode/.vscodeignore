@@ -2,6 +2,7 @@
 *.vsix
 *.pyc
 __pycache__/
+.mypy_cache/
 
 # Local helper/source variants not needed in VSIX
 README_AZURE.md

@@ -9,7 +9,7 @@ PATH_README_TARGET="${ROOT}/README.md"
 
 #----- begin requirements -------------------------------------#
 command -v jq >/dev/null 2>&1 ||		{ echo "jq not available, install with 'sudo apt-get install jq'."; exit 1; }
-command -v rsvg-convert >/dev/null 2>&1 ||	{ echo "rsvg-convert not available, install with... ask Gemini."; exit 1; }
+command -v rsvg-convert >/dev/null 2>&1 ||	{ echo "rsvg-convert not available, install with 'sudo apt-get install librsvg2-bin'"; exit 1; }
 #----- end requirements ---------------------------------------#
 
 # package.json is the single source of truth.
