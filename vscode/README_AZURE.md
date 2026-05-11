@@ -4,6 +4,25 @@ _BADGES_
 
 VS Code extension for Waterloo docstrings in Python.
 
+## Source and release
+
+The extension source and release workflow are tied to the GitHub repository:
+
+- `https://github.com/uwe-at-sdv/sdv_doc_waterloo`
+
+This GitHub presence is the public source of truth for the extension and is
+the repository used for the Trusted Publisher workflow on the Marketplace.
+
+## Requirements
+
+To use the extension, install the Waterloo Python package that provides the
+backend and shared schema data:
+
+- `sdv.doc.waterloo`
+
+You can install it from the GitHub repository or, once the public release is
+available, from PyPI.
+
 This extension provides:
 
 - Waterloo syntax highlighting for Python docstrings
@@ -53,6 +72,10 @@ The extension defines the following setting:
 - `waterloo.showSuccessNotifications` (default: `false`)
 
 If enabled, successful Waterloo operations show VS Code information messages.
+
+## Known issues
+
+No known issues at the moment. Please report problems on GitHub.
 
 ## Included components
 

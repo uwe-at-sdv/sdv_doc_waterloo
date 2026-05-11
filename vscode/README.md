@@ -1,8 +1,30 @@
 # Waterloo Docstrings for VS Code
 
 ![Version](https://img.shields.io/badge/version-0.1.11-blue)
+![Build](https://img.shields.io/badge/build-local_test-green)
+![Source](https://img.shields.io/badge/source-GitHub-181717?logo=github)
+![License](https://img.shields.io/badge/license-BSD_3--Clause-orange)
 
 VS Code extension for Waterloo docstrings in Python.
+
+## Source and release
+
+The extension source and release workflow are tied to the GitHub repository:
+
+- `https://github.com/uwe-at-sdv/sdv_doc_waterloo`
+
+This GitHub presence is the public source of truth for the extension and is
+the repository used for the Trusted Publisher workflow on the Marketplace.
+
+## Requirements
+
+To use the extension, install the Waterloo Python package that provides the
+backend and shared schema data:
+
+- `sdv.doc.waterloo`
+
+You can install it from the GitHub repository or, once the public release is
+available, from PyPI.
 
 This extension provides:
 
@@ -53,6 +75,10 @@ The extension defines the following setting:
 - `waterloo.showSuccessNotifications` (default: `false`)
 
 If enabled, successful Waterloo operations show VS Code information messages.
+
+## Known issues
+
+No known issues at the moment. Please report problems on GitHub.
 
 ## Included components
 
