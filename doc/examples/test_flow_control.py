@@ -24,6 +24,24 @@ Definitions:
 		# Numbered item with long text, so that we use \
 		the backslash in order to create a logical line.
 		# Numbered item
+Terminology:
+	Term B:
+		Terminology content is freeform. A single pipe character "|" separates paragraphs
+		within the freeform text.
+		|
+		This is the second paragraph. Here is an item list:
+		* Item 1
+		* Item 2
+		Some text after the item list.
+Notes:
+	About:
+		Notes content is freeform. A single pipe character "|" separates paragraphs
+		within the freeform text.
+		|
+		This is the second paragraph. Here is an item list:
+		* Item 1
+		* Item 2
+		Some text after the item list.
 Public_classes:
 	X
 Public_functions:
@@ -32,6 +50,7 @@ Class_overview:
 	X:
 		A class overview is not normative. The content
 		is a sequence of paragraphs.
+		|
 		This is the second paragraph. A single pipe character "|" separates paragraphs
 		within the freeform text.
 		|
@@ -42,8 +61,9 @@ Class_overview:
 		* An item
 Function_overview:
 	f:
-		A class overview is not normative. The content
+		A function overview is not normative. The content
 		is a sequence of paragraphs.
+		|
 		This is the second paragraph. A single pipe character "|" separates paragraphs
 		within the freeform text.
 		|
@@ -105,7 +125,7 @@ class X:
 		profile:
 			class
 		normative_sections:
-			Contract, Factory
+			Contract, Factory, Public_methods
 	Contract:
 		general:
 			Subsections in |label|`Contract` are line-based. This is\
@@ -125,7 +145,36 @@ class X:
 			This is the second logical line. Factories are not so different\
 			from constructors in terms of documentation. The content\
 			is interpreted as a line-by-line executable contract.
+	Public_methods:
+		m
+	Method_overview:
+		m:
+			A method overview is not normative. The content
+			is a sequence of paragraphs.
+			|
+			This is the second paragraph. A single pipe character "|" separates paragraphs
+			within the freeform text.
+			|
+			Itemizations and enumerations are possible:
+			# Numbered item
+			* An item
+			* An item
+			# Numbered item
 	"""
+	def m(self) -> None:
+		r"""
+		Preamble:
+			profile:
+				method
+			normative_sections:
+				Contract, Parameters, Returns, Raises
+		Contract:
+			general:
+		Parameters:
+		Returns:
+		Raises:
+		"""
+		pass
 
 def make_X() -> X:
 	pass

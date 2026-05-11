@@ -142,6 +142,7 @@ We do this by the following set of rules.
   followed by a whitespace character which allows simple, unique and robust parsing of the Rule ID.
   Informative: In this document which is written in reST, we insert a space (ASCII 32), a double-hyphen (en-dash),
   and another space (ASCII 32) between the braced Rule ID and the rule free-form text.
+  When a rule is merely mentioned but not introduced, square brackets |should_not| be used.
 
 Rule taxonomy
 -------------
@@ -724,6 +725,10 @@ the preamble and serves as metadata.
      - free-form text
      - Normative
      - Needs paragraph-capable text
+   * - :wtrl_label:`Definitions._inherit`
+     - list of identifiers
+     - Normative
+     - Implied by content kind
    * - :wtrl_label:`Terminology.<item>`
      - free-form text
      - Non-normative

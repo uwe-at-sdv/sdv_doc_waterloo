@@ -910,7 +910,7 @@ def build_sphinx_nodes(ctx : context,obj: object,doc: mod_docitem.docitem_docstr
 		parent += _build_internal_ref(ctx, exc_obj, exc_name, "wtrl_type")
 
 # Contract.*
-	RE_DOC_BULLET_LIST = re.compile(r"^[%-+*#]\s")
+	RE_DOC_BULLET_LIST = re.compile(r"^[-+*#]\s")
 	def build_bullet_list_from_subsection_items(items: Iterable[str]) -> nodes.bullet_list:
 		node_bullet_list = nodes.bullet_list()
 		for content in items:
