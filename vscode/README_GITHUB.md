@@ -38,6 +38,10 @@ This creates a file like:
 waterloo-docstrings-<version>.vsix
 ```
 
+The script updates the generated VSCode package files, but it does not stage,
+commit, or push. Use `publish.sh` for the release workflow, or stage the
+changes manually when building this branch directly.
+
 For the release-style README badges, use:
 
 ```bash

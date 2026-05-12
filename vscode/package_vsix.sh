@@ -12,9 +12,11 @@ command -v jq >/dev/null 2>&1 ||		{ echo "jq not available, install with 'sudo a
 command -v rsvg-convert >/dev/null 2>&1 ||	{ echo "rsvg-convert not available, install with 'sudo apt-get install librsvg2-bin'"; exit 1; }
 #----- end requirements ---------------------------------------#
 
+cd "${ROOT}"
+
 # package.json is the single source of truth.
 VERSION=$(jq ".version" package.json | tr -d '"')
-echo ${VERSION} > "VERSION"
+printf '%s\n' "${VERSION}" > "VERSION"
 
 # Update (redundant) version file.
 echo "VERSION: ${VERSION}"
@@ -33,13 +35,9 @@ PATH_LOCATION_BADGE_PNG="img/location-badge.png"
 rm -f img/version-badge.svg img/version-badge.png img/location-badge.svg img/location-badge.png
 curl "https://img.shields.io/badge/version-${VERSION}-blue" > "${PATH_VERSION_BADGE_SVG}"
 rsvg-convert -z 3 -f png "${PATH_VERSION_BADGE_SVG}" -o "${PATH_VERSION_BADGE_PNG}"
-git add "${PATH_VERSION_BADGE_SVG}"
-git add "${PATH_VERSION_BADGE_PNG}"
 
 curl "https://img.shields.io/badge/build-local_test-green" > "${PATH_LOCATION_BADGE_SVG}"
 rsvg-convert -z 3 -f png "${PATH_LOCATION_BADGE_SVG}" -o "${PATH_LOCATION_BADGE_PNG}"
-git add "${PATH_LOCATION_BADGE_SVG}"
-git add "${PATH_LOCATION_BADGE_PNG}"
 echo "#----- Done ---------------------------------------------------#"
 
 # Select badge file for local or public presentation.
