@@ -44,14 +44,14 @@ def parse_source_fragment(profile: Profile, source_fragment: str) -> ast.AST | N
 			|Must| return the first top-level AST node from the parsed tree.
 			|Must| ensure the returned node matches |var|`profile`:
 			For |value|`class`, the node |must| be |type|`ast.ClassDef`.
-			For |value|`function` or |value|`method`, the node |must| be |type|`ast.FunctionDef` or |type|`ast.AsyncFunctionDef`.
+			For |value|`function`, |value|`method`, or |value|`inherited_method`, the node |must| be |type|`ast.FunctionDef` or |type|`ast.AsyncFunctionDef`.
 			|Must| reject empty parses (no top-level nodes).
 
 	Parameters:
 		profile:
 			Profile used for node-type validation.
 		source_fragment:
-			Source fragment containing a class/function header (or small stub).
+			Source fragment containing a class/function/method header (or small stub).
 			Ignored if |var|`profile` is |value|`module`.
 	Returns:
 		|None| for profile |value|`module`, otherwise the validated first AST node.
@@ -70,7 +70,7 @@ def parse_source_fragment(profile: Profile, source_fragment: str) -> ast.AST | N
 	node: ast.AST = tree.body[0]
 	if profile == "class" and not isinstance(node, ast.ClassDef):
 		raise RuntimeError("source_fragment does not parse to a class header")
-	if profile in {"function", "method"} and not isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+	if profile in {"function", "method", "inherited_method"} and not isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
 		raise RuntimeError("source_fragment does not parse to a function/method header")
 	return node
 
