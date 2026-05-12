@@ -77,7 +77,7 @@ from the source tree.
 
 - `Waterloo: Generate Minimal Docstring`
 - `Waterloo: Generate Full Docstring`
-- `Waterloo: Validate Docstring`
+- `Waterloo: Save and Validate Docstring`
 
 The context menu appears for Python when the backend is available and the current line matches a supported location (`def`, `class`, or module docstring position).
 
@@ -93,7 +93,7 @@ code examples-python/example_function_full.py
 Then try the following:
 
 1. Place the cursor on the function header `def test()`.
-2. Open the editor context menu and select `Waterloo -> Validate Docstring`.
+2. Open the editor context menu and select `Waterloo -> Save and Validate Docstring`.
 3. A confirmation message such as `Waterloo: Validation passed for example_function_full.test.` should appear near the bottom of the editor window.
 4. Delete the docstring of function `test`.
 5. Place the cursor again on the function header `def test()`.

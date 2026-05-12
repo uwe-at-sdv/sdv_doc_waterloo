@@ -608,6 +608,13 @@ async function validateDocstringInBackend(prereq, commandName) {
 		vscode.window.showErrorMessage("Waterloo: No active editor.");
 		return;
 	}
+	if (editor.document.isDirty) {
+		const saved = await editor.document.save();
+		if (!saved) {
+			vscode.window.showErrorMessage("Waterloo: Could not save the active document before validation.");
+			return;
+		}
+	}
 	let generationContext;
 	try {
 		generationContext = buildGenerationRequestContext(editor);

@@ -3,7 +3,7 @@
   "displayName": "Waterloo Docstrings",
   "icon": "img/wtrl_logo_128x128.png",
   "description": "Tools for Waterloo docstrings in Python.",
-  "version": "0.1.12",
+  "version": "0.1.13",
   "publisher": "uwe-at-sdv",
   "engines": {
     "vscode": "^1.80.0"
@@ -53,7 +53,7 @@
       },
       {
         "command": "waterloo.validateDocstring",
-        "title": "Waterloo: Validate Docstring"
+        "title": "Waterloo: Save and Validate Docstring"
       }
     ],
     "submenus": [

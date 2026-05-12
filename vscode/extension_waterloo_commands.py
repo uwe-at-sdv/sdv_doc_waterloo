@@ -35,6 +35,10 @@ HeaderNode_t = Module | ClassDef | FunctionDef | AsyncFunctionDef
 DocstringOwnerNode_t = Module | ClassDef | FunctionDef | AsyncFunctionDef
 
 
+class _NoDocstringError(RuntimeError):
+	pass
+
+
 def _parse_file_to_ast(filename: str) -> Module:
 	with open(filename, "r", encoding="utf-8") as f:
 		source = f.read()
@@ -58,20 +62,21 @@ def _qualify_documented_object(module_filename: str, name: str, line: int) -> st
 	tree = _parse_file_to_ast(module_filename)
 	module_name = Path(module_filename).stem
 	for qi,nd in _gen_qis_and_nodes(tree,module_name):
-# We are only interested in objects with a docstring.
-		doc: str | None = ast.get_docstring(nd)
-		if doc:
 #			print(qi,"<->",name)
-			if qi.split(".")[-1] == name:
+		if qi.split(".")[-1] != name:
+			continue
 # Module node has no lineno/end_lineno and does not represent the selected header.
-				if isinstance(nd, ast.Module):
-					continue
+		if isinstance(nd, ast.Module):
+			continue
 # Check against full range for better robustness.
 # Important because decorators might shift beg_line.
-				beg_line = nd.lineno
-				end_line = nd.end_lineno if nd.end_lineno is not None else beg_line
-				if line in range(beg_line,end_line + 1):
-					return qi
+		beg_line = nd.lineno
+		end_line = nd.end_lineno if nd.end_lineno is not None else beg_line
+		if line in range(beg_line,end_line + 1):
+			doc: str | None = ast.get_docstring(nd)
+			if not doc:
+				raise _NoDocstringError(f"The selected object '{qi}' has no docstring.")
+			return qi
 	return ""
 
 def _validate_source_fragment(tr: wtrl.tracer,kind: str, source_fragment: str) -> HeaderNode_t:
@@ -196,13 +201,16 @@ def _handle_validate(
 		try:
 # In ast, line numbers are one-based, hence +1.
 			qi = _qualify_documented_object(source_file,node.name,line + 1)
+		except _NoDocstringError as e:
+			tr.add_error("XTNSN-013","extension","The selected object has no docstring.",{"source_file":source_file,"line":f"{line}"})
+			raise RuntimeError(str(e)) from e
 		except Exception as e:
 			tr.add_error("XTNSN-008","extension","Could not parse",{"source_file":source_file,"exc":str(e)})
 		if tr.has_errors():
 			raise RuntimeError()
 		if not qi:
 			tr.add_error("XTNSN-012","extension","Could not qualify documented object.",{"source_file":source_file,"line":f"{line}"})
-			raise RuntimeError()
+			raise RuntimeError("Could not qualify documented object.")
 # Make sure the module is found.
 	module_dir = str(Path(source_file).parent)
 	sys.path.insert(0,module_dir)

@@ -35,7 +35,7 @@ The extension contributes the following commands:
 
 - `Waterloo: Generate Minimal Docstring`
 - `Waterloo: Generate Full Docstring`
-- `Waterloo: Validate Docstring`
+- `Waterloo: Save and Validate Docstring`
 
 In Python files, these commands are also available from the editor context
 menu under:
@@ -56,7 +56,7 @@ The menu appears when the current line is a supported location, such as:
 4. Choose one of the following actions:
    - `Generate Minimal Docstring`
    - `Generate Full Docstring`
-   - `Validate Docstring`
+   - `Save and Validate Docstring`
 
 If generation is selected, a docstring template is inserted below the current
 definition. If validation is selected, the extension reports whether the
