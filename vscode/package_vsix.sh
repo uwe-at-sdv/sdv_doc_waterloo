@@ -102,4 +102,7 @@ if ! ${VSCE_BIN} package; then
     echo "VSIX build failed in ${ROOT}." >&2
     exit 1
 fi
+
+git add "${ROOT}"/waterloo-docstrings-*.vsix
+
 echo "#----- Done ---------------------------------------------------#"
