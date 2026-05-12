@@ -103,6 +103,4 @@ if ! ${VSCE_BIN} package; then
     exit 1
 fi
 
-git commit "${ROOT}"/waterloo-docstrings-*.vsix
-
 echo "#----- Done ---------------------------------------------------#"
