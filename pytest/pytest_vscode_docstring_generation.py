@@ -277,7 +277,25 @@ def test_vscode_backend_validate_reports_xtnsn_012_cannot_qualify_object() -> No
 		}
 	)
 	assert data.get("ok") is False, data
+	assert data.get("error") == "Could not qualify documented object.", data
 	assert "XTNSN-012" in _error_rule_ids(data), data
+
+
+def test_vscode_backend_validate_reports_xtnsn_013_selected_object_has_no_docstring() -> None:
+	data = _run_backend_json(
+		{
+			"version": 1,
+			"command": "validate_docstring",
+			"kind": "class",
+			"source_fragment": "class X: pass\n",
+			"source_file": DIR_EXAMPLES + "/pytest_no_docstring.py",
+			"line": 6,
+			"include_diagnostics": True,
+		}
+	)
+	assert data.get("ok") is False, data
+	assert data.get("error") == "The selected object 'pytest_no_docstring.X' has no docstring.", data
+	assert "XTNSN-013" in _error_rule_ids(data), data
 
 
 def test_vscode_backend_validate_reports_real_waterloo_validation_error() -> None:
