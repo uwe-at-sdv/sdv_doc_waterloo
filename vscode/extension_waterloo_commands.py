@@ -31,6 +31,7 @@ COMMAND_GENERATE_MINIMAL = "generate_minimal_docstring_to_tmp"
 COMMAND_GENERATE_FULL = "generate_full_docstring_to_tmp"
 COMMAND_VALIDATE = "validate_docstring"
 
+# From module ast.
 HeaderNode_t = Module | ClassDef | FunctionDef | AsyncFunctionDef
 DocstringOwnerNode_t = Module | ClassDef | FunctionDef | AsyncFunctionDef
 

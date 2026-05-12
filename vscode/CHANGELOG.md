@@ -4,7 +4,8 @@ Format:
 
 - VERSION [YYYY-MM-DD]: Summary.
 
-- 0.1.13 [2026-05-11]:	Autisave for Validate
+- 0.1.14 [2026-05-12]:	Cleanup, removed old source file.
+- 0.1.13 [2026-05-11]:	Autosave for Validate
 - 0.1.12 [2026-05-11]:	Modified README.dm
 - 0.1.11 [2026-05-09]:	Testing...
 - 0.1.10 [2026-05-09]:	Testing...

@@ -1,6 +1,6 @@
 # Waterloo Docstrings for VS Code
 
-![Version](https://img.shields.io/badge/version-0.1.13-blue)
+![Version](https://img.shields.io/badge/version-0.1.14-blue)
 ![Source](https://img.shields.io/badge/source-GitHub-181717?logo=github)
 ![Marketplace](https://img.shields.io/badge/VS%20Code-Marketplace-brightgreen)
 
