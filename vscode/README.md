@@ -1,8 +1,12 @@
-# Waterloo Docstrings for VS Code
+# Waterloo Docstrings for VS Code - TEST PHASE, DO NOT INSTALL
 
-![Version](https://img.shields.io/badge/version-0.1.14-blue)
+![Version](https://img.shields.io/badge/version-0.1.18-blue)
 ![Source](https://img.shields.io/badge/source-GitHub-181717?logo=github)
 ![Marketplace](https://img.shields.io/badge/VS%20Code-Marketplace-brightgreen)
+
+![ExtensionPreview](https://minifl.de/sdv_doc_waterloo/img/screencast_final_fallback.png)
+
+[Animated demo GIF](https://minifl.de/sdv_doc_waterloo/img/screencast_final.gif)
 
 VS Code extension for Waterloo docstrings in Python.
 

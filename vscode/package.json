@@ -3,7 +3,7 @@
   "displayName": "Waterloo Docstrings",
   "icon": "img/wtrl_logo_128x128.png",
   "description": "Tools for Waterloo docstrings in Python.",
-  "version": "0.1.14",
+  "version": "0.1.18",
   "publisher": "uwe-at-sdv",
   "engines": {
     "vscode": "^1.80.0"
@@ -93,5 +93,8 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/uwe-at-sdv/sdv_doc_waterloo.git"
+  },
+  "devDependencies": {
+    "@vscode/vsce": "^3.9.1"
   }
 }

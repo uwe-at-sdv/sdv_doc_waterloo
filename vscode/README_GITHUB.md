@@ -29,6 +29,7 @@ cd sdv_doc_waterloo/vscode
 From this directory:
 
 ```bash
+npm install --save-dev @vscode/vsce
 ./package_vsix.sh local
 ```
 

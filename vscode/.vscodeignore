@@ -9,6 +9,9 @@ README_AZURE.md
 README_BADGES_*.md
 README_GITHUB.md
 package_vsix.sh
+node_modules/**
+package-lock.json
+img/screencast_final_fallback.png
 obsolete/**
 tools/**
 

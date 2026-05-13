@@ -1,6 +1,10 @@
-# Waterloo Docstrings for VS Code
+# Waterloo Docstrings for VS Code - TEST PHASE, DO NOT INSTALL
 
 _BADGES_
+
+![ExtensionPreview](https://minifl.de/sdv_doc_waterloo/img/screencast_final_fallback.png)
+
+[Animated demo GIF](https://minifl.de/sdv_doc_waterloo/img/screencast_final.gif)
 
 VS Code extension for Waterloo docstrings in Python.
 

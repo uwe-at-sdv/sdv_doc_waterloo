@@ -4,6 +4,7 @@ Format:
 
 - VERSION [YYYY-MM-DD]: Summary.
 
+- 0.1.15 [2026-05-13]:	Screencast-Preview added.
 - 0.1.14 [2026-05-12]:	Cleanup, removed old source file.
 - 0.1.13 [2026-05-11]:	Autosave for Validate
 - 0.1.12 [2026-05-11]:	Modified README.dm
