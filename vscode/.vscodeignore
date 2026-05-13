@@ -11,7 +11,12 @@ README_GITHUB.md
 package_vsix.sh
 node_modules/**
 package-lock.json
+
+# Preview images must be hosted on a public site.
+# It's not useful to have them in the VSIX.
 img/screencast_final_fallback.png
+img/screencast_final.gif
+
 obsolete/**
 tools/**
 

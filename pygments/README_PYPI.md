@@ -1,10 +1,20 @@
 # Python-Waterloo Lexer
 
+![Status](https://img.shields.io/badge/status-pre--release-orange)
+![License](https://img.shields.io/badge/license-BSD--2--Clause-blue)
+![Python](https://img.shields.io/badge/python-3.10%2B-blue)
+
 `python-waterloo-lexer` is a Pygments lexer for Python files that contain
 Waterloo docstrings.
 
 It can be used with `pygmentize` and other tools that load Pygments lexers via
 entry points.
+
+## What it provides
+
+- a `python-waterloo` Pygments lexer alias
+- syntax highlighting for Python files with Waterloo docstrings
+- installation via PyPI, local checkout, or Git URL
 
 ## Installation
 
