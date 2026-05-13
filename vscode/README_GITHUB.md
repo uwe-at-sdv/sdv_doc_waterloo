@@ -8,6 +8,32 @@ This package provides:
 - context menu commands for docstring generation and validation
 - Python backend bridge used by the extension commands
 
+## Preview
+
+<picture>
+  <source srcset="https://minifl.de/sdv_doc_waterloo/img/screencast_final.gif" type="image/gif">
+  <img src="https://minifl.de/sdv_doc_waterloo/img/screencast_final_fallback.png" alt="ExtensionPreview">
+</picture>
+
+## Source and release
+
+The extension source and release workflow are tied to the GitHub repository:
+
+- `https://github.com/uwe-at-sdv/sdv_doc_waterloo`
+
+This GitHub presence is the public source of truth for the extension and is
+the repository used for the Trusted Publisher workflow on the Marketplace.
+
+## Requirements
+
+To use the extension, install the Waterloo Python package that provides the
+backend and shared schema data:
+
+- `sdv.doc.waterloo`
+
+The package can currently be installed from the GitHub repository.
+A future public release on PyPI is planned.
+
 ## Clone the correct branch
 
 The plugin sources live on branch `ide-plugins`. If you want to work from a

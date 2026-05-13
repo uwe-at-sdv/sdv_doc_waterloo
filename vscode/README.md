@@ -16,9 +16,10 @@
 > Installation is currently recommended mainly for testers and
 > developers already working with Waterloo docstrings.
 
-![ExtensionPreview](https://minifl.de/sdv_doc_waterloo/img/screencast_final_fallback.png)
-
-[Animated demo GIF](https://minifl.de/sdv_doc_waterloo/img/screencast_final.gif)
+<picture>
+  <source srcset="https://minifl.de/sdv_doc_waterloo/img/screencast_final.gif" type="image/gif">
+  <img src="https://minifl.de/sdv_doc_waterloo/img/screencast_final_fallback.png" alt="ExtensionPreview">
+</picture>
 
 VS Code extension for Waterloo docstrings in Python.
 
