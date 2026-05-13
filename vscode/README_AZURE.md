@@ -1,4 +1,4 @@
-# Waterloo Docstrings for VS Code - TEST PHASE, DO NOT INSTALL
+# Waterloo Docstrings for VS Code
 
 _BADGES_
 
