@@ -2,6 +2,18 @@
 
 _BADGES_
 
+> [!NOTE]
+> This extension is currently in a test phase.
+>
+> Functionality, command names, schema integration and generated
+> docstring structures may still change.
+>
+> The extension is currently published primarily for development,
+> testing and interoperability experiments with the Waterloo backend.
+>
+> Installation is currently recommended mainly for testers and
+> developers already working with Waterloo docstrings.
+
 ![ExtensionPreview](https://minifl.de/sdv_doc_waterloo/img/screencast_final_fallback.png)
 
 [Animated demo GIF](https://minifl.de/sdv_doc_waterloo/img/screencast_final.gif)
@@ -24,14 +36,14 @@ backend and shared schema data:
 
 - `sdv.doc.waterloo`
 
-You can install it from the GitHub repository or, once the public release is
-available, from PyPI.
+The package can currently be installed from the GitHub repository.
+A future public release on PyPI is planned.
 
 This extension provides:
 
 - Waterloo syntax highlighting for Python docstrings
-- context menu commands for docstring generation
-- context menu commands for docstring validation
+- context menu support for docstring generation
+- context menu support for docstring validation
 
 ## Features
 
