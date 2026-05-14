@@ -37,6 +37,20 @@ You can also check whether Pygments lists the lexer:
 pygmentize -L lexers | grep -i waterloo || true
 ```
 
+## Terminal viewer
+
+For a quick terminal preview, a `less` alias can be handy:
+
+```bash
+alias lessh='LESSOPEN="| pygmentize -O style=monokai %s" less -M -R'
+```
+
+Then open files with:
+
+```bash
+lessh <file.py>
+```
+
 ## Project repository
 
 Development happens in the Waterloo repository:

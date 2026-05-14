@@ -46,6 +46,23 @@ pygmentize -x \
   examples-python/example_function_full.py
 ```
 
+## Terminal viewer
+
+For ad-hoc file viewing in a terminal, a simple `less` alias can be useful:
+
+```bash
+alias lessh='LESSOPEN="| pygmentize -O style=monokai %s" less -M -R'
+```
+
+Then use:
+
+```bash
+lessh examples-python/example_function_full.py
+```
+
+If your system already provides `lesspipe`, you can also wire that into your
+shell startup file and have `less` itself perform the preprocessing step.
+
 ## Install from a local checkout
 
 If you have cloned the repository, install the lexer package from this folder:
