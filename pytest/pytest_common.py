@@ -26,19 +26,17 @@ PATH_IDE_PLUGINS =	ROOT / ".." / "package_ide-plugins"
 PATH_PYGMENTS =		PATH_IDE_PLUGINS / "pygments"
 PATH_VSCODE =		PATH_IDE_PLUGINS / "vscode"
 
-# In our developer workspace we use the latest pre-release.
-# In a stable environment we use the official executable.
-#if Path("./waterlint.py").exists():
-#	WATERLINT = ROOT / "waterlint.py"
-#else:
-WATERLINT = "waterlint"
+# In our developer workspace we use the installed package entry point,
+# but we invoke it via the active interpreter so that tests do not depend
+# on PATH setup.
+WATERLINT = (sys.executable, "-m", "sdv.doc.waterloo.waterlint")
 
 def run_waterlint(*args: str) -> subprocess.CompletedProcess[str]:
 	"""Run waterlint with project-local PYTHONPATH and return completed process."""
 	env = os.environ.copy()
 	env["PYTHONPATH"] = os.pathsep.join([str(ROOT), env.get("PYTHONPATH", "")])
 
-	cmd = [str(WATERLINT), *args]
+	cmd = [*WATERLINT, *args]
 
 	return subprocess.run(
 		cmd,
@@ -49,4 +47,3 @@ def run_waterlint(*args: str) -> subprocess.CompletedProcess[str]:
 		env=env,
 		cwd=ROOT,
 	)
-

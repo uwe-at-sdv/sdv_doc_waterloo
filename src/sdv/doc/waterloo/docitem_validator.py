@@ -1046,7 +1046,7 @@ Notes:
 				if method_name != base_name:
 					raise_validation_error(tr,obj,"CON-044",f"Base method name '{base_name}' does not match '{method_name}'.")
 # CON-045: referenced method must have a valid docstring.
-				if base_obj.__doc__ is None:
+				if not get_obj_docstring(base_obj):
 					raise_validation_error(tr,obj,"CON-045",f"Base method name '{base_name}' does not have a docstring.")
 				try:
 					top_base_obj = make_docitem_tree_from_object(tr,base_obj)
@@ -1220,7 +1220,7 @@ See_also:
 	if obj in _seen:
 		return _seen[obj]
 	if top == None:
-		if obj.__doc__ is None:
+		if not get_obj_docstring(obj):
 			raise_has_no_docstring(tr,"DOC-001",obj)
 		try:
 			top = make_docitem_tree_from_object(tr,obj)

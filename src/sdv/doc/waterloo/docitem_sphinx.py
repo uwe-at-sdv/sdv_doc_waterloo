@@ -543,8 +543,8 @@ def _get_validated_doc_for_object(
 	if key in cache:
 		cached = cache[key]
 		return cached if isinstance(cached, mod_docitem.docitem_docstring_base) else None
-	obj_doc = getattr(obj, "__doc__", None)
-	if not isinstance(obj_doc, str):
+	obj_doc = mod_docitem.get_obj_docstring(obj)
+	if not isinstance(obj_doc, str) or not obj_doc.strip():
 # Objects without a Waterloo docstring cannot contribute scope metadata.
 # We treat them as scope-agnostic, so that documented constants and
 # similar values remain linkable without spurious warnings.
@@ -1381,13 +1381,14 @@ Raises:
 		nodes_out: List[nodes.Node] = []
 
 # Validate class docstring and Method_overview coverage
-		if not isinstance(class_obj.__doc__, str):
+		class_doc_txt = mod_docitem.get_obj_docstring(class_obj)
+		if not class_doc_txt:
 			raise RuntimeError(f"class {class_obj} has no docstring.")
 		top = cast(mod_docitem.docitem_docstring_class,mod_docitem.validate_docstring(tr,class_obj))
 		mod_docitem.validate_class_method_coverage(tr,class_obj,top)
-		assert isinstance(class_obj.__doc__,str)
+		assert isinstance(class_doc_txt, str)
 
-		tree_cls = mod_docitem.parse_indent_docstring(tr,class_obj.__doc__)
+		tree_cls = mod_docitem.parse_indent_docstring(tr,class_doc_txt)
 		di_cls = mod_docitem.docitem_docstring_class()
 		di_cls.parse(tr,tree_cls)
 		mod_docitem.validate_docstring(tr,class_obj,di_cls)
@@ -1432,9 +1433,10 @@ Raises:
 					func_obj = mod_docitem.get_func_obj_from_callable(meth_obj)
 					if not func_obj:
 						continue
-					if not isinstance(func_obj.__doc__, str):
+					func_doc_txt = mod_docitem.get_obj_docstring(func_obj)
+					if not func_doc_txt:
 						continue
-					tree_m = mod_docitem.parse_indent_docstring(tr,func_obj.__doc__)
+					tree_m = mod_docitem.parse_indent_docstring(tr,func_doc_txt)
 
 					profile = mod_docitem.get_profile_of_tree(tr,tree_m)
 					di_m :  mod_docitem.docitem_base
@@ -1471,9 +1473,10 @@ Raises:
 					if meth is not None:
 						meth_objs.append((meth,prop_name + "." + attr_name))
 				for func_obj,func_name in meth_objs:
-					if not isinstance(func_obj.__doc__, str):
+					func_doc_txt = mod_docitem.get_obj_docstring(func_obj)
+					if not func_doc_txt:
 						continue
-					tree_m = mod_docitem.parse_indent_docstring(tr,func_obj.__doc__)
+					tree_m = mod_docitem.parse_indent_docstring(tr,func_doc_txt)
 
 					profile = mod_docitem.get_profile_of_tree(tr,tree_m)
 					di_prop_meth :  mod_docitem.docitem_base
@@ -1914,10 +1917,11 @@ Raises:
 		module_obj, _, _, _ = resolve_qualified_name(ctx, qname)
 		if not mod_docitem.is_obj_module(module_obj):
 			raise RuntimeError(f"{qname} does not resolve to a module.")
-		if not isinstance(module_obj.__doc__, str):
+		mod_doc_txt = mod_docitem.get_obj_docstring(module_obj)
+		if not mod_doc_txt:
 			raise RuntimeError(f"{qname} has no docstring.")
 
-		tree_mod = mod_docitem.parse_indent_docstring(tr,module_obj.__doc__)
+		tree_mod = mod_docitem.parse_indent_docstring(tr,mod_doc_txt)
 		di_mod = mod_docitem.docitem_docstring_module()
 		di_mod.parse(tr,tree_mod)
 		mod_docitem.validate_docstring(tr,module_obj, di_mod)
@@ -1965,10 +1969,11 @@ Raises:
 		function_obj, _, _, _ = resolve_qualified_name(ctx, qname)
 		if not callable(function_obj):
 			raise RuntimeError(f"{qname} does not resolve to a callable.")
-		if not isinstance(function_obj.__doc__, str):
+		func_doc_txt = mod_docitem.get_obj_docstring(function_obj)
+		if not func_doc_txt:
 			raise RuntimeError(f"{qname} has no docstring.")
 
-		tree_meth = mod_docitem.parse_indent_docstring(tr,mod_docitem.get_obj_docstring(function_obj))
+		tree_meth = mod_docitem.parse_indent_docstring(tr,func_doc_txt)
 		if mod_docitem.get_profile_of_tree(mod_docitem.tracer(),tree_meth) in ("function","method"):
 			di_meth = mod_docitem.docitem_docstring_method()
 			di_meth.parse(tr,tree_meth)
@@ -2022,10 +2027,11 @@ Raises:
 		obj, _, _, _ = resolve_qualified_name(ctx, qname)
 		if not mod_docitem.is_obj_class(obj):
 			raise RuntimeError(f"{qname} is not a class.")
-		if not isinstance(obj.__doc__, str):
+		class_doc_txt = mod_docitem.get_obj_docstring(obj)
+		if not class_doc_txt:
 			raise RuntimeError(f"{qname} has no docstring.")
 
-		tree_mod = mod_docitem.parse_indent_docstring(tr,obj.__doc__)
+		tree_mod = mod_docitem.parse_indent_docstring(tr,class_doc_txt)
 		di_node = mod_docitem.docitem_docstring_class()
 		di_node.parse(tr,tree_mod)
 		mod_docitem.validate_docstring(tr,obj, di_node)
@@ -2074,7 +2080,8 @@ Raises:
 		obj, _, _, _ = resolve_qualified_name(ctx, qname)
 		if not mod_docitem.is_obj_class(obj):
 			raise RuntimeError(f"{qname} is not a class.")
-		if not isinstance(obj.__doc__, str):
+		class_doc_txt = mod_docitem.get_obj_docstring(obj)
+		if not class_doc_txt:
 			raise RuntimeError(f"{qname} has no docstring.")
 		try:
 			return build_sphinx_nodes_full(ctx, obj)

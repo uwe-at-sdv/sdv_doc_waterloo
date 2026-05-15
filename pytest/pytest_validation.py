@@ -21,7 +21,7 @@ def test_selftest_runs() -> None:
 #	os.chdir('package/src')
 
 	result = subprocess.run(
-		["python3","-m","sdv.doc.waterloo.docitem"],
+		[sys.executable, "-m", "sdv.doc.waterloo.docitem"],
 		stdout=subprocess.PIPE,
 		stderr=subprocess.PIPE,
 		text=True,
@@ -34,7 +34,7 @@ def _run_waterlint_validate(obj: str) -> subprocess.CompletedProcess[str]:
 	"""Run ``waterlint validate`` for the given object and capture output."""
 	return subprocess.run(
 		[
-			str(WATERLINT),
+			*WATERLINT,
 			"validate",
 			"--basedir",
 			DIR_EXAMPLES,
@@ -51,7 +51,7 @@ def _run_waterlint_validate_with_basedir(obj: str, basedir: str = DIR_EXAMPLES) 
 	"""Run ``waterlint validate`` with explicit ``--basedir`` and capture output."""
 	return subprocess.run(
 		[
-			str(WATERLINT),
+			*WATERLINT,
 			"validate",
 			"--basedir",
 			basedir,

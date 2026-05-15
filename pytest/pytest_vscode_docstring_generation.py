@@ -115,7 +115,7 @@ def _validate_structural_only(tmp_path: Path, generated_docstring_literal: str) 
 	in_file = tmp_path / "generated_docstring.txt"
 	in_file.write_text(doc_for_validate, encoding="utf-8")
 	res = subprocess.run(
-		[str(WATERLINT), "validate", "--in", str(in_file)],
+		[*WATERLINT, "validate", "--in", str(in_file)],
 		stdout=subprocess.PIPE,
 		stderr=subprocess.PIPE,
 		text=True,

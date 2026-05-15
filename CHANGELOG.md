@@ -4,6 +4,7 @@ Format:
 
 - VERSION [YYYY-MM-DD]: Summary.
 
+- 0.13.0 [2026-05-15]: Refactoring docitem_helper
 - 0.12.1 [2026-05-10]: Changes in `waterlint`, mainly documentation of `render-html5`.
 - 0.12.0 [2026-05-08]: Changes in `docitem_validator.py` and `docitem_sphinx.py`
 - 0.11.1 [2026-05-07]: File doc/READ_THE_DOC: a how-to-read for LLMs in order to avoid noise.

@@ -12,7 +12,7 @@ def _run_waterlint_coverage(obj: str) -> subprocess.CompletedProcess[str]:
 	"""Run ``waterlint coverage`` for the given object and capture output."""
 	return subprocess.run(
 		[
-			str(WATERLINT),
+			*WATERLINT,
 			"coverage",
 			"--basedir",
 			DIR_EXAMPLES,

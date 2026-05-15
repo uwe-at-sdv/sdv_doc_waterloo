@@ -544,7 +544,7 @@ def check_profile_matches_object(tr: tracer, profile: str, obj: object) -> None:
 		if profile not in {"function", "method", "inherited_method"}:
 			warn_validation(tr, obj, "PRE-020", f"profile 'inherited_method' might be appropriate, cannot decide at this location in code.")
 			raise_validation_error(tr, obj, "PRE-019", f"profile is '{profile}' but '{get_obj_name(obj)}' is a function or method.")
-		is_method_like = is_obj_method_like(obj)
+		is_method_like = isinstance(obj, property) or is_obj_method_like(obj)
 		if is_method_like:
 			if profile not in {"method", "inherited_method"}:
 				raise_validation_error(tr, obj, "PRE-019", f"profile is '{profile}' but '{get_obj_name(obj)}' is method-like.")

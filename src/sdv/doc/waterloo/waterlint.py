@@ -27,7 +27,8 @@ from jsonschema import Draft202012Validator
 #from jsonschema import JSONDecodeError
 import jsonschema.exceptions
 
-__version__ = "0.9.2"
+__version__ = "0.10.0"
+# - 0.10.0 [2026-05-15]	Major refactoring in docitem_helper.
 # - 0.9.2 [2026-05-10]	Minor fixes/changes in subcommand render-html5.
 # - 0.9.1 [2026-05-01]	Minor changes in static typing
 # - 0.9.0 [2026-04-25]	Refactoring render-html5: freeform sections
@@ -845,8 +846,8 @@ def _extract_command(args: argparse.Namespace) -> int:
 		if args.obj:
 			_apply_basedir(getattr(args, "basedir", None), args.obj)
 			obj = _resolve_object(args.obj)
-			doc_txt = getattr(obj, "__doc__", None)
-			if not isinstance(doc_txt, str):
+			doc_txt = docitem.get_obj_docstring(obj)
+			if not isinstance(doc_txt, str) or not doc_txt.strip():
 				tr.add_error("TOOL-003", "tool", "Resolved object has no docstring.")
 				_emit_tracer(tr, out_diag, out_diag_json)
 				return 1

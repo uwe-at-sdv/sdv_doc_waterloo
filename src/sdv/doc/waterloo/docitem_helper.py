@@ -6,7 +6,10 @@ from typing import Any, Callable, Dict, Final, get_type_hints, get_origin, get_a
 
 import sys,re,os,copy
 import pkgutil,inspect,importlib
+import ast
+import textwrap
 import builtins
+from weakref import WeakKeyDictionary
 from contextlib import contextmanager
 
 try:
@@ -191,6 +194,128 @@ RE_WTRL_ANGLE_WTRL_REF_COMPILED: Final[re.Pattern[str]] = re.compile(RE_WTRL_ANG
 #CSV_SECTIONS = frozenset(["normative_sections", "scopes", "Public_classes", "Public_methods", "Public_functions", "See_also"])
 SINGLE_STRING_SECTIONS = frozenset(["profile","status"])
 
+_SOURCE_DOCSTRING_CACHE: Dict[int, str] = {}
+AstDocNode: TypeAlias = Union[ast.ClassDef, ast.FunctionDef, ast.AsyncFunctionDef]
+# Per-module AST cache used to preserve raw docstring indentation and tabs.
+_MODULE_AST_CACHE: WeakKeyDictionary[ModuleType, Tuple[str, ast.Module, Dict[str, list[AstDocNode]]]] = WeakKeyDictionary()
+
+
+def get_source_docstring(o: object) -> str:
+	"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Notes
+	Contract:
+		general:
+			|Must| return a raw source docstring for |var|`o` if the defining source text can be obtained.
+			|Must| support modules, classes, functions, methods, and routine-like objects for which source text is available.
+			|Must| prefer the source docstring over any runtime |value|`__doc__` representation.
+			|Must| cache the extracted result globally by object identity to avoid repeated source parsing.
+			|Must| cache one parsed AST per module and reuse it for subsequent lookups.
+			|Must| preserve original indentation and tabs in order to remain compatible with Waterloo parsing under Python 3.13+.
+			|Should| fall back to a direct source snippet parse when the object is a decorated or wrapper-like callable
+			that cannot be resolved reliably through the module AST.
+			The AST-based source lookup is intentionally slower than direct runtime docstring access and is therefore
+			implemented with caching as a first-order mitigation, not as a full performance optimization.
+			|Must| return the empty string if no source docstring can be determined.
+	Parameters:
+		o:
+			Any documentable object whose defining source docstring should be extracted.
+	Returns:
+		|Must| return the raw source docstring text, or the empty string if none is available.
+	Notes:
+		The helper uses a source-first strategy to preserve original indentation and tab characters in Python 3.13+.
+		Docstrings are cached by object identity, while parsed module ASTs are cached separately by module object.
+		Further performance improvements can be added later by caching validation results for repeated objects.
+	"""
+	key = id(o)
+	if key in _SOURCE_DOCSTRING_CACHE:
+		return _SOURCE_DOCSTRING_CACHE[key]
+	doc = ""
+	if isinstance(o, property):
+# Properties inherit their documentation from accessor methods.
+# Use the getter first because it is the canonical docstring source.
+		for accessor in (o.fget, o.fset, o.fdel):
+			if accessor is None:
+				continue
+			doc = get_source_docstring(accessor)
+			if doc:
+				break
+	if inspect.ismodule(o) or inspect.isclass(o) or inspect.isroutine(o):
+		mod = o if isinstance(o, ModuleType) else inspect.getmodule(o)
+		try:
+			if isinstance(mod, ModuleType):
+				src = inspect.getsource(mod)
+				ast_index: Dict[str, list[AstDocNode]] = {}
+				if mod in _MODULE_AST_CACHE:
+					_, tree, ast_index = _MODULE_AST_CACHE[mod]
+				else:
+					tree = ast.parse(src)
+
+					# Index nested class/function definitions by fully qualified name.
+					def _index_node(node: ast.AST, prefix: str = "") -> None:
+						body = getattr(node, "body", None)
+						if not isinstance(body, list):
+							return
+						for child in body:
+							if not isinstance(child, (ast.ClassDef, ast.FunctionDef, ast.AsyncFunctionDef)):
+								continue
+							name = child.name
+							qual = f"{prefix}.{name}" if prefix else name
+							ast_index.setdefault(qual, []).append(child)
+							_index_node(child, qual)
+
+					_index_node(tree)
+					_MODULE_AST_CACHE[mod] = (src, tree, ast_index)
+				qualname = getattr(o, "__qualname__", "") if not isinstance(o, ModuleType) else ""
+				if isinstance(o, ModuleType):
+					doc = ast.get_docstring(tree, clean=False) or ""
+				elif qualname:
+					# Normalize nested/locals-style qualnames to the AST index format.
+					qualname = qualname.replace(".<locals>.", ".").replace(".<locals>", "")
+					qualname = qualname.split("[", 1)[0]
+					nodes = ast_index.get(qualname, [])
+					node: AstDocNode | None = None
+					if len(nodes) == 1:
+						node = nodes[0]
+					elif len(nodes) > 1:
+						try:
+							_, lineno = inspect.getsourcelines(o)
+						except Exception:
+							lineno = None
+						if lineno is not None:
+							for cand in nodes:
+								cand_lineno = getattr(cand, "lineno", None)
+								decorators = getattr(cand, "decorator_list", None)
+								if isinstance(decorators, list) and decorators:
+									first_lineno = getattr(decorators[0], "lineno", cand_lineno)
+								else:
+									first_lineno = cand_lineno
+								if first_lineno == lineno:
+									node = cand
+									break
+						if node is None:
+							node = nodes[0]
+					if node is not None:
+						doc = ast.get_docstring(node, clean=False) or ""
+				if not doc and not isinstance(o, ModuleType):
+					try:
+						src_obj = inspect.getsource(o)
+						tree_obj = ast.parse(textwrap.dedent(src_obj))
+						body = getattr(tree_obj, "body", [])
+						if body:
+							first = body[0]
+							if isinstance(first, (ast.ClassDef, ast.FunctionDef, ast.AsyncFunctionDef)):
+								doc = ast.get_docstring(first, clean=False) or ""
+					except Exception:
+						doc = ""
+		except Exception:
+			doc = ""
+	_SOURCE_DOCSTRING_CACHE[key] = doc
+	return doc
+
 
 CANONICAL_ORDER_OF_SECTIONS : Final[Dict[str,None | Sequence[str]]] = {
 	"Preamble"		: ("profile","normative_sections","status","scope"),
@@ -308,7 +433,7 @@ class Flavour(IntEnum):
 			Inherit from |type|`int`.
 	Public_constants:
 		RAW:
-			Example: \|Must\|
+			Example: | + Must + |
 		RFC_2119:
 			Example: |lit|`MUST`
 		MARKDOWN:
@@ -993,7 +1118,8 @@ def get_obj_docstring(obj: object) -> str:
 			Contract, Parameters, Returns, Raises
 	Contract:
 		general:
-			|Must| return the docstring text for |var|`obj` if one is present.
+			|Must| return the best available docstring text for |var|`obj`.
+			|Must| prefer the raw source docstring obtained by |func|`get_source_docstring`.
 			|Must| support modules, classes, functions/methods, descriptors (|type|`staticmethod`, |type|`classmethod`, |type|`property` / |type|`cached_property`), partial/partialmethod objects, and callable instances via |func|`__call__`.
 			|Must| follow |type|`__wrapped__` chains created by |func|`functools.wraps`.
 			|Must| return the empty string if no docstring is available.
@@ -1001,11 +1127,11 @@ def get_obj_docstring(obj: object) -> str:
 		obj:
 			Any python object that might carry a docstring.
 	Returns:
-		|Must| return the docstring text, or empty string if none exists.
+		|Must| return the best available docstring text, or the empty string if none exists.
 	Raises:
 	Notes:
 		Last review:
-			2026-02-04
+			2026-05-15
 	"""
 	checked: set[int] = set()
 
@@ -1014,41 +1140,40 @@ def get_obj_docstring(obj: object) -> str:
 		if oid in checked:
 			return ""
 		checked.add(oid)
-# 1) direct __doc__
+		# 0) Prefer source docstring to preserve raw indentation in Python 3.13+.
+		doc_src = get_source_docstring(o)
+		if doc_src:
+			return doc_src
+		# 1) direct __doc__
 		doc_attr = getattr(o, "__doc__", None)
 		if isinstance(doc_attr, str):
 			return doc_attr
-# 2) functools.wraps chain via __wrapped__
+		# 2) functools.wraps chain via __wrapped__
 		wrapped = getattr(o, "__wrapped__", None)
 		if wrapped is not None:
 			res = _walk(wrapped)
 			if res:
 				return res
-# 3) descriptors: classmethod / staticmethod expose underlying function via __func__
+		# 3) descriptors: classmethod / staticmethod expose underlying function via __func__
 		func = getattr(o, "__func__", None)
 		if func is not None:
 			res = _walk(func)
 			if res:
 				return res
-# 4) property / cached_property: docstring on fget
+		# 4) property / cached_property: docstring on fget
 		if isinstance(o, property):
 			if o.fget:
 				res = _walk(o.fget)
 				if res:
 					return res
-# 5) functools.partial / partialmethod: underlying function in .func
+		# 5) functools.partial / partialmethod: underlying function in .func
 		func2 = getattr(o, "func", None)
 		if func2 is not None:
 			res = _walk(func2)
 			if res:
 				return res
-# This one delivers stuff like "Call self as a function", which we don't want.
-# 6) callable instances: look at __call__
-#		call = getattr(o, "__call__", None)
-#		if call is not None and call is not o:
-#			res = _walk(call)
-#			if res:
-#				return res
+		# 6) callable instances would resolve to their __call__ implementation,
+		# which is usually not the docstring we want to expose here.
 
 		return ""
 	return _walk(obj)
@@ -1095,6 +1220,7 @@ def get_obj_annotations(obj: object) -> dict[str, Any]:
 
 
 def get_obj_decorators(obj: object) -> List[str]:
+	"""Return decorator lines for a callable object from its source text, if available."""
 	try:
 		code = inspect.getsource(cast(Callable[...,Any],obj))
 		return [line.strip() for line in code.splitlines() if line.strip().startswith('@')]
@@ -1134,6 +1260,8 @@ Raises:
 		if isinstance(o, ModuleType):
 			# We're in a module. There might be classes and functions:
 			for name, member in list(o.__dict__.items()):
+				if name == "__annotate__" or name.startswith("__annotate"):
+					continue
 				if isinstance(member, ModuleType):
 					# descend into submodules
 					if not config.accept_imported_module(o,member):
@@ -1162,6 +1290,8 @@ Raises:
 		elif isinstance(o, type):
 			# We're in a class. There might be classes, static functions, class methods and "normal" methods:
 			for name, member in list(o.__dict__.items()):
+				if name == "__annotate__" or name.startswith("__annotate") or getattr(member, "__name__", "") == "__annotate__":
+					continue
 				if isinstance(member, type):
 					yield from _iter(member, seen)
 				else:

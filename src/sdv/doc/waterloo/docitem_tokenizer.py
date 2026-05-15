@@ -78,7 +78,7 @@ def get_num_indent(tr : tracer,line : str,indent_scheme: int) -> int:
 		raise_parsing_error(tr,"TKN-003",f"Unknown indentation scheme: {indent_scheme}")
 
 def parse_indent_docstring(tr : tracer,text : str) -> DocstringTree:
-	"""
+	r"""
 Preamble:
 	profile:
 		function
