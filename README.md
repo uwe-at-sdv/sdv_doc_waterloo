@@ -4,7 +4,7 @@
 
 ## README
 
-### Install
+### Install 
 
 `package_main` contains the Waterloo Python package and the Sphinx extension.
 The package can be installed from a local checkout of this repository:
