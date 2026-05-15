@@ -29,6 +29,9 @@ Public_constants:
 from __future__ import annotations
 
 import sys,re
+import ast
+import textwrap
+import inspect
 from typing import Any, Iterable, Iterator
 
 from pygments.lexer import Lexer
@@ -778,7 +781,23 @@ class PythonWaterlooLexer(PythonLexer):
 				return True
 		return False
 
+def _patch_analyse_text_docstring() -> None:
+	try:
+		src = inspect.getsource(PythonWaterlooLexer)
+		tree = ast.parse(textwrap.dedent(src))
+		for node in tree.body:
+			if isinstance(node, ast.ClassDef) and node.name == "PythonWaterlooLexer":
+				for child in node.body:
+					if isinstance(child, ast.FunctionDef) and child.name == "analyse_text":
+						doc = ast.get_docstring(child, clean=False)
+						if doc:
+							PythonWaterlooLexer.analyse_text.__doc__ = doc
+						return
+	except Exception:
+		pass
+
+_patch_analyse_text_docstring()
+
 # Don't change this.
 if __name__ == "__main__":
 	print(__version__)
-
