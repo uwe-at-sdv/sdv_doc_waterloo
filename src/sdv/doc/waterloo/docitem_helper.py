@@ -198,6 +198,8 @@ _SOURCE_DOCSTRING_CACHE: Dict[int, str] = {}
 AstDocNode: TypeAlias = Union[ast.ClassDef, ast.FunctionDef, ast.AsyncFunctionDef]
 # Per-module AST cache used to preserve raw docstring indentation and tabs.
 _MODULE_AST_CACHE: WeakKeyDictionary[ModuleType, Tuple[str, ast.Module, Dict[str, list[AstDocNode]]]] = WeakKeyDictionary()
+# Final docstring results are cached as well, because the wrapper walk is repeated often.
+_OBJ_DOCSTRING_CACHE: Dict[int, str] = {}
 
 
 def get_source_docstring(o: object) -> str:
@@ -228,6 +230,7 @@ def get_source_docstring(o: object) -> str:
 	Notes:
 		The helper uses a source-first strategy to preserve original indentation and tab characters in Python 3.13+.
 		Docstrings are cached by object identity, while parsed module ASTs are cached separately by module object.
+		The AST path is slower than runtime __doc__ access, but caching keeps the repeated cost manageable.
 		Further performance improvements can be added later by caching validation results for repeated objects.
 	"""
 	key = id(o)
@@ -235,8 +238,8 @@ def get_source_docstring(o: object) -> str:
 		return _SOURCE_DOCSTRING_CACHE[key]
 	doc = ""
 	if isinstance(o, property):
-# Properties inherit their documentation from accessor methods.
-# Use the getter first because it is the canonical docstring source.
+		# Properties inherit their documentation from accessor methods.
+		# Use the getter first because it is the canonical docstring source.
 		for accessor in (o.fget, o.fset, o.fdel):
 			if accessor is None:
 				continue
@@ -247,11 +250,17 @@ def get_source_docstring(o: object) -> str:
 		mod = o if isinstance(o, ModuleType) else inspect.getmodule(o)
 		try:
 			if isinstance(mod, ModuleType):
+				# The module source is the canonical raw text for module docstrings and
+				# for building the AST index used to resolve nested classes/functions.
 				src = inspect.getsource(mod)
 				ast_index: Dict[str, list[AstDocNode]] = {}
+				# Reuse the parsed module AST whenever we already have it in the cache.
+				# This avoids reparsing the same file for every object from that module.
 				if mod in _MODULE_AST_CACHE:
 					_, tree, ast_index = _MODULE_AST_CACHE[mod]
 				else:
+					# Parse the full module once so nested definitions remain addressable by
+					# their source-qualified names, preserving original indentation and tabs.
 					tree = ast.parse(src)
 
 					# Index nested class/function definitions by fully qualified name.
@@ -271,16 +280,21 @@ def get_source_docstring(o: object) -> str:
 					_MODULE_AST_CACHE[mod] = (src, tree, ast_index)
 				qualname = getattr(o, "__qualname__", "") if not isinstance(o, ModuleType) else ""
 				if isinstance(o, ModuleType):
+					# Module docstrings live on the AST root.
 					doc = ast.get_docstring(tree, clean=False) or ""
 				elif qualname:
 					# Normalize nested/locals-style qualnames to the AST index format.
+					# This keeps wrappers and <locals> names usable for AST lookup.
 					qualname = qualname.replace(".<locals>.", ".").replace(".<locals>", "")
 					qualname = qualname.split("[", 1)[0]
 					nodes = ast_index.get(qualname, [])
 					node: AstDocNode | None = None
 					if len(nodes) == 1:
+						# Fast path: exactly one AST definition matches this qualified name.
 						node = nodes[0]
 					elif len(nodes) > 1:
+						# Property accessors and similar wrappers can share a qualified name.
+						# Use the source line to choose the definition that actually matches.
 						try:
 							_, lineno = inspect.getsourcelines(o)
 						except Exception:
@@ -297,10 +311,13 @@ def get_source_docstring(o: object) -> str:
 									node = cand
 									break
 						if node is None:
+							# If source line selection fails, fall back to the first indexed node.
 							node = nodes[0]
 					if node is not None:
 						doc = ast.get_docstring(node, clean=False) or ""
 				if not doc and not isinstance(o, ModuleType):
+					# Last-resort fallback for objects that have a source file but are not
+					# directly resolvable through the module AST.
 					try:
 						src_obj = inspect.getsource(o)
 						tree_obj = ast.parse(textwrap.dedent(src_obj))
@@ -312,6 +329,8 @@ def get_source_docstring(o: object) -> str:
 					except Exception:
 						doc = ""
 		except Exception:
+			# Any source/AST failure means we cannot recover the raw docstring reliably.
+			# Let the caller fall back to the runtime __doc__ or descriptor chain.
 			doc = ""
 	_SOURCE_DOCSTRING_CACHE[key] = doc
 	return doc
@@ -1132,7 +1151,12 @@ def get_obj_docstring(obj: object) -> str:
 	Notes:
 		Last review:
 			2026-05-15
+		The object-level cache avoids repeating the wrapper walk for the same object.
 	"""
+	oid = id(obj)
+	if oid in _OBJ_DOCSTRING_CACHE:
+		return _OBJ_DOCSTRING_CACHE[oid]
+
 	checked: set[int] = set()
 
 	def _walk(o: object) -> str:
@@ -1176,7 +1200,9 @@ def get_obj_docstring(obj: object) -> str:
 		# which is usually not the docstring we want to expose here.
 
 		return ""
-	return _walk(obj)
+	doc = _walk(obj)
+	_OBJ_DOCSTRING_CACHE[oid] = doc
+	return doc
 
 import inspect
 from typing import Any

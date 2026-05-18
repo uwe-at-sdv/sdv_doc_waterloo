@@ -27,7 +27,8 @@ from jsonschema import Draft202012Validator
 #from jsonschema import JSONDecodeError
 import jsonschema.exceptions
 
-__version__ = "0.10.0"
+__version__ = "0.11.0"
+# - 0.11.0 [2026-05-18]	Subcommand 'walk' MVP
 # - 0.10.0 [2026-05-15]	Major refactoring in docitem_helper.
 # - 0.9.2 [2026-05-10]	Minor fixes/changes in subcommand render-html5.
 # - 0.9.1 [2026-05-01]	Minor changes in static typing
@@ -75,6 +76,7 @@ with contextlib.redirect_stdout(sys.stderr):
 		tracer,
 		get_obj_name,
 		get_obj_fully_qualified_name,
+		get_obj_path,
 		RE_ANSI_SGR_COMPILED,
 		ValidationError,
 		ParseError,
@@ -88,6 +90,7 @@ with contextlib.redirect_stdout(sys.stderr):
 #----- Schema versions, keep up to date -----------------------#
 WTRL_JSON_SCHEMA_VERSION = "0.1.0"
 WTRL_EXAMPLE_REFS_JSON_SCHEMA_VERSION = "0.1.1"
+WTRL_WALK_JSON_SCHEMA_VERSION = "0.0.0"
 
 WTRL_DOCITEM_VERSION = docitem.__version__
 
@@ -103,6 +106,7 @@ SUBCOMMANDS = (
 	"gen-example-template-json",
 	"render-json",
 	"render-html5",
+	"walk",
 	"gen-minimal",
 	"gen-full",
 	"list-schemas",
@@ -201,6 +205,310 @@ def _emit_tracer(tr: tracer, out_path: str | None, out_json_path: str | None = N
 		with open(out_json_path, "w", encoding="utf-8") as fh:
 			json.dump(doc, fh, indent=4)
 			fh.write("\n")
+
+
+WALK_DEFAULT_SHOW_FIELDS = ("qualname", "kind", "scope", "file", "lineno", "included", "reason")
+WALK_ALLOWED_SHOW_FIELDS = set(WALK_DEFAULT_SHOW_FIELDS)
+
+
+def _walk_normalize_path(path_text: str | None) -> Path | None:
+	if not path_text:
+		return None
+	try:
+		return Path(path_text).expanduser().resolve()
+	except Exception:
+		try:
+			return Path(os.path.abspath(os.path.expanduser(path_text)))
+		except Exception:
+			return None
+
+
+def _walk_path_is_under(path: Path, prefix: Path) -> bool:
+	try:
+		return path == prefix or path.is_relative_to(prefix)
+	except Exception:
+		return False
+
+
+def _walk_build_path_labels(entries: list[dict[str, Any]], basedir: str | None) -> list[tuple[str, Path]]:
+	basedir_path = _walk_normalize_path(basedir)
+	candidate_dirs: list[Path] = []
+	seen_candidates: set[str] = set()
+	for entry in entries:
+		file_txt = entry.get("file")
+		if not isinstance(file_txt, str) or not file_txt:
+			continue
+		file_path = _walk_normalize_path(file_txt)
+		if file_path is None:
+			continue
+		if basedir_path is not None and _walk_path_is_under(file_path, basedir_path):
+			continue
+		parent = file_path.parent
+		key = str(parent)
+		if key in seen_candidates:
+			continue
+		seen_candidates.add(key)
+		candidate_dirs.append(parent)
+	candidate_dirs.sort(key=lambda p: (len(p.parts), str(p)))
+	selected_dirs: list[Path] = []
+	for candidate in candidate_dirs:
+		if any(_walk_path_is_under(candidate, existing) for existing in selected_dirs):
+			continue
+		selected_dirs.append(candidate)
+	selected_dirs.sort(key=lambda p: (len(p.parts), str(p)))
+	labels: list[tuple[str, Path]] = []
+	if basedir_path is not None:
+		labels.append(("BASEDIR", basedir_path))
+	for idx, prefix in enumerate(selected_dirs):
+		labels.append((f"PATH{idx}", prefix))
+	return labels
+
+
+def _walk_compress_path(path_text: str | None, path_labels: list[tuple[str, Path]]) -> str | None:
+	if not isinstance(path_text, str) or not path_text:
+		return path_text
+	path = _walk_normalize_path(path_text)
+	if path is None:
+		return path_text
+	best_label: str | None = None
+	best_prefix: Path | None = None
+	for label, prefix in path_labels:
+		if not _walk_path_is_under(path, prefix):
+			continue
+		if best_prefix is None or len(prefix.parts) > len(best_prefix.parts):
+			best_label = label
+			best_prefix = prefix
+	if best_label is None or best_prefix is None:
+		return str(path)
+	try:
+		rel = path.relative_to(best_prefix)
+	except Exception:
+		return str(path)
+	rel_txt = str(rel)
+	if not rel_txt or rel_txt == ".":
+		return f"{{{best_label}}}"
+	return f"{{{best_label}}}/{rel_txt}"
+
+
+def _walk_kind(obj: object) -> str:
+	if docitem.is_obj_module(obj):
+		return "module"
+	if docitem.is_obj_class(obj):
+		return "class"
+	if isinstance(obj, property):
+		return "property"
+	if docitem.is_obj_method_like(obj):
+		return "method"
+	if docitem.is_obj_function(obj):
+		return "function"
+	return "unknown"
+
+
+def _walk_lineno(obj: object) -> int | None:
+	target: object = obj
+	if isinstance(obj, property):
+		for accessor in (obj.fget, obj.fset, obj.fdel):
+			if accessor is not None:
+				target = accessor
+				break
+	try:
+		_, lineno = inspect.getsourcelines(target)
+		return lineno
+	except Exception:
+		return None
+
+
+def _walk_scope_text(doc_tree: object) -> str:
+	try:
+		scopes = cast(Any, doc_tree).scopes()
+	except Exception:
+		return "unknown"
+	if not scopes:
+		return "unknown"
+	try:
+		items = []
+		for sc in sorted(scopes, key=lambda s: getattr(s, "value", 0)):
+			name = getattr(sc, "name", None)
+			items.append(str(name).lower() if isinstance(name, str) else str(sc).lower())
+		return ",".join(items) if items else "unknown"
+	except Exception:
+		return "unknown"
+
+
+def _walk_analyze_object(obj: object) -> tuple[str, bool, str]:
+	doc_txt = docitem.get_obj_docstring(obj)
+	if not doc_txt:
+		return ("no_doc", False, "unknown")
+	tmp_tr = tracer()
+	try:
+		tree = docitem.make_docitem_tree(tmp_tr, doc_txt)
+	except Exception:
+		return ("invalid", False, "unknown")
+	if tmp_tr.has_errors():
+		return ("invalid", False, "unknown")
+	return ("included", True, _walk_scope_text(tree))
+
+
+def _walk_format_value(val: object) -> str:
+	if isinstance(val, bool):
+		return "true" if val else "false"
+	if val is None:
+		return "null"
+	if isinstance(val, str):
+		return json.dumps(val)
+	return str(val)
+
+
+def _walk_format_table_value(val: object) -> str:
+	if isinstance(val, bool):
+		return "true" if val else "false"
+	if val is None:
+		return "null"
+	return str(val)
+
+
+def _walk_render_text(entries: list[dict[str, Any]], show_fields: list[str], path_labels: list[tuple[str, Path]] | None = None) -> str:
+	lines: list[str] = []
+	rows: list[list[str]] = []
+	if path_labels and "file" in show_fields:
+		for label, prefix in path_labels:
+			lines.append(f"{label}: {prefix}")
+		if entries:
+			lines.append("")
+	for entry in entries:
+		row: list[str] = []
+		for field in show_fields:
+			value = entry.get(field)
+			if field == "file":
+				value = _walk_compress_path(cast(str | None, value), path_labels or [])
+			row.append(_walk_format_table_value(value))
+		rows.append(row)
+	if show_fields:
+		widths = [len(field) for field in show_fields]
+		for row in rows:
+			for idx, cell in enumerate(row):
+				widths[idx] = max(widths[idx], len(cell))
+		lines.append("  ".join(field.ljust(widths[idx]) for idx, field in enumerate(show_fields)))
+		for row in rows:
+			lines.append("  ".join(cell.ljust(widths[idx]) for idx, cell in enumerate(row)))
+	return "\n".join(lines) + ("\n" if lines else "")
+
+
+def _walk_build_json_doc(
+	entries: list[dict[str, Any]],
+	basedir: str | None,
+	obj_qname: str,
+	include_imported: bool,
+	show_fields: list[str],
+) -> dict[str, Any]:
+	count_by_kind: dict[str, int] = {}
+	count_by_scope: dict[str, int] = {}
+	count_by_reason: dict[str, int] = {}
+	included_count = 0
+	for entry in entries:
+		kind = str(entry.get("kind", "unknown"))
+		scope = str(entry.get("scope", "unknown"))
+		reason = str(entry.get("reason", "unknown"))
+		count_by_kind[kind] = count_by_kind.get(kind, 0) + 1
+		count_by_scope[scope] = count_by_scope.get(scope, 0) + 1
+		count_by_reason[reason] = count_by_reason.get(reason, 0) + 1
+		if bool(entry.get("included", False)):
+			included_count += 1
+	doc: dict[str, Any] = {
+		"$schema": f"{WTRL_SCHEMA_URI_BASE}/wtrl-walk-json-{WTRL_WALK_JSON_SCHEMA_VERSION}.schema.json",
+		"$id": f"urn:waterlint:wtrl-walk-json:{__version__}:{datetime.now().strftime('%Y%m%d%H%M%S')}",
+		"__WTRL_VERSION__": {
+			"waterloo": WTRL_DOCITEM_VERSION,
+			"schema": WTRL_WALK_JSON_SCHEMA_VERSION,
+		},
+		"__WTRL_META__": {
+			"generated_at": datetime.now().astimezone().isoformat(timespec="seconds"),
+			"generator": "waterlint.walk",
+			"basedir": basedir,
+			"obj": obj_qname,
+			"include_imported": include_imported,
+			"show": show_fields,
+		},
+		"__WTRL_SUMMARY__": {
+			"total": len(entries),
+			"included": included_count,
+			"excluded": len(entries) - included_count,
+			"by_kind": count_by_kind,
+			"by_scope": count_by_scope,
+			"by_reason": count_by_reason,
+		},
+		"__WTRL_OBJECTS__": entries,
+	}
+	return doc
+
+
+def _walk_command(args: argparse.Namespace) -> int:
+	tr = tracer()
+	out_diag = getattr(args, "out_diag", None)
+	out_diag_json = getattr(args, "out_diag_json", None)
+	try:
+		show_raw = getattr(args, "show", None)
+		if show_raw:
+			show_fields = [p.strip() for p in str(show_raw).split(",") if p.strip()]
+		else:
+			show_fields = list(WALK_DEFAULT_SHOW_FIELDS)
+		invalid_show = [f for f in show_fields if f not in WALK_ALLOWED_SHOW_FIELDS]
+		if invalid_show:
+			print(f"Error: unsupported --show field(s): {', '.join(invalid_show)}", file=sys.stderr)
+			return 2
+
+		obj_qname = getattr(args, "obj", None)
+		if not isinstance(obj_qname, str) or not obj_qname.strip():
+			print("Error: --obj is required for walk.", file=sys.stderr)
+			return 2
+		obj_qname = obj_qname.strip()
+		_apply_basedir(getattr(args, "basedir", None), obj_qname)
+		obj = _resolve_object(obj_qname)
+
+		config = docitem.ConfigTraversal()
+		if getattr(args, "include_imported", True):
+			config.enable_include_imported()
+		config.disable_walk_packages()
+
+		entries: list[dict[str, Any]] = []
+		for o in docitem.gen_documentable_objects(obj, config):
+			reason, included, scope_text = _walk_analyze_object(o)
+			entry: dict[str, Any] = {
+				"qualname": get_obj_fully_qualified_name(o),
+				"kind": _walk_kind(o),
+				"scope": scope_text,
+				"file": get_obj_path(o),
+				"lineno": _walk_lineno(o),
+				"included": included,
+				"reason": reason,
+			}
+			entries.append(entry)
+		path_labels = _walk_build_path_labels(entries, getattr(args, "basedir", None))
+
+		out_json = getattr(args, "out_json", None)
+		out_file = getattr(args, "out_file", None)
+		if out_json:
+			doc = _walk_build_json_doc(entries, getattr(args, "basedir", None), obj_qname, getattr(args, "include_imported", True), show_fields)
+			with open(out_json, "w", encoding="utf-8") as fh:
+				json.dump(doc, fh, indent=4)
+				fh.write("\n")
+		else:
+			txt = _walk_render_text(entries, show_fields, path_labels)
+			if out_file:
+				with open(out_file, "w", encoding="utf-8") as fh:
+					fh.write(txt)
+			else:
+				sys.stdout.write(txt)
+
+		tr.add_info(f"Num objects traversed: {len(entries)}.", "tool")
+		tr.add_info(f"Num objects included: {sum(1 for e in entries if e.get('included'))}.", "tool")
+		tr.add_info(f"Num objects excluded: {sum(1 for e in entries if not e.get('included'))}.", "tool")
+		_emit_tracer(tr, out_diag, out_diag_json)
+		return 0
+	except Exception:
+		_add_traceback(tr)
+		_emit_tracer(tr, out_diag, out_diag_json)
+		return 1
 
 
 def _load_json(path: str | None) -> cvrt.WtrlJsonNode_t:
@@ -912,7 +1220,9 @@ def _infer_json_doc_category(doc: cvrt.WtrlJsonNode_t) -> str:
 	if not isinstance(doc, dict):
 		raise ValueError("Input JSON must be an object.")
 	matches: list[str] = []
-	if "__WTRL_OBJECTS__" in doc:
+	if "__WTRL_OBJECTS__" in doc and "__WTRL_SUMMARY__" in doc:
+		matches.append("wtrl-walk-json")
+	elif "__WTRL_OBJECTS__" in doc:
 		matches.append("wtrl-json")
 	if any(k in doc for k in ("__WTRL_INFO__", "__WTRL_WARNING__", "__WTRL_ERROR__", "__WTRL_DEBUG__")):
 		matches.append("wtrl-tracer-json")
@@ -937,7 +1247,7 @@ def _infer_schema_path_from_doc(doc: cvrt.WtrlJsonNode_t) -> tuple[Path, str]:
 	else:
 		declared_schema_fallback = doc.get("$schema")
 		if isinstance(declared_schema_fallback, str):
-			m = re.search(r"(wtrl-(?:json|tracer-json|example-refs-json))-([0-9]+(?:\.[0-9]+)*)\.schema\.json", declared_schema_fallback)
+			m = re.search(r"(wtrl-(?:json|walk-json|tracer-json|example-refs-json))-([0-9]+(?:\.[0-9]+)*)\.schema\.json", declared_schema_fallback)
 			if m is not None:
 				category_from_schema = m.group(1)
 				schema_version = m.group(2)
@@ -1838,6 +2148,7 @@ def _version_json_command(args: argparse.Namespace) -> int:
 		"wtrl-json": WTRL_JSON_SCHEMA_VERSION,
 		"wtrl-tracer-json": docitem.WTRL_TRACER_JSON_SCHEMA_VERSION,
 		"wtrl-example-refs-json": WTRL_EXAMPLE_REFS_JSON_SCHEMA_VERSION,
+		"wtrl-walk-json": WTRL_WALK_JSON_SCHEMA_VERSION,
 	}
 	json.dump(doc, sys.stdout, indent=2)
 	sys.stdout.write("\n")
@@ -2030,6 +2341,26 @@ def _build_parser() -> argparse.ArgumentParser:
 	render_html5.add_argument("--no-allow-raw-object-node", dest="allow_raw_object_node", action="store_false", help="Do not include section 'Raw object node' in HTML output.")
 	render_html5.add_argument("--debug", action="store_true", help="Emit debugging data to stderr (reserved)")
 
+#----- walk ---------------------------------------------------#
+	walk = subparsers.add_parser("walk", help="Walk documentable objects and analyze traversal", parents=[global_opts, common_validate_group])
+	walk.add_argument(
+		"--obj",
+		required=True,
+		metavar="QUALNAME",
+		help="Qualified identifier of a module/class/function/method to traverse.",
+	)
+	walk_out = walk.add_mutually_exclusive_group()
+	walk_out.add_argument("--out", dest="out_file", metavar="FILE", help="Write walk text output to FILE instead of stdout.")
+	walk_out.add_argument("--out-json", dest="out_json", metavar="FILE", help="Write walk JSON output to FILE.")
+	walk.add_argument(
+		"--show",
+		metavar="FIELDS",
+		help="Comma-separated list of fields to show in the text output (default: qualname,kind,scope,file,lineno,included,reason).",
+	)
+	walk.add_argument("--include-imported", dest="include_imported", action="store_true", default=True, help="Include imported members and submodules (default).")
+	walk.add_argument("--no-include-imported", dest="include_imported", action="store_false", help="Do not include imported members/submodules.")
+	walk.add_argument("--debug", action="store_true", help="Emit debugging data to stderr (reserved)")
+
 #----- gen-minimal --------------------------------------------#
 	gen_minimal = subparsers.add_parser("gen-minimal", help="Generate minimal Waterloo docstring skeleton", parents=[global_opts, common_validate_group])
 	gen_minimal.add_argument(
@@ -2114,6 +2445,8 @@ def main(argv: Optional[list[str]] = None) -> int:
 		return _render_json_command(args)
 	if args.command == "render-html5":
 		return _render_html5_command(args)
+	if args.command == "walk":
+		return _walk_command(args)
 	if args.command == "gen-minimal":
 		return _generate_command(args, "minimal")
 	if args.command == "gen-full":
