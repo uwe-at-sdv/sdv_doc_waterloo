@@ -13,7 +13,7 @@ import hashlib
 import io
 import importlib.util
 import importlib.resources as importlib_resources
-import sys,inspect,os,re
+import sys,inspect,os,re,shutil
 import traceback
 from datetime import datetime
 from pathlib import Path
@@ -27,7 +27,8 @@ from jsonschema import Draft202012Validator
 #from jsonschema import JSONDecodeError
 import jsonschema.exceptions
 
-__version__ = "0.11.0"
+__version__ = "0.11.1"
+# - 0.11.1 [2026-05-18]	Pretty format for help text.
 # - 0.11.0 [2026-05-18]	Subcommand 'walk' MVP
 # - 0.10.0 [2026-05-15]	Major refactoring in docitem_helper.
 # - 0.9.2 [2026-05-10]	Minor fixes/changes in subcommand render-html5.
@@ -2158,10 +2159,20 @@ parser: argparse.ArgumentParser
 
 #===== Build parser ===========================================#
 
+class CustomHelpFormatter(argparse.HelpFormatter):
+	def __init__(self, prog):
+		super().__init__(prog)
+		self._max_help_position = 36
+		self._indent_increment = 4
+		terminal_width = shutil.get_terminal_size().columns
+		self._width = min(100, terminal_width)
+
 def _build_parser() -> argparse.ArgumentParser:
 #----- Main parser --------------------------------------------#
 	global parser
-	parser = argparse.ArgumentParser(prog="waterlint")
+	parser = argparse.ArgumentParser(
+		prog="waterlint",
+		formatter_class=CustomHelpFormatter)
 	subparsers = parser.add_subparsers(dest="command", required=True)
 	parser.add_argument(
 		"--help-all",
@@ -2170,7 +2181,9 @@ def _build_parser() -> argparse.ArgumentParser:
 		)
 
 #----- Reusable parsers ---------------------------------------#
-	global_opts = argparse.ArgumentParser(add_help=False)
+	global_opts = argparse.ArgumentParser(
+		add_help=False,
+		formatter_class=CustomHelpFormatter)
 	global_opts.add_argument(
 		"--fail-on-warning",
 		action="store_true",
@@ -2187,7 +2200,9 @@ def _build_parser() -> argparse.ArgumentParser:
 		help="Write tracer diagnostics in machine-readable JSON format to PATH.",
 	)
 
-	common_validate_group = argparse.ArgumentParser(add_help=False)
+	common_validate_group = argparse.ArgumentParser(
+		add_help=False,
+		formatter_class=CustomHelpFormatter)
 	common_validate_group.add_argument(
 		"--basedir",
 		metavar="DIR",
@@ -2195,12 +2210,19 @@ def _build_parser() -> argparse.ArgumentParser:
 	)
 
 #----- help-topic ---------------------------------------------#
-	help_topic = subparsers.add_parser("help", help="Help on specific topic, e.g. help --topic validate")
+	help_topic = subparsers.add_parser(
+		"help",
+		help="Help on specific topic, e.g. help --topic validate",
+		formatter_class=parser.formatter_class)
 	help_topic.add_argument("--debug", action="store_true", help="Emit debugging data to stderr (reserved)")
 	help_topic.add_argument("--topic", dest="topic", metavar="TOPIC")
 
 #----- validate -----------------------------------------------#
-	validate = subparsers.add_parser("validate", help="Validate docstrings", parents=[common_validate_group, global_opts])
+	validate = subparsers.add_parser(
+		"validate",
+		help="Validate docstrings",
+		parents=[common_validate_group, global_opts],
+		formatter_class=parser.formatter_class)
 	vg = validate.add_mutually_exclusive_group()
 	vg.add_argument("--obj", metavar="QUALNAME", help="Qualified identifier of module/class/function/method")
 	vg.add_argument("--in", dest="input_file", metavar="FILE", help="Read docstring text from file")
@@ -2212,7 +2234,11 @@ def _build_parser() -> argparse.ArgumentParser:
 	)
 
 #----- coverage -----------------------------------------------#
-	coverage = subparsers.add_parser("coverage", help="Validate docstring coverage", parents=[global_opts])
+	coverage = subparsers.add_parser(
+		"coverage",
+		help="Validate docstring coverage",
+		parents=[global_opts],
+		formatter_class=parser.formatter_class)
 	coverage.add_argument(
 		"--basedir",
 		metavar="DIR",
@@ -2227,7 +2253,11 @@ def _build_parser() -> argparse.ArgumentParser:
 	coverage.add_argument("--debug", action="store_true", help="Emit debugging data to stderr (reserved)")
 
 #----- extract ------------------------------------------------#
-	extract = subparsers.add_parser("extract", help="Extract docstring sections", parents=[global_opts])
+	extract = subparsers.add_parser(
+		"extract",
+		help="Extract docstring sections",
+		parents=[global_opts],
+		formatter_class=parser.formatter_class)
 	eg = extract.add_mutually_exclusive_group()
 	eg.add_argument("--obj", metavar="QUALNAME", help="Qualified identifier of module/class/function/method")
 	eg.add_argument("--in", dest="input_file", metavar="FILE", help="Read docstring text from file")
@@ -2242,7 +2272,11 @@ def _build_parser() -> argparse.ArgumentParser:
 	extract.add_argument("--debug", action="store_true", help="Emit debugging data to stderr (reserved)")
 
 #----- validate-json ------------------------------------------#
-	validate_json = subparsers.add_parser("validate-json", help="Validate Waterloo JSON output", parents=[global_opts])
+	validate_json = subparsers.add_parser(
+		"validate-json",
+		help="Validate Waterloo JSON output",
+		parents=[global_opts],
+		formatter_class=parser.formatter_class)
 	validate_json.add_argument("--in", dest="input_file", metavar="FILE", help="Read JSON from file (default: stdin)")
 	validate_json.add_argument(
 		"--schema",
@@ -2253,7 +2287,11 @@ def _build_parser() -> argparse.ArgumentParser:
 	validate_json.add_argument("--debug", action="store_true", help="Emit debugging data to stderr (reserved)")
 
 #----- add-example-json ---------------------------------------#
-	add_example_json = subparsers.add_parser("add-example-json", help="Add example code mapping to Waterloo JSON", parents=[global_opts])
+	add_example_json = subparsers.add_parser(
+		"add-example-json",
+		help="Add example code mapping to Waterloo JSON",
+		parents=[global_opts],
+		formatter_class=parser.formatter_class)
 	add_example_json.add_argument("--in", dest="input_file", required=True, metavar="FILE", help="Input Waterloo JSON file.")
 	add_example_json.add_argument("--examples", dest="examples_file", required=True, metavar="FILE", help="Mapping JSON with __WTRL_EXAMPLE_REFS__ (QID -> list of example files).")
 	add_example_json.add_argument("--basedir", metavar="DIR", help="Base directory for resolving relative example file paths.")
@@ -2269,7 +2307,7 @@ def _build_parser() -> argparse.ArgumentParser:
 		"gen-example-template-json",
 		help="Generate JSON template for __WTRL_EXAMPLE_REFS__ mappings",
 		parents=[global_opts],
-	)
+		formatter_class=parser.formatter_class)
 	gen_example_template_json.add_argument(
 		"--org-or-project",
 		default="none",
@@ -2291,7 +2329,11 @@ def _build_parser() -> argparse.ArgumentParser:
 	gen_example_template_json.add_argument("--debug", action="store_true", help="Emit debugging data to stderr (reserved)")
 
 #----- render-json --------------------------------------------#
-	render_json = subparsers.add_parser("render-json", help="Render module to Waterloo JSON", parents=[global_opts])
+	render_json = subparsers.add_parser(
+		"render-json",
+		help="Render module to Waterloo JSON",
+		parents=[global_opts],
+		formatter_class=parser.formatter_class)
 	render_json.add_argument(
 		"--obj",
 		required=True,
@@ -2319,7 +2361,11 @@ def _build_parser() -> argparse.ArgumentParser:
 	render_json.add_argument("--debug", action="store_true", help="Emit debugging data to stderr (reserved)")
 
 #----- render-html5 -------------------------------------------#
-	render_html5 = subparsers.add_parser("render-html5", help="Render Waterloo JSON to bundled HTML5", parents=[global_opts])
+	render_html5 = subparsers.add_parser(
+		"render-html5",
+		help="Render Waterloo JSON to bundled HTML5",
+		parents=[global_opts],
+		formatter_class=parser.formatter_class)
 	render_html5.add_argument(
 		"--in",
 		dest="input_files",
@@ -2342,7 +2388,11 @@ def _build_parser() -> argparse.ArgumentParser:
 	render_html5.add_argument("--debug", action="store_true", help="Emit debugging data to stderr (reserved)")
 
 #----- walk ---------------------------------------------------#
-	walk = subparsers.add_parser("walk", help="Walk documentable objects and analyze traversal", parents=[global_opts, common_validate_group])
+	walk = subparsers.add_parser(
+		"walk",
+		help="Walk documentable objects and analyze traversal",
+		parents=[global_opts, common_validate_group],
+		formatter_class=parser.formatter_class)
 	walk.add_argument(
 		"--obj",
 		required=True,
@@ -2362,7 +2412,11 @@ def _build_parser() -> argparse.ArgumentParser:
 	walk.add_argument("--debug", action="store_true", help="Emit debugging data to stderr (reserved)")
 
 #----- gen-minimal --------------------------------------------#
-	gen_minimal = subparsers.add_parser("gen-minimal", help="Generate minimal Waterloo docstring skeleton", parents=[global_opts, common_validate_group])
+	gen_minimal = subparsers.add_parser(
+		"gen-minimal",
+		help="Generate minimal Waterloo docstring skeleton",
+		parents=[global_opts, common_validate_group],
+		formatter_class=parser.formatter_class)
 	gen_minimal.add_argument(
 		"--obj",
 		required=True,
@@ -2379,7 +2433,11 @@ def _build_parser() -> argparse.ArgumentParser:
 	gen_minimal.add_argument("--debug", action="store_true", help="Emit debugging data to stderr (reserved)")
 
 #----- gen-full -----------------------------------------------#
-	gen_full = subparsers.add_parser("gen-full", help="Generate full Waterloo docstring skeleton", parents=[global_opts, common_validate_group])
+	gen_full = subparsers.add_parser(
+		"gen-full",
+		help="Generate full Waterloo docstring skeleton",
+		parents=[global_opts, common_validate_group],
+		formatter_class=parser.formatter_class)
 	gen_full.add_argument(
 		"--obj",
 		required=True,
@@ -2396,15 +2454,27 @@ def _build_parser() -> argparse.ArgumentParser:
 	gen_full.add_argument("--debug", action="store_true", help="Emit debugging data to stderr (reserved)")
 
 #----- list-schemas -------------------------------------------#
-	list_schemas = subparsers.add_parser("list-schemas", help="List available Waterloo JSON Schemas", parents=[global_opts])
+	list_schemas = subparsers.add_parser(
+		"list-schemas",
+		help="List available Waterloo JSON Schemas",
+		parents=[global_opts],
+		formatter_class=parser.formatter_class)
 	list_schemas.add_argument("--debug", action="store_true", help="Emit debugging data to stderr (reserved)")
 
 #----- version ------------------------------------------------#
-	version = subparsers.add_parser("version", help="Print waterlint version string", parents=[global_opts])
+	version = subparsers.add_parser(
+		"version",
+		help="Print waterlint version string",
+		parents=[global_opts],
+		formatter_class=parser.formatter_class)
 	version.add_argument("--debug", action="store_true", help="Emit debugging data to stderr (reserved)")
 
 #----- version-json -------------------------------------------#
-	version = subparsers.add_parser("version-json", help="Print JSON with Waterloo schema versions", parents=[global_opts])
+	version = subparsers.add_parser(
+		"version-json",
+		help="Print JSON with Waterloo schema versions",
+		parents=[global_opts],
+		formatter_class=parser.formatter_class)
 	version.add_argument("--debug", action="store_true", help="Emit debugging data to stderr (reserved)")
 
 	return parser
