@@ -3,7 +3,7 @@
 	"x-published": "2026-05-16",
 	"x-changelog": [
 		{
-			"version": "0.0.0",
+			"version": "0.0.1",
 			"date": "2026-05-16",
 			"changes": [
 				{
@@ -14,8 +14,8 @@
 		}
 	],
 	"$schema": "https://json-schema.org/draft/2020-12/schema",
-	"$id": "https://sci-d-vis.com/schema/wtrl-walk-json-0.0.0.schema.json",
-	"title": "Waterloo walk JSON (schema 0.0.0, provisional)",
+	"$id": "https://sci-d-vis.com/schema/wtrl-walk-json-0.0.1.schema.json",
+	"title": "Waterloo walk JSON",
 	"type": "object",
 	"required": [
 		"$schema",
@@ -49,7 +49,8 @@
 				"file": { "type": ["string", "null"] },
 				"lineno": { "type": ["integer", "null"] },
 				"included": { "type": "boolean" },
-				"reason": { "$ref": "#/$defs/reason" }
+				"reason": { "$ref": "#/$defs/reason" },
+				"reason_detail": { "type": "string" }
 			}
 		},
 		"count_map": {

@@ -92,15 +92,15 @@ with contextlib.redirect_stdout(sys.stderr):
 #----- Schema versions, keep up to date -----------------------#
 WTRL_JSON_SCHEMA_VERSION = "0.1.0"
 WTRL_EXAMPLE_REFS_JSON_SCHEMA_VERSION = "0.1.1"
-WTRL_WALK_JSON_SCHEMA_VERSION = "0.0.0"
+WTRL_WALK_JSON_SCHEMA_VERSION = "0.0.1"
 
 WTRL_DOCITEM_VERSION = docitem.__version__
 
 WTRL_SCHEMA_URI_BASE = "https://sci-d-vis.com/schema"
 
 WTRL_WALK_DEFAULT_SHOW_FIELDS = ("qualname", "kind", "scope", "file", "lineno", "included", "reason")
-WTRL_WALK_ALLOWED_SHOW_FIELDS = set(WTRL_WALK_DEFAULT_SHOW_FIELDS)
-WTRL_WALK_ALLOWED_SORT_FIELDS = set(WTRL_WALK_DEFAULT_SHOW_FIELDS)
+WTRL_WALK_ALLOWED_SHOW_FIELDS = set(WTRL_WALK_DEFAULT_SHOW_FIELDS + ("reason_detail",))
+WTRL_WALK_ALLOWED_SORT_FIELDS = set(WTRL_WALK_DEFAULT_SHOW_FIELDS + ("reason_detail",))
 WTRL_WALK_NUMERIC_SORT_FIELDS = frozenset({"lineno"})
 
 #----- Add subcommands here -----------------------------------#
@@ -1878,19 +1878,22 @@ def _walk_scope_text(doc_tree: object) -> str:
 	except Exception:
 		return "unknown"
 
-# Analyze for reason, included, scope
-def _walk_analyze_object(obj: object) -> tuple[str, bool, str]:
+# Analyze for reason, included, scope, reason_detail
+def _walk_analyze_object(obj: object) -> tuple[str, bool, str, str]:
 	doc_txt = docitem.get_obj_docstring(obj)
 	if not doc_txt:
-		return ("no_doc", False, "unknown")
+		return ("no_doc", False, "unknown", "no Waterloo docstring found")
 	tmp_tr = tracer()
 	try:
 		tree = docitem.make_docitem_tree(tmp_tr, doc_txt)
-	except Exception:
-		return ("invalid", False, "unknown")
+	except Exception as exc:
+		return ("invalid", False, "unknown", f"{type(exc).__name__}: {exc}")
 	if tmp_tr.has_errors():
-		return ("invalid", False, "unknown")
-	return ("included", True, _walk_scope_text(tree))
+		for _context, rule_id, _origin, msg, _details in tmp_tr.gen_errors():
+			return ("invalid", False, "unknown", f"{rule_id}: {msg}")
+		return ("invalid", False, "unknown", "docstring validation failed")
+	scope_text = _walk_scope_text(tree)
+	return ("included", True, scope_text, f"waterloo docstring parsed successfully; scope={scope_text}")
 
 # Standardized representation for boolean and None
 def _walk_format_table_value(val: object) -> str:
@@ -1938,7 +1941,7 @@ def _walk_render_text(entries: list[dict[str, Any]], show_fields: list[str], pat
 def _walk_build_json_doc(
 	entries: list[dict[str, Any]],
 	basedir: str | None,
-	obj_qname: str,
+	obj_qnames: list[str],
 	include_imported: bool,
 	show_fields: list[str],
 ) -> dict[str, Any]:
@@ -1966,7 +1969,8 @@ def _walk_build_json_doc(
 			"generated_at": datetime.now().astimezone().isoformat(timespec="seconds"),
 			"generator": "waterlint.walk",
 			"basedir": basedir,
-			"obj": obj_qname,
+			"obj": obj_qnames[0] if len(obj_qnames) == 1 else ", ".join(obj_qnames),
+			"objs": obj_qnames,
 			"include_imported": include_imported,
 			"show": show_fields,
 		},
@@ -1992,7 +1996,18 @@ def _walk_command(args: argparse.Namespace) -> int:
 	try:
 		show_raw = getattr(args, "show", None)
 		if show_raw:
-			show_fields = [p.strip() for p in str(show_raw).split(",") if p.strip()]
+			show_fields = []
+			for part in str(show_raw).split(","):
+				field = part.strip()
+				if not field:
+					continue
+				if field == "default":
+					for default_field in WTRL_WALK_DEFAULT_SHOW_FIELDS:
+						if default_field not in show_fields:
+							show_fields.append(default_field)
+					continue
+				if field not in show_fields:
+					show_fields.append(field)
 		else:
 			show_fields = list(WTRL_WALK_DEFAULT_SHOW_FIELDS)
 		invalid_show = [f for f in show_fields if f not in WTRL_WALK_ALLOWED_SHOW_FIELDS]
@@ -2010,13 +2025,19 @@ def _walk_command(args: argparse.Namespace) -> int:
 			print(f"Error: unsupported --sort field(s): {', '.join(invalid_sort)}", file=sys.stderr)
 			return 2
 
-		obj_qname = getattr(args, "obj", None)
-		if not isinstance(obj_qname, str) or not obj_qname.strip():
+		obj_raw = getattr(args, "obj", None)
+		obj_qnames: list[str] = []
+		if obj_raw:
+			for grp in obj_raw:
+				if isinstance(grp, list):
+					obj_qnames.extend(str(item).strip() for item in grp if str(item).strip())
+				else:
+					item = str(grp).strip()
+					if item:
+						obj_qnames.append(item)
+		if not obj_qnames:
 			print("Error: --obj is required for walk.", file=sys.stderr)
 			return 2
-		obj_qname = obj_qname.strip()
-		_apply_basedir(getattr(args, "basedir", None), obj_qname)
-		obj = _resolve_object(obj_qname)
 		#----- Object traversal and config ----------------------------#
 		config = docitem.ConfigTraversal()
 		if getattr(args, "include_imported", True):
@@ -2024,18 +2045,27 @@ def _walk_command(args: argparse.Namespace) -> int:
 		config.disable_walk_packages()
 		#----- Walk and build list of entries -------------------------#
 		entries: list[dict[str, Any]] = []
-		for o in docitem.gen_documentable_objects(obj, config):
-			reason, included, scope_text = _walk_analyze_object(o)
-			entry: dict[str, Any] = {
-				"qualname": get_obj_fully_qualified_name(o),
-				"kind": _walk_kind(o),
-				"scope": scope_text,
-				"file": get_obj_path(o),
-				"lineno": _walk_lineno(o),
-				"included": included,
-				"reason": reason,
-			}
-			entries.append(entry)
+		seen_qnames: set[str] = set()
+		for obj_qname in obj_qnames:
+			_apply_basedir(getattr(args, "basedir", None), obj_qname)
+			obj = _resolve_object(obj_qname)
+			for o in docitem.gen_documentable_objects(obj, config):
+				qname = get_obj_fully_qualified_name(o)
+				if qname in seen_qnames:
+					continue
+				seen_qnames.add(qname)
+				reason, included, scope_text, reason_detail = _walk_analyze_object(o)
+				entry: dict[str, Any] = {
+					"qualname": qname,
+					"kind": _walk_kind(o),
+					"scope": scope_text,
+					"file": get_obj_path(o),
+					"lineno": _walk_lineno(o),
+					"included": included,
+					"reason": reason,
+					"reason_detail": reason_detail,
+				}
+				entries.append(entry)
 		if sort_fields:
 			_walk_sort_entries(entries, sort_fields)
 		#----- Prepare path compression for better readability --------#
@@ -2045,7 +2075,7 @@ def _walk_command(args: argparse.Namespace) -> int:
 		out_file = getattr(args, "out_file", None)
 		if out_json:
 			# Render JSON
-			doc = _walk_build_json_doc(entries, getattr(args, "basedir", None), obj_qname, getattr(args, "include_imported", True), show_fields)
+			doc = _walk_build_json_doc(entries, getattr(args, "basedir", None), obj_qnames, getattr(args, "include_imported", True), show_fields)
 			with open(out_json, "w", encoding="utf-8") as fh:
 				json.dump(doc, fh, indent=4)
 				fh.write("\n")
@@ -2211,6 +2241,48 @@ class CustomHelpFormatter(argparse.HelpFormatter):
 		self._indent_increment = 4
 		terminal_width = shutil.get_terminal_size().columns
 		self._width = min(100, terminal_width)
+
+	def _format_action(self, action):
+		# Keep the help text anchored at a fixed column instead of letting the
+		# longest option name push the start position further to the right.
+		help_position = self._max_help_position
+		help_width = max(self._width - help_position, 11)
+		action_width = help_position - self._current_indent - 2
+		action_header = self._format_action_invocation(action)
+		action_header_no_color = self._decolor(action_header)
+
+		if not action.help:
+			tup = self._current_indent, '', action_header
+			action_header = '%*s%s\n' % tup
+		elif len(action_header_no_color) <= action_width:
+			action_header_color = action_header
+			tup = self._current_indent, '', action_width, action_header_no_color
+			action_header = '%*s%-*s  ' % tup
+			action_header = action_header.replace(
+				action_header_no_color, action_header_color
+			)
+			indent_first = 0
+		else:
+			tup = self._current_indent, '', action_header
+			action_header = '%*s%s\n' % tup
+			indent_first = help_position
+
+		parts = [action_header]
+
+		if action.help and action.help.strip():
+			help_text = self._expand_help(action)
+			if help_text:
+				help_lines = self._split_lines(help_text, help_width)
+				parts.append('%*s%s\n' % (indent_first, '', help_lines[0]))
+				for line in help_lines[1:]:
+					parts.append('%*s%s\n' % (help_position, '', line))
+		elif not action_header.endswith('\n'):
+			parts.append('\n')
+
+		for subaction in self._iter_indented_subactions(action):
+			parts.append(self._format_action(subaction))
+
+		return self._join_parts(parts)
 
 def _build_parser() -> argparse.ArgumentParser:
 #----- Main parser --------------------------------------------#
@@ -2441,8 +2513,10 @@ def _build_parser() -> argparse.ArgumentParser:
 	walk.add_argument(
 		"--obj",
 		required=True,
+		nargs="+",
+		action="append",
 		metavar="QUALNAME",
-		help="Qualified identifier of a module/class/function/method to traverse.",
+		help="One or more qualified identifiers of modules/classes/functions/methods to traverse. Option may be repeated and grouped.",
 	)
 	walk_out = walk.add_mutually_exclusive_group()
 	walk_out.add_argument("--out", dest="out_file", metavar="FILE", help="Write walk text output to FILE instead of stdout.")
@@ -2450,7 +2524,7 @@ def _build_parser() -> argparse.ArgumentParser:
 	walk.add_argument(
 		"--show",
 		metavar="FIELDS",
-		help="Comma-separated list of fields to show in the text output (default: qualname,kind,scope,file,lineno,included,reason).",
+		help="Comma-separated list of fields to show in the text output (default: qualname,kind,scope,file,lineno,included,reason,reason_detail). Use 'default' as an alias for that list.",
 	)
 	walk.add_argument(
 		"--sort",
