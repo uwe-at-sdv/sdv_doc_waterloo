@@ -1,19 +1,20 @@
+
 <!DOCTYPE html>
 
-<html lang="en" data-content_root="./">
+<html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
     <title>11. Test: Flow control in freeform sections &#8212; Waterloo Docstrings 0 documentation</title>
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5f771d8e" />
-    <link rel="stylesheet" type="text/css" href="_static/basic.css?v=b08954a9" />
-    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=27fed22d" />
-    <link rel="stylesheet" type="text/css" href="_static/common_styles.css?v=27e4112a" />
-    <link rel="stylesheet" type="text/css" href="_static/alabaster_waterloo.css?v=163535b2" />
-    <script src="_static/documentation_options.js?v=8dde47fa"></script>
-    <script src="_static/doctools.js?v=fd6eb6e6"></script>
-    <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
+    <link rel="stylesheet" type="text/css" href="_static/common_styles.css" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster_waterloo.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="12. Test: Scopes" href="_test_scope.html" />
@@ -21,9 +22,8 @@
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
-
   
-  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
   </head><body>
   
@@ -36,191 +36,21 @@
           <div class="body" role="main">
             
   <section id="test-flow-control-in-freeform-sections">
-<span id="flow-control"></span><h1><span class="section-number">11. </span>Test: Flow control in freeform sections<a class="headerlink" href="#test-flow-control-in-freeform-sections" title="Link to this heading">¶</a></h1>
+<span id="flow-control"></span><h1><span class="section-number">11. </span>Test: Flow control in freeform sections<a class="headerlink" href="#test-flow-control-in-freeform-sections" title="Permalink to this headline">¶</a></h1>
 <p>This section is informative.</p>
 <p>Here, we are testing how the Sphinx renderer handles free-form-content sections and itemized-content sections.</p>
-<table class="wtrl-box docutils align-default" id="wtrl-mod-17:test_flow_control">
-<tbody>
-<tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Preamble</span></code></p></td>
-<td><ul class="simple">
-<li><p><code class="wtrl_label docutils literal notranslate"><span class="pre">normative</span> <span class="pre">sections</span></code></p>
-<ul>
-<li><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Contract</span></code>, <code class="wtrl_label docutils literal notranslate"><span class="pre">Definitions</span></code>, <code class="wtrl_label docutils literal notranslate"><span class="pre">Public</span> <span class="pre">classes</span></code>, <code class="wtrl_label docutils literal notranslate"><span class="pre">Public</span> <span class="pre">functions</span></code>, <code class="wtrl_label docutils literal notranslate"><span class="pre">Public</span> <span class="pre">types</span></code>, <code class="wtrl_label docutils literal notranslate"><span class="pre">Public</span> <span class="pre">variables</span></code>, <code class="wtrl_label docutils literal notranslate"><span class="pre">Public</span> <span class="pre">constants</span></code></p></li>
-</ul>
-</li>
-</ul>
-</td>
-</tr>
-<tr class="wtrl-section row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Contract</span></code></p></td>
-<td><ul class="simple">
-<li><p><code class="wtrl_label docutils literal notranslate"><span class="pre">general</span></code></p>
-<ul>
-</ul>
-</li>
-</ul>
-</td>
-</tr>
-<tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Description</span></code></p></td>
-<td><p>We test several freeform and bullet-list scenarios. A <code class="wtrl_label docutils literal notranslate"><span class="pre">Description</span></code> section is freeform content. A single pipe character “|” separates paragraphs within the freeform text.</p>
-<p>This is the second paragraph. Here is an enumeration:<ol class="arabic simple" start="1">
-<li><p>Item 1</p></li>
-<li><p>Item 2</p></li>
-</ol>
-</p>
-</td>
-</tr>
-<tr class="wtrl-section row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Definitions</span></code></p></td>
-<td><dl class="wtrl-dfn-list">
-<dt><code class="wtrl_dfn docutils literal notranslate"><span class="pre">Term_A</span></code></dt><dd><p>Definition content is freeform  A single pipe character “|” separates paragraphs within the freeform text.</p>
-<p>This is the second paragraph. Here is an enumeration<ol class="arabic simple" start="1">
-<li><p>Numbered item with long text, so that we use the backslash in order to create a logical line.</p></li>
-<li><p>Numbered item</p></li>
-</ol>
-</p>
-</dd>
-</dl>
-</td>
-</tr>
-<tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Terminology</span></code></p></td>
-<td><dl class="wtrl-dfn-list">
-<dt><code class="wtrl_dfn docutils literal notranslate"><span class="pre">Term</span> <span class="pre">B</span></code></dt><dd><p>Terminology content is freeform. A single pipe character “|” separates paragraphs within the freeform text.</p>
-<p>This is the second paragraph. Here is an item list:<ul class="simple">
-<li><p>Item 1</p></li>
-<li><p>Item 2</p></li>
-</ul>
- Some text after the item list.</p>
-</dd>
-</dl>
-</td>
-</tr>
-<tr class="wtrl-section row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Notes</span></code></p></td>
-<td><p class="wtrl-note-title rubric">About</p>
-<p class="wtrl-freeform-paragraph-content">Notes content is freeform. A single pipe character “|” separates paragraphs within the freeform text.</p>
-<p class="wtrl-freeform-paragraph-content">This is the second paragraph. Here is an item list:<ul class="simple">
-<li><p>Item 1</p></li>
-<li><p>Item 2</p></li>
-</ul>
- Some text after the item list.</p>
-</td>
-</tr>
-<tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Public</span> <span class="pre">classes</span></code></p></td>
-<td><p><a class="wtrl_type reference internal" href="#wtrl-cls-17:test_flow_control-1:X" title="test_flow_control.X"><span>X</span></a></p></td>
-</tr>
-<tr class="wtrl-section row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Public</span> <span class="pre">functions</span></code></p></td>
-<td><p><a class="wtrl_func reference internal" href="#wtrl-func-17:test_flow_control-1:f" title="test_flow_control.f"><span>f</span></a></p></td>
-</tr>
-<tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Class</span> <span class="pre">overview</span></code></p></td>
-<td><ul>
-<li><p><code class="wtrl_type docutils literal notranslate"><span class="pre">X</span></code></p>
-<p class="wtrl-freeform-paragraph-content">A class overview is not normative. The content is a sequence of paragraphs.</p>
-<p class="wtrl-freeform-paragraph-content">This is the second paragraph. A single pipe character “|” separates paragraphs within the freeform text.</p>
-<p class="wtrl-freeform-paragraph-content">Itemizations and enumerations are possible:<ul class="simple">
-<li><p>An item</p>
-<ol class="arabic simple" start="1">
-<li><p>Numbered item</p></li>
-<li><p>Numbered item</p></li>
-</ol>
-</li>
-<li><p>An item</p></li>
-</ul>
-</p>
-</li>
-</ul>
-</td>
-</tr>
-<tr class="wtrl-section row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Function</span> <span class="pre">overview</span></code></p></td>
-<td><ul>
-<li><p><code class="wtrl_func docutils literal notranslate"><span class="pre">f</span></code></p>
-<p class="wtrl-freeform-paragraph-content">A function overview is not normative. The content is a sequence of paragraphs.</p>
-<p class="wtrl-freeform-paragraph-content">This is the second paragraph. A single pipe character “|” separates paragraphs within the freeform text.</p>
-<p class="wtrl-freeform-paragraph-content">Itemizations and enumerations are possible:<ol class="arabic simple" start="1">
-<li><p>Numbered item</p>
-<ul class="simple">
-<li><p>An item</p></li>
-<li><p>An item</p></li>
-</ul>
-</li>
-<li><p>Numbered item</p></li>
-</ol>
-</p>
-</li>
-</ul>
-</td>
-</tr>
-<tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Public</span> <span class="pre">types</span></code></p></td>
-<td><ul>
-<li><p><a class="wtrl_type reference internal" href="#wtrl-obj-6:typing-5:Tuple" title="typing.Tuple"><span>MyType</span></a></p>
-<p class="wtrl-freeform-paragraph-content"><code class="wtrl_label docutils literal notranslate"><span class="pre">Public_types</span></code> is normative. The content is a sequence of paragraphs. This is the second paragraph. A single pipe character “|” separates paragraphs within the freeform text.</p>
-<p class="wtrl-freeform-paragraph-content">Itemizations and enumerations are possible:<ol class="arabic simple" start="1">
-<li><p>Numbered item</p>
-<ul class="simple">
-<li><p>An item</p></li>
-<li><p>An item</p></li>
-</ul>
-</li>
-<li><p>Numbered item</p></li>
-</ol>
-</p>
-</li>
-</ul>
-</td>
-</tr>
-<tr class="wtrl-section row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Public</span> <span class="pre">variables</span></code></p></td>
-<td><ul>
-<li><p><a class="wtrl_var reference internal" href="#wtrl-obj"><span>my_variable</span></a></p>
-<p class="wtrl-freeform-paragraph-content"><code class="wtrl_label docutils literal notranslate"><span class="pre">Public_variables</span></code> is normative. The content is a sequence of paragraphs. This is the second paragraph. A single pipe character “|” separates paragraphs within the freeform text.</p>
-<p class="wtrl-freeform-paragraph-content">Itemizations and enumerations are possible:<ol class="arabic simple" start="1">
-<li><p>Numbered item</p>
-<ul class="simple">
-<li><p>An item</p></li>
-<li><p>An item</p></li>
-</ul>
-</li>
-<li><p>Numbered item</p></li>
-</ol>
-</p>
-</li>
-</ul>
-</td>
-</tr>
-<tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Public</span> <span class="pre">constants</span></code></p></td>
-<td><ul>
-<li><p><a class="wtrl_var reference internal" href="#wtrl-obj"><span>my_constant</span></a></p>
-<p class="wtrl-freeform-paragraph-content"><code class="wtrl_label docutils literal notranslate"><span class="pre">Public_constants</span></code> is normative. The content is a sequence of paragraphs. This is the second paragraph. A single pipe character “|” separates paragraphs within the freeform text.</p>
-<p class="wtrl-freeform-paragraph-content">Itemizations and enumerations are possible:<ul class="simple">
-<li><p>An item</p>
-<ul>
-<li><p>A subitem</p>
-<ul>
-<li><p>A subsubitem</p></li>
-<li><p>A subsubitem</p></li>
-</ul>
-</li>
-<li><p>A subitem</p></li>
-</ul>
-</li>
-<li><p>An item</p></li>
-</ul>
-</p>
-</li>
-</ul>
-</td>
-</tr>
-</tbody>
-<thead class="wtrl-box-head-module">
-<tr class="row-even"><th class="head"><code class="wtrl_label docutils literal notranslate"><span class="pre">Module</span></code></th>
-<th class="head"><p>test_flow_control</p></th>
-</tr>
-</thead>
-</table>
 <p class="wtrl-current-module-message wtrl-current-module-push">Classes and functions below this point implicitly belong to package/module <code class="wtrl_var docutils literal notranslate"><span class="pre">test_flow_control</span></code>. </p>
 <table class="wtrl-box docutils align-default" id="wtrl-cls-17:test_flow_control-1:X">
+<colgroup>
+<col style="width: 18%" />
+<col style="width: 82%" />
+</colgroup>
 <tbody>
 <tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Preamble</span></code></p></td>
 <td><ul class="simple">
 <li><p><code class="wtrl_label docutils literal notranslate"><span class="pre">normative</span> <span class="pre">sections</span></code></p>
 <ul>
-<li><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Contract</span></code>, <code class="wtrl_label docutils literal notranslate"><span class="pre">Factory</span></code>, <code class="wtrl_label docutils literal notranslate"><span class="pre">Public</span> <span class="pre">methods</span></code></p></li>
+<li><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Contract</span></code>, <code class="wtrl_label docutils literal notranslate"><span class="pre">Factory</span></code></p></li>
 </ul>
 </li>
 </ul>
@@ -254,28 +84,6 @@
 </ul>
 </td>
 </tr>
-<tr class="wtrl-section row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Public</span> <span class="pre">methods</span></code></p></td>
-<td><p><a class="wtrl_func reference internal" href="#wtrl-func-17:test_flow_control-1:X-1:m" title="test_flow_control.X.m"><span>m</span></a></p></td>
-</tr>
-<tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Method</span> <span class="pre">overview</span></code></p></td>
-<td><ul>
-<li><p><code class="wtrl_func docutils literal notranslate"><span class="pre">m</span></code></p>
-<p class="wtrl-freeform-paragraph-content">A method overview is not normative. The content is a sequence of paragraphs.</p>
-<p class="wtrl-freeform-paragraph-content">This is the second paragraph. A single pipe character “|” separates paragraphs within the freeform text.</p>
-<p class="wtrl-freeform-paragraph-content">Itemizations and enumerations are possible:<ol class="arabic simple" start="1">
-<li><p>Numbered item</p>
-<ul class="simple">
-<li><p>An item</p></li>
-<li><p>An item</p></li>
-</ul>
-</li>
-<li><p>Numbered item</p></li>
-</ol>
-</p>
-</li>
-</ul>
-</td>
-</tr>
 </tbody>
 <thead class="wtrl-box-head-class">
 <tr class="row-even"><th class="head"><code class="wtrl_label docutils literal notranslate"><span class="pre">Class</span></code></th>
@@ -284,6 +92,10 @@
 </thead>
 </table>
 <table class="wtrl-box docutils align-default" id="wtrl-func-17:test_flow_control-1:f">
+<colgroup>
+<col style="width: 18%" />
+<col style="width: 82%" />
+</colgroup>
 <tbody>
 <tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Signature</span></code></p></td>
 <td><div class="wtrl-signature-head line"><span class="wtrl_mod">test_flow_control</span><span class="wtrl_op">.</span><span class="wtrl_func">f</span><span class="wtrl_op">(</span></div>
@@ -384,11 +196,11 @@
           
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
 <p class="logo">
   <a href="index.html">
-    <img class="logo" src="_static/wtrl_logo_color_64x64.png" alt="Logo" />
+    <img class="logo" src="_static/wtrl_logo_color_64x64.png" alt="Logo"/>
     
   </a>
 </p>
@@ -400,16 +212,7 @@
 
 
 
-
-<search id="searchbox" style="display: none" role="search">
-    <div class="searchformwrapper">
-    <form class="search" action="search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
-      <input type="submit" value="Go" />
-    </form>
-    </div>
-</search>
-<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<h3>Navigation</h3>
 <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="introduction.html">1. Introduction</a></li>
@@ -435,6 +238,16 @@
   </ul></li>
 </ul>
 </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
 
 
 
@@ -448,11 +261,11 @@
       <div class="clearer"></div>
     </div>
     <div class="footer">
-      &#169;2026, Uwe.
+      &copy;2026, Uwe.
       
       |
-      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 9.1.0</a>
-      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.3.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |
       <a href="_sources/_test_freeform.rst.txt"

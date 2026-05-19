@@ -1,19 +1,20 @@
+
 <!DOCTYPE html>
 
-<html lang="en" data-content_root="./">
+<html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
     <title>2. Getting Started &#8212; Waterloo Docstrings 0 documentation</title>
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5f771d8e" />
-    <link rel="stylesheet" type="text/css" href="_static/basic.css?v=b08954a9" />
-    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=27fed22d" />
-    <link rel="stylesheet" type="text/css" href="_static/common_styles.css?v=27e4112a" />
-    <link rel="stylesheet" type="text/css" href="_static/alabaster_waterloo.css?v=163535b2" />
-    <script src="_static/documentation_options.js?v=8dde47fa"></script>
-    <script src="_static/doctools.js?v=fd6eb6e6"></script>
-    <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
+    <link rel="stylesheet" type="text/css" href="_static/common_styles.css" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster_waterloo.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="3. Docstrings - minimal and full examples" href="examples_minimax.html" />
@@ -21,9 +22,8 @@
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
-
   
-  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
   </head><body>
   
@@ -36,7 +36,7 @@
           <div class="body" role="main">
             
   <section id="getting-started">
-<h1><span class="section-number">2. </span>Getting Started<a class="headerlink" href="#getting-started" title="Link to this heading">¶</a></h1>
+<h1><span class="section-number">2. </span>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h1>
 <p>Suppose you are about to build a Python module or write documentation
 for an existing one. This section demonstrates how to get started
 with Waterloo Docstrings.</p>
@@ -48,7 +48,7 @@ Python docstrings.</p>
 you may skip sections <a class="reference internal" href="#section-sphinx"><span class="std std-ref">Install Sphinx</span></a>
 and <a class="reference internal" href="#section-building-human-readable-documentation"><span class="std std-ref">Building a Human-Readable Documentation</span></a>.</p>
 <section id="setup-root-directory">
-<h2><span class="section-number">2.1. </span>Setup Root Directory<a class="headerlink" href="#setup-root-directory" title="Link to this heading">¶</a></h2>
+<h2><span class="section-number">2.1. </span>Setup Root Directory<a class="headerlink" href="#setup-root-directory" title="Permalink to this headline">¶</a></h2>
 <p>In the following sections, we refer to the project’s root directory as <code class="docutils literal notranslate"><span class="pre">${ROOT}</span></code>.
 Navigate to this directory in your terminal before proceeding.</p>
 <p>We use the placeholder name <code class="wtrl_mod docutils literal notranslate"><span class="pre">my_module</span></code> for the module to be documented
@@ -56,13 +56,13 @@ Navigate to this directory in your terminal before proceeding.</p>
 for the corresponding source file.</p>
 </section>
 <section id="virtual-environment">
-<span id="section-venv"></span><h2><span class="section-number">2.2. </span>Virtual Environment<a class="headerlink" href="#virtual-environment" title="Link to this heading">¶</a></h2>
+<span id="section-venv"></span><h2><span class="section-number">2.2. </span>Virtual Environment<a class="headerlink" href="#virtual-environment" title="Permalink to this headline">¶</a></h2>
 <p>We recommend using a Python virtual environment for the initial setup.
 This prevents upgrades of your system-wide installations of
 <code class="wtrl_lit docutils literal notranslate"><span class="pre">pip</span></code>, <code class="wtrl_lit docutils literal notranslate"><span class="pre">sphinx</span></code>, and other packages, which may not
 be desirable.</p>
 <section id="create-a-virtual-environment">
-<h3><span class="section-number">2.2.1. </span>Create a Virtual Environment<a class="headerlink" href="#create-a-virtual-environment" title="Link to this heading">¶</a></h3>
+<h3><span class="section-number">2.2.1. </span>Create a Virtual Environment<a class="headerlink" href="#create-a-virtual-environment" title="Permalink to this headline">¶</a></h3>
 <p>There is extensive documentation available for <code class="wtrl_lit docutils literal notranslate"><span class="pre">venv</span></code>,
 but since it is straightforward to use, we briefly summarize
 the basic steps here.</p>
@@ -74,14 +74,14 @@ the basic steps here.</p>
 containing a standard Python installation.</p>
 </section>
 <section id="activate-the-environment">
-<h3><span class="section-number">2.2.2. </span>Activate the Environment<a class="headerlink" href="#activate-the-environment" title="Link to this heading">¶</a></h3>
+<h3><span class="section-number">2.2.2. </span>Activate the Environment<a class="headerlink" href="#activate-the-environment" title="Permalink to this headline">¶</a></h3>
 <p>Run the activation command appropriate for your operating system and shell.</p>
-<table class="docutils align-default" id="id1">
-<caption><span class="caption-text">Activation Commands</span><a class="headerlink" href="#id1" title="Link to this table">¶</a></caption>
+<table class="colwidths-given docutils align-default" id="id1">
+<caption><span class="caption-text">Activation Commands</span><a class="headerlink" href="#id1" title="Permalink to this table">¶</a></caption>
 <colgroup>
-<col style="width: 20.0%" />
-<col style="width: 30.0%" />
-<col style="width: 50.0%" />
+<col style="width: 20%" />
+<col style="width: 30%" />
+<col style="width: 50%" />
 </colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Platform</p></th>
@@ -128,7 +128,7 @@ when you are finished with this tutorial.</p>
 </section>
 </section>
 <section id="install-sphinx">
-<span id="section-sphinx"></span><h2><span class="section-number">2.3. </span>Install Sphinx<a class="headerlink" href="#install-sphinx" title="Link to this heading">¶</a></h2>
+<span id="section-sphinx"></span><h2><span class="section-number">2.3. </span>Install Sphinx<a class="headerlink" href="#install-sphinx" title="Permalink to this headline">¶</a></h2>
 <p>You have likely already installed Sphinx. However, if you are working
 inside the virtual environment recommended above, you need to install
 it there as well.</p>
@@ -176,9 +176,9 @@ Create a directory for the human-readable documentation:</p>
 <p><code class="wtrl_file docutils literal notranslate"><span class="pre">file://</span></code><code class="wtrl_var docutils literal notranslate"><span class="pre">${ROOT}</span></code><code class="wtrl_file docutils literal notranslate"><span class="pre">/doc/build/html/index.html</span></code></p>
 </section>
 <section id="waterloo-docstrings">
-<span id="section-waterloo-docstrings"></span><h2><span class="section-number">2.4. </span>Waterloo Docstrings<a class="headerlink" href="#waterloo-docstrings" title="Link to this heading">¶</a></h2>
+<span id="section-waterloo-docstrings"></span><h2><span class="section-number">2.4. </span>Waterloo Docstrings<a class="headerlink" href="#waterloo-docstrings" title="Permalink to this headline">¶</a></h2>
 <section id="install-waterloo">
-<h3><span class="section-number">2.4.1. </span>Install Waterloo<a class="headerlink" href="#install-waterloo" title="Link to this heading">¶</a></h3>
+<h3><span class="section-number">2.4.1. </span>Install Waterloo<a class="headerlink" href="#install-waterloo" title="Permalink to this headline">¶</a></h3>
 <p>If you have not done so already, update <code class="wtrl_lit docutils literal notranslate"><span class="pre">pip</span></code>:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>--upgrade<span class="w"> </span>pip
 </pre></div>
@@ -210,7 +210,7 @@ Create a directory for the human-readable documentation:</p>
 </div>
 </section>
 <section id="adding-a-waterloo-docstring">
-<h3><span class="section-number">2.4.2. </span>Adding a Waterloo Docstring<a class="headerlink" href="#adding-a-waterloo-docstring" title="Link to this heading">¶</a></h3>
+<h3><span class="section-number">2.4.2. </span>Adding a Waterloo Docstring<a class="headerlink" href="#adding-a-waterloo-docstring" title="Permalink to this headline">¶</a></h3>
 <p>Insert the following example docstring at the top of your module
 source file <code class="wtrl_file docutils literal notranslate"><span class="pre">my_module.py</span></code>.</p>
 <p>Indentation may use either a tab character or four spaces.
@@ -236,7 +236,7 @@ errors, the linter provides more detailed and clearer diagnostics.</p>
 </div>
 </section>
 <section id="building-a-human-readable-documentation">
-<span id="section-building-human-readable-documentation"></span><h3><span class="section-number">2.4.3. </span>Building a Human-Readable Documentation<a class="headerlink" href="#building-a-human-readable-documentation" title="Link to this heading">¶</a></h3>
+<span id="section-building-human-readable-documentation"></span><h3><span class="section-number">2.4.3. </span>Building a Human-Readable Documentation<a class="headerlink" href="#building-a-human-readable-documentation" title="Permalink to this headline">¶</a></h3>
 <p>To see how Waterloo integrates with Sphinx, add the following
 directive to a source file, for example <code class="wtrl_file docutils literal notranslate"><span class="pre">index.rst</span></code>
 (for testing purposes):</p>
@@ -253,7 +253,7 @@ representation of the module docstring.</p>
 in the same way using the corresponding directives.</p>
 </section>
 <section id="building-a-machine-readable-documentation">
-<h3><span class="section-number">2.4.4. </span>Building a Machine-Readable Documentation<a class="headerlink" href="#building-a-machine-readable-documentation" title="Link to this heading">¶</a></h3>
+<h3><span class="section-number">2.4.4. </span>Building a Machine-Readable Documentation<a class="headerlink" href="#building-a-machine-readable-documentation" title="Permalink to this headline">¶</a></h3>
 <p>As outlined in the introduction, LLMs can process the original
 Waterloo docstrings directly. However, JSON is often preferred
 because it is not indentation-based and can be validated using
@@ -283,7 +283,7 @@ the JSON output is valid.</p>
 </section>
 </section>
 <section id="final-remarks">
-<h2><span class="section-number">2.5. </span>Final Remarks<a class="headerlink" href="#final-remarks" title="Link to this heading">¶</a></h2>
+<h2><span class="section-number">2.5. </span>Final Remarks<a class="headerlink" href="#final-remarks" title="Permalink to this headline">¶</a></h2>
 <p>This section outlines the minimal steps required to integrate
 Waterloo Docstrings into a project.</p>
 <p>Further examples are provided in
@@ -298,11 +298,11 @@ Waterloo Docstrings into a project.</p>
           
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
 <p class="logo">
   <a href="index.html">
-    <img class="logo" src="_static/wtrl_logo_color_64x64.png" alt="Logo" />
+    <img class="logo" src="_static/wtrl_logo_color_64x64.png" alt="Logo"/>
     
   </a>
 </p>
@@ -314,16 +314,7 @@ Waterloo Docstrings into a project.</p>
 
 
 
-
-<search id="searchbox" style="display: none" role="search">
-    <div class="searchformwrapper">
-    <form class="search" action="search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
-      <input type="submit" value="Go" />
-    </form>
-    </div>
-</search>
-<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<h3>Navigation</h3>
 <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="introduction.html">1. Introduction</a></li>
@@ -366,6 +357,16 @@ Waterloo Docstrings into a project.</p>
   </ul></li>
 </ul>
 </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
 
 
 
@@ -379,11 +380,11 @@ Waterloo Docstrings into a project.</p>
       <div class="clearer"></div>
     </div>
     <div class="footer">
-      &#169;2026, Uwe.
+      &copy;2026, Uwe.
       
       |
-      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 9.1.0</a>
-      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.3.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |
       <a href="_sources/getting_started.rst.txt"
