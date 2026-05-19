@@ -100,6 +100,7 @@ This section is normative.
 * [XTNSN-010] -- No source file given
 * [XTNSN-011] -- Line number not specified properly
 * [XTNSN-012] -- Cannot qualify documented object
+* [XTNSN-013] -- The selected object has no docstring.
 
 The JSON protocol used by the VSCode editor integration is documented
 separately in chapter :ref:`vscode_extension_backend`.
