@@ -27,7 +27,8 @@ from jsonschema import Draft202012Validator
 #from jsonschema import JSONDecodeError
 import jsonschema.exceptions
 
-__version__ = "0.11.2"
+__version__ = "0.12.0"
+# - 0.12.0 [2026-05-20]	Subcommand 'render-json': Option --in.
 # - 0.11.2 [2026-05-19]	Subcommand 'walk': Option --sort.
 # - 0.11.1 [2026-05-18]	Pretty format for help text.
 # - 0.11.0 [2026-05-18]	Subcommand 'walk' MVP
@@ -218,6 +219,19 @@ def _load_json(path: str | None) -> cvrt.WtrlJsonNode_t:
 		with open(path, "r", encoding="utf-8") as fh:
 			return cast(cvrt.WtrlJsonNode_t, json.load(fh))
 	return cast(cvrt.WtrlJsonNode_t, json.load(sys.stdin))
+
+
+def _load_walk_input(tr: tracer, path: str) -> dict[str, Any] | None:
+	"""Load and validate a walk JSON file for render-json --in."""
+	doc = _load_json(path)
+	if not isinstance(doc, dict):
+		tr.add_error("JSCH-700", "tool", f"Walk input must be a JSON object: {path}")
+		return None
+	schema_path = Path(__file__).resolve().parent / "schema" / f"wtrl-walk-json-{WTRL_WALK_JSON_SCHEMA_VERSION}.schema.json"
+	_validate_json_against_schema(tr, doc, str(schema_path))
+	if tr.has_errors():
+		return None
+	return doc
 
 
 def _safe_module_docstring(modname: str) -> str | None:
@@ -1095,37 +1109,88 @@ def _render_json_command(args: argparse.Namespace) -> int:
 		flavour = cvrt.flavour_tag_map.get(flavour_str)
 		if flavour is None:
 			flavour = cvrt.Flavour.RFC_2119
+		input_walk_doc: dict[str, Any] | None = None
+		obj_qnames: list[str] = []
+		include_imported = bool(getattr(args, "include_imported", True))
+		walk_basedir: str | None = None
+		walk_included_qnames: set[str] = set()
+		if getattr(args, "in_file", None):
+			if getattr(args, "basedir", None) or getattr(args, "obj", None):
+				print("Error: --in is mutually exclusive with direct --basedir/--obj mode.", file=sys.stderr)
+				return 2
+			input_walk_doc = _load_walk_input(tr, str(getattr(args, "in_file")))
+			if input_walk_doc is None:
+				_emit_tracer(tr, out_diag, out_diag_json)
+				return 1
+			meta = input_walk_doc.get("__WTRL_META__", {})
+			if not isinstance(meta, dict):
+				print("Error: walk input __WTRL_META__ must be an object.", file=sys.stderr)
+				return 2
+			walk_basedir_val = meta.get("basedir")
+			if isinstance(walk_basedir_val, str) and walk_basedir_val.strip():
+				walk_basedir = walk_basedir_val.strip()
+			entries_raw = input_walk_doc.get("__WTRL_OBJECTS__", [])
+			if isinstance(entries_raw, list):
+				for entry in entries_raw:
+					if not isinstance(entry, dict):
+						continue
+					qname = entry.get("qualname")
+					if isinstance(qname, str) and qname.strip() and bool(entry.get("included", False)):
+						walk_included_qnames.add(qname.strip())
+			# Prefer the new plural root list, but keep the singular field as a fallback.
+			objs_raw = meta.get("objs", meta.get("obj", []))
+			if isinstance(objs_raw, list):
+				for item in objs_raw:
+					if isinstance(item, str) and item.strip():
+						obj_qnames.append(item.strip())
+			elif isinstance(objs_raw, str) and objs_raw.strip():
+				obj_qnames.append(objs_raw.strip())
+			if not obj_qnames:
+				print("Error: walk input does not contain any root objects.", file=sys.stderr)
+				return 2
+			if "include_imported" in meta:
+				include_imported = bool(meta.get("include_imported"))
+		else:
 # Build a flat list of object qualified names from the --obj arguments, which may be repeated and/or grouped.
 # This is related to argparse's handling of nargs='+' with multiple occurrences, which results in a list of lists.
-		obj_qnames: list[str] = []
-		if args.obj:
-			for grp in args.obj:
-				if isinstance(grp, list):
-					obj_qnames.extend(grp)
-				else:
-					obj_qnames.append(str(grp))
-		if not obj_qnames:
-			print("Error: --obj is required for render-json.", file=sys.stderr)
-			return 2
+			if args.obj:
+				for grp in args.obj:
+					if isinstance(grp, list):
+						obj_qnames.extend(grp)
+					else:
+						obj_qnames.append(str(grp))
+			if not obj_qnames:
+				print("Error: --obj is required for render-json.", file=sys.stderr)
+				return 2
 # Each qualified name must resolve to a module, and we need the module objects for traversal, so resolve them all upfront.
-		modules: list[ModuleType] = []
+		modules: list[object] = []
 		for qname in obj_qnames:
-			_apply_basedir(getattr(args, "basedir", None), qname)
+			if getattr(args, "in_file", None):
+				_apply_basedir(walk_basedir, qname)
+			else:
+				_apply_basedir(getattr(args, "basedir", None), qname)
 			mod_obj = _resolve_object(qname)
-			if not isinstance(mod_obj, ModuleType):
+			if not getattr(args, "in_file", None) and not isinstance(mod_obj, ModuleType):
 				print(f"Error: --obj must resolve to modules for render-json (got {qname}).", file=sys.stderr)
 				return 2
 			modules.append(mod_obj)
 
 #----- Object traversal and config ----------------------------#
 		config = docitem.ConfigTraversal()
-		if args.include_imported:
+		if include_imported:
 			config.enable_include_imported()
 		config.disable_walk_packages()
 #----- Filter by scope ----------------------------------------#
 		objs: list[object] = []
+		included_roots: set[str] = set()
 		for mod in modules:
-			objs.extend(docitem.gen_documentable_objects(mod, config))
+			for cand in docitem.gen_documentable_objects(mod, config):
+				qname = get_obj_fully_qualified_name(cand)
+				if input_walk_doc is not None:
+					if qname not in walk_included_qnames:
+						continue
+					included_roots.add(qname)
+				objs.append(cand)
 # Use from argparse if available, otherwise fall back to "core" (maximimum output).
 		scope_str: str = args.scope
 		scope_val = SCOPE_TAG_MAP.get(scope_str, SCOPE_TAG_MAP["core"])
@@ -1193,8 +1258,10 @@ def _render_json_command(args: argparse.Namespace) -> int:
 
 #----- Iterate over scope-filtered objects --------------------#
 		for o in objs:
-			doc_txt = docitem.get_obj_docstring(o)
 			name_key = get_obj_fully_qualified_name(o)
+			if input_walk_doc is not None and name_key not in walk_included_qnames:
+				continue
+			doc_txt = docitem.get_obj_docstring(o)
 			if not doc_txt or not str(doc_txt).strip():
 # No docstring or empty docstring. Count safely.
 				if name_key not in objects_counted:
@@ -1407,12 +1474,16 @@ def _render_json_command(args: argparse.Namespace) -> int:
 				if not mod_doc:
 					mod_doc = _safe_module_docstring(modname)
 				if mod_doc:
+					if input_walk_doc is not None and modname not in walk_included_qnames:
+						entry2["doc"] = {}
+						tree_full["__WTRL_OBJECTS__"][modname] = entry2
+						continue
 					try:
 						tr_tmp = tracer()
 						mod_tree_parsed = docitem.parse_indent_docstring(tr_tmp, mod_doc)
 						mod_tree = docitem.make_docitem_tree_from_docstring_tree(tr_tmp, mod_tree_parsed)
-# Render module docstring if the module is visible for the given scope; otherwise render stub.
-						if cast(Any, mod_tree).is_visible(scopes_filter):
+						# Render module docstring if it is included in walk; otherwise render stub.
+						if input_walk_doc is None and cast(Any, mod_tree).is_visible(scopes_filter):
 							entry2["doc"] = cvrt.to_node_docstring_tree_json(mod_tree_parsed, flavour)
 						else:
 							entry2["doc"] = {}
@@ -2235,36 +2306,37 @@ parser: argparse.ArgumentParser
 #===== Build parser ===========================================#
 
 class CustomHelpFormatter(argparse.HelpFormatter):
-	def __init__(self, prog):
+	def __init__(self, prog : Any):
 		super().__init__(prog)
 		self._max_help_position = 36
 		self._indent_increment = 4
 		terminal_width = shutil.get_terminal_size().columns
 		self._width = min(100, terminal_width)
 
-	def _format_action(self, action):
+	def _format_action(self, action: argparse.Action) -> str:
 		# Keep the help text anchored at a fixed column instead of letting the
 		# longest option name push the start position further to the right.
 		help_position = self._max_help_position
 		help_width = max(self._width - help_position, 11)
 		action_width = help_position - self._current_indent - 2
 		action_header = self._format_action_invocation(action)
+		assert(hasattr(self,'_decolor'))
 		action_header_no_color = self._decolor(action_header)
 
 		if not action.help:
-			tup = self._current_indent, '', action_header
-			action_header = '%*s%s\n' % tup
+			tup1 = self._current_indent, '', action_header
+			action_header = '%*s%s\n' % tup1
 		elif len(action_header_no_color) <= action_width:
 			action_header_color = action_header
-			tup = self._current_indent, '', action_width, action_header_no_color
-			action_header = '%*s%-*s  ' % tup
+			tup2 = self._current_indent, '', action_width, action_header_no_color
+			action_header = '%*s%-*s  ' % tup2
 			action_header = action_header.replace(
 				action_header_no_color, action_header_color
 			)
 			indent_first = 0
 		else:
-			tup = self._current_indent, '', action_header
-			action_header = '%*s%s\n' % tup
+			tup3 = self._current_indent, '', action_header
+			action_header = '%*s%s\n' % tup3
 			indent_first = help_position
 
 		parts = [action_header]
@@ -2448,18 +2520,23 @@ def _build_parser() -> argparse.ArgumentParser:
 #----- render-json --------------------------------------------#
 	render_json = subparsers.add_parser(
 		"render-json",
-		help="Render module to Waterloo JSON",
+		help="Render Waterloo JSON from source or replay walk JSON",
 		parents=[global_opts],
 		formatter_class=parser.formatter_class)
 	render_json.add_argument(
+		"--in",
+		dest="in_file",
+		metavar="FILE",
+		help="Read exactly one walk JSON file as input. Validates the schema and uses included=true as filter SSoT. Mutually exclusive with direct --basedir/--obj mode.",
+	)
+	render_json.add_argument(
 		"--obj",
-		required=True,
 		nargs="+",
 		action="append",
 		metavar="MODULE",
-		help="One or more qualified module names to render (merged). Option may be repeated.",
+		help="One or more qualified module names to render in direct mode (merged). Option may be repeated.",
 	)
-	render_json.add_argument("--basedir", metavar="DIR", help="Base directory for resolving --obj.")
+	render_json.add_argument("--basedir", metavar="DIR", help="Base directory for resolving --obj in direct mode.")
 	rg_out = render_json.add_mutually_exclusive_group()
 	rg_out.add_argument("--out", dest="out_file", metavar="FILE", help="Write JSON to FILE instead of stdout.")
 	rg_out.add_argument("--out-dir", dest="out_dir", metavar="DIR", help="Write JSON into DIR using a generated filename.")
@@ -2507,7 +2584,7 @@ def _build_parser() -> argparse.ArgumentParser:
 #----- walk ---------------------------------------------------#
 	walk = subparsers.add_parser(
 		"walk",
-		help="Walk documentable objects and analyze traversal",
+		help="Walk documentable objects and preview traversal/filtering",
 		parents=[global_opts, common_validate_group],
 		formatter_class=parser.formatter_class)
 	walk.add_argument(
@@ -2516,7 +2593,7 @@ def _build_parser() -> argparse.ArgumentParser:
 		nargs="+",
 		action="append",
 		metavar="QUALNAME",
-		help="One or more qualified identifiers of modules/classes/functions/methods to traverse. Option may be repeated and grouped.",
+		help="One or more qualified identifiers of modules/classes/functions/methods to traverse. Option may be repeated and grouped. This is the preview input for walk JSON and later render-json replay.",
 	)
 	walk_out = walk.add_mutually_exclusive_group()
 	walk_out.add_argument("--out", dest="out_file", metavar="FILE", help="Write walk text output to FILE instead of stdout.")
@@ -2524,14 +2601,14 @@ def _build_parser() -> argparse.ArgumentParser:
 	walk.add_argument(
 		"--show",
 		metavar="FIELDS",
-		help="Comma-separated list of fields to show in the text output (default: qualname,kind,scope,file,lineno,included,reason,reason_detail). Use 'default' as an alias for that list.",
+		help="Comma-separated list of fields to show in the text output (default: qualname,kind,scope,file,lineno,included,reason,reason_detail). Use 'default' as an alias for that list. Text output only; JSON stays complete.",
 	)
 	walk.add_argument(
 		"--sort",
 		"--order",
 		dest="sort",
 		metavar="FIELDS",
-		help="Comma-separated list of fields to sort by. The last field is applied first; sort is always ascending. Numeric fields sort numerically with null before 0; string and bool fields sort case-insensitively with underscores ignored.",
+		help="Comma-separated list of fields to sort by. The last field is applied first; sort is always ascending. Numeric fields sort numerically with null before 0; string and bool fields sort case-insensitively with underscores ignored. Applies to both text and JSON output order.",
 	)
 	walk.add_argument("--include-imported", dest="include_imported", action="store_true", default=True, help="Include imported members and submodules (default).")
 	walk.add_argument("--no-include-imported", dest="include_imported", action="store_false", help="Do not include imported members/submodules.")
@@ -2616,7 +2693,8 @@ def main(argv: Optional[list[str]] = None) -> int:
 		for action in parser._subparsers._actions:
 			if isinstance(action, argparse._SubParsersAction):
 				for cmd, subp in action.choices.items():
-					print(f"\nSubcommand '{cmd}':")
+					label = f"Subcommand: {cmd}"
+					print(f"\n" + "─" * 10 + " " + label + " " + "─" * (80 - 2 - len(label)) + "\n")
 					subp.print_help()
 		return 0
 
