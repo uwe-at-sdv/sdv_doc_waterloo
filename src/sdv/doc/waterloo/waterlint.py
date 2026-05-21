@@ -27,7 +27,8 @@ from jsonschema import Draft202012Validator
 #from jsonschema import JSONDecodeError
 import jsonschema.exceptions
 
-__version__ = "0.12.0"
+__version__ = "0.13.0"
+# - 0.13.0 [2026-05-21]	Subcommand 'carve': Options --in, --out, --out-diag, --out-diag-json, --simplify,.--recompute
 # - 0.12.0 [2026-05-20]	Subcommand 'render-json': Option --in.
 # - 0.11.2 [2026-05-19]	Subcommand 'walk': Option --sort.
 # - 0.11.1 [2026-05-18]	Pretty format for help text.
@@ -73,6 +74,8 @@ with contextlib.redirect_stdout(sys.stderr):
 	import sdv.doc.waterloo.docitem as docitem
 	import sdv.doc.waterloo.docitem_convert as cvrt
 	import sdv.doc.waterloo.docitem_genutil as genutil
+	import sdv.doc.waterloo.waterlint_carve as carve
+	import sdv.doc.waterloo.waterlint_common as wl_common
 	import sdv.doc.waterloo.waterlint_render_html5 as rhtml5
 	import sdv.doc.waterloo.docitem_tokenizer as tokenizer
 	from sdv.doc.waterloo.docitem_helper import (
@@ -113,6 +116,7 @@ SUBCOMMANDS = (
 	"add-example-json",
 	"gen-example-template-json",
 	"render-json",
+	"carve",
 	"render-html5",
 	"walk",
 	"gen-minimal",
@@ -139,11 +143,7 @@ def _add_traceback(tr: tracer) -> None:
 	tr.add_error("TOOL-800","tool",f"{err_name}: {err_msg}")
 
 def _emit_diagnostics(tr: tracer, dest: io.TextIOBase, strip_ansi: bool = False) -> None:
-	severity = tr.Severity.DEBUG if _debug else tr.Severity.INFO
-	txt = tr.str_by_severity(severity)
-	if strip_ansi:
-		txt = RE_ANSI_SGR_COMPILED.sub("", txt)
-	dest.write(txt)
+	wl_common.emit_diagnostics(tr, dest, debug=_debug, strip_ansi=strip_ansi)
 
 def _build_tracer_json_doc(tr: tracer) -> dict[str, Any]:
 	doc: dict[str, Any] = {
@@ -185,11 +185,7 @@ def _build_tracer_json_doc(tr: tracer) -> dict[str, Any]:
 	return doc
 
 def _tokens_to_json_pointer(tokens: list[object]) -> str:
-	if not tokens:
-		return ""
-	def _esc(seg: object) -> str:
-		return str(seg).replace("~", "~0").replace("/", "~1")
-	return "/" + "/".join(_esc(t) for t in tokens)
+	return cast(str, wl_common.tokens_to_json_pointer(tokens))
 
 
 def _final_exit_code(base_code: int, tr: tracer, fail_on_warning: bool) -> int:
@@ -215,10 +211,7 @@ def _emit_tracer(tr: tracer, out_path: str | None, out_json_path: str | None = N
 			fh.write("\n")
 
 def _load_json(path: str | None) -> cvrt.WtrlJsonNode_t:
-	if path:
-		with open(path, "r", encoding="utf-8") as fh:
-			return cast(cvrt.WtrlJsonNode_t, json.load(fh))
-	return cast(cvrt.WtrlJsonNode_t, json.load(sys.stdin))
+	return cast(cvrt.WtrlJsonNode_t, wl_common.load_json(path))
 
 
 def _load_walk_input(tr: tracer, path: str) -> dict[str, Any] | None:
@@ -250,23 +243,7 @@ def _safe_module_docstring(modname: str) -> str | None:
 
 
 def _validate_json_against_schema(tr: tracer, doc: cvrt.WtrlJsonNode_t, schema_path: str) -> None:
-	schema = _load_json(schema_path)
-	validator = Draft202012Validator(schema)
-	errors = sorted(validator.iter_errors(doc), key=lambda e: list(e.path))
-	for e in errors:
-		path_tokens = list(e.path)
-		schema_path_tokens = list(e.schema_path)
-		if isinstance(e,jsonschema.exceptions.ValidationError):
-			details = {
-				"validator": e.validator,
-				"path": path_tokens,
-				"schema_path": schema_path_tokens,
-				"path_pointer": _tokens_to_json_pointer(path_tokens),
-				"schema_path_pointer": _tokens_to_json_pointer(schema_path_tokens),
-			}
-			tr.add_error("JSCH-005", "tool",  "[" + docitem.get_obj_fully_qualified_name(e) + "] " + e.message,details)
-		else:
-			tr.add_error("JSCH-800", "tool",  "[" + docitem.get_obj_fully_qualified_name(e) + "] " + e.message,{})
+	wl_common.validate_json_against_schema(tr, doc, schema_path, "JSCH-005", "JSCH-800")
 
 
 def _validate_example_refs_map_against_schema(tr: tracer, ex_map: cvrt.WtrlJsonNode_t) -> bool:
@@ -1902,7 +1879,9 @@ def _walk_sort_key_for_field(entry: dict[str, Any], field: str) -> tuple[int, ob
 
 def _walk_sort_entries(entries: list[dict[str, Any]], sort_fields: list[str]) -> None:
 	for field in reversed(sort_fields):
-		entries.sort(key=lambda entry, field=field: _walk_sort_key_for_field(entry, field))
+		def _sort_key(entry: dict[str, Any], field: str = field) -> tuple[int, Any]:
+			return _walk_sort_key_for_field(entry, field)
+		entries.sort(key=_sort_key)
 
 
 def _walk_kind(obj: object) -> str:
@@ -1927,7 +1906,7 @@ def _walk_lineno(obj: object) -> int | None:
 				target = accessor
 				break
 	try:
-		_, lineno = inspect.getsourcelines(target)
+		_, lineno = inspect.getsourcelines(cast(Any, target))
 		return lineno
 	except Exception:
 		return None
@@ -2016,19 +1995,6 @@ def _walk_build_json_doc(
 	include_imported: bool,
 	show_fields: list[str],
 ) -> dict[str, Any]:
-	count_by_kind: dict[str, int] = {}
-	count_by_scope: dict[str, int] = {}
-	count_by_reason: dict[str, int] = {}
-	included_count = 0
-	for entry in entries:
-		kind = str(entry.get("kind", "unknown"))
-		scope = str(entry.get("scope", "unknown"))
-		reason = str(entry.get("reason", "unknown"))
-		count_by_kind[kind] = count_by_kind.get(kind, 0) + 1
-		count_by_scope[scope] = count_by_scope.get(scope, 0) + 1
-		count_by_reason[reason] = count_by_reason.get(reason, 0) + 1
-		if bool(entry.get("included", False)):
-			included_count += 1
 	doc: dict[str, Any] = {
 		"$schema": f"{WTRL_SCHEMA_URI_BASE}/wtrl-walk-json-{WTRL_WALK_JSON_SCHEMA_VERSION}.schema.json",
 		"$id": f"urn:waterlint:wtrl-walk-json:{__version__}:{datetime.now().strftime('%Y%m%d%H%M%S')}",
@@ -2045,14 +2011,7 @@ def _walk_build_json_doc(
 			"include_imported": include_imported,
 			"show": show_fields,
 		},
-		"__WTRL_SUMMARY__": {
-			"total": len(entries),
-			"included": included_count,
-			"excluded": len(entries) - included_count,
-			"by_kind": count_by_kind,
-			"by_scope": count_by_scope,
-			"by_reason": count_by_reason,
-		},
+		"__WTRL_SUMMARY__": wl_common.recompute_walk_summary(entries),
 		"__WTRL_OBJECTS__": entries,
 	}
 	return doc
@@ -2190,7 +2149,10 @@ def _help_gen_example_template_json() -> None:
 	print("Generate template JSON for __WTRL_EXAMPLE_REFS__ mappings.")
 
 def _help_render_json() -> None:
-	print("Render Waterloo objects (module) to Waterloo JSON.")
+	print("Render Waterloo JSON from source or replay walk JSON.")
+
+def _help_carve() -> None:
+	print("Edit walk JSON documents.")
 
 def _help_render_html5() -> None:
 	print("Render Waterloo JSON documents into one bundled HTML5 file.")
@@ -2234,6 +2196,8 @@ def _help_topic_command(args: argparse.Namespace) -> int:
 						_help_gen_example_template_json()
 					if cmd == "render-json":
 						_help_render_json()
+					if cmd == "carve":
+						_help_carve()
 					if cmd == "render-html5":
 						_help_render_html5()
 					if cmd == "gen-minimal":
@@ -2554,6 +2518,9 @@ def _build_parser() -> argparse.ArgumentParser:
 	render_json.add_argument("--no-allow-local-paths", dest="allow_local_paths", action="store_false", help="Omit filesystem paths in JSON.")
 	render_json.add_argument("--debug", action="store_true", help="Emit debugging data to stderr (reserved)")
 
+#----- carve --------------------------------------------------#
+	carve.build_parser(subparsers, parser.formatter_class, global_opts)
+
 #----- render-html5 -------------------------------------------#
 	render_html5 = subparsers.add_parser(
 		"render-html5",
@@ -2717,6 +2684,8 @@ def main(argv: Optional[list[str]] = None) -> int:
 		return _gen_example_template_json_command(args)
 	if args.command == "render-json":
 		return _render_json_command(args)
+	if args.command == "carve":
+		return int(carve.carve_command(args))
 	if args.command == "render-html5":
 		return _render_html5_command(args)
 	if args.command == "walk":
