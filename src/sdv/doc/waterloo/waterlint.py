@@ -27,7 +27,10 @@ from jsonschema import Draft202012Validator
 #from jsonschema import JSONDecodeError
 import jsonschema.exceptions
 
-__version__ = "0.13.0"
+__version__ = "0.13.1"
+# - 0.13.1 [2026-05-22]	Moved common functions from waterlint.py and waterlint_carve.py to waterlint_common.py;
+#			bugfix in docitem.py.
+#			documentation in waterlint_carve.py and waterlint_render_html5.py
 # - 0.13.0 [2026-05-21]	Subcommand 'carve': Options --in, --out, --out-diag, --out-diag-json, --simplify,.--recompute
 # - 0.12.0 [2026-05-20]	Subcommand 'render-json': Option --in.
 # - 0.11.2 [2026-05-19]	Subcommand 'walk': Option --sort.
@@ -80,6 +83,7 @@ with contextlib.redirect_stdout(sys.stderr):
 	import sdv.doc.waterloo.docitem_tokenizer as tokenizer
 	from sdv.doc.waterloo.docitem_helper import (
 		tracer,
+		Documentable,
 		get_obj_name,
 		get_obj_fully_qualified_name,
 		get_obj_path,
@@ -146,46 +150,16 @@ def _emit_diagnostics(tr: tracer, dest: io.TextIOBase, strip_ansi: bool = False)
 	wl_common.emit_diagnostics(tr, dest, debug=_debug, strip_ansi=strip_ansi)
 
 def _build_tracer_json_doc(tr: tracer) -> dict[str, Any]:
-	doc: dict[str, Any] = {
-		"$schema": f"{WTRL_SCHEMA_URI_BASE}/wtrl-tracer-json-{docitem.WTRL_TRACER_JSON_SCHEMA_VERSION}.schema.json",
-		"$id": f"urn:waterlint:wtrl-tracer-json:{__version__}:{datetime.now().strftime('%Y%m%d%H%M%S')}",
-		"__WTRL_VERSION__": {
-			"waterloo": WTRL_DOCITEM_VERSION,
-			"schema": docitem.WTRL_TRACER_JSON_SCHEMA_VERSION,
-		},
-		"__WTRL_INFO__": [],
-		"__WTRL_WARNING__": [],
-		"__WTRL_ERROR__": [],
-	}
-	if _debug:
-		doc["__WTRL_DEBUG__"] = []
-#----- Debug notes --------------------------------------------#
-	if _debug:
-		for context,origin,msg in tr.gen_debug_notes():
-			dentry: dict[str, Any] = {"kind": "debug", "origin": origin, "msg": msg}
-			dentry["context"] = context
-			cast(list[dict[str, Any]], doc["__WTRL_DEBUG__"]).append(dentry)
-#----- Infos --------------------------------------------------#
-	for context,origin,msg in tr.gen_infos():
-		entry: dict[str, Any] = {"kind": "info", "origin": origin, "msg": msg}
-		entry["context"] = context
-		cast(list[dict[str, Any]], doc["__WTRL_INFO__"]).append(entry)
-#----- Warnings -----------------------------------------------#
-	for context,rule_id,origin,msg,details in tr.gen_warnings():
-		entry = {"kind": "warning", "origin": origin, "rule-id": rule_id, "msg": msg}
-		entry["context"] = context
-		entry["details"] = details
-		cast(list[dict[str, Any]], doc["__WTRL_WARNING__"]).append(entry)
-#----- Errors -------------------------------------------------#
-	for context,rule_id,origin,msg,details in tr.gen_errors():
-		entry = {"kind": "error", "origin": origin, "rule-id": rule_id, "msg": msg}
-		entry["context"] = context
-		entry["details"] = details
-		cast(list[dict[str, Any]], doc["__WTRL_ERROR__"]).append(entry)
-	return doc
+	return wl_common.build_tracer_json_doc(
+		tr,
+		schema_version=docitem.WTRL_TRACER_JSON_SCHEMA_VERSION,
+		waterloo_version=WTRL_DOCITEM_VERSION,
+		id_prefix=f"urn:waterlint:wtrl-tracer-json:{__version__}",
+		include_debug=_debug,
+	)
 
 def _tokens_to_json_pointer(tokens: list[object]) -> str:
-	return cast(str, wl_common.tokens_to_json_pointer(tokens))
+	return wl_common.tokens_to_json_pointer(tokens)
 
 
 def _final_exit_code(base_code: int, tr: tracer, fail_on_warning: bool) -> int:
@@ -198,20 +172,16 @@ def _final_exit_code(base_code: int, tr: tracer, fail_on_warning: bool) -> int:
 
 
 def _emit_tracer(tr: tracer, out_path: str | None, out_json_path: str | None = None) -> None:
-	if out_path:
-		with open(out_path, "w", encoding="utf-8") as fh:
-			_emit_diagnostics(tr, fh, strip_ansi=True)
-	else:
-		severity = tr.Severity.DEBUG if _debug else tr.Severity.INFO
-		print(tr.str_by_severity(severity),file=sys.stderr,end="")
-	if out_json_path:
-		doc = _build_tracer_json_doc(tr)
-		with open(out_json_path, "w", encoding="utf-8") as fh:
-			json.dump(doc, fh, indent=4)
-			fh.write("\n")
+	wl_common.emit_tracer(
+		tr,
+		out_path,
+		out_json_path,
+		debug=_debug,
+		callback_build_json_doc=_build_tracer_json_doc,
+	)
 
 def _load_json(path: str | None) -> cvrt.WtrlJsonNode_t:
-	return cast(cvrt.WtrlJsonNode_t, wl_common.load_json(path))
+	return wl_common.load_json(path)
 
 
 def _load_walk_input(tr: tracer, path: str) -> dict[str, Any] | None:
@@ -1140,7 +1110,7 @@ def _render_json_command(args: argparse.Namespace) -> int:
 				print("Error: --obj is required for render-json.", file=sys.stderr)
 				return 2
 # Each qualified name must resolve to a module, and we need the module objects for traversal, so resolve them all upfront.
-		modules: list[object] = []
+		modules: list[Documentable] = []
 		for qname in obj_qnames:
 			if getattr(args, "in_file", None):
 				_apply_basedir(walk_basedir, qname)
@@ -1150,7 +1120,7 @@ def _render_json_command(args: argparse.Namespace) -> int:
 			if not getattr(args, "in_file", None) and not isinstance(mod_obj, ModuleType):
 				print(f"Error: --obj must resolve to modules for render-json (got {qname}).", file=sys.stderr)
 				return 2
-			modules.append(mod_obj)
+			modules.append(cast(Documentable, mod_obj))
 
 #----- Object traversal and config ----------------------------#
 		config = docitem.ConfigTraversal()
@@ -2079,7 +2049,7 @@ def _walk_command(args: argparse.Namespace) -> int:
 		for obj_qname in obj_qnames:
 			_apply_basedir(getattr(args, "basedir", None), obj_qname)
 			obj = _resolve_object(obj_qname)
-			for o in docitem.gen_documentable_objects(obj, config):
+			for o in docitem.gen_documentable_objects(cast(Documentable, obj), config):
 				qname = get_obj_fully_qualified_name(o)
 				if qname in seen_qnames:
 					continue
@@ -2519,7 +2489,7 @@ def _build_parser() -> argparse.ArgumentParser:
 	render_json.add_argument("--debug", action="store_true", help="Emit debugging data to stderr (reserved)")
 
 #----- carve --------------------------------------------------#
-	carve.build_parser(subparsers, parser.formatter_class, global_opts)
+	carve.build_parser(subparsers, cast(type[argparse.HelpFormatter], parser.formatter_class), global_opts)
 
 #----- render-html5 -------------------------------------------#
 	render_html5 = subparsers.add_parser(

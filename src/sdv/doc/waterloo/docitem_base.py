@@ -425,10 +425,27 @@ class docitem_list_of_symbols_base(docitem_list_base):
 # Validate and collect
 		refs_split : List[str] = []
 		seen = set()
-		for ref in refs:
-# Only string are allowed (not list of something)
+		logical_refs: List[str] = []
+		pending = ""
+		for idx, ref in enumerate(refs):
+# Only strings are allowed (not list of something)
 			if not isinstance(ref,str):
 				raise_parsing_error_expected_but_got(tr,"LQID-001",'str', f'{ref}')
+# Wraps are tolerated: commas at the end of a physical line continue the logical CSV list.
+			part = ref.strip()
+			if idx < len(refs) - 1 and not part.endswith(","):
+				warn_parsing(tr,"LQID-006","A non-final CSV line should end with a comma when the list is wrapped across multiple physical lines.")
+			if pending:
+				pending += " " + part
+			else:
+				pending = part
+			if pending.endswith(","):
+				continue
+			logical_refs.append(pending)
+			pending = ""
+		if pending:
+			logical_refs.append(pending)
+		for ref in logical_refs:
 # We allow a comma separated string of qualified identifiers.
 # Strip due to rule LQID-003
 			segments = map(str.strip,ref.split(","))

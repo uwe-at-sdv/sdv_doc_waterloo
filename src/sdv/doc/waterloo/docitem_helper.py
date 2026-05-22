@@ -132,6 +132,7 @@ RULE_ID_WHITELIST: Final[Dict[str, WHITELIST_REASON]] = {
 	"CPVAR-009":	WHITELIST_REASON.SEMANTIC_RULE,
 	"DEF-010":	WHITELIST_REASON.STRUCTURE_RULE,
 	"LQID-003":	WHITELIST_REASON.STRUCTURE_RULE,
+	"LQID-006":	WHITELIST_REASON.STRUCTURE_RULE,
 	"LQID-005":	WHITELIST_REASON.STRUCTURE_RULE,
 	"MPVAR-009":	WHITELIST_REASON.SEMANTIC_RULE,
 	"RET-008":	WHITELIST_REASON.SEMANTIC_RULE,
@@ -1151,7 +1152,8 @@ def get_obj_docstring(obj: object) -> str:
 	Notes:
 		Last review:
 			2026-05-15
-		The object-level cache avoids repeating the wrapper walk for the same object.
+		General:
+			The object-level cache avoids repeating the wrapper walk for the same object.
 	"""
 	oid = id(obj)
 	if oid in _OBJ_DOCSTRING_CACHE:

@@ -251,7 +251,8 @@ from contextlib import contextmanager
 from sdv.doc.waterloo.docitem_docstring import *
 from sdv.doc.waterloo.docitem_validator import *
 
-__version__ = "0.8.0"
+__version__ = "0.8.1"
+# - 0.8.1 [2026-05-22]	Bugfix: Enforce LQID-002 in a tolerant way, new rule LQID-006.
 # - 0.8.0 [2026-05-08]	read AST in order to extract docstrings since __doc__ has become unusable as of Python 3.13.
 # - 0.7.0 [2026-05-08]	Rules DER-010 to DER-013 and implementation in docitem_validator.py "Derived_from"
 # - 0.6.1 [2026-04-02]	Semantic role 'key' for keyboard

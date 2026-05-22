@@ -1,14 +1,28 @@
 #!/usr/bin/env python3
-"""Edit Waterloo walk JSON documents.
-
-The first implementation step is intentionally small:
-- read one validated walk JSON file
-- optionally simplify it to included entries
-- optionally recompute summary/statistics
-- write the result back out
-
-The module stays self-contained so that later carve-specific helpers can
-move here without bloating waterlint.py further.
+r"""
+Preamble:
+	profile:
+		module
+	normative_sections:
+		Contract, Public_functions
+	scope:
+		extension
+Contract:
+	general:
+		|Must| edit Waterloo walk JSON documents in a small, self-contained command module.
+Public_functions:
+	carve_command, build_parser
+Function_overview:
+	carve_command:
+		Execute the carve command by loading exactly one validated walk JSON file,
+		optionally simplifying it to included entries, optionally recomputing the
+		summary statistics, and then writing the resulting document back out.
+	build_parser:
+		Construct the carve subcommand parser and connect it to the global CLI.
+Notes:
+	General note:
+		The first implementation step is intentionally small.
+		Later carve-specific helpers can still move here without bloating waterlint.py further.
 """
 
 from __future__ import annotations
@@ -33,45 +47,28 @@ WTRL_SCHEMA_URI_BASE = "https://sci-d-vis.com/schema"
 WTRL_WALK_JSON_SCHEMA_VERSION = "0.0.1"
 
 
-def _emit_diagnostics(tr: tracer, dest: io.TextIOBase, strip_ansi: bool = False) -> None:
-	wl_common.emit_diagnostics(tr, dest, debug=True, strip_ansi=strip_ansi)
+def _emit_diagnostics(tr: tracer, dest: io.TextIOBase, strip_ansi: bool = False, debug: bool = False) -> None:
+	wl_common.emit_diagnostics(tr, dest, debug=debug, strip_ansi=strip_ansi)
 
 
-def _build_tracer_json_doc(tr: tracer) -> dict[str, Any]:
-	doc: dict[str, Any] = {
-		"$schema": f"{WTRL_SCHEMA_URI_BASE}/wtrl-tracer-json-{WTRL_TRACER_JSON_SCHEMA_VERSION}.schema.json",
-		"$id": f"urn:waterlint:wtrl-tracer-json:carve:{datetime.now().strftime('%Y%m%d%H%M%S')}",
-		"__WTRL_VERSION__": {
-			"waterloo": docitem.__version__,
-			"schema": WTRL_TRACER_JSON_SCHEMA_VERSION,
-		},
-		"__WTRL_INFO__": [],
-		"__WTRL_WARNING__": [],
-		"__WTRL_ERROR__": [],
-	}
-	for context, origin, msg in tr.gen_infos():
-		entry: dict[str, Any] = {"kind": "info", "origin": origin, "msg": msg, "context": context}
-		cast(list[dict[str, Any]], doc["__WTRL_INFO__"]).append(entry)
-	for context, rule_id, origin, msg, details in tr.gen_warnings():
-		entry = {"kind": "warning", "origin": origin, "rule-id": rule_id, "msg": msg, "context": context, "details": details}
-		cast(list[dict[str, Any]], doc["__WTRL_WARNING__"]).append(entry)
-	for context, rule_id, origin, msg, details in tr.gen_errors():
-		entry = {"kind": "error", "origin": origin, "rule-id": rule_id, "msg": msg, "context": context, "details": details}
-		cast(list[dict[str, Any]], doc["__WTRL_ERROR__"]).append(entry)
-	return doc
+def _build_tracer_json_doc(tr: tracer, include_debug: bool = False) -> dict[str, Any]:
+	return wl_common.build_tracer_json_doc(
+		tr,
+		schema_version=WTRL_TRACER_JSON_SCHEMA_VERSION,
+		waterloo_version=docitem.__version__,
+		id_prefix="urn:waterlint:wtrl-tracer-json:carve",
+		include_debug=include_debug,
+	)
 
 
-def _emit_tracer(tr: tracer, out_path: str | None, out_json_path: str | None = None) -> None:
-	if out_path:
-		with open(out_path, "w", encoding="utf-8") as fh:
-			_emit_diagnostics(tr, fh, strip_ansi=True)
-	else:
-		print(tr.str_by_severity(tr.Severity.DEBUG), file=sys.stderr, end="")
-	if out_json_path:
-		doc = _build_tracer_json_doc(tr)
-		with open(out_json_path, "w", encoding="utf-8") as fh:
-			json.dump(doc, fh, indent=4)
-			fh.write("\n")
+def _emit_tracer(tr: tracer, out_path: str | None, out_json_path: str | None = None, debug: bool = False) -> None:
+	wl_common.emit_tracer(
+		tr,
+		out_path,
+		out_json_path,
+		debug=debug,
+		callback_build_json_doc=lambda tr_: _build_tracer_json_doc(tr_, include_debug=debug),
+	)
 
 
 def _load_and_validate_walk_input(tr: tracer, path: str) -> dict[str, Any] | None:
@@ -87,9 +84,31 @@ def _load_and_validate_walk_input(tr: tracer, path: str) -> dict[str, Any] | Non
 
 
 def carve_command(args: argparse.Namespace) -> int:
+	r"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+		scope:
+			extension
+	Contract:
+		general:
+			|Must| execute the carve command on exactly one validated walk JSON file and write the resulting document back out.
+	Parameters:
+		args:
+			Namespace containing the parsed carve command line options.
+	Returns:
+		|Must| return 0 on success, non-zero on validation or processing errors.
+	Raises:
+	Notes:
+		General note:
+			The function intentionally keeps the first implementation step small and self-contained.
+	"""
 	tr = tracer()
 	out_diag = getattr(args, "out_diag", None)
 	out_diag_json = getattr(args, "out_diag_json", None)
+	debug = bool(getattr(args, "debug", False))
 	try:
 		in_file = getattr(args, "in_file", None)
 		if not in_file:
@@ -97,12 +116,12 @@ def carve_command(args: argparse.Namespace) -> int:
 			return 2
 		doc = _load_and_validate_walk_input(tr, in_file)
 		if doc is None:
-			_emit_tracer(tr, out_diag, out_diag_json)
+			_emit_tracer(tr, out_diag, out_diag_json, debug=debug)
 			return 1
 		entries_raw = doc.get("__WTRL_OBJECTS__", [])
 		if not isinstance(entries_raw, list):
 			tr.add_error("CARVE-002", "tool", "__WTRL_OBJECTS__ is not an array.")
-			_emit_tracer(tr, out_diag, out_diag_json)
+			_emit_tracer(tr, out_diag, out_diag_json, debug=debug)
 			return 1
 		entries = [cast(dict[str, Any], entry) for entry in entries_raw if isinstance(entry, dict)]
 		simplify = bool(getattr(args, "simplify", False))
@@ -128,14 +147,36 @@ def carve_command(args: argparse.Namespace) -> int:
 			sys.stdout.write("\n")
 	except Exception as exc:  # pragma: no cover - defensive
 		tr.add_error("CARVE-800", "tool", f"[{get_obj_fully_qualified_name(exc)}] {exc}")
-		_emit_tracer(tr, out_diag, out_diag_json)
+		_emit_tracer(tr, out_diag, out_diag_json, debug=debug)
 		return 1
 
-	_emit_tracer(tr, out_diag, out_diag_json)
+	_emit_tracer(tr, out_diag, out_diag_json, debug=debug)
 	return 0
 
 
 def build_parser(subparsers: argparse._SubParsersAction[argparse.ArgumentParser], formatter_class: type[argparse.HelpFormatter], global_opts: argparse.ArgumentParser) -> argparse.ArgumentParser:
+	r"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+		scope:
+			extension
+	Contract:
+		general:
+			|Must| construct and return the argparse subparser for the carve command.
+	Parameters:
+		subparsers:
+			The argparse subparser registry of the main command line interface.
+		formatter_class:
+			Help formatter class used for carve-specific help text.
+		global_opts:
+			Parser instance containing the shared global CLI options.
+	Returns:
+		|Must| return the configured carve subparser.
+	Raises:
+	"""
 	carve = subparsers.add_parser(
 		"carve",
 		help="Edit walk JSON documents",
