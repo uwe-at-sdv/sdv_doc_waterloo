@@ -645,7 +645,7 @@ state whether it applies to Identifiers or to Qualified Identifiers.
 * [LQID-005] -- Tools |must| treat the result as a flat list of [Qualified] Identifiers, without preserving line structure or grouping.
 * [LQID-006] -- If a CSV list is wrapped across multiple physical lines, every non-final physical line |should| end with a comma.
 
-The following warning rule is orthogonal to the LQID rules: it applies when a section appears in a docstring but violates the LoII principle.
+The following warning rule applies when a section appears in a docstring but violates the LoII principle.
 This happens, for example, when definitions are imported from a module docstring into a class, function, or method docstring.
 Since definitions are normative, that import introduces non-locality.
 

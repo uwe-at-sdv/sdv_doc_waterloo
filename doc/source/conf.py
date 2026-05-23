@@ -60,6 +60,11 @@ templates_path = ['_templates']
 # This pattern also affects html_static_path and html_extra_path.
 exclude_patterns = []
 
+# Waterloo documentation is currently English-only; disable gettext/i18n
+# lookup so Sphinx does not search for locale catalogs.
+language = "en"
+locale_dirs = []
+
 
 # -- Options for HTML output -------------------------------------------------
 

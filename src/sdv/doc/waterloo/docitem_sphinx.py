@@ -3,8 +3,8 @@ Preamble:
 	profile:
 		module
 	normative_sections:
-		Contract
-		Public_classes
+		Contract,
+		Public_classes,
 		Public_functions
 Description:
 	This module provides the Sphinx integration layer for the Waterloo documentation system.
@@ -61,22 +61,22 @@ Class_overview:
 	context:
 		Internal class, please ignore
 Public_functions:
-	build_sphinx_nodes
-	build_sphinx_nodes_full
-	resolve_qualified_name
-	wtrl_build_autodoc_module_nodes
-	wtrl_build_autodoc_function_nodes
-	wtrl_build_autodoc_class_nodes
-	wtrl_build_autodoc_class_full_nodes
-	wtrl_build_push_current_module_nodes
-	wtrl_build_push_current_class_nodes
-	wtrl_build_push_current_scope_nodes
-	wtrl_build_pop_current_module_nodes
-	wtrl_build_pop_current_class_nodes
-	wtrl_build_pop_current_scope_nodes
-	wtrl_build_method_signature_nodes
-	wtrl_build_function_signature_nodes
-	wtrl_build_method_signature_block_nodes
+	build_sphinx_nodes,
+	build_sphinx_nodes_full,
+	resolve_qualified_name,
+	wtrl_build_autodoc_module_nodes,
+	wtrl_build_autodoc_function_nodes,
+	wtrl_build_autodoc_class_nodes,
+	wtrl_build_autodoc_class_full_nodes,
+	wtrl_build_push_current_module_nodes,
+	wtrl_build_push_current_class_nodes,
+	wtrl_build_push_current_scope_nodes,
+	wtrl_build_pop_current_module_nodes,
+	wtrl_build_pop_current_class_nodes,
+	wtrl_build_pop_current_scope_nodes,
+	wtrl_build_method_signature_nodes,
+	wtrl_build_function_signature_nodes,
+	wtrl_build_method_signature_block_nodes,
 	wtrl_build_function_signature_block_nodes
 Function_overview:
 	build_sphinx_nodes:
@@ -669,10 +669,7 @@ def build_sphinx_nodes(ctx : context,obj: object,doc: mod_docitem.docitem_docstr
 		profile:
 			function
 		normative_sections:
-			Contract
-			Parameters
-			Returns
-			Raises
+			Contract, Parameters, Returns, Raises
 	Contract:
 		general:
 			|Must| convert a parsed |type|`docitem_docstring_module`, |type|`docitem_docstring_class` or |type|`docitem_docstring_method` into a list of docutils nodes.
@@ -1349,10 +1346,7 @@ Preamble:
 	profile:
 		function
 	normative_sections:
-		Contract
-		Parameters
-		Returns
-		Raises
+		Contract, Parameters, Returns, Raises
 Contract:
 	general:
 		|Must| analyze the docstring and methods of the class object.
@@ -1501,10 +1495,7 @@ Preamble:
 	profile:
 		function
 	normative_sections:
-		Contract
-		Parameters
-		Returns
-		Raises
+		Contract, Parameters, Returns, Raises
 Contract:
 	general:
 		|Must| resolve the qualified name |var|`qname` using current module/class context in |var|`ctx` when present.
@@ -1933,10 +1924,7 @@ Preamble:
 	profile:
 		function
 	normative_sections:
-		Contract
-		Parameters
-		Returns
-		Raises
+		Contract, Parameters, Returns, Raises
 Contract:
 	general:
 		|Must| resolve the dotted function name |var|`qname` to a callable taking into account the current module/class state.
@@ -1991,10 +1979,7 @@ Preamble:
 	profile:
 		function
 	normative_sections:
-		Contract
-		Parameters
-		Returns
-		Raises
+		Contract, Parameters, Returns, Raises
 Contract:
 	general:
 		|Must| resolve the dotted class name |var|`qname` to a class taking into account the current module/class state.
@@ -2043,10 +2028,7 @@ Preamble:
 	profile:
 		function
 	normative_sections:
-		Contract
-		Parameters
-		Returns
-		Raises
+		Contract, Parameters, Returns, Raises
 Contract:
 	general:
 		|Must| parse the class's docstring and create a docstring tree.

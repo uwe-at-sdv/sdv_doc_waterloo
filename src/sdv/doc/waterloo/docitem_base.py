@@ -419,7 +419,7 @@ class docitem_list_of_symbols_base(docitem_list_base):
 				|Must| raise if the items are not strings (no subtrees allowed).
 				|Must| raise if the items (after splitting the CSV) are not (Qualified) Identifiers.
 		See_also:
-			sdv.doc.waterloo.docitem_helper.RE_IDENTIFIER
+			sdv.doc.waterloo.docitem_helper.RE_IDENTIFIER,
 			sdv.doc.waterloo.docitem_helper.RE_QUALIFIED_IDENTIFIER
 		"""
 # Validate and collect

@@ -10,13 +10,13 @@ Contract:
 	general:
 		|Must| provide converter functions for all flavours and formats in |mod|`sdv.doc.waterloo.helper`.
 Public_functions:
-	to_node_legend_json
-	to_node_docstring_tree_json
-	to_node_signature_json
-	to_string_legend_yaml
-	to_string_yaml
-	to_string_signature_yaml
-	to_string_md
+	to_node_legend_json,
+	to_node_docstring_tree_json,
+	to_node_signature_json,
+	to_string_legend_yaml,
+	to_string_yaml,
+	to_string_signature_yaml,
+	to_string_md,
 	build_node_json
 Public_types:
 	WtrlJsonNode_t:

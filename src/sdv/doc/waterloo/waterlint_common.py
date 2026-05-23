@@ -35,6 +35,9 @@ from __future__ import annotations
 import io
 import json
 import sys
+import traceback
+import importlib.util
+import importlib.resources as importlib_resources
 from datetime import datetime
 from pathlib import Path
 from typing import Any, Callable, cast, Dict, List, TypeAlias
@@ -42,18 +45,116 @@ from typing import Any, Callable, cast, Dict, List, TypeAlias
 import jsonschema.exceptions
 from jsonschema import Draft202012Validator
 
+import sdv.doc.waterloo.docitem as docitem
+
 from sdv.doc.waterloo.docitem_helper import (
 	RE_ANSI_SGR_COMPILED,
 	get_obj_fully_qualified_name,
 	tracer,
-)
+	)
 
-#===== Type Checking =========================================#
+#===== Type Checking ==========================================#
 WtrlJsonNode_t: TypeAlias = Dict[str, "WtrlJsonNode_t"] | List["WtrlJsonNode_t"] | str | int | float | bool | None
-#=============================================================#
+#==============================================================#
+
+#===== Constants ==============================================#
+WTRL_DOCITEM_VERSION = docitem.__version__
+
+#----- Schema versions, keep up to date -----------------------#
+WTRL_JSON_SCHEMA_VERSION = "0.1.0"
+WTRL_EXAMPLE_REFS_JSON_SCHEMA_VERSION = "0.1.1"
+WTRL_WALK_JSON_SCHEMA_VERSION = "0.0.1"
 
 WTRL_SCHEMA_URI_BASE = "https://sci-d-vis.com/schema"
+#==============================================================#
 
+def add_traceback(tr: tracer) -> None:
+	r"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+		scope:
+			extension
+		status:
+			stable
+	Contract:
+		general:
+			|Must| capture the current exception traceback and add it to the tracer as info and error notes, if an exception is active.
+	Parameters:
+		tr:
+			|Must| be a tracer instance where the traceback information will be added.
+	Returns:
+		|Must| return |None|.
+	Raises:
+	"""
+	exc_type, exc_value, exc_traceback = sys.exc_info()
+	if exc_value is not None:
+		tb_exc = traceback.TracebackException.from_exception(exc_value)
+		for i, frame in enumerate(tb_exc.stack):
+			line_txt = (frame.line or "").strip()
+			frame_msg = f"#{i} \x1b[38;2;159;159;255m{frame.filename}\x1b[0m:\x1b[38;2;159;255;159m{frame.lineno}\x1b[0m in {frame.name}"
+			if line_txt:
+				frame_msg += f" | {line_txt}"
+			tr.add_info(frame_msg, "tool")
+	err_name = exc_type.__name__ if exc_type is not None else "Exception"
+	err_msg = str(exc_value) if exc_value is not None else "unknown error"
+	tr.add_error("TOOL-800","tool",f"{err_name}: {err_msg}")
+
+def _resolve_object(qname: str) -> object:
+	# current_obj is not needed for fully qualified names; use None as context.
+	obj, _ = docitem.resolve_object(qname, None)
+	return obj
+
+def _apply_basedir(basedir: str | None, qname: str | None) -> None:
+	if not qname:
+		return
+# No basedir passed? Done.
+	if not basedir:
+		return
+# Resolve basedir to absolute path.
+	base_abs = basedir if basedir.startswith("/") else str((Path.cwd() / basedir).resolve())
+# Not a dir? Error.
+	if not Path(base_abs).is_dir():
+		raise RuntimeError(f"basedir is not a directory: {basedir}")
+# Update sys.path with basedir, so that we have a chance to find the module.
+	if base_abs not in sys.path:
+		sys.path.insert(0, base_abs)
+
+# Yet we need more tricks...
+# The main problem is to enforce that qname is really imported
+# from the path specified in basedir, not from a local installation
+# in ~/.local or from a system installation in /usr/local.
+	parts = qname.split(".")
+	prefixes: list[str] = []
+	for i in range(1, len(parts) + 1):
+		pfx = ".".join(parts[:i])
+		pfx_path = Path(base_abs, *parts[:i])
+		if pfx_path.is_dir():
+			prefixes.append(pfx)
+		else:
+			break
+# Example: For --obj sdv.doc.waterloo.docitem, prefixes is ['sdv', 'sdv.doc', 'sdv.doc.waterloo']
+
+# Iterate over the prefixes.
+	for pfx in prefixes:
+# Combine with the basedir and make a path from the prefixes.
+		pfx_path = Path(base_abs, *pfx.split("."))
+		if pfx in sys.modules:
+			mod = sys.modules[pfx]
+			if hasattr(mod, "__path__"):
+				paths = list(mod.__path__)
+				if str(pfx_path) not in paths:
+					paths.insert(0, str(pfx_path))
+					mod.__path__ = paths
+			continue
+		spec = importlib.util.spec_from_loader(pfx, loader=None, origin="namespace")
+		if spec is None:
+			continue
+		mod = importlib.util.module_from_spec(spec)
+		mod.__path__ = [str(pfx_path)]
+		sys.modules[pfx] = mod
 
 def tokens_to_json_pointer(tokens: list[object]) -> str:
 	r"""

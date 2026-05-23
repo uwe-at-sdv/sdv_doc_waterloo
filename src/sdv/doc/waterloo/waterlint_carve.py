@@ -43,6 +43,11 @@ from sdv.doc.waterloo.docitem_helper import (
 )
 from sdv.doc.waterloo import waterlint_common as wl_common
 
+# Not relevant yet, but in case we set up a plugin concept,
+# vendors should be encouraged to follow semantic versioning
+# for their plugins.
+__version__ = "0.1.0"
+
 WTRL_SCHEMA_URI_BASE = "https://sci-d-vis.com/schema"
 WTRL_WALK_JSON_SCHEMA_VERSION = "0.0.1"
 
@@ -177,15 +182,19 @@ def build_parser(subparsers: argparse._SubParsersAction[argparse.ArgumentParser]
 		|Must| return the configured carve subparser.
 	Raises:
 	"""
-	carve = subparsers.add_parser(
+	prsr = subparsers.add_parser(
 		"carve",
 		help="Edit walk JSON documents",
 		parents=[global_opts],
 		formatter_class=formatter_class,
 	)
-	carve.add_argument("--in", dest="in_file", required=True, metavar="FILE", help="Read exactly one walk JSON file.")
-	carve.add_argument("--out", dest="out_file", metavar="FILE", help="Write walk JSON to FILE instead of stdout.")
-	carve.add_argument("--simplify", action="store_true", help="Keep only included==true entries and recompute summary.")
-	carve.add_argument("--recompute", action="store_true", help="Recompute summary/statistics from current entries.")
-	carve.add_argument("--debug", action="store_true", help="Emit debugging data to stderr (reserved)")
-	return carve
+	prsr.add_argument("--in", dest="in_file", required=True, metavar="FILE", help="Read exactly one walk JSON file.")
+	prsr.add_argument("--out", dest="out_file", metavar="FILE", help="Write walk JSON to FILE instead of stdout.")
+	prsr.add_argument("--simplify", action="store_true", help="Keep only included==true entries and recompute summary.")
+	prsr.add_argument("--recompute", action="store_true", help="Recompute summary/statistics from current entries.")
+	prsr.add_argument("--debug", action="store_true", help="Emit debugging data to stderr (reserved)")
+	return prsr
+
+if __name__ == "__main__":
+	print(__version__)
+	exit(0)

@@ -30,6 +30,7 @@ Function_overview:
 
 from __future__ import annotations
 
+import argparse
 import json
 import html
 import re
@@ -650,6 +651,56 @@ def render_html5(
 	except Exception as exc:
 		_add_error("RHTM-001", f"Unexpected render-html5 failure: {exc}")
 		return ""
+
+def build_parser(subparsers: argparse._SubParsersAction[argparse.ArgumentParser], formatter_class: type[argparse.HelpFormatter], global_opts: argparse.ArgumentParser) -> argparse.ArgumentParser:
+	r"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+		scope:
+			extension
+	Contract:
+		general:
+			|Must| construct and return the argparse subparser for the render_html5 command.
+	Parameters:
+		subparsers:
+			The argparse subparser registry of the main command line interface.
+		formatter_class:
+			Help formatter class used for render_html5-specific help text.
+		global_opts:
+			Parser instance containing the shared global CLI options.
+	Returns:
+		|Must| return the configured render_html5 subparser.
+	Raises:
+	"""
+	prsr = subparsers.add_parser(
+		"render-html5",
+		help="Render Waterloo JSON to bundled HTML5",
+		parents=[global_opts],
+		formatter_class=formatter_class)
+	prsr.add_argument(
+		"--in",
+		dest="input_files",
+		required=True,
+		nargs="+",
+		action="append",
+		metavar="JSON",
+		help="One or more Waterloo JSON files. Option may be repeated.",
+	)
+	prsr_out = prsr.add_mutually_exclusive_group(required=True)
+	prsr_out.add_argument("--out", dest="out_file", metavar="HTML", help="Write HTML to HTML.")
+	prsr_out.add_argument("--out-dir", dest="out_dir", metavar="DIR", help="Write HTML to DIR with generated filename.")
+	prsr.add_argument("--css", dest="css_file", metavar="FILE", help="Primary CSS file to embed instead of the built-in default CSS.")
+	prsr.add_argument("--additional-css", dest="additional_css_file", metavar="FILE", help="Additional CSS file to append after the primary CSS.")
+	prsr.add_argument("--header-html", dest="header_html_file", metavar="FILE", help="HTML fragment file used instead of the built-in header markup.")
+	prsr.add_argument("--pygments-theme", dest="pygments_theme", default="gruvbox-light", metavar="THEME", help="Pygments style name for rendered examples (default: gruvbox-light).")
+	prsr.add_argument("--no-render-preamble", dest="no_render_preamble", action="store_true", help="Do not render section 'Preamble' in HTML output.")
+	prsr.add_argument("--allow-raw-object-node", dest="allow_raw_object_node", action="store_true", default=True, help="Include collapsible section 'Raw object node' in HTML output (default).")
+	prsr.add_argument("--no-allow-raw-object-node", dest="allow_raw_object_node", action="store_false", help="Do not include section 'Raw object node' in HTML output.")
+	prsr.add_argument("--debug", action="store_true", help="Emit debugging data to stderr (reserved)")
+	return prsr
 
 if __name__ == "__main__":
 	print(__version__)

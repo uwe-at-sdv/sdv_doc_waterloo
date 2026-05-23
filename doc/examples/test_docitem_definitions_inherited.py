@@ -33,8 +33,7 @@ class X:
 		Private_Identifier:
 			A |term|`Private_Identifier` is an |term|`Identifier` that starts with a double underscore.
 		_inherit:
-			Identifier
-			Term_Z
+			Identifier, Term_Z
 	"""
 	def spam(self) -> None:
 		r"""

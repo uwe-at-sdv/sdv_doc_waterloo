@@ -3,11 +3,11 @@ Preamble:
 	profile:
 		module
 	normative_sections:
-		Contract
-		Definitions
-		Public_classes
-		Public_functions
-		Public_types
+		Contract,
+		Definitions,
+		Public_classes,
+		Public_functions,
+		Public_types,
 		Public_constants
 Contract:
 	general:
@@ -23,15 +23,15 @@ Definitions:
 	Qualified_Identifier:
 		A string that matches the regular expression |var|`RE_QUALIFIED_IDENTIFIER` (see |label|`Public_constants`).
 Public_functions:
-	is_obj_module, is_obj_class, is_obj_function, is_obj_method_like, is_attr_annotated, is_attr_final
-	get_obj_name, get_obj_path, get_obj_annotations
-	resolve_object, get_status, get_profile, get_num_indent
-	parse_indent_docstring, get_tree_of_section, get_tree_of_subsection, to_string_tree
-	validate_docstring_method, validate_docstring_inherited_method, validate_docstring_class
-	validate_docstring_module, validate_docstring, validate_class_class_coverage
-	validate_class_method_coverage, validate_class_constant_coverage, validate_class_variable_coverage
-	validate_class_coverage, validate_module_class_coverage, validate_module_function_coverage
-	validate_module_type_coverage, validate_module_constant_coverage, validate_module_variable_coverage
+	is_obj_module, is_obj_class, is_obj_function, is_obj_method_like, is_attr_annotated, is_attr_final,
+	get_obj_name, get_obj_path, get_obj_annotations,
+	resolve_object, get_status, get_profile, get_num_indent,
+	parse_indent_docstring, get_tree_of_section, get_tree_of_subsection, to_string_tree,
+	validate_docstring_method, validate_docstring_inherited_method, validate_docstring_class,
+	validate_docstring_module, validate_docstring, validate_class_class_coverage,
+	validate_class_method_coverage, validate_class_constant_coverage, validate_class_variable_coverage,
+	validate_class_coverage, validate_module_class_coverage, validate_module_function_coverage,
+	validate_module_type_coverage, validate_module_constant_coverage, validate_module_variable_coverage,
 	validate_module_coverage, gen_documentable_objects, make_docitem_tree
 
 Function_overview:
@@ -92,20 +92,20 @@ Function_overview:
 	make_docitem_tree:
 		Generate a docitem tree from a docstring.
 Public_classes:
-	tracer
-	docitem_base, docitem_list_base, docitem_map_base, docitem_free_text_entry_base
-	docitem_list_of_symbols_base, docitem_profile, docitem_normative_sections, docitem_status
-	docitem_preamble, docitem_constructor, docitem_general, docitem_invariants, docitem_requires
-	docitem_ensures, docitem_base_to_inherit_from, docitem_traits, docitem_contract_module
-	docitem_contract_class, docitem_contract_method, docitem_contract_inherited_method
-	docitem_derived_from, docitem_factory_functions, docitem_factory, docitem_class_overview_entry
-	docitem_class_overview, docitem_public_types_entry, docitem_public_types
-	docitem_public_assignables_entry, docitem_public_assignables_base, docitem_method_overview_entry
-	docitem_method_overview, docitem_function_overview_entry, docitem_function_overview, docitem_returns
-	docitem_parameters_entry, docitem_parameters, docitem_raises_entry, docitem_raises
-	docitem_definitions_entry, docitem_definitions, docitem_terminology_entry, docitem_terminology
-	docitem_notes_entry, docitem_notes, docitem_description, docitem_see_also, docitem_docstring_base
-	docitem_docstring_module, docitem_docstring_class, docitem_docstring_method, docitem_docstring_inherited_method
+	tracer,
+	docitem_base, docitem_list_base, docitem_map_base, docitem_free_text_entry_base,
+	docitem_list_of_symbols_base, docitem_profile, docitem_normative_sections, docitem_status,
+	docitem_preamble, docitem_constructor, docitem_general, docitem_invariants, docitem_requires,
+	docitem_ensures, docitem_base_to_inherit_from, docitem_traits, docitem_contract_module,
+	docitem_contract_class, docitem_contract_method, docitem_contract_inherited_method,
+	docitem_derived_from, docitem_factory_functions, docitem_factory, docitem_class_overview_entry,
+	docitem_class_overview, docitem_public_types_entry, docitem_public_types,
+	docitem_public_assignables_entry, docitem_public_assignables_base, docitem_method_overview_entry,
+	docitem_method_overview, docitem_function_overview_entry, docitem_function_overview, docitem_returns,
+	docitem_parameters_entry, docitem_parameters, docitem_raises_entry, docitem_raises,
+	docitem_definitions_entry, docitem_definitions, docitem_terminology_entry, docitem_terminology,
+	docitem_notes_entry, docitem_notes, docitem_description, docitem_see_also, docitem_docstring_base,
+	docitem_docstring_module, docitem_docstring_class, docitem_docstring_method, docitem_docstring_inherited_method,
 	Scope, Flavour, Format, Status
 Class_overview:
 	tracer:

@@ -13,12 +13,21 @@ import hashlib
 import io
 import importlib.util
 import importlib.resources as importlib_resources
-import sys,inspect,os,re,shutil
-import traceback
+import sys, inspect, os, re,shutil, traceback
 from datetime import datetime
 from pathlib import Path
 from types import ModuleType
 from typing import Any, Callable, Dict, List, Optional, Tuple, cast
+from sdv.doc.waterloo.waterlint_common import (
+	WTRL_DOCITEM_VERSION,
+	WTRL_JSON_SCHEMA_VERSION,
+	WTRL_EXAMPLE_REFS_JSON_SCHEMA_VERSION,
+	WTRL_WALK_JSON_SCHEMA_VERSION,
+	WTRL_SCHEMA_URI_BASE,
+	_apply_basedir,
+	_resolve_object,
+	add_traceback
+	)
 
 import json
 
@@ -27,7 +36,8 @@ from jsonschema import Draft202012Validator
 #from jsonschema import JSONDecodeError
 import jsonschema.exceptions
 
-__version__ = "0.13.1"
+__version__ = "0.13.2"
+# - 0.13.2 [2026-05-23]	Subcommand `walk` moved to waterlint_walk.py; more functions in waterlint_common.py
 # - 0.13.1 [2026-05-22]	Moved common functions from waterlint.py and waterlint_carve.py to waterlint_common.py;
 #			bugfix in docitem.py.
 #			documentation in waterlint_carve.py and waterlint_render_html5.py
@@ -80,6 +90,7 @@ with contextlib.redirect_stdout(sys.stderr):
 	import sdv.doc.waterloo.waterlint_carve as carve
 	import sdv.doc.waterloo.waterlint_common as wl_common
 	import sdv.doc.waterloo.waterlint_render_html5 as rhtml5
+	import sdv.doc.waterloo.waterlint_walk as wlk
 	import sdv.doc.waterloo.docitem_tokenizer as tokenizer
 	from sdv.doc.waterloo.docitem_helper import (
 		tracer,
@@ -98,18 +109,6 @@ with contextlib.redirect_stdout(sys.stderr):
 #===== Constants ==============================================#
 
 #----- Schema versions, keep up to date -----------------------#
-WTRL_JSON_SCHEMA_VERSION = "0.1.0"
-WTRL_EXAMPLE_REFS_JSON_SCHEMA_VERSION = "0.1.1"
-WTRL_WALK_JSON_SCHEMA_VERSION = "0.0.1"
-
-WTRL_DOCITEM_VERSION = docitem.__version__
-
-WTRL_SCHEMA_URI_BASE = "https://sci-d-vis.com/schema"
-
-WTRL_WALK_DEFAULT_SHOW_FIELDS = ("qualname", "kind", "scope", "file", "lineno", "included", "reason")
-WTRL_WALK_ALLOWED_SHOW_FIELDS = set(WTRL_WALK_DEFAULT_SHOW_FIELDS + ("reason_detail",))
-WTRL_WALK_ALLOWED_SORT_FIELDS = set(WTRL_WALK_DEFAULT_SHOW_FIELDS + ("reason_detail",))
-WTRL_WALK_NUMERIC_SORT_FIELDS = frozenset({"lineno"})
 
 #----- Add subcommands here -----------------------------------#
 SUBCOMMANDS = (
@@ -131,20 +130,6 @@ SUBCOMMANDS = (
 )
 
 #===== Helper =================================================#
-
-def _add_traceback(tr: tracer) -> None:
-	exc_type, exc_value, exc_traceback = sys.exc_info()
-	if exc_value is not None:
-		tb_exc = traceback.TracebackException.from_exception(exc_value)
-		for i, frame in enumerate(tb_exc.stack):
-			line_txt = (frame.line or "").strip()
-			frame_msg = f"#{i} \x1b[38;2;159;159;255m{frame.filename}\x1b[0m:\x1b[38;2;159;255;159m{frame.lineno}\x1b[0m in {frame.name}"
-			if line_txt:
-				frame_msg += f" | {line_txt}"
-			tr.add_info(frame_msg, "tool")
-	err_name = exc_type.__name__ if exc_type is not None else "Exception"
-	err_msg = str(exc_value) if exc_value is not None else "unknown error"
-	tr.add_error("TOOL-800","tool",f"{err_name}: {err_msg}")
 
 def _emit_diagnostics(tr: tracer, dest: io.TextIOBase, strip_ansi: bool = False) -> None:
 	wl_common.emit_diagnostics(tr, dest, debug=_debug, strip_ansi=strip_ansi)
@@ -577,7 +562,7 @@ def _add_example_json_command(args: argparse.Namespace) -> int:
 		tr.add_info(f"JSON with examples written to: {out_file}")
 	except SOURCE_CODE_ERRORS:
 		if not out_diag:
-			_add_traceback(tr)
+			add_traceback(tr)
 			_emit_tracer(tr, out_diag)
 			return 1
 		raise
@@ -605,62 +590,6 @@ def _read_docstring_from_file(path: str) -> str:
 
 def _read_docstring_from_stdin() -> str:
 	return sys.stdin.read()
-
-
-def _resolve_object(qname: str) -> object:
-	# current_obj is not needed for fully qualified names; use None as context.
-	obj, _ = docitem.resolve_object(qname, None)
-	return obj
-
-
-def _apply_basedir(basedir: str | None, qname: str | None) -> None:
-	if not qname:
-		return
-# No basedir passed? Done.
-	if not basedir:
-		return
-# Resolve basedir to absolute path.
-	base_abs = basedir if basedir.startswith("/") else str((Path.cwd() / basedir).resolve())
-# Not a dir? Error.
-	if not Path(base_abs).is_dir():
-		raise RuntimeError(f"basedir is not a directory: {basedir}")
-# Update sys.path with basedir, so that we have a chance to find the module.
-	if base_abs not in sys.path:
-		sys.path.insert(0, base_abs)
-
-# Yet we need more tricks...
-# The main problem is to enforce that qname is really imported
-# from the path specified in basedir, not from a local installation
-# in ~/.local or from a system installation in /usr/local.
-	parts = qname.split(".")
-	prefixes: list[str] = []
-	for i in range(1, len(parts) + 1):
-		pfx = ".".join(parts[:i])
-		pfx_path = Path(base_abs, *parts[:i])
-		if pfx_path.is_dir():
-			prefixes.append(pfx)
-		else:
-			break
-# Example: For --obj sdv.doc.waterloo.docitem, prefixes is ['sdv', 'sdv.doc', 'sdv.doc.waterloo']
-
-# Iterate over the prefixes.
-	for pfx in prefixes:
-# Combine with the basedir and make a path from the prefixes.
-		pfx_path = Path(base_abs, *pfx.split("."))
-		if pfx in sys.modules:
-			mod = sys.modules[pfx]
-			if hasattr(mod, "__path__"):
-				paths = list(mod.__path__)
-				if str(pfx_path) not in paths:
-					paths.insert(0, str(pfx_path))
-					mod.__path__ = paths
-			continue
-		spec = importlib.util.spec_from_loader(pfx, loader=None, origin="namespace")
-		if spec is None:
-			continue
-		mod = importlib.util.module_from_spec(spec)
-		mod.__path__ = [str(pfx_path)]
-		sys.modules[pfx] = mod
 
 #===== Validate ===============================================#
 
@@ -704,7 +633,7 @@ def _validate_command(args: argparse.Namespace) -> int:
 	except SOURCE_CODE_ERRORS:
 # Implementation error
 		if not out_diag:
-			_add_traceback(tr)
+			add_traceback(tr)
 			_emit_tracer(tr, out_diag)
 			return 1
 		else:
@@ -771,7 +700,7 @@ def _coverage_command(args: argparse.Namespace) -> int:
 	except SOURCE_CODE_ERRORS:
 # Implementation error
 		if not out_diag:
-			_add_traceback(tr)
+			add_traceback(tr)
 			_emit_tracer(tr, out_diag)
 			return 1
 		else:
@@ -1560,7 +1489,7 @@ def _render_html5_command(args: argparse.Namespace) -> int:
 		tr.add_info(f"HTML5 documentation written to: {out_path}")
 	except SOURCE_CODE_ERRORS:
 		if not out_diag:
-			_add_traceback(tr)
+			add_traceback(tr)
 			_emit_tracer(tr, out_diag)
 			return 1
 		raise
@@ -1731,7 +1660,7 @@ def _generate_command(args: argparse.Namespace, mode: str) -> int:
 				sys.stdout.write("\n")
 	except SOURCE_CODE_ERRORS:
 		if not out_diag:
-			_add_traceback(tr)
+			add_traceback(tr)
 			_emit_tracer(tr, out_diag)
 			return 1
 		raise
@@ -1741,362 +1670,6 @@ def _generate_command(args: argparse.Namespace, mode: str) -> int:
 		return 1
 	_emit_tracer(tr, out_diag, out_diag_json)
 	return _final_exit_code(0, tr, args.fail_on_warning)
-
-#===== Walk ===================================================#
-
-def _walk_normalize_path(path_text: str | None) -> Path | None:
-	if not path_text:
-		return None
-	try:
-		return Path(path_text).expanduser().resolve()
-	except Exception:
-		try:
-			return Path(os.path.abspath(os.path.expanduser(path_text)))
-		except Exception:
-			return None
-
-
-def _walk_path_is_under(path: Path, prefix: Path) -> bool:
-	try:
-		return path == prefix or path.is_relative_to(prefix)
-	except Exception:
-		return False
-
-
-def _walk_build_path_labels(entries: list[dict[str, Any]], basedir: str | None) -> list[tuple[str, Path]]:
-	basedir_path = _walk_normalize_path(basedir)
-	candidate_dirs: list[Path] = []
-	seen_candidates: set[str] = set()
-	for entry in entries:
-		file_txt = entry.get("file")
-		if not isinstance(file_txt, str) or not file_txt:
-			continue
-		file_path = _walk_normalize_path(file_txt)
-		if file_path is None:
-			continue
-		if basedir_path is not None and _walk_path_is_under(file_path, basedir_path):
-			continue
-		parent = file_path.parent
-		key = str(parent)
-		if key in seen_candidates:
-			continue
-		seen_candidates.add(key)
-		candidate_dirs.append(parent)
-	candidate_dirs.sort(key=lambda p: (len(p.parts), str(p)))
-	selected_dirs: list[Path] = []
-	for candidate in candidate_dirs:
-		if any(_walk_path_is_under(candidate, existing) for existing in selected_dirs):
-			continue
-		selected_dirs.append(candidate)
-	selected_dirs.sort(key=lambda p: (len(p.parts), str(p)))
-	labels: list[tuple[str, Path]] = []
-	if basedir_path is not None:
-		labels.append(("BASEDIR", basedir_path))
-	for idx, prefix in enumerate(selected_dirs):
-		labels.append((f"PATH{idx}", prefix))
-	return labels
-
-
-def _walk_compress_path(path_text: str | None, path_labels: list[tuple[str, Path]]) -> str | None:
-	if not isinstance(path_text, str) or not path_text:
-		return path_text
-	path = _walk_normalize_path(path_text)
-	if path is None:
-		return path_text
-	best_label: str | None = None
-	best_prefix: Path | None = None
-	for label, prefix in path_labels:
-		if not _walk_path_is_under(path, prefix):
-			continue
-		if best_prefix is None or len(prefix.parts) > len(best_prefix.parts):
-			best_label = label
-			best_prefix = prefix
-	if best_label is None or best_prefix is None:
-		return str(path)
-	try:
-		rel = path.relative_to(best_prefix)
-	except Exception:
-		return str(path)
-	rel_txt = str(rel)
-	if not rel_txt or rel_txt == ".":
-		return f"{{{best_label}}}"
-	return f"{{{best_label}}}/{rel_txt}"
-
-
-def _walk_sort_text(text: object) -> str:
-	txt = str(text).casefold()
-	return "".join(ch for ch in txt if ch != "_")
-
-
-def _walk_sort_key_for_field(entry: dict[str, Any], field: str) -> tuple[int, object]:
-	value = entry.get(field)
-	if value is None:
-		if field in WTRL_WALK_NUMERIC_SORT_FIELDS:
-			return (0, 0)
-		return (0, "")
-	if field in WTRL_WALK_NUMERIC_SORT_FIELDS:
-		try:
-			return (1, int(value))
-		except Exception:
-			try:
-				return (1, int(str(value).strip()))
-			except Exception:
-				return (1, 0)
-	if isinstance(value, bool):
-		return (1, _walk_sort_text("true" if value else "false"))
-	return (1, _walk_sort_text(value))
-
-
-def _walk_sort_entries(entries: list[dict[str, Any]], sort_fields: list[str]) -> None:
-	for field in reversed(sort_fields):
-		def _sort_key(entry: dict[str, Any], field: str = field) -> tuple[int, Any]:
-			return _walk_sort_key_for_field(entry, field)
-		entries.sort(key=_sort_key)
-
-
-def _walk_kind(obj: object) -> str:
-	if docitem.is_obj_module(obj):
-		return "module"
-	if docitem.is_obj_class(obj):
-		return "class"
-	if isinstance(obj, property):
-		return "property"
-	if docitem.is_obj_method_like(obj):
-		return "method"
-	if docitem.is_obj_function(obj):
-		return "function"
-	return "unknown"
-
-
-def _walk_lineno(obj: object) -> int | None:
-	target: object = obj
-	if isinstance(obj, property):
-		for accessor in (obj.fget, obj.fset, obj.fdel):
-			if accessor is not None:
-				target = accessor
-				break
-	try:
-		_, lineno = inspect.getsourcelines(cast(Any, target))
-		return lineno
-	except Exception:
-		return None
-
-
-def _walk_scope_text(doc_tree: object) -> str:
-	try:
-		scopes = cast(Any, doc_tree).scopes()
-	except Exception:
-		return "unknown"
-	if not scopes:
-		return "unknown"
-	try:
-		items = []
-		for sc in sorted(scopes, key=lambda s: getattr(s, "value", 0)):
-			name = getattr(sc, "name", None)
-			items.append(str(name).lower() if isinstance(name, str) else str(sc).lower())
-		return ",".join(items) if items else "unknown"
-	except Exception:
-		return "unknown"
-
-# Analyze for reason, included, scope, reason_detail
-def _walk_analyze_object(obj: object) -> tuple[str, bool, str, str]:
-	doc_txt = docitem.get_obj_docstring(obj)
-	if not doc_txt:
-		return ("no_doc", False, "unknown", "no Waterloo docstring found")
-	tmp_tr = tracer()
-	try:
-		tree = docitem.make_docitem_tree(tmp_tr, doc_txt)
-	except Exception as exc:
-		return ("invalid", False, "unknown", f"{type(exc).__name__}: {exc}")
-	if tmp_tr.has_errors():
-		for _context, rule_id, _origin, msg, _details in tmp_tr.gen_errors():
-			return ("invalid", False, "unknown", f"{rule_id}: {msg}")
-		return ("invalid", False, "unknown", "docstring validation failed")
-	scope_text = _walk_scope_text(tree)
-	return ("included", True, scope_text, f"waterloo docstring parsed successfully; scope={scope_text}")
-
-# Standardized representation for boolean and None
-def _walk_format_table_value(val: object) -> str:
-	if isinstance(val, bool):
-		return "true" if val else "false"
-	if val is None:
-		return "null"
-	return str(val)
-
-
-def _walk_render_text(entries: list[dict[str, Any]], show_fields: list[str], path_labels: list[tuple[str, Path]] | None = None) -> str:
-	lines: list[str] = []
-	rows: list[list[str]] = []
-# Legend: Label representing the path prefix and the path prefix itself.
-	if path_labels and "file" in show_fields:
-		for label, prefix in path_labels:
-			lines.append(f"{label}: {prefix}")
-		if entries:
-			lines.append("")
-# Entries:
-	for entry in entries:
-		row: list[str] = []
-		for field in show_fields:
-			value = entry.get(field)
-# For field 'file' compress the path.
-			if field == "file":
-				value = _walk_compress_path(cast(str | None, value), path_labels or [])
-			row.append(_walk_format_table_value(value))
-		rows.append(row)
-	if show_fields:
-# For pretty printing, measure the maximum required size for each column.
-# First the header (elements in show fields), then the entries.
-		widths = [len(field) for field in show_fields]
-		for row in rows:
-			for idx, cell in enumerate(row):
-				widths[idx] = max(widths[idx], len(cell))
-# Build list of lines. Make sure there are at least
-# two white spaces between the columns.
-		lines.append("  ".join(field.ljust(widths[idx]) for idx, field in enumerate(show_fields)))
-		for row in rows:
-			lines.append("  ".join(cell.ljust(widths[idx]) for idx, cell in enumerate(row)))
-	return "\n".join(lines) + ("\n" if lines else "")
-
-
-def _walk_build_json_doc(
-	entries: list[dict[str, Any]],
-	basedir: str | None,
-	obj_qnames: list[str],
-	include_imported: bool,
-	show_fields: list[str],
-) -> dict[str, Any]:
-	doc: dict[str, Any] = {
-		"$schema": f"{WTRL_SCHEMA_URI_BASE}/wtrl-walk-json-{WTRL_WALK_JSON_SCHEMA_VERSION}.schema.json",
-		"$id": f"urn:waterlint:wtrl-walk-json:{__version__}:{datetime.now().strftime('%Y%m%d%H%M%S')}",
-		"__WTRL_VERSION__": {
-			"waterloo": WTRL_DOCITEM_VERSION,
-			"schema": WTRL_WALK_JSON_SCHEMA_VERSION,
-		},
-		"__WTRL_META__": {
-			"generated_at": datetime.now().astimezone().isoformat(timespec="seconds"),
-			"generator": "waterlint.walk",
-			"basedir": basedir,
-			"obj": obj_qnames[0] if len(obj_qnames) == 1 else ", ".join(obj_qnames),
-			"objs": obj_qnames,
-			"include_imported": include_imported,
-			"show": show_fields,
-		},
-		"__WTRL_SUMMARY__": wl_common.recompute_walk_summary(entries),
-		"__WTRL_OBJECTS__": entries,
-	}
-	return doc
-
-
-def _walk_command(args: argparse.Namespace) -> int:
-	tr = tracer()
-#----- output spec --------------------------------------------#
-	out_diag	= getattr(args, "out_diag", None)
-	out_diag_json	= getattr(args, "out_diag_json", None)
-#--------------------------------------------------------------#
-	try:
-		show_raw = getattr(args, "show", None)
-		if show_raw:
-			show_fields = []
-			for part in str(show_raw).split(","):
-				field = part.strip()
-				if not field:
-					continue
-				if field == "default":
-					for default_field in WTRL_WALK_DEFAULT_SHOW_FIELDS:
-						if default_field not in show_fields:
-							show_fields.append(default_field)
-					continue
-				if field not in show_fields:
-					show_fields.append(field)
-		else:
-			show_fields = list(WTRL_WALK_DEFAULT_SHOW_FIELDS)
-		invalid_show = [f for f in show_fields if f not in WTRL_WALK_ALLOWED_SHOW_FIELDS]
-		if invalid_show:
-			print(f"Error: unsupported --show field(s): {', '.join(invalid_show)}", file=sys.stderr)
-			return 2
-
-		sort_raw = getattr(args, "sort", None)
-		if sort_raw:
-			sort_fields = [p.strip() for p in str(sort_raw).split(",") if p.strip()]
-		else:
-			sort_fields = []
-		invalid_sort = [f for f in sort_fields if f not in WTRL_WALK_ALLOWED_SORT_FIELDS]
-		if invalid_sort:
-			print(f"Error: unsupported --sort field(s): {', '.join(invalid_sort)}", file=sys.stderr)
-			return 2
-
-		obj_raw = getattr(args, "obj", None)
-		obj_qnames: list[str] = []
-		if obj_raw:
-			for grp in obj_raw:
-				if isinstance(grp, list):
-					obj_qnames.extend(str(item).strip() for item in grp if str(item).strip())
-				else:
-					item = str(grp).strip()
-					if item:
-						obj_qnames.append(item)
-		if not obj_qnames:
-			print("Error: --obj is required for walk.", file=sys.stderr)
-			return 2
-		#----- Object traversal and config ----------------------------#
-		config = docitem.ConfigTraversal()
-		if getattr(args, "include_imported", True):
-			config.enable_include_imported()
-		config.disable_walk_packages()
-		#----- Walk and build list of entries -------------------------#
-		entries: list[dict[str, Any]] = []
-		seen_qnames: set[str] = set()
-		for obj_qname in obj_qnames:
-			_apply_basedir(getattr(args, "basedir", None), obj_qname)
-			obj = _resolve_object(obj_qname)
-			for o in docitem.gen_documentable_objects(cast(Documentable, obj), config):
-				qname = get_obj_fully_qualified_name(o)
-				if qname in seen_qnames:
-					continue
-				seen_qnames.add(qname)
-				reason, included, scope_text, reason_detail = _walk_analyze_object(o)
-				entry: dict[str, Any] = {
-					"qualname": qname,
-					"kind": _walk_kind(o),
-					"scope": scope_text,
-					"file": get_obj_path(o),
-					"lineno": _walk_lineno(o),
-					"included": included,
-					"reason": reason,
-					"reason_detail": reason_detail,
-				}
-				entries.append(entry)
-		if sort_fields:
-			_walk_sort_entries(entries, sort_fields)
-		#----- Prepare path compression for better readability --------#
-		path_labels = _walk_build_path_labels(entries, getattr(args, "basedir", None))
-
-		out_json = getattr(args, "out_json", None)
-		out_file = getattr(args, "out_file", None)
-		if out_json:
-			# Render JSON
-			doc = _walk_build_json_doc(entries, getattr(args, "basedir", None), obj_qnames, getattr(args, "include_imported", True), show_fields)
-			with open(out_json, "w", encoding="utf-8") as fh:
-				json.dump(doc, fh, indent=4)
-				fh.write("\n")
-		else:
-			# Render human readable text, apply labels from path compression.
-			txt = _walk_render_text(entries, show_fields, path_labels)
-			if out_file:
-				with open(out_file, "w", encoding="utf-8") as fh:
-					fh.write(txt)
-			else:
-				sys.stdout.write(txt)
-		# Write summary to tracer.
-		tr.add_info(f"Num objects traversed: {len(entries)}.", "tool")
-		tr.add_info(f"Num objects included: {sum(1 for e in entries if e.get('included'))}.", "tool")
-		tr.add_info(f"Num objects excluded: {sum(1 for e in entries if not e.get('included'))}.", "tool")
-		_emit_tracer(tr, out_diag, out_diag_json)
-		return 0
-	except Exception:
-		_add_traceback(tr)
-		_emit_tracer(tr, out_diag, out_diag_json)
-		return 1
 
 #===== Help topic  ============================================#
 
@@ -2492,64 +2065,10 @@ def _build_parser() -> argparse.ArgumentParser:
 	carve.build_parser(subparsers, cast(type[argparse.HelpFormatter], parser.formatter_class), global_opts)
 
 #----- render-html5 -------------------------------------------#
-	render_html5 = subparsers.add_parser(
-		"render-html5",
-		help="Render Waterloo JSON to bundled HTML5",
-		parents=[global_opts],
-		formatter_class=parser.formatter_class)
-	render_html5.add_argument(
-		"--in",
-		dest="input_files",
-		required=True,
-		nargs="+",
-		action="append",
-		metavar="JSON",
-		help="One or more Waterloo JSON files. Option may be repeated.",
-	)
-	rh_out = render_html5.add_mutually_exclusive_group(required=True)
-	rh_out.add_argument("--out", dest="out_file", metavar="HTML", help="Write HTML to HTML.")
-	rh_out.add_argument("--out-dir", dest="out_dir", metavar="DIR", help="Write HTML to DIR with generated filename.")
-	render_html5.add_argument("--css", dest="css_file", metavar="FILE", help="Primary CSS file to embed instead of the built-in default CSS.")
-	render_html5.add_argument("--additional-css", dest="additional_css_file", metavar="FILE", help="Additional CSS file to append after the primary CSS.")
-	render_html5.add_argument("--header-html", dest="header_html_file", metavar="FILE", help="HTML fragment file used instead of the built-in header markup.")
-	render_html5.add_argument("--pygments-theme", dest="pygments_theme", default="gruvbox-light", metavar="THEME", help="Pygments style name for rendered examples (default: gruvbox-light).")
-	render_html5.add_argument("--no-render-preamble", dest="no_render_preamble", action="store_true", help="Do not render section 'Preamble' in HTML output.")
-	render_html5.add_argument("--allow-raw-object-node", dest="allow_raw_object_node", action="store_true", default=True, help="Include collapsible section 'Raw object node' in HTML output (default).")
-	render_html5.add_argument("--no-allow-raw-object-node", dest="allow_raw_object_node", action="store_false", help="Do not include section 'Raw object node' in HTML output.")
-	render_html5.add_argument("--debug", action="store_true", help="Emit debugging data to stderr (reserved)")
+	rhtml5.build_parser(subparsers, cast(type[argparse.HelpFormatter], parser.formatter_class), global_opts)
 
 #----- walk ---------------------------------------------------#
-	walk = subparsers.add_parser(
-		"walk",
-		help="Walk documentable objects and preview traversal/filtering",
-		parents=[global_opts, common_validate_group],
-		formatter_class=parser.formatter_class)
-	walk.add_argument(
-		"--obj",
-		required=True,
-		nargs="+",
-		action="append",
-		metavar="QUALNAME",
-		help="One or more qualified identifiers of modules/classes/functions/methods to traverse. Option may be repeated and grouped. This is the preview input for walk JSON and later render-json replay.",
-	)
-	walk_out = walk.add_mutually_exclusive_group()
-	walk_out.add_argument("--out", dest="out_file", metavar="FILE", help="Write walk text output to FILE instead of stdout.")
-	walk_out.add_argument("--out-json", dest="out_json", metavar="FILE", help="Write walk JSON output to FILE.")
-	walk.add_argument(
-		"--show",
-		metavar="FIELDS",
-		help="Comma-separated list of fields to show in the text output (default: qualname,kind,scope,file,lineno,included,reason,reason_detail). Use 'default' as an alias for that list. Text output only; JSON stays complete.",
-	)
-	walk.add_argument(
-		"--sort",
-		"--order",
-		dest="sort",
-		metavar="FIELDS",
-		help="Comma-separated list of fields to sort by. The last field is applied first; sort is always ascending. Numeric fields sort numerically with null before 0; string and bool fields sort case-insensitively with underscores ignored. Applies to both text and JSON output order.",
-	)
-	walk.add_argument("--include-imported", dest="include_imported", action="store_true", default=True, help="Include imported members and submodules (default).")
-	walk.add_argument("--no-include-imported", dest="include_imported", action="store_false", help="Do not include imported members/submodules.")
-	walk.add_argument("--debug", action="store_true", help="Emit debugging data to stderr (reserved)")
+	wlk.build_parser(subparsers, cast(type[argparse.HelpFormatter], parser.formatter_class), global_opts, common_validate_group)
 
 #----- gen-minimal --------------------------------------------#
 	gen_minimal = subparsers.add_parser(
@@ -2659,7 +2178,7 @@ def main(argv: Optional[list[str]] = None) -> int:
 	if args.command == "render-html5":
 		return _render_html5_command(args)
 	if args.command == "walk":
-		return _walk_command(args)
+		return wlk._walk_command(args)
 	if args.command == "gen-minimal":
 		return _generate_command(args, "minimal")
 	if args.command == "gen-full":
