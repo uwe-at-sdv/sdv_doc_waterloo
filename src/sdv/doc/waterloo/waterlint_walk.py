@@ -1,3 +1,24 @@
+r"""
+Preamble:
+	profile:
+		module
+	normative_sections:
+		Contract, Public_functions
+	scope:
+		extension
+Contract:
+	general:
+		|Must| provide the walk command for previewing object traversal and JSON output.
+Public_functions:
+	walk_command, build_parser
+Function_overview:
+	walk_command:
+		Execute the walk command by traversing documentable objects, collecting walk entries,
+		and emitting either text or JSON output.
+	build_parser:
+		Construct and return the argparse subparser for the walk command.
+"""
+
 from __future__ import annotations
 
 import argparse
@@ -194,23 +215,6 @@ def _walk_lineno(obj: object) -> int | None:
 	except Exception:
 		return None
 
-
-def _walk_scope_text(doc_tree: object) -> str:
-	try:
-		scopes = cast(Any, doc_tree).scopes()
-	except Exception:
-		return "unknown"
-	if not scopes:
-		return "unknown"
-	try:
-		items = []
-		for sc in sorted(scopes, key=lambda s: getattr(s, "value", 0)):
-			name = getattr(sc, "name", None)
-			items.append(str(name).lower() if isinstance(name, str) else str(sc).lower())
-		return ",".join(items) if items else "unknown"
-	except Exception:
-		return "unknown"
-
 # Analyze for reason, included, scope, reason_detail
 def _walk_analyze_object(obj: object) -> tuple[str, bool, str, str]:
 	doc_txt = docitem.get_obj_docstring(obj)
@@ -225,7 +229,7 @@ def _walk_analyze_object(obj: object) -> tuple[str, bool, str, str]:
 		for _context, rule_id, _origin, msg, _details in tmp_tr.gen_errors():
 			return ("invalid", False, "unknown", f"{rule_id}: {msg}")
 		return ("invalid", False, "unknown", "docstring validation failed")
-	scope_text = _walk_scope_text(tree)
+	scope_text = tree.get_scope_text()
 	return ("included", True, scope_text, f"waterloo docstring parsed successfully; scope={scope_text}")
 
 # Standardized representation for boolean and None
@@ -300,7 +304,7 @@ def _walk_build_json_doc(
 	return doc
 
 
-def _walk_command(args: argparse.Namespace) -> int:
+def walk_command(args: argparse.Namespace) -> int:
 	tr = tracer()
 #----- output spec --------------------------------------------#
 	out_diag	= getattr(args, "out_diag", None)
@@ -411,19 +415,42 @@ def _walk_command(args: argparse.Namespace) -> int:
 		_emit_tracer(tr, out_diag, out_diag_json)
 		return 1
 
-def build_parser(subparsers: argparse._SubParsersAction[argparse.ArgumentParser], formatter_class: type[argparse.HelpFormatter], global_opts: argparse.ArgumentParser, common_validate_group: argparse.ArgumentParser) -> argparse.ArgumentParser:
+def build_parser(
+	subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
+	parser_parts: wl_common.ParserParts_t,
+) -> argparse.ArgumentParser:
+	"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+		scope:
+			extension
+	Contract:
+		general:
+			|Must| construct and return the argparse subparser for the walk command.
+	Parameters:
+		subparsers:
+			The argparse subparser registry of the main command line interface.
+		parser_parts:
+			Shared parser parts provided by the main program. Walk uses the formatter class, the global CLI options, and the base-directory group.
+	Returns:
+		|Must| return the configured walk subparser.
+	Raises:
+	"""
 	prsr = subparsers.add_parser(
 		"walk",
 		help="Walk documentable objects and preview traversal/filtering",
-		parents=[global_opts, common_validate_group],
-		formatter_class=formatter_class)
+		parents=[parser_parts["global_opts"], parser_parts["basedir_group"]],
+		formatter_class=parser_parts["formatter_class"])
 	prsr.add_argument(
 		"--obj",
 		required=True,
 		nargs="+",
 		action="append",
 		metavar="QUALNAME",
-		help="One or more qualified identifiers of modules/classes/functions/methods to traverse. Option may be repeated and grouped. This is the preview input for prsr JSON and later render-json replay.",
+		help="One or more qualified identifiers of modules/classes/functions/methods to traverse. Option may be repeated and grouped. This is the preview input for walk JSON and later render-json replay.",
 	)
 	prsr_out = prsr.add_mutually_exclusive_group()
 	prsr_out.add_argument("--out", dest="out_file", metavar="FILE", help="Write prsr text output to FILE instead of stdout.")

@@ -159,7 +159,10 @@ def carve_command(args: argparse.Namespace) -> int:
 	return 0
 
 
-def build_parser(subparsers: argparse._SubParsersAction[argparse.ArgumentParser], formatter_class: type[argparse.HelpFormatter], global_opts: argparse.ArgumentParser) -> argparse.ArgumentParser:
+def build_parser(
+	subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
+	parser_parts: wl_common.ParserParts_t,
+) -> argparse.ArgumentParser:
 	r"""
 	Preamble:
 		profile:
@@ -174,10 +177,8 @@ def build_parser(subparsers: argparse._SubParsersAction[argparse.ArgumentParser]
 	Parameters:
 		subparsers:
 			The argparse subparser registry of the main command line interface.
-		formatter_class:
-			Help formatter class used for carve-specific help text.
-		global_opts:
-			Parser instance containing the shared global CLI options.
+		parser_parts:
+			Shared parser parts provided by the main program. Carve uses the formatter class and the global CLI options.
 	Returns:
 		|Must| return the configured carve subparser.
 	Raises:
@@ -185,8 +186,8 @@ def build_parser(subparsers: argparse._SubParsersAction[argparse.ArgumentParser]
 	prsr = subparsers.add_parser(
 		"carve",
 		help="Edit walk JSON documents",
-		parents=[global_opts],
-		formatter_class=formatter_class,
+		parents=[parser_parts["global_opts"]],
+		formatter_class=parser_parts["formatter_class"],
 	)
 	prsr.add_argument("--in", dest="in_file", required=True, metavar="FILE", help="Read exactly one walk JSON file.")
 	prsr.add_argument("--out", dest="out_file", metavar="FILE", help="Write walk JSON to FILE instead of stdout.")

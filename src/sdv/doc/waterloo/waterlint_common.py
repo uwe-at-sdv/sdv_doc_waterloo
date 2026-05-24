@@ -4,12 +4,14 @@ Preamble:
 	profile:
 		module
 	normative_sections:
-		Contract, Public_functions
-	scope:
-		extension
+		Contract, Public_classes, Public_functions, Public_types
+scope:
+	extension
 Contract:
 	general:
 		|Must| provide common utilities for loading JSON, validating against schemas, and emitting diagnostics in both text and structured JSON form.
+Public_classes:
+	ParserParts_t
 Public_functions:
 	tokens_to_json_pointer, load_json, emit_diagnostics, validate_json_against_schema,
 	recompute_walk_summary, build_tracer_json_doc, emit_tracer
@@ -28,10 +30,14 @@ Function_overview:
 		Build a structured JSON document from the contents of a tracer.
 	emit_tracer:
 		Emit tracer diagnostics as text and/or JSON depending on the specified output arguments.
+Public_types:
+	WtrlJsonNode_t:
+		Type alias for JSON data structures used in this module.
 """
 
 from __future__ import annotations
 
+import argparse
 import io
 import json
 import sys
@@ -40,7 +46,7 @@ import importlib.util
 import importlib.resources as importlib_resources
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Callable, cast, Dict, List, TypeAlias
+from typing import Any, Callable, cast, Dict, List, TypeAlias, TypedDict
 
 import jsonschema.exceptions
 from jsonschema import Draft202012Validator
@@ -55,6 +61,37 @@ from sdv.doc.waterloo.docitem_helper import (
 
 #===== Type Checking ==========================================#
 WtrlJsonNode_t: TypeAlias = Dict[str, "WtrlJsonNode_t"] | List["WtrlJsonNode_t"] | str | int | float | bool | None
+
+class ParserParts_t(TypedDict):
+	r"""
+	Preamble:
+		profile:
+			class
+		normative_sections:
+			Contract
+		status:
+			stable
+		scope:
+			extension
+	Contract:
+		general:
+			|Must| represent reusable argparse components for plugin command-line interfaces.
+			|Must| keep the documented keys stable for existing plugins.
+			Future keys may be added, but existing keys will not be removed or renamed.
+		constructor:
+			|Must| be instantiated with the following fields:
+			- formatter_class: A class derived from argparse.HelpFormatter for consistent help message formatting.
+			- global_opts: An argparse.ArgumentParser instance containing global options applicable to all subcommands.
+			- basedir_group: An argparse.ArgumentParser instance or argument group for handling basedir-related options.
+	Notes:
+		General note:
+			Plugins may consume only the parts they need. This class is a TypedDict
+			that packages the reusable parser pieces passed from the main program to
+			subcommands.
+	"""
+	formatter_class: type[argparse.HelpFormatter]
+	global_opts: argparse.ArgumentParser
+	basedir_group: argparse.ArgumentParser
 #==============================================================#
 
 #===== Constants ==============================================#

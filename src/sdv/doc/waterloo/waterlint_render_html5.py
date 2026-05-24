@@ -11,7 +11,7 @@ Contract:
 		|Must| provide a function |func|`render_html5` that serves as\
 		the main entry point for the |cmd|`waterlint render-html5` subcommand.
 Public_functions:
-	render_html5
+	render_html5, build_parser
 Public_classes:
 	TracerProtocol
 Class_overview:
@@ -26,6 +26,8 @@ Function_overview:
 		presents the documented objects in a clear and navigable format.
 		The function also handles error reporting via the provided
 		tracer instance and supports various customization options for the output HTML.
+	build_parser:
+		Construct and return the argparse subparser for the render-html5 command.
 """
 
 from __future__ import annotations
@@ -34,9 +36,17 @@ import argparse
 import json
 import html
 import re
+import sys
+import traceback
 import importlib.resources as importlib_resources
 from pathlib import Path
 from typing import Any, Dict, List, Literal, Protocol, Tuple, TypeAlias
+from sdv.doc.waterloo import docitem
+from sdv.doc.waterloo import waterlint_common as wl_common
+from sdv.doc.waterloo.docitem_helper import (
+	get_obj_fully_qualified_name,
+	tracer,
+)
 
 # Not relevant yet, but in case we set up a plugin concept,
 # vendors should be encouraged to follow semantic versioning
@@ -75,6 +85,37 @@ class TracerProtocol(Protocol):
 	def add_info(self, msg: str, origin: Origin_t = "tool") -> None:
 		"""Report a tool info message."""
 #=============================================================#
+
+SOURCE_CODE_ERRORS = (AttributeError, IndexError, KeyError, NameError, AssertionError, NotImplementedError, SyntaxError)
+
+
+def _build_tracer_json_doc(tr: tracer, include_debug: bool = False) -> dict[str, Any]:
+	return wl_common.build_tracer_json_doc(
+		tr,
+		schema_version=docitem.WTRL_TRACER_JSON_SCHEMA_VERSION,
+		waterloo_version=wl_common.WTRL_DOCITEM_VERSION,
+		id_prefix=f"urn:waterlint:wtrl-tracer-json:{__version__}",
+		include_debug=include_debug,
+	)
+
+
+def _emit_tracer(tr: tracer, out_path: str | None, out_json_path: str | None = None, debug: bool = False) -> None:
+	wl_common.emit_tracer(
+		tr,
+		out_path,
+		out_json_path,
+		debug=debug,
+		callback_build_json_doc=lambda tr_: _build_tracer_json_doc(tr_, include_debug=debug),
+	)
+
+
+def _final_exit_code(base_code: int, tr: tracer, fail_on_warning: bool) -> int:
+	code = base_code
+	if tr.has_errors():
+		code = 1
+	if code == 0 and fail_on_warning and tr.has_warnings():
+		code = 1
+	return code
 
 try:
 	from pygments import highlight
@@ -485,7 +526,7 @@ a.wtrl-func:visited, a.wtrl-type:visited, a.wtrl-var:visited, a.wtrl-ref:visited
 # contract of such a plugin. The function name should correlate to the
 # waterlint subcommand that invokes it, and the parameters should cover all
 # necessary inputs and options for the rendering process.
-def render_html5(
+def _render_html5_document(
 	tr: TracerProtocol,
 	*,
 	input_paths: List[str],
@@ -652,7 +693,72 @@ def render_html5(
 		_add_error("RHTM-001", f"Unexpected render-html5 failure: {exc}")
 		return ""
 
-def build_parser(subparsers: argparse._SubParsersAction[argparse.ArgumentParser], formatter_class: type[argparse.HelpFormatter], global_opts: argparse.ArgumentParser) -> argparse.ArgumentParser:
+
+def render_html5(args: argparse.Namespace) -> int:
+	r"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+		scope:
+			extension
+	Contract:
+		general:
+			|Must| execute the render-html5 command on one or more Waterloo JSON inputs and write the resulting HTML output.
+	Parameters:
+		args:
+			Namespace containing the parsed render-html5 command line options.
+	Returns:
+		|Must| return 0 on success, non-zero on validation or processing errors.
+	Raises:
+	"""
+	tr = tracer()
+	out_diag = getattr(args, "out_diag", None)
+	out_diag_json = getattr(args, "out_diag_json", None)
+	try:
+		in_files: list[str] = []
+		if args.input_files:
+			for grp in args.input_files:
+				if isinstance(grp, list):
+					in_files.extend(grp)
+				else:
+					in_files.append(str(grp))
+		if not in_files:
+			raise RuntimeError("at least one --in must be provided")
+		out_path = _render_html5_document(
+			tr,
+			input_paths=in_files,
+			out_file=getattr(args, "out_file", None),
+			out_dir=getattr(args, "out_dir", None),
+			css_path=getattr(args, "css_file", None),
+			additional_css_path=getattr(args, "additional_css_file", None),
+			header_html_path=getattr(args, "header_html_file", None),
+			pygments_theme=getattr(args, "pygments_theme", None),
+			no_render_preamble=getattr(args, "no_render_preamble", False),
+			allow_raw_object_node=getattr(args, "allow_raw_object_node", True),
+		)
+		if not out_path:
+			_emit_tracer(tr, out_diag, out_diag_json)
+			return 1
+		tr.add_info(f"HTML5 documentation written to: {out_path}")
+	except SOURCE_CODE_ERRORS:
+		if not out_diag:
+			wl_common.add_traceback(tr)
+			_emit_tracer(tr, out_diag)
+			return 1
+		raise
+	except Exception as exc:
+		tr.add_error("RHTM-001", "tool", f"[{get_obj_fully_qualified_name(exc)}] Unexpected failure in render-html5 command: {exc}")
+		_emit_tracer(tr, out_diag, out_diag_json)
+		return 1
+	_emit_tracer(tr, out_diag, out_diag_json)
+	return _final_exit_code(0, tr, args.fail_on_warning)
+
+def build_parser(
+	subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
+	parser_parts: wl_common.ParserParts_t,
+) -> argparse.ArgumentParser:
 	r"""
 	Preamble:
 		profile:
@@ -667,10 +773,8 @@ def build_parser(subparsers: argparse._SubParsersAction[argparse.ArgumentParser]
 	Parameters:
 		subparsers:
 			The argparse subparser registry of the main command line interface.
-		formatter_class:
-			Help formatter class used for render_html5-specific help text.
-		global_opts:
-			Parser instance containing the shared global CLI options.
+		parser_parts:
+			Shared parser parts provided by the main program. Render-html5 uses the formatter class and the global CLI options.
 	Returns:
 		|Must| return the configured render_html5 subparser.
 	Raises:
@@ -678,8 +782,8 @@ def build_parser(subparsers: argparse._SubParsersAction[argparse.ArgumentParser]
 	prsr = subparsers.add_parser(
 		"render-html5",
 		help="Render Waterloo JSON to bundled HTML5",
-		parents=[global_opts],
-		formatter_class=formatter_class)
+		parents=[parser_parts["global_opts"]],
+		formatter_class=parser_parts["formatter_class"])
 	prsr.add_argument(
 		"--in",
 		dest="input_files",

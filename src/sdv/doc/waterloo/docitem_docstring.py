@@ -74,6 +74,7 @@ Method_overview:
 			return set([Scope.PUBLIC])
 		node_scope = node_preamble.item("scope")
 		return set([SCOPE_TAG_MAP[s] for s in node_scope.items()])
+
 	def is_visible(self,sc_query: Scopes) -> bool:
 		r"""
 		Preamble:
@@ -103,6 +104,7 @@ Method_overview:
 		"""
 		scopes_obj = self.scopes()
 		return any(s_obj <= s_query for s_query in sc_query for s_obj in scopes_obj)
+
 	def can_see(self,sc_query: Scopes) -> bool:
 		r"""
 		Preamble:
@@ -131,6 +133,7 @@ Method_overview:
 		"""
 		scopes_obj = self.scopes()
 		return any(s_query <= s_obj for s_query in sc_query for s_obj in scopes_obj)
+
 	def is_scope_compatible(self,obj_trg : docitem_docstring_base) -> bool:
 		r"""
 		Preamble:
@@ -151,7 +154,7 @@ Method_overview:
 				for both |self| and |var|`obj_trg`.
 		Parameters:
 			obj_trg:
-				The embedded, referenced or otherwise dependend object.
+				The embedded, referenced or otherwise dependent object.
 		Returns:
 			|True| if scopes are compatible, else |False|.
 		Raises:
@@ -161,32 +164,66 @@ Method_overview:
 		scopes_src = self.scopes()
 		scopes_trg = obj_trg.scopes()
 		return any(s_src <= s_trg for s_src in scopes_src for s_trg in scopes_trg)
+
+	def get_scope_text(self) -> str:
+		r"""
+		Preamble:
+			profile:
+				method
+			normative_sections:
+				Contract, Parameters, Returns, Raises
+		Contract:
+			general:
+				|Must| return the documented object's scopes as a comma-separated, lowercase string.
+				|Must| return |"undefined"| if the tree is malformed enough to prevent scope detection, or if the scope section is missing.
+			requires:
+				|Self| |must| represent a formally correct Abstract Syntax Tree.
+		Parameters:
+		Returns:
+			The documented object's scopes as a comma-separated, lowercase string, or |"undefined"| if the
+			tree is malformed enough to prevent scope detection, or if the scope section is missing.
+		Raises:
+		"""
+		try:
+			scopes = self.scopes()
+		except Exception:
+			return "undefined"
+		if not scopes:
+			return "undefined"
+		try:
+			items = []
+			for sc in sorted(scopes, key=lambda s: getattr(s, "value", 0)):
+				name = getattr(sc, "name", None)
+				items.append(str(name).lower() if isinstance(name, str) else str(sc).lower())
+			return ",".join(items) if items else "undefined"
+		except Exception:
+			return "undefined"
 		
 	def parse(self,tr : tracer,tree : DocstringSubtree) -> None:
 		"""
-Preamble:
-	profile:
-		method
-	normative_sections:
-		Contract, Parameters, Returns, Raises
-Contract:
-	general:
-		|Must| accept a complete docstring tree according to the map returned by the derived class' method |func|`dispatch_map`.
-Parameters:
-	tr:
-		The tracer for collecting diagnostics.
-	tree:
-		The docstring tree
-Returns:
-	|Must| return |None|.
-Raises:
-	RuntimeError:
-		|Must| raise if |label|`Preamble` is not the first section found.
-		|Must| raise if an invalid section label is found.
-		|Must| raise if parsing any of the sections fails.
-	NotImplementedError:
-		|Must| raise if not invoked for an instance of a derived class.
-	"""
+		Preamble:
+			profile:
+				method
+			normative_sections:
+				Contract, Parameters, Returns, Raises
+		Contract:
+			general:
+				|Must| accept a complete docstring tree according to the map returned by the derived class' method |func|`dispatch_map`.
+		Parameters:
+			tr:
+				The tracer for collecting diagnostics.
+			tree:
+				The docstring tree
+		Returns:
+			|Must| return |None|.
+		Raises:
+			RuntimeError:
+				|Must| raise if |label|`Preamble` is not the first section found.
+				|Must| raise if an invalid section label is found.
+				|Must| raise if parsing any of the sections fails.
+			NotImplementedError:
+				|Must| raise if not invoked for an instance of a derived class.
+		"""
 		found_preamble = False
 		pos = 0
 		dmap = self.dispatch_map()

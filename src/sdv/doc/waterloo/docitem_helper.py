@@ -429,6 +429,7 @@ class Scope(IntEnum):
 	EXTENSION	= 20
 	CORE		= 30
 
+# Keys |must| be lower-case.
 scope_tag_map = {
 	"public": Scope.PUBLIC,
 	"extension": Scope.EXTENSION,
@@ -620,7 +621,7 @@ RuleId: TypeAlias = str
 Origin: TypeAlias = Literal["parsing", "validation", "tool", "extension"]
 Details: TypeAlias = Dict[str,Any]
 
-Scopes: TypeAlias = Set[int]
+Scopes: TypeAlias = Set[Scope]
 
 Documentable: TypeAlias = ModuleType | type[object] | Callable[..., Any]
 

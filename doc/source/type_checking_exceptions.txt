@@ -5,10 +5,10 @@ docitem_sphinx.py:129 # type: ignore[attr-defined]
 docitem_validator.py:9 # type: ignore
 docitem_validator.py:10 # pragma: no cover - older Python
 waterlint_carve.py:153 # pragma: no cover - defensive
-waterlint.py:657 # pragma: no cover - defensive
-waterlint.py:724 # pragma: no cover - defensive
-waterlint.py:799 # pragma: no cover - defensive
-waterlint.py:895 # pragma: no cover - defensive
-waterlint.py:899 # pragma: no cover - defensive
-waterlint.py:903 # pragma: no cover - defensive
-waterlint.py:1449 # pragma: no cover - defensive
+waterlint.py:658 # pragma: no cover - defensive
+waterlint.py:725 # pragma: no cover - defensive
+waterlint.py:800 # pragma: no cover - defensive
+waterlint.py:896 # pragma: no cover - defensive
+waterlint.py:900 # pragma: no cover - defensive
+waterlint.py:904 # pragma: no cover - defensive
+waterlint.py:1450 # pragma: no cover - defensive

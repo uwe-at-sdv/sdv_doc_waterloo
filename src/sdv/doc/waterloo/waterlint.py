@@ -1,7 +1,15 @@
 #!/usr/bin/env python3
-"""
-Command line tool for validating and analyzing Waterloo docstrings.
-Implementation follows the normative specification in doc/source/tools.rst.
+r"""
+Preamble:
+	profile:
+		module
+	normative_sections:
+		Contract
+Contract:
+	general:
+		|Must| be the main entry point for the waterlint command-line tool.
+		|Must| dispatch to subcommands implemented in other modules.
+		|Must| provide shared helper functions for subcommands, if needed.
 """
 
 from __future__ import annotations
@@ -36,7 +44,10 @@ from jsonschema import Draft202012Validator
 #from jsonschema import JSONDecodeError
 import jsonschema.exceptions
 
-__version__ = "0.13.2"
+__version__ = "0.13.3"
+# - 0.13.3 [2026-05-24]	Subcommands `gen-full` and `gen-minimal` moved to waterlint_generate_common.py, waterlint_gen_minimal.py and waterlint_gen_full.py.
+#			Documentation in waterlint_gen_full.py and waterlint_gen_minimal.py
+#			Updated waterlint_render_html5.py.
 # - 0.13.2 [2026-05-23]	Subcommand `walk` moved to waterlint_walk.py; more functions in waterlint_common.py
 # - 0.13.1 [2026-05-22]	Moved common functions from waterlint.py and waterlint_carve.py to waterlint_common.py;
 #			bugfix in docitem.py.
@@ -86,9 +97,11 @@ SOURCE_CODE_ERRORS = (AttributeError,IndexError,KeyError,NameError,AssertionErro
 with contextlib.redirect_stdout(sys.stderr):
 	import sdv.doc.waterloo.docitem as docitem
 	import sdv.doc.waterloo.docitem_convert as cvrt
-	import sdv.doc.waterloo.docitem_genutil as genutil
 	import sdv.doc.waterloo.waterlint_carve as carve
 	import sdv.doc.waterloo.waterlint_common as wl_common
+	import sdv.doc.waterloo.waterlint_gen_full as gfull
+	import sdv.doc.waterloo.waterlint_gen_minimal as gmin
+	import sdv.doc.waterloo.waterlint_gen_example_template_json as gext
 	import sdv.doc.waterloo.waterlint_render_html5 as rhtml5
 	import sdv.doc.waterloo.waterlint_walk as wlk
 	import sdv.doc.waterloo.docitem_tokenizer as tokenizer
@@ -331,46 +344,6 @@ def _compute_example_path_for_json(path_abs: Path, basedir_abs: Path | None) -> 
 		except ValueError:
 			pass
 	return str(path_abs)
-
-def _render_example_refs_template(tr: tracer, org_or_project: str = "none", domain: str = "local") -> dict[str,Any]:
-	nodes: dict[str, Any] = {}
-	nodes["$schema"] = f"{WTRL_SCHEMA_URI_BASE}/wtrl-example-refs-json-{WTRL_EXAMPLE_REFS_JSON_SCHEMA_VERSION}.schema.json"
-	nodes["$id"] = f"urn:{org_or_project}:{domain}:wtrl-example-refs-json:{WTRL_EXAMPLE_REFS_JSON_SCHEMA_VERSION}"
-	nodes["__WTRL_VERSION__"] = {
-		"waterloo": WTRL_DOCITEM_VERSION,
-		"waterlint_min": __version__,
-		"schema": WTRL_EXAMPLE_REFS_JSON_SCHEMA_VERSION
-		}
-	nodes["__WTRL_EXAMPLE_REFS__"] = {}
-	return nodes
-
-def _gen_example_template_json_command(args: argparse.Namespace) -> int:
-	tr = tracer()
-	out_diag = getattr(args, "out_diag", None)
-	out_diag_json = getattr(args, "out_diag_json", None)
-	try:
-		org_or_project = str(getattr(args, "org_or_project", "none"))
-		domain = str(getattr(args, "domain", "local"))
-		nodes = _render_example_refs_template(tr, org_or_project=org_or_project, domain=domain)
-		out_file = getattr(args, "out_file", None)
-		if out_file:
-			with open(out_file, "w", encoding="utf-8") as fh:
-				json.dump(nodes, fh, indent=4)
-				fh.write("\n")
-			tr.add_info(f"Example refs template written to: {out_file}", "tool")
-		else:
-			json.dump(nodes, sys.stdout, indent=4)
-			sys.stdout.write("\n")
-	except OSError as exc:
-		tr.add_error("AXMPL-004", "tool", str(exc))
-		_emit_tracer(tr, out_diag, out_diag_json)
-		return 1
-	except Exception as exc:
-		tr.add_error("AXMPL-000", "tool", f"[{docitem.get_obj_fully_qualified_name(exc)}] {exc}")
-		_emit_tracer(tr, out_diag, out_diag_json)
-		return 1
-	_emit_tracer(tr, out_diag, out_diag_json)
-	return _final_exit_code(0, tr, args.fail_on_warning)
 
 def _add_example_json_command(args: argparse.Namespace) -> int:
 	tr = tracer()
@@ -1457,220 +1430,7 @@ def _render_json_command(args: argparse.Namespace) -> int:
 
 #===== Render HTML5 ===========================================#
 
-def _render_html5_command(args: argparse.Namespace) -> int:
-	tr = tracer()
-	out_diag = getattr(args, "out_diag", None)
-	out_diag_json = getattr(args, "out_diag_json", None)
-	try:
-		in_files: list[str] = []
-		if args.input_files:
-			for grp in args.input_files:
-				if isinstance(grp, list):
-					in_files.extend(grp)
-				else:
-					in_files.append(str(grp))
-		if not in_files:
-			raise RuntimeError("at least one --in must be provided")
-		out_path = rhtml5.render_html5(
-			tr,
-			input_paths=in_files,
-			out_file=getattr(args, "out_file", None),
-			out_dir=getattr(args, "out_dir", None),
-			css_path=getattr(args, "css_file", None),
-			additional_css_path=getattr(args, "additional_css_file", None),
-			header_html_path=getattr(args, "header_html_file", None),
-			pygments_theme=getattr(args, "pygments_theme", None),
-			no_render_preamble=getattr(args, "no_render_preamble", False),
-			allow_raw_object_node=getattr(args, "allow_raw_object_node", True),
-		)
-		if not out_path:
-			_emit_tracer(tr, out_diag, out_diag_json)
-			return 1
-		tr.add_info(f"HTML5 documentation written to: {out_path}")
-	except SOURCE_CODE_ERRORS:
-		if not out_diag:
-			add_traceback(tr)
-			_emit_tracer(tr, out_diag)
-			return 1
-		raise
-	except Exception as exc:
-		tr.add_error("RHTM-001", "tool", f"[{docitem.get_obj_fully_qualified_name(exc)}] Unexpected failure in render-html5 command: {exc}")
-		_emit_tracer(tr, out_diag, out_diag_json)
-		return 1
-	_emit_tracer(tr, out_diag, out_diag_json)
-	return _final_exit_code(0, tr, args.fail_on_warning)
-
 #===== Generate ===============================================#
-
-def _leading_ws_width(s: str) -> int:
-	width = 0
-	for ch in s:
-		if ch == "\t" or ch == " ":
-			width += 1
-		else:
-			break
-	return width
-
-
-def _retab_docstring(doc: str, indent_mode: str) -> str:
-	if indent_mode == "tab":
-		return doc
-	indent_unit = "    "
-	lines = doc.splitlines()
-	out_lines: list[str] = []
-	for line in lines:
-		if not line:
-			out_lines.append(line)
-			continue
-		wsw = _leading_ws_width(line)
-		if wsw == 0:
-			out_lines.append(line)
-			continue
-		stripped = line.lstrip("\t ")
-		out_lines.append((indent_unit * wsw) + stripped)
-	return "\n".join(out_lines) + ("\n" if doc.endswith("\n") else "")
-
-
-def _collect_generation_targets(
-	tr: tracer,
-	obj_qnames: list[str],
-	basedir: str | None,
-	recursive: bool,
-	missing_only: bool,
-) -> list[object]:
-	seen_qnames: set[str] = set()
-	targets: list[object] = []
-	cfg = docitem.ConfigTraversal()
-	for qname in obj_qnames:
-		_apply_basedir(basedir, qname)
-# Maybe the cast is not good here.
-		obj = _resolve_object(qname)
-		if not docitem.is_obj_documentable(obj):
-			continue
-		root = obj
-		candidates: list[object]
-		if recursive:
-			candidates = list(docitem.gen_documentable_objects(root, cfg))
-		else:
-			candidates = [root]
-		for cand in candidates:
-			fqname = get_obj_fully_qualified_name(cand)
-			if fqname in seen_qnames:
-				continue
-			if missing_only:
-				doc_txt = docitem.get_obj_docstring(cand)
-				if isinstance(doc_txt, str) and doc_txt.strip():
-					continue
-			seen_qnames.add(fqname)
-			targets.append(cand)
-	return targets
-
-
-def _render_generation_json(
-	mode: str,
-	recursive: bool,
-	missing_only: bool,
-	targets: list[object],
-	indent_mode: str,
-) -> dict[str, Any]:
-	nodes: list[dict[str, Any]] = []
-	for obj in targets:
-		profile = genutil.infer_docstring_profile(obj)
-		if mode == "minimal":
-			doc = genutil.generate_minimal_docstring(obj, profile=profile)
-		else:
-			doc = genutil.generate_full_docstring(obj, profile=profile)
-		nodes.append(
-			{
-				"qualified_identifier": get_obj_fully_qualified_name(obj),
-				"kind": profile,
-				"docstring": _retab_docstring(doc, indent_mode),
-			}
-		)
-	return {
-		"mode": mode,
-		"recursive": recursive,
-		"missing_only": missing_only,
-		"count": len(nodes),
-		"objects": nodes,
-	}
-
-
-def _generate_command(args: argparse.Namespace, mode: str) -> int:
-	tr = tracer()
-#----- output spec --------------------------------------------#
-	out_diag	=  getattr(args, "out_diag", None)
-	out_diag_json	=  getattr(args, "out_diag_json", None)
-#--------------------------------------------------------------#
-	try:
-		obj_qnames: list[str] = []
-		if args.obj:
-			for grp in args.obj:
-				if isinstance(grp, list):
-					obj_qnames.extend(grp)
-				else:
-					obj_qnames.append(str(grp))
-		if not obj_qnames:
-			print("Error: --obj is required.", file=sys.stderr)
-			return 2
-		fmt = args.format
-		if fmt is None:
-			fmt = "json" if args.recursive else "raw"
-		targets = _collect_generation_targets(
-			tr,
-			obj_qnames=obj_qnames,
-			basedir=getattr(args, "basedir", None),
-			recursive=bool(args.recursive),
-			missing_only=bool(args.missing_only),
-		)
-		if fmt == "raw":
-			if len(targets) != 1:
-				tr.add_error(
-					"TOOL-820",
-					"tool",
-					f"--format raw requires exactly one target object, got {len(targets)}.",
-				)
-				_emit_tracer(tr, out_diag, out_diag_json)
-				return 2
-			profile = genutil.infer_docstring_profile(targets[0])
-			if mode == "minimal":
-				doc = genutil.generate_minimal_docstring(targets[0], profile=profile)
-			else:
-				doc = genutil.generate_full_docstring(targets[0], profile=profile)
-			doc = _retab_docstring(doc, args.indent)
-			if args.out_file:
-				with open(args.out_file, "w", encoding="utf-8") as fh:
-					fh.write(doc)
-			else:
-				sys.stdout.write(doc)
-		else:
-			doc_json = _render_generation_json(
-				mode=mode,
-				recursive=bool(args.recursive),
-				missing_only=bool(args.missing_only),
-				targets=targets,
-				indent_mode=args.indent,
-			)
-			if args.out_file:
-				with open(args.out_file, "w", encoding="utf-8") as fh:
-					json.dump(doc_json, fh, indent=2)
-					fh.write("\n")
-			else:
-				json.dump(doc_json, sys.stdout, indent=2)
-				sys.stdout.write("\n")
-	except SOURCE_CODE_ERRORS:
-		if not out_diag:
-			add_traceback(tr)
-			_emit_tracer(tr, out_diag)
-			return 1
-		raise
-	except Exception as exc:
-		tr.add_error("TOOL-821", "tool", f"[{docitem.get_obj_fully_qualified_name(exc)}] {exc}")
-		_emit_tracer(tr, out_diag, out_diag_json)
-		return 1
-	_emit_tracer(tr, out_diag, out_diag_json)
-	return _final_exit_code(0, tr, args.fail_on_warning)
-
 #===== Help topic  ============================================#
 
 def _help_validate() -> None:
@@ -1896,10 +1656,18 @@ def _build_parser() -> argparse.ArgumentParser:
 		help="Write tracer diagnostics in machine-readable JSON format to PATH.",
 	)
 
-	common_validate_group = argparse.ArgumentParser(
-		add_help=False,
-		formatter_class=CustomHelpFormatter)
-	common_validate_group.add_argument(
+	parser_parts: wl_common.ParserParts_t = {
+		"formatter_class": CustomHelpFormatter,
+		"global_opts": global_opts,
+		"basedir_group": argparse.ArgumentParser(
+			add_help=False,
+			formatter_class=CustomHelpFormatter,
+		),
+	}
+	# parser_parts bundles the reusable parser building blocks shared with plugins.
+	# The current keys are stable for existing plugins; future keys may be added
+	# without removing or renaming the present ones.
+	parser_parts["basedir_group"].add_argument(
 		"--basedir",
 		metavar="DIR",
 		help="Base directory for resolving objects passed to --obj.",
@@ -1917,7 +1685,7 @@ def _build_parser() -> argparse.ArgumentParser:
 	validate = subparsers.add_parser(
 		"validate",
 		help="Validate docstrings",
-		parents=[common_validate_group, global_opts],
+		parents=[parser_parts["basedir_group"], global_opts],
 		formatter_class=parser.formatter_class)
 	vg = validate.add_mutually_exclusive_group()
 	vg.add_argument("--obj", metavar="QUALNAME", help="Qualified identifier of module/class/function/method")
@@ -1999,30 +1767,7 @@ def _build_parser() -> argparse.ArgumentParser:
 	add_example_json.add_argument("--debug", action="store_true", help="Emit debugging data to stderr (reserved)")
 
 #----- gen-example-template-json ------------------------------#
-	gen_example_template_json = subparsers.add_parser(
-		"gen-example-template-json",
-		help="Generate JSON template for __WTRL_EXAMPLE_REFS__ mappings",
-		parents=[global_opts],
-		formatter_class=parser.formatter_class)
-	gen_example_template_json.add_argument(
-		"--org-or-project",
-		default="none",
-		metavar="TEXT",
-		help="Value for $id segment <org-or-project> (default: none).",
-	)
-	gen_example_template_json.add_argument(
-		"--domain",
-		default="local",
-		metavar="TEXT",
-		help="Value for $id segment <domain> (default: local).",
-	)
-	gen_example_template_json.add_argument(
-		"--out",
-		dest="out_file",
-		metavar="FILE",
-		help="Write template JSON to FILE instead of stdout.",
-	)
-	gen_example_template_json.add_argument("--debug", action="store_true", help="Emit debugging data to stderr (reserved)")
+	gext.build_parser(subparsers, parser_parts)
 
 #----- render-json --------------------------------------------#
 	render_json = subparsers.add_parser(
@@ -2062,55 +1807,19 @@ def _build_parser() -> argparse.ArgumentParser:
 	render_json.add_argument("--debug", action="store_true", help="Emit debugging data to stderr (reserved)")
 
 #----- carve --------------------------------------------------#
-	carve.build_parser(subparsers, cast(type[argparse.HelpFormatter], parser.formatter_class), global_opts)
+	carve.build_parser(subparsers, parser_parts)
 
 #----- render-html5 -------------------------------------------#
-	rhtml5.build_parser(subparsers, cast(type[argparse.HelpFormatter], parser.formatter_class), global_opts)
+	rhtml5.build_parser(subparsers, parser_parts)
 
 #----- walk ---------------------------------------------------#
-	wlk.build_parser(subparsers, cast(type[argparse.HelpFormatter], parser.formatter_class), global_opts, common_validate_group)
+	wlk.build_parser(subparsers, parser_parts)
 
 #----- gen-minimal --------------------------------------------#
-	gen_minimal = subparsers.add_parser(
-		"gen-minimal",
-		help="Generate minimal Waterloo docstring skeleton",
-		parents=[global_opts, common_validate_group],
-		formatter_class=parser.formatter_class)
-	gen_minimal.add_argument(
-		"--obj",
-		required=True,
-		nargs="+",
-		action="append",
-		metavar="QUALNAME",
-		help="One or more qualified objects to generate docstring skeletons for. Option may be repeated.",
-	)
-	gen_minimal.add_argument("--recursive", action="store_true", help="Recursively traverse documentable objects below each --obj.")
-	gen_minimal.add_argument("--missing-only", action="store_true", help="Generate only for objects without docstring.")
-	gen_minimal.add_argument("--format", choices=["raw", "json"], default=None, help="Output format. Default: raw, or json if --recursive is set.")
-	gen_minimal.add_argument("--out", dest="out_file", metavar="FILE", help="Write output to FILE instead of stdout.")
-	gen_minimal.add_argument("--indent", choices=["tab", "spc4"], default="spc4", help="Indent unit for generated docstring text (default: spc4).")
-	gen_minimal.add_argument("--debug", action="store_true", help="Emit debugging data to stderr (reserved)")
+	gmin.build_parser(subparsers, parser_parts)
 
 #----- gen-full -----------------------------------------------#
-	gen_full = subparsers.add_parser(
-		"gen-full",
-		help="Generate full Waterloo docstring skeleton",
-		parents=[global_opts, common_validate_group],
-		formatter_class=parser.formatter_class)
-	gen_full.add_argument(
-		"--obj",
-		required=True,
-		nargs="+",
-		action="append",
-		metavar="QUALNAME",
-		help="One or more qualified objects to generate docstring skeletons for. Option may be repeated.",
-	)
-	gen_full.add_argument("--recursive", action="store_true", help="Recursively traverse documentable objects below each --obj.")
-	gen_full.add_argument("--missing-only", action="store_true", help="Generate only for objects without docstring.")
-	gen_full.add_argument("--format", choices=["raw", "json"], default=None, help="Output format. Default: raw, or json if --recursive is set.")
-	gen_full.add_argument("--out", dest="out_file", metavar="FILE", help="Write output to FILE instead of stdout.")
-	gen_full.add_argument("--indent", choices=["tab", "spc4"], default="spc4", help="Indent unit for generated docstring text (default: spc4).")
-	gen_full.add_argument("--debug", action="store_true", help="Emit debugging data to stderr (reserved)")
+	gfull.build_parser(subparsers, parser_parts)
 
 #----- list-schemas -------------------------------------------#
 	list_schemas = subparsers.add_parser(
@@ -2170,19 +1879,19 @@ def main(argv: Optional[list[str]] = None) -> int:
 	if args.command == "add-example-json":
 		return _add_example_json_command(args)
 	if args.command == "gen-example-template-json":
-		return _gen_example_template_json_command(args)
+		return gext.gen_example_template_json_command(args, __version__)
 	if args.command == "render-json":
 		return _render_json_command(args)
 	if args.command == "carve":
 		return int(carve.carve_command(args))
 	if args.command == "render-html5":
-		return _render_html5_command(args)
+		return rhtml5.render_html5(args)
 	if args.command == "walk":
-		return wlk._walk_command(args)
+		return wlk.walk_command(args)
 	if args.command == "gen-minimal":
-		return _generate_command(args, "minimal")
+		return gmin.gen_minimal_command(args, __version__)
 	if args.command == "gen-full":
-		return _generate_command(args, "full")
+		return gfull.gen_full_command(args, __version__)
 	if args.command == "list-schemas":
 		return _list_schemas_command(args)
 	if args.command == "version":

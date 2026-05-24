@@ -16,7 +16,9 @@ def test_gen_example_template_json_stdout_default() -> None:
 	doc = json.loads(res.stdout)
 	assert "wtrl-example-refs-json-" in doc["$schema"] and doc["$schema"].endswith(".schema.json")
 	assert "urn:none:local:wtrl-example-refs-json:" in doc["$id"]
-	assert doc["__WTRL_EXAMPLE_REFS__"] == {}
+	assert doc["__WTRL_EXAMPLE_REFS__"] == {
+		"my_module.my_function": ["path/to/example1.py", "path/to/example2.py"],
+	}
 
 
 def test_gen_example_template_json_with_custom_id_segments() -> None:
@@ -45,5 +47,6 @@ def test_gen_example_template_json_out_file(tmp_path: Path) -> None:
 	assert out_file.exists(), "expected output file was not created"
 	doc = json.loads(out_file.read_text(encoding="utf-8"))
 	assert isinstance(doc, dict)
-	assert "__WTRL_EXAMPLE_REFS__" in doc
-
+	assert doc["__WTRL_EXAMPLE_REFS__"] == {
+		"my_module.my_function": ["path/to/example1.py", "path/to/example2.py"],
+	}
