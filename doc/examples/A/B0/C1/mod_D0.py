@@ -1,0 +1,9 @@
+r"""
+Preamble:
+    profile:
+        module
+    normative_sections:
+        Contract
+Contract:
+    general:
+"""

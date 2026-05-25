@@ -44,7 +44,8 @@ from jsonschema import Draft202012Validator
 #from jsonschema import JSONDecodeError
 import jsonschema.exceptions
 
-__version__ = "0.13.3"
+__version__ = "0.14.0"
+# - 0.14.0 [2026-05-25]	Subcommand `carve` now final, including exhaustive pytests.
 # - 0.13.3 [2026-05-24]	Subcommands `gen-full` and `gen-minimal` moved to waterlint_generate_common.py, waterlint_gen_minimal.py and waterlint_gen_full.py.
 #			Documentation in waterlint_gen_full.py and waterlint_gen_minimal.py
 #			Updated waterlint_render_html5.py.
@@ -1766,9 +1767,6 @@ def _build_parser() -> argparse.ArgumentParser:
 	aex_out.add_argument("--out-dir", dest="out_dir", metavar="DIR", help="Write updated JSON to DIR using input filename.")
 	add_example_json.add_argument("--debug", action="store_true", help="Emit debugging data to stderr (reserved)")
 
-#----- gen-example-template-json ------------------------------#
-	gext.build_parser(subparsers, parser_parts)
-
 #----- render-json --------------------------------------------#
 	render_json = subparsers.add_parser(
 		"render-json",
@@ -1820,6 +1818,9 @@ def _build_parser() -> argparse.ArgumentParser:
 
 #----- gen-full -----------------------------------------------#
 	gfull.build_parser(subparsers, parser_parts)
+
+#----- gen-example-template-json ------------------------------#
+	gext.build_parser(subparsers, parser_parts)
 
 #----- list-schemas -------------------------------------------#
 	list_schemas = subparsers.add_parser(

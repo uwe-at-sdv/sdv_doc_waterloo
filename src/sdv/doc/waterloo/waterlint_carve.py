@@ -15,8 +15,9 @@ Public_functions:
 Function_overview:
 	carve_command:
 		Execute the carve command by loading exactly one validated walk JSON file,
-		optionally simplifying it to included entries, optionally recomputing the
-		summary statistics, and then writing the resulting document back out.
+		optionally simplifying it to included entries, optionally applying a
+		prefix-based drop/keep chain, optionally recomputing the summary
+		statistics, and then writing the resulting document back out.
 	build_parser:
 		Construct the carve subcommand parser and connect it to the global CLI.
 Notes:
@@ -50,6 +51,76 @@ __version__ = "0.1.0"
 
 WTRL_SCHEMA_URI_BASE = "https://sci-d-vis.com/schema"
 WTRL_WALK_JSON_SCHEMA_VERSION = "0.0.1"
+
+
+class _DropKeepAction(argparse.Action):
+	def __call__(self, parser: argparse.ArgumentParser, namespace: argparse.Namespace, values: Any, option_string: str | None = None) -> None:
+		chain = getattr(namespace, self.dest, None)
+		if not isinstance(chain, list):
+			chain = []
+		op = "drop" if option_string == "--drop" else "keep"
+		for value in values:
+			prefix = str(value).strip()
+			if not prefix:
+				raise argparse.ArgumentError(self, "empty prefix is not allowed")
+			chain.append((op, prefix))
+		setattr(namespace, self.dest, chain)
+
+
+def _carve_normalize_path(path_text: str | None) -> Path | None:
+	if not path_text:
+		return None
+	try:
+		return Path(path_text).expanduser().resolve()
+	except Exception:
+		try:
+			return Path(Path(path_text).expanduser().absolute())
+		except Exception:
+			return None
+
+
+def _carve_path_is_under(path: Path, prefix: Path) -> bool:
+	try:
+		return path == prefix or path.is_relative_to(prefix)
+	except Exception:
+		return False
+
+
+def _carve_qname_matches_prefix(qname: str, prefix: str) -> bool:
+	return qname == prefix or qname.startswith(prefix + ".")
+
+
+def _carve_apply_drop_keep_filters(entries: list[dict[str, Any]], chain: list[tuple[str, str]]) -> list[dict[str, Any]]:
+	if not chain:
+		return entries
+	keep_state = chain[0][0] == "drop"
+	out: list[dict[str, Any]] = []
+	for entry in entries:
+		qname = str(entry.get("qualname", ""))
+		state = keep_state
+		for op, prefix in chain:
+			if _carve_qname_matches_prefix(qname, prefix):
+				state = op == "keep"
+		if state:
+			out.append(entry)
+	return out
+
+
+def _carve_drop_non_basedir(tr: tracer, entries: list[dict[str, Any]], basedir_text: str | None) -> list[dict[str, Any]]:
+	basedir_path = _carve_normalize_path(basedir_text)
+	if basedir_path is None:
+		tr.add_error("CARVE-003", "tool", "Walk input does not define a usable basedir for --drop-non-basedir.")
+		return entries
+	out: list[dict[str, Any]] = []
+	for entry in entries:
+		file_txt = entry.get("file")
+		file_path = _carve_normalize_path(file_txt if isinstance(file_txt, str) else None)
+		if file_path is None:
+			out.append(entry)
+			continue
+		if _carve_path_is_under(file_path, basedir_path):
+			out.append(entry)
+	return out
 
 
 def _emit_diagnostics(tr: tracer, dest: io.TextIOBase, strip_ansi: bool = False, debug: bool = False) -> None:
@@ -109,6 +180,7 @@ def carve_command(args: argparse.Namespace) -> int:
 	Notes:
 		General note:
 			The function intentionally keeps the first implementation step small and self-contained.
+			Drop/keep filters are applied as an ordered prefix chain.
 	"""
 	tr = tracer()
 	out_diag = getattr(args, "out_diag", None)
@@ -130,9 +202,20 @@ def carve_command(args: argparse.Namespace) -> int:
 			return 1
 		entries = [cast(dict[str, Any], entry) for entry in entries_raw if isinstance(entry, dict)]
 		simplify = bool(getattr(args, "simplify", False))
-		recompute = bool(getattr(args, "recompute", False)) or simplify
+		drop_keep_chain = list(getattr(args, "drop_keep_chain", []) or [])
+		drop_non_basedir = bool(getattr(args, "drop_non_basedir", False))
+		recompute = bool(getattr(args, "recompute", False)) or simplify or bool(drop_keep_chain) or drop_non_basedir
 		if simplify:
 			entries = [entry for entry in entries if bool(entry.get("included", False))]
+		if drop_keep_chain:
+			entries = _carve_apply_drop_keep_filters(entries, drop_keep_chain)
+		if drop_non_basedir:
+			meta = doc.get("__WTRL_META__", {})
+			basedir_text = meta.get("basedir") if isinstance(meta, dict) else None
+			entries = _carve_drop_non_basedir(tr, entries, basedir_text if isinstance(basedir_text, str) else None)
+			if tr.has_errors():
+				_emit_tracer(tr, out_diag, out_diag_json, debug=debug)
+				return 1
 		if recompute:
 			doc["__WTRL_SUMMARY__"] = wl_common.recompute_walk_summary(entries)
 		doc["__WTRL_OBJECTS__"] = entries
@@ -192,6 +275,9 @@ def build_parser(
 	prsr.add_argument("--in", dest="in_file", required=True, metavar="FILE", help="Read exactly one walk JSON file.")
 	prsr.add_argument("--out", dest="out_file", metavar="FILE", help="Write walk JSON to FILE instead of stdout.")
 	prsr.add_argument("--simplify", action="store_true", help="Keep only included==true entries and recompute summary.")
+	prsr.add_argument("--drop", dest="drop_keep_chain", action=_DropKeepAction, nargs="+", metavar="QUALNAME", help="Drop entries whose qualified names match the given prefix chain. The first --drop begins with keep-all.")
+	prsr.add_argument("--keep", dest="drop_keep_chain", action=_DropKeepAction, nargs="+", metavar="QUALNAME", help="Keep entries whose qualified names match the given prefix chain. The first --keep begins with drop-all.")
+	prsr.add_argument("--drop-non-basedir", action="store_true", help="Drop entries whose file path is outside the input basedir.")
 	prsr.add_argument("--recompute", action="store_true", help="Recompute summary/statistics from current entries.")
 	prsr.add_argument("--debug", action="store_true", help="Emit debugging data to stderr (reserved)")
 	return prsr
