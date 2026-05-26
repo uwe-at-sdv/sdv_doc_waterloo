@@ -44,7 +44,48 @@ integration of code examples. It highlights the transformation from
 source code to structured JSON artifacts and finally to rendered HTML.</p>
 <p>The individual stages of this workflow are described in detail in
 sections <a class="reference internal" href="json_io.html#json-io-layer"><span class="std std-ref">The JSON I/O Layer</span></a> and <a class="reference internal" href="html_output_layer.html#html-output-layer"><span class="std std-ref">The HTML Output Layer</span></a>.</p>
-<img alt="Workflow von waterlint" class="align-center" src="_images/waterlint_pipeline.svg" />
+<img alt="Workflow for waterlint's JSON/HTML output layer" class="align-center" src="_images/waterlint_pipeline.svg" />
+<p><code class="wtrl_cmd docutils literal notranslate"><span class="pre">waterlint</span></code> provides a mechanism to control and refine the
+set of objects included in generated documentation artifacts.
+This functionality is implemented by the combination of the
+subcommands <code class="wtrl_cmd docutils literal notranslate"><span class="pre">walk</span></code> and <code class="wtrl_cmd docutils literal notranslate"><span class="pre">carve</span></code>.</p>
+<p>The command <code class="wtrl_cmd docutils literal notranslate"><span class="pre">walk</span></code> expects one or more modules located
+within a common base directory and traverses all reachable documented
+objects.</p>
+<p>The output (text or JSON) represents the discovered object graph.
+The text output is intended for human inspection, while the JSON
+output provides a machine-readable intermediate representation suitable
+for further processing.</p>
+<p>By default, each entry contains fields such as:</p>
+<ul class="simple">
+<li><p><code class="wtrl_value docutils literal notranslate"><span class="pre">qualname</span></code> – qualified name of the object</p></li>
+<li><p><code class="wtrl_value docutils literal notranslate"><span class="pre">kind</span></code> – object category (module, class, function, …)</p></li>
+<li><p><code class="wtrl_value docutils literal notranslate"><span class="pre">scope</span></code> – visibility scope as defined in this document</p></li>
+<li><p><code class="wtrl_value docutils literal notranslate"><span class="pre">file</span></code> – path to the module containing the object</p></li>
+<li><p><code class="wtrl_value docutils literal notranslate"><span class="pre">lineno</span></code> – source line number of the object definition</p></li>
+<li><p><code class="wtrl_value docutils literal notranslate"><span class="pre">included</span></code> – whether the object participates in a valid Waterloo artifact</p></li>
+<li><p><code class="wtrl_value docutils literal notranslate"><span class="pre">reason</span></code> – reason for exclusion (e.g. <code class="wtrl_value docutils literal notranslate"><span class="pre">no_doc</span></code>, <code class="wtrl_value docutils literal notranslate"><span class="pre">invalid</span></code>)</p></li>
+</ul>
+<p>In text mode, file paths are compacted and accompanied by a legend.
+In JSON mode, paths are represented canonically.</p>
+<p>The JSON output is described by schema</p>
+<blockquote>
+<div><p><code class="wtrl_file docutils literal notranslate"><span class="pre">wtrl-walk-json-*.*.*.schema.json</span></code></p>
+</div></blockquote>
+<p>and can be validated using</p>
+<blockquote>
+<div><p><code class="wtrl_cmd docutils literal notranslate"><span class="pre">waterlint</span> <span class="pre">validate-json</span></code></p>
+</div></blockquote>
+<p>The command <code class="wtrl_cmd docutils literal notranslate"><span class="pre">carve</span></code> provides a set of editing and projection
+operations for walk JSON artifacts. In particular, the
+<code class="wtrl_opt docutils literal notranslate"><span class="pre">--drop</span></code> and <code class="wtrl_opt docutils literal notranslate"><span class="pre">--keep</span></code> options allow selective
+inclusion or exclusion of namespaces by qualified-name prefix chains.</p>
+<p>Conceptually, <code class="wtrl_cmd docutils literal notranslate"><span class="pre">carve</span></code> acts as an operator transforming one
+walk JSON artifact into another walk JSON artifact.</p>
+<p>The resulting JSON artifact can then be passed directly to
+<code class="wtrl_cmd docutils literal notranslate"><span class="pre">waterlint</span> <span class="pre">render-json</span></code> instead of specifying modules
+explicitly, as illustrated in the following diagram.</p>
+<img alt="Walk, carve, and render" class="align-center" src="_images/waterlint_pipeline_carve.svg" />
 </section>
 
 
