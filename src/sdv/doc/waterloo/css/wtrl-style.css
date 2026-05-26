@@ -293,7 +293,40 @@ html, body {
 	}
 .wtrl-ref, .wtrl_ref {
 	color:#005cc5;
-/*	text-decoration:underline; */
+	text-decoration-line: underline;
+	text-decoration-style: dotted;
+	text-decoration-thickness: 1px;
+	text-underline-offset: 0.12em;
+	}
+.wtrl-ref.wtrl-func, .wtrl_ref.wtrl_func {
+	color:#3040ff;
+	text-decoration-line: underline;
+	text-decoration-style: dotted;
+	text-decoration-thickness: 1px;
+	text-underline-offset: 0.12em;
+	}
+.wtrl-ref.wtrl-type, .wtrl_ref.wtrl_type {
+	color:#770000;
+	text-decoration-line: underline;
+	text-decoration-style: dotted;
+	text-decoration-thickness: 1px;
+	text-underline-offset: 0.12em;
+	}
+.wtrl-ref.wtrl-var, .wtrl_ref.wtrl_var {
+	color:#a00;
+	text-decoration-line: underline;
+	text-decoration-style: dotted;
+	text-decoration-thickness: 1px;
+	text-underline-offset: 0.12em;
+	}
+.wtrl-ref.wtrl-func:visited, .wtrl_ref.wtrl_func:visited {
+	color:#3040ff;
+	}
+.wtrl-ref.wtrl-type:visited, .wtrl_ref.wtrl_type:visited {
+	color:#770000;
+	}
+.wtrl-ref.wtrl-var:visited, .wtrl_ref.wtrl_var:visited {
+	color:#a00;
 	}
 .wtrl-norm, .wtrl_norm {
 	color:#b42318;

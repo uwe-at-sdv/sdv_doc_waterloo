@@ -5,8 +5,8 @@ Preamble:
 		module
 	normative_sections:
 		Contract, Public_classes, Public_functions, Public_types
-scope:
-	extension
+	scope:
+		extension
 Contract:
 	general:
 		|Must| provide common utilities for loading JSON, validating against schemas, and emitting diagnostics in both text and structured JSON form.

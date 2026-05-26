@@ -44,7 +44,8 @@ from jsonschema import Draft202012Validator
 #from jsonschema import JSONDecodeError
 import jsonschema.exceptions
 
-__version__ = "0.14.0"
+__version__ = "0.14.1"
+# - 0.14.1 [2026-05-26]	Subcommand 'render-html5': Entries in Public_* and *_overview sections are now links.
 # - 0.14.0 [2026-05-25]	Subcommand `carve` now final, including exhaustive pytests.
 # - 0.13.3 [2026-05-24]	Subcommands `gen-full` and `gen-minimal` moved to waterlint_generate_common.py, waterlint_gen_minimal.py and waterlint_gen_full.py.
 #			Documentation in waterlint_gen_full.py and waterlint_gen_minimal.py

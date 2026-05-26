@@ -10,6 +10,10 @@ function setTextIfPresent(id, text) {
   const elem = byId(id);
   if (elem) elem.textContent = text;
 }
+
+// Map fully qualified identifiers to renderable anchor ids.
+// This is used e.g. in function resolveLocalTarget() to determine
+// whether a given QID can be linked to from the current page.
 const TARGET_TO_ANCHOR = new Map();
 for (const e of WTRL_INDEX) {
   if (e.anchor) TARGET_TO_ANCHOR.set(e.target, e.anchor);
@@ -742,6 +746,66 @@ function resolveSeeAlsoTarget(entry, currentQid) {
   return hit;
 }
 
+// Resolve a local Public_* or *_overview name to a target QID.
+// Return the empty string when no unambiguous target can be found.
+//
+// This resolver is stricter than See_also resolution. It only links when the
+// result is obvious from the current scope or already fully qualified.
+function resolveLocalTarget(entry, currentQid) {
+  const raw = String(entry || "").trim();
+  if (!raw) return "";
+  if (TARGET_TO_ANCHOR.has(raw)) return raw;
+  if (raw.indexOf(".") >= 0) return "";
+
+  // Try to resolve against the current QID.
+  // The corresponding rules MPCL-004, MPFN-004, CPCL-004, and CPMT-004
+  // ensure that the listed entry names exist and have the expected kind;
+  // this helper only creates a link when the resolved target is also
+  // unambiguous in the current context.
+  const cur = String(currentQid || "").trim();
+  if (!cur) return "";
+
+  const candidates = [cur + "." + raw];
+  // Prepare a second candidate by dropping the last segment of the current QID, if any.
+  const parts = cur.split(".").filter(Boolean);
+  if (parts.length > 1) {
+    candidates.push(parts.slice(0, -1).concat([raw]).join("."));
+  }
+
+  // Resolve against the current scope and the immediate parent scope as a
+  // conservative fallback. Return a link only if the result is unambiguous.
+  let hit = "";
+  for (const cand of candidates) {
+    // Discard candidates that are not linkable targets (or do not exist).
+    if (!cand || !TARGET_TO_ANCHOR.has(cand)) continue;
+    // If name resolution yields multiple candidates, do not link at all to avoid ambiguity.
+    if (hit && hit !== cand) return "";
+    hit = cand;
+  }
+  return hit;
+}
+
+// Render a label as a link only when the target is unambiguous in the current
+// scope. Otherwise keep the plain colored text.
+function appendLinkedOrStyledText(parent, txt, roleCls, currentQid) {
+  const raw = String(txt || "");
+  const targetQid = resolveLocalTarget(raw, currentQid);
+  if (!targetQid) {
+    appendMaybeStyledText(parent, raw, roleCls);
+    return;
+  }
+  const anchor = TARGET_TO_ANCHOR.get(targetQid);
+  if (!anchor) {
+    appendMaybeStyledText(parent, raw, roleCls);
+    return;
+  }
+  const elemLink = document.createElement("a");
+  elemLink.className = "wtrl-ref wtrl_ref" + (roleCls ? " " + roleCls : "");
+  elemLink.href = "#" + anchor;
+  elemLink.textContent = raw;
+  parent.appendChild(elemLink);
+}
+
 function appendSeeAlsoEntry(parent, entry, currentQid) {
   const raw = String(entry || "").trim();
   if (!raw) return;
@@ -959,7 +1023,19 @@ function renderValue(value, container, depth, path, currentQid) {
     elemGenericList.className = "wtrl-list";
     for (const item of value) {
       const elemGenericItem = document.createElement("li");
-      if (typeof item === "string") appendMaybeStyledText(elemGenericItem, item, leafRoleCls);
+      if (typeof item === "string") {
+        // Public_* entries are linked only when the local name resolves
+        // unambiguously to a known object in the current scope.
+        if (
+          pth[0] === "Public_classes" ||
+          pth[0] === "Public_functions" ||
+          pth[0] === "Public_methods"
+        ) {
+          appendLinkedOrStyledText(elemGenericItem, item, leafRoleCls, currentQid);
+        } else {
+          appendMaybeStyledText(elemGenericItem, item, leafRoleCls);
+        }
+      }
       else renderValue(item, elemGenericItem, depth + 1, pth, currentQid);
       elemGenericList.appendChild(elemGenericItem);
     }
@@ -1039,9 +1115,21 @@ function renderValue(value, container, depth, path, currentQid) {
       if (depth === 0) {
         elemHead.textContent = formatSectionHead(k);
       } else {
-        if (k === "normative_sections") elemHead.textContent = formatSectionHead(k);
-        else elemHead.textContent = k;
+        const section = String((pth && pth.length > 0) ? pth[0] : "");
         const roleCls = getRoleClassForSubsectionHead(pth, k);
+        if (k === "normative_sections") {
+          elemHead.textContent = formatSectionHead(k);
+        } else if (section === "Class_overview" || section === "Function_overview" || section === "Method_overview") {
+          // Overview entry labels are linked only when the local name resolves
+          // unambiguously to a documented object in the current scope.
+          appendLinkedOrStyledText(elemHead, k, roleCls, currentQid);
+        } else if (section === "Public_types" || section === "Public_variables" || section === "Public_constants") {
+          // Public type/variable/constant entries use the same conservative
+          // target resolution: link only when the object name is unambiguous.
+          appendLinkedOrStyledText(elemHead, k, roleCls, currentQid);
+        } else {
+          elemHead.textContent = k;
+        }
         if (roleCls) elemHead.className += " " + roleCls;
       }
       elemBlock.appendChild(elemHead);
