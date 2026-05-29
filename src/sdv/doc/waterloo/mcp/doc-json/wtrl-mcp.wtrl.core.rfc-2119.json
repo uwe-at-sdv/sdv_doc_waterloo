@@ -1,0 +1,431 @@
+{
+    "$schema": "https://sci-d-vis.com/schema/wtrl-json-0.1.0.schema.json",
+    "$id": "urn:waterlint:wtrl-json:0.14.1:core:rfc-2119:8f4c289aba02db669b162ce10950d81f8932c91f6fbb2b50f01603ac041e2719",
+    "__WTRL_VERSION__": {
+        "waterloo": "0.8.1",
+        "schema": "0.1.0"
+    },
+    "__WTRL_META__": {
+        "generated_at": "2026-05-29T21:04:13+02:00",
+        "generator": "waterlint",
+        "scope": "core",
+        "flavour": "rfc-2119"
+    },
+    "__WTRL_ROLES__": {
+        "attr": "Attribute name",
+        "cmd": "Shell or CLI command",
+        "dfn": "Definition of a term",
+        "file": "File or path",
+        "func": "Function or callable",
+        "key": "Key on the keyboard",
+        "label": "Section/Subsection label",
+        "lit": "Literal text or code",
+        "mod": "Module name",
+        "op": "Operator symbol",
+        "opt": "Command-line option or flag",
+        "tag": "Tag or marker",
+        "term": "Domain-specific term",
+        "type": "Type name or annotation",
+        "value": "Concrete value",
+        "var": "Variable name",
+        "var_type": "Variable and type, like 'var:type'"
+    },
+    "__WTRL_SCOPES__": {
+        "public": {
+            "value": 10,
+            "description": ""
+        },
+        "extension": {
+            "value": 20,
+            "description": ""
+        },
+        "core": {
+            "value": 30,
+            "description": ""
+        }
+    },
+    "__WTRL_TOC_MODULES__": {
+        "server": "/__WTRL_OBJECTS__/server",
+        "sdv.doc.waterloo.mcp.tools": "/__WTRL_OBJECTS__/sdv.doc.waterloo.mcp.tools"
+    },
+    "__WTRL_TOC_CLASSES__": {},
+    "__WTRL_TOC_CALLABLES__": {
+        "sdv.doc.waterloo.mcp.tools.get_object": "/__WTRL_OBJECTS__/sdv.doc.waterloo.mcp.tools.get_object",
+        "sdv.doc.waterloo.mcp.tools.get_root": "/__WTRL_OBJECTS__/sdv.doc.waterloo.mcp.tools.get_root",
+        "sdv.doc.waterloo.mcp.tools.get_section": "/__WTRL_OBJECTS__/sdv.doc.waterloo.mcp.tools.get_section",
+        "sdv.doc.waterloo.mcp.tools.list_docs": "/__WTRL_OBJECTS__/sdv.doc.waterloo.mcp.tools.list_docs",
+        "server.build_app": "/__WTRL_OBJECTS__/server.build_app"
+    },
+    "__WTRL_TOC_TYPES__": {},
+    "__WTRL_TOC_VARIABLES__": {},
+    "__WTRL_TOC_CONSTANTS__": {},
+    "__WTRL_OBJECTS__": {
+        "server": {
+            "path": "/server/devel/sdv/privat/uwe/source/sdv_doc_waterloo/package_main/src/sdv/doc/waterloo/mcp/server.py",
+            "doc": {
+                "Preamble": {
+                    "profile": "module",
+                    "normative_sections": [
+                        "Contract",
+                        "Public_functions"
+                    ],
+                    "scope": [
+                        "extension"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST provide the entry point for the Waterloo MCP server."
+                    ]
+                },
+                "Public_functions": [
+                    "read_package_readme"
+                ],
+                "Function_overview": {
+                    "read_package_readme": [
+                        "Provide the content of the package README as a string for use as MCP instructions."
+                    ]
+                }
+            }
+        },
+        "sdv.doc.waterloo.mcp.tools.get_object": {
+            "signature": {
+                "text": "get_object(root_id: 'str', qid: 'str', roots: 'list[Mapping[str, Any]]') -> 'dict[str, Any]'",
+                "parameters": [
+                    {
+                        "name": "root_id",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    },
+                    {
+                        "name": "qid",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    },
+                    {
+                        "name": "roots",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "list[Mapping[str, Any]]",
+                        "default": null
+                    }
+                ],
+                "returns": "dict[str, Any]"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST resolve one QID inside one configured root and return the stored object record together with the root metadata."
+                    ]
+                },
+                "Parameters": {
+                    "root_id": [
+                        "The canonical root identifier derived from the canonical absolute root path."
+                    ],
+                    "qid": [
+                        "The fully qualified identifier of the requested object inside the loaded Waterloo JSON document."
+                    ],
+                    "roots": [
+                        "The list of configured root entries."
+                    ]
+                },
+                "Returns": [
+                    "A dictionary describing the root, the requested QID, and the stored object record."
+                ],
+                "Raises": {
+                    "ValueError": [
+                        "MAY raise if the root identifier or QID is unknown."
+                    ],
+                    "FileNotFoundError": [
+                        "MAY raise if the configured root path no longer exists."
+                    ],
+                    "json.JSONDecodeError": [
+                        "MAY raise if the root file is not valid JSON."
+                    ]
+                }
+            }
+        },
+        "sdv.doc.waterloo.mcp.tools": {
+            "path": "/server/devel/sdv/privat/uwe/source/sdv_doc_waterloo/package_main/src/sdv/doc/waterloo/mcp/tools.py",
+            "doc": {
+                "Preamble": {
+                    "profile": "module",
+                    "normative_sections": [
+                        "Contract",
+                        "Public_functions"
+                    ],
+                    "scope": [
+                        "extension"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST provide the tool set for the Waterloo MCP-server."
+                    ]
+                },
+                "Public_functions": [
+                    "list_docs",
+                    "get_root",
+                    "get_object",
+                    "get_section"
+                ],
+                "Function_overview": {
+                    "list_docs": [
+                        "List the configured Waterloo roots with stable identifiers."
+                    ],
+                    "get_root": [
+                        "Resolve one configured root by its stable identifier and return the loaded JSON document."
+                    ],
+                    "get_object": [
+                        "Resolve one object by QID inside one configured root and return the loaded object record."
+                    ],
+                    "get_section": [
+                        "Resolve one named section of one object inside one configured root and return the stored section value."
+                    ]
+                }
+            }
+        },
+        "sdv.doc.waterloo.mcp.tools.get_root": {
+            "signature": {
+                "text": "get_root(root_id: 'str', roots: 'list[Mapping[str, Any]]') -> 'dict[str, Any]'",
+                "parameters": [
+                    {
+                        "name": "root_id",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    },
+                    {
+                        "name": "roots",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "list[Mapping[str, Any]]",
+                        "default": null
+                    }
+                ],
+                "returns": "dict[str, Any]"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ],
+                    "scope": [
+                        "extension"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST resolve a configured root by its canonical root identifier and return the root metadata together with the loaded JSON document."
+                    ]
+                },
+                "Parameters": {
+                    "root_id": [
+                        "The canonical root identifier derived from the canonical absolute root path."
+                    ],
+                    "roots": [
+                        "The list of configured root entries."
+                    ]
+                },
+                "Returns": [
+                    "A dictionary describing the root and containing the parsed JSON document."
+                ],
+                "Raises": {
+                    "ValueError": [
+                        "MAY raise if the root identifier is unknown."
+                    ],
+                    "FileNotFoundError": [
+                        "MAY raise if the configured root path no longer exists."
+                    ],
+                    "json.JSONDecodeError": [
+                        "MAY raise if the root file is not valid JSON."
+                    ]
+                }
+            }
+        },
+        "sdv.doc.waterloo.mcp.tools.get_section": {
+            "signature": {
+                "text": "get_section(root_id: 'str', qid: 'str', section: 'str', roots: 'list[Mapping[str, Any]]') -> 'dict[str, Any]'",
+                "parameters": [
+                    {
+                        "name": "root_id",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    },
+                    {
+                        "name": "qid",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    },
+                    {
+                        "name": "section",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    },
+                    {
+                        "name": "roots",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "list[Mapping[str, Any]]",
+                        "default": null
+                    }
+                ],
+                "returns": "dict[str, Any]"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST resolve one named section of one QID inside one configured root and return the stored section value together with the relevant metadata."
+                    ]
+                },
+                "Parameters": {
+                    "root_id": [
+                        "The canonical root identifier derived from the canonical absolute root path."
+                    ],
+                    "qid": [
+                        "The fully qualified identifier of the requested object inside the loaded Waterloo JSON document."
+                    ],
+                    "section": [
+                        "The name of the requested stored section, for example ``Contract`` or ``Public_functions``."
+                    ],
+                    "roots": [
+                        "The list of configured root entries."
+                    ]
+                },
+                "Returns": [
+                    "A dictionary describing the root, the requested QID, the requested section, and the stored section value."
+                ],
+                "Raises": {
+                    "ValueError": [
+                        "MAY raise if the root identifier, QID, or section name is unknown."
+                    ],
+                    "FileNotFoundError": [
+                        "MAY raise if the configured root path no longer exists."
+                    ],
+                    "json.JSONDecodeError": [
+                        "MAY raise if the root file is not valid JSON."
+                    ]
+                }
+            }
+        },
+        "sdv.doc.waterloo.mcp.tools.list_docs": {
+            "signature": {
+                "text": "list_docs(roots: 'list[Mapping[str, Any]]') -> 'list[dict[str, Any]]'",
+                "parameters": [
+                    {
+                        "name": "roots",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "list[Mapping[str, Any]]",
+                        "default": null
+                    }
+                ],
+                "returns": "list[dict[str, Any]]"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ],
+                    "scope": [
+                        "extension"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST extract attributes from the provided root entries (as given in the configuration), derive a stable root identifier from the canonical absolute path of each root locator, and return a list of dictionaries with specific keys.",
+                        "MUST define the |attr|`root_id` of one root as a short stable hash of that canonical absolute path, independent of labels and configuration order."
+                    ]
+                },
+                "Parameters": {
+                    "roots": [
+                        "The list of root configurations to process."
+                    ]
+                },
+                "Returns": [
+                    "A list of dictionaries, each representing a root document with its attributes."
+                ],
+                "Raises": {}
+            }
+        },
+        "server.build_app": {
+            "signature": {
+                "text": "build_app(config: 'McpConfig') -> 'FastMCP'",
+                "parameters": [
+                    {
+                        "name": "config",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "McpConfig",
+                        "default": null
+                    }
+                ],
+                "returns": "FastMCP"
+            },
+            "decorators": [
+                "@mcp.tool(name=\"list_docs\", description=\"List configured Waterloo data roots.\")",
+                "@mcp.tool(name=\"get_root\", description=\"Read one configured Waterloo data root by root_id.\")",
+                "@mcp.tool(name=\"get_object\", description=\"Read one Waterloo object by qid from a configured root.\")",
+                "@mcp.tool(name=\"get_section\", description=\"Read one stored section of one Waterloo object.\")"
+            ],
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ],
+                    "scope": [
+                        "extension"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST build an MCP app according to the provided configuration."
+                    ]
+                },
+                "Parameters": {
+                    "config": [
+                        "The loaded MCP configuration according to which the app should be built."
+                    ]
+                },
+                "Returns": [
+                    "The built MCP app."
+                ],
+                "Raises": {
+                    "ValueError": [
+                        "MAY raise if the configuration is invalid in any way."
+                    ]
+                }
+            }
+        }
+    }
+}

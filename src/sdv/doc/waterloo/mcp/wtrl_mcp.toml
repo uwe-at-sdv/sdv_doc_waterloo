@@ -24,10 +24,11 @@ allowed_origins = ["http://gilgamesh:6274"]
 # access_log = true
 
 [[roots]]
-path = "package_main/src/sdv/doc/waterloo"
-label = "Waterloo"
+# Possible kind at current state of development: wtrl-json.
+path = "doc-json/wtrl-mcp.wtrl.core.rfc-2119.json"
+label = "Waterloo MCP Server and Tool set Reference"
 enabled = true
-kind = "directory"
+kind = "wtrl-json"
 
 # [[roots]]
 # path = "/tmp/other-waterloo-root"

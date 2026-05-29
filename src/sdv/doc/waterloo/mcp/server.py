@@ -1,4 +1,20 @@
-"""Waterloo MCP server entry point."""
+r"""
+Preamble:
+	profile:
+		module
+	normative_sections:
+		Contract, Public_functions
+	scope:
+		extension
+Contract:
+	general:
+		|Must| provide the entry point for the Waterloo MCP server.
+Public_functions:
+	read_package_readme
+Function_overview:
+	read_package_readme:
+		Provide the content of the package README as a string for use as MCP instructions.
+"""
 
 from __future__ import annotations
 
@@ -21,12 +37,14 @@ from mcp.server.fastmcp.server import TransportSecuritySettings
 
 try:
 	from . import __version__
-	from .tools import list_docs
+	from .tools import get_object, get_root, get_section, list_docs
 except ImportError:  # pragma: no cover
 	from sdv.doc.waterloo.mcp import __version__
-	from sdv.doc.waterloo.mcp.tools import list_docs
+	from sdv.doc.waterloo.mcp.tools import get_object, get_root, get_section, list_docs
 
 # Run browser-based MCP-inspector with npx @modelcontextprotocol/inspector 
+
+#----- begin helper classes for toml config parsing ----------#
 
 @dataclass(frozen=True)
 class ServerConfig:
@@ -75,8 +93,34 @@ class McpConfig:
 	roots: list[RootConfig]
 	source_path: Path
 
+#----- end helper classes for toml config parsing ------------#
 
-def _read_package_readme() -> str:
+def read_package_readme() -> str:
+	r"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+		scope:
+			extension
+	Contract:
+		general:
+			|Must| resolve a resource path to the package |file|`README` file.
+			|Must| read and return the content of the |file|`README` file for use as MCP instructions.
+	Notes:
+		Purpose:
+			This is a simple way to provide rich instructions for the MCP server without hardcoding them in the source.
+			The README can be edited as needed to update the instructions without touching the code.
+		Usage:
+			The string returned by this function is passes as the `instructions` parameter
+			when building the MCP app, making it visible to clients in the MCP session metadata.
+	Parameters:
+	Returns:
+		The content of the |file|`README` file as a string.
+	Raises:
+		FileNotFoundError: If the |file|`README` file does not exist.
+	"""
 	path = Path(__file__).resolve().with_name("README")
 	try:
 		return path.read_text(encoding="utf-8").strip()
@@ -136,10 +180,11 @@ allowed_origins = ["http://gilgamesh:6274"]
 # access_log = true
 
 [[roots]]
-path = "package_main/src/sdv/doc/waterloo"
-label = "Waterloo"
+# Possible kind at current state of development: wtrl-json.
+path = "doc-json/wtrl-mcp.wtrl.core.rfc-2119.json"
+label = "Waterloo MCP Server and Tool set Reference"
 enabled = true
-kind = "directory"
+kind = "wtrl-json"
 
 # [[roots]]
 # path = "/tmp/other-waterloo-root"
@@ -228,10 +273,30 @@ def load_config(config_path: Path | None = None) -> McpConfig:
 
 
 def build_app(config: McpConfig) -> FastMCP:
+	r"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+		scope:
+			extension
+	Contract:
+		general:
+			|Must| build an MCP app according to the provided configuration.
+	Parameters:
+		config:
+			The loaded MCP configuration according to which the app should be built.
+	Returns:
+		The built MCP app.
+	Raises:
+		ValueError:
+			|May| raise if the configuration is invalid in any way.
+	"""
 	"""Build the Waterloo MCP app with the configured data roots."""
 	mcp = FastMCP(
 		name="wtrl_mcp",
-		instructions=_read_package_readme(),
+		instructions=read_package_readme(),
 		debug=False,
 		log_level=config.logging.level,  # type: ignore[arg-type]
 		host=config.server.host,
@@ -245,19 +310,32 @@ def build_app(config: McpConfig) -> FastMCP:
 			allowed_origins=list(config.security.allowed_origins),
 		)
 
+	def _root_mappings() -> list[dict[str, Any]]:
+		return [
+			{
+				"path": root.path,
+				"label": root.label,
+				"enabled": root.enabled,
+				"kind": root.kind,
+			}
+			for root in config.roots
+		]
+
 	@mcp.tool(name="list_docs", description="List configured Waterloo data roots.")
 	def _list_docs() -> list[dict[str, Any]]:
-		return list_docs(
-			[
-				{
-					"path": root.path,
-					"label": root.label,
-					"enabled": root.enabled,
-					"kind": root.kind,
-				}
-				for root in config.roots
-			]
-		)
+		return list_docs(_root_mappings())
+
+	@mcp.tool(name="get_root", description="Read one configured Waterloo data root by root_id.")
+	def _get_root(root_id: str) -> dict[str, Any]:
+		return get_root(root_id, _root_mappings())
+
+	@mcp.tool(name="get_object", description="Read one Waterloo object by qid from a configured root.")
+	def _get_object(root_id: str, qid: str) -> dict[str, Any]:
+		return get_object(root_id, qid, _root_mappings())
+
+	@mcp.tool(name="get_section", description="Read one stored section of one Waterloo object.")
+	def _get_section(root_id: str, qid: str, section: str) -> dict[str, Any]:
+		return get_section(root_id, qid, section, _root_mappings())
 
 	return mcp
 
