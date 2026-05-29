@@ -1,14 +1,36 @@
-# Waterloo MCP server configuration
+# Waterloo MCP server configuration template
+#
+# Save this as wtrl_mcp.toml next to server.py and edit it as needed.
 
 [server]
+# transport = "stdio"
 transport = "streamable-http"
+# host = "127.0.0.1"
 host = "127.0.0.1"
-port = 8000
+# port = 8000
+port = 13316
+# streamable_http_path = "/mcp"
 streamable_http_path = "/mcp"
 
 [security]
-allowed_hosts = ["127.0.0.1:8000"]
+# allowed_hosts = ["127.0.0.1:8000"]
+allowed_hosts = ["127.0.0.1:13316"]
+# allowed_origins = ["http://localhost:6274"]
 allowed_origins = ["http://gilgamesh:6274"]
+
+[logging]
+# level = "INFO"
+# config_path = "package_main/src/sdv/doc/waterloo/mcp/logging.toml"
+# access_log = true
 
 [[roots]]
 path = "package_main/src/sdv/doc/waterloo"
+label = "Waterloo"
+enabled = true
+kind = "directory"
+
+# [[roots]]
+# path = "/tmp/other-waterloo-root"
+# label = "Other root"
+# enabled = false
+# kind = "directory"

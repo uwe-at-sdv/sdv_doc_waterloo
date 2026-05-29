@@ -12,19 +12,16 @@ The current entry point is `wtrl_mcp`.
 The Inspector-friendly entry point is `sdv.doc.waterloo.mcp.server:app`.
 
 Typical usage:
-- start the server with one or more roots
-- use `--transport stdio` for a local child-process integration
-- use `--transport streamable-http` for the browser Inspector
-- set `WTRL_MCP_ALLOWED_ORIGINS` for browser-origin allowlisting, as a
-  comma-separated list
-- set `WTRL_MCP_ALLOWED_HOSTS` if the HTTP Host header needs allowlisting, as a
-  comma-separated list
+- use `--config` to select a TOML file explicitly
+- or keep `wtrl_mcp.toml` next to `server.py` as the default configuration
+- use `--gen-config-template` to print a template to stdout
+- configure `transport = "stdio"` or `transport = "streamable-http"` in the
+  TOML file
 - browser Inspector example:
-  - `WTRL_MCP_ROOTS=package_main/src/sdv/doc/waterloo`
-  - `WTRL_MCP_ALLOWED_ORIGINS=http://gilgamesh:6274`
-  - `WTRL_MCP_ALLOWED_HOSTS=127.0.0.1:8000`
-  - `wtrl_mcp --transport streamable-http package_main/src/sdv/doc/waterloo`
-- connect the Inspector to `http://127.0.0.1:8000/mcp`
+  - set `transport = "streamable-http"` in the TOML file
+  - set `allowed_origins = ["http://gilgamesh:6274"]`
+  - set `allowed_hosts = ["127.0.0.1:8000"]`
+  - connect the Inspector to `http://127.0.0.1:8000/mcp`
 - inspect `tools/list`
 - call `list_docs`
 

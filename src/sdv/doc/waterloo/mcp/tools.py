@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Any
+from typing import Any, Mapping
 
 
 def _classify_root(path_text: str) -> str:
@@ -15,17 +15,17 @@ def _classify_root(path_text: str) -> str:
 	return "missing"
 
 
-def list_docs(roots: list[str]) -> list[dict[str, Any]]:
+def list_docs(roots: list[Mapping[str, Any]]) -> list[dict[str, Any]]:
 	"""Return a compact summary of configured Waterloo data roots."""
 	out: list[dict[str, Any]] = []
-	for idx, root_text in enumerate(roots):
-		root = Path(root_text).expanduser()
+	for idx, root_data in enumerate(roots):
+		root = Path(str(root_data.get("path", ""))).expanduser()
 		item = {
 			"root_id": f"root-{idx}",
-			"label": root.name or str(root),
-			"kind": _classify_root(str(root)),
+			"label": str(root_data.get("label") or root.name or str(root)),
+			"kind": str(root_data.get("kind") or _classify_root(str(root))),
 			"path": str(root.resolve()) if root.exists() else str(root),
+			"enabled": bool(root_data.get("enabled", True)),
 		}
 		out.append(item)
 	return out
-

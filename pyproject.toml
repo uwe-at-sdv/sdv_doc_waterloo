@@ -24,7 +24,8 @@ dependencies = [
 	"jsonschema",
 	"jsonpointer",
 	"docutils",
-	"mcp"
+	"mcp",
+	"tomli; python_version < '3.11'"
 	]
 
 # Optional dependencies.
