@@ -26,6 +26,7 @@ except ImportError:  # pragma: no cover
 	from sdv.doc.waterloo.mcp import __version__
 	from sdv.doc.waterloo.mcp.tools import list_docs
 
+# Run browser-based MCP-inspector with npx @modelcontextprotocol/inspector 
 
 @dataclass(frozen=True)
 class ServerConfig:
