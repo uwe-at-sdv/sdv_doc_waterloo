@@ -1,0 +1,31 @@
+Waterloo MCP server
+
+This package exposes read-only access to Waterloo data roots over MCP.
+
+Current v1 focus:
+- list configured roots
+- inspect the indexed Waterloo data behind them
+- keep the server simple and stdio-based for local development
+- offer Streamable HTTP for Inspector-based inspection at `/mcp`
+
+The current entry point is `wtrl_mcp`.
+The Inspector-friendly entry point is `sdv.doc.waterloo.mcp.server:app`.
+
+Typical usage:
+- start the server with one or more roots
+- use `--transport stdio` for a local child-process integration
+- use `--transport streamable-http` for the browser Inspector
+- set `WTRL_MCP_ALLOWED_ORIGINS` for browser-origin allowlisting, as a
+  comma-separated list
+- set `WTRL_MCP_ALLOWED_HOSTS` if the HTTP Host header needs allowlisting, as a
+  comma-separated list
+- browser Inspector example:
+  - `WTRL_MCP_ROOTS=package_main/src/sdv/doc/waterloo`
+  - `WTRL_MCP_ALLOWED_ORIGINS=http://gilgamesh:6274`
+  - `WTRL_MCP_ALLOWED_HOSTS=127.0.0.1:8000`
+  - `wtrl_mcp --transport streamable-http package_main/src/sdv/doc/waterloo`
+- connect the Inspector to `http://127.0.0.1:8000/mcp`
+- inspect `tools/list`
+- call `list_docs`
+
+The server is intentionally read-only in v1.

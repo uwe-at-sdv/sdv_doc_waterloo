@@ -1,0 +1,14 @@
+# Waterloo MCP server configuration
+
+[server]
+transport = "streamable-http"
+host = "127.0.0.1"
+port = 8000
+streamable_http_path = "/mcp"
+
+[security]
+allowed_hosts = ["127.0.0.1:8000"]
+allowed_origins = ["http://gilgamesh:6274"]
+
+[[roots]]
+path = "package_main/src/sdv/doc/waterloo"
