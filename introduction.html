@@ -377,7 +377,24 @@ complete verification in all contexts.</p>
 <li><p><code class="wtrl_file docutils literal notranslate"><span class="pre">sdv.doc.waterloo.waterlint_render_html5</span></code></p></li>
 </ul>
 <p>are validated on a regular basis. The current status is</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Success: no issues found in 21 source files
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>/server/devel/sdv/privat/uwe/source/sdv_doc_waterloo/package_main/src/sdv/doc/waterloo/mcp/server.py:199: error: Returning Any from function declared to return &quot;Mapping[str, Any]&quot;  [no-any-return]
+/server/devel/sdv/privat/uwe/source/sdv_doc_waterloo/package_main/src/sdv/doc/waterloo/mcp/server.py:301: error: Unused &quot;type: ignore&quot; comment  [unused-ignore]
+/server/devel/sdv/privat/uwe/source/sdv_doc_waterloo/package_main/src/sdv/doc/waterloo/mcp/server.py:326: error: Argument 1 to &quot;list_docs&quot; has incompatible type &quot;list[dict[str, Any]]&quot;; expected &quot;list[Mapping[str, Any]]&quot;  [arg-type]
+/server/devel/sdv/privat/uwe/source/sdv_doc_waterloo/package_main/src/sdv/doc/waterloo/mcp/server.py:326: note: &quot;list&quot; is invariant -- see https://mypy.readthedocs.io/en/stable/common_issues.html#variance
+/server/devel/sdv/privat/uwe/source/sdv_doc_waterloo/package_main/src/sdv/doc/waterloo/mcp/server.py:326: note: Consider using &quot;Sequence&quot; instead, which is covariant
+/server/devel/sdv/privat/uwe/source/sdv_doc_waterloo/package_main/src/sdv/doc/waterloo/mcp/server.py:330: error: Argument 2 to &quot;get_root&quot; has incompatible type &quot;list[dict[str, Any]]&quot;; expected &quot;list[Mapping[str, Any]]&quot;  [arg-type]
+/server/devel/sdv/privat/uwe/source/sdv_doc_waterloo/package_main/src/sdv/doc/waterloo/mcp/server.py:330: note: &quot;list&quot; is invariant -- see https://mypy.readthedocs.io/en/stable/common_issues.html#variance
+/server/devel/sdv/privat/uwe/source/sdv_doc_waterloo/package_main/src/sdv/doc/waterloo/mcp/server.py:330: note: Consider using &quot;Sequence&quot; instead, which is covariant
+/server/devel/sdv/privat/uwe/source/sdv_doc_waterloo/package_main/src/sdv/doc/waterloo/mcp/server.py:334: error: Argument 3 to &quot;get_object&quot; has incompatible type &quot;list[dict[str, Any]]&quot;; expected &quot;list[Mapping[str, Any]]&quot;  [arg-type]
+/server/devel/sdv/privat/uwe/source/sdv_doc_waterloo/package_main/src/sdv/doc/waterloo/mcp/server.py:334: note: &quot;list&quot; is invariant -- see https://mypy.readthedocs.io/en/stable/common_issues.html#variance
+/server/devel/sdv/privat/uwe/source/sdv_doc_waterloo/package_main/src/sdv/doc/waterloo/mcp/server.py:334: note: Consider using &quot;Sequence&quot; instead, which is covariant
+/server/devel/sdv/privat/uwe/source/sdv_doc_waterloo/package_main/src/sdv/doc/waterloo/mcp/server.py:338: error: Argument 4 to &quot;get_section&quot; has incompatible type &quot;list[dict[str, Any]]&quot;; expected &quot;list[Mapping[str, Any]]&quot;  [arg-type]
+/server/devel/sdv/privat/uwe/source/sdv_doc_waterloo/package_main/src/sdv/doc/waterloo/mcp/server.py:338: note: &quot;list&quot; is invariant -- see https://mypy.readthedocs.io/en/stable/common_issues.html#variance
+/server/devel/sdv/privat/uwe/source/sdv_doc_waterloo/package_main/src/sdv/doc/waterloo/mcp/server.py:338: note: Consider using &quot;Sequence&quot; instead, which is covariant
+/server/devel/sdv/privat/uwe/source/sdv_doc_waterloo/package_main/src/sdv/doc/waterloo/mcp/server.py:342: error: Argument 5 to &quot;get_subsection&quot; has incompatible type &quot;list[dict[str, Any]]&quot;; expected &quot;list[Mapping[str, Any]]&quot;  [arg-type]
+/server/devel/sdv/privat/uwe/source/sdv_doc_waterloo/package_main/src/sdv/doc/waterloo/mcp/server.py:342: note: &quot;list&quot; is invariant -- see https://mypy.readthedocs.io/en/stable/common_issues.html#variance
+/server/devel/sdv/privat/uwe/source/sdv_doc_waterloo/package_main/src/sdv/doc/waterloo/mcp/server.py:342: note: Consider using &quot;Sequence&quot; instead, which is covariant
+Found 7 errors in 1 file (checked 24 source files)
 </pre></div>
 </div>
 <p>Our <code class="wtrl_lit docutils literal notranslate"><span class="pre">mypy</span></code>-configuration is:</p>
