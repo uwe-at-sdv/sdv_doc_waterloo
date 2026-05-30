@@ -7,6 +7,8 @@ Current v1 focus:
 - read one configured root by its `root_id`
 - read one object by `root_id` and `qid`
 - read one stored section by `root_id`, `qid`, and section name
+- read one stored subsection by `root_id`, `qid`, section name, and subsection name
+- search objects by expression and structural filters
 - inspect the indexed Waterloo data behind them
 - keep the server simple and stdio-based for local development
 - offer Streamable HTTP for Inspector-based inspection at `/mcp`
@@ -30,6 +32,8 @@ Typical usage:
 - call `get_root` with a `root_id`
 - call `get_object` with a `root_id` and `qid`
 - call `get_section` with a `root_id`, `qid`, and section name
+- call `get_subsection` with a `root_id`, `qid`, section name, and subsection name
+- call `search_objects` with an expression and an optional filter object
 
 The `root_id` is a short stable hash of the canonical absolute root path.
 

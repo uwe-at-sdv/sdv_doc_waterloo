@@ -10,10 +10,12 @@ Contract:
 	general:
 		|Must| provide the entry point for the Waterloo MCP server.
 Public_functions:
-	read_package_readme
+	read_package_readme, build_app
 Function_overview:
 	read_package_readme:
 		Provide the content of the package README as a string for use as MCP instructions.
+	build_app:
+		Build the MCP app according to the provided configuration, including loading the configured data roots and defining the MCP tools for accessing them.
 """
 
 from __future__ import annotations
@@ -22,7 +24,7 @@ import argparse
 import sys
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Mapping
+from typing import Mapping, Sequence, cast
 
 try:
 	import tomllib
@@ -31,16 +33,17 @@ except ModuleNotFoundError:  # pragma: no cover - Python 3.10 fallback
 
 import uvicorn
 from starlette.middleware.cors import CORSMiddleware
+from starlette.types import ASGIApp
 
 from mcp.server.fastmcp import FastMCP
 from mcp.server.fastmcp.server import TransportSecuritySettings
 
 try:
 	from . import __version__
-	from .tools import get_object, get_root, get_section, list_docs
+	from .tools import SearchObjectsFilter, get_object, get_root, get_section, get_subsection, list_docs, search_objects
 except ImportError:  # pragma: no cover
 	from sdv.doc.waterloo.mcp import __version__
-	from sdv.doc.waterloo.mcp.tools import get_object, get_root, get_section, list_docs
+	from sdv.doc.waterloo.mcp.tools import SearchObjectsFilter, get_object, get_root, get_section, get_subsection, list_docs, search_objects
 
 # Run browser-based MCP-inspector with npx @modelcontextprotocol/inspector 
 
@@ -119,7 +122,8 @@ def read_package_readme() -> str:
 	Returns:
 		The content of the |file|`README` file as a string.
 	Raises:
-		FileNotFoundError: If the |file|`README` file does not exist.
+		FileNotFoundError:
+			|may| raise if the |file|`README` file does not exist.
 	"""
 	path = Path(__file__).resolve().with_name("README")
 	try:
@@ -194,9 +198,9 @@ kind = "wtrl-json"
 """
 
 
-def _load_toml(path: Path) -> Mapping[str, Any]:
+def _load_toml(path: Path) -> Mapping[str, object]:
 	with path.open("rb") as fh:
-		return tomllib.load(fh)
+		return cast(Mapping[str, object], tomllib.load(fh))
 
 
 def _parse_roots(raw_roots: object, config_dir: Path) -> list[RootConfig]:
@@ -298,7 +302,7 @@ def build_app(config: McpConfig) -> FastMCP:
 		name="wtrl_mcp",
 		instructions=read_package_readme(),
 		debug=False,
-		log_level=config.logging.level,  # type: ignore[arg-type]
+		log_level=config.logging.level,
 		host=config.server.host,
 		port=config.server.port,
 		streamable_http_path=config.server.streamable_http_path,
@@ -310,7 +314,7 @@ def build_app(config: McpConfig) -> FastMCP:
 			allowed_origins=list(config.security.allowed_origins),
 		)
 
-	def _root_mappings() -> list[dict[str, Any]]:
+	def _root_mappings() -> list[Mapping[str, object]]:
 		return [
 			{
 				"path": root.path,
@@ -322,25 +326,33 @@ def build_app(config: McpConfig) -> FastMCP:
 		]
 
 	@mcp.tool(name="list_docs", description="List configured Waterloo data roots.")
-	def _list_docs() -> list[dict[str, Any]]:
+	def _list_docs() -> list[dict[str, object]]:
 		return list_docs(_root_mappings())
 
 	@mcp.tool(name="get_root", description="Read one configured Waterloo data root by root_id.")
-	def _get_root(root_id: str) -> dict[str, Any]:
+	def _get_root(root_id: str) -> dict[str, object]:
 		return get_root(root_id, _root_mappings())
 
 	@mcp.tool(name="get_object", description="Read one Waterloo object by qid from a configured root.")
-	def _get_object(root_id: str, qid: str) -> dict[str, Any]:
+	def _get_object(root_id: str, qid: str) -> dict[str, object]:
 		return get_object(root_id, qid, _root_mappings())
 
 	@mcp.tool(name="get_section", description="Read one stored section of one Waterloo object.")
-	def _get_section(root_id: str, qid: str, section: str) -> dict[str, Any]:
+	def _get_section(root_id: str, qid: str, section: str) -> dict[str, object]:
 		return get_section(root_id, qid, section, _root_mappings())
+
+	@mcp.tool(name="get_subsection", description="Read one stored subsection of one Waterloo object.")
+	def _get_subsection(root_id: str, qid: str, section: str, subsection: str) -> dict[str, object]:
+		return get_subsection(root_id, qid, section, subsection, _root_mappings())
+
+	@mcp.tool(name="search_objects", description="Search Waterloo objects by expression and structural filters.")
+	def _search_objects(expression: str, filter: SearchObjectsFilter | None = None) -> list[tuple[str, str, str]]:
+		return search_objects(expression, _root_mappings(), filter)
 
 	return mcp
 
 
-def _wrap_browser_cors(app: Any, origins: list[str]) -> Any:
+def _wrap_browser_cors(app: ASGIApp, origins: list[str]) -> ASGIApp:
 	"""Wrap an ASGI app with permissive browser CORS for MCP Inspector use."""
 	return CORSMiddleware(
 		app,

@@ -1,12 +1,12 @@
 {
     "$schema": "https://sci-d-vis.com/schema/wtrl-json-0.1.0.schema.json",
-    "$id": "urn:waterlint:wtrl-json:0.14.1:core:rfc-2119:8f4c289aba02db669b162ce10950d81f8932c91f6fbb2b50f01603ac041e2719",
+    "$id": "urn:waterlint:wtrl-json:0.14.1:core:rfc-2119:18dc37316e995f523a5397bfd7af6a187908ac056dd8d2c120a78937ff645c7f",
     "__WTRL_VERSION__": {
         "waterloo": "0.8.1",
         "schema": "0.1.0"
     },
     "__WTRL_META__": {
-        "generated_at": "2026-05-29T21:04:13+02:00",
+        "generated_at": "2026-05-30T11:17:51+02:00",
         "generator": "waterlint",
         "scope": "core",
         "flavour": "rfc-2119"
@@ -53,7 +53,9 @@
         "sdv.doc.waterloo.mcp.tools.get_object": "/__WTRL_OBJECTS__/sdv.doc.waterloo.mcp.tools.get_object",
         "sdv.doc.waterloo.mcp.tools.get_root": "/__WTRL_OBJECTS__/sdv.doc.waterloo.mcp.tools.get_root",
         "sdv.doc.waterloo.mcp.tools.get_section": "/__WTRL_OBJECTS__/sdv.doc.waterloo.mcp.tools.get_section",
+        "sdv.doc.waterloo.mcp.tools.get_subsection": "/__WTRL_OBJECTS__/sdv.doc.waterloo.mcp.tools.get_subsection",
         "sdv.doc.waterloo.mcp.tools.list_docs": "/__WTRL_OBJECTS__/sdv.doc.waterloo.mcp.tools.list_docs",
+        "sdv.doc.waterloo.mcp.tools.search_objects": "/__WTRL_OBJECTS__/sdv.doc.waterloo.mcp.tools.search_objects",
         "server.build_app": "/__WTRL_OBJECTS__/server.build_app"
     },
     "__WTRL_TOC_TYPES__": {},
@@ -177,7 +179,9 @@
                     "list_docs",
                     "get_root",
                     "get_object",
-                    "get_section"
+                    "get_section",
+                    "get_subsection",
+                    "search_objects"
                 ],
                 "Function_overview": {
                     "list_docs": [
@@ -191,6 +195,12 @@
                     ],
                     "get_section": [
                         "Resolve one named section of one object inside one configured root and return the stored section value."
+                    ],
+                    "get_subsection": [
+                        "Resolve one named subsection of one section of one object inside one configured root and return the stored subsection value."
+                    ],
+                    "search_objects": [
+                        "Search for object QIDs with optional structural filters and return stable triples."
                     ]
                 }
             }
@@ -332,6 +342,91 @@
                 }
             }
         },
+        "sdv.doc.waterloo.mcp.tools.get_subsection": {
+            "signature": {
+                "text": "get_subsection(root_id: 'str', qid: 'str', section: 'str', subsection: 'str', roots: 'list[Mapping[str, Any]]') -> 'dict[str, Any]'",
+                "parameters": [
+                    {
+                        "name": "root_id",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    },
+                    {
+                        "name": "qid",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    },
+                    {
+                        "name": "section",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    },
+                    {
+                        "name": "subsection",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    },
+                    {
+                        "name": "roots",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "list[Mapping[str, Any]]",
+                        "default": null
+                    }
+                ],
+                "returns": "dict[str, Any]"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST resolve one named subsection of one named section of one QID inside one configured root and return the stored subsection value together with the relevant metadata."
+                    ]
+                },
+                "Parameters": {
+                    "root_id": [
+                        "The canonical root identifier derived from the canonical absolute root path."
+                    ],
+                    "qid": [
+                        "The fully qualified identifier of the requested object inside the loaded Waterloo JSON document."
+                    ],
+                    "section": [
+                        "The name of the requested stored section."
+                    ],
+                    "subsection": [
+                        "The name of the requested subsection inside the selected section."
+                    ],
+                    "roots": [
+                        "The list of configured root entries."
+                    ]
+                },
+                "Returns": [
+                    "A dictionary describing the root, the requested QID, the requested section, the requested subsection, and the stored subsection value."
+                ],
+                "Raises": {
+                    "ValueError": [
+                        "MAY raise if the root identifier, QID, section name, or subsection name is unknown."
+                    ],
+                    "FileNotFoundError": [
+                        "MAY raise if the configured root path no longer exists."
+                    ],
+                    "json.JSONDecodeError": [
+                        "MAY raise if the root file is not valid JSON."
+                    ]
+                }
+            }
+        },
         "sdv.doc.waterloo.mcp.tools.list_docs": {
             "signature": {
                 "text": "list_docs(roots: 'list[Mapping[str, Any]]') -> 'list[dict[str, Any]]'",
@@ -375,6 +470,68 @@
                 "Raises": {}
             }
         },
+        "sdv.doc.waterloo.mcp.tools.search_objects": {
+            "signature": {
+                "text": "search_objects(expression: 'str', roots: 'list[Mapping[str, Any]]', filter: 'SearchObjectsFilter | None' = None) -> 'list[tuple[str, str, str]]'",
+                "parameters": [
+                    {
+                        "name": "expression",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    },
+                    {
+                        "name": "roots",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "list[Mapping[str, Any]]",
+                        "default": null
+                    },
+                    {
+                        "name": "filter",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "SearchObjectsFilter | None",
+                        "default": "None"
+                    }
+                ],
+                "returns": "list[tuple[str, str, str]]"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST search configured Waterloo roots for object QIDs matching the given expression and optional structural filters, and return stable triples of root ID, QID, and kind.",
+                        "MUST treat wildcard expressions as segment-aware matches over the QID, with the last segment being the primary lookup target for simple names."
+                    ]
+                },
+                "Parameters": {
+                    "expression": [
+                        "The search expression. Wildcards are allowed."
+                    ],
+                    "filter": [
+                        "Optional structural filters such as root ID, kind, and scope."
+                    ],
+                    "roots": [
+                        "The list of configured root entries."
+                    ]
+                },
+                "Returns": [
+                    "A list of triples ``(root_id, qid, kind)`` for matching objects."
+                ],
+                "Raises": {
+                    "None": [
+                        "MUST not raise any intentional exceptions for unmatched search criteria."
+                    ]
+                }
+            }
+        },
         "server.build_app": {
             "signature": {
                 "text": "build_app(config: 'McpConfig') -> 'FastMCP'",
@@ -392,7 +549,9 @@
                 "@mcp.tool(name=\"list_docs\", description=\"List configured Waterloo data roots.\")",
                 "@mcp.tool(name=\"get_root\", description=\"Read one configured Waterloo data root by root_id.\")",
                 "@mcp.tool(name=\"get_object\", description=\"Read one Waterloo object by qid from a configured root.\")",
-                "@mcp.tool(name=\"get_section\", description=\"Read one stored section of one Waterloo object.\")"
+                "@mcp.tool(name=\"get_section\", description=\"Read one stored section of one Waterloo object.\")",
+                "@mcp.tool(name=\"get_subsection\", description=\"Read one stored subsection of one Waterloo object.\")",
+                "@mcp.tool(name=\"search_objects\", description=\"Search Waterloo objects by expression and structural filters.\")"
             ],
             "doc": {
                 "Preamble": {

@@ -14,9 +14,21 @@ streamable_http_path = "/mcp"
 
 [security]
 # allowed_hosts = ["127.0.0.1:8000"]
+# Prefer explicit host:port entries, e.g. ["127.0.0.1:13316", "localhost:13316"].
 allowed_hosts = ["127.0.0.1:13316"]
 # allowed_origins = ["http://localhost:6274"]
+# Prefer explicit origins, e.g. ["http://localhost:6274", "http://gilgamesh:6274"].
+# Wildcard support is implementation/version dependent; assume exact matches unless verified.
 allowed_origins = ["http://gilgamesh:6274"]
+
+# Example profiles (copy/paste into active values above):
+# Dev profile (Inspector + local VS Code):
+# allowed_hosts = ["127.0.0.1:13316", "localhost:13316"]
+# allowed_origins = ["http://localhost:6274", "http://gilgamesh:6274"]
+#
+# Prod profile (strict, no browser tooling):
+# allowed_hosts = ["mcp.example.internal:443"]
+# allowed_origins = ["https://vscode.example.internal"]
 
 [logging]
 # level = "INFO"
