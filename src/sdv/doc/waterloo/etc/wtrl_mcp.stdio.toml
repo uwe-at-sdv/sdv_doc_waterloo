@@ -1,0 +1,24 @@
+# Waterloo MCP server configuration for stdio transport.
+#
+# Use this file with:
+#   wtrl_mcp --config /server/devel/sdv/privat/uwe/source/sdv_doc_waterloo/package_main/src/sdv/doc/waterloo/etc/wtrl_mcp.stdio.toml
+#
+# The roots are resolved relative to this file.
+
+[server]
+transport = "stdio"
+# host, port, and streamable_http_path are only used for streamable-http.
+
+[security]
+# Browser/host allowlists are only used for streamable-http.
+
+[logging]
+level = "INFO"
+access_log = true
+config_path = "logging.syslog.toml"
+
+[[roots]]
+path = "../mcp/doc-json/wtrl-mcp.wtrl.core.rfc-2119.json"
+label = "Waterloo MCP Server and Tool set Reference"
+enabled = true
+kind = "wtrl-json"

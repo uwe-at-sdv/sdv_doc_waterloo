@@ -14,4 +14,3 @@ def _read_version() -> str:
 
 
 __version__ = _read_version()
-

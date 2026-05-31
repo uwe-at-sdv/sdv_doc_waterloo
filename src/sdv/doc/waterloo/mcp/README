@@ -9,6 +9,8 @@ Current v1 focus:
 - read one stored section by `root_id`, `qid`, and section name
 - read one stored subsection by `root_id`, `qid`, section name, and subsection name
 - search objects by expression and structural filters
+- search section and subsection labels by expression and structural filters,
+  returning compact location records without redundant match text
 - inspect the indexed Waterloo data behind them
 - keep the server simple and stdio-based for local development
 - offer Streamable HTTP for Inspector-based inspection at `/mcp`
@@ -22,6 +24,11 @@ Typical usage:
 - use `--gen-config-template` to print a template to stdout
 - configure `transport = "stdio"` or `transport = "streamable-http"` in the
   TOML file
+- when regenerating the MCP doc-JSON from docstrings, use the package root
+  `package_main/src/sdv/doc/waterloo/mcp` as `--basedir` and address the
+  modules relative to that directory, for example `--obj server tools`
+  instead of `--obj mcp.server`; this avoids name clashes with the Python
+  `mcp` SDK package and makes local chat-driven testing easier
 - browser Inspector example:
   - set `transport = "streamable-http"` in the TOML file
   - set `allowed_origins = ["http://gilgamesh:6274"]`
@@ -34,6 +41,13 @@ Typical usage:
 - call `get_section` with a `root_id`, `qid`, and section name
 - call `get_subsection` with a `root_id`, `qid`, section name, and subsection name
 - call `search_objects` with an expression and an optional filter object
+- call `search_sections` with an expression and an optional filter object
+- call `search_text` with a list of terms and an optional filter object
+
+Lookup failures are currently reported as standardized tool messages with
+`MCPS-001` through `MCPS-004` prefixes, for example unknown `root_id`,
+unknown `qid`, or unknown section and subsection labels. `MCPS-005` is
+reserved for a future root-size guardrail.
 
 The `root_id` is a short stable hash of the canonical absolute root path.
 

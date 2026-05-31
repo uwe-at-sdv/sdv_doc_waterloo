@@ -1,14 +1,14 @@
 {
     "$schema": "https://sci-d-vis.com/schema/wtrl-json-0.1.0.schema.json",
-    "$id": "urn:waterlint:wtrl-json:0.14.1:core:rfc-2119:18dc37316e995f523a5397bfd7af6a187908ac056dd8d2c120a78937ff645c7f",
+    "$id": "urn:waterlint:wtrl-json:0.14.1:extension:rfc-2119:066124e5c8357a5e383f06d3e5ae593d55142dfb814e8c67dc616213550711ab",
     "__WTRL_VERSION__": {
         "waterloo": "0.8.1",
         "schema": "0.1.0"
     },
     "__WTRL_META__": {
-        "generated_at": "2026-05-30T11:17:51+02:00",
+        "generated_at": "2026-05-30T20:15:24+02:00",
         "generator": "waterlint",
-        "scope": "core",
+        "scope": "extension",
         "flavour": "rfc-2119"
     },
     "__WTRL_ROLES__": {
@@ -48,7 +48,11 @@
         "server": "/__WTRL_OBJECTS__/server",
         "sdv.doc.waterloo.mcp.tools": "/__WTRL_OBJECTS__/sdv.doc.waterloo.mcp.tools"
     },
-    "__WTRL_TOC_CLASSES__": {},
+    "__WTRL_TOC_CLASSES__": {
+        "sdv.doc.waterloo.mcp.tools.SearchObjectsFilter": "/__WTRL_OBJECTS__/sdv.doc.waterloo.mcp.tools.SearchObjectsFilter",
+        "sdv.doc.waterloo.mcp.tools.SearchSectionsFilter": "/__WTRL_OBJECTS__/sdv.doc.waterloo.mcp.tools.SearchSectionsFilter",
+        "sdv.doc.waterloo.mcp.tools.SearchTextFilter": "/__WTRL_OBJECTS__/sdv.doc.waterloo.mcp.tools.SearchTextFilter"
+    },
     "__WTRL_TOC_CALLABLES__": {
         "sdv.doc.waterloo.mcp.tools.get_object": "/__WTRL_OBJECTS__/sdv.doc.waterloo.mcp.tools.get_object",
         "sdv.doc.waterloo.mcp.tools.get_root": "/__WTRL_OBJECTS__/sdv.doc.waterloo.mcp.tools.get_root",
@@ -56,6 +60,7 @@
         "sdv.doc.waterloo.mcp.tools.get_subsection": "/__WTRL_OBJECTS__/sdv.doc.waterloo.mcp.tools.get_subsection",
         "sdv.doc.waterloo.mcp.tools.list_docs": "/__WTRL_OBJECTS__/sdv.doc.waterloo.mcp.tools.list_docs",
         "sdv.doc.waterloo.mcp.tools.search_objects": "/__WTRL_OBJECTS__/sdv.doc.waterloo.mcp.tools.search_objects",
+        "server.read_package_readme": "/__WTRL_OBJECTS__/server.read_package_readme",
         "server.build_app": "/__WTRL_OBJECTS__/server.build_app"
     },
     "__WTRL_TOC_TYPES__": {},
@@ -63,7 +68,6 @@
     "__WTRL_TOC_CONSTANTS__": {},
     "__WTRL_OBJECTS__": {
         "server": {
-            "path": "/server/devel/sdv/privat/uwe/source/sdv_doc_waterloo/package_main/src/sdv/doc/waterloo/mcp/server.py",
             "doc": {
                 "Preamble": {
                     "profile": "module",
@@ -81,18 +85,218 @@
                     ]
                 },
                 "Public_functions": [
-                    "read_package_readme"
+                    "read_package_readme",
+                    "build_app"
                 ],
                 "Function_overview": {
                     "read_package_readme": [
                         "Provide the content of the package README as a string for use as MCP instructions."
+                    ],
+                    "build_app": [
+                        "Build the MCP app according to the provided configuration, including loading the configured data roots and defining the MCP tools for accessing them."
+                    ]
+                }
+            }
+        },
+        "sdv.doc.waterloo.mcp.tools.SearchObjectsFilter": {
+            "signature": {
+                "text": "BaseModel.__init__(self, /, **data: 'Any') -> 'None'",
+                "parameters": [
+                    {
+                        "name": "data",
+                        "kind": "VAR_KEYWORD",
+                        "annotation": "Any",
+                        "default": null
+                    }
+                ],
+                "returns": "None"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "class",
+                    "normative_sections": [
+                        "Contract"
+                    ],
+                    "scope": [
+                        "extension"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST represent the reusable structural filters for object searches in the Waterloo MCP server.",
+                        "MUST allow the caller to omit any field by leaving it |lit|`None`.",
+                        "MUST keep the documented fields stable for existing clients."
+                    ],
+                    "constructor": [
+                        "MUST accept the following fields:",
+                        "- root_id: Optional root identifier filter.",
+                        "- kind: Optional object kind filter.",
+                        "- scope: Optional exact scope filter."
+                    ]
+                },
+                "Notes": {
+                    "Purpose": [
+                        "This model is part of the public MCP API and is intentionally small so that it can grow additively."
+                    ]
+                }
+            }
+        },
+        "sdv.doc.waterloo.mcp.tools": {
+            "doc": {
+                "Preamble": {
+                    "profile": "module",
+                    "normative_sections": [
+                        "Contract",
+                        "Public_classes",
+                        "Public_functions"
+                    ],
+                    "scope": [
+                        "extension"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST provide the tool set for the Waterloo MCP-server."
+                    ]
+                },
+                "Public_classes": [
+                    "SearchObjectsFilter",
+                    "SearchSectionsFilter",
+                    "SearchTextFilter"
+                ],
+                "Public_functions": [
+                    "list_docs",
+                    "get_root",
+                    "get_object",
+                    "get_section",
+                    "get_subsection",
+                    "search_objects",
+                    "search_sections",
+                    "search_text"
+                ],
+                "Function_overview": {
+                    "list_docs": [
+                        "List the configured Waterloo roots with stable identifiers."
+                    ],
+                    "get_root": [
+                        "Resolve one configured root by its stable identifier and return the loaded JSON document."
+                    ],
+                    "get_object": [
+                        "Resolve one object by QID inside one configured root and return the loaded object record."
+                    ],
+                    "get_section": [
+                        "Resolve one named section of one object inside one configured root and return the stored section value."
+                    ],
+                    "get_subsection": [
+                        "Resolve one named subsection of one section of one object inside one configured root and return the stored subsection value."
+                    ],
+                    "search_objects": [
+                        "Search for object QIDs with optional structural filters and return stable triples."
+                    ],
+                    "search_sections": [
+                        "Search for stored section and subsection labels with optional structural filters."
+                    ],
+                    "search_text": [
+                        "Search for textual content with optional structural filters and compact excerpts."
+                    ]
+                }
+            }
+        },
+        "sdv.doc.waterloo.mcp.tools.SearchSectionsFilter": {
+            "signature": {
+                "text": "BaseModel.__init__(self, /, **data: 'Any') -> 'None'",
+                "parameters": [
+                    {
+                        "name": "data",
+                        "kind": "VAR_KEYWORD",
+                        "annotation": "Any",
+                        "default": null
+                    }
+                ],
+                "returns": "None"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "class",
+                    "normative_sections": [
+                        "Contract"
+                    ],
+                    "scope": [
+                        "extension"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST represent the reusable structural filters for section searches in the Waterloo MCP server.",
+                        "MUST allow the caller to omit any field by leaving it |lit|`None`.",
+                        "MUST keep the documented fields stable for existing clients."
+                    ],
+                    "constructor": [
+                        "MUST accept the following fields:",
+                        "- root_id: Optional root identifier filter.",
+                        "- qid: Optional object QID filter.",
+                        "- kind: Optional object kind filter.",
+                        "- scope: Optional exact scope filter."
+                    ]
+                },
+                "Notes": {
+                    "Purpose": [
+                        "This model is part of the public MCP API and is intentionally small so that it can grow additively."
+                    ]
+                }
+            }
+        },
+        "sdv.doc.waterloo.mcp.tools.SearchTextFilter": {
+            "signature": {
+                "text": "BaseModel.__init__(self, /, **data: 'Any') -> 'None'",
+                "parameters": [
+                    {
+                        "name": "data",
+                        "kind": "VAR_KEYWORD",
+                        "annotation": "Any",
+                        "default": null
+                    }
+                ],
+                "returns": "None"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "class",
+                    "normative_sections": [
+                        "Contract"
+                    ],
+                    "scope": [
+                        "extension"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST represent the reusable structural and matching filters for text searches in the Waterloo MCP server.",
+                        "MUST allow the caller to omit any field by leaving it |lit|`None`.",
+                        "MUST keep the documented fields stable for existing clients."
+                    ],
+                    "constructor": [
+                        "MUST accept the following fields:",
+                        "- root_id: Optional root identifier filter.",
+                        "- qid: Optional object QID filter.",
+                        "- kind: Optional object kind filter.",
+                        "- scope: Optional exact scope filter.",
+                        "- ignore_case: Optional case-insensitive matching toggle.",
+                        "- strip_roles: Optional markup and role stripping toggle.",
+                        "- match_mode: Optional literal matching mode.",
+                        "- term_mode: Optional any/all term combination mode."
+                    ]
+                },
+                "Notes": {
+                    "Purpose": [
+                        "This model is part of the public MCP API and is intentionally small so that it can grow additively."
                     ]
                 }
             }
         },
         "sdv.doc.waterloo.mcp.tools.get_object": {
             "signature": {
-                "text": "get_object(root_id: 'str', qid: 'str', roots: 'list[Mapping[str, Any]]') -> 'dict[str, Any]'",
+                "text": "get_object(root_id: 'str', qid: 'str', roots: 'list[Mapping[str, object]]') -> 'dict[str, object]'",
                 "parameters": [
                     {
                         "name": "root_id",
@@ -109,11 +313,11 @@
                     {
                         "name": "roots",
                         "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "list[Mapping[str, Any]]",
+                        "annotation": "list[Mapping[str, object]]",
                         "default": null
                     }
                 ],
-                "returns": "dict[str, Any]"
+                "returns": "dict[str, object]"
             },
             "doc": {
                 "Preamble": {
@@ -123,6 +327,9 @@
                         "Parameters",
                         "Returns",
                         "Raises"
+                    ],
+                    "scope": [
+                        "extension"
                     ]
                 },
                 "Contract": {
@@ -157,57 +364,9 @@
                 }
             }
         },
-        "sdv.doc.waterloo.mcp.tools": {
-            "path": "/server/devel/sdv/privat/uwe/source/sdv_doc_waterloo/package_main/src/sdv/doc/waterloo/mcp/tools.py",
-            "doc": {
-                "Preamble": {
-                    "profile": "module",
-                    "normative_sections": [
-                        "Contract",
-                        "Public_functions"
-                    ],
-                    "scope": [
-                        "extension"
-                    ]
-                },
-                "Contract": {
-                    "general": [
-                        "MUST provide the tool set for the Waterloo MCP-server."
-                    ]
-                },
-                "Public_functions": [
-                    "list_docs",
-                    "get_root",
-                    "get_object",
-                    "get_section",
-                    "get_subsection",
-                    "search_objects"
-                ],
-                "Function_overview": {
-                    "list_docs": [
-                        "List the configured Waterloo roots with stable identifiers."
-                    ],
-                    "get_root": [
-                        "Resolve one configured root by its stable identifier and return the loaded JSON document."
-                    ],
-                    "get_object": [
-                        "Resolve one object by QID inside one configured root and return the loaded object record."
-                    ],
-                    "get_section": [
-                        "Resolve one named section of one object inside one configured root and return the stored section value."
-                    ],
-                    "get_subsection": [
-                        "Resolve one named subsection of one section of one object inside one configured root and return the stored subsection value."
-                    ],
-                    "search_objects": [
-                        "Search for object QIDs with optional structural filters and return stable triples."
-                    ]
-                }
-            }
-        },
         "sdv.doc.waterloo.mcp.tools.get_root": {
             "signature": {
-                "text": "get_root(root_id: 'str', roots: 'list[Mapping[str, Any]]') -> 'dict[str, Any]'",
+                "text": "get_root(root_id: 'str', roots: 'list[Mapping[str, object]]') -> 'dict[str, object]'",
                 "parameters": [
                     {
                         "name": "root_id",
@@ -218,11 +377,11 @@
                     {
                         "name": "roots",
                         "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "list[Mapping[str, Any]]",
+                        "annotation": "list[Mapping[str, object]]",
                         "default": null
                     }
                 ],
-                "returns": "dict[str, Any]"
+                "returns": "dict[str, object]"
             },
             "doc": {
                 "Preamble": {
@@ -268,7 +427,7 @@
         },
         "sdv.doc.waterloo.mcp.tools.get_section": {
             "signature": {
-                "text": "get_section(root_id: 'str', qid: 'str', section: 'str', roots: 'list[Mapping[str, Any]]') -> 'dict[str, Any]'",
+                "text": "get_section(root_id: 'str', qid: 'str', section: 'str', roots: 'list[Mapping[str, object]]') -> 'dict[str, object]'",
                 "parameters": [
                     {
                         "name": "root_id",
@@ -291,11 +450,11 @@
                     {
                         "name": "roots",
                         "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "list[Mapping[str, Any]]",
+                        "annotation": "list[Mapping[str, object]]",
                         "default": null
                     }
                 ],
-                "returns": "dict[str, Any]"
+                "returns": "dict[str, object]"
             },
             "doc": {
                 "Preamble": {
@@ -305,6 +464,9 @@
                         "Parameters",
                         "Returns",
                         "Raises"
+                    ],
+                    "scope": [
+                        "extension"
                     ]
                 },
                 "Contract": {
@@ -344,7 +506,7 @@
         },
         "sdv.doc.waterloo.mcp.tools.get_subsection": {
             "signature": {
-                "text": "get_subsection(root_id: 'str', qid: 'str', section: 'str', subsection: 'str', roots: 'list[Mapping[str, Any]]') -> 'dict[str, Any]'",
+                "text": "get_subsection(root_id: 'str', qid: 'str', section: 'str', subsection: 'str', roots: 'list[Mapping[str, object]]') -> 'dict[str, object]'",
                 "parameters": [
                     {
                         "name": "root_id",
@@ -373,11 +535,11 @@
                     {
                         "name": "roots",
                         "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "list[Mapping[str, Any]]",
+                        "annotation": "list[Mapping[str, object]]",
                         "default": null
                     }
                 ],
-                "returns": "dict[str, Any]"
+                "returns": "dict[str, object]"
             },
             "doc": {
                 "Preamble": {
@@ -387,6 +549,9 @@
                         "Parameters",
                         "Returns",
                         "Raises"
+                    ],
+                    "scope": [
+                        "extension"
                     ]
                 },
                 "Contract": {
@@ -429,16 +594,16 @@
         },
         "sdv.doc.waterloo.mcp.tools.list_docs": {
             "signature": {
-                "text": "list_docs(roots: 'list[Mapping[str, Any]]') -> 'list[dict[str, Any]]'",
+                "text": "list_docs(roots: 'list[Mapping[str, object]]') -> 'list[dict[str, object]]'",
                 "parameters": [
                     {
                         "name": "roots",
                         "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "list[Mapping[str, Any]]",
+                        "annotation": "list[Mapping[str, object]]",
                         "default": null
                     }
                 ],
-                "returns": "list[dict[str, Any]]"
+                "returns": "list[dict[str, object]]"
             },
             "doc": {
                 "Preamble": {
@@ -472,7 +637,7 @@
         },
         "sdv.doc.waterloo.mcp.tools.search_objects": {
             "signature": {
-                "text": "search_objects(expression: 'str', roots: 'list[Mapping[str, Any]]', filter: 'SearchObjectsFilter | None' = None) -> 'list[tuple[str, str, str]]'",
+                "text": "search_objects(expression: 'str', roots: 'list[Mapping[str, object]]', filter: 'SearchObjectsFilter | None' = None) -> 'list[tuple[str, str, str]]'",
                 "parameters": [
                     {
                         "name": "expression",
@@ -483,7 +648,7 @@
                     {
                         "name": "roots",
                         "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "list[Mapping[str, Any]]",
+                        "annotation": "list[Mapping[str, object]]",
                         "default": null
                     },
                     {
@@ -503,6 +668,9 @@
                         "Parameters",
                         "Returns",
                         "Raises"
+                    ],
+                    "scope": [
+                        "extension"
                     ]
                 },
                 "Contract": {
@@ -525,9 +693,51 @@
                 "Returns": [
                     "A list of triples ``(root_id, qid, kind)`` for matching objects."
                 ],
+                "Raises": {}
+            }
+        },
+        "server.read_package_readme": {
+            "signature": {
+                "text": "read_package_readme() -> 'str'",
+                "parameters": [],
+                "returns": "str"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ],
+                    "scope": [
+                        "extension"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST resolve a resource path to the package |file|`README` file.",
+                        "MUST read and return the content of the |file|`README` file for use as MCP instructions."
+                    ]
+                },
+                "Notes": {
+                    "Purpose": [
+                        "This is a simple way to provide rich instructions for the MCP server without hardcoding them in the source.",
+                        "The README can be edited as needed to update the instructions without touching the code."
+                    ],
+                    "Usage": [
+                        "The string returned by this function is passes as the `instructions` parameter",
+                        "when building the MCP app, making it visible to clients in the MCP session metadata."
+                    ]
+                },
+                "Parameters": {},
+                "Returns": [
+                    "The content of the |file|`README` file as a string."
+                ],
                 "Raises": {
-                    "None": [
-                        "MUST not raise any intentional exceptions for unmatched search criteria."
+                    "FileNotFoundError": [
+                        "MAY raise if the |file|`README` file does not exist."
                     ]
                 }
             }
@@ -551,7 +761,9 @@
                 "@mcp.tool(name=\"get_object\", description=\"Read one Waterloo object by qid from a configured root.\")",
                 "@mcp.tool(name=\"get_section\", description=\"Read one stored section of one Waterloo object.\")",
                 "@mcp.tool(name=\"get_subsection\", description=\"Read one stored subsection of one Waterloo object.\")",
-                "@mcp.tool(name=\"search_objects\", description=\"Search Waterloo objects by expression and structural filters.\")"
+                "@mcp.tool(name=\"search_objects\", description=\"Search Waterloo objects by expression and structural filters.\")",
+                "@mcp.tool(name=\"search_sections\", description=\"Search Waterloo section and subsection labels by expression and structural filters.\")",
+                "@mcp.tool(name=\"search_text\", description=\"Search Waterloo text content by terms and structural filters.\")"
             ],
             "doc": {
                 "Preamble": {

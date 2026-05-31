@@ -1,0 +1,34 @@
+# Waterloo MCP server configuration for streamable-http transport.
+#
+# Use this file with:
+#   wtrl_mcp --config /server/devel/sdv/privat/uwe/source/sdv_doc_waterloo/package_main/src/sdv/doc/waterloo/etc/wtrl_mcp.http.toml
+#
+# The roots and logging config_path are resolved relative to this file.
+
+[server]
+transport = "streamable-http"
+host = "0.0.0.0"
+port = 13316
+streamable_http_path = "/mcp"
+
+[security]
+allowed_hosts = ["127.0.0.1:13316", "localhost:13316", "gilgamesh:13316"]
+allowed_origins = ["http://gilgamesh:6274", "http://localhost:6274"]
+
+[logging]
+level = "INFO"
+access_log = true
+config_path = "logging.toml"
+
+[[roots]]
+# Possible kind at current state of development: wtrl-json.
+path = "../mcp/doc-json/wtrl-mcp.wtrl.core.rfc-2119.json"
+label = "Waterloo MCP Server and Tool set Reference"
+enabled = true
+kind = "wtrl-json"
+
+# [[roots]]
+# path = "/tmp/other-waterloo-root"
+# label = "Other root"
+# enabled = false
+# kind = "directory"

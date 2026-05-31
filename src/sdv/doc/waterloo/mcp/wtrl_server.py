@@ -38,12 +38,20 @@ from starlette.types import ASGIApp
 from mcp.server.fastmcp import FastMCP
 from mcp.server.fastmcp.server import TransportSecuritySettings
 
-try:
-	from . import __version__
-	from .tools import SearchObjectsFilter, get_object, get_root, get_section, get_subsection, list_docs, search_objects
-except ImportError:  # pragma: no cover
-	from sdv.doc.waterloo.mcp import __version__
-	from sdv.doc.waterloo.mcp.tools import SearchObjectsFilter, get_object, get_root, get_section, get_subsection, list_docs, search_objects
+from sdv.doc.waterloo.mcp import __version__
+from sdv.doc.waterloo.mcp.wtrl_tools import (
+	SearchObjectsFilter,
+	SearchSectionsFilter,
+	SearchTextFilter,
+	get_object,
+	get_root,
+	get_section,
+	get_subsection,
+	list_docs,
+	search_objects,
+	search_sections,
+	search_text,
+)
 
 # Run browser-based MCP-inspector with npx @modelcontextprotocol/inspector 
 
@@ -203,6 +211,14 @@ def _load_toml(path: Path) -> Mapping[str, object]:
 		return cast(Mapping[str, object], tomllib.load(fh))
 
 
+def _load_logging_config(path: Path) -> object:
+	"""Load a logging configuration file for uvicorn."""
+	if path.suffix.lower() == ".toml":
+		with path.open("rb") as fh:
+			return cast(object, tomllib.load(fh))
+	return str(path)
+
+
 def _parse_roots(raw_roots: object, config_dir: Path) -> list[RootConfig]:
 	if not isinstance(raw_roots, list) or not raw_roots:
 		raise ValueError("Configuration file must contain at least one [[roots]] entry.")
@@ -349,6 +365,14 @@ def build_app(config: McpConfig) -> FastMCP:
 	def _search_objects(expression: str, filter: SearchObjectsFilter | None = None) -> list[tuple[str, str, str]]:
 		return search_objects(expression, _root_mappings(), filter)
 
+	@mcp.tool(name="search_sections", description="Search Waterloo section and subsection labels by expression and structural filters.")
+	def _search_sections(expression: str, filter: SearchSectionsFilter | None = None) -> list[dict[str, object]]:
+		return search_sections(expression, _root_mappings(), filter)
+
+	@mcp.tool(name="search_text", description="Search Waterloo text content by terms and structural filters.")
+	def _search_text(terms: list[str], filter: SearchTextFilter | None = None) -> list[dict[str, object]]:
+		return search_text(terms, _root_mappings(), filter)
+
 	return mcp
 
 
@@ -383,7 +407,7 @@ def _run_loaded_config(config: McpConfig) -> None:
 			port=config.server.port,
 			log_level=config.logging.level.lower(),
 			access_log=bool(config.logging.access_log) if config.logging.access_log is not None else True,
-			log_config=str(config.logging.config_path) if config.logging.config_path else None,
+			log_config=_load_logging_config(config.logging.config_path) if config.logging.config_path else None,
 		)
 		return
 
