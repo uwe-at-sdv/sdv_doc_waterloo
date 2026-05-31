@@ -3,16 +3,14 @@
   "displayName": "Waterloo Docstrings",
   "icon": "img/wtrl_logo_128x128.png",
   "description": "Tools for Waterloo docstrings in Python.",
-  "version": "0.1.20",
+  "version": "0.2.0",
   "publisher": "uwe-at-sdv",
   "engines": {
-    "vscode": "^1.80.0"
+    "vscode": "^1.115.0"
   },
   "main": "./extension.js",
   "activationEvents": [
-    "onCommand:waterloo.generateMinimalDocstring",
-    "onCommand:waterloo.generateFullDocstring",
-    "onCommand:waterloo.validateDocstring",
+    "onStartupFinished",
     "onLanguage:python"
   ],
   "categories": [
@@ -30,9 +28,35 @@
           "type": "boolean",
           "default": false,
           "description": "Show information notifications after successful Waterloo actions."
+        },
+        "waterloo.mcpProvideServer": {
+          "type": "boolean",
+          "default": true,
+          "description": "Provide a Waterloo MCP stdio server definition to VS Code."
+        },
+        "waterloo.mcpCommand": {
+          "type": "string",
+          "default": "wtrl_mcp",
+          "description": "Command used to start the Waterloo MCP stdio server."
+        },
+        "waterloo.mcpConfigPath": {
+          "type": "string",
+          "default": "",
+          "description": "Absolute path to wtrl_mcp.stdio.toml. If empty, common workspace locations are tried."
+        },
+        "waterloo.mcpServerLabel": {
+          "type": "string",
+          "default": "Waterloo Docs (stdio)",
+          "description": "Human-readable label for the provided MCP server."
         }
       }
     },
+    "mcpServerDefinitionProviders": [
+      {
+        "id": "waterloo.mcpProvider",
+        "label": "Waterloo MCP Provider"
+      }
+    ],
     "grammars": [
       {
         "scopeName": "waterloo.injection",

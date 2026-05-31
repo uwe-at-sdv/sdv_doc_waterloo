@@ -433,6 +433,110 @@ function setCapabilities(capabilities) {
 	void vscode.commands.executeCommand('setContext', 'waterloo.cap.any', caps.size > 0);
 }
 
+function resolveWaterlooMcpConfigPath() {
+	const cfg = vscode.workspace.getConfiguration("waterloo");
+	const configured = String(cfg.get("mcpConfigPath", "")).trim();
+	if (configured.length > 0 && path.isAbsolute(configured)) {
+		if (fs.existsSync(configured)) {
+			return configured;
+		}
+		fout.appendLine(`Waterloo MCP provider: configured absolute path not found yet, passing through: ${configured}`);
+		return configured;
+	}
+
+	try {
+		const pythonOutput = execFileSync('python3', [
+			'-c',
+			'import sdv.doc.waterloo; import os; print(os.path.dirname(sdv.doc.waterloo.__file__))'
+		], { encoding: 'utf-8', timeout: 5000, stdio: ['pipe', 'pipe', 'ignore'] }).trim();
+		if (pythonOutput.length > 0) {
+			const pkgRoot = pythonOutput;
+			const candidate = path.join(pkgRoot, 'etc', 'wtrl_mcp.stdio.toml');
+			if (fs.existsSync(candidate)) {
+				fout.appendLine(`Waterloo MCP provider: found TOML at package root: ${candidate}`);
+				return candidate;
+			}
+		}
+	} catch (_err) {
+		// Silent fallback: workspace/configured-path resolution and default config arg remain available.
+	}
+
+	if (configured.length > 0 && !path.isAbsolute(configured)) {
+		const workspaceFolders = vscode.workspace.workspaceFolders || [];
+		for (const folder of workspaceFolders) {
+			const candidate = path.join(folder.uri.fsPath, configured);
+			if (fs.existsSync(candidate)) {
+				fout.appendLine(`Waterloo MCP provider: found TOML at configured relative path: ${candidate}`);
+				return candidate;
+			}
+		}
+	}
+
+	const workspaceFolders = vscode.workspace.workspaceFolders || [];
+	for (const folder of workspaceFolders) {
+		const candidates = [
+			path.join(folder.uri.fsPath, "sdw", "etc", "wtrl_mcp.stdio.toml"),
+			path.join(folder.uri.fsPath, "etc", "wtrl_mcp.stdio.toml"),
+			path.join(folder.uri.fsPath, "package_main", "etc", "wtrl_mcp.stdio.toml"),
+			path.join(folder.uri.fsPath, "package_main", "src", "sdv", "doc", "waterloo", "mcp", "wtrl_mcp.stdio.toml"),
+		];
+		for (const candidate of candidates) {
+			if (fs.existsSync(candidate)) {
+				fout.appendLine(`Waterloo MCP provider: found TOML at workspace path: ${candidate}`);
+				return candidate;
+			}
+		}
+	}
+
+	return null;
+}
+
+function createWaterlooMcpServerDefinition() {
+	const cfg = vscode.workspace.getConfiguration("waterloo");
+	const command = String(cfg.get("mcpCommand", "wtrl_mcp")).trim() || "wtrl_mcp";
+	const label = String(cfg.get("mcpServerLabel", "Waterloo Docs (stdio)")).trim() || "Waterloo Docs (stdio)";
+	const configured = String(cfg.get("mcpConfigPath", "")).trim();
+	const resolvedPath = resolveWaterlooMcpConfigPath();
+	const configArg = resolvedPath || configured || "etc/wtrl_mcp.stdio.toml";
+	if (!resolvedPath) {
+		fout.appendLine(`Waterloo MCP provider: using fallback config argument: ${configArg}`);
+	}
+	fout.appendLine(
+		`Waterloo MCP provider: advertising '${label}' via '${command} --config ${configArg}'.`
+	);
+
+	const args = ["--config", configArg];
+	return new vscode.McpStdioServerDefinition(label, command, args);
+}
+
+function registerWaterlooMcpProvider(context) {
+	if (!vscode.lm || typeof vscode.lm.registerMcpServerDefinitionProvider !== "function") {
+		fout.appendLine("Waterloo MCP provider: VS Code MCP API not available in this host/version.");
+		return;
+	}
+
+	const cfg = vscode.workspace.getConfiguration("waterloo");
+	if (cfg.get("mcpProvideServer", true) !== true) {
+		fout.appendLine("Waterloo MCP provider: disabled by setting waterloo.mcpProvideServer.");
+		return;
+	}
+
+	const provider = {
+		provideMcpServerDefinitions: () => {
+			const server = createWaterlooMcpServerDefinition();
+			return server ? [server] : [];
+		}
+	};
+
+	try {
+		const disposable = vscode.lm.registerMcpServerDefinitionProvider("waterloo.mcpProvider", provider);
+		context.subscriptions.push(disposable);
+		fout.appendLine("Waterloo MCP provider: registered.");
+	} catch (err) {
+		fout.appendLine(`Waterloo MCP provider: registration failed: ${err}`);
+	}
+}
+
 function emitFatalActivationError(code, detail) {
 	const msg = `Waterloo fatal activation error: ${code}${detail ? ` - ${detail}` : ""}`;
 	fout.appendLine(msg);
@@ -670,12 +774,14 @@ async function validateDocstringInBackend(prereq, commandName) {
 async function activate(context) {
 	fout.appendLine('Activating Waterloo extension...');
 	fout.show(true);
+	registerWaterlooMcpProvider(context);
 	setBackendReady(false);
 	setCapabilities([]);
 	const prereq = checkActivationPrerequisites(context);
 	// Phase-A: Existence and permissions checks, and Python availability check.
 	if (!prereq.ok) {
 		emitFatalActivationError(prereq.code, prereq.detail);
+		fout.appendLine('Waterloo MCP provider remains active; skipping docstring backend setup.');
 		return;
 	}
 	// Phase-B: Ping the backend to check if it is working at all, and that the protocol is compatible.
@@ -700,6 +806,7 @@ async function activate(context) {
 		}
 		catch (err) {
 			emitFatalActivationError(FATAL_BACKEND_PING_FAILED, String(err));
+			fout.appendLine('Waterloo MCP provider remains active; skipping docstring backend setup.');
 			return;
 		}
 	setBackendReady(true);
