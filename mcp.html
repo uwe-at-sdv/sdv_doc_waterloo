@@ -37,8 +37,114 @@
             
   <section id="model-context-protocol">
 <h1><span class="section-number">10. </span>Model Context Protocol<a class="headerlink" href="#model-context-protocol" title="Link to this heading">¶</a></h1>
+<section id="the-waterloo-mcp-server">
+<h2><span class="section-number">10.1. </span>The Waterloo MCP-Server<a class="headerlink" href="#the-waterloo-mcp-server" title="Link to this heading">¶</a></h2>
+<p>The purpose of the MCP-server is to provide a simple, standardized way
+for LLM-agents to access and query Waterloo documents in JSON format.
+While the plain JSON document is already sufficient for many use cases,
+the MCP server additionally enables efficient access to very large
+documentation artifacts that would otherwise burden the agent’s context window.
+The MCP-server is implemented as a simple HTTP server that listens for JSON-RPC requests and responds
+with JSON data. The server can be easily integrated with LLM-agents that support JSON-RPC.</p>
+</section>
+<section id="executable-and-configuration">
+<h2><span class="section-number">10.2. </span>Executable and configuration<a class="headerlink" href="#executable-and-configuration" title="Link to this heading">¶</a></h2>
+<p>There is a pre-defined configuration file for the MCP-server in the Waterloo package,
+located at <code class="wtrl_file docutils literal notranslate"><span class="pre">etc/wtrl_mcp.http.toml</span></code>.
+Once the Waterloo package is installed, the MCP-server can be started by running e.g. the following command in the terminal:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>wtrl_mcp<span class="w"> </span>--config<span class="w"> </span>etc/wtrl_mcp.http.toml
+</pre></div>
+</div>
+<p>If the argument to <code class="wtrl_cmd docutils literal notranslate"><span class="pre">--config</span></code> is an absolute path, it is used as is.
+If it is a relative path, <code class="wtrl_cmd docutils literal notranslate"><span class="pre">wtrl_mcp</span></code> first looks for the file relative
+to the current working directory and then relative to the installed Waterloo
+package root. Therefore the usual package-local configuration path is prefixed
+with <code class="docutils literal notranslate"><span class="pre">etc/</span></code>. If neither candidate exists, the server reports a clear
+configuration error and exits.</p>
+</section>
+<section id="tools">
+<h2><span class="section-number">10.3. </span>Tools<a class="headerlink" href="#tools" title="Link to this heading">¶</a></h2>
+<p>The MCP-server supports the following tools:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 24.0%" />
+<col style="width: 76.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Tool name</p></th>
+<th class="head"><p>What the tool does</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="wtrl_cmd docutils literal notranslate"><span class="pre">list_roots</span></code></p></td>
+<td><p>List configured Waterloo data roots.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="wtrl_cmd docutils literal notranslate"><span class="pre">get_root</span></code></p></td>
+<td><p>Read one configured Waterloo data root by <code class="docutils literal notranslate"><span class="pre">root_id</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="wtrl_cmd docutils literal notranslate"><span class="pre">get_object</span></code></p></td>
+<td><p>Read one Waterloo object by <code class="docutils literal notranslate"><span class="pre">qid</span></code> from a configured root.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="wtrl_cmd docutils literal notranslate"><span class="pre">get_section</span></code></p></td>
+<td><p>Read one stored section of one Waterloo object.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="wtrl_cmd docutils literal notranslate"><span class="pre">get_subsection</span></code></p></td>
+<td><p>Read one stored subsection of one Waterloo object.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="wtrl_cmd docutils literal notranslate"><span class="pre">search_objects</span></code></p></td>
+<td><p>Search Waterloo objects by expression and structural filters.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="wtrl_cmd docutils literal notranslate"><span class="pre">search_sections</span></code></p></td>
+<td><p>Search Waterloo section and subsection labels by expression and structural filters.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="wtrl_cmd docutils literal notranslate"><span class="pre">search_text</span></code></p></td>
+<td><p>Search Waterloo text content by terms and structural filters.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="typical-agent-workflow">
+<h2><span class="section-number">10.4. </span>Typical agent workflow<a class="headerlink" href="#typical-agent-workflow" title="Link to this heading">¶</a></h2>
+<p>The lookup-oriented tools are meant to be used in a simple progression:</p>
+<ol class="arabic simple">
+<li><p><code class="wtrl_cmd docutils literal notranslate"><span class="pre">list_roots</span></code> to discover available roots.</p></li>
+<li><p><code class="wtrl_cmd docutils literal notranslate"><span class="pre">search_objects</span></code> to find candidate objects and obtain stable <code class="docutils literal notranslate"><span class="pre">root_id</span></code> / <code class="docutils literal notranslate"><span class="pre">qid</span></code> pairs.</p></li>
+<li><p><code class="wtrl_cmd docutils literal notranslate"><span class="pre">get_section</span></code> or <code class="wtrl_cmd docutils literal notranslate"><span class="pre">get_subsection</span></code> to inspect the relevant contract, notes, or other structured sections.</p></li>
+<li><p><code class="wtrl_cmd docutils literal notranslate"><span class="pre">search_sections</span></code> when the agent wants to find section or subsection labels rather than object names.</p></li>
+<li><p><code class="wtrl_cmd docutils literal notranslate"><span class="pre">search_text</span></code> when the agent wants to search the actual content text with a small set of terms.</p></li>
+</ol>
+<p>In practice this means that the agent can start with a vague name, narrow it
+down to a canonical target, and then inspect the exact Waterloo text that
+describes the object.</p>
+</section>
+<section id="using-the-mcp-server-in-vscode">
+<h2><span class="section-number">10.5. </span>Using the MCP-server in VSCode<a class="headerlink" href="#using-the-mcp-server-in-vscode" title="Link to this heading">¶</a></h2>
+<p>[Last tested with VSCode 1.115.0 on 2026-05-31]</p>
+<p>With transport <code class="wtrl_lit docutils literal notranslate"><span class="pre">streamable-http</span></code>, the MCP-server is added to VSCode by:</p>
+<blockquote>
+<div><p><code class="wtrl_key docutils literal notranslate"><span class="pre">Shift+Ctrl+P</span></code> and <code class="wtrl_lit docutils literal notranslate"><span class="pre">MCP:</span> <span class="pre">Open</span> <span class="pre">User</span> <span class="pre">Configuration</span></code></p>
+</div></blockquote>
+<p>The code to be added should look like</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;servers&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;waterloo-docs&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;http&quot;</span><span class="p">,</span>
+<span class="w">                </span><span class="nt">&quot;url&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;http://127.0.0.1:13316/mcp&quot;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>where the <code class="wtrl_attr docutils literal notranslate"><span class="pre">url</span></code> is the URL of the MCP server. Use the host and port
+from the running server configuration, and make sure the URL matches the
+configured <code class="wtrl_lit docutils literal notranslate"><span class="pre">streamable-http</span></code> endpoint. The MCP server must be
+running and accessible at that URL for the integration to work. As a smoke
+test, open the MCP panel in VSCode and see whether it connects successfully.
+Then ask Copilot to run <code class="wtrl_cmd docutils literal notranslate"><span class="pre">list_roots</span></code> and check whether it returns the
+expected list of documents.</p>
+</section>
 <section id="server-error-messages">
-<h2><span class="section-number">10.1. </span>Server error messages<a class="headerlink" href="#server-error-messages" title="Link to this heading">¶</a></h2>
+<h2><span class="section-number">10.6. </span>Server error messages<a class="headerlink" href="#server-error-messages" title="Link to this heading">¶</a></h2>
 <p>This section is normative.</p>
 <p>The current lookup-oriented rule family is:</p>
 <ul class="simple">
@@ -51,8 +157,6 @@
 <p>The current implementation already prefixes tool error messages with these
 rule labels. A later version may map them more directly to structured
 JSON-RPC error payloads if the MCP SDK exposes a better hook for that.</p>
-<p>This section is intended as the normative source for MCP server lookup
-errors.</p>
 </section>
 </section>
 
@@ -99,7 +203,12 @@ errors.</p>
 <li class="toctree-l1"><a class="reference internal" href="json_io.html">8. The JSON I/O Layer</a></li>
 <li class="toctree-l1"><a class="reference internal" href="html_output_layer.html">9. The HTML Output Layer</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">10. Model Context Protocol</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#server-error-messages">10.1. Server error messages</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#the-waterloo-mcp-server">10.1. The Waterloo MCP-Server</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#executable-and-configuration">10.2. Executable and configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#tools">10.3. Tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#typical-agent-workflow">10.4. Typical agent workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#using-the-mcp-server-in-vscode">10.5. Using the MCP-server in VSCode</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#server-error-messages">10.6. Server error messages</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="reference.html">11. Reference - Core View</a></li>
