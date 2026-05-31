@@ -12,8 +12,11 @@ port = 13316
 streamable_http_path = "/mcp"
 
 [security]
-allowed_hosts = ["127.0.0.1:13316", "localhost:13316", "gilgamesh:13316"]
-allowed_origins = ["http://gilgamesh:6274", "http://localhost:6274"]
+allowed_hosts = ["127.0.0.1:13316", "localhost:13316"]
+# This matters for the browser-based Inspector, which connects
+# via CORS. Replace "gilgamesh" with your hostname if you want
+# to try it locally. This entry is not relevant for VSCode.
+allowed_origins = ["http://localhost:6274", "http://gilgamesh:6274"]
 
 [logging]
 level = "INFO"

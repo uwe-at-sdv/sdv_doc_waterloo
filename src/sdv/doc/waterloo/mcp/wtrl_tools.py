@@ -12,9 +12,9 @@ Contract:
 Public_classes:
 	SearchObjectsFilter, SearchSectionsFilter, SearchTextFilter
 Public_functions:
-	list_docs, get_root, get_object, get_section, get_subsection, search_objects, search_sections, search_text
+	list_roots, get_root, get_object, get_section, get_subsection, search_objects, search_sections, search_text
 Function_overview:
-	list_docs:
+	list_roots:
 		List the configured Waterloo roots with stable identifiers.
 	get_root:
 		Resolve one configured root by its stable identifier and return the loaded JSON document.
@@ -382,7 +382,7 @@ def _find_root_by_id(roots: list[Mapping[str, object]], root_id: str) -> tuple[i
 	raise _mcp_lookup_error("MCPS-001", f"unknown root_id: {root_id}")
 
 
-def list_docs(roots: list[Mapping[str, object]]) -> list[dict[str, object]]:
+def list_roots(roots: list[Mapping[str, object]]) -> list[dict[str, object]]:
 	r"""
 	Preamble:
 		profile:

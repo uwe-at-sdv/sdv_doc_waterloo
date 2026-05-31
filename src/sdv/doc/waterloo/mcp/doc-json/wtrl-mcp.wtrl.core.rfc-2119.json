@@ -1,12 +1,12 @@
 {
     "$schema": "https://sci-d-vis.com/schema/wtrl-json-0.1.0.schema.json",
-    "$id": "urn:waterlint:wtrl-json:0.14.1:extension:rfc-2119:066124e5c8357a5e383f06d3e5ae593d55142dfb814e8c67dc616213550711ab",
+    "$id": "urn:waterlint:wtrl-json:0.14.1:extension:rfc-2119:e31b5e46c8fbaf4ab3052f2462f191d84f643af95473110c7aae7d04ef4b7ae7",
     "__WTRL_VERSION__": {
         "waterloo": "0.8.1",
         "schema": "0.1.0"
     },
     "__WTRL_META__": {
-        "generated_at": "2026-05-30T20:15:24+02:00",
+        "generated_at": "2026-05-31T11:44:18+02:00",
         "generator": "waterlint",
         "scope": "extension",
         "flavour": "rfc-2119"
@@ -45,29 +45,29 @@
         }
     },
     "__WTRL_TOC_MODULES__": {
-        "server": "/__WTRL_OBJECTS__/server",
-        "sdv.doc.waterloo.mcp.tools": "/__WTRL_OBJECTS__/sdv.doc.waterloo.mcp.tools"
+        "wtrl_server": "/__WTRL_OBJECTS__/wtrl_server",
+        "sdv.doc.waterloo.mcp.wtrl_tools": "/__WTRL_OBJECTS__/sdv.doc.waterloo.mcp.wtrl_tools"
     },
     "__WTRL_TOC_CLASSES__": {
-        "sdv.doc.waterloo.mcp.tools.SearchObjectsFilter": "/__WTRL_OBJECTS__/sdv.doc.waterloo.mcp.tools.SearchObjectsFilter",
-        "sdv.doc.waterloo.mcp.tools.SearchSectionsFilter": "/__WTRL_OBJECTS__/sdv.doc.waterloo.mcp.tools.SearchSectionsFilter",
-        "sdv.doc.waterloo.mcp.tools.SearchTextFilter": "/__WTRL_OBJECTS__/sdv.doc.waterloo.mcp.tools.SearchTextFilter"
+        "sdv.doc.waterloo.mcp.wtrl_tools.SearchObjectsFilter": "/__WTRL_OBJECTS__/sdv.doc.waterloo.mcp.wtrl_tools.SearchObjectsFilter",
+        "sdv.doc.waterloo.mcp.wtrl_tools.SearchSectionsFilter": "/__WTRL_OBJECTS__/sdv.doc.waterloo.mcp.wtrl_tools.SearchSectionsFilter",
+        "sdv.doc.waterloo.mcp.wtrl_tools.SearchTextFilter": "/__WTRL_OBJECTS__/sdv.doc.waterloo.mcp.wtrl_tools.SearchTextFilter"
     },
     "__WTRL_TOC_CALLABLES__": {
-        "sdv.doc.waterloo.mcp.tools.get_object": "/__WTRL_OBJECTS__/sdv.doc.waterloo.mcp.tools.get_object",
-        "sdv.doc.waterloo.mcp.tools.get_root": "/__WTRL_OBJECTS__/sdv.doc.waterloo.mcp.tools.get_root",
-        "sdv.doc.waterloo.mcp.tools.get_section": "/__WTRL_OBJECTS__/sdv.doc.waterloo.mcp.tools.get_section",
-        "sdv.doc.waterloo.mcp.tools.get_subsection": "/__WTRL_OBJECTS__/sdv.doc.waterloo.mcp.tools.get_subsection",
-        "sdv.doc.waterloo.mcp.tools.list_docs": "/__WTRL_OBJECTS__/sdv.doc.waterloo.mcp.tools.list_docs",
-        "sdv.doc.waterloo.mcp.tools.search_objects": "/__WTRL_OBJECTS__/sdv.doc.waterloo.mcp.tools.search_objects",
-        "server.read_package_readme": "/__WTRL_OBJECTS__/server.read_package_readme",
-        "server.build_app": "/__WTRL_OBJECTS__/server.build_app"
+        "sdv.doc.waterloo.mcp.wtrl_tools.get_object": "/__WTRL_OBJECTS__/sdv.doc.waterloo.mcp.wtrl_tools.get_object",
+        "sdv.doc.waterloo.mcp.wtrl_tools.get_root": "/__WTRL_OBJECTS__/sdv.doc.waterloo.mcp.wtrl_tools.get_root",
+        "sdv.doc.waterloo.mcp.wtrl_tools.get_section": "/__WTRL_OBJECTS__/sdv.doc.waterloo.mcp.wtrl_tools.get_section",
+        "sdv.doc.waterloo.mcp.wtrl_tools.get_subsection": "/__WTRL_OBJECTS__/sdv.doc.waterloo.mcp.wtrl_tools.get_subsection",
+        "sdv.doc.waterloo.mcp.wtrl_tools.list_roots": "/__WTRL_OBJECTS__/sdv.doc.waterloo.mcp.wtrl_tools.list_roots",
+        "sdv.doc.waterloo.mcp.wtrl_tools.search_objects": "/__WTRL_OBJECTS__/sdv.doc.waterloo.mcp.wtrl_tools.search_objects",
+        "wtrl_server.read_package_readme": "/__WTRL_OBJECTS__/wtrl_server.read_package_readme",
+        "wtrl_server.build_app": "/__WTRL_OBJECTS__/wtrl_server.build_app"
     },
     "__WTRL_TOC_TYPES__": {},
     "__WTRL_TOC_VARIABLES__": {},
     "__WTRL_TOC_CONSTANTS__": {},
     "__WTRL_OBJECTS__": {
-        "server": {
+        "wtrl_server": {
             "doc": {
                 "Preamble": {
                     "profile": "module",
@@ -98,7 +98,7 @@
                 }
             }
         },
-        "sdv.doc.waterloo.mcp.tools.SearchObjectsFilter": {
+        "sdv.doc.waterloo.mcp.wtrl_tools.SearchObjectsFilter": {
             "signature": {
                 "text": "BaseModel.__init__(self, /, **data: 'Any') -> 'None'",
                 "parameters": [
@@ -141,7 +141,7 @@
                 }
             }
         },
-        "sdv.doc.waterloo.mcp.tools": {
+        "sdv.doc.waterloo.mcp.wtrl_tools": {
             "doc": {
                 "Preamble": {
                     "profile": "module",
@@ -165,7 +165,7 @@
                     "SearchTextFilter"
                 ],
                 "Public_functions": [
-                    "list_docs",
+                    "list_roots",
                     "get_root",
                     "get_object",
                     "get_section",
@@ -175,7 +175,7 @@
                     "search_text"
                 ],
                 "Function_overview": {
-                    "list_docs": [
+                    "list_roots": [
                         "List the configured Waterloo roots with stable identifiers."
                     ],
                     "get_root": [
@@ -202,7 +202,7 @@
                 }
             }
         },
-        "sdv.doc.waterloo.mcp.tools.SearchSectionsFilter": {
+        "sdv.doc.waterloo.mcp.wtrl_tools.SearchSectionsFilter": {
             "signature": {
                 "text": "BaseModel.__init__(self, /, **data: 'Any') -> 'None'",
                 "parameters": [
@@ -246,7 +246,7 @@
                 }
             }
         },
-        "sdv.doc.waterloo.mcp.tools.SearchTextFilter": {
+        "sdv.doc.waterloo.mcp.wtrl_tools.SearchTextFilter": {
             "signature": {
                 "text": "BaseModel.__init__(self, /, **data: 'Any') -> 'None'",
                 "parameters": [
@@ -294,7 +294,7 @@
                 }
             }
         },
-        "sdv.doc.waterloo.mcp.tools.get_object": {
+        "sdv.doc.waterloo.mcp.wtrl_tools.get_object": {
             "signature": {
                 "text": "get_object(root_id: 'str', qid: 'str', roots: 'list[Mapping[str, object]]') -> 'dict[str, object]'",
                 "parameters": [
@@ -364,7 +364,7 @@
                 }
             }
         },
-        "sdv.doc.waterloo.mcp.tools.get_root": {
+        "sdv.doc.waterloo.mcp.wtrl_tools.get_root": {
             "signature": {
                 "text": "get_root(root_id: 'str', roots: 'list[Mapping[str, object]]') -> 'dict[str, object]'",
                 "parameters": [
@@ -425,7 +425,7 @@
                 }
             }
         },
-        "sdv.doc.waterloo.mcp.tools.get_section": {
+        "sdv.doc.waterloo.mcp.wtrl_tools.get_section": {
             "signature": {
                 "text": "get_section(root_id: 'str', qid: 'str', section: 'str', roots: 'list[Mapping[str, object]]') -> 'dict[str, object]'",
                 "parameters": [
@@ -504,7 +504,7 @@
                 }
             }
         },
-        "sdv.doc.waterloo.mcp.tools.get_subsection": {
+        "sdv.doc.waterloo.mcp.wtrl_tools.get_subsection": {
             "signature": {
                 "text": "get_subsection(root_id: 'str', qid: 'str', section: 'str', subsection: 'str', roots: 'list[Mapping[str, object]]') -> 'dict[str, object]'",
                 "parameters": [
@@ -592,9 +592,9 @@
                 }
             }
         },
-        "sdv.doc.waterloo.mcp.tools.list_docs": {
+        "sdv.doc.waterloo.mcp.wtrl_tools.list_roots": {
             "signature": {
-                "text": "list_docs(roots: 'list[Mapping[str, object]]') -> 'list[dict[str, object]]'",
+                "text": "list_roots(roots: 'list[Mapping[str, object]]') -> 'list[dict[str, object]]'",
                 "parameters": [
                     {
                         "name": "roots",
@@ -635,7 +635,7 @@
                 "Raises": {}
             }
         },
-        "sdv.doc.waterloo.mcp.tools.search_objects": {
+        "sdv.doc.waterloo.mcp.wtrl_tools.search_objects": {
             "signature": {
                 "text": "search_objects(expression: 'str', roots: 'list[Mapping[str, object]]', filter: 'SearchObjectsFilter | None' = None) -> 'list[tuple[str, str, str]]'",
                 "parameters": [
@@ -696,7 +696,7 @@
                 "Raises": {}
             }
         },
-        "server.read_package_readme": {
+        "wtrl_server.read_package_readme": {
             "signature": {
                 "text": "read_package_readme() -> 'str'",
                 "parameters": [],
@@ -742,7 +742,7 @@
                 }
             }
         },
-        "server.build_app": {
+        "wtrl_server.build_app": {
             "signature": {
                 "text": "build_app(config: 'McpConfig') -> 'FastMCP'",
                 "parameters": [
@@ -756,7 +756,7 @@
                 "returns": "FastMCP"
             },
             "decorators": [
-                "@mcp.tool(name=\"list_docs\", description=\"List configured Waterloo data roots.\")",
+                "@mcp.tool(name=\"list_roots\", description=\"List configured Waterloo data roots.\")",
                 "@mcp.tool(name=\"get_root\", description=\"Read one configured Waterloo data root by root_id.\")",
                 "@mcp.tool(name=\"get_object\", description=\"Read one Waterloo object by qid from a configured root.\")",
                 "@mcp.tool(name=\"get_section\", description=\"Read one stored section of one Waterloo object.\")",

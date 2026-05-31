@@ -16,17 +16,17 @@ Current v1 focus:
 - offer Streamable HTTP for Inspector-based inspection at `/mcp`
 
 The current entry point is `wtrl_mcp`.
-The Inspector-friendly entry point is `sdv.doc.waterloo.mcp.server:app`.
+The Inspector-friendly entry point is `sdv.doc.waterloo.mcp.wtrl_server:app`.
 
 Typical usage:
 - use `--config` to select a TOML file explicitly
-- or keep `wtrl_mcp.toml` next to `server.py` as the default configuration
+- or keep the prepared TOML files under `etc/` and pass one of them via `--config`
 - use `--gen-config-template` to print a template to stdout
 - configure `transport = "stdio"` or `transport = "streamable-http"` in the
   TOML file
 - when regenerating the MCP doc-JSON from docstrings, use the package root
   `package_main/src/sdv/doc/waterloo/mcp` as `--basedir` and address the
-  modules relative to that directory, for example `--obj server tools`
+  modules relative to that directory, for example `--obj wtrl_server`
   instead of `--obj mcp.server`; this avoids name clashes with the Python
   `mcp` SDK package and makes local chat-driven testing easier
 - browser Inspector example:
@@ -35,7 +35,7 @@ Typical usage:
   - set `allowed_hosts = ["127.0.0.1:8000"]`
   - connect the Inspector to `http://127.0.0.1:8000/mcp`
 - inspect `tools/list`
-- call `list_docs`
+- call `list_roots`
 - call `get_root` with a `root_id`
 - call `get_object` with a `root_id` and `qid`
 - call `get_section` with a `root_id`, `qid`, and section name

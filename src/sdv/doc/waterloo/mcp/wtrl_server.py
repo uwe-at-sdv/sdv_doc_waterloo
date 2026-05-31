@@ -47,7 +47,7 @@ from sdv.doc.waterloo.mcp.wtrl_tools import (
 	get_root,
 	get_section,
 	get_subsection,
-	list_docs,
+	list_roots,
 	search_objects,
 	search_sections,
 	search_text,
@@ -165,10 +165,16 @@ def _default_config_path() -> Path:
 	return Path(__file__).resolve().with_name("wtrl_mcp.toml")
 
 
+def _package_root() -> Path:
+	return Path(__file__).resolve().parent.parent
+
+
 def _template_text() -> str:
 	return """# Waterloo MCP server configuration template
 #
-# Save this as wtrl_mcp.toml next to server.py and edit it as needed.
+# Save this under etc/ as wtrl_mcp.http.toml or wtrl_mcp.stdio.toml and edit it.
+# Relative paths are resolved against the current directory and the installed
+# Waterloo package root, so the etc/ prefix is intentional.
 
 [server]
 # transport = "stdio"
@@ -219,6 +225,21 @@ def _load_logging_config(path: Path) -> object:
 	return str(path)
 
 
+def _resolve_config_path(config_path: Path | None) -> Path:
+	if config_path is None:
+		return _default_config_path()
+	if config_path.is_absolute():
+		return config_path
+	candidates = [
+		Path.cwd() / config_path,
+		_package_root() / config_path,
+	]
+	for candidate in candidates:
+		if candidate.exists():
+			return candidate
+	return config_path
+
+
 def _parse_roots(raw_roots: object, config_dir: Path) -> list[RootConfig]:
 	if not isinstance(raw_roots, list) or not raw_roots:
 		raise ValueError("Configuration file must contain at least one [[roots]] entry.")
@@ -246,8 +267,13 @@ def _parse_roots(raw_roots: object, config_dir: Path) -> list[RootConfig]:
 
 def load_config(config_path: Path | None = None) -> McpConfig:
 	"""Load a Waterloo MCP TOML configuration file."""
-	path = config_path or _default_config_path()
+	path = _resolve_config_path(config_path)
 	if not path.exists():
+		if config_path is not None and not config_path.is_absolute():
+			raise FileNotFoundError(
+				"Waterloo MCP configuration file not found: "
+				f"{config_path} (searched {Path.cwd() / config_path} and {_package_root() / config_path})"
+			)
 		raise FileNotFoundError(f"Waterloo MCP configuration file not found: {path}")
 	raw = _load_toml(path)
 	if not isinstance(raw, Mapping):
@@ -341,9 +367,9 @@ def build_app(config: McpConfig) -> FastMCP:
 			for root in config.roots
 		]
 
-	@mcp.tool(name="list_docs", description="List configured Waterloo data roots.")
-	def _list_docs() -> list[dict[str, object]]:
-		return list_docs(_root_mappings())
+	@mcp.tool(name="list_roots", description="List configured Waterloo data roots.")
+	def _list_roots() -> list[dict[str, object]]:
+		return list_roots(_root_mappings())
 
 	@mcp.tool(name="get_root", description="Read one configured Waterloo data root by root_id.")
 	def _get_root(root_id: str) -> dict[str, object]:

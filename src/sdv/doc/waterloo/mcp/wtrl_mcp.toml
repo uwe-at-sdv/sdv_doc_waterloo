@@ -1,6 +1,6 @@
 # Waterloo MCP server configuration template
 #
-# Save this as wtrl_mcp.toml next to server.py and edit it as needed.
+# Save this as wtrl_mcp.toml next to wtrl_server.py and edit it as needed.
 
 [server]
 # transport = "stdio"
