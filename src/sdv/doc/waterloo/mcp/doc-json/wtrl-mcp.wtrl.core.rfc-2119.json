@@ -1,14 +1,14 @@
 {
     "$schema": "https://sci-d-vis.com/schema/wtrl-json-0.1.0.schema.json",
-    "$id": "urn:waterlint:wtrl-json:0.14.1:extension:rfc-2119:e31b5e46c8fbaf4ab3052f2462f191d84f643af95473110c7aae7d04ef4b7ae7",
+    "$id": "urn:waterlint:wtrl-json:0.14.1:core:rfc-2119:d912c74a094a1dea0769520b9ebac1efb3a07b9f1ac8f75788cce17b0b65f78d",
     "__WTRL_VERSION__": {
         "waterloo": "0.8.1",
         "schema": "0.1.0"
     },
     "__WTRL_META__": {
-        "generated_at": "2026-05-31T11:44:18+02:00",
+        "generated_at": "2026-05-31T17:52:52+02:00",
         "generator": "waterlint",
-        "scope": "extension",
+        "scope": "core",
         "flavour": "rfc-2119"
     },
     "__WTRL_ROLES__": {
@@ -60,6 +60,8 @@
         "sdv.doc.waterloo.mcp.wtrl_tools.get_subsection": "/__WTRL_OBJECTS__/sdv.doc.waterloo.mcp.wtrl_tools.get_subsection",
         "sdv.doc.waterloo.mcp.wtrl_tools.list_roots": "/__WTRL_OBJECTS__/sdv.doc.waterloo.mcp.wtrl_tools.list_roots",
         "sdv.doc.waterloo.mcp.wtrl_tools.search_objects": "/__WTRL_OBJECTS__/sdv.doc.waterloo.mcp.wtrl_tools.search_objects",
+        "sdv.doc.waterloo.mcp.wtrl_tools.search_sections": "/__WTRL_OBJECTS__/sdv.doc.waterloo.mcp.wtrl_tools.search_sections",
+        "sdv.doc.waterloo.mcp.wtrl_tools.search_text": "/__WTRL_OBJECTS__/sdv.doc.waterloo.mcp.wtrl_tools.search_text",
         "wtrl_server.read_package_readme": "/__WTRL_OBJECTS__/wtrl_server.read_package_readme",
         "wtrl_server.build_app": "/__WTRL_OBJECTS__/wtrl_server.build_app"
     },
@@ -68,6 +70,7 @@
     "__WTRL_TOC_CONSTANTS__": {},
     "__WTRL_OBJECTS__": {
         "wtrl_server": {
+            "path": "/server/devel/sdv/privat/uwe/source/sdv_doc_waterloo/package_main/src/sdv/doc/waterloo/mcp/wtrl_server.py",
             "doc": {
                 "Preamble": {
                     "profile": "module",
@@ -142,6 +145,7 @@
             }
         },
         "sdv.doc.waterloo.mcp.wtrl_tools": {
+            "path": "/server/devel/sdv/privat/uwe/source/sdv_doc_waterloo/package_main/src/sdv/doc/waterloo/mcp/wtrl_tools.py",
             "doc": {
                 "Preamble": {
                     "profile": "module",
@@ -692,6 +696,129 @@
                 },
                 "Returns": [
                     "A list of triples ``(root_id, qid, kind)`` for matching objects."
+                ],
+                "Raises": {}
+            }
+        },
+        "sdv.doc.waterloo.mcp.wtrl_tools.search_sections": {
+            "signature": {
+                "text": "search_sections(expression: 'str', roots: 'list[Mapping[str, object]]', filter: 'SearchSectionsFilter | None' = None) -> 'list[dict[str, object]]'",
+                "parameters": [
+                    {
+                        "name": "expression",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    },
+                    {
+                        "name": "roots",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "list[Mapping[str, object]]",
+                        "default": null
+                    },
+                    {
+                        "name": "filter",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "SearchSectionsFilter | None",
+                        "default": "None"
+                    }
+                ],
+                "returns": "list[dict[str, object]]"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ],
+                    "scope": [
+                        "extension"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST search configured Waterloo roots for stored section and subsection labels matching the given expression and optional structural filters, and return compact result records.",
+                        "MUST treat wildcard expressions as segment-aware matches over section and subsection labels."
+                    ]
+                },
+                "Parameters": {
+                    "expression": [
+                        "The search expression. Wildcards are allowed."
+                    ],
+                    "filter": [
+                        "Optional structural filters such as root ID, QID, kind, and scope."
+                    ],
+                    "roots": [
+                        "The list of configured root entries."
+                    ]
+                },
+                "Returns": [
+                    "A list of dictionaries describing matching section or subsection labels together with their object and root location."
+                ],
+                "Raises": {}
+            }
+        },
+        "sdv.doc.waterloo.mcp.wtrl_tools.search_text": {
+            "signature": {
+                "text": "search_text(terms: 'list[str]', roots: 'list[Mapping[str, object]]', filter: 'SearchTextFilter | None' = None) -> 'list[dict[str, object]]'",
+                "parameters": [
+                    {
+                        "name": "terms",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "list[str]",
+                        "default": null
+                    },
+                    {
+                        "name": "roots",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "list[Mapping[str, object]]",
+                        "default": null
+                    },
+                    {
+                        "name": "filter",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "SearchTextFilter | None",
+                        "default": "None"
+                    }
+                ],
+                "returns": "list[dict[str, object]]"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ],
+                    "scope": [
+                        "extension"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST search configured Waterloo roots for textual content matching the given search terms and optional structural filters, and return compact result records with excerpts.",
+                        "MUST treat the search terms as a list so that clients can fan out over multiple terms without inventing a mini query language.",
+                        "MUST keep the first implementation exact and literal while still honoring the explicit term-mode and matching-mode fields in the filter object."
+                    ]
+                },
+                "Parameters": {
+                    "terms": [
+                        "The search terms. Each term is treated literally in the first implementation."
+                    ],
+                    "filter": [
+                        "Optional structural and matching filters such as root ID, QID, kind, scope, case folding, role stripping, and term mode."
+                    ],
+                    "roots": [
+                        "The list of configured root entries."
+                    ]
+                },
+                "Returns": [
+                    "A list of dictionaries describing matching text locations together with their object and root location, plus a compact excerpt."
                 ],
                 "Raises": {}
             }

@@ -24,7 +24,7 @@ import argparse
 import sys
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Mapping, Sequence, cast
+from typing import Mapping, cast
 
 try:
 	import tomllib
@@ -40,14 +40,14 @@ from mcp.server.fastmcp.server import TransportSecuritySettings
 
 from sdv.doc.waterloo.mcp import __version__
 from sdv.doc.waterloo.mcp.wtrl_tools import (
-	SearchObjectsFilter,
-	SearchSectionsFilter,
-	SearchTextFilter,
-	get_object,
-	get_root,
-	get_section,
-	get_subsection,
-	list_roots,
+    SearchObjectsFilter,
+    SearchSectionsFilter,
+    SearchTextFilter,
+    get_object,
+    get_root,
+    get_section,
+    get_subsection,
+    list_roots,
 	search_objects,
 	search_sections,
 	search_text,
@@ -56,7 +56,6 @@ from sdv.doc.waterloo.mcp.wtrl_tools import (
 # Run browser-based MCP-inspector with npx @modelcontextprotocol/inspector 
 
 #----- begin helper classes for toml config parsing ----------#
-
 @dataclass(frozen=True)
 class ServerConfig:
 	"""Parsed configuration for the MCP transport layer."""

@@ -110,6 +110,11 @@ Server error messages
 
 This section is normative.
 
+The MCP implementation currently returns textual tool errors through the
+FastMCP transport path. The Waterloo-specific error payload classes are kept
+as a draft in :wtrl_file:`mcp/wtrl_error.py`, but the wire-level structure is
+not normative yet.
+
 The current lookup-oriented rule family is:
 
 * [MCPS-001] -- unknown or missing ``root_id``.

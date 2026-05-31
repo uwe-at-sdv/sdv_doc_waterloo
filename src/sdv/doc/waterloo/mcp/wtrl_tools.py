@@ -156,10 +156,6 @@ class SearchTextFilter(BaseModel):
 # were part of the Waterloo API surface.
 del BaseModel, ConfigDict
 
-
-def _mcp_lookup_error(rule: str, detail: str) -> ValueError:
-	return ValueError(f"{rule}: {detail}")
-
 def _classify_root(path_text: str) -> str:
 	path = Path(path_text)
 	if path.is_dir():
@@ -379,7 +375,7 @@ def _find_root_by_id(roots: list[Mapping[str, object]], root_id: str) -> tuple[i
 		path_text = str(root_data.get("path", "")).strip()
 		if path_text and _root_id_for_path(path_text) == root_id:
 			return idx, root_data
-	raise _mcp_lookup_error("MCPS-001", f"unknown root_id: {root_id}")
+	raise ValueError(f"Unknown root_id: {root_id}")
 
 
 def list_roots(roots: list[Mapping[str, object]]) -> list[dict[str, object]]:
@@ -472,10 +468,10 @@ def get_object(root_id: str, qid: str, roots: list[Mapping[str, object]]) -> dic
 	idx, root_data, root_path, document = _load_root_context(root_id, roots)
 	objects = document.get("__WTRL_OBJECTS__", {})
 	if not isinstance(objects, Mapping):
-		raise _mcp_lookup_error("MCPS-002", f"unknown qid: {qid}")
+		raise ValueError(f"Unknown qid: {qid}")
 	object_record = objects.get(qid)
 	if object_record is None:
-		raise _mcp_lookup_error("MCPS-002", f"unknown qid: {qid}")
+		raise ValueError(f"Unknown qid: {qid}")
 	return {**_root_summary(idx, root_data, root_path), "qid": qid, "object": object_record}
 
 
@@ -513,16 +509,16 @@ def get_section(root_id: str, qid: str, section: str, roots: list[Mapping[str, o
 	idx, root_data, root_path, document = _load_root_context(root_id, roots)
 	objects = document.get("__WTRL_OBJECTS__", {})
 	if not isinstance(objects, Mapping):
-		raise _mcp_lookup_error("MCPS-002", f"unknown qid: {qid}")
+		raise ValueError(f"Unknown qid: {qid}")
 	object_record = objects.get(qid)
 	if not isinstance(object_record, Mapping):
-		raise _mcp_lookup_error("MCPS-002", f"unknown qid: {qid}")
+		raise ValueError(f"Unknown qid: {qid}")
 	doc = object_record.get("doc", {})
 	if not isinstance(doc, Mapping):
-		raise _mcp_lookup_error("MCPS-003", f"unknown section: {section}")
+		raise ValueError(f"Unknown section: {section}")
 	section_value = doc.get(section)
 	if section_value is None:
-		raise _mcp_lookup_error("MCPS-003", f"unknown section: {section}")
+		raise ValueError(f"Unknown section: {section}")
 	return {**_root_summary(idx, root_data, root_path), "qid": qid, "section": section, "section_value": section_value}
 
 
@@ -562,19 +558,19 @@ def get_subsection(root_id: str, qid: str, section: str, subsection: str, roots:
 	idx, root_data, root_path, document = _load_root_context(root_id, roots)
 	objects = document.get("__WTRL_OBJECTS__", {})
 	if not isinstance(objects, Mapping):
-		raise _mcp_lookup_error("MCPS-002", f"unknown qid: {qid}")
+		raise ValueError(f"Unknown qid: {qid}")
 	object_record = objects.get(qid)
 	if not isinstance(object_record, Mapping):
-		raise _mcp_lookup_error("MCPS-002", f"unknown qid: {qid}")
+		raise ValueError(f"Unknown qid: {qid}")
 	doc = object_record.get("doc", {})
 	if not isinstance(doc, Mapping):
-		raise _mcp_lookup_error("MCPS-003", f"unknown section: {section}")
+		raise ValueError(f"Unknown section: {section}")
 	section_value = doc.get(section)
 	if not isinstance(section_value, Mapping):
-		raise _mcp_lookup_error("MCPS-004", f"unknown subsection: {subsection}")
+		raise ValueError(f"Unknown subsection: {subsection}")
 	subsection_value = section_value.get(subsection)
 	if subsection_value is None:
-		raise _mcp_lookup_error("MCPS-004", f"unknown subsection: {subsection}")
+		raise ValueError(f"Unknown subsection: {subsection}")
 	return {
 		**_root_summary(idx, root_data, root_path),
 		"qid": qid,
@@ -673,7 +669,7 @@ def search_sections(
 		roots:
 			The list of configured root entries.
 	Returns:
-			A list of dictionaries describing matching section or subsection labels together with their object and root location.
+		A list of dictionaries describing matching section or subsection labels together with their object and root location.
 	Raises:
 	"""
 	expression = expression.strip()
@@ -767,7 +763,7 @@ def search_text(
 		roots:
 			The list of configured root entries.
 	Returns:
-			A list of dictionaries describing matching text locations together with their object and root location, plus a compact excerpt.
+		A list of dictionaries describing matching text locations together with their object and root location, plus a compact excerpt.
 	Raises:
 	"""
 	terms = [str(term).strip() for term in terms if str(term).strip()]

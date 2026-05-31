@@ -49,6 +49,10 @@ Lookup failures are currently reported as standardized tool messages with
 unknown `qid`, or unknown section and subsection labels. `MCPS-005` is
 reserved for a future root-size guardrail.
 
+The text-vs-structured error question is still open; see
+[`mcp.rst`]({branch-main}/doc/source/mcp.rst)
+for the normative current status.
+
 The `root_id` is a short stable hash of the canonical absolute root path.
 
 The server is intentionally read-only in v1.
