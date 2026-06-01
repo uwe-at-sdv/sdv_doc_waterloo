@@ -6,7 +6,7 @@
         "schema": "0.1.0"
     },
     "__WTRL_META__": {
-        "generated_at": "2026-06-01T19:45:50+02:00",
+        "generated_at": "2026-06-01T20:11:50+02:00",
         "generator": "waterlint",
         "scope": "core",
         "flavour": "rfc-2119"
@@ -59,7 +59,7 @@
     "__WTRL_TOC_CONSTANTS__": {},
     "__WTRL_OBJECTS__": {
         "minimal_docstring_templates": {
-            "path": "/server/devel/sdv/privat/uwe/source/sdv_doc_waterloo/package_main/templates-json/in_python/minimal_docstring_templates.py",
+            "path": "/server/devel/sdv/privat/uwe/source/sdv_doc_waterloo/package_main/templates-json/out_python/minimal_docstring_templates.py",
             "doc": {
                 "Preamble": {
                     "profile": "module",

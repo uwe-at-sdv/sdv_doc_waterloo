@@ -18,6 +18,11 @@ Public_functions:
 	parse_signature_fragment,
 	generate_minimal_docstring, generate_full_docstring,
 	generate_minimal_docstring_from_node, generate_full_docstring_from_node
+Notes:
+	Important:
+		JSON templates for minimal and full docstring templates
+		can be generates by means of |file|`$MAIN/tools/make_docstring_templates_json.sh`.
+		This script should be used in order to avoid drift.
 """
 
 from __future__ import annotations

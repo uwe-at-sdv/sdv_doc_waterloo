@@ -1,7 +1,7 @@
 {
   "__WTRL_OBJECTS__": {
     "full_docstring_templates": {
-      "path": "/server/devel/sdv/privat/uwe/source/sdv_doc_waterloo/package_main/templates-json/in_python/full_docstring_templates.py",
+      "path": "/server/devel/sdv/privat/uwe/source/sdv_doc_waterloo/package_main/templates-json/out_python/full_docstring_templates.py",
       "doc": {
         "Preamble": {
           "profile": "module",

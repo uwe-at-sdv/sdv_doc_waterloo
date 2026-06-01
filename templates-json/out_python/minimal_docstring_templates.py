@@ -34,7 +34,6 @@ class X:
         Returns:
         Raises:
         """
-        pass
 
 def f(a: int) -> int:
     r"""
@@ -51,4 +50,4 @@ def f(a: int) -> int:
     Returns:
     Raises:
     """
-    pass
+

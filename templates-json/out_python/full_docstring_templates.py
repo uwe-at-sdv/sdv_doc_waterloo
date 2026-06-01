@@ -108,7 +108,6 @@ class X:
                 ...
         See_also:
         """
-        pass
 
 def f(a: int) -> int:
     r"""
@@ -151,4 +150,4 @@ def f(a: int) -> int:
             ...
     See_also:
     """
-    pass  
+
