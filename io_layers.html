@@ -1,20 +1,19 @@
-
 <!DOCTYPE html>
 
-<html>
+<html lang="en" data-content_root="./">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>7. Overview: I/O Layers &#8212; Waterloo Docstrings 0 documentation</title>
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
-    <link rel="stylesheet" type="text/css" href="_static/common_styles.css" />
-    <link rel="stylesheet" type="text/css" href="_static/alabaster_waterloo.css" />
-    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-    <script src="_static/jquery.js"></script>
-    <script src="_static/underscore.js"></script>
-    <script src="_static/doctools.js"></script>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5f771d8e" />
+    <link rel="stylesheet" type="text/css" href="_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=27fed22d" />
+    <link rel="stylesheet" type="text/css" href="_static/common_styles.css?v=27e4112a" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster_waterloo.css?v=163535b2" />
+    <script src="_static/documentation_options.js?v=8dde47fa"></script>
+    <script src="_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="8. The JSON I/O Layer" href="json_io.html" />
@@ -22,8 +21,9 @@
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
+
   
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+  
 
   </head><body>
   
@@ -36,26 +36,80 @@
           <div class="body" role="main">
             
   <section id="overview-i-o-layers">
-<h1><span class="section-number">7. </span>Overview: I/O Layers<a class="headerlink" href="#overview-i-o-layers" title="Permalink to this headline">¶</a></h1>
+<h1><span class="section-number">7. </span>Overview: I/O Layers<a class="headerlink" href="#overview-i-o-layers" title="Link to this heading">¶</a></h1>
 <p>This section is informative.</p>
+<section id="from-source-to-html">
+<h2><span class="section-number">7.1. </span>From source to HTML<a class="headerlink" href="#from-source-to-html" title="Link to this heading">¶</a></h2>
 <p>The following diagram illustrates the typical workflow for generating
 both LLM-readable and human-readable documentation, including the
 integration of code examples. It highlights the transformation from
 source code to structured JSON artifacts and finally to rendered HTML.</p>
 <p>The individual stages of this workflow are described in detail in
 sections <a class="reference internal" href="json_io.html#json-io-layer"><span class="std std-ref">The JSON I/O Layer</span></a> and <a class="reference internal" href="html_output_layer.html#html-output-layer"><span class="std std-ref">The HTML Output Layer</span></a>.</p>
-<img alt="Workflow von waterlint" class="align-center" src="_images/waterlint_pipeline.svg" /></section>
+<img alt="Workflow for waterlint's JSON/HTML output layer" class="align-center" src="_images/waterlint_pipeline.svg" />
+</section>
+<section id="walk-and-carve">
+<h2><span class="section-number">7.2. </span>Walk and carve<a class="headerlink" href="#walk-and-carve" title="Link to this heading">¶</a></h2>
+<p><code class="wtrl_cmd docutils literal notranslate"><span class="pre">waterlint</span></code> provides a mechanism to inspect, filter, and refine
+the set of objects that enter the documentation pipeline. This functionality
+is implemented by the combination of the subcommands <code class="wtrl_cmd docutils literal notranslate"><span class="pre">walk</span></code> and
+<code class="wtrl_cmd docutils literal notranslate"><span class="pre">carve</span></code>.</p>
+<p>The command <code class="wtrl_cmd docutils literal notranslate"><span class="pre">walk</span></code> expects one or more modules located within a
+common base directory and traverses all reachable documented objects. Its
+output is a canonical intermediate JSON artifact that reflects the current
+object graph and visibility state of the source tree.</p>
+<p>This artifact is useful as a source of truth for later processing, but it is
+not intended as a general exchange format. Many entries are tied to concrete
+filesystem paths and local name resolution, so the resulting JSON is highly
+meaningful within the originating tree but not portable across unrelated
+environments.</p>
+<p>The output (text or JSON) represents the discovered object graph. The text
+output is intended for human inspection, while the JSON output provides a
+machine-readable intermediate representation suitable for further processing.</p>
+<p>By default, each entry contains fields such as:</p>
+<ul class="simple">
+<li><p><code class="wtrl_value docutils literal notranslate"><span class="pre">qualname</span></code> – qualified name of the object</p></li>
+<li><p><code class="wtrl_value docutils literal notranslate"><span class="pre">kind</span></code> – object category (module, class, function, …)</p></li>
+<li><p><code class="wtrl_value docutils literal notranslate"><span class="pre">scope</span></code> – visibility scope as defined in this document</p></li>
+<li><p><code class="wtrl_value docutils literal notranslate"><span class="pre">file</span></code> – path to the module containing the object</p></li>
+<li><p><code class="wtrl_value docutils literal notranslate"><span class="pre">lineno</span></code> – source line number of the object definition</p></li>
+<li><p><code class="wtrl_value docutils literal notranslate"><span class="pre">included</span></code> – whether the object participates in a valid Waterloo artifact</p></li>
+<li><p><code class="wtrl_value docutils literal notranslate"><span class="pre">reason</span></code> – reason for exclusion (e.g. <code class="wtrl_value docutils literal notranslate"><span class="pre">no_doc</span></code>, <code class="wtrl_value docutils literal notranslate"><span class="pre">invalid</span></code>)</p></li>
+</ul>
+<p>In text mode, file paths are compacted and accompanied by a legend.
+In JSON mode, paths are represented canonically.</p>
+<p>The JSON output is described by schema</p>
+<blockquote>
+<div><p><code class="wtrl_file docutils literal notranslate"><span class="pre">wtrl-walk-json-*.*.*.schema.json</span></code></p>
+</div></blockquote>
+<p>and can be validated using</p>
+<blockquote>
+<div><p><code class="wtrl_cmd docutils literal notranslate"><span class="pre">waterlint</span> <span class="pre">validate-json</span></code></p>
+</div></blockquote>
+<p>The command <code class="wtrl_cmd docutils literal notranslate"><span class="pre">carve</span></code> provides a deliberate editing and projection
+layer for walk JSON artifacts. In particular, the <code class="wtrl_opt docutils literal notranslate"><span class="pre">--drop</span></code> and
+<code class="wtrl_opt docutils literal notranslate"><span class="pre">--keep</span></code> options allow selective inclusion or exclusion of
+namespaces by qualified-name prefix chains.</p>
+<p>Conceptually, <code class="wtrl_cmd docutils literal notranslate"><span class="pre">carve</span></code> acts as an operator transforming one walk
+JSON artifact into another walk JSON artifact. It preserves the canonical
+schema shape, but may simplify, filter, and recompute derived summary data.</p>
+<p>The resulting JSON artifact can then be passed directly to
+<code class="wtrl_cmd docutils literal notranslate"><span class="pre">waterlint</span> <span class="pre">render-json</span></code> instead of specifying modules explicitly,
+as illustrated in the following diagram.</p>
+<img alt="Walk, carve, and render" class="align-center" src="_images/waterlint_pipeline_carve.svg" />
+</section>
+</section>
 
 
           </div>
           
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper">
 <p class="logo">
   <a href="index.html">
-    <img class="logo" src="_static/wtrl_logo_color_64x64.png" alt="Logo"/>
+    <img class="logo" src="_static/wtrl_logo_color_64x64.png" alt="Logo" />
     
   </a>
 </p>
@@ -67,7 +121,16 @@ sections <a class="reference internal" href="json_io.html#json-io-layer"><span c
 
 
 
-<h3>Navigation</h3>
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
 <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="introduction.html">1. Introduction</a></li>
@@ -76,12 +139,17 @@ sections <a class="reference internal" href="json_io.html#json-io-layer"><span c
 <li class="toctree-l1"><a class="reference internal" href="examples.html">4. Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="format.html">5. Docstring format</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tools.html">6. Tools</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">7. Overview: I/O Layers</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">7. Overview: I/O Layers</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#from-source-to-html">7.1. From source to HTML</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#walk-and-carve">7.2. Walk and carve</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="json_io.html">8. The JSON I/O Layer</a></li>
 <li class="toctree-l1"><a class="reference internal" href="html_output_layer.html">9. The HTML Output Layer</a></li>
-<li class="toctree-l1"><a class="reference internal" href="reference.html">10. Reference - Core View</a></li>
-<li class="toctree-l1"><a class="reference internal" href="_test_freeform.html">11. Test: Flow control in freeform sections</a></li>
-<li class="toctree-l1"><a class="reference internal" href="_test_scope.html">12. Test: Scopes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mcp.html">10. Model Context Protocol</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reference.html">11. Reference - Core View</a></li>
+<li class="toctree-l1"><a class="reference internal" href="_test_freeform.html">12. Test: Flow control in freeform sections</a></li>
+<li class="toctree-l1"><a class="reference internal" href="_test_scope.html">13. Test: Scopes</a></li>
 </ul>
 
 <div class="relations">
@@ -93,16 +161,6 @@ sections <a class="reference internal" href="json_io.html#json-io-layer"><span c
   </ul></li>
 </ul>
 </div>
-<div id="searchbox" style="display: none" role="search">
-  <h3 id="searchlabel">Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
-      <input type="submit" value="Go" />
-    </form>
-    </div>
-</div>
-<script>$('#searchbox').show(0);</script>
 
 
 
@@ -116,11 +174,11 @@ sections <a class="reference internal" href="json_io.html#json-io-layer"><span c
       <div class="clearer"></div>
     </div>
     <div class="footer">
-      &copy;2026, Uwe.
+      &#169;2026, Uwe.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.3.2</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 9.1.0</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
       
       |
       <a href="_sources/io_layers.rst.txt"
