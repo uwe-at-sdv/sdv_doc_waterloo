@@ -1,0 +1,59 @@
+# Waterloo MCP logging configuration template.
+#
+# This file is read by wtrl_server.py and passed to uvicorn as a logging
+# dictionary. The active configuration below logs to the terminal. A commented
+# syslog variant is included further down.
+#
+# Common values:
+# - version = 1 is required by logging.config.dictConfig.
+# - disable_existing_loggers = false keeps unrelated loggers usable.
+# - formatters define the text layout for regular and access logs.
+# - handlers define where the log records go.
+# - loggers define the Uvicorn logger tree.
+# - root is the fallback logger for records that do not match a named logger.
+# - The dictConfig key "()" is used for formatter factories such as the
+#   Uvicorn formatter classes below.
+
+version = 1
+disable_existing_loggers = false
+
+[formatters.default]
+"()" = "uvicorn.logging.DefaultFormatter"
+fmt = "%(asctime)s %(levelprefix)s %(message)s [%(funcName)s]"
+datefmt = "%Y-%m-%dT%H:%M:%S"
+use_colors = true
+
+[formatters.access]
+"()" = "uvicorn.logging.AccessFormatter"
+fmt = '%(asctime)s %(levelprefix)s %(client_addr)s "%(request_line)s" %(status_code)s [%(funcName)s]'
+datefmt = "%Y-%m-%dT%H:%M:%S"
+use_colors = true
+
+[handlers.default]
+class = "logging.StreamHandler"
+formatter = "default"
+stream = "ext://sys.stderr"
+
+[handlers.access]
+class = "logging.StreamHandler"
+formatter = "access"
+stream = "ext://sys.stdout"
+
+[loggers.uvicorn]
+level = "INFO"
+handlers = ["default"]
+propagate = false
+
+[loggers."uvicorn.error"]
+level = "INFO"
+handlers = ["default"]
+propagate = false
+
+[loggers."uvicorn.access"]
+level = "INFO"
+handlers = ["access"]
+propagate = false
+
+[root]
+level = "INFO"
+handlers = ["default"]

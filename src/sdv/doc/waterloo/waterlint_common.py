@@ -152,12 +152,40 @@ def _apply_basedir(basedir: str | None, qname: str | None) -> None:
 		return
 # Resolve basedir to absolute path.
 	base_abs = basedir if basedir.startswith("/") else str((Path.cwd() / basedir).resolve())
+	base_root = Path(base_abs)
 # Not a dir? Error.
-	if not Path(base_abs).is_dir():
+	if not base_root.is_dir():
 		raise RuntimeError(f"basedir is not a directory: {basedir}")
 # Update sys.path with basedir, so that we have a chance to find the module.
 	if base_abs not in sys.path:
 		sys.path.insert(0, base_abs)
+
+# If a local file/module matches qname exactly, prefer it over any already
+# imported foreign module with the same bare name.
+	if "." not in qname:
+		local_mod_file = base_root / f"{qname}.py"
+		local_pkg_init = base_root / qname / "__init__.py"
+		if local_mod_file.is_file() or local_pkg_init.is_file():
+			existing = sys.modules.get(qname)
+			if existing is not None:
+				existing_file = getattr(existing, "__file__", None)
+				existing_paths = getattr(existing, "__path__", None)
+				is_local = False
+				if isinstance(existing_file, str):
+					try:
+						is_local = Path(existing_file).resolve().is_relative_to(base_root)
+					except Exception:
+						is_local = False
+				if not is_local and existing_paths is not None:
+					for pth in existing_paths:
+						try:
+							if Path(str(pth)).resolve().is_relative_to(base_root):
+								is_local = True
+								break
+						except Exception:
+							continue
+				if not is_local:
+					del sys.modules[qname]
 
 # Yet we need more tricks...
 # The main problem is to enforce that qname is really imported

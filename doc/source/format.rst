@@ -209,6 +209,7 @@ The following list explains the mnemonic prefixes and their semantics.
 * AXMPL: Error messages related to example mapping (e.g. for :wtrl_cmd:`waterlint add-example-json`)
 * RHTM: Error messages related to rendering HTML (e.g. for :wtrl_cmd:`waterlint render-html5`)
 * XTNSN: Error messages related to extensions (e.g. for IDEs)
+* MCPS: Error messages returned by an MCP server
 
 .. rubric:: Miscellaneous
 
