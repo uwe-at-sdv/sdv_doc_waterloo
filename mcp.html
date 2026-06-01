@@ -100,6 +100,9 @@ configuration error and exits.</p>
 <tr class="row-odd"><td><p><code class="wtrl_cmd docutils literal notranslate"><span class="pre">search_text</span></code></p></td>
 <td><p>Search Waterloo text content by terms and structural filters.</p></td>
 </tr>
+<tr class="row-even"><td><p><code class="wtrl_cmd docutils literal notranslate"><span class="pre">gen_docstring</span></code></p></td>
+<td><p>Generate a Waterloo docstring template for a given profile, with optional signature, template mode, and indentation mode.</p></td>
+</tr>
 </tbody>
 </table>
 </section>
@@ -146,6 +149,10 @@ expected list of documents.</p>
 <section id="server-error-messages">
 <h2><span class="section-number">10.6. </span>Server error messages<a class="headerlink" href="#server-error-messages" title="Link to this heading">¶</a></h2>
 <p>This section is normative.</p>
+<p>The MCP implementation currently returns textual tool errors through the
+FastMCP transport path. The Waterloo-specific error payload classes are kept
+as a draft in <code class="wtrl_file docutils literal notranslate"><span class="pre">mcp/wtrl_error.py</span></code>, but the wire-level structure is
+not normative yet.</p>
 <p>The current lookup-oriented rule family is:</p>
 <ul class="simple">
 <li><p>[MCPS-001] – unknown or missing <code class="docutils literal notranslate"><span class="pre">root_id</span></code>.</p></li>
