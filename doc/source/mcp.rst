@@ -57,6 +57,8 @@ The MCP-server supports the following tools:
 	  - Search Waterloo section and subsection labels by expression and structural filters.
 	* - :wtrl_cmd:`search_text`
 	  - Search Waterloo text content by terms and structural filters.
+	* - :wtrl_cmd:`gen_docstring`
+	  - Generate a Waterloo docstring template for a given profile, with optional signature, template mode, and indentation mode.
 
 Typical agent workflow
 ----------------------

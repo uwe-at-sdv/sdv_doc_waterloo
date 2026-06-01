@@ -14,8 +14,9 @@ Description:
 	A typical use case is a VSCode context-menu action on a |lit|`class` or |lit|`def` line:
 	parse the selected header fragment, infer/select a profile, and generate a minimal or full Waterloo docstring template.
 Public_functions:
-	parse_source_fragment, infer_docstring_profile
-	generate_minimal_docstring, generate_full_docstring
+	parse_source_fragment, infer_docstring_profile,
+	parse_signature_fragment,
+	generate_minimal_docstring, generate_full_docstring,
 	generate_minimal_docstring_from_node, generate_full_docstring_from_node
 """
 
@@ -73,6 +74,54 @@ def parse_source_fragment(profile: Profile, source_fragment: str) -> ast.AST | N
 	if profile in {"function", "method", "inherited_method"} and not isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
 		raise RuntimeError("source_fragment does not parse to a function/method header")
 	return node
+
+
+def parse_signature_fragment(profile: Profile, signature: str) -> ast.AST | None:
+	r"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+		scope:
+			extension
+	Contract:
+		general:
+			|Must| turn a textual signature fragment into a small synthetic source fragment that can be parsed by |func|`parse_source_fragment`.
+			|Must| return |None| for profile |value|`module`.
+			|Must| accept signatures with or without leading |lit|`class`, |lit|`def`, or |lit|`async def` keywords.
+			|Must| synthesize a minimal valid body so that the resulting fragment can be parsed by |mod|`ast`.
+		requires:
+			|Must| provide a non-empty signature for non-|value|`module` profiles.
+	Parameters:
+		profile:
+			Waterloo docstring profile to target.
+		signature:
+			Textual signature fragment.
+	Returns:
+		|None| for profile |value|`module`, otherwise the parsed AST node of the synthetic fragment.
+	Raises:
+		RuntimeError:
+			|Must| raise if the signature is empty or the synthetic fragment cannot be parsed.
+	"""
+	if profile == "module":
+		return None
+	signature = signature.strip()
+	if not signature:
+		raise RuntimeError("signature is empty")
+	normalized = signature.rstrip().rstrip(":")
+	if profile == "class":
+		if normalized.startswith("class "):
+			normalized = normalized[len("class ") :].lstrip()
+		source_fragment = f"class {normalized}:\n\tpass"
+		return parse_source_fragment(profile, source_fragment)
+	if normalized.startswith("async def "):
+		body = f"{normalized}:\n\tpass"
+	elif normalized.startswith("def "):
+		body = f"{normalized}:\n\tpass"
+	else:
+		body = f"def {normalized}:\n\tpass"
+	return parse_source_fragment(profile, body)
 
 def infer_docstring_profile(obj: object) -> Profile:
 	r"""
@@ -432,12 +481,12 @@ def _full_docstring_for_function(obj: object) -> str:
 		"Contract:",
 		"\tgeneral:",
 		"\t\t|Must| define the externally visible behavior of this callable.",
-		"\tinvariants:",
-		"\t\t|Must| preserve all documented invariants across valid calls.",
 		"\trequires:",
 		"\t\t|Must| define preconditions for valid input.",
 		"\tensures:",
 		"\t\t|Must| define postconditions for successful execution.",
+		"\tinvariants:",
+		"\t\t|Must| preserve all documented invariants across valid calls.",
 		"Description:",
 		"\t...",
 		"Parameters:",
@@ -489,12 +538,12 @@ def _full_docstring_for_method(obj: object) -> str:
 		"Contract:",
 		"\tgeneral:",
 		"\t\t|Must| define the externally visible behavior of this method.",
-		"\tinvariants:",
-		"\t\t|Must| preserve all documented invariants across valid calls.",
 		"\trequires:",
 		"\t\t|Must| define preconditions for valid input.",
 		"\tensures:",
 		"\t\t|Must| define postconditions for successful execution.",
+		"\tinvariants:",
+		"\t\t|Must| preserve all documented invariants across valid calls.",
 		"Description:",
 		"\t...",
 		"Parameters:",
@@ -546,12 +595,12 @@ def _full_docstring_for_function_node(node: ast.FunctionDef | ast.AsyncFunctionD
 		"Contract:",
 		"\tgeneral:",
 		"\t\t|Must| define the externally visible behavior of this callable.",
-		"\tinvariants:",
-		"\t\t|Must| preserve all documented invariants across valid calls.",
 		"\trequires:",
 		"\t\t|Must| define preconditions for valid input.",
 		"\tensures:",
 		"\t\t|Must| define postconditions for successful execution.",
+		"\tinvariants:",
+		"\t\t|Must| preserve all documented invariants across valid calls.",
 		"Description:",
 		"\t...",
 		"Parameters:",
@@ -598,12 +647,12 @@ def _full_docstring_for_method_node(node: ast.FunctionDef | ast.AsyncFunctionDef
 		"Contract:",
 		"\tgeneral:",
 		"\t\t|Must| define the externally visible behavior of this method.",
-		"\tinvariants:",
-		"\t\t|Must| preserve all documented invariants across valid calls.",
 		"\trequires:",
 		"\t\t|Must| define preconditions for valid input.",
 		"\tensures:",
 		"\t\t|Must| define postconditions for successful execution.",
+		"\tinvariants:",
+		"\t\t|Must| preserve all documented invariants across valid calls.",
 		"Description:",
 		"\t...",
 		"Parameters:",

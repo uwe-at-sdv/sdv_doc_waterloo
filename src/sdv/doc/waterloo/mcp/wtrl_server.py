@@ -43,6 +43,7 @@ from sdv.doc.waterloo.mcp.wtrl_tools import (
     SearchObjectsFilter,
     SearchSectionsFilter,
     SearchTextFilter,
+    gen_docstring,
     get_object,
     get_root,
     get_section,
@@ -397,6 +398,20 @@ def build_app(config: McpConfig) -> FastMCP:
 	@mcp.tool(name="search_text", description="Search Waterloo text content by terms and structural filters.")
 	def _search_text(terms: list[str], filter: SearchTextFilter | None = None) -> list[dict[str, object]]:
 		return search_text(terms, _root_mappings(), filter)
+
+	@mcp.tool(name="gen_docstring", description="Generate a Waterloo docstring template for a given profile.")
+	def _gen_docstring(
+		profile: str,
+		signature: str | None = None,
+		mode: str = "minimal",
+		indent_mode: str = "tab",
+	) -> dict[str, object]:
+		return gen_docstring(
+			profile=profile,  # type: ignore[arg-type]
+			signature=signature,
+			mode=mode,  # type: ignore[arg-type]
+			indent_mode=indent_mode,  # type: ignore[arg-type]
+		)
 
 	return mcp
 

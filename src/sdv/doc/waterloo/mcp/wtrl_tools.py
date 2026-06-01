@@ -3,7 +3,7 @@ Preamble:
 	profile:
 		module
 	normative_sections:
-		Contract, Public_classes, Public_functions
+		Contract, Public_classes, Public_functions, Public_types
 	scope:
 		extension
 Contract:
@@ -12,7 +12,8 @@ Contract:
 Public_classes:
 	SearchObjectsFilter, SearchSectionsFilter, SearchTextFilter
 Public_functions:
-	list_roots, get_root, get_object, get_section, get_subsection, search_objects, search_sections, search_text
+	list_roots, get_root, get_object, get_section, get_subsection,
+	search_objects, search_sections, search_text, gen_docstring
 Function_overview:
 	list_roots:
 		List the configured Waterloo roots with stable identifiers.
@@ -30,6 +31,22 @@ Function_overview:
 		Search for stored section and subsection labels with optional structural filters.
 	search_text:
 		Search for textual content with optional structural filters and compact excerpts.
+	gen_docstring:
+		Generate a Waterloo docstring template for a given profile and return a
+		docstring text together with a JSON placeholder snippet.
+Public_types:
+	SearchObjectKind_t:
+		The kind of object to search for, such as module, class, callable, type, constant, or variable.
+	SearchTextMatchMode_t:
+		The mode of matching text search terms. Currently only literal matching is supported.
+	SearchTextTermMode_t:
+		The mode of combining multiple search terms in text search. Can be |value|`any` or |value|`all`.
+	DocstringProfile_t:
+		The profile to target when generating a docstring template, one of |value|`module`, |value|`class`, |value|`function`, or |value|`method`.
+	DocstringMode_t:
+		The mode of the docstring template, either |value|`minimal` or |value|`full`.
+	DocstringIndentMode_t:
+		The indentation mode for generated docstrings, either |value|`tab` or |value|`spc4`.
 """
 
 from __future__ import annotations
@@ -42,10 +59,14 @@ from pathlib import Path
 from typing import Iterator, Literal, Mapping, cast
 
 from pydantic import BaseModel, ConfigDict
+from sdv.doc.waterloo import docitem_genutil as genutil
 
 SearchObjectKind_t = Literal["module", "class", "callable", "type", "constant", "variable"]
 SearchTextMatchMode_t = Literal["literal"]
 SearchTextTermMode_t = Literal["any", "all"]
+DocstringProfile_t = Literal["module", "class", "function", "method"]
+DocstringMode_t = Literal["minimal", "full"]
+DocstringIndentMode_t = Literal["tab", "spc4"]
 
 
 class SearchObjectsFilter(BaseModel):
@@ -851,3 +872,63 @@ def search_text(
 		seen.add(key)
 		deduped.append(match)
 	return deduped
+
+
+def gen_docstring(
+	profile: DocstringProfile_t,
+	signature: str | None = None,
+	mode: DocstringMode_t = "minimal",
+	indent_mode: DocstringIndentMode_t = "tab",
+) -> dict[str, object]:
+	r"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+		scope:
+			extension
+	Contract:
+		general:
+			|Must| generate a Waterloo docstring template for the requested profile.
+			|Must| return the generated docstring together with a JSON placeholder snippet in the first implementation phase.
+			|Must| keep the JSON snippet compatible with the existing Waterloo JSON document shape in later phases.
+	Parameters:
+		profile:
+			Target Waterloo docstring profile.
+		signature:
+			Optional textual signature for non-module profiles.
+		mode:
+			Template mode, either ``minimal`` or ``full``.
+		indent_mode:
+			Indentation mode for the returned docstring text, either ``tab`` or ``spc4``.
+	Returns:
+		A dictionary with the generated ``docstring`` text and a ``json_snippet`` placeholder.
+	Raises:
+		ValueError:
+			|May| be raised if the profile requires a signature and none is given.
+	"""
+	if mode not in {"minimal", "full"}:
+		raise ValueError(f"unknown docstring mode: {mode}")
+	if profile not in {"module", "class", "function", "method"}:
+		raise ValueError(f"unsupported docstring profile: {profile}")
+	if profile == "module":
+		node = genutil.parse_signature_fragment("module", signature or "")
+	elif signature is None or not signature.strip():
+		raise ValueError(f"signature is required for profile {profile}")
+	else:
+		node = genutil.parse_signature_fragment(profile, signature)
+	if mode == "minimal":
+		docstring = genutil.generate_minimal_docstring_from_node(profile, node)
+	else:
+		docstring = genutil.generate_full_docstring_from_node(profile, node)
+	if indent_mode == "spc4":
+		docstring = docstring.replace("\t", "    ")
+	return {
+		"profile": profile,
+		"signature": signature,
+		"mode": mode,
+		"indent_mode": indent_mode,
+		"docstring": docstring,
+		"json_snippet": {},
+	}

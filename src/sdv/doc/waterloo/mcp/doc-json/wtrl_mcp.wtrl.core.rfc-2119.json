@@ -1,12 +1,12 @@
 {
     "$schema": "https://sci-d-vis.com/schema/wtrl-json-0.1.0.schema.json",
-    "$id": "urn:waterlint:wtrl-json:0.14.1:core:rfc-2119:d912c74a094a1dea0769520b9ebac1efb3a07b9f1ac8f75788cce17b0b65f78d",
+    "$id": "urn:waterlint:wtrl-json:0.14.1:core:rfc-2119:de0fda2864ca6b870eeb145debeb4ac717e42c712356bfcc2920cde804abb597",
     "__WTRL_VERSION__": {
         "waterloo": "0.8.1",
         "schema": "0.1.0"
     },
     "__WTRL_META__": {
-        "generated_at": "2026-05-31T17:52:52+02:00",
+        "generated_at": "2026-06-01T16:06:11+02:00",
         "generator": "waterlint",
         "scope": "core",
         "flavour": "rfc-2119"
@@ -46,26 +46,34 @@
     },
     "__WTRL_TOC_MODULES__": {
         "wtrl_server": "/__WTRL_OBJECTS__/wtrl_server",
-        "sdv.doc.waterloo.mcp.wtrl_tools": "/__WTRL_OBJECTS__/sdv.doc.waterloo.mcp.wtrl_tools"
+        "wtrl_tools": "/__WTRL_OBJECTS__/wtrl_tools"
     },
     "__WTRL_TOC_CLASSES__": {
-        "sdv.doc.waterloo.mcp.wtrl_tools.SearchObjectsFilter": "/__WTRL_OBJECTS__/sdv.doc.waterloo.mcp.wtrl_tools.SearchObjectsFilter",
-        "sdv.doc.waterloo.mcp.wtrl_tools.SearchSectionsFilter": "/__WTRL_OBJECTS__/sdv.doc.waterloo.mcp.wtrl_tools.SearchSectionsFilter",
-        "sdv.doc.waterloo.mcp.wtrl_tools.SearchTextFilter": "/__WTRL_OBJECTS__/sdv.doc.waterloo.mcp.wtrl_tools.SearchTextFilter"
+        "wtrl_tools.SearchObjectsFilter": "/__WTRL_OBJECTS__/wtrl_tools.SearchObjectsFilter",
+        "wtrl_tools.SearchSectionsFilter": "/__WTRL_OBJECTS__/wtrl_tools.SearchSectionsFilter",
+        "wtrl_tools.SearchTextFilter": "/__WTRL_OBJECTS__/wtrl_tools.SearchTextFilter"
     },
     "__WTRL_TOC_CALLABLES__": {
-        "sdv.doc.waterloo.mcp.wtrl_tools.get_object": "/__WTRL_OBJECTS__/sdv.doc.waterloo.mcp.wtrl_tools.get_object",
-        "sdv.doc.waterloo.mcp.wtrl_tools.get_root": "/__WTRL_OBJECTS__/sdv.doc.waterloo.mcp.wtrl_tools.get_root",
-        "sdv.doc.waterloo.mcp.wtrl_tools.get_section": "/__WTRL_OBJECTS__/sdv.doc.waterloo.mcp.wtrl_tools.get_section",
-        "sdv.doc.waterloo.mcp.wtrl_tools.get_subsection": "/__WTRL_OBJECTS__/sdv.doc.waterloo.mcp.wtrl_tools.get_subsection",
-        "sdv.doc.waterloo.mcp.wtrl_tools.list_roots": "/__WTRL_OBJECTS__/sdv.doc.waterloo.mcp.wtrl_tools.list_roots",
-        "sdv.doc.waterloo.mcp.wtrl_tools.search_objects": "/__WTRL_OBJECTS__/sdv.doc.waterloo.mcp.wtrl_tools.search_objects",
-        "sdv.doc.waterloo.mcp.wtrl_tools.search_sections": "/__WTRL_OBJECTS__/sdv.doc.waterloo.mcp.wtrl_tools.search_sections",
-        "sdv.doc.waterloo.mcp.wtrl_tools.search_text": "/__WTRL_OBJECTS__/sdv.doc.waterloo.mcp.wtrl_tools.search_text",
         "wtrl_server.read_package_readme": "/__WTRL_OBJECTS__/wtrl_server.read_package_readme",
-        "wtrl_server.build_app": "/__WTRL_OBJECTS__/wtrl_server.build_app"
+        "wtrl_server.build_app": "/__WTRL_OBJECTS__/wtrl_server.build_app",
+        "wtrl_tools.list_roots": "/__WTRL_OBJECTS__/wtrl_tools.list_roots",
+        "wtrl_tools.get_root": "/__WTRL_OBJECTS__/wtrl_tools.get_root",
+        "wtrl_tools.get_object": "/__WTRL_OBJECTS__/wtrl_tools.get_object",
+        "wtrl_tools.get_section": "/__WTRL_OBJECTS__/wtrl_tools.get_section",
+        "wtrl_tools.get_subsection": "/__WTRL_OBJECTS__/wtrl_tools.get_subsection",
+        "wtrl_tools.search_objects": "/__WTRL_OBJECTS__/wtrl_tools.search_objects",
+        "wtrl_tools.search_sections": "/__WTRL_OBJECTS__/wtrl_tools.search_sections",
+        "wtrl_tools.search_text": "/__WTRL_OBJECTS__/wtrl_tools.search_text",
+        "wtrl_tools.gen_docstring": "/__WTRL_OBJECTS__/wtrl_tools.gen_docstring"
     },
-    "__WTRL_TOC_TYPES__": {},
+    "__WTRL_TOC_TYPES__": {
+        "wtrl_tools.SearchObjectKind_t": "/__WTRL_OBJECTS__/wtrl_tools.SearchObjectKind_t",
+        "wtrl_tools.SearchTextMatchMode_t": "/__WTRL_OBJECTS__/wtrl_tools.SearchTextMatchMode_t",
+        "wtrl_tools.SearchTextTermMode_t": "/__WTRL_OBJECTS__/wtrl_tools.SearchTextTermMode_t",
+        "wtrl_tools.DocstringProfile_t": "/__WTRL_OBJECTS__/wtrl_tools.DocstringProfile_t",
+        "wtrl_tools.DocstringMode_t": "/__WTRL_OBJECTS__/wtrl_tools.DocstringMode_t",
+        "wtrl_tools.DocstringIndentMode_t": "/__WTRL_OBJECTS__/wtrl_tools.DocstringIndentMode_t"
+    },
     "__WTRL_TOC_VARIABLES__": {},
     "__WTRL_TOC_CONSTANTS__": {},
     "__WTRL_OBJECTS__": {
@@ -101,7 +109,234 @@
                 }
             }
         },
-        "sdv.doc.waterloo.mcp.wtrl_tools.SearchObjectsFilter": {
+        "wtrl_server.read_package_readme": {
+            "signature": {
+                "text": "read_package_readme() -> 'str'",
+                "parameters": [],
+                "returns": "str"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ],
+                    "scope": [
+                        "extension"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST resolve a resource path to the package |file|`README` file.",
+                        "MUST read and return the content of the |file|`README` file for use as MCP instructions."
+                    ]
+                },
+                "Notes": {
+                    "Purpose": [
+                        "This is a simple way to provide rich instructions for the MCP server without hardcoding them in the source.",
+                        "The README can be edited as needed to update the instructions without touching the code."
+                    ],
+                    "Usage": [
+                        "The string returned by this function is passes as the `instructions` parameter",
+                        "when building the MCP app, making it visible to clients in the MCP session metadata."
+                    ]
+                },
+                "Parameters": {},
+                "Returns": [
+                    "The content of the |file|`README` file as a string."
+                ],
+                "Raises": {
+                    "FileNotFoundError": [
+                        "MAY raise if the |file|`README` file does not exist."
+                    ]
+                }
+            }
+        },
+        "wtrl_server.build_app": {
+            "signature": {
+                "text": "build_app(config: 'McpConfig') -> 'FastMCP'",
+                "parameters": [
+                    {
+                        "name": "config",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "McpConfig",
+                        "default": null
+                    }
+                ],
+                "returns": "FastMCP"
+            },
+            "decorators": [
+                "@mcp.tool(name=\"list_roots\", description=\"List configured Waterloo data roots.\")",
+                "@mcp.tool(name=\"get_root\", description=\"Read one configured Waterloo data root by root_id.\")",
+                "@mcp.tool(name=\"get_object\", description=\"Read one Waterloo object by qid from a configured root.\")",
+                "@mcp.tool(name=\"get_section\", description=\"Read one stored section of one Waterloo object.\")",
+                "@mcp.tool(name=\"get_subsection\", description=\"Read one stored subsection of one Waterloo object.\")",
+                "@mcp.tool(name=\"search_objects\", description=\"Search Waterloo objects by expression and structural filters.\")",
+                "@mcp.tool(name=\"search_sections\", description=\"Search Waterloo section and subsection labels by expression and structural filters.\")",
+                "@mcp.tool(name=\"search_text\", description=\"Search Waterloo text content by terms and structural filters.\")",
+                "@mcp.tool(name=\"gen_docstring\", description=\"Generate a Waterloo docstring template for a given profile.\")"
+            ],
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ],
+                    "scope": [
+                        "extension"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST build an MCP app according to the provided configuration."
+                    ]
+                },
+                "Parameters": {
+                    "config": [
+                        "The loaded MCP configuration according to which the app should be built."
+                    ]
+                },
+                "Returns": [
+                    "The built MCP app."
+                ],
+                "Raises": {
+                    "ValueError": [
+                        "MAY raise if the configuration is invalid in any way."
+                    ]
+                }
+            }
+        },
+        "wtrl_tools.SearchObjectKind_t": {
+            "doc": {},
+            "doc_lines": [
+                "The kind of object to search for, such as module, class, callable, type, constant, or variable."
+            ]
+        },
+        "wtrl_tools.SearchTextMatchMode_t": {
+            "doc": {},
+            "doc_lines": [
+                "The mode of matching text search terms. Currently only literal matching is supported."
+            ]
+        },
+        "wtrl_tools.SearchTextTermMode_t": {
+            "doc": {},
+            "doc_lines": [
+                "The mode of combining multiple search terms in text search. Can be |value|`any` or |value|`all`."
+            ]
+        },
+        "wtrl_tools.DocstringProfile_t": {
+            "doc": {},
+            "doc_lines": [
+                "The profile to target when generating a docstring template, one of |value|`module`, |value|`class`, |value|`function`, or |value|`method`."
+            ]
+        },
+        "wtrl_tools.DocstringMode_t": {
+            "doc": {},
+            "doc_lines": [
+                "The mode of the docstring template, either |value|`minimal` or |value|`full`."
+            ]
+        },
+        "wtrl_tools.DocstringIndentMode_t": {
+            "doc": {},
+            "doc_lines": [
+                "The indentation mode for generated docstrings, either |value|`tab` or |value|`spc4`."
+            ]
+        },
+        "wtrl_tools": {
+            "path": "/server/devel/sdv/privat/uwe/source/sdv_doc_waterloo/package_main/src/sdv/doc/waterloo/mcp/wtrl_tools.py",
+            "doc": {
+                "Preamble": {
+                    "profile": "module",
+                    "normative_sections": [
+                        "Contract",
+                        "Public_classes",
+                        "Public_functions",
+                        "Public_types"
+                    ],
+                    "scope": [
+                        "extension"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST provide the tool set for the Waterloo MCP-server."
+                    ]
+                },
+                "Public_classes": [
+                    "SearchObjectsFilter",
+                    "SearchSectionsFilter",
+                    "SearchTextFilter"
+                ],
+                "Public_functions": [
+                    "list_roots",
+                    "get_root",
+                    "get_object",
+                    "get_section",
+                    "get_subsection",
+                    "search_objects",
+                    "search_sections",
+                    "search_text",
+                    "gen_docstring"
+                ],
+                "Function_overview": {
+                    "list_roots": [
+                        "List the configured Waterloo roots with stable identifiers."
+                    ],
+                    "get_root": [
+                        "Resolve one configured root by its stable identifier and return the loaded JSON document."
+                    ],
+                    "get_object": [
+                        "Resolve one object by QID inside one configured root and return the loaded object record."
+                    ],
+                    "get_section": [
+                        "Resolve one named section of one object inside one configured root and return the stored section value."
+                    ],
+                    "get_subsection": [
+                        "Resolve one named subsection of one section of one object inside one configured root and return the stored subsection value."
+                    ],
+                    "search_objects": [
+                        "Search for object QIDs with optional structural filters and return stable triples."
+                    ],
+                    "search_sections": [
+                        "Search for stored section and subsection labels with optional structural filters."
+                    ],
+                    "search_text": [
+                        "Search for textual content with optional structural filters and compact excerpts."
+                    ],
+                    "gen_docstring": [
+                        "Generate a Waterloo docstring template for a given profile and return a",
+                        "docstring text together with a JSON placeholder snippet."
+                    ]
+                },
+                "Public_types": {
+                    "SearchObjectKind_t": [
+                        "The kind of object to search for, such as module, class, callable, type, constant, or variable."
+                    ],
+                    "SearchTextMatchMode_t": [
+                        "The mode of matching text search terms. Currently only literal matching is supported."
+                    ],
+                    "SearchTextTermMode_t": [
+                        "The mode of combining multiple search terms in text search. Can be |value|`any` or |value|`all`."
+                    ],
+                    "DocstringProfile_t": [
+                        "The profile to target when generating a docstring template, one of |value|`module`, |value|`class`, |value|`function`, or |value|`method`."
+                    ],
+                    "DocstringMode_t": [
+                        "The mode of the docstring template, either |value|`minimal` or |value|`full`."
+                    ],
+                    "DocstringIndentMode_t": [
+                        "The indentation mode for generated docstrings, either |value|`tab` or |value|`spc4`."
+                    ]
+                }
+            }
+        },
+        "wtrl_tools.SearchObjectsFilter": {
             "signature": {
                 "text": "BaseModel.__init__(self, /, **data: 'Any') -> 'None'",
                 "parameters": [
@@ -144,69 +379,7 @@
                 }
             }
         },
-        "sdv.doc.waterloo.mcp.wtrl_tools": {
-            "path": "/server/devel/sdv/privat/uwe/source/sdv_doc_waterloo/package_main/src/sdv/doc/waterloo/mcp/wtrl_tools.py",
-            "doc": {
-                "Preamble": {
-                    "profile": "module",
-                    "normative_sections": [
-                        "Contract",
-                        "Public_classes",
-                        "Public_functions"
-                    ],
-                    "scope": [
-                        "extension"
-                    ]
-                },
-                "Contract": {
-                    "general": [
-                        "MUST provide the tool set for the Waterloo MCP-server."
-                    ]
-                },
-                "Public_classes": [
-                    "SearchObjectsFilter",
-                    "SearchSectionsFilter",
-                    "SearchTextFilter"
-                ],
-                "Public_functions": [
-                    "list_roots",
-                    "get_root",
-                    "get_object",
-                    "get_section",
-                    "get_subsection",
-                    "search_objects",
-                    "search_sections",
-                    "search_text"
-                ],
-                "Function_overview": {
-                    "list_roots": [
-                        "List the configured Waterloo roots with stable identifiers."
-                    ],
-                    "get_root": [
-                        "Resolve one configured root by its stable identifier and return the loaded JSON document."
-                    ],
-                    "get_object": [
-                        "Resolve one object by QID inside one configured root and return the loaded object record."
-                    ],
-                    "get_section": [
-                        "Resolve one named section of one object inside one configured root and return the stored section value."
-                    ],
-                    "get_subsection": [
-                        "Resolve one named subsection of one section of one object inside one configured root and return the stored subsection value."
-                    ],
-                    "search_objects": [
-                        "Search for object QIDs with optional structural filters and return stable triples."
-                    ],
-                    "search_sections": [
-                        "Search for stored section and subsection labels with optional structural filters."
-                    ],
-                    "search_text": [
-                        "Search for textual content with optional structural filters and compact excerpts."
-                    ]
-                }
-            }
-        },
-        "sdv.doc.waterloo.mcp.wtrl_tools.SearchSectionsFilter": {
+        "wtrl_tools.SearchSectionsFilter": {
             "signature": {
                 "text": "BaseModel.__init__(self, /, **data: 'Any') -> 'None'",
                 "parameters": [
@@ -250,7 +423,7 @@
                 }
             }
         },
-        "sdv.doc.waterloo.mcp.wtrl_tools.SearchTextFilter": {
+        "wtrl_tools.SearchTextFilter": {
             "signature": {
                 "text": "BaseModel.__init__(self, /, **data: 'Any') -> 'None'",
                 "parameters": [
@@ -298,7 +471,111 @@
                 }
             }
         },
-        "sdv.doc.waterloo.mcp.wtrl_tools.get_object": {
+        "wtrl_tools.list_roots": {
+            "signature": {
+                "text": "list_roots(roots: 'list[Mapping[str, object]]') -> 'list[dict[str, object]]'",
+                "parameters": [
+                    {
+                        "name": "roots",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "list[Mapping[str, object]]",
+                        "default": null
+                    }
+                ],
+                "returns": "list[dict[str, object]]"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ],
+                    "scope": [
+                        "extension"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST extract attributes from the provided root entries (as given in the configuration), derive a stable root identifier from the canonical absolute path of each root locator, and return a list of dictionaries with specific keys.",
+                        "MUST define the |attr|`root_id` of one root as a short stable hash of that canonical absolute path, independent of labels and configuration order."
+                    ]
+                },
+                "Parameters": {
+                    "roots": [
+                        "The list of root configurations to process."
+                    ]
+                },
+                "Returns": [
+                    "A list of dictionaries, each representing a root document with its attributes."
+                ],
+                "Raises": {}
+            }
+        },
+        "wtrl_tools.get_root": {
+            "signature": {
+                "text": "get_root(root_id: 'str', roots: 'list[Mapping[str, object]]') -> 'dict[str, object]'",
+                "parameters": [
+                    {
+                        "name": "root_id",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    },
+                    {
+                        "name": "roots",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "list[Mapping[str, object]]",
+                        "default": null
+                    }
+                ],
+                "returns": "dict[str, object]"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ],
+                    "scope": [
+                        "extension"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST resolve a configured root by its canonical root identifier and return the root metadata together with the loaded JSON document."
+                    ]
+                },
+                "Parameters": {
+                    "root_id": [
+                        "The canonical root identifier derived from the canonical absolute root path."
+                    ],
+                    "roots": [
+                        "The list of configured root entries."
+                    ]
+                },
+                "Returns": [
+                    "A dictionary describing the root and containing the parsed JSON document."
+                ],
+                "Raises": {
+                    "ValueError": [
+                        "MAY raise if the root identifier is unknown."
+                    ],
+                    "FileNotFoundError": [
+                        "MAY raise if the configured root path no longer exists."
+                    ],
+                    "json.JSONDecodeError": [
+                        "MAY raise if the root file is not valid JSON."
+                    ]
+                }
+            }
+        },
+        "wtrl_tools.get_object": {
             "signature": {
                 "text": "get_object(root_id: 'str', qid: 'str', roots: 'list[Mapping[str, object]]') -> 'dict[str, object]'",
                 "parameters": [
@@ -368,68 +645,7 @@
                 }
             }
         },
-        "sdv.doc.waterloo.mcp.wtrl_tools.get_root": {
-            "signature": {
-                "text": "get_root(root_id: 'str', roots: 'list[Mapping[str, object]]') -> 'dict[str, object]'",
-                "parameters": [
-                    {
-                        "name": "root_id",
-                        "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "str",
-                        "default": null
-                    },
-                    {
-                        "name": "roots",
-                        "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "list[Mapping[str, object]]",
-                        "default": null
-                    }
-                ],
-                "returns": "dict[str, object]"
-            },
-            "doc": {
-                "Preamble": {
-                    "profile": "function",
-                    "normative_sections": [
-                        "Contract",
-                        "Parameters",
-                        "Returns",
-                        "Raises"
-                    ],
-                    "scope": [
-                        "extension"
-                    ]
-                },
-                "Contract": {
-                    "general": [
-                        "MUST resolve a configured root by its canonical root identifier and return the root metadata together with the loaded JSON document."
-                    ]
-                },
-                "Parameters": {
-                    "root_id": [
-                        "The canonical root identifier derived from the canonical absolute root path."
-                    ],
-                    "roots": [
-                        "The list of configured root entries."
-                    ]
-                },
-                "Returns": [
-                    "A dictionary describing the root and containing the parsed JSON document."
-                ],
-                "Raises": {
-                    "ValueError": [
-                        "MAY raise if the root identifier is unknown."
-                    ],
-                    "FileNotFoundError": [
-                        "MAY raise if the configured root path no longer exists."
-                    ],
-                    "json.JSONDecodeError": [
-                        "MAY raise if the root file is not valid JSON."
-                    ]
-                }
-            }
-        },
-        "sdv.doc.waterloo.mcp.wtrl_tools.get_section": {
+        "wtrl_tools.get_section": {
             "signature": {
                 "text": "get_section(root_id: 'str', qid: 'str', section: 'str', roots: 'list[Mapping[str, object]]') -> 'dict[str, object]'",
                 "parameters": [
@@ -508,7 +724,7 @@
                 }
             }
         },
-        "sdv.doc.waterloo.mcp.wtrl_tools.get_subsection": {
+        "wtrl_tools.get_subsection": {
             "signature": {
                 "text": "get_subsection(root_id: 'str', qid: 'str', section: 'str', subsection: 'str', roots: 'list[Mapping[str, object]]') -> 'dict[str, object]'",
                 "parameters": [
@@ -596,50 +812,7 @@
                 }
             }
         },
-        "sdv.doc.waterloo.mcp.wtrl_tools.list_roots": {
-            "signature": {
-                "text": "list_roots(roots: 'list[Mapping[str, object]]') -> 'list[dict[str, object]]'",
-                "parameters": [
-                    {
-                        "name": "roots",
-                        "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "list[Mapping[str, object]]",
-                        "default": null
-                    }
-                ],
-                "returns": "list[dict[str, object]]"
-            },
-            "doc": {
-                "Preamble": {
-                    "profile": "function",
-                    "normative_sections": [
-                        "Contract",
-                        "Parameters",
-                        "Returns",
-                        "Raises"
-                    ],
-                    "scope": [
-                        "extension"
-                    ]
-                },
-                "Contract": {
-                    "general": [
-                        "MUST extract attributes from the provided root entries (as given in the configuration), derive a stable root identifier from the canonical absolute path of each root locator, and return a list of dictionaries with specific keys.",
-                        "MUST define the |attr|`root_id` of one root as a short stable hash of that canonical absolute path, independent of labels and configuration order."
-                    ]
-                },
-                "Parameters": {
-                    "roots": [
-                        "The list of root configurations to process."
-                    ]
-                },
-                "Returns": [
-                    "A list of dictionaries, each representing a root document with its attributes."
-                ],
-                "Raises": {}
-            }
-        },
-        "sdv.doc.waterloo.mcp.wtrl_tools.search_objects": {
+        "wtrl_tools.search_objects": {
             "signature": {
                 "text": "search_objects(expression: 'str', roots: 'list[Mapping[str, object]]', filter: 'SearchObjectsFilter | None' = None) -> 'list[tuple[str, str, str]]'",
                 "parameters": [
@@ -700,7 +873,7 @@
                 "Raises": {}
             }
         },
-        "sdv.doc.waterloo.mcp.wtrl_tools.search_sections": {
+        "wtrl_tools.search_sections": {
             "signature": {
                 "text": "search_sections(expression: 'str', roots: 'list[Mapping[str, object]]', filter: 'SearchSectionsFilter | None' = None) -> 'list[dict[str, object]]'",
                 "parameters": [
@@ -761,7 +934,7 @@
                 "Raises": {}
             }
         },
-        "sdv.doc.waterloo.mcp.wtrl_tools.search_text": {
+        "wtrl_tools.search_text": {
             "signature": {
                 "text": "search_text(terms: 'list[str]', roots: 'list[Mapping[str, object]]', filter: 'SearchTextFilter | None' = None) -> 'list[dict[str, object]]'",
                 "parameters": [
@@ -823,75 +996,37 @@
                 "Raises": {}
             }
         },
-        "wtrl_server.read_package_readme": {
+        "wtrl_tools.gen_docstring": {
             "signature": {
-                "text": "read_package_readme() -> 'str'",
-                "parameters": [],
-                "returns": "str"
-            },
-            "doc": {
-                "Preamble": {
-                    "profile": "function",
-                    "normative_sections": [
-                        "Contract",
-                        "Parameters",
-                        "Returns",
-                        "Raises"
-                    ],
-                    "scope": [
-                        "extension"
-                    ]
-                },
-                "Contract": {
-                    "general": [
-                        "MUST resolve a resource path to the package |file|`README` file.",
-                        "MUST read and return the content of the |file|`README` file for use as MCP instructions."
-                    ]
-                },
-                "Notes": {
-                    "Purpose": [
-                        "This is a simple way to provide rich instructions for the MCP server without hardcoding them in the source.",
-                        "The README can be edited as needed to update the instructions without touching the code."
-                    ],
-                    "Usage": [
-                        "The string returned by this function is passes as the `instructions` parameter",
-                        "when building the MCP app, making it visible to clients in the MCP session metadata."
-                    ]
-                },
-                "Parameters": {},
-                "Returns": [
-                    "The content of the |file|`README` file as a string."
-                ],
-                "Raises": {
-                    "FileNotFoundError": [
-                        "MAY raise if the |file|`README` file does not exist."
-                    ]
-                }
-            }
-        },
-        "wtrl_server.build_app": {
-            "signature": {
-                "text": "build_app(config: 'McpConfig') -> 'FastMCP'",
+                "text": "gen_docstring(profile: 'DocstringProfile_t', signature: 'str | None' = None, mode: 'DocstringMode_t' = 'minimal', indent_mode: 'DocstringIndentMode_t' = 'tab') -> 'dict[str, object]'",
                 "parameters": [
                     {
-                        "name": "config",
+                        "name": "profile",
                         "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "McpConfig",
+                        "annotation": "DocstringProfile_t",
                         "default": null
+                    },
+                    {
+                        "name": "signature",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str | None",
+                        "default": "None"
+                    },
+                    {
+                        "name": "mode",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "DocstringMode_t",
+                        "default": "'minimal'"
+                    },
+                    {
+                        "name": "indent_mode",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "DocstringIndentMode_t",
+                        "default": "'tab'"
                     }
                 ],
-                "returns": "FastMCP"
+                "returns": "dict[str, object]"
             },
-            "decorators": [
-                "@mcp.tool(name=\"list_roots\", description=\"List configured Waterloo data roots.\")",
-                "@mcp.tool(name=\"get_root\", description=\"Read one configured Waterloo data root by root_id.\")",
-                "@mcp.tool(name=\"get_object\", description=\"Read one Waterloo object by qid from a configured root.\")",
-                "@mcp.tool(name=\"get_section\", description=\"Read one stored section of one Waterloo object.\")",
-                "@mcp.tool(name=\"get_subsection\", description=\"Read one stored subsection of one Waterloo object.\")",
-                "@mcp.tool(name=\"search_objects\", description=\"Search Waterloo objects by expression and structural filters.\")",
-                "@mcp.tool(name=\"search_sections\", description=\"Search Waterloo section and subsection labels by expression and structural filters.\")",
-                "@mcp.tool(name=\"search_text\", description=\"Search Waterloo text content by terms and structural filters.\")"
-            ],
             "doc": {
                 "Preamble": {
                     "profile": "function",
@@ -907,20 +1042,29 @@
                 },
                 "Contract": {
                     "general": [
-                        "MUST build an MCP app according to the provided configuration."
+                        "MUST generate a Waterloo docstring template for the requested profile.",
+                        "MUST return the generated docstring together with a JSON placeholder snippet in the first implementation phase.",
+                        "MUST keep the JSON snippet compatible with the existing Waterloo JSON document shape in later phases."
                     ]
                 },
                 "Parameters": {
-                    "config": [
-                        "The loaded MCP configuration according to which the app should be built."
+                    "profile": "Target Waterloo docstring profile.",
+                    "signature": [
+                        "Optional textual signature for non-module profiles."
+                    ],
+                    "mode": [
+                        "Template mode, either ``minimal`` or ``full``."
+                    ],
+                    "indent_mode": [
+                        "Indentation mode for the returned docstring text, either ``tab`` or ``spc4``."
                     ]
                 },
                 "Returns": [
-                    "The built MCP app."
+                    "A dictionary with the generated ``docstring`` text and a ``json_snippet`` placeholder."
                 ],
                 "Raises": {
                     "ValueError": [
-                        "MAY raise if the configuration is invalid in any way."
+                        "MAY be raised if the profile requires a signature and none is given."
                     ]
                 }
             }

@@ -30,7 +30,7 @@ access_log = true
 config_path = "logging.syslog.toml"
 
 [[roots]]
-path = "../mcp/doc-json/wtrl-mcp.wtrl.core.rfc-2119.json"
+path = "../mcp/doc-json/wtrl_mcp.wtrl.core.rfc-2119.json"
 label = "Waterloo MCP Server and Tool set Reference"
 enabled = true
 kind = "wtrl-json"
