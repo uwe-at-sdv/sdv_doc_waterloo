@@ -1,4 +1,4 @@
-// version: see package.json
+// Package version is declared in package.json.
 
 const vscode = require('vscode');
 const { execFile, execFileSync } = require('child_process');
@@ -8,19 +8,19 @@ const path = require('path');
 const MAX_HEADER_LINES = 100;
 const MAX_HEADER_CHARS = 65536;
 
-// Create an output channel for logging. This is useful for debugging and error reporting.
+// Keep one output channel for activation messages, errors, and provider tracing.
 const fout = vscode.window.createOutputChannel('Channel.Waterloo');
 
-// Define fatal error codes for activation failures.
-// Phase-A:
+// Fatal error codes for activation failures.
+// Phase A: backend script and Python availability.
 const FATAL_BACKEND_NOT_FOUND = "WTRL_VSCODE_PYTHON_BACKEND_NOT_AVAILABLE";
 const FATAL_BACKEND_NOT_READABLE = "WTRL_VSCODE_PYTHON_BACKEND_NOT_READABLE";
 const FATAL_PYTHON_NOT_AVAILABLE = "WTRL_VSCODE_PYTHON_NOT_AVAILABLE";
-// Phase-B:
+// Phase B: backend ping / protocol checks.
 const FATAL_BACKEND_PING_FAILED = "WTRL_VSCODE_PYTHON_BACKEND_PING_FAILED";
 const FATAL_BACKEND_PROTOCOL_ERROR = "WTRL_VSCODE_PYTHON_BACKEND_PROTOCOL_ERROR";
-// Capability strings that the backend can report support for.
-// These are used to conditionally enable/disable commands and UI elements.
+// Capability strings that the backend can report.
+// They are used to enable or hide commands and menu entries.
 const CAP_GENERATE_MINIMAL = "generateMinimalDocstring";
 const CAP_GENERATE_FULL = "generateFullDocstring";
 const CAP_VALIDATE = "validateDocstring";
@@ -127,9 +127,13 @@ function enforceHeaderLimits(headerText, linesRead, kind) {
 
 function collectDecoratorLines(document, startLine) {
 	let decoratorLines = [];
+	// We walk upward because decorators are written above the def/class line
+	// they belong to. We stop as soon as we hit real code.
 	for (let i = startLine - 1; i >= 0; i--) {
 		const line = document.lineAt(i).text;
 		const stripped = line.trim();
+		// Decorators belong to the next def/class header, but only as long as we
+		// do not cross a real code line. Blank lines and comment lines are safe.
 		if (/^\s*@/.test(line)) {
 			decoratorLines.unshift(document.lineAt(i).text);
 		} else if (stripped !== "" && !stripped.startsWith('#')) {
@@ -146,14 +150,24 @@ function scanHeader(document, startLine, startRegex, kindLabel) {
 	let currentLine = startLine;
 	let linesRead = 0;
 
-	// Read the header (`class ...:` or `def ...:`), including multiline cases.
+	// Walk forward from the selected line until we have seen the full header.
+	// The scanner is intentionally lightweight: it does not parse Python ASTs.
+	// It only wants enough text to reconstruct a minimal valid header.
+	//
+	// This supports multiline signatures such as:
+	//   def f(
+	//       x: int,
+	//       y: str,
+	//   ) -> None:
 	while (currentLine < document.lineCount) {
 		let lineText = document.lineAt(currentLine).text;
 
-		// Mask strings (due to possible special chars in default values)
+		// Replace quoted strings with neutral placeholders so brackets, commas,
+		// or colons inside default values do not confuse the header scanner.
 		const lineSanitized = lineText.replace(/(["'])(?:(?=(\\?))\2.)*?\1/g, "''");
 
-		// Find start.
+		// Wait until the selected line or a later line actually looks like the
+		// start of a class/def header.
 		if (!foundStart && lineSanitized.match(startRegex)) {
 			foundStart = true;
 		}
@@ -163,7 +177,8 @@ function scanHeader(document, startLine, startRegex, kindLabel) {
 			linesRead += 1;
 			enforceHeaderLimits(headerText, linesRead, kindLabel);
 
-			// Count all delimiters to avoid ending on colons inside [], {}, or ().
+			// Track open delimiters so we do not stop too early on a colon that is
+			// inside parentheses, brackets, or braces.
 			openDelimiters += countChar(lineSanitized, '(');
 			openDelimiters -= countChar(lineSanitized, ')');
 			openDelimiters += countChar(lineSanitized, '[');
@@ -171,7 +186,8 @@ function scanHeader(document, startLine, startRegex, kindLabel) {
 			openDelimiters += countChar(lineSanitized, '{');
 			openDelimiters -= countChar(lineSanitized, '}');
 
-			// End found when delimiters balance and a top-level colon exists.
+			// When the delimiters balance and the line has a top-level colon, the
+			// header is complete.
 			if (openDelimiters <= 0 && hasTopLevelColon(lineSanitized)) {
 				return { headerText, endLine: currentLine };
 			}
@@ -186,14 +202,14 @@ function scanHeader(document, startLine, startRegex, kindLabel) {
 }
 
 function getClassHeaderInfo(document, startLine) {
-	// 1. Collect decorators above
+	// Collect decorators first, because they logically belong to the class.
 	let decoratorLines = collectDecoratorLines(document, startLine);
 	const headerScan = scanHeader(document, startLine, /^\s*class\s+/, "class");
 
-	// 2. Clean and append 'pass' for syntactic correctness
+	// Rebuild a minimal but syntactically valid class definition for backend use.
 	const headerText = headerScan.headerText;
 	const draft_code = (decoratorLines.join("\n") + "\n" + headerText).trim();
-	// Use your trusty multiline regex for comments
+	// Strip inline comments so the synthetic snippet stays compact and parseable.
 	const final_code = draft_code.replace(/\s*#.*$/m, "");
 
 	return {
@@ -203,11 +219,11 @@ function getClassHeaderInfo(document, startLine) {
 }
 
 function getFunctionHeaderInfo(document, startLine) {
-	// 1. Collect decorators above
+	// Collect decorators first, because they logically belong to the function.
 	let decoratorLines = collectDecoratorLines(document, startLine);
 	const headerScan = scanHeader(document, startLine, /^\s*def\s+/, "function");
 
-	// 2. Clean and append 'pass' for syntactic correctness
+	// Rebuild a minimal but syntactically valid function definition for backend use.
 	const headerText = headerScan.headerText.trim();
 	const draft_code = (decoratorLines.join("\n") + "\n" + headerText).trim();
 	const final_code = draft_code.replace(/\s*#.*$/m, "");
@@ -225,6 +241,7 @@ function splitTopLevelComma(text) {
 	let parenDepth = 0;
 	let bracketDepth = 0;
 	let braceDepth = 0;
+	// Split only at commas that are not nested inside brackets or braces.
 	for (const ch of text) {
 		if (ch === ',' && parenDepth === 0 && bracketDepth === 0 && braceDepth === 0) {
 			parts.push(current);
@@ -244,6 +261,9 @@ function splitTopLevelComma(text) {
 }
 
 function extractFirstParameterNameFromFunctionHeader(headerText) {
+	// This is a heuristic, not a parser. We just need to detect the first
+	// positional parameter well enough to distinguish function from method in
+	// the common cases.
 	const sanitized = headerText.replace(/(["'])(?:(?=(\\?))\2.)*?\1/g, "''");
 	const defMatch = sanitized.match(/\bdef\s+[A-Za-z_][A-Za-z0-9_]*\s*\(/);
 	if (!defMatch || defMatch.index === undefined) {
@@ -258,6 +278,8 @@ function extractFirstParameterNameFromFunctionHeader(headerText) {
 	let bracketDepth = 0;
 	let braceDepth = 0;
 	let paramsText = "";
+	// Read the parameter list of the function header one character at a time.
+	// We stop at the matching ')' that closes the outer def(...).
 	while (i < sanitized.length) {
 		const ch = sanitized[i];
 		if (ch === ')' && parenDepth === 0 && bracketDepth === 0 && braceDepth === 0) {
@@ -287,6 +309,9 @@ function extractFirstParameterNameFromFunctionHeader(headerText) {
 }
 
 function classifyFunctionVsMethod(document, startLine, lineText, headerInfo) {
+	// The backend needs to know whether the generated docstring should be for a
+	// function or a method. This is only heuristic, so we try the strongest
+	// signals first and keep the fallback behavior simple.
 	// 1. Decorator-based detection.
 	for (const decLineRaw of headerInfo.decoratorLines) {
 		const decLine = decLineRaw.trim();
@@ -316,16 +341,16 @@ function classifyFunctionVsMethod(document, startLine, lineText, headerInfo) {
 function getIndentUnit(editor) {
 	const insertSpaces = editor.options.insertSpaces === true;
 	if (!insertSpaces) {
-// Waterloo indentiation TAB
+		// Keep tab indentation when the file uses tabs.
 		return "\t";
 	}
 	else {
-// Waterloo indentiation SPC4
-		return "    "
+		// Otherwise use four spaces, which is the project's default style.
+		return "    ";
 	}
 }
 
-// Waterloo allows indentation with TAB or four SPC.
+// Normalize user-facing text to the indentation style of the current file.
 function normalizeDocstringIndent(rawDocstring, editor) {
 	return rawDocstring.replace(/\t/g, getIndentUnit(editor));
 }
@@ -339,12 +364,12 @@ function indentNonEmptyLines(text, prefix) {
 
 function buildDocstringForInsertion(rawDocstring, kind, editor, lineTextForIndent) {
 	const normalized = normalizeDocstringIndent(rawDocstring, editor);
-// For modules, no further indentation is required.
+	// Module docstrings are inserted at top level.
 	if (kind === "module") {
 		return normalized;
 	}
-// For class, function, and method we measure the indentation of the current line
-// (as selected by user) and add one indentation unit, in accordance to PEP 257.
+	// For class/function/method docstrings we indent one level deeper than the
+	// current declaration line, in line with PEP 257.
 	const currentIndent = (lineTextForIndent.match(/^\s*/) || [""])[0];
 	const bodyIndent = currentIndent + getIndentUnit(editor);
 	return indentNonEmptyLines(normalized, bodyIndent);
@@ -363,6 +388,9 @@ function updateFuncClassModuleContext(editor)
 		}
 	const position = editor.selection.active;
 	const lineText = editor.document.lineAt(position.line).text;
+	// This context key drives the right-click menu. We recompute it often, so
+	// the check stays deliberately cheap and only inspects the current cursor
+	// position plus a small amount of surrounding context.
 	void vscode.commands.executeCommand(
 		'setContext',
 		'waterloo.isFuncClassOrModuleLine',
@@ -375,6 +403,10 @@ function updateFuncClassModuleContext(editor)
 // in order to ensure the extension does not block under any circumstances.
 function runPythonJsonCommand(scriptPath, payload) {
 	return new Promise((resolve, reject) => {
+		// The Python backend is treated as a short-lived helper: we send one JSON
+		// payload on stdin and expect one JSON object on stdout.
+		// This keeps the Node side simple and avoids having to keep a long-lived
+		// Python process in sync with the editor state.
 		const child = execFile(
 			'python3',
 			[scriptPath],
@@ -436,6 +468,8 @@ function setCapabilities(capabilities) {
 function resolveWaterlooMcpConfigPath() {
 	const cfg = vscode.workspace.getConfiguration("waterloo");
 	const configured = String(cfg.get("mcpConfigPath", "")).trim();
+
+	// Absolute paths are the simplest case: use them as-is when they exist.
 	if (configured.length > 0 && path.isAbsolute(configured)) {
 		if (fs.existsSync(configured)) {
 			return configured;
@@ -444,6 +478,10 @@ function resolveWaterlooMcpConfigPath() {
 		return configured;
 	}
 
+	// If the package is installed in editable mode, ask Python where the package
+	// root lives and try the package-local etc/ directory next.
+	// This makes the extension work both from the source tree and from an
+	// editable install without forcing the user to enter a long path manually.
 	try {
 		const pythonOutput = execFileSync('python3', [
 			'-c',
@@ -458,9 +496,13 @@ function resolveWaterlooMcpConfigPath() {
 			}
 		}
 	} catch (_err) {
-		// Silent fallback: workspace/configured-path resolution and default config arg remain available.
+		// If Python is unavailable, we still try workspace-relative fallbacks below.
 	}
 
+	// If the user supplied a relative path, interpret it against every open
+	// workspace folder before falling back to canned locations.
+	// This is helpful when the workspace already contains a local copy of the
+	// config file and the user does not want to type an absolute path.
 	if (configured.length > 0 && !path.isAbsolute(configured)) {
 		const workspaceFolders = vscode.workspace.workspaceFolders || [];
 		for (const folder of workspaceFolders) {
@@ -472,6 +514,10 @@ function resolveWaterlooMcpConfigPath() {
 		}
 	}
 
+	// Last resort: try a handful of common workspace layouts. This keeps the
+	// extension usable even when the project is checked out in slightly different
+	// directory structures. The order is not magic; it just reflects the layouts
+	// we have seen so far in this repository.
 	const workspaceFolders = vscode.workspace.workspaceFolders || [];
 	for (const folder of workspaceFolders) {
 		const candidates = [
@@ -505,6 +551,8 @@ function createWaterlooMcpServerDefinition() {
 		`Waterloo MCP provider: advertising '${label}' via '${command} --config ${configArg}'.`
 	);
 
+	// VS Code's MCP API wants a stdio server definition, so we hand it the
+	// command plus the config path we resolved above.
 	const args = ["--config", configArg];
 	return new vscode.McpStdioServerDefinition(label, command, args);
 }

@@ -3,7 +3,7 @@
   "displayName": "Waterloo Docstrings",
   "icon": "img/wtrl_logo_128x128.png",
   "description": "Tools for Waterloo docstrings in Python.",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "publisher": "uwe-at-sdv",
   "engines": {
     "vscode": "^1.115.0"
@@ -32,22 +32,22 @@
         "waterloo.mcpProvideServer": {
           "type": "boolean",
           "default": true,
-          "description": "Provide a Waterloo MCP stdio server definition to VS Code."
+          "description": "Add a Waterloo MCP stdio server to VS Code."
         },
         "waterloo.mcpCommand": {
           "type": "string",
           "default": "wtrl_mcp",
-          "description": "Command used to start the Waterloo MCP stdio server."
+          "description": "Command VS Code should run to start the Waterloo MCP server."
         },
         "waterloo.mcpConfigPath": {
           "type": "string",
           "default": "",
-          "description": "Absolute path to wtrl_mcp.stdio.toml. If empty, common workspace locations are tried."
+          "description": "Path to wtrl_mcp.stdio.toml. If empty or relative, VS Code also looks in the open workspace and in the installed Waterloo package etc/ directory."
         },
         "waterloo.mcpServerLabel": {
           "type": "string",
           "default": "Waterloo Docs (stdio)",
-          "description": "Human-readable label for the provided MCP server."
+          "description": "Name shown for the Waterloo MCP server in VS Code."
         }
       }
     },
