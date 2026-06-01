@@ -47,11 +47,14 @@ Public_types:
 		The mode of the docstring template, either |value|`minimal` or |value|`full`.
 	DocstringIndentMode_t:
 		The indentation mode for generated docstrings, either |value|`tab` or |value|`spc4`.
+	DocstringJsonMode_t:
+		The JSON output mode for generated docstrings, either |value|`full` or |value|`doc_only`.
 """
 
 from __future__ import annotations
 
 import fnmatch
+import ast
 import hashlib
 import json
 import re
@@ -67,6 +70,7 @@ SearchTextTermMode_t = Literal["any", "all"]
 DocstringProfile_t = Literal["module", "class", "function", "method"]
 DocstringMode_t = Literal["minimal", "full"]
 DocstringIndentMode_t = Literal["tab", "spc4"]
+DocstringJsonMode_t = Literal["full", "doc_only"]
 
 
 class SearchObjectsFilter(BaseModel):
@@ -874,11 +878,325 @@ def search_text(
 	return deduped
 
 
+def _unparse_expr(node: ast.AST | None) -> str | None:
+	if node is None:
+		return None
+	try:
+		text = ast.unparse(node)
+	except Exception:
+		return None
+	text = text.strip()
+	return text or None
+
+
+def _signature_parameters_from_function_node(
+	node: ast.FunctionDef | ast.AsyncFunctionDef,
+	*,
+	drop_first_receiver: bool = False,
+) -> list[dict[str, object]]:
+	all_pos = list(node.args.posonlyargs) + list(node.args.args)
+	default_start = len(all_pos) - len(node.args.defaults)
+	parameters: list[dict[str, object]] = []
+
+	for index, arg in enumerate(node.args.posonlyargs):
+		default_idx = index - default_start
+		parameters.append(
+			{
+				"name": arg.arg,
+				"kind": "POSITIONAL_ONLY",
+				"annotation": _unparse_expr(arg.annotation),
+				"default": _unparse_expr(node.args.defaults[default_idx]) if default_idx >= 0 else None,
+			}
+		)
+	for index, arg in enumerate(node.args.args, start=len(node.args.posonlyargs)):
+		default_idx = index - default_start
+		parameters.append(
+			{
+				"name": arg.arg,
+				"kind": "POSITIONAL_OR_KEYWORD",
+				"annotation": _unparse_expr(arg.annotation),
+				"default": _unparse_expr(node.args.defaults[default_idx]) if default_idx >= 0 else None,
+			}
+		)
+	if node.args.vararg is not None:
+		parameters.append(
+			{
+				"name": node.args.vararg.arg,
+				"kind": "VAR_POSITIONAL",
+				"annotation": _unparse_expr(node.args.vararg.annotation),
+				"default": None,
+			}
+		)
+	for arg, default in zip(node.args.kwonlyargs, node.args.kw_defaults, strict=False):
+		parameters.append(
+			{
+				"name": arg.arg,
+				"kind": "KEYWORD_ONLY",
+				"annotation": _unparse_expr(arg.annotation),
+				"default": _unparse_expr(default),
+			}
+		)
+	if node.args.kwarg is not None:
+		parameters.append(
+			{
+				"name": node.args.kwarg.arg,
+				"kind": "VAR_KEYWORD",
+				"annotation": _unparse_expr(node.args.kwarg.annotation),
+				"default": None,
+			}
+		)
+	if drop_first_receiver and parameters and parameters[0]["name"] in {"self", "cls", "mcls"}:
+		parameters = parameters[1:]
+	return parameters
+
+
+def _signature_parameter_names_from_node(
+	node: ast.FunctionDef | ast.AsyncFunctionDef,
+	*,
+	drop_first_receiver: bool = False,
+) -> list[str]:
+	return [
+		str(item["name"])
+		for item in _signature_parameters_from_function_node(node, drop_first_receiver=drop_first_receiver)
+	]
+
+
+def _signature_json_from_node(
+	profile: DocstringProfile_t,
+	signature: str | None,
+	node: ast.AST | None,
+) -> dict[str, object] | None:
+	if profile == "module":
+		return None
+	if isinstance(node, ast.ClassDef):
+		return {
+			"text": "object.__init__(self, /, *args, **kwargs)",
+			"parameters": [
+				{
+					"name": "args",
+					"kind": "VAR_POSITIONAL",
+					"annotation": None,
+					"default": None,
+				},
+				{
+					"name": "kwargs",
+					"kind": "VAR_KEYWORD",
+					"annotation": None,
+					"default": None,
+				},
+			],
+			"returns": None,
+		}
+	if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+		kind = "method" if profile == "method" else "function"
+		return {
+			"text": _signature_text_from_node(profile, signature, node) or kind,
+			"parameters": _signature_parameters_from_function_node(node, drop_first_receiver=(profile == "method")),
+			"returns": _unparse_expr(node.returns),
+		}
+	return None
+
+
+def _signature_text_from_node(profile: DocstringProfile_t, signature: str | None, node: ast.AST | None) -> str | None:
+	if isinstance(node, ast.ClassDef):
+		try:
+			rendered = ast.unparse(node)
+		except Exception:
+			rendered = signature.strip() if signature else node.name
+		rendered = re.sub(r":\s*pass\s*\Z", "", rendered.strip())
+		rendered = rendered.removeprefix("class ").strip()
+		return rendered or node.name
+	if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+		try:
+			rendered = ast.unparse(node)
+		except Exception:
+			rendered = signature.strip() if signature else node.name
+		rendered = rendered.strip()
+		rendered = rendered.removeprefix("async def ").removeprefix("def ").strip()
+		rendered = re.sub(r":\s*pass\s*\Z", "", rendered).strip()
+		return rendered or node.name
+	return signature.strip() if signature else None
+
+
+def _doc_snippet_for(profile: DocstringProfile_t, node: ast.AST | None, mode: DocstringMode_t) -> dict[str, object]:
+	if profile == "module":
+		if mode == "minimal":
+			return {
+				"Preamble": {
+					"profile": "module",
+					"normative_sections": ["Contract"],
+				},
+				"Contract": {
+					"general": [],
+				},
+			}
+		return {
+			"Preamble": {
+				"profile": "module",
+				"normative_sections": [
+					"Definitions",
+					"Contract",
+					"Public_classes",
+					"Public_functions",
+					"Public_types",
+					"Public_variables",
+					"Public_constants",
+					"See_also",
+				],
+				"scope": ["public"],
+			},
+			"Definitions": {
+				"ExampleTerm": {
+					"variations": [],
+					"text": ["..."],
+				},
+			},
+			"Terminology": {
+				"Example term": ["..."],
+			},
+			"Contract": {
+				"general": ["MUST define the externally visible behavior of this module."],
+			},
+			"Description": [],
+			"Notes": {
+				"General note": ["..."],
+			},
+			"Public_classes": [],
+			"Class_overview": {},
+			"Public_functions": [],
+			"Function_overview": {},
+			"Public_types": {},
+			"Public_variables": {},
+			"Public_constants": {},
+			"See_also": [],
+		}
+	if profile == "class":
+		if mode == "minimal":
+			return {
+				"Preamble": {
+					"profile": "class",
+					"normative_sections": ["Contract"],
+				},
+				"Contract": {
+					"general": [],
+					"constructor": [],
+				},
+			}
+		return {
+			"Preamble": {
+				"profile": "class",
+				"normative_sections": [
+					"Definitions",
+					"Contract",
+					"Derived_from",
+					"Public_classes",
+					"Public_methods",
+					"Public_types",
+					"Public_variables",
+					"Public_constants",
+					"Factory",
+					"See_also",
+				],
+				"scope": ["public"],
+			},
+			"Definitions": {
+				"ExampleTerm": {
+					"variations": [],
+					"text": ["..."],
+				},
+			},
+			"Terminology": {
+				"Example term": ["..."],
+			},
+			"Contract": {
+				"general": ["MUST define the externally visible behavior of this class."],
+				"constructor": ["MUST define construction requirements and guarantees."],
+				"traits": [],
+			},
+			"Description": ["..."],
+			"Derived_from": [],
+			"Notes": {
+				"General note": ["..."],
+			},
+			"Public_classes": [],
+			"Class_overview": {},
+			"Public_methods": [],
+			"Method_overview": {},
+			"Public_types": {},
+			"Public_variables": {},
+			"Public_constants": {},
+			"Factory": {},
+			"See_also": [],
+		}
+	if profile in {"function", "method"}:
+		parameter_names = _signature_parameter_names_from_node(
+			cast(ast.FunctionDef | ast.AsyncFunctionDef, node),
+			drop_first_receiver=(profile == "method"),
+		)
+		if mode == "minimal":
+			return {
+				"Preamble": {
+					"profile": profile,
+					"normative_sections": ["Contract", "Parameters", "Returns", "Raises"],
+				},
+				"Contract": {
+					"general": [],
+				},
+				"Parameters": {name: ["..."] for name in parameter_names},
+				"Returns": [],
+				"Raises": {},
+			}
+		return {
+			"Preamble": {
+				"profile": profile,
+				"normative_sections": [
+					"Definitions",
+					"Contract",
+					"Parameters",
+					"Returns",
+					"Raises",
+					"See_also",
+				],
+				"status": "stable",
+				"scope": ["public"],
+			},
+			"Definitions": {
+				"ExampleTerm": {
+					"variations": [],
+					"text": ["..."],
+				},
+			},
+			"Terminology": {
+				"Example term": ["..."],
+			},
+			"Contract": {
+				"general": [
+					"MUST define the externally visible behavior of this callable."
+					if profile == "function"
+					else "MUST define the externally visible behavior of this method."
+				],
+				"requires": ["MUST define preconditions for valid input."],
+				"ensures": ["MUST define postconditions for successful execution."],
+				"invariants": ["MUST preserve all documented invariants across valid calls."],
+			},
+			"Description": ["..."],
+			"Parameters": {name: ["..."] for name in parameter_names},
+			"Returns": ["MUST return ..."],
+			"Raises": {"BaseException": ["MUST raise if..."]},
+			"Notes": {
+				"General note": ["..."],
+			},
+			"See_also": [],
+		}
+	return {}
+
+
 def gen_docstring(
 	profile: DocstringProfile_t,
 	signature: str | None = None,
 	mode: DocstringMode_t = "minimal",
 	indent_mode: DocstringIndentMode_t = "tab",
+	json_mode: DocstringJsonMode_t = "full",
 ) -> dict[str, object]:
 	r"""
 	Preamble:
@@ -902,6 +1220,8 @@ def gen_docstring(
 			Template mode, either ``minimal`` or ``full``.
 		indent_mode:
 			Indentation mode for the returned docstring text, either ``tab`` or ``spc4``.
+		json_mode:
+			JSON output mode, either ``full`` or ``doc_only``.
 	Returns:
 		A dictionary with the generated ``docstring`` text and a ``json_snippet`` placeholder.
 	Raises:
@@ -910,6 +1230,8 @@ def gen_docstring(
 	"""
 	if mode not in {"minimal", "full"}:
 		raise ValueError(f"unknown docstring mode: {mode}")
+	if json_mode not in {"full", "doc_only"}:
+		raise ValueError(f"unknown JSON mode: {json_mode}")
 	if profile not in {"module", "class", "function", "method"}:
 		raise ValueError(f"unsupported docstring profile: {profile}")
 	if profile == "module":
@@ -924,11 +1246,21 @@ def gen_docstring(
 		docstring = genutil.generate_full_docstring_from_node(profile, node)
 	if indent_mode == "spc4":
 		docstring = docstring.replace("\t", "    ")
+	doc_snippet = _doc_snippet_for(profile, node, mode)
+	if json_mode == "doc_only":
+		json_snippet: dict[str, object] = doc_snippet
+	else:
+		signature_json = _signature_json_from_node(profile, signature, node)
+		object_entry: dict[str, object] = {"doc": doc_snippet}
+		if signature_json is not None:
+			object_entry["signature"] = signature_json
+		json_snippet = {"__WTRL_OBJECTS__": {"generated_docstring_template": object_entry}}
 	return {
 		"profile": profile,
 		"signature": signature,
 		"mode": mode,
 		"indent_mode": indent_mode,
+		"json_mode": json_mode,
 		"docstring": docstring,
-		"json_snippet": {},
+		"json_snippet": json_snippet,
 	}

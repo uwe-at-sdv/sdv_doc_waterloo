@@ -40,6 +40,10 @@ from mcp.server.fastmcp.server import TransportSecuritySettings
 
 from sdv.doc.waterloo.mcp import __version__
 from sdv.doc.waterloo.mcp.wtrl_tools import (
+    DocstringIndentMode_t,
+    DocstringJsonMode_t,
+    DocstringMode_t,
+    DocstringProfile_t,
     SearchObjectsFilter,
     SearchSectionsFilter,
     SearchTextFilter,
@@ -401,17 +405,13 @@ def build_app(config: McpConfig) -> FastMCP:
 
 	@mcp.tool(name="gen_docstring", description="Generate a Waterloo docstring template for a given profile.")
 	def _gen_docstring(
-		profile: str,
+		profile: DocstringProfile_t,
 		signature: str | None = None,
-		mode: str = "minimal",
-		indent_mode: str = "tab",
+		mode: DocstringMode_t = "minimal",
+		indent_mode: DocstringIndentMode_t = "tab",
+		json_mode: DocstringJsonMode_t = "full",
 	) -> dict[str, object]:
-		return gen_docstring(
-			profile=profile,  # type: ignore[arg-type]
-			signature=signature,
-			mode=mode,  # type: ignore[arg-type]
-			indent_mode=indent_mode,  # type: ignore[arg-type]
-		)
+		return gen_docstring(profile=profile, signature=signature, mode=mode, indent_mode=indent_mode, json_mode=json_mode)
 
 	return mcp
 

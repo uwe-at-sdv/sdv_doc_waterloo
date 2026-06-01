@@ -44,6 +44,15 @@ Typical usage:
 - call `search_sections` with an expression and an optional filter object
 - call `search_text` with a list of terms and an optional filter object
 
+Pytest workflow:
+- the MCP HTTP integration tests live in `package_main/pytest/pytest_mcp_*.py`
+- they expect a running MCP server on `http://127.0.0.1:13316/mcp`
+- if the server is not running, the tests skip with a short start-up hint
+- `pytest_mcp_http.py` exercises `tools/list` and `gen_docstring` against the
+  canonical JSON templates in `package_main/templates-json/out`
+- the tests intentionally use the live server so that the `streamable-http`
+  wire behavior stays close to the actual browser/Inspector workflow
+
 Lookup failures are currently reported as standardized tool messages with
 `MCPS-001` through `MCPS-004` prefixes, for example unknown `root_id`,
 unknown `qid`, or unknown section and subsection labels. `MCPS-005` is
