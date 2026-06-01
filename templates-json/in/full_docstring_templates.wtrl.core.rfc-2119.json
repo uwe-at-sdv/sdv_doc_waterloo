@@ -1,0 +1,357 @@
+{
+    "$schema": "https://sci-d-vis.com/schema/wtrl-json-0.1.0.schema.json",
+    "$id": "urn:waterlint:wtrl-json:0.14.1:core:rfc-2119:8026c9c727c00f287b632f921a07924a0a52ab77715ce7aab9c4a8259b111fbc",
+    "__WTRL_VERSION__": {
+        "waterloo": "0.8.1",
+        "schema": "0.1.0"
+    },
+    "__WTRL_META__": {
+        "generated_at": "2026-06-01T19:45:51+02:00",
+        "generator": "waterlint",
+        "scope": "core",
+        "flavour": "rfc-2119"
+    },
+    "__WTRL_ROLES__": {
+        "attr": "Attribute name",
+        "cmd": "Shell or CLI command",
+        "dfn": "Definition of a term",
+        "file": "File or path",
+        "func": "Function or callable",
+        "key": "Key on the keyboard",
+        "label": "Section/Subsection label",
+        "lit": "Literal text or code",
+        "mod": "Module name",
+        "op": "Operator symbol",
+        "opt": "Command-line option or flag",
+        "tag": "Tag or marker",
+        "term": "Domain-specific term",
+        "type": "Type name or annotation",
+        "value": "Concrete value",
+        "var": "Variable name",
+        "var_type": "Variable and type, like 'var:type'"
+    },
+    "__WTRL_SCOPES__": {
+        "public": {
+            "value": 10,
+            "description": ""
+        },
+        "extension": {
+            "value": 20,
+            "description": ""
+        },
+        "core": {
+            "value": 30,
+            "description": ""
+        }
+    },
+    "__WTRL_TOC_MODULES__": {
+        "full_docstring_templates": "/__WTRL_OBJECTS__/full_docstring_templates"
+    },
+    "__WTRL_TOC_CLASSES__": {
+        "full_docstring_templates.X": "/__WTRL_OBJECTS__/full_docstring_templates.X"
+    },
+    "__WTRL_TOC_CALLABLES__": {
+        "full_docstring_templates.X.m": "/__WTRL_OBJECTS__/full_docstring_templates.X.m",
+        "full_docstring_templates.f": "/__WTRL_OBJECTS__/full_docstring_templates.f"
+    },
+    "__WTRL_TOC_TYPES__": {},
+    "__WTRL_TOC_VARIABLES__": {},
+    "__WTRL_TOC_CONSTANTS__": {},
+    "__WTRL_OBJECTS__": {
+        "full_docstring_templates": {
+            "path": "/server/devel/sdv/privat/uwe/source/sdv_doc_waterloo/package_main/templates-json/in_python/full_docstring_templates.py",
+            "doc": {
+                "Preamble": {
+                    "profile": "module",
+                    "normative_sections": [
+                        "Definitions",
+                        "Contract",
+                        "Public_classes",
+                        "Public_functions",
+                        "Public_types",
+                        "Public_variables",
+                        "Public_constants",
+                        "See_also"
+                    ],
+                    "scope": [
+                        "public"
+                    ]
+                },
+                "Definitions": {
+                    "ExampleTerm": {
+                        "variations": [],
+                        "text": [
+                            "..."
+                        ]
+                    }
+                },
+                "Terminology": {
+                    "Example term": [
+                        "..."
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST define the externally visible behavior of this module."
+                    ]
+                },
+                "Description": [
+                    "..."
+                ],
+                "Notes": {
+                    "General note": [
+                        "..."
+                    ]
+                },
+                "Public_classes": [],
+                "Class_overview": {},
+                "Public_functions": [],
+                "Function_overview": {},
+                "Public_types": {},
+                "Public_variables": {},
+                "Public_constants": {},
+                "See_also": []
+            }
+        },
+        "full_docstring_templates.X": {
+            "signature": {
+                "text": "object.__init__(self, /, *args, **kwargs)",
+                "parameters": [
+                    {
+                        "name": "args",
+                        "kind": "VAR_POSITIONAL",
+                        "annotation": null,
+                        "default": null
+                    },
+                    {
+                        "name": "kwargs",
+                        "kind": "VAR_KEYWORD",
+                        "annotation": null,
+                        "default": null
+                    }
+                ],
+                "returns": null
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "class",
+                    "normative_sections": [
+                        "Definitions",
+                        "Contract",
+                        "Derived_from",
+                        "Public_classes",
+                        "Public_methods",
+                        "Public_types",
+                        "Public_variables",
+                        "Public_constants",
+                        "Factory",
+                        "See_also"
+                    ],
+                    "scope": [
+                        "public"
+                    ]
+                },
+                "Definitions": {
+                    "ExampleTerm": {
+                        "variations": [],
+                        "text": [
+                            "..."
+                        ]
+                    }
+                },
+                "Terminology": {
+                    "Example term": [
+                        "..."
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST define the externally visible behavior of this class."
+                    ],
+                    "constructor": [
+                        "MUST define construction requirements and guarantees."
+                    ],
+                    "traits": []
+                },
+                "Description": [
+                    "..."
+                ],
+                "Derived_from": [],
+                "Notes": {
+                    "General note": [
+                        "..."
+                    ]
+                },
+                "Public_classes": [],
+                "Class_overview": {},
+                "Public_methods": [],
+                "Method_overview": {},
+                "Public_types": {},
+                "Public_variables": {},
+                "Public_constants": {},
+                "Factory": {},
+                "See_also": []
+            }
+        },
+        "full_docstring_templates.X.m": {
+            "signature": {
+                "text": "X.m(self, a: int) -> int",
+                "parameters": [
+                    {
+                        "name": "a",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "int",
+                        "default": null
+                    }
+                ],
+                "returns": "int"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "method",
+                    "normative_sections": [
+                        "Definitions",
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises",
+                        "See_also"
+                    ],
+                    "status": "stable",
+                    "scope": [
+                        "public"
+                    ]
+                },
+                "Definitions": {
+                    "ExampleTerm": {
+                        "variations": [],
+                        "text": [
+                            "..."
+                        ]
+                    }
+                },
+                "Terminology": {
+                    "Example term": [
+                        "..."
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST define the externally visible behavior of this method."
+                    ],
+                    "requires": [
+                        "MUST define preconditions for valid input."
+                    ],
+                    "ensures": [
+                        "MUST define postconditions for successful execution."
+                    ],
+                    "invariants": [
+                        "MUST preserve all documented invariants across valid calls."
+                    ]
+                },
+                "Description": [
+                    "..."
+                ],
+                "Parameters": {
+                    "a": [
+                        "..."
+                    ]
+                },
+                "Returns": [
+                    "MUST return ..."
+                ],
+                "Raises": {
+                    "BaseException": [
+                        "MUST raise if..."
+                    ]
+                },
+                "Notes": {
+                    "General note": [
+                        "..."
+                    ]
+                },
+                "See_also": []
+            }
+        },
+        "full_docstring_templates.f": {
+            "signature": {
+                "text": "f(a: int) -> int",
+                "parameters": [
+                    {
+                        "name": "a",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "int",
+                        "default": null
+                    }
+                ],
+                "returns": "int"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Definitions",
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises",
+                        "See_also"
+                    ],
+                    "status": "stable",
+                    "scope": [
+                        "public"
+                    ]
+                },
+                "Definitions": {
+                    "ExampleTerm": {
+                        "variations": [],
+                        "text": [
+                            "..."
+                        ]
+                    }
+                },
+                "Terminology": {
+                    "Example term": [
+                        "..."
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST define the externally visible behavior of this callable."
+                    ],
+                    "requires": [
+                        "MUST define preconditions for valid input."
+                    ],
+                    "ensures": [
+                        "MUST define postconditions for successful execution."
+                    ],
+                    "invariants": [
+                        "MUST preserve all documented invariants across valid calls."
+                    ]
+                },
+                "Description": [
+                    "..."
+                ],
+                "Parameters": {
+                    "a": [
+                        "..."
+                    ]
+                },
+                "Returns": [
+                    "MUST return ..."
+                ],
+                "Raises": {
+                    "BaseException": [
+                        "MUST raise if..."
+                    ]
+                },
+                "Notes": {
+                    "General note": [
+                        "..."
+                    ]
+                },
+                "See_also": []
+            }
+        }
+    }
+}

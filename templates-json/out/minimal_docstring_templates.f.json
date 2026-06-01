@@ -1,0 +1,39 @@
+{
+  "__WTRL_OBJECTS__": {
+    "minimal_docstring_templates.f": {
+      "signature": {
+        "text": "f(a: int) -> int",
+        "parameters": [
+          {
+            "name": "a",
+            "kind": "POSITIONAL_OR_KEYWORD",
+            "annotation": "int",
+            "default": null
+          }
+        ],
+        "returns": "int"
+      },
+      "doc": {
+        "Preamble": {
+          "profile": "function",
+          "normative_sections": [
+            "Contract",
+            "Parameters",
+            "Returns",
+            "Raises"
+          ]
+        },
+        "Contract": {
+          "general": []
+        },
+        "Parameters": {
+          "a": [
+            "..."
+          ]
+        },
+        "Returns": [],
+        "Raises": {}
+      }
+    }
+  }
+}

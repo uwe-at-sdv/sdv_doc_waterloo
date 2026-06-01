@@ -1,0 +1,18 @@
+{
+  "__WTRL_OBJECTS__": {
+    "minimal_docstring_templates": {
+      "path": "/server/devel/sdv/privat/uwe/source/sdv_doc_waterloo/package_main/templates-json/in_python/minimal_docstring_templates.py",
+      "doc": {
+        "Preamble": {
+          "profile": "module",
+          "normative_sections": [
+            "Contract"
+          ]
+        },
+        "Contract": {
+          "general": []
+        }
+      }
+    }
+  }
+}

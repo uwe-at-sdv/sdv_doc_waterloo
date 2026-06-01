@@ -1,0 +1,59 @@
+{
+  "__WTRL_OBJECTS__": {
+    "full_docstring_templates": {
+      "path": "/server/devel/sdv/privat/uwe/source/sdv_doc_waterloo/package_main/templates-json/in_python/full_docstring_templates.py",
+      "doc": {
+        "Preamble": {
+          "profile": "module",
+          "normative_sections": [
+            "Definitions",
+            "Contract",
+            "Public_classes",
+            "Public_functions",
+            "Public_types",
+            "Public_variables",
+            "Public_constants",
+            "See_also"
+          ],
+          "scope": [
+            "public"
+          ]
+        },
+        "Definitions": {
+          "ExampleTerm": {
+            "variations": [],
+            "text": [
+              "..."
+            ]
+          }
+        },
+        "Terminology": {
+          "Example term": [
+            "..."
+          ]
+        },
+        "Contract": {
+          "general": [
+            "MUST define the externally visible behavior of this module."
+          ]
+        },
+        "Description": [
+          "..."
+        ],
+        "Notes": {
+          "General note": [
+            "..."
+          ]
+        },
+        "Public_classes": [],
+        "Class_overview": {},
+        "Public_functions": [],
+        "Function_overview": {},
+        "Public_types": {},
+        "Public_variables": {},
+        "Public_constants": {},
+        "See_also": []
+      }
+    }
+  }
+}

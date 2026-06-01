@@ -1,0 +1,84 @@
+{
+  "__WTRL_OBJECTS__": {
+    "full_docstring_templates.f": {
+      "signature": {
+        "text": "f(a: int) -> int",
+        "parameters": [
+          {
+            "name": "a",
+            "kind": "POSITIONAL_OR_KEYWORD",
+            "annotation": "int",
+            "default": null
+          }
+        ],
+        "returns": "int"
+      },
+      "doc": {
+        "Preamble": {
+          "profile": "function",
+          "normative_sections": [
+            "Definitions",
+            "Contract",
+            "Parameters",
+            "Returns",
+            "Raises",
+            "See_also"
+          ],
+          "status": "stable",
+          "scope": [
+            "public"
+          ]
+        },
+        "Definitions": {
+          "ExampleTerm": {
+            "variations": [],
+            "text": [
+              "..."
+            ]
+          }
+        },
+        "Terminology": {
+          "Example term": [
+            "..."
+          ]
+        },
+        "Contract": {
+          "general": [
+            "MUST define the externally visible behavior of this callable."
+          ],
+          "requires": [
+            "MUST define preconditions for valid input."
+          ],
+          "ensures": [
+            "MUST define postconditions for successful execution."
+          ],
+          "invariants": [
+            "MUST preserve all documented invariants across valid calls."
+          ]
+        },
+        "Description": [
+          "..."
+        ],
+        "Parameters": {
+          "a": [
+            "..."
+          ]
+        },
+        "Returns": [
+          "MUST return ..."
+        ],
+        "Raises": {
+          "BaseException": [
+            "MUST raise if..."
+          ]
+        },
+        "Notes": {
+          "General note": [
+            "..."
+          ]
+        },
+        "See_also": []
+      }
+    }
+  }
+}

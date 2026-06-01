@@ -1,0 +1,36 @@
+{
+  "__WTRL_OBJECTS__": {
+    "minimal_docstring_templates.X": {
+      "signature": {
+        "text": "object.__init__(self, /, *args, **kwargs)",
+        "parameters": [
+          {
+            "name": "args",
+            "kind": "VAR_POSITIONAL",
+            "annotation": null,
+            "default": null
+          },
+          {
+            "name": "kwargs",
+            "kind": "VAR_KEYWORD",
+            "annotation": null,
+            "default": null
+          }
+        ],
+        "returns": null
+      },
+      "doc": {
+        "Preamble": {
+          "profile": "class",
+          "normative_sections": [
+            "Contract"
+          ]
+        },
+        "Contract": {
+          "general": [],
+          "constructor": []
+        }
+      }
+    }
+  }
+}

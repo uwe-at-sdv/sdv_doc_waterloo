@@ -1,0 +1,78 @@
+{
+    "$schema": "https://sci-d-vis.com/schema/wtrl-tracer-json-0.0.2.schema.json",
+    "$id": "urn:waterlint:wtrl-tracer-json:0.14.1:20260601194551",
+    "__WTRL_VERSION__": {
+        "waterloo": "0.8.1",
+        "schema": "0.0.2"
+    },
+    "__WTRL_INFO__": [
+        {
+            "kind": "info",
+            "origin": "tool",
+            "msg": "Result JSON contains local filesystem paths; disable with --no-allow-local-paths.",
+            "context": []
+        },
+        {
+            "kind": "info",
+            "origin": "tool",
+            "msg": "Num modules skipped (no docstring / invalid)  : 0 / 0.",
+            "context": []
+        },
+        {
+            "kind": "info",
+            "origin": "tool",
+            "msg": "Num classes skipped (no docstring / invalid)  : 0 / 0.",
+            "context": []
+        },
+        {
+            "kind": "info",
+            "origin": "tool",
+            "msg": "Num callables skipped (no docstring / invalid): 0 / 0.",
+            "context": []
+        },
+        {
+            "kind": "info",
+            "origin": "tool",
+            "msg": "Num <unknown> skipped (no docstring / invalid): 0 / 0.",
+            "context": []
+        },
+        {
+            "kind": "info",
+            "origin": "tool",
+            "msg": "Num modules rendered  : 1.",
+            "context": []
+        },
+        {
+            "kind": "info",
+            "origin": "tool",
+            "msg": "Num classes rendered  : 1.",
+            "context": []
+        },
+        {
+            "kind": "info",
+            "origin": "tool",
+            "msg": "Num callables rendered: 2.",
+            "context": []
+        },
+        {
+            "kind": "info",
+            "origin": "tool",
+            "msg": "Num types rendered    : 0.",
+            "context": []
+        },
+        {
+            "kind": "info",
+            "origin": "tool",
+            "msg": "Num variables rendered: 0.",
+            "context": []
+        },
+        {
+            "kind": "info",
+            "origin": "tool",
+            "msg": "Num constants rendered: 0.",
+            "context": []
+        }
+    ],
+    "__WTRL_WARNING__": [],
+    "__WTRL_ERROR__": []
+}
