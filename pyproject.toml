@@ -23,7 +23,9 @@ dynamic = ["version"]
 dependencies = [
 	"jsonschema",
 	"jsonpointer",
-	"docutils"
+	"docutils",
+	"mcp",
+	"tomli; python_version < '3.11'"
 	]
 
 # Optional dependencies.
@@ -45,6 +47,8 @@ dev = ["pytest"]
 # Syntax: "<command> = package.module:function"
 [project.scripts]
 waterlint = "sdv.doc.waterloo.waterlint:main"
+# MCP server entry point for Waterloo data roots and tool access.
+wtrl_mcp = "sdv.doc.waterloo.mcp.wtrl_server:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
@@ -67,5 +71,6 @@ version = { attr = "sdv.doc.waterloo.docitem.__version__" }
 	"doc-json/*.json",
 	"schema/*.json",
 	"js/*.js",
-	"css/*.css"
+	"css/*.css",
+	"etc/*.toml"
 	]
