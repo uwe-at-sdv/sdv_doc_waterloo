@@ -11937,7 +11937,7 @@
 <tbody>
 <tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Signature</span></code></p></td>
 <td><div class="wtrl-signature-head line"><span class="wtrl_mod">sdv.doc.waterloo.docitem_convert</span><span class="wtrl_op">.</span><span class="wtrl_func">to_string_legend_yaml</span><span class="wtrl_op">(</span></div>
-<div class="wtrl-signature-param line"><span class="wtrl_var">config</span><span class="wtrl_op">: </span><span class="wtrl_type">YamlConfig</span><span class="wtrl_op"> = </span><span class="wtrl_lit">&lt;sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7fe4180c1940&gt;</span></div>
+<div class="wtrl-signature-param line"><span class="wtrl_var">config</span><span class="wtrl_op">: </span><span class="wtrl_type">YamlConfig</span><span class="wtrl_op"> = </span><span class="wtrl_lit">&lt;sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7fe372895a90&gt;</span></div>
 <div class="wtrl-signature-ret line"><span class="wtrl_op">)</span><span class="wtrl_op"> -&gt; </span><span class="wtrl_type">str</span></div>
 </td>
 </tr>
@@ -12001,7 +12001,7 @@
 <td><div class="wtrl-signature-head line"><span class="wtrl_mod">sdv.doc.waterloo.docitem_convert</span><span class="wtrl_op">.</span><span class="wtrl_func">to_string_yaml</span><span class="wtrl_op">(</span></div>
 <div class="wtrl-signature-param line"><span class="wtrl_var">tree</span><span class="wtrl_op">: </span><span class="wtrl_type">DocstringTree</span></div>
 <div class="wtrl-signature-param line"><span class="wtrl_var">flavour</span><span class="wtrl_op">: </span><span class="wtrl_type">Flavour</span></div>
-<div class="wtrl-signature-param line"><span class="wtrl_var">config</span><span class="wtrl_op">: </span><span class="wtrl_type">YamlConfig</span><span class="wtrl_op"> = </span><span class="wtrl_lit">&lt;sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7fe417481590&gt;</span></div>
+<div class="wtrl-signature-param line"><span class="wtrl_var">config</span><span class="wtrl_op">: </span><span class="wtrl_type">YamlConfig</span><span class="wtrl_op"> = </span><span class="wtrl_lit">&lt;sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7fe371b8de50&gt;</span></div>
 <div class="wtrl-signature-ret line"><span class="wtrl_op">)</span><span class="wtrl_op"> -&gt; </span><span class="wtrl_type">str</span></div>
 </td>
 </tr>
@@ -12097,7 +12097,7 @@
 <tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Signature</span></code></p></td>
 <td><div class="wtrl-signature-head line"><span class="wtrl_mod">sdv.doc.waterloo.docitem_convert</span><span class="wtrl_op">.</span><span class="wtrl_func">to_string_signature_yaml</span><span class="wtrl_op">(</span></div>
 <div class="wtrl-signature-param line"><span class="wtrl_var">obj</span><span class="wtrl_op">: </span><span class="wtrl_type">object</span></div>
-<div class="wtrl-signature-param line"><span class="wtrl_var">config</span><span class="wtrl_op">: </span><span class="wtrl_type">YamlConfig</span><span class="wtrl_op"> = </span><span class="wtrl_lit">&lt;sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7fe417481450&gt;</span></div>
+<div class="wtrl-signature-param line"><span class="wtrl_var">config</span><span class="wtrl_op">: </span><span class="wtrl_type">YamlConfig</span><span class="wtrl_op"> = </span><span class="wtrl_lit">&lt;sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7fe371b8dd10&gt;</span></div>
 <div class="wtrl-signature-ret line"><span class="wtrl_op">)</span><span class="wtrl_op"> -&gt; </span><span class="wtrl_type">str</span></div>
 </td>
 </tr>
@@ -12304,20 +12304,28 @@
 <li><p><code class="wtrl_label docutils literal notranslate"><span class="pre">general</span></code></p>
 <ul>
 <li><p><code class="wtrl_norm docutils literal notranslate"><span class="pre">Must</span></code> provide functions for generating minimal and full waterloo docstring templates.</p></li>
+<li><p><code class="wtrl_norm docutils literal notranslate"><span class="pre">Must</span></code> represent the Single Source of Truth for the structure and content of these templates.</p></li>
+<li><p><code class="wtrl_norm docutils literal notranslate"><span class="pre">Should</span></code> represent the Single Source of Truth for future cuts of such templates.</p></li>
+<li><p><code class="wtrl_norm docutils literal notranslate"><span class="pre">Must</span></code> provide JSON representations of these templates as a result from a canonical generation process (e.g. a script) in order to avoid drift.</p></li>
 </ul>
 </li>
 </ul>
 </td>
 </tr>
 <tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Description</span></code></p></td>
-<td><p>This module is intended for IDE-extension workflows. A typical use case is a VSCode context-menu action on a <code class="wtrl_lit docutils literal notranslate"><span class="pre">class</span></code> or <code class="wtrl_lit docutils literal notranslate"><span class="pre">def</span></code> line: parse the selected header fragment, infer/select a profile, and generate a minimal or full Waterloo docstring template.</p></td>
+<td><p>This module is intended for IDE-extension workflows. A typical use case is a VSCode context-menu action on a <code class="wtrl_lit docutils literal notranslate"><span class="pre">class</span></code> or <code class="wtrl_lit docutils literal notranslate"><span class="pre">def</span></code> line: parse the selected header fragment, infer/select a profile, and generate a minimal or full Waterloo docstring template. The signature-to-AST bridge in <code class="wtrl_func docutils literal notranslate"><span class="pre">parse_signature_fragment</span></code> is shared by MCP and IDE workflows. Keep it close to the AST-based generators so that the template text and any future JSON snippets continue to derive from the same canonical structure.</p></td>
 </tr>
 <tr class="wtrl-section row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Public</span> <span class="pre">functions</span></code></p></td>
 <td><p><a class="wtrl_func reference internal" href="#wtrl-func-3:sdv-3:doc-8:waterloo-15:docitem_genutil-21:parse_source_fragment" title="sdv.doc.waterloo.docitem_genutil.parse_source_fragment"><span>parse_source_fragment</span></a>, <a class="wtrl_func reference internal" href="#wtrl-func-3:sdv-3:doc-8:waterloo-15:docitem_genutil-23:infer_docstring_profile" title="sdv.doc.waterloo.docitem_genutil.infer_docstring_profile"><span>infer_docstring_profile</span></a>, <a class="wtrl_func reference internal" href="#wtrl-func-3:sdv-3:doc-8:waterloo-15:docitem_genutil-24:parse_signature_fragment" title="sdv.doc.waterloo.docitem_genutil.parse_signature_fragment"><span>parse_signature_fragment</span></a>, <a class="wtrl_func reference internal" href="#wtrl-func-3:sdv-3:doc-8:waterloo-15:docitem_genutil-26:generate_minimal_docstring" title="sdv.doc.waterloo.docitem_genutil.generate_minimal_docstring"><span>generate_minimal_docstring</span></a>, <a class="wtrl_func reference internal" href="#wtrl-func-3:sdv-3:doc-8:waterloo-15:docitem_genutil-23:generate_full_docstring" title="sdv.doc.waterloo.docitem_genutil.generate_full_docstring"><span>generate_full_docstring</span></a>, <a class="wtrl_func reference internal" href="#wtrl-func-3:sdv-3:doc-8:waterloo-15:docitem_genutil-36:generate_minimal_docstring_from_node" title="sdv.doc.waterloo.docitem_genutil.generate_minimal_docstring_from_node"><span>generate_minimal_docstring_from_node</span></a>, <a class="wtrl_func reference internal" href="#wtrl-func-3:sdv-3:doc-8:waterloo-15:docitem_genutil-33:generate_full_docstring_from_node" title="sdv.doc.waterloo.docitem_genutil.generate_full_docstring_from_node"><span>generate_full_docstring_from_node</span></a></p></td>
 </tr>
+<tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Notes</span></code></p></td>
+<td><p class="wtrl-note-title rubric">Important</p>
+<p class="wtrl-freeform-paragraph-content">JSON templates for minimal and full docstring templates can be generated by means of <code class="wtrl_file docutils literal notranslate"><span class="pre">$MAIN/tools/make_docstring_templates_json.sh</span></code>. This script should be used in order to avoid drift. It represents the canonical generation process for these templates, and the resulting JSON files are the Single Source of Truth for their structure and content. Any future JSON snippets produced from signature fragments should stay aligned with the same canonical structure in <a href="#id1"><span class="problematic" id="id2">|</span></a>path|`package_main/templates-json/out`.</p>
+</td>
+</tr>
 </tbody>
 <thead class="wtrl-box-head-module">
-<tr class="row-odd"><th class="head"><code class="wtrl_label docutils literal notranslate"><span class="pre">Module</span></code></th>
+<tr class="row-even"><th class="head"><code class="wtrl_label docutils literal notranslate"><span class="pre">Module</span></code></th>
 <th class="head"><p>sdv.doc.waterloo.docitem_genutil</p></th>
 </tr>
 </thead>

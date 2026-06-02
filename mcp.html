@@ -68,39 +68,54 @@ configuration error and exits.</p>
 <table class="docutils align-default">
 <colgroup>
 <col style="width: 24.0%" />
-<col style="width: 76.0%" />
+<col style="width: 24.0%" />
+<col style="width: 52.0%" />
 </colgroup>
 <thead>
-<tr class="row-odd"><th class="head"><p>Tool name</p></th>
+<tr class="row-odd"><th class="head"><p>Category</p></th>
+<th class="head"><p>Tool name</p></th>
 <th class="head"><p>What the tool does</p></th>
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p><code class="wtrl_cmd docutils literal notranslate"><span class="pre">list_roots</span></code></p></td>
+<tr class="row-even"><td><p>Root discovery and retrieval</p></td>
+<td><p><code class="wtrl_cmd docutils literal notranslate"><span class="pre">list_roots</span></code></p></td>
 <td><p>List configured Waterloo data roots.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="wtrl_cmd docutils literal notranslate"><span class="pre">get_root</span></code></p></td>
+<tr class="row-odd"><td><p>Root discovery and retrieval</p></td>
+<td><p><code class="wtrl_cmd docutils literal notranslate"><span class="pre">get_root</span></code></p></td>
 <td><p>Read one configured Waterloo data root by <code class="docutils literal notranslate"><span class="pre">root_id</span></code>.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="wtrl_cmd docutils literal notranslate"><span class="pre">get_object</span></code></p></td>
+<tr class="row-even"><td><p>Object content access</p></td>
+<td><p><code class="wtrl_cmd docutils literal notranslate"><span class="pre">get_object</span></code></p></td>
 <td><p>Read one Waterloo object by <code class="docutils literal notranslate"><span class="pre">qid</span></code> from a configured root.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="wtrl_cmd docutils literal notranslate"><span class="pre">get_section</span></code></p></td>
+<tr class="row-odd"><td><p>Object content access</p></td>
+<td><p><code class="wtrl_cmd docutils literal notranslate"><span class="pre">get_section</span></code></p></td>
 <td><p>Read one stored section of one Waterloo object.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="wtrl_cmd docutils literal notranslate"><span class="pre">get_subsection</span></code></p></td>
+<tr class="row-even"><td><p>Object content access</p></td>
+<td><p><code class="wtrl_cmd docutils literal notranslate"><span class="pre">get_subsection</span></code></p></td>
 <td><p>Read one stored subsection of one Waterloo object.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="wtrl_cmd docutils literal notranslate"><span class="pre">search_objects</span></code></p></td>
+<tr class="row-odd"><td><p>Reference lookup</p></td>
+<td><p><code class="wtrl_cmd docutils literal notranslate"><span class="pre">get_references</span></code></p></td>
+<td><p>Read structured incoming See_also references for one Waterloo object.</p></td>
+</tr>
+<tr class="row-even"><td><p>Search tools</p></td>
+<td><p><code class="wtrl_cmd docutils literal notranslate"><span class="pre">search_objects</span></code></p></td>
 <td><p>Search Waterloo objects by expression and structural filters.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="wtrl_cmd docutils literal notranslate"><span class="pre">search_sections</span></code></p></td>
+<tr class="row-odd"><td><p>Search tools</p></td>
+<td><p><code class="wtrl_cmd docutils literal notranslate"><span class="pre">search_sections</span></code></p></td>
 <td><p>Search Waterloo section and subsection labels by expression and structural filters.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="wtrl_cmd docutils literal notranslate"><span class="pre">search_text</span></code></p></td>
+<tr class="row-even"><td><p>Search tools</p></td>
+<td><p><code class="wtrl_cmd docutils literal notranslate"><span class="pre">search_text</span></code></p></td>
 <td><p>Search Waterloo text content by terms and structural filters.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="wtrl_cmd docutils literal notranslate"><span class="pre">gen_docstring</span></code></p></td>
+<tr class="row-odd"><td><p>Authoring helper</p></td>
+<td><p><code class="wtrl_cmd docutils literal notranslate"><span class="pre">gen_docstring</span></code></p></td>
 <td><p>Generate a Waterloo docstring template for a given profile, with optional signature, template mode, and indentation mode.</p></td>
 </tr>
 </tbody>
