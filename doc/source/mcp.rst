@@ -37,27 +37,40 @@ The MCP-server supports the following tools:
 
 .. list-table::
 	:header-rows: 1
-	:widths: 24 76
+	:widths: 24 24 52
 
-	* - Tool name
+	* - Category
+	  - Tool name
 	  - What the tool does
-	* - :wtrl_cmd:`list_roots`
+	* - Root discovery and retrieval
+	  - :wtrl_cmd:`list_roots`
 	  - List configured Waterloo data roots.
-	* - :wtrl_cmd:`get_root`
+	* - Root discovery and retrieval
+	  - :wtrl_cmd:`get_root`
 	  - Read one configured Waterloo data root by ``root_id``.
-	* - :wtrl_cmd:`get_object`
+	* - Object content access
+	  - :wtrl_cmd:`get_object`
 	  - Read one Waterloo object by ``qid`` from a configured root.
-	* - :wtrl_cmd:`get_section`
+	* - Object content access
+	  - :wtrl_cmd:`get_section`
 	  - Read one stored section of one Waterloo object.
-	* - :wtrl_cmd:`get_subsection`
+	* - Object content access
+	  - :wtrl_cmd:`get_subsection`
 	  - Read one stored subsection of one Waterloo object.
-	* - :wtrl_cmd:`search_objects`
+	* - Reference lookup
+	  - :wtrl_cmd:`get_references`
+	  - Read structured incoming See_also references for one Waterloo object.
+	* - Search tools
+	  - :wtrl_cmd:`search_objects`
 	  - Search Waterloo objects by expression and structural filters.
-	* - :wtrl_cmd:`search_sections`
+	* - Search tools
+	  - :wtrl_cmd:`search_sections`
 	  - Search Waterloo section and subsection labels by expression and structural filters.
-	* - :wtrl_cmd:`search_text`
+	* - Search tools
+	  - :wtrl_cmd:`search_text`
 	  - Search Waterloo text content by terms and structural filters.
-	* - :wtrl_cmd:`gen_docstring`
+	* - Authoring helper
+	  - :wtrl_cmd:`gen_docstring`
 	  - Generate a Waterloo docstring template for a given profile, with optional signature, template mode, and indentation mode.
 
 Typical agent workflow

@@ -10,10 +10,10 @@ Contract:
 	general:
 		|Must| provide the tool set for the Waterloo MCP-server.
 Public_classes:
-	SearchObjectsFilter, SearchSectionsFilter, SearchTextFilter
+	ReferenceRecord, SearchObjectsFilter, SearchSectionsFilter, SearchTextFilter
 Public_functions:
 	list_roots, get_root, get_object, get_section, get_subsection,
-	search_objects, search_sections, search_text, gen_docstring
+	get_references, search_objects, search_sections, search_text, gen_docstring
 Function_overview:
 	list_roots:
 		List the configured Waterloo roots with stable identifiers.
@@ -25,6 +25,8 @@ Function_overview:
 		Resolve one named section of one object inside one configured root and return the stored section value.
 	get_subsection:
 		Resolve one named subsection of one section of one object inside one configured root and return the stored subsection value.
+	get_references:
+		Return the structured incoming See_also references for one object using a reverse lookup map.
 	search_objects:
 		Search for object QIDs with optional structural filters and return stable triples.
 	search_sections:
@@ -173,6 +175,37 @@ class SearchTextFilter(BaseModel):
 	strip_roles: bool = True
 	match_mode: SearchTextMatchMode_t = "literal"
 	term_mode: SearchTextTermMode_t = "any"
+
+
+class ReferenceRecord(BaseModel):
+	r"""
+	Preamble:
+		profile:
+			class
+		normative_sections:
+			Contract
+		scope:
+			extension
+	Contract:
+		general:
+			|Must| represent one incoming structured See_also reference in the Waterloo MCP server.
+			|Must| keep the record compact and stable so that lookup results can be reused directly by MCP clients.
+		constructor:
+			|Must| accept the following fields:
+			- source_root_id: stable root identifier of the object that holds the See_also link.
+			- source_qid: fully qualified identifier of the source object.
+			- source_profile: Waterloo docstring profile of the source object.
+			- is_normative: whether the See_also link was recorded in a normative section.
+	Notes:
+		Purpose:
+			This record is the canonical Waterloo representation for reverse See_also lookups.
+	"""
+	model_config = ConfigDict(extra="forbid")
+
+	source_root_id: str
+	source_qid: str
+	source_profile: DocstringProfile_t
+	is_normative: bool
 
 
 # The Pydantic base classes are only needed for class construction above.
@@ -603,6 +636,47 @@ def get_subsection(root_id: str, qid: str, section: str, subsection: str, roots:
 		"subsection": subsection,
 		"subsection_value": subsection_value,
 	}
+
+
+def get_references(
+	reference_index: Mapping[tuple[str, str], list[ReferenceRecord]],
+	root_id: str,
+	qid: str,
+	normative_only: bool = False,
+) -> list[ReferenceRecord]:
+	r"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+		scope:
+			extension
+	Contract:
+		general:
+			|Must| return the structured incoming See_also references for one object from the provided reverse lookup map.
+			|Must| treat the lookup as a simple read-only reverse-map access and filter the result when normative_only is requested.
+	Parameters:
+		reference_index:
+			The reverse lookup map built by the server at startup.
+		root_id:
+			The canonical root identifier of the object whose incoming references should be returned.
+		qid:
+			The fully qualified identifier of the object whose incoming references should be returned.
+		normative_only:
+			Whether to keep only references recorded from a normative See_also section.
+	Returns:
+		A list of incoming structured See_also reference records.
+	Raises:
+	"""
+	records = reference_index.get((root_id, qid), [])
+	records = [
+		record if isinstance(record, ReferenceRecord) else ReferenceRecord.model_validate(record)
+		for record in records
+	]
+	if normative_only:
+		records = [record for record in records if record.is_normative]
+	return records
 
 
 def search_objects(

@@ -21,6 +21,8 @@ Function_overview:
 from __future__ import annotations
 
 import argparse
+import logging
+import logging.config
 import sys
 from dataclasses import dataclass
 from pathlib import Path
@@ -38,24 +40,31 @@ from starlette.types import ASGIApp
 from mcp.server.fastmcp import FastMCP
 from mcp.server.fastmcp.server import TransportSecuritySettings
 
+logger = logging.getLogger("wtrl_mcp")
+
 from sdv.doc.waterloo.mcp import __version__
 from sdv.doc.waterloo.mcp.wtrl_tools import (
     DocstringIndentMode_t,
     DocstringJsonMode_t,
     DocstringMode_t,
     DocstringProfile_t,
+    ReferenceRecord,
     SearchObjectsFilter,
     SearchSectionsFilter,
     SearchTextFilter,
     gen_docstring,
     get_object,
+    get_references,
     get_root,
     get_section,
     get_subsection,
     list_roots,
-	search_objects,
-	search_sections,
-	search_text,
+    search_objects,
+    search_sections,
+    search_text,
+    _canonical_root_path,
+    _read_json_document,
+	_root_id_for_path,
 )
 
 # Run browser-based MCP-inspector with npx @modelcontextprotocol/inspector 
@@ -96,6 +105,23 @@ class RootConfig:
 	label: str
 	enabled: bool
 	kind: str
+
+
+@dataclass(frozen=True)
+class RootMTimeRecord:
+	"""Cached modification timestamp information for one Waterloo root."""
+
+	root_id: str
+	root_path: str
+	mtime_ns: int | None
+
+
+@dataclass(frozen=True)
+class ReferenceIndex:
+	"""Cached reverse reference map and root modification timestamps."""
+
+	reverse_map: dict[tuple[str, str], list[ReferenceRecord]]
+	root_mtimes: dict[str, RootMTimeRecord]
 
 
 @dataclass(frozen=True)
@@ -221,12 +247,151 @@ def _load_toml(path: Path) -> Mapping[str, object]:
 		return cast(Mapping[str, object], tomllib.load(fh))
 
 
-def _load_logging_config(path: Path) -> object:
+def _load_logging_config(path: Path) -> dict[str, object]:
 	"""Load a logging configuration file for uvicorn."""
 	if path.suffix.lower() == ".toml":
 		with path.open("rb") as fh:
-			return cast(object, tomllib.load(fh))
-	return str(path)
+			return cast(dict[str, object], tomllib.load(fh))
+	raise ValueError(f"Unsupported logging config format: {path}")
+
+
+def _configure_waterloo_logging(config: McpConfig) -> None:
+	"""Install the configured Waterloo logging dictionary before startup messages."""
+	if config.logging.config_path is None:
+		return
+	logging.config.dictConfig(_load_logging_config(config.logging.config_path))
+
+
+def _root_mtime_record(root_id: str, root_path: Path) -> RootMTimeRecord:
+	try:
+		mtime_ns = root_path.stat().st_mtime_ns
+	except OSError:
+		mtime_ns = None
+	return RootMTimeRecord(root_id=root_id, root_path=str(root_path), mtime_ns=mtime_ns)
+
+
+def _doc_profile(object_record: Mapping[str, object]) -> str | None:
+	doc = object_record.get("doc", {})
+	if not isinstance(doc, Mapping):
+		return None
+	preamble = doc.get("Preamble", {})
+	if not isinstance(preamble, Mapping):
+		return None
+	profile = preamble.get("profile")
+	if isinstance(profile, str):
+		profile = profile.strip()
+		return profile or None
+	return None
+
+
+def _doc_normative_sections(object_record: Mapping[str, object]) -> set[str]:
+	doc = object_record.get("doc", {})
+	if not isinstance(doc, Mapping):
+		return set()
+	preamble = doc.get("Preamble", {})
+	if not isinstance(preamble, Mapping):
+		return set()
+	sections = preamble.get("normative_sections", [])
+	if not isinstance(sections, list):
+		return set()
+	return {str(section).strip() for section in sections if str(section).strip()}
+
+
+def _doc_see_also_refs(object_record: Mapping[str, object]) -> list[str]:
+	doc = object_record.get("doc", {})
+	if not isinstance(doc, Mapping):
+		return []
+	see_also = doc.get("See_also")
+	if not isinstance(see_also, list):
+		return []
+	return [str(item).strip() for item in see_also if str(item).strip()]
+
+
+def _resolve_reference_targets(
+	ref: str,
+	source_root_id: str,
+	source_qid: str,
+	qids_to_roots: Mapping[str, set[str]],
+) -> list[tuple[str, str]]:
+	candidates: list[str] = []
+	if "." in ref:
+		candidates.append(ref)
+	if "." in source_qid:
+		candidates.append(f"{source_qid.rsplit('.', 1)[0]}.{ref}")
+	else:
+		candidates.append(f"{source_qid}.{ref}")
+	candidates.append(ref)
+
+	resolved: list[tuple[str, str]] = []
+	seen_candidates: set[str] = set()
+	for cand in candidates:
+		if cand in seen_candidates:
+			continue
+		seen_candidates.add(cand)
+		root_ids = qids_to_roots.get(cand)
+		if not root_ids:
+			continue
+		if source_root_id in root_ids:
+			resolved.append((source_root_id, cand))
+			continue
+		if len(root_ids) == 1:
+			root_id = next(iter(root_ids))
+			resolved.append((root_id, cand))
+	return resolved
+
+
+def _build_reference_index(roots: list[RootConfig]) -> ReferenceIndex:
+	reverse_map: dict[tuple[str, str], list[ReferenceRecord]] = {}
+	root_mtimes: dict[str, RootMTimeRecord] = {}
+	objects_by_root: dict[str, list[tuple[str, Mapping[str, object]]]] = {}
+	qids_to_roots: dict[str, set[str]] = {}
+
+	for root in roots:
+		if not root.enabled:
+			continue
+		root_path = _canonical_root_path(root.path)
+		root_id = _root_id_for_path(str(root_path))
+		root_mtimes[root_id] = _root_mtime_record(root_id, root_path)
+		try:
+			document = _read_json_document(str(root_path))
+		except Exception:
+			continue
+		if not isinstance(document, Mapping):
+			continue
+		objects = document.get("__WTRL_OBJECTS__", {})
+		if not isinstance(objects, Mapping):
+			continue
+		root_objects: list[tuple[str, Mapping[str, object]]] = []
+		for qid, object_record in objects.items():
+			if not isinstance(object_record, Mapping):
+				continue
+			qid_text = str(qid)
+			root_objects.append((qid_text, object_record))
+			qids_to_roots.setdefault(qid_text, set()).add(root_id)
+		objects_by_root[root_id] = root_objects
+
+	for root_id, root_objects in objects_by_root.items():
+		for qid_text, object_record in root_objects:
+			source_profile = _doc_profile(object_record)
+			if source_profile not in {"module", "class", "function", "method"}:
+				continue
+			refs = _doc_see_also_refs(object_record)
+			if not refs:
+				continue
+			is_normative = "See_also" in _doc_normative_sections(object_record)
+			source_record = ReferenceRecord(
+				source_root_id=root_id,
+				source_qid=qid_text,
+				source_profile=source_profile,
+				is_normative=is_normative,
+			)
+			for ref in refs:
+				for target_root_id, target_qid in _resolve_reference_targets(ref, root_id, qid_text, qids_to_roots):
+					reverse_map.setdefault((target_root_id, target_qid), []).append(source_record)
+
+	for records in reverse_map.values():
+		records.sort(key=lambda record: (record.source_root_id, record.source_qid, record.source_profile))
+	return ReferenceIndex(reverse_map=reverse_map, root_mtimes=root_mtimes)
 
 
 def _resolve_config_path(config_path: Path | None) -> Path:
@@ -243,11 +408,10 @@ def _resolve_config_path(config_path: Path | None) -> Path:
 			return candidate
 	return config_path
 
-
 def _parse_roots(raw_roots: object, config_dir: Path) -> list[RootConfig]:
+	roots: list[RootConfig] = []
 	if not isinstance(raw_roots, list) or not raw_roots:
 		raise ValueError("Configuration file must contain at least one [[roots]] entry.")
-	roots: list[RootConfig] = []
 	for item in raw_roots:
 		if not isinstance(item, Mapping):
 			raise ValueError("Each [[roots]] entry must be a table.")
@@ -344,6 +508,8 @@ def build_app(config: McpConfig) -> FastMCP:
 			|May| raise if the configuration is invalid in any way.
 	"""
 	"""Build the Waterloo MCP app with the configured data roots."""
+	reference_index = _build_reference_index(config.roots)
+
 	mcp = FastMCP(
 		name="wtrl_mcp",
 		instructions=read_package_readme(),
@@ -353,6 +519,7 @@ def build_app(config: McpConfig) -> FastMCP:
 		port=config.server.port,
 		streamable_http_path=config.server.streamable_http_path,
 	)
+	setattr(mcp, "_waterloo_reference_index", reference_index)
 	if config.security.allowed_hosts or config.security.allowed_origins:
 		mcp.settings.transport_security = TransportSecuritySettings(
 			enable_dns_rebinding_protection=True,
@@ -391,6 +558,10 @@ def build_app(config: McpConfig) -> FastMCP:
 	def _get_subsection(root_id: str, qid: str, section: str, subsection: str) -> dict[str, object]:
 		return get_subsection(root_id, qid, section, subsection, _root_mappings())
 
+	@mcp.tool(name="get_references", description="Read structured incoming See_also references for one Waterloo object.")
+	def _get_references(root_id: str, qid: str, normative_only: bool = False) -> list[ReferenceRecord]:
+		return get_references(reference_index.reverse_map, root_id, qid, normative_only)
+
 	@mcp.tool(name="search_objects", description="Search Waterloo objects by expression and structural filters.")
 	def _search_objects(expression: str, filter: SearchObjectsFilter | None = None) -> list[tuple[str, str, str]]:
 		return search_objects(expression, _root_mappings(), filter)
@@ -413,6 +584,15 @@ def build_app(config: McpConfig) -> FastMCP:
 	) -> dict[str, object]:
 		return gen_docstring(profile=profile, signature=signature, mode=mode, indent_mode=indent_mode, json_mode=json_mode)
 
+	logger.info("Ready to serve via Uvicorn.")
+	logger.info(f"Loaded {len(config.roots)} configured roots.")
+	for root in config.roots:
+		logger.info(f"Configured root: {root.path} '{root.label}' (enabled={root.enabled}, kind={root.kind})")
+	logger.info(
+		"Built reference index with %d target entries and %d source references.",
+		len(reference_index.reverse_map),
+		sum(len(records) for records in reference_index.reverse_map.values()),
+	)
 	return mcp
 
 
@@ -434,6 +614,7 @@ def _print_config_error(exc: Exception) -> None:
 
 def _run_loaded_config(config: McpConfig) -> None:
 	"""Run the server according to a loaded configuration."""
+	_configure_waterloo_logging(config)
 	mcp = build_app(config)
 	if config.server.transport == "streamable-http":
 		http_app = mcp.streamable_http_app()

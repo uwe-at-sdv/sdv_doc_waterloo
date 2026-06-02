@@ -20,6 +20,11 @@ fmt = "%(levelprefix)s %(message)s"
 # work properly; last tested 2026-05-31 on Mint Linux.
 use_colors = false
 
+[formatters.waterloo]
+"()" = "uvicorn.logging.DefaultFormatter"
+fmt = "%(levelprefix)s WTRL %(message)s"
+use_colors = false
+
 # Syslog example:
 # - Many Linux systems expose a local syslog socket at /dev/log.
 # - Some systems use a different socket or a UDP/TCP endpoint.
@@ -29,6 +34,12 @@ use_colors = false
 [handlers.syslog]
 class = "logging.handlers.SysLogHandler"
 formatter = "default"
+address = "/dev/log"
+facility = "local0"
+
+[handlers.waterloo]
+class = "logging.handlers.SysLogHandler"
+formatter = "waterloo"
 address = "/dev/log"
 facility = "local0"
 
@@ -45,6 +56,11 @@ propagate = false
 [loggers."uvicorn.access"]
 level = "INFO"
 handlers = ["syslog"]
+propagate = false
+
+[loggers."wtrl_mcp"]
+level = "INFO"
+handlers = ["waterloo"]
 propagate = false
 
 [root]
