@@ -142,7 +142,6 @@ We do this by the following set of rules.
   followed by a whitespace character which allows simple, unique and robust parsing of the Rule ID.
   Informative: In this document which is written in reST, we insert a space (ASCII 32), a double-hyphen (en-dash),
   and another space (ASCII 32) between the braced Rule ID and the rule free-form text.
-  When a rule is merely mentioned but not introduced, square brackets |should_not| be used.
 
 Rule taxonomy
 -------------
@@ -209,7 +208,6 @@ The following list explains the mnemonic prefixes and their semantics.
 * AXMPL: Error messages related to example mapping (e.g. for :wtrl_cmd:`waterlint add-example-json`)
 * RHTM: Error messages related to rendering HTML (e.g. for :wtrl_cmd:`waterlint render-html5`)
 * XTNSN: Error messages related to extensions (e.g. for IDEs)
-* MCPS: Error messages returned by an MCP server
 
 .. rubric:: Miscellaneous
 
@@ -644,11 +642,6 @@ state whether it applies to Identifiers or to Qualified Identifiers.
 * [LQID-003] -- Whitespace surrounding each [Qualified] Identifier |must| be stripped by tools.
 * [LQID-004] -- Each [Qualified] Identifier |must| occur at most once in the resulting list.
 * [LQID-005] -- Tools |must| treat the result as a flat list of [Qualified] Identifiers, without preserving line structure or grouping.
-* [LQID-006] -- If a CSV list is wrapped across multiple physical lines, every non-final physical line |should| end with a comma.
-
-The following warning rule applies when a section appears in a docstring but violates the LoII principle.
-This happens, for example, when definitions are imported from a module docstring into a class, function, or method docstring.
-Since definitions are normative, that import introduces non-locality.
 
 * [VLII-001] -- A warning with this rule ID |may| be issued if a section appears in a docstring
   that violates the LoII principle. Informative: The section that triggers this warning is
@@ -731,10 +724,6 @@ the preamble and serves as metadata.
      - free-form text
      - Normative
      - Needs paragraph-capable text
-   * - :wtrl_label:`Definitions._inherit`
-     - list of identifiers
-     - Normative
-     - Implied by content kind
    * - :wtrl_label:`Terminology.<item>`
      - free-form text
      - Non-normative
@@ -1506,9 +1495,6 @@ The purpose of scopes is to allow a single codebase and documentation set to be
 rendered consistently for different audiences, such as public users, extension
 developers, or core developers.
 
-More formally, the purpose is to ensure that any rendered
-documentation artifact forms a reference-closed subgraph of the
-complete documentation graph.
 
 Conceptual model
 ^^^^^^^^^^^^^^^^^^^^^
@@ -1605,9 +1591,7 @@ target object.
 In terms of the numeric scope order, this means:
 
 * for containment-style references, there exist s_A in scopes(A) and s_B in scopes(B) such that s_B <= s_A,
-  where A represents the contained object and B represents the containing object.
-  Intuitively, a contained object must not be visible in a context
-  where the object containing it is invisible.
+  where A represents the contained object and B represents the containing object
 * for :wtrl_label:`See_also`, there exist s_A in scopes(A) and s_B in scopes(B) such that s_B <= s_A,
   where A represents the object with the :wtrl_label:`See_also`, :wtrl_label:`Derived_from`,
   or :wtrl_label:`Contract.base` section and B represents the object pointed to from this section.
