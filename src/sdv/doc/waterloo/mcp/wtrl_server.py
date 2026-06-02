@@ -44,7 +44,8 @@ logger = logging.getLogger("wtrl_mcp")
 
 from sdv.doc.waterloo.mcp import __version__
 from sdv.doc.waterloo.mcp.wtrl_tools import (
-    DocstringIndentMode_t,
+    WtrlJsonNode_t,
+	DocstringIndentMode_t,
     DocstringJsonMode_t,
     DocstringMode_t,
     DocstringProfile_t,
@@ -343,7 +344,7 @@ def _resolve_reference_targets(
 def _build_reference_index(roots: list[RootConfig]) -> ReferenceIndex:
 	reverse_map: dict[tuple[str, str], list[ReferenceRecord]] = {}
 	root_mtimes: dict[str, RootMTimeRecord] = {}
-	objects_by_root: dict[str, list[tuple[str, Mapping[str, object]]]] = {}
+	objects_by_root: dict[str, list[tuple[str, dict[str, WtrlJsonNode_t]]]] = {}
 	qids_to_roots: dict[str, set[str]] = {}
 
 	for root in roots:
@@ -361,7 +362,7 @@ def _build_reference_index(roots: list[RootConfig]) -> ReferenceIndex:
 		objects = document.get("__WTRL_OBJECTS__", {})
 		if not isinstance(objects, Mapping):
 			continue
-		root_objects: list[tuple[str, Mapping[str, object]]] = []
+		root_objects: list[tuple[str, dict[str, WtrlJsonNode_t]]] = []
 		for qid, object_record in objects.items():
 			if not isinstance(object_record, Mapping):
 				continue
@@ -527,7 +528,7 @@ def build_app(config: McpConfig) -> FastMCP:
 			allowed_origins=list(config.security.allowed_origins),
 		)
 
-	def _root_mappings() -> list[Mapping[str, object]]:
+	def _root_mappings() -> list[Mapping[str, WtrlJsonNode_t]]:
 		return [
 			{
 				"path": root.path,
@@ -539,23 +540,23 @@ def build_app(config: McpConfig) -> FastMCP:
 		]
 
 	@mcp.tool(name="list_roots", description="List configured Waterloo data roots.")
-	def _list_roots() -> list[dict[str, object]]:
+	def _list_roots() -> list[dict[str, WtrlJsonNode_t]]:
 		return list_roots(_root_mappings())
 
 	@mcp.tool(name="get_root", description="Read one configured Waterloo data root by root_id.")
-	def _get_root(root_id: str) -> dict[str, object]:
+	def _get_root(root_id: str) -> dict[str, WtrlJsonNode_t]:
 		return get_root(root_id, _root_mappings())
 
 	@mcp.tool(name="get_object", description="Read one Waterloo object by qid from a configured root.")
-	def _get_object(root_id: str, qid: str) -> dict[str, object]:
+	def _get_object(root_id: str, qid: str) -> dict[str, WtrlJsonNode_t]:
 		return get_object(root_id, qid, _root_mappings())
 
 	@mcp.tool(name="get_section", description="Read one stored section of one Waterloo object.")
-	def _get_section(root_id: str, qid: str, section: str) -> dict[str, object]:
+	def _get_section(root_id: str, qid: str, section: str) -> dict[str, WtrlJsonNode_t]:
 		return get_section(root_id, qid, section, _root_mappings())
 
 	@mcp.tool(name="get_subsection", description="Read one stored subsection of one Waterloo object.")
-	def _get_subsection(root_id: str, qid: str, section: str, subsection: str) -> dict[str, object]:
+	def _get_subsection(root_id: str, qid: str, section: str, subsection: str) -> dict[str, WtrlJsonNode_t]:
 		return get_subsection(root_id, qid, section, subsection, _root_mappings())
 
 	@mcp.tool(name="get_references", description="Read structured incoming See_also references for one Waterloo object.")
@@ -567,11 +568,11 @@ def build_app(config: McpConfig) -> FastMCP:
 		return search_objects(expression, _root_mappings(), filter)
 
 	@mcp.tool(name="search_sections", description="Search Waterloo section and subsection labels by expression and structural filters.")
-	def _search_sections(expression: str, filter: SearchSectionsFilter | None = None) -> list[dict[str, object]]:
+	def _search_sections(expression: str, filter: SearchSectionsFilter | None = None) -> list[dict[str, WtrlJsonNode_t]]:
 		return search_sections(expression, _root_mappings(), filter)
 
 	@mcp.tool(name="search_text", description="Search Waterloo text content by terms and structural filters.")
-	def _search_text(terms: list[str], filter: SearchTextFilter | None = None) -> list[dict[str, object]]:
+	def _search_text(terms: list[str], filter: SearchTextFilter | None = None) -> list[dict[str, WtrlJsonNode_t]]:
 		return search_text(terms, _root_mappings(), filter)
 
 	@mcp.tool(name="gen_docstring", description="Generate a Waterloo docstring template for a given profile.")
@@ -581,7 +582,7 @@ def build_app(config: McpConfig) -> FastMCP:
 		mode: DocstringMode_t = "minimal",
 		indent_mode: DocstringIndentMode_t = "tab",
 		json_mode: DocstringJsonMode_t = "full",
-	) -> dict[str, object]:
+	) -> dict[str, WtrlJsonNode_t]:
 		return gen_docstring(profile=profile, signature=signature, mode=mode, indent_mode=indent_mode, json_mode=json_mode)
 
 	logger.info("Ready to serve via Uvicorn.")

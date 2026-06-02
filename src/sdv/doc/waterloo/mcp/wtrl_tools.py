@@ -431,7 +431,7 @@ def _make_excerpt(text: str, terms: list[str], ignore_case: bool, strip_roles: b
 	return excerpt
 
 
-def _load_root_context(root_id: str, roots: list[Mapping[str, object]]) -> tuple[int, Mapping[str, object], Path, dict[str, WtrlJsonNode_t]]:
+def _load_root_context(root_id: str, roots: list[Mapping[str, WtrlJsonNode_t]]) -> tuple[int, Mapping[str, WtrlJsonNode_t], Path, dict[str, WtrlJsonNode_t]]:
 	idx, root_data = _get_root_record(root_id, roots)
 	root_path = _canonical_root_path(str(root_data.get("path", "")))
 	document = _read_json_document(str(root_path))
@@ -440,11 +440,11 @@ def _load_root_context(root_id: str, roots: list[Mapping[str, object]]) -> tuple
 	return idx, root_data, root_path, document
 
 
-def _get_root_record(root_id: str, roots: list[Mapping[str, object]]) -> tuple[int, Mapping[str, object]]:
+def _get_root_record(root_id: str, roots: list[Mapping[str, WtrlJsonNode_t]]) -> tuple[int, Mapping[str, WtrlJsonNode_t]]:
 	return _find_root_by_id(roots, root_id)
 
 
-def _find_root_by_id(roots: list[Mapping[str, object]], root_id: str) -> tuple[int, Mapping[str, object]]:
+def _find_root_by_id(roots: list[Mapping[str, WtrlJsonNode_t]], root_id: str) -> tuple[int, Mapping[str, WtrlJsonNode_t]]:
 	for idx, root_data in enumerate(roots):
 		path_text = str(root_data.get("path", "")).strip()
 		if path_text and _root_id_for_path(path_text) == root_id:
@@ -452,7 +452,7 @@ def _find_root_by_id(roots: list[Mapping[str, object]], root_id: str) -> tuple[i
 	raise ValueError(f"Unknown root_id: {root_id}")
 
 
-def list_roots(roots: list[Mapping[str, object]]) -> list[dict[str, WtrlJsonNode_t]]:
+def list_roots(roots: list[Mapping[str, WtrlJsonNode_t]]) -> list[dict[str, WtrlJsonNode_t]]:
 	r"""
 	Preamble:
 		profile:
@@ -479,7 +479,7 @@ def list_roots(roots: list[Mapping[str, object]]) -> list[dict[str, WtrlJsonNode
 	return out
 
 
-def get_root(root_id: str, roots: list[Mapping[str, object]]) -> dict[str, WtrlJsonNode_t]:
+def get_root(root_id: str, roots: list[Mapping[str, WtrlJsonNode_t]]) -> dict[str, WtrlJsonNode_t]:
 	r"""
 	Preamble:
 		profile:
@@ -510,7 +510,7 @@ def get_root(root_id: str, roots: list[Mapping[str, object]]) -> dict[str, WtrlJ
 	return {**_root_summary(idx, root_data, root_path), "document": document}
 
 
-def get_object(root_id: str, qid: str, roots: list[Mapping[str, object]]) -> dict[str, WtrlJsonNode_t]:
+def get_object(root_id: str, qid: str, roots: list[Mapping[str, WtrlJsonNode_t]]) -> dict[str, WtrlJsonNode_t]:
 	r"""
 	Preamble:
 		profile:
@@ -549,7 +549,7 @@ def get_object(root_id: str, qid: str, roots: list[Mapping[str, object]]) -> dic
 	return {**_root_summary(idx, root_data, root_path), "qid": qid, "object": object_record}
 
 
-def get_section(root_id: str, qid: str, section: str, roots: list[Mapping[str, object]]) -> dict[str, WtrlJsonNode_t]:
+def get_section(root_id: str, qid: str, section: str, roots: list[Mapping[str, WtrlJsonNode_t]]) -> dict[str, WtrlJsonNode_t]:
 	r"""
 	Preamble:
 		profile:
@@ -596,7 +596,7 @@ def get_section(root_id: str, qid: str, section: str, roots: list[Mapping[str, o
 	return {**_root_summary(idx, root_data, root_path), "qid": qid, "section": section, "section_value": section_value}
 
 
-def get_subsection(root_id: str, qid: str, section: str, subsection: str, roots: list[Mapping[str, object]]) -> dict[str, WtrlJsonNode_t]:
+def get_subsection(root_id: str, qid: str, section: str, subsection: str, roots: list[Mapping[str, WtrlJsonNode_t]]) -> dict[str, WtrlJsonNode_t]:
 	r"""
 	Preamble:
 		profile:
@@ -697,7 +697,7 @@ def get_references(
 
 def search_objects(
 	expression: str,
-	roots: list[Mapping[str, object]],
+	roots: list[Mapping[str, WtrlJsonNode_t]],
 	filter: SearchObjectsFilter | None = None,
 ) -> list[tuple[str, str, str]]:
 	r"""
@@ -761,7 +761,7 @@ def search_objects(
 
 def search_sections(
 	expression: str,
-	roots: list[Mapping[str, object]],
+	roots: list[Mapping[str, WtrlJsonNode_t]],
 	filter: SearchSectionsFilter | None = None,
 ) -> list[dict[str, WtrlJsonNode_t]]:
 	r"""
@@ -854,7 +854,7 @@ def search_sections(
 
 def search_text(
 	terms: list[str],
-	roots: list[Mapping[str, object]],
+	roots: list[Mapping[str, WtrlJsonNode_t]],
 	filter: SearchTextFilter | None = None,
 ) -> list[dict[str, WtrlJsonNode_t]]:
 	r"""
