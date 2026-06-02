@@ -621,6 +621,32 @@ a.wtrl_var:visited
 	opacity:0.85;
 	}
 
+/* 4th and deeper nested bullet lists use an open square marker. */
+.wtrl-section ul {
+	list-style: none;
+	}
+.wtrl-section ul > li::marker {
+	content: "• ";
+	}
+.wtrl-section ul ul {
+	list-style: none;
+	}
+.wtrl-section ul ul > li::marker {
+	content: "◦ ";
+	}
+.wtrl-section ul ul ul {
+	list-style: none;
+	}
+.wtrl-section ul ul ul > li::marker {
+	content: "▪ ";
+	}
+.wtrl-section ul ul ul ul {
+	list-style: none;
+	}
+.wtrl-section ul ul ul ul > li::marker {
+	content: "▫ ";
+	}
+
 /*----- Docstring boxes for modules, classes, callables ------*/
 
 table > thead.wtrl-box-head-module > tr > th {

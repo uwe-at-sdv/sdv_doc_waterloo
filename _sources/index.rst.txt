@@ -15,6 +15,7 @@ Waterloo Docstrings
 	io_layers.rst
 	json_io.rst
 	html_output_layer.rst
+	mcp.rst
 	reference.rst
 	_test_freeform.rst
 	_test_scope.rst
