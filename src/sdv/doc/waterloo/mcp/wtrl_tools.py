@@ -61,10 +61,23 @@ import hashlib
 import json
 import re
 from pathlib import Path
-from typing import Iterator, Literal, Mapping, cast
+# Note that we don't need to import Any here.
+from typing import Dict, Iterator, List, Literal, Mapping, cast, TypeAlias, Union
 
 from pydantic import BaseModel, ConfigDict
 from sdv.doc.waterloo import docitem_genutil as genutil
+
+#===== Type Checking ==========================================#
+# Gemini says nope, but I don't see the problem here, as long as
+# mypy is happy and the actual runtime values are correct.
+# The whole point of defining WtrlJsonNode_t is to have a
+# well-defined type for the JSON data we load, even if we can't
+# enforce it at runtime without extra validation. So let's keep
+# it as is and let the callers handle the type appropriately.
+# We got rid of a lot of plain objects in the API and replaced
+# them with well-defined Pydantic models, so the places where we
+# still have to use a generic JSON node type should be limited and manageable.
+WtrlJsonNode_t: TypeAlias = Dict[str, "WtrlJsonNode_t"] | List["WtrlJsonNode_t"] | str | int | float | bool | None
 
 SearchObjectKind_t = Literal["module", "class", "callable", "type", "constant", "variable"]
 SearchTextMatchMode_t = Literal["literal"]
@@ -73,7 +86,7 @@ DocstringProfile_t = Literal["module", "class", "function", "method"]
 DocstringMode_t = Literal["minimal", "full"]
 DocstringIndentMode_t = Literal["tab", "spc4"]
 DocstringJsonMode_t = Literal["full", "doc_only"]
-
+#=============================================================#
 
 class SearchObjectsFilter(BaseModel):
 	r"""
@@ -232,13 +245,16 @@ def _root_id_for_path(path_text: str) -> str:
 	digest = hashlib.blake2s(str(canonical_path).encode("utf-8"), digest_size=6).hexdigest()
 	return f"root:{digest}"
 
-
-def _read_json_document(path_text: str) -> object:
+# Of course we could just cast the loaded JSON to the expected type,
+# but that would be unsafe and defeat the purpose of having a
+# well-defined JSON node type in the first place. So we keep
+# the return type of this function as the generic WtrlJsonNode_t
+# and let the callers handle it appropriately.
+def _read_json_document(path_text: str) -> WtrlJsonNode_t:
 	path = _canonical_root_path(path_text)
-	return json.loads(path.read_text(encoding="utf-8"))
+	return cast(WtrlJsonNode_t, json.loads(path.read_text(encoding="utf-8")))
 
-
-def _root_summary(idx: int, root_data: Mapping[str, object], root_path: Path) -> dict[str, object]:
+def _root_summary(idx: int, root_data: Mapping[str, object], root_path: Path) -> dict[str, WtrlJsonNode_t]:
 	return {
 		"root_id": _root_id_for_path(str(root_path)),
 		"root_index": idx,
@@ -415,13 +431,13 @@ def _make_excerpt(text: str, terms: list[str], ignore_case: bool, strip_roles: b
 	return excerpt
 
 
-def _load_root_context(root_id: str, roots: list[Mapping[str, object]]) -> tuple[int, Mapping[str, object], Path, dict[str, object]]:
+def _load_root_context(root_id: str, roots: list[Mapping[str, object]]) -> tuple[int, Mapping[str, object], Path, dict[str, WtrlJsonNode_t]]:
 	idx, root_data = _get_root_record(root_id, roots)
 	root_path = _canonical_root_path(str(root_data.get("path", "")))
 	document = _read_json_document(str(root_path))
 	if not isinstance(document, dict):
 		raise ValueError(f"Root document must be a JSON object: {root_id}")
-	return idx, root_data, root_path, cast(dict[str, object], document)
+	return idx, root_data, root_path, document
 
 
 def _get_root_record(root_id: str, roots: list[Mapping[str, object]]) -> tuple[int, Mapping[str, object]]:
@@ -436,7 +452,7 @@ def _find_root_by_id(roots: list[Mapping[str, object]], root_id: str) -> tuple[i
 	raise ValueError(f"Unknown root_id: {root_id}")
 
 
-def list_roots(roots: list[Mapping[str, object]]) -> list[dict[str, object]]:
+def list_roots(roots: list[Mapping[str, object]]) -> list[dict[str, WtrlJsonNode_t]]:
 	r"""
 	Preamble:
 		profile:
@@ -456,14 +472,14 @@ def list_roots(roots: list[Mapping[str, object]]) -> list[dict[str, object]]:
 		A list of dictionaries, each representing a root document with its attributes.
 	Raises:
 	"""
-	out: list[dict[str, object]] = []
+	out: list[dict[str, WtrlJsonNode_t]] = []
 	for idx, root_data in enumerate(roots):
 		root = _canonical_root_path(str(root_data.get("path", "")))
 		out.append(_root_summary(idx, root_data, root))
 	return out
 
 
-def get_root(root_id: str, roots: list[Mapping[str, object]]) -> dict[str, object]:
+def get_root(root_id: str, roots: list[Mapping[str, object]]) -> dict[str, WtrlJsonNode_t]:
 	r"""
 	Preamble:
 		profile:
@@ -494,7 +510,7 @@ def get_root(root_id: str, roots: list[Mapping[str, object]]) -> dict[str, objec
 	return {**_root_summary(idx, root_data, root_path), "document": document}
 
 
-def get_object(root_id: str, qid: str, roots: list[Mapping[str, object]]) -> dict[str, object]:
+def get_object(root_id: str, qid: str, roots: list[Mapping[str, object]]) -> dict[str, WtrlJsonNode_t]:
 	r"""
 	Preamble:
 		profile:
@@ -533,7 +549,7 @@ def get_object(root_id: str, qid: str, roots: list[Mapping[str, object]]) -> dic
 	return {**_root_summary(idx, root_data, root_path), "qid": qid, "object": object_record}
 
 
-def get_section(root_id: str, qid: str, section: str, roots: list[Mapping[str, object]]) -> dict[str, object]:
+def get_section(root_id: str, qid: str, section: str, roots: list[Mapping[str, object]]) -> dict[str, WtrlJsonNode_t]:
 	r"""
 	Preamble:
 		profile:
@@ -580,7 +596,7 @@ def get_section(root_id: str, qid: str, section: str, roots: list[Mapping[str, o
 	return {**_root_summary(idx, root_data, root_path), "qid": qid, "section": section, "section_value": section_value}
 
 
-def get_subsection(root_id: str, qid: str, section: str, subsection: str, roots: list[Mapping[str, object]]) -> dict[str, object]:
+def get_subsection(root_id: str, qid: str, section: str, subsection: str, roots: list[Mapping[str, object]]) -> dict[str, WtrlJsonNode_t]:
 	r"""
 	Preamble:
 		profile:
@@ -747,7 +763,7 @@ def search_sections(
 	expression: str,
 	roots: list[Mapping[str, object]],
 	filter: SearchSectionsFilter | None = None,
-) -> list[dict[str, object]]:
+) -> list[dict[str, WtrlJsonNode_t]]:
 	r"""
 	Preamble:
 		profile:
@@ -778,7 +794,7 @@ def search_sections(
 	qid_filter = filter.qid if filter is not None else None
 	kind_filter = filter.kind if filter is not None else None
 	scope_filter = filter.scope if filter is not None else None
-	matches: list[dict[str, object]] = []
+	matches: list[dict[str, WtrlJsonNode_t]] = []
 	for idx, root_data in enumerate(roots):
 		if not bool(root_data.get("enabled", True)):
 			continue
@@ -840,7 +856,7 @@ def search_text(
 	terms: list[str],
 	roots: list[Mapping[str, object]],
 	filter: SearchTextFilter | None = None,
-) -> list[dict[str, object]]:
+) -> list[dict[str, WtrlJsonNode_t]]:
 	r"""
 	Preamble:
 		profile:
@@ -879,7 +895,7 @@ def search_text(
 		_normalize_search_text(term, ignore_case=ignore_case, strip_roles=strip_roles)
 		for term in terms
 	]
-	matches: list[dict[str, object]] = []
+	matches: list[dict[str, WtrlJsonNode_t]] = []
 	seen: set[tuple[object, ...]] = set()
 	for idx, root_data in enumerate(roots):
 		if not bool(root_data.get("enabled", True)):
@@ -935,7 +951,7 @@ def search_text(
 						"excerpt": _make_excerpt(leaf_text, terms, ignore_case=ignore_case, strip_roles=strip_roles, term_mode=term_mode),
 					}
 				)
-	deduped: list[dict[str, object]] = []
+	deduped: list[dict[str, WtrlJsonNode_t]] = []
 	for match in matches:
 		key = (
 			match.get("root_id"),
@@ -967,10 +983,10 @@ def _signature_parameters_from_function_node(
 	node: ast.FunctionDef | ast.AsyncFunctionDef,
 	*,
 	drop_first_receiver: bool = False,
-) -> list[dict[str, object]]:
+) -> list[dict[str, WtrlJsonNode_t]]:
 	all_pos = list(node.args.posonlyargs) + list(node.args.args)
 	default_start = len(all_pos) - len(node.args.defaults)
-	parameters: list[dict[str, object]] = []
+	parameters: list[dict[str, WtrlJsonNode_t]] = []
 
 	for index, arg in enumerate(node.args.posonlyargs):
 		default_idx = index - default_start
@@ -1039,7 +1055,7 @@ def _signature_json_from_node(
 	profile: DocstringProfile_t,
 	signature: str | None,
 	node: ast.AST | None,
-) -> dict[str, object] | None:
+) -> dict[str, WtrlJsonNode_t] | None:
 	if profile == "module":
 		return None
 	if isinstance(node, ast.ClassDef):
@@ -1065,7 +1081,7 @@ def _signature_json_from_node(
 		kind = "method" if profile == "method" else "function"
 		return {
 			"text": _signature_text_from_node(profile, signature, node) or kind,
-			"parameters": _signature_parameters_from_function_node(node, drop_first_receiver=(profile == "method")),
+			"parameters": cast(WtrlJsonNode_t, _signature_parameters_from_function_node(node, drop_first_receiver=(profile == "method"))),
 			"returns": _unparse_expr(node.returns),
 		}
 	return None
@@ -1092,7 +1108,7 @@ def _signature_text_from_node(profile: DocstringProfile_t, signature: str | None
 	return signature.strip() if signature else None
 
 
-def _doc_snippet_for(profile: DocstringProfile_t, node: ast.AST | None, mode: DocstringMode_t) -> dict[str, object]:
+def _doc_snippet_for(profile: DocstringProfile_t, node: ast.AST | None, mode: DocstringMode_t) -> dict[str, WtrlJsonNode_t]:
 	if profile == "module":
 		if mode == "minimal":
 			return {
@@ -1271,7 +1287,7 @@ def gen_docstring(
 	mode: DocstringMode_t = "minimal",
 	indent_mode: DocstringIndentMode_t = "tab",
 	json_mode: DocstringJsonMode_t = "full",
-) -> dict[str, object]:
+) -> dict[str, WtrlJsonNode_t]:
 	r"""
 	Preamble:
 		profile:
@@ -1283,7 +1299,7 @@ def gen_docstring(
 	Contract:
 		general:
 			|Must| generate a Waterloo docstring template for the requested profile.
-			|Must| return the generated docstring together with a JSON placeholder snippet in the first implementation phase.
+			|Must| return the generated docstring together with a JSON snippet that represents the docstring structure and content.
 			|Must| keep the JSON snippet compatible with the existing Waterloo JSON document shape in later phases.
 	Parameters:
 		profile:
@@ -1297,7 +1313,7 @@ def gen_docstring(
 		json_mode:
 			JSON output mode, either ``full`` or ``doc_only``.
 	Returns:
-		A dictionary with the generated ``docstring`` text and a ``json_snippet`` placeholder.
+		A dictionary with the generated ``docstring`` text and a ``json_snippet`` that represents the docstring structure and content.
 	Raises:
 		ValueError:
 			|May| be raised if the profile requires a signature and none is given.
@@ -1322,10 +1338,10 @@ def gen_docstring(
 		docstring = docstring.replace("\t", "    ")
 	doc_snippet = _doc_snippet_for(profile, node, mode)
 	if json_mode == "doc_only":
-		json_snippet: dict[str, object] = doc_snippet
+		json_snippet: dict[str, WtrlJsonNode_t] = doc_snippet
 	else:
 		signature_json = _signature_json_from_node(profile, signature, node)
-		object_entry: dict[str, object] = {"doc": doc_snippet}
+		object_entry: dict[str, WtrlJsonNode_t] = {"doc": doc_snippet}
 		if signature_json is not None:
 			object_entry["signature"] = signature_json
 		json_snippet = {"__WTRL_OBJECTS__": {"generated_docstring_template": object_entry}}
