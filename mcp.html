@@ -98,23 +98,43 @@ configuration error and exits.</p>
 <td><p><code class="wtrl_cmd docutils literal notranslate"><span class="pre">get_subsection</span></code></p></td>
 <td><p>Read one stored subsection of one Waterloo object.</p></td>
 </tr>
+<tr class="row-odd"><td><p>Object content access</p></td>
+<td><p><code class="wtrl_cmd docutils literal notranslate"><span class="pre">get_signature</span></code></p></td>
+<td><p>Read the stored signature block for one Waterloo object.</p></td>
+</tr>
+<tr class="row-even"><td><p>Tool discovery</p></td>
+<td><p><code class="wtrl_cmd docutils literal notranslate"><span class="pre">describe_tool</span></code></p></td>
+<td><p>Read the Waterloo signature and docstring for one MCP tool.</p></td>
+</tr>
 <tr class="row-odd"><td><p>Reference lookup</p></td>
 <td><p><code class="wtrl_cmd docutils literal notranslate"><span class="pre">get_references</span></code></p></td>
 <td><p>Read structured incoming See_also references for one Waterloo object.</p></td>
 </tr>
-<tr class="row-even"><td><p>Search tools</p></td>
+<tr class="row-even"><td><p>Graph navigation</p></td>
+<td><p><code class="wtrl_cmd docutils literal notranslate"><span class="pre">search_related</span></code></p></td>
+<td><p>Read the star-shaped See_also neighborhood for one Waterloo object.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Example lookup</p></td>
+<td><p><code class="wtrl_cmd docutils literal notranslate"><span class="pre">get_examples</span></code></p></td>
+<td><p>Read structured example metadata for one Waterloo object.</p></td>
+</tr>
+<tr class="row-even"><td><p>Example lookup</p></td>
+<td><p><code class="wtrl_cmd docutils literal notranslate"><span class="pre">get_example_source</span></code></p></td>
+<td><p>Read the source text for one canonical Waterloo example reference.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Search tools</p></td>
 <td><p><code class="wtrl_cmd docutils literal notranslate"><span class="pre">search_objects</span></code></p></td>
 <td><p>Search Waterloo objects by expression and structural filters.</p></td>
 </tr>
-<tr class="row-odd"><td><p>Search tools</p></td>
+<tr class="row-even"><td><p>Search tools</p></td>
 <td><p><code class="wtrl_cmd docutils literal notranslate"><span class="pre">search_sections</span></code></p></td>
 <td><p>Search Waterloo section and subsection labels by expression and structural filters.</p></td>
 </tr>
-<tr class="row-even"><td><p>Search tools</p></td>
+<tr class="row-odd"><td><p>Search tools</p></td>
 <td><p><code class="wtrl_cmd docutils literal notranslate"><span class="pre">search_text</span></code></p></td>
 <td><p>Search Waterloo text content by terms and structural filters.</p></td>
 </tr>
-<tr class="row-odd"><td><p>Authoring helper</p></td>
+<tr class="row-even"><td><p>Authoring helper</p></td>
 <td><p><code class="wtrl_cmd docutils literal notranslate"><span class="pre">gen_docstring</span></code></p></td>
 <td><p>Generate a Waterloo docstring template for a given profile, with optional signature, template mode, and indentation mode.</p></td>
 </tr>
@@ -129,6 +149,12 @@ configuration error and exits.</p>
 <li><p><code class="wtrl_cmd docutils literal notranslate"><span class="pre">search_objects</span></code> to find candidate objects and obtain stable <code class="docutils literal notranslate"><span class="pre">root_id</span></code> / <code class="docutils literal notranslate"><span class="pre">qid</span></code> pairs.</p></li>
 <li><p><code class="wtrl_cmd docutils literal notranslate"><span class="pre">get_section</span></code> or <code class="wtrl_cmd docutils literal notranslate"><span class="pre">get_subsection</span></code> to inspect the relevant contract, notes, or other structured sections.</p></li>
 <li><p><code class="wtrl_cmd docutils literal notranslate"><span class="pre">search_sections</span></code> when the agent wants to find section or subsection labels rather than object names.</p></li>
+<li><p><code class="wtrl_cmd docutils literal notranslate"><span class="pre">describe_tool</span></code> when the agent wants to inspect the signature and Waterloo docstring of one MCP tool.</p></li>
+<li><p><code class="wtrl_cmd docutils literal notranslate"><span class="pre">get_signature</span></code> when the agent wants to inspect the canonical stored signature for one object.</p></li>
+<li><p><code class="wtrl_cmd docutils literal notranslate"><span class="pre">get_references</span></code> when the agent wants to inspect incoming structured See_also references for one object.</p></li>
+<li><p><code class="wtrl_cmd docutils literal notranslate"><span class="pre">search_related</span></code> when the agent wants a compact star-shaped See_also neighborhood around one object.</p></li>
+<li><p><code class="wtrl_cmd docutils literal notranslate"><span class="pre">get_examples</span></code> when the agent wants to inspect available example references for one object.</p></li>
+<li><p><code class="wtrl_cmd docutils literal notranslate"><span class="pre">get_example_source</span></code> when the agent wants to retrieve the raw source text for one canonical example reference.</p></li>
 <li><p><code class="wtrl_cmd docutils literal notranslate"><span class="pre">search_text</span></code> when the agent wants to search the actual content text with a small set of terms.</p></li>
 </ol>
 <p>In practice this means that the agent can start with a vague name, narrow it
@@ -175,6 +201,8 @@ not normative yet.</p>
 <li><p>[MCPS-003] – unknown section name.</p></li>
 <li><p>[MCPS-004] – unknown subsection name.</p></li>
 <li><p>[MCPS-005] – root document too large for the <code class="docutils literal notranslate"><span class="pre">get_root</span></code> guardrail.</p></li>
+<li><p>[MCPS-006] – unknown example reference.</p></li>
+<li><p>[MCPS-007] – unknown tool name.</p></li>
 </ul>
 <p>The current implementation already prefixes tool error messages with these
 rule labels. A later version may map them more directly to structured
