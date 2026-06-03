@@ -21,12 +21,15 @@ Function_overview:
 from __future__ import annotations
 
 import argparse
+import inspect
 import logging
 import logging.config
+import re
 import sys
+import textwrap
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Mapping, cast
+from typing import Callable, Mapping, cast
 
 try:
 	import tomllib
@@ -44,17 +47,20 @@ logger = logging.getLogger("wtrl_mcp")
 
 from sdv.doc.waterloo.mcp import __version__
 from sdv.doc.waterloo.mcp.wtrl_tools import (
-    WtrlJsonNode_t,
-	DocstringIndentMode_t,
+    DocstringIndentMode_t,
     DocstringJsonMode_t,
     DocstringMode_t,
     DocstringProfile_t,
+    ExampleRef,
     ReferenceRecord,
     SearchObjectsFilter,
     SearchSectionsFilter,
     SearchTextFilter,
     gen_docstring,
     get_object,
+    get_examples,
+    get_example_source,
+    get_signature,
     get_references,
     get_root,
     get_section,
@@ -65,7 +71,8 @@ from sdv.doc.waterloo.mcp.wtrl_tools import (
     search_text,
     _canonical_root_path,
     _read_json_document,
-	_root_id_for_path,
+    _root_id_for_path,
+    WtrlJsonNode_t,
 )
 
 # Run browser-based MCP-inspector with npx @modelcontextprotocol/inspector 
@@ -344,7 +351,7 @@ def _resolve_reference_targets(
 def _build_reference_index(roots: list[RootConfig]) -> ReferenceIndex:
 	reverse_map: dict[tuple[str, str], list[ReferenceRecord]] = {}
 	root_mtimes: dict[str, RootMTimeRecord] = {}
-	objects_by_root: dict[str, list[tuple[str, dict[str, WtrlJsonNode_t]]]] = {}
+	objects_by_root: dict[str, list[tuple[str, Mapping[str, WtrlJsonNode_t]]]] = {}
 	qids_to_roots: dict[str, set[str]] = {}
 
 	for root in roots:
@@ -362,7 +369,7 @@ def _build_reference_index(roots: list[RootConfig]) -> ReferenceIndex:
 		objects = document.get("__WTRL_OBJECTS__", {})
 		if not isinstance(objects, Mapping):
 			continue
-		root_objects: list[tuple[str, dict[str, WtrlJsonNode_t]]] = []
+		root_objects: list[tuple[str, Mapping[str, WtrlJsonNode_t]]] = []
 		for qid, object_record in objects.items():
 			if not isinstance(object_record, Mapping):
 				continue
@@ -539,6 +546,29 @@ def build_app(config: McpConfig) -> FastMCP:
 			for root in config.roots
 		]
 
+	def _format_tool_signature(tool: Callable[..., object]) -> str:
+		signature = str(inspect.signature(tool))
+		signature = re.sub(r": '([^']+)'", r": \1", signature)
+		signature = re.sub(r"-> '([^']+)'", r"-> \1", signature)
+		return signature
+
+	def _tool_help_text(toolname: str, tool: Callable[..., object], doc_source: Callable[..., object]) -> str:
+		doc = inspect.getdoc(doc_source) or ""
+		doc = textwrap.dedent(doc).strip()
+		doc = doc.replace("\t", "    ")
+		if not doc:
+			doc = "No Waterloo docstring available."
+		lines = [
+			f"Tool: {toolname}",
+			"",
+			"Signature:",
+			f"  {_format_tool_signature(tool)}",
+			"",
+			"Waterloo docstring:",
+		]
+		lines.extend(f"  {line}" if line else "" for line in doc.splitlines())
+		return "\n".join(lines).strip()
+
 	@mcp.tool(name="list_roots", description="List configured Waterloo data roots.")
 	def _list_roots() -> list[dict[str, WtrlJsonNode_t]]:
 		return list_roots(_root_mappings())
@@ -558,6 +588,18 @@ def build_app(config: McpConfig) -> FastMCP:
 	@mcp.tool(name="get_subsection", description="Read one stored subsection of one Waterloo object.")
 	def _get_subsection(root_id: str, qid: str, section: str, subsection: str) -> dict[str, WtrlJsonNode_t]:
 		return get_subsection(root_id, qid, section, subsection, _root_mappings())
+
+	@mcp.tool(name="get_examples", description="Read structured example metadata for one Waterloo object.")
+	def _get_examples(root_id: str, qid: str) -> list[ExampleRef]:
+		return get_examples(root_id, qid, _root_mappings())
+
+	@mcp.tool(name="get_example_source", description="Read the source text for one Waterloo example reference.")
+	def _get_example_source(root_id: str, example_path: str) -> str:
+		return get_example_source(root_id, example_path, _root_mappings())
+
+	@mcp.tool(name="get_signature", description="Read the stored signature block for one Waterloo object.")
+	def _get_signature(root_id: str, qid: str) -> dict[str, WtrlJsonNode_t]:
+		return get_signature(root_id, qid, _root_mappings())
 
 	@mcp.tool(name="get_references", description="Read structured incoming See_also references for one Waterloo object.")
 	def _get_references(root_id: str, qid: str, normative_only: bool = False) -> list[ReferenceRecord]:
@@ -584,6 +626,65 @@ def build_app(config: McpConfig) -> FastMCP:
 		json_mode: DocstringJsonMode_t = "full",
 	) -> dict[str, WtrlJsonNode_t]:
 		return gen_docstring(profile=profile, signature=signature, mode=mode, indent_mode=indent_mode, json_mode=json_mode)
+
+	@mcp.tool(name="describe_tool", description="Describe one MCP tool by its canonical tool name.")
+	def _describe_tool(toolname: str) -> str:
+		r"""
+		Preamble:
+			profile:
+				function
+			normative_sections:
+				Contract, Parameters, Returns, Raises
+			scope:
+				extension
+		Contract:
+			general:
+				|Must| return the stored Waterloo tool signature together with the Waterloo-normative docstring for one MCP tool.
+				|Must| help an agent discover the tool set without needing an out-of-band explanation channel.
+		Parameters:
+			toolname:
+				The canonical MCP tool name to describe.
+		Returns:
+			A plain text help string containing the signature, the Waterloo docstring, and a short one-line example.
+		Raises:
+			ValueError:
+				|May| raise if the requested tool name is unknown.
+		"""
+		tool_wrappers: dict[str, Callable[..., object]] = {
+			"list_roots": _list_roots,
+			"get_root": _get_root,
+			"get_object": _get_object,
+			"get_section": _get_section,
+			"get_subsection": _get_subsection,
+			"get_examples": _get_examples,
+			"get_example_source": _get_example_source,
+			"get_signature": _get_signature,
+			"get_references": _get_references,
+			"search_objects": _search_objects,
+			"search_sections": _search_sections,
+			"search_text": _search_text,
+			"gen_docstring": _gen_docstring,
+			"describe_tool": _describe_tool,
+		}
+		tool_docs: dict[str, Callable[..., object]] = {
+			"list_roots": list_roots,
+			"get_root": get_root,
+			"get_object": get_object,
+			"get_section": get_section,
+			"get_subsection": get_subsection,
+			"get_examples": get_examples,
+			"get_example_source": get_example_source,
+			"get_signature": get_signature,
+			"get_references": get_references,
+			"search_objects": search_objects,
+			"search_sections": search_sections,
+			"search_text": search_text,
+			"gen_docstring": gen_docstring,
+			"describe_tool": _describe_tool,
+		}
+		if toolname not in tool_wrappers or toolname not in tool_docs:
+			raise ValueError(f"MCPS-007 unknown tool: {toolname}")
+		return _tool_help_text(toolname, tool_wrappers[toolname], tool_docs[toolname])
 
 	logger.info("Ready to serve via Uvicorn.")
 	logger.info(f"Loaded {len(config.roots)} configured roots.")

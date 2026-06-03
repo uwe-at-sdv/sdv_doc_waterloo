@@ -10,31 +10,41 @@ Contract:
 	general:
 		|Must| provide the tool set for the Waterloo MCP-server.
 Public_classes:
-	ReferenceRecord, SearchObjectsFilter, SearchSectionsFilter, SearchTextFilter
+	ExampleRef, ReferenceRecord, SearchObjectsFilter, SearchSectionsFilter, SearchTextFilter
 Public_functions:
+	matches_segment_aware_expression,
 	list_roots, get_root, get_object, get_section, get_subsection,
-	get_references, search_objects, search_sections, search_text, gen_docstring
+	get_references, get_signature, get_examples, get_example_source,
+	search_objects, search_sections, search_text, gen_docstring
 Function_overview:
+	matches_segment_aware_expression:
+		Check whether a candidate name matches a given expression, which can be either a literal match or a glob pattern.
 	list_roots:
-		List the configured Waterloo roots with stable identifiers.
+		[MCP tool] List the configured Waterloo roots with stable identifiers.
 	get_root:
-		Resolve one configured root by its stable identifier and return the loaded JSON document.
+		[MCP tool] Resolve one configured root by its stable identifier and return the loaded JSON document.
 	get_object:
-		Resolve one object by QID inside one configured root and return the loaded object record.
+		[MCP tool] Resolve one object by QID inside one configured root and return the loaded object record.
 	get_section:
-		Resolve one named section of one object inside one configured root and return the stored section value.
+		[MCP tool] Resolve one named section of one object inside one configured root and return the stored section value.
 	get_subsection:
-		Resolve one named subsection of one section of one object inside one configured root and return the stored subsection value.
+		[MCP tool] Resolve one named subsection of one section of one object inside one configured root and return the stored subsection value.
 	get_references:
-		Return the structured incoming See_also references for one object using a reverse lookup map.
+		[MCP tool] Return the structured incoming See_also references for one object using a reverse lookup map.
+	get_signature:
+		[MCP tool] Return the stored signature block for one object without reconstructing it.
+	get_examples:
+		[MCP tool] Return example metadata for one object using the structured __WTRL_EXAMPLES__ data.
+	get_example_source:
+		[MCP tool] Return the source text for one example reference using the structured __WTRL_EXAMPLES__ data.
 	search_objects:
-		Search for object QIDs with optional structural filters and return stable triples.
+		[MCP tool] Search for object QIDs with optional structural filters and return stable triples.
 	search_sections:
-		Search for stored section and subsection labels with optional structural filters.
+		[MCP tool] Search for stored section and subsection labels with optional structural filters.
 	search_text:
-		Search for textual content with optional structural filters and compact excerpts.
+		[MCP tool] Search for textual content with optional structural filters and compact excerpts.
 	gen_docstring:
-		Generate a Waterloo docstring template for a given profile and return a
+		[MCP tool] Generate a Waterloo docstring template for a given profile and return a
 		docstring text together with a JSON placeholder snippet.
 Public_types:
 	SearchObjectKind_t:
@@ -61,23 +71,14 @@ import hashlib
 import json
 import re
 from pathlib import Path
-# Note that we don't need to import Any here.
-from typing import Dict, Iterator, List, Literal, Mapping, cast, TypeAlias, Union
+from typing import Any, Dict, Iterator, List, Literal, Mapping, cast, TypeAlias, Union
 
 from pydantic import BaseModel, ConfigDict
 from sdv.doc.waterloo import docitem_genutil as genutil
 
 #===== Type Checking ==========================================#
-# Gemini says nope, but I don't see the problem here, as long as
-# mypy is happy and the actual runtime values are correct.
-# The whole point of defining WtrlJsonNode_t is to have a
-# well-defined type for the JSON data we load, even if we can't
-# enforce it at runtime without extra validation. So let's keep
-# it as is and let the callers handle the type appropriately.
-# We got rid of a lot of plain objects in the API and replaced
-# them with well-defined Pydantic models, so the places where we
-# still have to use a generic JSON node type should be limited and manageable.
-WtrlJsonNode_t: TypeAlias = Dict[str, "WtrlJsonNode_t"] | List["WtrlJsonNode_t"] | str | int | float | bool | None
+# WtrlJsonNode_t captures Waterloo JSON values without recursive forward refs.
+WtrlJsonNode_t: TypeAlias = Dict[str, Any] | List[Any] | str | int | float | bool | None
 
 SearchObjectKind_t = Literal["module", "class", "callable", "type", "constant", "variable"]
 SearchTextMatchMode_t = Literal["literal"]
@@ -100,7 +101,7 @@ class SearchObjectsFilter(BaseModel):
 	Contract:
 		general:
 			|Must| represent the reusable structural filters for object searches in the Waterloo MCP server.
-			|Must| allow the caller to omit any field by leaving it |lit|`None`.
+			|Must| allow the caller to omit any field by leaving it |None|.
 			|Must| keep the documented fields stable for existing clients.
 		constructor:
 			|Must| accept the following fields:
@@ -130,7 +131,7 @@ class SearchSectionsFilter(BaseModel):
 	Contract:
 		general:
 			|Must| represent the reusable structural filters for section searches in the Waterloo MCP server.
-			|Must| allow the caller to omit any field by leaving it |lit|`None`.
+			|Must| allow the caller to omit any field by leaving it |None|.
 			|Must| keep the documented fields stable for existing clients.
 		constructor:
 			|Must| accept the following fields:
@@ -162,7 +163,7 @@ class SearchTextFilter(BaseModel):
 	Contract:
 		general:
 			|Must| represent the reusable structural and matching filters for text searches in the Waterloo MCP server.
-			|Must| allow the caller to omit any field by leaving it |lit|`None`.
+			|Must| allow the caller to omit any field by leaving it |None|.
 			|Must| keep the documented fields stable for existing clients.
 		constructor:
 			|Must| accept the following fields:
@@ -221,6 +222,39 @@ class ReferenceRecord(BaseModel):
 	is_normative: bool
 
 
+class ExampleRef(BaseModel):
+	r"""
+	Preamble:
+		profile:
+			class
+		normative_sections:
+			Contract
+		scope:
+			extension
+	Contract:
+		general:
+			|Must| represent one example reference in the Waterloo MCP server.
+			|Must| keep the reference compact and stable so that lookup results can be reused directly by MCP clients.
+		constructor:
+			|Must| accept the following fields:
+			- root_id: stable root identifier of the object that owns the example reference.
+			- example_path: canonical path inside __WTRL_EXAMPLES__.
+			- title: optional human-readable name.
+			- lang: language tag of the example payload.
+			- size: raw octet size of the example payload.
+	Notes:
+		Purpose:
+			This record is the canonical Waterloo representation for structured example lookups.
+	"""
+	model_config = ConfigDict(extra="forbid")
+
+	root_id: str
+	example_path: str
+	title: str | None = None
+	lang: str
+	size: int
+
+
 # The Pydantic base classes are only needed for class construction above.
 # Remove the imported helper names from the module namespace so the doc
 # renderer does not traverse the external Pydantic implementation as if it
@@ -245,11 +279,7 @@ def _root_id_for_path(path_text: str) -> str:
 	digest = hashlib.blake2s(str(canonical_path).encode("utf-8"), digest_size=6).hexdigest()
 	return f"root:{digest}"
 
-# Of course we could just cast the loaded JSON to the expected type,
-# but that would be unsafe and defeat the purpose of having a
-# well-defined JSON node type in the first place. So we keep
-# the return type of this function as the generic WtrlJsonNode_t
-# and let the callers handle it appropriately.
+# Return the loaded JSON as the generic Waterloo node type.
 def _read_json_document(path_text: str) -> WtrlJsonNode_t:
 	path = _canonical_root_path(path_text)
 	return cast(WtrlJsonNode_t, json.loads(path.read_text(encoding="utf-8")))
@@ -298,6 +328,17 @@ def _object_kind(document: Mapping[str, object], qid: str, object_record: Mappin
 	return _object_kind_from_toc(document, qid) or _object_kind_from_profile(object_record)
 
 
+def _doc_profile(object_record: Mapping[str, object]) -> str:
+	doc = object_record.get("doc", {})
+	if isinstance(doc, Mapping):
+		preamble = doc.get("Preamble", {})
+		if isinstance(preamble, Mapping):
+			profile = str(preamble.get("profile", "")).strip().lower()
+			if profile in {"module", "class", "function", "method", "inherited_method"}:
+				return profile
+	return "module"
+
+
 def _object_scopes(object_record: Mapping[str, object]) -> set[str]:
 	doc = object_record.get("doc", {})
 	if not isinstance(doc, Mapping):
@@ -320,19 +361,54 @@ def _root_scope_names(document: Mapping[str, object]) -> set[str]:
 	return {str(name) for name in scopes.keys()}
 
 
-def _matches_expression(qid: str, expression: str) -> bool:
+def matches_segment_aware_expression(candidate: str, expression: str) -> bool:
+	r"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+		scope:
+			extension
+	Contract:
+		general:
+			|Must| check whether a candidate name matches a given expression.
+			|Must| support literal matches and glob patterns with wildcards |lit|`*` |lit|`?` |lit|`[]` including negated character classes |lit|`[!... ]`.
+			|Must| match wildcard expressions against the whole candidate, the tail after the last dot, and each individual dot-separated segment.
+			|Must| treat the expression as a literal match if it does not contain any glob wildcard characters.
+			|Must| match literal expressions against the whole candidate and against the tail after the last dot.
+			|Must| allow the following wildcards in glob patterns:
+			- |lit|`*` matches any sequence of characters, including dots.
+			- |lit|`?` matches any single character.
+			- |lit|`[abc]` matches any single character in the set.
+			- |lit|`[!abc]` matches any single character not in the set.
+	Parameters:
+		candidate:
+			The candidate name to check, for example |lit|`package.module.Class.method` or |lit|`Parameters`.
+		expression:
+			The expression to match against, which can be either a literal string or a glob pattern.
+	Returns:
+		|True| if the candidate matches the expression according to the rules above, |False| otherwise.
+	Raises:
+	Notes:
+		Implementation:
+			The implementation uses the fnmatch module for wildcard expressions and first
+			checks the whole candidate, then the tail after the last dot, and finally each
+			individual dot-separated segment. Literal expressions are checked against the
+			whole candidate and the tail only.
+	"""
 	if any(ch in expression for ch in "*?[]"):
-		if fnmatch.fnmatchcase(qid, expression):
+		if fnmatch.fnmatchcase(candidate, expression):
 			return True
-		tail = qid.split(".")[-1]
+		tail = candidate.split(".")[-1]
 		if fnmatch.fnmatchcase(tail, expression):
 			return True
-		return any(fnmatch.fnmatchcase(part, expression) for part in qid.split("."))
-	if qid == expression:
+		return any(fnmatch.fnmatchcase(part, expression) for part in candidate.split("."))
+	if candidate == expression:
 		return True
-	if qid.endswith(f".{expression}"):
+	if candidate.endswith(f".{expression}"):
 		return True
-	return qid.split(".")[-1] == expression
+	return candidate.split(".")[-1] == expression
 
 
 def _strip_roles_from_text(text: str) -> str:
@@ -681,6 +757,12 @@ def get_references(
 			The fully qualified identifier of the object whose incoming references should be returned.
 		normative_only:
 			Whether to keep only references recorded from a normative See_also section.
+	Notes:
+		Parameters:
+			MCP callers only pass ``root_id``, ``qid`` and optionally ``normative_only``;
+			the server injects ``reference_index`` internally.
+		Example:
+			``get_references(root_id="...", qid="...")``
 	Returns:
 		A list of incoming structured See_also reference records.
 	Raises:
@@ -693,6 +775,201 @@ def get_references(
 	if normative_only:
 		records = [record for record in records if record.is_normative]
 	return records
+
+
+def get_signature(root_id: str, qid: str, roots: list[Mapping[str, WtrlJsonNode_t]]) -> dict[str, WtrlJsonNode_t]:
+	r"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+		scope:
+			extension
+	Contract:
+		general:
+			|Must| return the stored signature block for one object together with its root and profile metadata.
+			|Must| preserve the stored signature block verbatim, including additional fields such as decorators.
+	Parameters:
+		root_id:
+			The canonical root identifier derived from the canonical absolute root path.
+		qid:
+			The fully qualified identifier of the requested object inside the loaded Waterloo JSON document.
+		roots:
+			The list of configured root entries.
+	Notes:
+		Parameters:
+			MCP callers only pass ``root_id`` and ``qid``; the server injects the root list internally.
+		Example:
+			``get_signature(root_id="...", qid="...")``
+	Returns:
+		A dictionary with ``root_id``, ``qid``, ``profile`` and ``signature``.
+	Raises:
+		ValueError:
+			|May| raise if the root identifier or QID is unknown.
+	"""
+	idx, root_data, root_path, document = _load_root_context(root_id, roots)
+	objects = document.get("__WTRL_OBJECTS__", {})
+	if not isinstance(objects, Mapping):
+		raise ValueError(f"Unknown qid: {qid}")
+	object_record = objects.get(qid)
+	if not isinstance(object_record, Mapping):
+		raise ValueError(f"Unknown qid: {qid}")
+	profile = _doc_profile(object_record)
+	return {
+		**_root_summary(idx, root_data, root_path),
+		"qid": qid,
+		"profile": profile,
+		"signature": cast(WtrlJsonNode_t, object_record.get("signature")),
+	}
+
+
+def _example_key_from_path(example_path: str) -> str:
+	prefix = "/__WTRL_EXAMPLES__/"
+	if not example_path.startswith(prefix):
+		raise ValueError(f"MCPS-006 unknown example reference: {example_path}")
+	key = example_path[len(prefix) :]
+	if not key:
+		raise ValueError(f"MCPS-006 unknown example reference: {example_path}")
+	return key
+
+
+def _example_ref_from_entry(root_id: str, example_path: str, example_entry: Mapping[str, object]) -> ExampleRef:
+	lang = str(example_entry.get("lang", "")).strip()
+	if not lang:
+		raise ValueError(f"Example entry is missing lang: {example_path}")
+	code = example_entry.get("code", "")
+	if isinstance(code, str):
+		size = len(code.encode("utf-8"))
+	else:
+		size = len(str(code).encode("utf-8"))
+	title_value = example_entry.get("title")
+	title = str(title_value).strip() if isinstance(title_value, str) and title_value.strip() else None
+	return ExampleRef(
+		root_id=root_id,
+		example_path=example_path,
+		title=title,
+		lang=lang,
+		size=size,
+	)
+
+
+def get_examples(
+	root_id: str,
+	qid: str,
+	roots: list[Mapping[str, WtrlJsonNode_t]],
+) -> list[ExampleRef]:
+	r"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+		scope:
+			extension
+	Contract:
+		general:
+			|Must| return structured example metadata for one QID from the configured roots.
+			|Must| return an empty list if the object exists but has no examples.
+			|Must| treat the example paths as canonical references inside __WTRL_EXAMPLES__.
+	Parameters:
+		root_id:
+			The canonical root identifier derived from the canonical absolute root path.
+		qid:
+			The fully qualified identifier of the requested object inside the loaded Waterloo JSON document.
+		roots:
+			The list of configured root entries.
+	Notes:
+		Parameters:
+			MCP callers only pass ``root_id`` and ``qid``; the server injects the root list internally.
+		Example:
+			``get_examples(root_id="...", qid="...")``
+	Returns:
+		A list of ExampleRef records for the object.
+	Raises:
+		ValueError:
+			|May| raise if the root identifier or QID is unknown.
+	"""
+	_, _, _, document = _load_root_context(root_id, roots)
+	objects = document.get("__WTRL_OBJECTS__", {})
+	if not isinstance(objects, Mapping):
+		raise ValueError(f"Unknown qid: {qid}")
+	object_record = objects.get(qid)
+	if not isinstance(object_record, Mapping):
+		raise ValueError(f"Unknown qid: {qid}")
+	example_paths = object_record.get("examples", [])
+	if not isinstance(example_paths, list) or not example_paths:
+		return []
+	example_entries = document.get("__WTRL_EXAMPLES__", {})
+	if not isinstance(example_entries, Mapping):
+		return []
+	examples: list[ExampleRef] = []
+	for raw_path in example_paths:
+		if not isinstance(raw_path, str):
+			continue
+		example_path = raw_path.strip()
+		if not example_path:
+			continue
+		key = _example_key_from_path(example_path)
+		example_entry = example_entries.get(key)
+		if not isinstance(example_entry, Mapping):
+			continue
+		examples.append(_example_ref_from_entry(root_id, example_path, example_entry))
+	return examples
+
+
+def _example_source_entry(root_id: str, example_path: str, roots: list[Mapping[str, WtrlJsonNode_t]]) -> Mapping[str, object]:
+	_, _, _, document = _load_root_context(root_id, roots)
+	example_entries = document.get("__WTRL_EXAMPLES__", {})
+	if not isinstance(example_entries, Mapping):
+		raise ValueError(f"MCPS-006 unknown example reference: {example_path}")
+	key = _example_key_from_path(example_path)
+	example_entry = example_entries.get(key)
+	if not isinstance(example_entry, Mapping):
+		raise ValueError(f"MCPS-006 unknown example reference: {example_path}")
+	return example_entry
+
+
+def get_example_source(
+	root_id: str,
+	example_path: str,
+	roots: list[Mapping[str, WtrlJsonNode_t]],
+) -> str:
+	r"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+		scope:
+			extension
+	Contract:
+		general:
+			|Must| return the raw source text for one canonical example reference.
+			|Must| treat the example path as a canonical path inside __WTRL_EXAMPLES__.
+	Parameters:
+		root_id:
+			The canonical root identifier derived from the canonical absolute root path.
+		example_path:
+			The canonical example path returned by get_examples.
+		roots:
+			The list of configured root entries.
+	Notes:
+		Parameters:
+			MCP callers only pass ``root_id`` and ``example_path``; the server injects the root list internally.
+		Example:
+			``get_example_source(root_id="...", example_path="/__WTRL_EXAMPLES__/sha256_...")``
+	Returns:
+		The raw example source text.
+	Raises:
+		ValueError:
+			|May| raise if the root identifier is unknown or if the example reference is unknown.
+	"""
+	example_entry = _example_source_entry(root_id, example_path, roots)
+	code = example_entry.get("code")
+	if not isinstance(code, str):
+		raise ValueError(f"MCPS-006 unknown example reference: {example_path}")
+	return code
 
 
 def search_objects(
@@ -715,10 +992,10 @@ def search_objects(
 	Parameters:
 		expression:
 			The search expression. Wildcards are allowed.
-		filter:
-			Optional structural filters such as root ID, kind, and scope.
 		roots:
 			The list of configured root entries.
+		filter:
+			Optional structural filters such as root ID, kind, and scope.
 	Returns:
 		A list of triples ``(root_id, qid, kind)`` for matching objects.
 	Raises:
@@ -753,7 +1030,7 @@ def search_objects(
 				continue
 			if use_scope_filter and scope_filter is not None and scope_filter not in _object_scopes(object_record):
 				continue
-			if not _matches_expression(str(qid), expression):
+			if not matches_segment_aware_expression(str(qid), expression):
 				continue
 			matches.append((current_root_id, str(qid), kind))
 	return matches
@@ -816,7 +1093,7 @@ def search_sections(
 			kind = _object_kind(document, str(qid), object_record)
 			if kind_filter is not None and kind != kind_filter:
 				continue
-			if qid_filter is not None and not _matches_expression(str(qid), qid_filter):
+			if qid_filter is not None and not matches_segment_aware_expression(str(qid), qid_filter):
 				continue
 			if use_scope_filter and scope_filter is not None and scope_filter not in _object_scopes(object_record):
 				continue
@@ -825,7 +1102,7 @@ def search_sections(
 				continue
 			root_summary = _root_summary(idx, root_data, root_path)
 			for section_name, section_value in doc.items():
-				if _matches_expression(str(section_name), expression):
+				if matches_segment_aware_expression(str(section_name), expression):
 					matches.append(
 						{
 							**root_summary,
@@ -838,7 +1115,7 @@ def search_sections(
 					)
 				if isinstance(section_value, Mapping):
 					for subsection_name, subsection_value in section_value.items():
-						if _matches_expression(str(subsection_name), expression):
+						if matches_segment_aware_expression(str(subsection_name), expression):
 							matches.append(
 								{
 									**root_summary,
@@ -919,7 +1196,7 @@ def search_text(
 			kind = _object_kind(document, qid_text, object_record)
 			if kind_filter is not None and kind != kind_filter:
 				continue
-			if qid_filter is not None and not _matches_expression(qid_text, qid_filter):
+			if qid_filter is not None and not matches_segment_aware_expression(qid_text, qid_filter):
 				continue
 			if use_scope_filter and scope_filter is not None and scope_filter not in _object_scopes(object_record):
 				continue

@@ -1,12 +1,12 @@
 {
     "$schema": "https://sci-d-vis.com/schema/wtrl-json-0.1.0.schema.json",
-    "$id": "urn:waterlint:wtrl-json:0.14.1:core:rfc-2119:de0fda2864ca6b870eeb145debeb4ac717e42c712356bfcc2920cde804abb597",
+    "$id": "urn:waterlint:wtrl-json:0.14.1:core:rfc-2119:ff2b34ad9b831b8e2c3f5ee7db7d745d5950333287d852c1eda656a7609ec650",
     "__WTRL_VERSION__": {
         "waterloo": "0.8.1",
         "schema": "0.1.0"
     },
     "__WTRL_META__": {
-        "generated_at": "2026-06-01T16:06:11+02:00",
+        "generated_at": "2026-06-02T19:28:17+02:00",
         "generator": "waterlint",
         "scope": "core",
         "flavour": "rfc-2119"
@@ -46,21 +46,77 @@
     },
     "__WTRL_TOC_MODULES__": {
         "wtrl_server": "/__WTRL_OBJECTS__/wtrl_server",
-        "wtrl_tools": "/__WTRL_OBJECTS__/wtrl_tools"
+        "sdv.doc.waterloo.mcp.wtrl_tools": "/__WTRL_OBJECTS__/sdv.doc.waterloo.mcp.wtrl_tools",
+        "wtrl_tools": "/__WTRL_OBJECTS__/wtrl_tools",
+        "sdv.doc.waterloo.docitem_genutil": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_genutil",
+        "sdv.doc.waterloo.docitem_helper": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper"
     },
     "__WTRL_TOC_CLASSES__": {
+        "sdv.doc.waterloo.mcp.wtrl_tools.ExampleRef": "/__WTRL_OBJECTS__/sdv.doc.waterloo.mcp.wtrl_tools.ExampleRef",
+        "sdv.doc.waterloo.mcp.wtrl_tools.ReferenceRecord": "/__WTRL_OBJECTS__/sdv.doc.waterloo.mcp.wtrl_tools.ReferenceRecord",
+        "sdv.doc.waterloo.mcp.wtrl_tools.SearchObjectsFilter": "/__WTRL_OBJECTS__/sdv.doc.waterloo.mcp.wtrl_tools.SearchObjectsFilter",
+        "sdv.doc.waterloo.mcp.wtrl_tools.SearchSectionsFilter": "/__WTRL_OBJECTS__/sdv.doc.waterloo.mcp.wtrl_tools.SearchSectionsFilter",
+        "sdv.doc.waterloo.mcp.wtrl_tools.SearchTextFilter": "/__WTRL_OBJECTS__/sdv.doc.waterloo.mcp.wtrl_tools.SearchTextFilter",
+        "sdv.doc.waterloo.docitem_helper.Trait": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.Trait",
+        "sdv.doc.waterloo.docitem_helper.Scope": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.Scope",
+        "sdv.doc.waterloo.docitem_helper.Flavour": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.Flavour",
+        "sdv.doc.waterloo.docitem_helper.Format": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.Format",
+        "sdv.doc.waterloo.docitem_helper.Status": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.Status",
+        "sdv.doc.waterloo.docitem_helper.ConfigTraversal": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.ConfigTraversal",
+        "sdv.doc.waterloo.docitem_helper.tracer": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.tracer",
         "wtrl_tools.SearchObjectsFilter": "/__WTRL_OBJECTS__/wtrl_tools.SearchObjectsFilter",
         "wtrl_tools.SearchSectionsFilter": "/__WTRL_OBJECTS__/wtrl_tools.SearchSectionsFilter",
-        "wtrl_tools.SearchTextFilter": "/__WTRL_OBJECTS__/wtrl_tools.SearchTextFilter"
+        "wtrl_tools.SearchTextFilter": "/__WTRL_OBJECTS__/wtrl_tools.SearchTextFilter",
+        "wtrl_tools.ReferenceRecord": "/__WTRL_OBJECTS__/wtrl_tools.ReferenceRecord",
+        "wtrl_tools.ExampleRef": "/__WTRL_OBJECTS__/wtrl_tools.ExampleRef"
     },
     "__WTRL_TOC_CALLABLES__": {
+        "sdv.doc.waterloo.mcp.wtrl_tools.gen_docstring": "/__WTRL_OBJECTS__/sdv.doc.waterloo.mcp.wtrl_tools.gen_docstring",
+        "sdv.doc.waterloo.mcp.wtrl_tools.get_object": "/__WTRL_OBJECTS__/sdv.doc.waterloo.mcp.wtrl_tools.get_object",
+        "sdv.doc.waterloo.mcp.wtrl_tools.get_examples": "/__WTRL_OBJECTS__/sdv.doc.waterloo.mcp.wtrl_tools.get_examples",
+        "sdv.doc.waterloo.mcp.wtrl_tools.get_example_source": "/__WTRL_OBJECTS__/sdv.doc.waterloo.mcp.wtrl_tools.get_example_source",
+        "sdv.doc.waterloo.mcp.wtrl_tools.get_references": "/__WTRL_OBJECTS__/sdv.doc.waterloo.mcp.wtrl_tools.get_references",
+        "sdv.doc.waterloo.mcp.wtrl_tools.get_root": "/__WTRL_OBJECTS__/sdv.doc.waterloo.mcp.wtrl_tools.get_root",
+        "sdv.doc.waterloo.mcp.wtrl_tools.get_section": "/__WTRL_OBJECTS__/sdv.doc.waterloo.mcp.wtrl_tools.get_section",
+        "sdv.doc.waterloo.mcp.wtrl_tools.get_subsection": "/__WTRL_OBJECTS__/sdv.doc.waterloo.mcp.wtrl_tools.get_subsection",
+        "sdv.doc.waterloo.mcp.wtrl_tools.list_roots": "/__WTRL_OBJECTS__/sdv.doc.waterloo.mcp.wtrl_tools.list_roots",
+        "sdv.doc.waterloo.mcp.wtrl_tools.search_objects": "/__WTRL_OBJECTS__/sdv.doc.waterloo.mcp.wtrl_tools.search_objects",
+        "sdv.doc.waterloo.mcp.wtrl_tools.search_sections": "/__WTRL_OBJECTS__/sdv.doc.waterloo.mcp.wtrl_tools.search_sections",
+        "sdv.doc.waterloo.mcp.wtrl_tools.search_text": "/__WTRL_OBJECTS__/sdv.doc.waterloo.mcp.wtrl_tools.search_text",
         "wtrl_server.read_package_readme": "/__WTRL_OBJECTS__/wtrl_server.read_package_readme",
         "wtrl_server.build_app": "/__WTRL_OBJECTS__/wtrl_server.build_app",
+        "sdv.doc.waterloo.docitem_helper.is_attr_annotated": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.is_attr_annotated",
+        "sdv.doc.waterloo.docitem_helper.is_attr_final": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.is_attr_final",
+        "sdv.doc.waterloo.docitem_helper.is_obj_module": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.is_obj_module",
+        "sdv.doc.waterloo.docitem_helper.is_obj_class": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.is_obj_class",
+        "sdv.doc.waterloo.docitem_helper.is_obj_function": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.is_obj_function",
+        "sdv.doc.waterloo.docitem_helper.is_obj_method_like": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.is_obj_method_like",
+        "sdv.doc.waterloo.docitem_helper.is_obj_named_value": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.is_obj_named_value",
+        "sdv.doc.waterloo.docitem_helper.is_obj_documentable": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.is_obj_documentable",
+        "sdv.doc.waterloo.docitem_helper.get_obj_direct_module": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.get_obj_direct_module",
+        "sdv.doc.waterloo.docitem_helper.get_obj_name": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.get_obj_name",
+        "sdv.doc.waterloo.docitem_helper.get_obj_fully_qualified_name": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.get_obj_fully_qualified_name",
+        "sdv.doc.waterloo.docitem_helper.get_obj_path": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.get_obj_path",
+        "sdv.doc.waterloo.docitem_helper.build_anchor": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.build_anchor",
+        "sdv.doc.waterloo.docitem_helper.get_func_obj_from_callable": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.get_func_obj_from_callable",
+        "sdv.doc.waterloo.docitem_helper.get_obj_docstring": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.get_obj_docstring",
+        "sdv.doc.waterloo.docitem_helper.get_obj_annotations": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.get_obj_annotations",
+        "sdv.doc.waterloo.docitem_helper.gen_documentable_objects": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.gen_documentable_objects",
+        "sdv.doc.waterloo.docitem_genutil.parse_source_fragment": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_genutil.parse_source_fragment",
+        "sdv.doc.waterloo.docitem_genutil.parse_signature_fragment": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_genutil.parse_signature_fragment",
+        "sdv.doc.waterloo.docitem_genutil.infer_docstring_profile": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_genutil.infer_docstring_profile",
+        "sdv.doc.waterloo.docitem_genutil.generate_minimal_docstring": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_genutil.generate_minimal_docstring",
+        "sdv.doc.waterloo.docitem_genutil.generate_full_docstring": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_genutil.generate_full_docstring",
+        "sdv.doc.waterloo.docitem_genutil.generate_minimal_docstring_from_node": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_genutil.generate_minimal_docstring_from_node",
+        "sdv.doc.waterloo.docitem_genutil.generate_full_docstring_from_node": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_genutil.generate_full_docstring_from_node",
         "wtrl_tools.list_roots": "/__WTRL_OBJECTS__/wtrl_tools.list_roots",
         "wtrl_tools.get_root": "/__WTRL_OBJECTS__/wtrl_tools.get_root",
         "wtrl_tools.get_object": "/__WTRL_OBJECTS__/wtrl_tools.get_object",
         "wtrl_tools.get_section": "/__WTRL_OBJECTS__/wtrl_tools.get_section",
         "wtrl_tools.get_subsection": "/__WTRL_OBJECTS__/wtrl_tools.get_subsection",
+        "wtrl_tools.get_references": "/__WTRL_OBJECTS__/wtrl_tools.get_references",
+        "wtrl_tools.get_examples": "/__WTRL_OBJECTS__/wtrl_tools.get_examples",
+        "wtrl_tools.get_example_source": "/__WTRL_OBJECTS__/wtrl_tools.get_example_source",
         "wtrl_tools.search_objects": "/__WTRL_OBJECTS__/wtrl_tools.search_objects",
         "wtrl_tools.search_sections": "/__WTRL_OBJECTS__/wtrl_tools.search_sections",
         "wtrl_tools.search_text": "/__WTRL_OBJECTS__/wtrl_tools.search_text",
@@ -72,10 +128,36 @@
         "wtrl_tools.SearchTextTermMode_t": "/__WTRL_OBJECTS__/wtrl_tools.SearchTextTermMode_t",
         "wtrl_tools.DocstringProfile_t": "/__WTRL_OBJECTS__/wtrl_tools.DocstringProfile_t",
         "wtrl_tools.DocstringMode_t": "/__WTRL_OBJECTS__/wtrl_tools.DocstringMode_t",
-        "wtrl_tools.DocstringIndentMode_t": "/__WTRL_OBJECTS__/wtrl_tools.DocstringIndentMode_t"
+        "wtrl_tools.DocstringIndentMode_t": "/__WTRL_OBJECTS__/wtrl_tools.DocstringIndentMode_t",
+        "wtrl_tools.DocstringJsonMode_t": "/__WTRL_OBJECTS__/wtrl_tools.DocstringJsonMode_t",
+        "sdv.doc.waterloo.docitem_helper.tracer.Context": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.tracer.Context",
+        "sdv.doc.waterloo.mcp.wtrl_tools.SearchObjectKind_t": "/__WTRL_OBJECTS__/sdv.doc.waterloo.mcp.wtrl_tools.SearchObjectKind_t",
+        "sdv.doc.waterloo.mcp.wtrl_tools.SearchTextMatchMode_t": "/__WTRL_OBJECTS__/sdv.doc.waterloo.mcp.wtrl_tools.SearchTextMatchMode_t",
+        "sdv.doc.waterloo.mcp.wtrl_tools.SearchTextTermMode_t": "/__WTRL_OBJECTS__/sdv.doc.waterloo.mcp.wtrl_tools.SearchTextTermMode_t",
+        "sdv.doc.waterloo.mcp.wtrl_tools.DocstringProfile_t": "/__WTRL_OBJECTS__/sdv.doc.waterloo.mcp.wtrl_tools.DocstringProfile_t",
+        "sdv.doc.waterloo.mcp.wtrl_tools.DocstringMode_t": "/__WTRL_OBJECTS__/sdv.doc.waterloo.mcp.wtrl_tools.DocstringMode_t",
+        "sdv.doc.waterloo.mcp.wtrl_tools.DocstringIndentMode_t": "/__WTRL_OBJECTS__/sdv.doc.waterloo.mcp.wtrl_tools.DocstringIndentMode_t",
+        "sdv.doc.waterloo.mcp.wtrl_tools.DocstringJsonMode_t": "/__WTRL_OBJECTS__/sdv.doc.waterloo.mcp.wtrl_tools.DocstringJsonMode_t"
     },
     "__WTRL_TOC_VARIABLES__": {},
-    "__WTRL_TOC_CONSTANTS__": {},
+    "__WTRL_TOC_CONSTANTS__": {
+        "sdv.doc.waterloo.docitem_helper.Trait.ABSTRACT": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.Trait.ABSTRACT",
+        "sdv.doc.waterloo.docitem_helper.Trait.FINAL": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.Trait.FINAL",
+        "sdv.doc.waterloo.docitem_helper.Scope.PUBLIC": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.Scope.PUBLIC",
+        "sdv.doc.waterloo.docitem_helper.Scope.EXTENSION": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.Scope.EXTENSION",
+        "sdv.doc.waterloo.docitem_helper.Scope.CORE": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.Scope.CORE",
+        "sdv.doc.waterloo.docitem_helper.Flavour.RAW": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.Flavour.RAW",
+        "sdv.doc.waterloo.docitem_helper.Flavour.RFC_2119": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.Flavour.RFC_2119",
+        "sdv.doc.waterloo.docitem_helper.Flavour.MARKDOWN": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.Flavour.MARKDOWN",
+        "sdv.doc.waterloo.docitem_helper.Format.JSON": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.Format.JSON",
+        "sdv.doc.waterloo.docitem_helper.Format.YAML": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.Format.YAML",
+        "sdv.doc.waterloo.docitem_helper.Format.MD": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.Format.MD",
+        "sdv.doc.waterloo.docitem_helper.Status.EXPERIMENTAL": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.Status.EXPERIMENTAL",
+        "sdv.doc.waterloo.docitem_helper.Status.STABLE": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.Status.STABLE",
+        "sdv.doc.waterloo.docitem_helper.Status.FROZEN": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.Status.FROZEN",
+        "sdv.doc.waterloo.docitem_helper.Status.DEPRECATED": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.Status.DEPRECATED",
+        "sdv.doc.waterloo.docitem_helper.Status.DRAFT": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.Status.DRAFT"
+    },
     "__WTRL_OBJECTS__": {
         "wtrl_server": {
             "path": "/server/devel/sdv/privat/uwe/source/sdv_doc_waterloo/package_main/src/sdv/doc/waterloo/mcp/wtrl_server.py",
@@ -107,6 +189,1141 @@
                         "Build the MCP app according to the provided configuration, including loading the configured data roots and defining the MCP tools for accessing them."
                     ]
                 }
+            }
+        },
+        "sdv.doc.waterloo.mcp.wtrl_tools.ExampleRef": {
+            "signature": {
+                "text": "BaseModel.__init__(self, /, **data: 'Any') -> 'None'",
+                "parameters": [
+                    {
+                        "name": "data",
+                        "kind": "VAR_KEYWORD",
+                        "annotation": "Any",
+                        "default": null
+                    }
+                ],
+                "returns": "None"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "class",
+                    "normative_sections": [
+                        "Contract"
+                    ],
+                    "scope": [
+                        "extension"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST represent one example reference in the Waterloo MCP server.",
+                        "MUST keep the reference compact and stable so that lookup results can be reused directly by MCP clients."
+                    ],
+                    "constructor": [
+                        "MUST accept the following fields:",
+                        "- root_id: stable root identifier of the object that owns the example reference.",
+                        "- example_path: canonical path inside __WTRL_EXAMPLES__.",
+                        "- title: optional human-readable name.",
+                        "- lang: language tag of the example payload.",
+                        "- size: raw octet size of the example payload."
+                    ]
+                },
+                "Notes": {
+                    "Purpose": [
+                        "This record is the canonical Waterloo representation for structured example lookups."
+                    ]
+                }
+            }
+        },
+        "sdv.doc.waterloo.mcp.wtrl_tools": {
+            "path": "/server/devel/sdv/privat/uwe/source/sdv_doc_waterloo/package_main/src/sdv/doc/waterloo/mcp/wtrl_tools.py",
+            "doc": {
+                "Preamble": {
+                    "profile": "module",
+                    "normative_sections": [
+                        "Contract",
+                        "Public_classes",
+                        "Public_functions",
+                        "Public_types"
+                    ],
+                    "scope": [
+                        "extension"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST provide the tool set for the Waterloo MCP-server."
+                    ]
+                },
+                "Public_classes": [
+                    "ExampleRef",
+                    "ReferenceRecord",
+                    "SearchObjectsFilter",
+                    "SearchSectionsFilter",
+                    "SearchTextFilter"
+                ],
+                "Public_functions": [
+                    "list_roots",
+                    "get_root",
+                    "get_object",
+                    "get_section",
+                    "get_subsection",
+                    "get_references",
+                    "get_examples",
+                    "get_example_source",
+                    "search_objects",
+                    "search_sections",
+                    "search_text",
+                    "gen_docstring"
+                ],
+                "Function_overview": {
+                    "list_roots": [
+                        "List the configured Waterloo roots with stable identifiers."
+                    ],
+                    "get_root": [
+                        "Resolve one configured root by its stable identifier and return the loaded JSON document."
+                    ],
+                    "get_object": [
+                        "Resolve one object by QID inside one configured root and return the loaded object record."
+                    ],
+                    "get_section": [
+                        "Resolve one named section of one object inside one configured root and return the stored section value."
+                    ],
+                    "get_subsection": [
+                        "Resolve one named subsection of one section of one object inside one configured root and return the stored subsection value."
+                    ],
+                    "get_references": [
+                        "Return the structured incoming See_also references for one object using a reverse lookup map."
+                    ],
+                    "get_examples": [
+                        "Return example metadata for one object using the structured __WTRL_EXAMPLES__ data."
+                    ],
+                    "get_example_source": [
+                        "Return the source text for one example reference using the structured __WTRL_EXAMPLES__ data."
+                    ],
+                    "search_objects": [
+                        "Search for object QIDs with optional structural filters and return stable triples."
+                    ],
+                    "search_sections": [
+                        "Search for stored section and subsection labels with optional structural filters."
+                    ],
+                    "search_text": [
+                        "Search for textual content with optional structural filters and compact excerpts."
+                    ],
+                    "gen_docstring": [
+                        "Generate a Waterloo docstring template for a given profile and return a",
+                        "docstring text together with a JSON placeholder snippet."
+                    ]
+                },
+                "Public_types": {
+                    "SearchObjectKind_t": [
+                        "The kind of object to search for, such as module, class, callable, type, constant, or variable."
+                    ],
+                    "SearchTextMatchMode_t": [
+                        "The mode of matching text search terms. Currently only literal matching is supported."
+                    ],
+                    "SearchTextTermMode_t": [
+                        "The mode of combining multiple search terms in text search. Can be |value|`any` or |value|`all`."
+                    ],
+                    "DocstringProfile_t": [
+                        "The profile to target when generating a docstring template, one of |value|`module`, |value|`class`, |value|`function`, or |value|`method`."
+                    ],
+                    "DocstringMode_t": [
+                        "The mode of the docstring template, either |value|`minimal` or |value|`full`."
+                    ],
+                    "DocstringIndentMode_t": [
+                        "The indentation mode for generated docstrings, either |value|`tab` or |value|`spc4`."
+                    ],
+                    "DocstringJsonMode_t": [
+                        "The JSON output mode for generated docstrings, either |value|`full` or |value|`doc_only`."
+                    ]
+                }
+            }
+        },
+        "sdv.doc.waterloo.mcp.wtrl_tools.ReferenceRecord": {
+            "signature": {
+                "text": "BaseModel.__init__(self, /, **data: 'Any') -> 'None'",
+                "parameters": [
+                    {
+                        "name": "data",
+                        "kind": "VAR_KEYWORD",
+                        "annotation": "Any",
+                        "default": null
+                    }
+                ],
+                "returns": "None"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "class",
+                    "normative_sections": [
+                        "Contract"
+                    ],
+                    "scope": [
+                        "extension"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST represent one incoming structured See_also reference in the Waterloo MCP server.",
+                        "MUST keep the record compact and stable so that lookup results can be reused directly by MCP clients."
+                    ],
+                    "constructor": [
+                        "MUST accept the following fields:",
+                        "- source_root_id: stable root identifier of the object that holds the See_also link.",
+                        "- source_qid: fully qualified identifier of the source object.",
+                        "- source_profile: Waterloo docstring profile of the source object.",
+                        "- is_normative: whether the See_also link was recorded in a normative section."
+                    ]
+                },
+                "Notes": {
+                    "Purpose": [
+                        "This record is the canonical Waterloo representation for reverse See_also lookups."
+                    ]
+                }
+            }
+        },
+        "sdv.doc.waterloo.mcp.wtrl_tools.SearchObjectsFilter": {
+            "signature": {
+                "text": "BaseModel.__init__(self, /, **data: 'Any') -> 'None'",
+                "parameters": [
+                    {
+                        "name": "data",
+                        "kind": "VAR_KEYWORD",
+                        "annotation": "Any",
+                        "default": null
+                    }
+                ],
+                "returns": "None"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "class",
+                    "normative_sections": [
+                        "Contract"
+                    ],
+                    "scope": [
+                        "extension"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST represent the reusable structural filters for object searches in the Waterloo MCP server.",
+                        "MUST allow the caller to omit any field by leaving it |lit|`None`.",
+                        "MUST keep the documented fields stable for existing clients."
+                    ],
+                    "constructor": [
+                        "MUST accept the following fields:",
+                        "- root_id: Optional root identifier filter.",
+                        "- kind: Optional object kind filter.",
+                        "- scope: Optional exact scope filter."
+                    ]
+                },
+                "Notes": {
+                    "Purpose": [
+                        "This model is part of the public MCP API and is intentionally small so that it can grow additively."
+                    ]
+                }
+            }
+        },
+        "sdv.doc.waterloo.mcp.wtrl_tools.SearchSectionsFilter": {
+            "signature": {
+                "text": "BaseModel.__init__(self, /, **data: 'Any') -> 'None'",
+                "parameters": [
+                    {
+                        "name": "data",
+                        "kind": "VAR_KEYWORD",
+                        "annotation": "Any",
+                        "default": null
+                    }
+                ],
+                "returns": "None"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "class",
+                    "normative_sections": [
+                        "Contract"
+                    ],
+                    "scope": [
+                        "extension"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST represent the reusable structural filters for section searches in the Waterloo MCP server.",
+                        "MUST allow the caller to omit any field by leaving it |lit|`None`.",
+                        "MUST keep the documented fields stable for existing clients."
+                    ],
+                    "constructor": [
+                        "MUST accept the following fields:",
+                        "- root_id: Optional root identifier filter.",
+                        "- qid: Optional object QID filter.",
+                        "- kind: Optional object kind filter.",
+                        "- scope: Optional exact scope filter."
+                    ]
+                },
+                "Notes": {
+                    "Purpose": [
+                        "This model is part of the public MCP API and is intentionally small so that it can grow additively."
+                    ]
+                }
+            }
+        },
+        "sdv.doc.waterloo.mcp.wtrl_tools.SearchTextFilter": {
+            "signature": {
+                "text": "BaseModel.__init__(self, /, **data: 'Any') -> 'None'",
+                "parameters": [
+                    {
+                        "name": "data",
+                        "kind": "VAR_KEYWORD",
+                        "annotation": "Any",
+                        "default": null
+                    }
+                ],
+                "returns": "None"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "class",
+                    "normative_sections": [
+                        "Contract"
+                    ],
+                    "scope": [
+                        "extension"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST represent the reusable structural and matching filters for text searches in the Waterloo MCP server.",
+                        "MUST allow the caller to omit any field by leaving it |lit|`None`.",
+                        "MUST keep the documented fields stable for existing clients."
+                    ],
+                    "constructor": [
+                        "MUST accept the following fields:",
+                        "- root_id: Optional root identifier filter.",
+                        "- qid: Optional object QID filter.",
+                        "- kind: Optional object kind filter.",
+                        "- scope: Optional exact scope filter.",
+                        "- ignore_case: Optional case-insensitive matching toggle.",
+                        "- strip_roles: Optional markup and role stripping toggle.",
+                        "- match_mode: Optional literal matching mode.",
+                        "- term_mode: Optional any/all term combination mode."
+                    ]
+                },
+                "Notes": {
+                    "Purpose": [
+                        "This model is part of the public MCP API and is intentionally small so that it can grow additively."
+                    ]
+                }
+            }
+        },
+        "sdv.doc.waterloo.mcp.wtrl_tools.gen_docstring": {
+            "signature": {
+                "text": "gen_docstring(profile: 'DocstringProfile_t', signature: 'str | None' = None, mode: 'DocstringMode_t' = 'minimal', indent_mode: 'DocstringIndentMode_t' = 'tab', json_mode: 'DocstringJsonMode_t' = 'full') -> 'dict[str, WtrlJsonNode_t]'",
+                "parameters": [
+                    {
+                        "name": "profile",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "DocstringProfile_t",
+                        "default": null
+                    },
+                    {
+                        "name": "signature",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str | None",
+                        "default": "None"
+                    },
+                    {
+                        "name": "mode",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "DocstringMode_t",
+                        "default": "'minimal'"
+                    },
+                    {
+                        "name": "indent_mode",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "DocstringIndentMode_t",
+                        "default": "'tab'"
+                    },
+                    {
+                        "name": "json_mode",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "DocstringJsonMode_t",
+                        "default": "'full'"
+                    }
+                ],
+                "returns": "dict[str, WtrlJsonNode_t]"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ],
+                    "scope": [
+                        "extension"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST generate a Waterloo docstring template for the requested profile.",
+                        "MUST return the generated docstring together with a JSON snippet that represents the docstring structure and content.",
+                        "MUST keep the JSON snippet compatible with the existing Waterloo JSON document shape in later phases."
+                    ]
+                },
+                "Parameters": {
+                    "profile": "Target Waterloo docstring profile.",
+                    "signature": [
+                        "Optional textual signature for non-module profiles."
+                    ],
+                    "mode": [
+                        "Template mode, either ``minimal`` or ``full``."
+                    ],
+                    "indent_mode": [
+                        "Indentation mode for the returned docstring text, either ``tab`` or ``spc4``."
+                    ],
+                    "json_mode": [
+                        "JSON output mode, either ``full`` or ``doc_only``."
+                    ]
+                },
+                "Returns": [
+                    "A dictionary with the generated ``docstring`` text and a ``json_snippet`` that represents the docstring structure and content."
+                ],
+                "Raises": {
+                    "ValueError": [
+                        "MAY be raised if the profile requires a signature and none is given."
+                    ]
+                }
+            }
+        },
+        "sdv.doc.waterloo.mcp.wtrl_tools.get_object": {
+            "signature": {
+                "text": "get_object(root_id: 'str', qid: 'str', roots: 'list[Mapping[str, WtrlJsonNode_t]]') -> 'dict[str, WtrlJsonNode_t]'",
+                "parameters": [
+                    {
+                        "name": "root_id",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    },
+                    {
+                        "name": "qid",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    },
+                    {
+                        "name": "roots",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "list[Mapping[str, WtrlJsonNode_t]]",
+                        "default": null
+                    }
+                ],
+                "returns": "dict[str, WtrlJsonNode_t]"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ],
+                    "scope": [
+                        "extension"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST resolve one QID inside one configured root and return the stored object record together with the root metadata."
+                    ]
+                },
+                "Parameters": {
+                    "root_id": [
+                        "The canonical root identifier derived from the canonical absolute root path."
+                    ],
+                    "qid": [
+                        "The fully qualified identifier of the requested object inside the loaded Waterloo JSON document."
+                    ],
+                    "roots": [
+                        "The list of configured root entries."
+                    ]
+                },
+                "Returns": [
+                    "A dictionary describing the root, the requested QID, and the stored object record."
+                ],
+                "Raises": {
+                    "ValueError": [
+                        "MAY raise if the root identifier or QID is unknown."
+                    ],
+                    "FileNotFoundError": [
+                        "MAY raise if the configured root path no longer exists."
+                    ],
+                    "json.JSONDecodeError": [
+                        "MAY raise if the root file is not valid JSON."
+                    ]
+                }
+            }
+        },
+        "sdv.doc.waterloo.mcp.wtrl_tools.get_examples": {
+            "signature": {
+                "text": "get_examples(root_id: 'str', qid: 'str', roots: 'list[Mapping[str, WtrlJsonNode_t]]') -> 'list[ExampleRef]'",
+                "parameters": [
+                    {
+                        "name": "root_id",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    },
+                    {
+                        "name": "qid",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    },
+                    {
+                        "name": "roots",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "list[Mapping[str, WtrlJsonNode_t]]",
+                        "default": null
+                    }
+                ],
+                "returns": "list[ExampleRef]"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ],
+                    "scope": [
+                        "extension"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST return structured example metadata for one QID from the configured roots.",
+                        "MUST return an empty list if the object exists but has no examples.",
+                        "MUST treat the example paths as canonical references inside __WTRL_EXAMPLES__."
+                    ]
+                },
+                "Parameters": {
+                    "root_id": [
+                        "The canonical root identifier derived from the canonical absolute root path."
+                    ],
+                    "qid": [
+                        "The fully qualified identifier of the requested object inside the loaded Waterloo JSON document."
+                    ],
+                    "roots": [
+                        "The list of configured root entries."
+                    ]
+                },
+                "Returns": [
+                    "A list of ExampleRef records for the object."
+                ],
+                "Raises": {
+                    "ValueError": [
+                        "MAY raise if the root identifier or QID is unknown."
+                    ]
+                }
+            }
+        },
+        "sdv.doc.waterloo.mcp.wtrl_tools.get_example_source": {
+            "signature": {
+                "text": "get_example_source(root_id: 'str', example_path: 'str', roots: 'list[Mapping[str, WtrlJsonNode_t]]') -> 'str'",
+                "parameters": [
+                    {
+                        "name": "root_id",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    },
+                    {
+                        "name": "example_path",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    },
+                    {
+                        "name": "roots",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "list[Mapping[str, WtrlJsonNode_t]]",
+                        "default": null
+                    }
+                ],
+                "returns": "str"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ],
+                    "scope": [
+                        "extension"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST return the raw source text for one canonical example reference.",
+                        "MUST treat the example path as a canonical path inside __WTRL_EXAMPLES__."
+                    ]
+                },
+                "Parameters": {
+                    "root_id": [
+                        "The canonical root identifier derived from the canonical absolute root path."
+                    ],
+                    "example_path": [
+                        "The canonical example path returned by get_examples."
+                    ],
+                    "roots": [
+                        "The list of configured root entries."
+                    ]
+                },
+                "Returns": [
+                    "The raw example source text."
+                ],
+                "Raises": {
+                    "ValueError": [
+                        "MAY raise if the root identifier is unknown or if the example reference is unknown."
+                    ]
+                }
+            }
+        },
+        "sdv.doc.waterloo.mcp.wtrl_tools.get_references": {
+            "signature": {
+                "text": "get_references(reference_index: 'Mapping[tuple[str, str], list[ReferenceRecord]]', root_id: 'str', qid: 'str', normative_only: 'bool' = False) -> 'list[ReferenceRecord]'",
+                "parameters": [
+                    {
+                        "name": "reference_index",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "Mapping[tuple[str, str], list[ReferenceRecord]]",
+                        "default": null
+                    },
+                    {
+                        "name": "root_id",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    },
+                    {
+                        "name": "qid",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    },
+                    {
+                        "name": "normative_only",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "bool",
+                        "default": "False"
+                    }
+                ],
+                "returns": "list[ReferenceRecord]"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ],
+                    "scope": [
+                        "extension"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST return the structured incoming See_also references for one object from the provided reverse lookup map.",
+                        "MUST treat the lookup as a simple read-only reverse-map access and filter the result when normative_only is requested."
+                    ]
+                },
+                "Parameters": {
+                    "reference_index": [
+                        "The reverse lookup map built by the server at startup."
+                    ],
+                    "root_id": [
+                        "The canonical root identifier of the object whose incoming references should be returned."
+                    ],
+                    "qid": [
+                        "The fully qualified identifier of the object whose incoming references should be returned."
+                    ],
+                    "normative_only": [
+                        "Whether to keep only references recorded from a normative See_also section."
+                    ]
+                },
+                "Returns": [
+                    "A list of incoming structured See_also reference records."
+                ],
+                "Raises": {}
+            }
+        },
+        "sdv.doc.waterloo.mcp.wtrl_tools.get_root": {
+            "signature": {
+                "text": "get_root(root_id: 'str', roots: 'list[Mapping[str, WtrlJsonNode_t]]') -> 'dict[str, WtrlJsonNode_t]'",
+                "parameters": [
+                    {
+                        "name": "root_id",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    },
+                    {
+                        "name": "roots",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "list[Mapping[str, WtrlJsonNode_t]]",
+                        "default": null
+                    }
+                ],
+                "returns": "dict[str, WtrlJsonNode_t]"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ],
+                    "scope": [
+                        "extension"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST resolve a configured root by its canonical root identifier and return the root metadata together with the loaded JSON document."
+                    ]
+                },
+                "Parameters": {
+                    "root_id": [
+                        "The canonical root identifier derived from the canonical absolute root path."
+                    ],
+                    "roots": [
+                        "The list of configured root entries."
+                    ]
+                },
+                "Returns": [
+                    "A dictionary describing the root and containing the parsed JSON document."
+                ],
+                "Raises": {
+                    "ValueError": [
+                        "MAY raise if the root identifier is unknown."
+                    ],
+                    "FileNotFoundError": [
+                        "MAY raise if the configured root path no longer exists."
+                    ],
+                    "json.JSONDecodeError": [
+                        "MAY raise if the root file is not valid JSON."
+                    ]
+                }
+            }
+        },
+        "sdv.doc.waterloo.mcp.wtrl_tools.get_section": {
+            "signature": {
+                "text": "get_section(root_id: 'str', qid: 'str', section: 'str', roots: 'list[Mapping[str, WtrlJsonNode_t]]') -> 'dict[str, WtrlJsonNode_t]'",
+                "parameters": [
+                    {
+                        "name": "root_id",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    },
+                    {
+                        "name": "qid",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    },
+                    {
+                        "name": "section",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    },
+                    {
+                        "name": "roots",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "list[Mapping[str, WtrlJsonNode_t]]",
+                        "default": null
+                    }
+                ],
+                "returns": "dict[str, WtrlJsonNode_t]"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ],
+                    "scope": [
+                        "extension"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST resolve one named section of one QID inside one configured root and return the stored section value together with the relevant metadata."
+                    ]
+                },
+                "Parameters": {
+                    "root_id": [
+                        "The canonical root identifier derived from the canonical absolute root path."
+                    ],
+                    "qid": [
+                        "The fully qualified identifier of the requested object inside the loaded Waterloo JSON document."
+                    ],
+                    "section": [
+                        "The name of the requested stored section, for example ``Contract`` or ``Public_functions``."
+                    ],
+                    "roots": [
+                        "The list of configured root entries."
+                    ]
+                },
+                "Returns": [
+                    "A dictionary describing the root, the requested QID, the requested section, and the stored section value."
+                ],
+                "Raises": {
+                    "ValueError": [
+                        "MAY raise if the root identifier, QID, or section name is unknown."
+                    ],
+                    "FileNotFoundError": [
+                        "MAY raise if the configured root path no longer exists."
+                    ],
+                    "json.JSONDecodeError": [
+                        "MAY raise if the root file is not valid JSON."
+                    ]
+                }
+            }
+        },
+        "sdv.doc.waterloo.mcp.wtrl_tools.get_subsection": {
+            "signature": {
+                "text": "get_subsection(root_id: 'str', qid: 'str', section: 'str', subsection: 'str', roots: 'list[Mapping[str, WtrlJsonNode_t]]') -> 'dict[str, WtrlJsonNode_t]'",
+                "parameters": [
+                    {
+                        "name": "root_id",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    },
+                    {
+                        "name": "qid",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    },
+                    {
+                        "name": "section",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    },
+                    {
+                        "name": "subsection",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    },
+                    {
+                        "name": "roots",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "list[Mapping[str, WtrlJsonNode_t]]",
+                        "default": null
+                    }
+                ],
+                "returns": "dict[str, WtrlJsonNode_t]"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ],
+                    "scope": [
+                        "extension"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST resolve one named subsection of one named section of one QID inside one configured root and return the stored subsection value together with the relevant metadata."
+                    ]
+                },
+                "Parameters": {
+                    "root_id": [
+                        "The canonical root identifier derived from the canonical absolute root path."
+                    ],
+                    "qid": [
+                        "The fully qualified identifier of the requested object inside the loaded Waterloo JSON document."
+                    ],
+                    "section": [
+                        "The name of the requested stored section."
+                    ],
+                    "subsection": [
+                        "The name of the requested subsection inside the selected section."
+                    ],
+                    "roots": [
+                        "The list of configured root entries."
+                    ]
+                },
+                "Returns": [
+                    "A dictionary describing the root, the requested QID, the requested section, the requested subsection, and the stored subsection value."
+                ],
+                "Raises": {
+                    "ValueError": [
+                        "MAY raise if the root identifier, QID, section name, or subsection name is unknown."
+                    ],
+                    "FileNotFoundError": [
+                        "MAY raise if the configured root path no longer exists."
+                    ],
+                    "json.JSONDecodeError": [
+                        "MAY raise if the root file is not valid JSON."
+                    ]
+                }
+            }
+        },
+        "sdv.doc.waterloo.mcp.wtrl_tools.list_roots": {
+            "signature": {
+                "text": "list_roots(roots: 'list[Mapping[str, WtrlJsonNode_t]]') -> 'list[dict[str, WtrlJsonNode_t]]'",
+                "parameters": [
+                    {
+                        "name": "roots",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "list[Mapping[str, WtrlJsonNode_t]]",
+                        "default": null
+                    }
+                ],
+                "returns": "list[dict[str, WtrlJsonNode_t]]"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ],
+                    "scope": [
+                        "extension"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST extract attributes from the provided root entries (as given in the configuration), derive a stable root identifier from the canonical absolute path of each root locator, and return a list of dictionaries with specific keys.",
+                        "MUST define the |attr|`root_id` of one root as a short stable hash of that canonical absolute path, independent of labels and configuration order."
+                    ]
+                },
+                "Parameters": {
+                    "roots": [
+                        "The list of root configurations to process."
+                    ]
+                },
+                "Returns": [
+                    "A list of dictionaries, each representing a root document with its attributes."
+                ],
+                "Raises": {}
+            }
+        },
+        "sdv.doc.waterloo.mcp.wtrl_tools.search_objects": {
+            "signature": {
+                "text": "search_objects(expression: 'str', roots: 'list[Mapping[str, WtrlJsonNode_t]]', filter: 'SearchObjectsFilter | None' = None) -> 'list[tuple[str, str, str]]'",
+                "parameters": [
+                    {
+                        "name": "expression",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    },
+                    {
+                        "name": "roots",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "list[Mapping[str, WtrlJsonNode_t]]",
+                        "default": null
+                    },
+                    {
+                        "name": "filter",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "SearchObjectsFilter | None",
+                        "default": "None"
+                    }
+                ],
+                "returns": "list[tuple[str, str, str]]"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ],
+                    "scope": [
+                        "extension"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST search configured Waterloo roots for object QIDs matching the given expression and optional structural filters, and return stable triples of root ID, QID, and kind.",
+                        "MUST treat wildcard expressions as segment-aware matches over the QID, with the last segment being the primary lookup target for simple names."
+                    ]
+                },
+                "Parameters": {
+                    "expression": [
+                        "The search expression. Wildcards are allowed."
+                    ],
+                    "filter": [
+                        "Optional structural filters such as root ID, kind, and scope."
+                    ],
+                    "roots": [
+                        "The list of configured root entries."
+                    ]
+                },
+                "Returns": [
+                    "A list of triples ``(root_id, qid, kind)`` for matching objects."
+                ],
+                "Raises": {}
+            }
+        },
+        "sdv.doc.waterloo.mcp.wtrl_tools.search_sections": {
+            "signature": {
+                "text": "search_sections(expression: 'str', roots: 'list[Mapping[str, WtrlJsonNode_t]]', filter: 'SearchSectionsFilter | None' = None) -> 'list[dict[str, WtrlJsonNode_t]]'",
+                "parameters": [
+                    {
+                        "name": "expression",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    },
+                    {
+                        "name": "roots",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "list[Mapping[str, WtrlJsonNode_t]]",
+                        "default": null
+                    },
+                    {
+                        "name": "filter",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "SearchSectionsFilter | None",
+                        "default": "None"
+                    }
+                ],
+                "returns": "list[dict[str, WtrlJsonNode_t]]"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ],
+                    "scope": [
+                        "extension"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST search configured Waterloo roots for stored section and subsection labels matching the given expression and optional structural filters, and return compact result records.",
+                        "MUST treat wildcard expressions as segment-aware matches over section and subsection labels."
+                    ]
+                },
+                "Parameters": {
+                    "expression": [
+                        "The search expression. Wildcards are allowed."
+                    ],
+                    "filter": [
+                        "Optional structural filters such as root ID, QID, kind, and scope."
+                    ],
+                    "roots": [
+                        "The list of configured root entries."
+                    ]
+                },
+                "Returns": [
+                    "A list of dictionaries describing matching section or subsection labels together with their object and root location."
+                ],
+                "Raises": {}
+            }
+        },
+        "sdv.doc.waterloo.mcp.wtrl_tools.search_text": {
+            "signature": {
+                "text": "search_text(terms: 'list[str]', roots: 'list[Mapping[str, WtrlJsonNode_t]]', filter: 'SearchTextFilter | None' = None) -> 'list[dict[str, WtrlJsonNode_t]]'",
+                "parameters": [
+                    {
+                        "name": "terms",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "list[str]",
+                        "default": null
+                    },
+                    {
+                        "name": "roots",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "list[Mapping[str, WtrlJsonNode_t]]",
+                        "default": null
+                    },
+                    {
+                        "name": "filter",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "SearchTextFilter | None",
+                        "default": "None"
+                    }
+                ],
+                "returns": "list[dict[str, WtrlJsonNode_t]]"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ],
+                    "scope": [
+                        "extension"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST search configured Waterloo roots for textual content matching the given search terms and optional structural filters, and return compact result records with excerpts.",
+                        "MUST treat the search terms as a list so that clients can fan out over multiple terms without inventing a mini query language.",
+                        "MUST keep the first implementation exact and literal while still honoring the explicit term-mode and matching-mode fields in the filter object."
+                    ]
+                },
+                "Parameters": {
+                    "terms": [
+                        "The search terms. Each term is treated literally in the first implementation."
+                    ],
+                    "filter": [
+                        "Optional structural and matching filters such as root ID, QID, kind, scope, case folding, role stripping, and term mode."
+                    ],
+                    "roots": [
+                        "The list of configured root entries."
+                    ]
+                },
+                "Returns": [
+                    "A list of dictionaries describing matching text locations together with their object and root location, plus a compact excerpt."
+                ],
+                "Raises": {}
             }
         },
         "wtrl_server.read_package_readme": {
@@ -174,6 +1391,9 @@
                 "@mcp.tool(name=\"get_object\", description=\"Read one Waterloo object by qid from a configured root.\")",
                 "@mcp.tool(name=\"get_section\", description=\"Read one stored section of one Waterloo object.\")",
                 "@mcp.tool(name=\"get_subsection\", description=\"Read one stored subsection of one Waterloo object.\")",
+                "@mcp.tool(name=\"get_examples\", description=\"Read structured example metadata for one Waterloo object.\")",
+                "@mcp.tool(name=\"get_example_source\", description=\"Read the source text for one Waterloo example reference.\")",
+                "@mcp.tool(name=\"get_references\", description=\"Read structured incoming See_also references for one Waterloo object.\")",
                 "@mcp.tool(name=\"search_objects\", description=\"Search Waterloo objects by expression and structural filters.\")",
                 "@mcp.tool(name=\"search_sections\", description=\"Search Waterloo section and subsection labels by expression and structural filters.\")",
                 "@mcp.tool(name=\"search_text\", description=\"Search Waterloo text content by terms and structural filters.\")",
@@ -248,6 +1468,12 @@
                 "The indentation mode for generated docstrings, either |value|`tab` or |value|`spc4`."
             ]
         },
+        "wtrl_tools.DocstringJsonMode_t": {
+            "doc": {},
+            "doc_lines": [
+                "The JSON output mode for generated docstrings, either |value|`full` or |value|`doc_only`."
+            ]
+        },
         "wtrl_tools": {
             "path": "/server/devel/sdv/privat/uwe/source/sdv_doc_waterloo/package_main/src/sdv/doc/waterloo/mcp/wtrl_tools.py",
             "doc": {
@@ -269,6 +1495,8 @@
                     ]
                 },
                 "Public_classes": [
+                    "ExampleRef",
+                    "ReferenceRecord",
                     "SearchObjectsFilter",
                     "SearchSectionsFilter",
                     "SearchTextFilter"
@@ -279,6 +1507,9 @@
                     "get_object",
                     "get_section",
                     "get_subsection",
+                    "get_references",
+                    "get_examples",
+                    "get_example_source",
                     "search_objects",
                     "search_sections",
                     "search_text",
@@ -299,6 +1530,15 @@
                     ],
                     "get_subsection": [
                         "Resolve one named subsection of one section of one object inside one configured root and return the stored subsection value."
+                    ],
+                    "get_references": [
+                        "Return the structured incoming See_also references for one object using a reverse lookup map."
+                    ],
+                    "get_examples": [
+                        "Return example metadata for one object using the structured __WTRL_EXAMPLES__ data."
+                    ],
+                    "get_example_source": [
+                        "Return the source text for one example reference using the structured __WTRL_EXAMPLES__ data."
                     ],
                     "search_objects": [
                         "Search for object QIDs with optional structural filters and return stable triples."
@@ -332,6 +1572,1837 @@
                     ],
                     "DocstringIndentMode_t": [
                         "The indentation mode for generated docstrings, either |value|`tab` or |value|`spc4`."
+                    ],
+                    "DocstringJsonMode_t": [
+                        "The JSON output mode for generated docstrings, either |value|`full` or |value|`doc_only`."
+                    ]
+                }
+            }
+        },
+        "sdv.doc.waterloo.docitem_genutil": {
+            "path": "/server/devel/sdv/privat/uwe/source/sdv_doc_waterloo/package_main/src/sdv/doc/waterloo/docitem_genutil.py",
+            "doc": {
+                "Preamble": {
+                    "profile": "module",
+                    "normative_sections": [
+                        "Contract",
+                        "Public_functions"
+                    ],
+                    "scope": [
+                        "extension"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST provide functions for generating minimal and full waterloo docstring templates.",
+                        "MUST represent the Single Source of Truth for the structure and content of these templates.",
+                        "SHOULD represent the Single Source of Truth for future cuts of such templates.",
+                        "MUST provide JSON representations of these templates as a result from a canonical generation process (e.g. a script) in order to avoid drift."
+                    ]
+                },
+                "Description": [
+                    "This module is intended for IDE-extension workflows.",
+                    "A typical use case is a VSCode context-menu action on a |lit|`class` or |lit|`def` line:",
+                    "parse the selected header fragment, infer/select a profile, and generate a minimal or full Waterloo docstring template.",
+                    "The signature-to-AST bridge in |func|`parse_signature_fragment` is shared by MCP",
+                    "and IDE workflows. Keep it close to the AST-based generators so that the",
+                    "template text and any future JSON snippets continue to derive from the same",
+                    "canonical structure."
+                ],
+                "Public_functions": [
+                    "parse_source_fragment",
+                    "infer_docstring_profile",
+                    "parse_signature_fragment",
+                    "generate_minimal_docstring",
+                    "generate_full_docstring",
+                    "generate_minimal_docstring_from_node",
+                    "generate_full_docstring_from_node"
+                ],
+                "Notes": {
+                    "Important": [
+                        "JSON templates for minimal and full docstring templates",
+                        "can be generated by means of |file|`$MAIN/tools/make_docstring_templates_json.sh`.",
+                        "This script should be used in order to avoid drift. It represents the canonical generation process",
+                        "for these templates, and the resulting JSON files are the Single Source of Truth for their structure and content.",
+                        "Any future JSON snippets produced from signature fragments should stay aligned with",
+                        "the same canonical structure in |path|`package_main/templates-json/out`."
+                    ]
+                }
+            }
+        },
+        "sdv.doc.waterloo.docitem_helper.Trait.ABSTRACT": {
+            "doc": {},
+            "doc_lines": [
+                "The class is abstract, i.e. it cannot be instantiated directly and is not a complete specification of the concept."
+            ]
+        },
+        "sdv.doc.waterloo.docitem_helper.Trait.FINAL": {
+            "doc": {},
+            "doc_lines": [
+                "The class is final, i.e. it cannot be subclassed and is a complete specification of the concept."
+            ]
+        },
+        "sdv.doc.waterloo.docitem_helper.Trait": {
+            "signature": {
+                "text": "object.__init__(self, /, *args, **kwargs)",
+                "parameters": [
+                    {
+                        "name": "args",
+                        "kind": "VAR_POSITIONAL",
+                        "annotation": null,
+                        "default": null
+                    },
+                    {
+                        "name": "kwargs",
+                        "kind": "VAR_KEYWORD",
+                        "annotation": null,
+                        "default": null
+                    }
+                ],
+                "returns": null
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "class",
+                    "normative_sections": [
+                        "Contract",
+                        "Public_constants"
+                    ],
+                    "scope": [
+                        "public"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST provide constants representing the traits of a class."
+                    ],
+                    "constructor": [
+                        "Inherit from |type|`str` and |type|`Enum`."
+                    ]
+                },
+                "Public_constants": {
+                    "ABSTRACT": [
+                        "The class is abstract, i.e. it cannot be instantiated directly and is not a complete specification of the concept."
+                    ],
+                    "FINAL": [
+                        "The class is final, i.e. it cannot be subclassed and is a complete specification of the concept."
+                    ]
+                }
+            }
+        },
+        "sdv.doc.waterloo.docitem_helper": {
+            "path": "/server/devel/sdv/privat/uwe/source/sdv_doc_waterloo/package_main/src/sdv/doc/waterloo/docitem_helper.py",
+            "doc": {}
+        },
+        "sdv.doc.waterloo.docitem_helper.Scope.PUBLIC": {
+            "doc": {},
+            "doc_lines": [
+                "Selects the public API."
+            ]
+        },
+        "sdv.doc.waterloo.docitem_helper.Scope.EXTENSION": {
+            "doc": {},
+            "doc_lines": [
+                "Selects the API for developers of plugin and extensions."
+            ]
+        },
+        "sdv.doc.waterloo.docitem_helper.Scope.CORE": {
+            "doc": {},
+            "doc_lines": [
+                "Selects the API for core developers."
+            ]
+        },
+        "sdv.doc.waterloo.docitem_helper.Scope": {
+            "signature": {
+                "text": "object.__init__(self, /, *args, **kwargs)",
+                "parameters": [
+                    {
+                        "name": "args",
+                        "kind": "VAR_POSITIONAL",
+                        "annotation": null,
+                        "default": null
+                    },
+                    {
+                        "name": "kwargs",
+                        "kind": "VAR_KEYWORD",
+                        "annotation": null,
+                        "default": null
+                    }
+                ],
+                "returns": null
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "class",
+                    "normative_sections": [
+                        "Contract",
+                        "Public_constants"
+                    ],
+                    "scope": [
+                        "public"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST provide constants representing available scopes.",
+                        "MUST provide a time-stable partial order for the constants."
+                    ],
+                    "constructor": [
+                        "Inherit from |type|`int`."
+                    ]
+                },
+                "Public_constants": {
+                    "PUBLIC": [
+                        "Selects the public API."
+                    ],
+                    "EXTENSION": [
+                        "Selects the API for developers of plugin and extensions."
+                    ],
+                    "CORE": [
+                        "Selects the API for core developers."
+                    ]
+                },
+                "Notes": {
+                    "Purpose": [
+                        "The scope is an optional parameter for rendering functions. It allows to restrict the set of rendered objects to a well-defined audience."
+                    ],
+                    "Values": [
+                        "The class only ensures the partial order but does not ensure particular values for the constants."
+                    ]
+                }
+            }
+        },
+        "sdv.doc.waterloo.docitem_helper.Flavour.RAW": {
+            "doc": {},
+            "doc_lines": [
+                "Example: | + Must + |"
+            ]
+        },
+        "sdv.doc.waterloo.docitem_helper.Flavour.RFC_2119": {
+            "doc": {},
+            "doc_lines": [
+                "Example: |lit|`MUST`"
+            ]
+        },
+        "sdv.doc.waterloo.docitem_helper.Flavour.MARKDOWN": {
+            "doc": {},
+            "doc_lines": [
+                "Example: |lit|`**MUST**`"
+            ]
+        },
+        "sdv.doc.waterloo.docitem_helper.Flavour": {
+            "signature": {
+                "text": "object.__init__(self, /, *args, **kwargs)",
+                "parameters": [
+                    {
+                        "name": "args",
+                        "kind": "VAR_POSITIONAL",
+                        "annotation": null,
+                        "default": null
+                    },
+                    {
+                        "name": "kwargs",
+                        "kind": "VAR_KEYWORD",
+                        "annotation": null,
+                        "default": null
+                    }
+                ],
+                "returns": null
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "class",
+                    "normative_sections": [
+                        "Contract",
+                        "Public_constants"
+                    ],
+                    "scope": [
+                        "public"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST provide constants representing available flavours for rendering Normativity Keywords."
+                    ],
+                    "constructor": [
+                        "Inherit from |type|`int`."
+                    ]
+                },
+                "Public_constants": {
+                    "RAW": [
+                        "Example: | + Must + |"
+                    ],
+                    "RFC_2119": [
+                        "Example: |lit|`MUST`"
+                    ],
+                    "MARKDOWN": [
+                        "Example: |lit|`**MUST**`"
+                    ]
+                }
+            }
+        },
+        "sdv.doc.waterloo.docitem_helper.Format.JSON": {
+            "doc": {},
+            "doc_lines": [
+                "Javascript Object Notation"
+            ]
+        },
+        "sdv.doc.waterloo.docitem_helper.Format.YAML": {
+            "doc": {},
+            "doc_lines": [
+                "YAML Ain't Markup Language"
+            ]
+        },
+        "sdv.doc.waterloo.docitem_helper.Format.MD": {
+            "doc": {},
+            "doc_lines": [
+                "Markdown."
+            ]
+        },
+        "sdv.doc.waterloo.docitem_helper.Format": {
+            "signature": {
+                "text": "object.__init__(self, /, *args, **kwargs)",
+                "parameters": [
+                    {
+                        "name": "args",
+                        "kind": "VAR_POSITIONAL",
+                        "annotation": null,
+                        "default": null
+                    },
+                    {
+                        "name": "kwargs",
+                        "kind": "VAR_KEYWORD",
+                        "annotation": null,
+                        "default": null
+                    }
+                ],
+                "returns": null
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "class",
+                    "normative_sections": [
+                        "Contract",
+                        "Public_constants"
+                    ],
+                    "scope": [
+                        "public"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST provide constants representing available output formats for string rendering."
+                    ],
+                    "constructor": [
+                        "Inherit from |type|`int`."
+                    ]
+                },
+                "Public_constants": {
+                    "JSON": [
+                        "Javascript Object Notation"
+                    ],
+                    "YAML": [
+                        "YAML Ain't Markup Language"
+                    ],
+                    "MD": [
+                        "Markdown."
+                    ]
+                }
+            }
+        },
+        "sdv.doc.waterloo.docitem_helper.Status.EXPERIMENTAL": {
+            "doc": {},
+            "doc_lines": [
+                "See rule |ref|`STA-004 <section_function_pramble>`."
+            ]
+        },
+        "sdv.doc.waterloo.docitem_helper.Status.STABLE": {
+            "doc": {},
+            "doc_lines": [
+                "See rule |ref|`STA-004 <section_function_pramble>`."
+            ]
+        },
+        "sdv.doc.waterloo.docitem_helper.Status.FROZEN": {
+            "doc": {},
+            "doc_lines": [
+                "See rule |ref|`STA-004 <section_function_pramble>`."
+            ]
+        },
+        "sdv.doc.waterloo.docitem_helper.Status.DEPRECATED": {
+            "doc": {},
+            "doc_lines": [
+                "See rule |ref|`STA-004 <section_function_pramble>`."
+            ]
+        },
+        "sdv.doc.waterloo.docitem_helper.Status.DRAFT": {
+            "doc": {},
+            "doc_lines": [
+                "See rule |ref|`STA-004 <section_function_pramble>`."
+            ]
+        },
+        "sdv.doc.waterloo.docitem_helper.Status": {
+            "signature": {
+                "text": "object.__init__(self, /, *args, **kwargs)",
+                "parameters": [
+                    {
+                        "name": "args",
+                        "kind": "VAR_POSITIONAL",
+                        "annotation": null,
+                        "default": null
+                    },
+                    {
+                        "name": "kwargs",
+                        "kind": "VAR_KEYWORD",
+                        "annotation": null,
+                        "default": null
+                    }
+                ],
+                "returns": null
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "class",
+                    "normative_sections": [
+                        "Contract",
+                        "Public_constants"
+                    ],
+                    "scope": [
+                        "public"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST provide constants representing the values of subsection |label|`Preamble.status`."
+                    ],
+                    "constructor": [
+                        "Inherit from |type|`Enum`."
+                    ]
+                },
+                "Public_constants": {
+                    "EXPERIMENTAL": [
+                        "See rule |ref|`STA-004 <section_function_pramble>`."
+                    ],
+                    "STABLE": [
+                        "See rule |ref|`STA-004 <section_function_pramble>`."
+                    ],
+                    "FROZEN": [
+                        "See rule |ref|`STA-004 <section_function_pramble>`."
+                    ],
+                    "DEPRECATED": [
+                        "See rule |ref|`STA-004 <section_function_pramble>`."
+                    ],
+                    "DRAFT": [
+                        "See rule |ref|`STA-004 <section_function_pramble>`."
+                    ]
+                },
+                "Notes": {
+                    "LoII": [
+                        "This docstring violates LoII in order to preserve SSoT,",
+                        "see |label|`Public_constants`."
+                    ]
+                }
+            }
+        },
+        "sdv.doc.waterloo.docitem_helper.ConfigTraversal": {
+            "signature": {
+                "text": "ConfigTraversal.__init__(self) -> 'None'",
+                "parameters": [],
+                "returns": "None"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "class",
+                    "normative_sections": [
+                        "Contract"
+                    ],
+                    "scope": [
+                        "public"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST provide public methods to configure object traversal for functions like |func|`gen_documentable_objects`.",
+                        "MUST provide (internal) boolean methods which accept or refuse traversal at a given node in the object tree."
+                    ],
+                    "constructor": [
+                        "MUST be default-constructible"
+                    ]
+                },
+                "Notes": {
+                    "Experimental": [
+                        "This class will likely be expanded in the future, and we are postponing the normative documentation for now."
+                    ],
+                    "Configure": [
+                        "Use |func|`enable_include_imported` to allow descending into imported modules."
+                    ],
+                    "Future": [
+                        "Possible extensions include acceptance/refusal by regular expressions."
+                    ],
+                    "Example": [
+                        "|ref|`gen_documentable_objects <example_gen_documentable_objects>`"
+                    ]
+                }
+            }
+        },
+        "sdv.doc.waterloo.docitem_helper.is_attr_annotated": {
+            "signature": {
+                "text": "is_attr_annotated(obj: 'AnnotatableObject', attr: 'str') -> 'bool'",
+                "parameters": [
+                    {
+                        "name": "obj",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "AnnotatableObject",
+                        "default": null
+                    },
+                    {
+                        "name": "attr",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    }
+                ],
+                "returns": "bool"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ],
+                    "scope": [
+                        "extension"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST find out whether the attribute passed is annotated."
+                    ]
+                },
+                "Parameters": {
+                    "obj": [
+                        "The class or module containing the attribute."
+                    ],
+                    "attr": [
+                        "The name of the attribute to be tested."
+                    ]
+                },
+                "Returns": [
+                    "MUST return |True| if the attribute is annotated, else |False|."
+                ],
+                "Raises": {
+                    "BaseException": [
+                        "MAY propagate exceptions from |func|`getattr`."
+                    ]
+                },
+                "Notes": {
+                    "Last review": [
+                        "2026-02-04"
+                    ]
+                }
+            }
+        },
+        "sdv.doc.waterloo.docitem_helper.is_attr_final": {
+            "signature": {
+                "text": "is_attr_final(obj: 'AnnotatableObject', attr: 'str') -> 'bool'",
+                "parameters": [
+                    {
+                        "name": "obj",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "AnnotatableObject",
+                        "default": null
+                    },
+                    {
+                        "name": "attr",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    }
+                ],
+                "returns": "bool"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ],
+                    "scope": [
+                        "extension"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST find out whether the attribute passed is annotated as |type|`Final`."
+                    ]
+                },
+                "Parameters": {
+                    "obj": [
+                        "The class or module containing the attribute."
+                    ],
+                    "attr": [
+                        "The name of the attribute to be tested."
+                    ]
+                },
+                "Returns": [
+                    "MUST return |True| if the attribute is annotated as |type|`Final`, else |False|."
+                ],
+                "Raises": {
+                    "BaseException": [
+                        "MAY propagate exceptions from |func|`get_type_hints`."
+                    ]
+                },
+                "Notes": {
+                    "Last review": [
+                        "2026-02-04"
+                    ]
+                }
+            }
+        },
+        "sdv.doc.waterloo.docitem_helper.is_obj_module": {
+            "signature": {
+                "text": "is_obj_module(obj: 'object') -> 'TypeIs[ModuleType]'",
+                "parameters": [
+                    {
+                        "name": "obj",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "object",
+                        "default": null
+                    }
+                ],
+                "returns": "TypeIs[ModuleType]"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ],
+                    "scope": [
+                        "public"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST relay to |func|`inspect.ismodule`"
+                    ]
+                },
+                "Parameters": {
+                    "obj": [
+                        "The object to inspect."
+                    ]
+                },
+                "Returns": [
+                    "|True| if |var|`obj` is a module."
+                ],
+                "Raises": {
+                    "BaseException": [
+                        "MAY propagate exceptions from |mod|`inspect`."
+                    ]
+                },
+                "Notes": {
+                    "Purpose": [
+                        "Uniform wrapper, allows us to add debugging output or hooks in case of trouble."
+                    ]
+                }
+            }
+        },
+        "sdv.doc.waterloo.docitem_helper.is_obj_class": {
+            "signature": {
+                "text": "is_obj_class(obj: 'object') -> 'TypeIs[type[object]]'",
+                "parameters": [
+                    {
+                        "name": "obj",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "object",
+                        "default": null
+                    }
+                ],
+                "returns": "TypeIs[type[object]]"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ],
+                    "scope": [
+                        "public"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST relay to |func|`inspect.isclass`"
+                    ]
+                },
+                "Parameters": {
+                    "obj": [
+                        "The object to inspect."
+                    ]
+                },
+                "Returns": [
+                    "|True| if |var|`obj` is a class."
+                ],
+                "Raises": {
+                    "BaseException": [
+                        "MAY propagate exceptions from |mod|`inspect`."
+                    ]
+                },
+                "Notes": {
+                    "Purpose": [
+                        "Uniform wrapper, allows us to add debugging output or hooks in case of trouble."
+                    ]
+                }
+            }
+        },
+        "sdv.doc.waterloo.docitem_helper.is_obj_function": {
+            "signature": {
+                "text": "is_obj_function(obj: 'object') -> 'TypeIs[Callable[..., Any]]'",
+                "parameters": [
+                    {
+                        "name": "obj",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "object",
+                        "default": null
+                    }
+                ],
+                "returns": "TypeIs[Callable[..., Any]]"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ],
+                    "scope": [
+                        "public"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST relay to |func|`inspect.isroutine`"
+                    ]
+                },
+                "Parameters": {
+                    "obj": [
+                        "The object to inspect."
+                    ]
+                },
+                "Returns": [
+                    "|True| if |var|`obj` is a routine, which is a pretty general concept for \"something that can be called\", but excludes callable classes."
+                ],
+                "Raises": {
+                    "BaseException": [
+                        "MAY propagate exceptions from |mod|`inspect`."
+                    ]
+                },
+                "Notes": {
+                    "Purpose": [
+                        "Uniform wrapper, allows us to add debugging output or hooks in case of trouble."
+                    ]
+                }
+            }
+        },
+        "sdv.doc.waterloo.docitem_helper.is_obj_method_like": {
+            "signature": {
+                "text": "is_obj_method_like(obj: 'object') -> 'TypeIs[Callable[..., Any]]'",
+                "parameters": [
+                    {
+                        "name": "obj",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "object",
+                        "default": null
+                    }
+                ],
+                "returns": "TypeIs[Callable[..., Any]]"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ],
+                    "scope": [
+                        "extension"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST detect callables which should be treated as \"method-like\" for Waterloo profile heuristics.",
+                        "MUST return |False| for non-routines.",
+                        "MUST treat callables with class-like |value|`__qualname__` (`A.f`) as method-like.",
+                        "SHOULD additionally use decorators |lit|`@staticmethod`, |lit|`@classmethod`, |lit|`@abstractmethod`, |lit|`@abc.abstractmethod` as hints."
+                    ]
+                },
+                "Parameters": {
+                    "obj": [
+                        "Object to inspect."
+                    ]
+                },
+                "Returns": [
+                    "|True| if |var|`obj` is callable and method-like by heuristic."
+                ],
+                "Raises": {}
+            }
+        },
+        "sdv.doc.waterloo.docitem_helper.is_obj_named_value": {
+            "signature": {
+                "text": "is_obj_named_value(obj: 'object') -> 'TypeIs[Callable[..., Any]]'",
+                "parameters": [
+                    {
+                        "name": "obj",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "object",
+                        "default": null
+                    }
+                ],
+                "returns": "TypeIs[Callable[..., Any]]"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ],
+                    "scope": [
+                        "public"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST be equivalent to not |func|`is_obj_module` and not |func|`is_obj_class` and not |func|`is_obj_function`."
+                    ],
+                    "requires": [
+                        "The caller MUST ensure that the object exists."
+                    ]
+                },
+                "Parameters": {
+                    "obj": [
+                        "The object to inspect."
+                    ]
+                },
+                "Returns": [
+                    "|True| if |var|`obj` is a named value"
+                ],
+                "Raises": {
+                    "BaseException": [
+                        "MAY propagate exceptions from |mod|`inspect`."
+                    ]
+                },
+                "Notes": {
+                    "Purpose": [
+                        "Uniform wrapper, allows us to add debugging output or hooks in case of trouble."
+                    ]
+                }
+            }
+        },
+        "sdv.doc.waterloo.docitem_helper.is_obj_documentable": {
+            "signature": {
+                "text": "is_obj_documentable(obj: 'object') -> 'TypeIs[Documentable]'",
+                "parameters": [
+                    {
+                        "name": "obj",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "object",
+                        "default": null
+                    }
+                ],
+                "returns": "TypeIs[Documentable]"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST find out if the object passed can have a docstring."
+                    ]
+                },
+                "Parameters": {
+                    "obj": [
+                        "The object to examine."
+                    ]
+                },
+                "Returns": [
+                    "|True| if |var|`obj` is a module, class or function, else |False|."
+                ],
+                "Raises": {}
+            }
+        },
+        "sdv.doc.waterloo.docitem_helper.get_obj_direct_module": {
+            "signature": {
+                "text": "get_obj_direct_module(obj: 'object') -> 'ModuleType | None'",
+                "parameters": [
+                    {
+                        "name": "obj",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "object",
+                        "default": null
+                    }
+                ],
+                "returns": "ModuleType | None"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ],
+                    "scope": [
+                        "public"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST return the direct owner module of |var|`obj`.",
+                        "MUST return |var|`obj` unchanged if |var|`obj` is a module.",
+                        "MUST try to resolve the module named by |var|`obj.__module__` for classes and callables.",
+                        "MUST return |None| if no direct module can be resolved.",
+                        "MUST avoid deep traversal (e.g. not resolve enclosing module hierarchies recursively)."
+                    ]
+                },
+                "Parameters": {
+                    "obj": [
+                        "The object to inspect."
+                    ]
+                },
+                "Returns": [
+                    "The direct module object, or |None| if unavailable."
+                ],
+                "Raises": {
+                    "ImportError": [
+                        "MAY be raised by module import helpers if implementation chooses to import by name."
+                    ],
+                    "ValueError": [
+                        "MAY be raised by import helpers for malformed module names."
+                    ],
+                    "AttributeError": [
+                        "MAY be raised by low-level inspection for malformed objects."
+                    ]
+                },
+                "Notes": {
+                    "Boundary": [
+                        "\"Direct module\" is defined by immediate metadata (`__module__`) only.",
+                        "Nested ownership (class-inside-class, closures, descriptors) is out of scope."
+                    ]
+                }
+            }
+        },
+        "sdv.doc.waterloo.docitem_helper.get_obj_name": {
+            "signature": {
+                "text": "get_obj_name(obj: 'object') -> 'str'",
+                "parameters": [
+                    {
+                        "name": "obj",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "object",
+                        "default": null
+                    }
+                ],
+                "returns": "str"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ],
+                    "scope": [
+                        "public"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST employ reasonable heuristics to extract a representative name.",
+                        "MUST return string objects as-is.",
+                        "MUST prioritize `__qualname__` over `__name__` for types/functions.",
+                        "MUST resolve to the name of the underlying class for object instances.",
+                        "MUST provide the string representation as a terminal fallback."
+                    ]
+                },
+                "Parameters": {
+                    "obj": [
+                        "The object to inspect."
+                    ]
+                },
+                "Returns": [
+                    "The resolved name according to the defined hierarchy."
+                ],
+                "Raises": {},
+                "Notes": {
+                    "Last review": [
+                        "2026-02-04"
+                    ]
+                }
+            }
+        },
+        "sdv.doc.waterloo.docitem_helper.get_obj_fully_qualified_name": {
+            "signature": {
+                "text": "get_obj_fully_qualified_name(obj: 'object') -> 'str'",
+                "parameters": [
+                    {
+                        "name": "obj",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "object",
+                        "default": null
+                    }
+                ],
+                "returns": "str"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ],
+                    "scope": [
+                        "public"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST return a fully qualified object name where possible.",
+                        "MUST return module objects as their module name.",
+                        "MUST return callable/class/object names as |mod|`<module>` . |lit|`<qualname>` when both parts are available.",
+                        "MUST fall back to |func|`get_obj_name` if no module prefix can be determined.",
+                        "MUST return input strings unchanged."
+                    ]
+                },
+                "Parameters": {
+                    "obj": [
+                        "The object to inspect."
+                    ]
+                },
+                "Returns": [
+                    "Best-effort fully qualified object name."
+                ],
+                "Raises": {}
+            }
+        },
+        "sdv.doc.waterloo.docitem_helper.get_obj_path": {
+            "signature": {
+                "text": "get_obj_path(obj: 'object') -> 'str | None'",
+                "parameters": [
+                    {
+                        "name": "obj",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "object",
+                        "default": null
+                    }
+                ],
+                "returns": "str | None"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST return an absolute filesystem path to the module that defines |var|`obj`, if determinable.",
+                        "MUST return |None| if the path cannot be determined (e.g. builtins, C-extensions, interactive objects)."
+                    ]
+                },
+                "Parameters": {
+                    "obj": [
+                        "The object whose defining module path is requested."
+                    ]
+                },
+                "Returns": [
+                    "Absolute path string or |None|."
+                ],
+                "Raises": {},
+                "Notes": {
+                    "Last review": [
+                        "2026-02-05"
+                    ]
+                }
+            }
+        },
+        "sdv.doc.waterloo.docitem_helper.build_anchor": {
+            "signature": {
+                "text": "build_anchor(obj: 'object', kind: 'str | None' = None) -> 'str'",
+                "parameters": [
+                    {
+                        "name": "obj",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "object",
+                        "default": null
+                    },
+                    {
+                        "name": "kind",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str | None",
+                        "default": "None"
+                    }
+                ],
+                "returns": "str"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ],
+                    "scope": [
+                        "extension"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST build a deterministic anchor string from an object.",
+                        "MUST use the fully qualified name as source.",
+                        "MUST encode each qualified-name segment as ``<len>:<segment>``.",
+                        "MUST prefix the anchor by |lit|`wtrl-<kind>-`.",
+                        "MUST infer kind as one of ``mod``, ``cls``, ``func``, ``obj`` if not passed explicitly."
+                    ]
+                },
+                "Parameters": {
+                    "obj": [
+                        "Object for which the anchor shall be generated."
+                    ],
+                    "kind": [
+                        "Optional explicit kind tag."
+                    ]
+                },
+                "Returns": [
+                    "Deterministic anchor string suitable for doc-internal links."
+                ],
+                "Raises": {}
+            }
+        },
+        "sdv.doc.waterloo.docitem_helper.get_func_obj_from_callable": {
+            "signature": {
+                "text": "get_func_obj_from_callable(obj: 'object') -> 'Callable[..., Any] | None'",
+                "parameters": [
+                    {
+                        "name": "obj",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "object",
+                        "default": null
+                    }
+                ],
+                "returns": "Callable[..., Any] | None"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ],
+                    "scope": [
+                        "extension"
+                    ],
+                    "status": "stable"
+                },
+                "Contract": {
+                    "general": [
+                        "MUST return the function object assigned to the object for a wide class of cases.",
+                        "MUST handle functions in classes without decorators.",
+                        "MUST handle functions in classes with decorator |attr|`@staticmethod`.",
+                        "MUST handle functions in classes with decorator |attr|`@classmethod`.",
+                        "MUST handle callable classes.",
+                        "MUST handle instances of callable classes.",
+                        "MUST handle functions at module level.",
+                        "MUST handle generators.",
+                        "SHOULD be able to handle built-ins."
+                    ]
+                },
+                "Parameters": {
+                    "obj": [
+                        "The object to analyze."
+                    ]
+                },
+                "Returns": [
+                    "The function object (or built-in) assigned to |var|`obj`."
+                ],
+                "Raises": {},
+                "Notes": {
+                    "API": [
+                        "The signature is stable, but we might add cases to the implementation."
+                    ]
+                }
+            }
+        },
+        "sdv.doc.waterloo.docitem_helper.get_obj_docstring": {
+            "signature": {
+                "text": "get_obj_docstring(obj: 'object') -> 'str'",
+                "parameters": [
+                    {
+                        "name": "obj",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "object",
+                        "default": null
+                    }
+                ],
+                "returns": "str"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST return the best available docstring text for |var|`obj`.",
+                        "MUST prefer the raw source docstring obtained by |func|`get_source_docstring`.",
+                        "MUST support modules, classes, functions/methods, descriptors (|type|`staticmethod`, |type|`classmethod`, |type|`property` / |type|`cached_property`), partial/partialmethod objects, and callable instances via |func|`__call__`.",
+                        "MUST follow |type|`__wrapped__` chains created by |func|`functools.wraps`.",
+                        "MUST return the empty string if no docstring is available."
+                    ]
+                },
+                "Parameters": {
+                    "obj": [
+                        "Any python object that might carry a docstring."
+                    ]
+                },
+                "Returns": [
+                    "MUST return the best available docstring text, or the empty string if none exists."
+                ],
+                "Raises": {},
+                "Notes": {
+                    "Last review": [
+                        "2026-05-15"
+                    ],
+                    "General": [
+                        "The object-level cache avoids repeating the wrapper walk for the same object."
+                    ]
+                }
+            }
+        },
+        "sdv.doc.waterloo.docitem_helper.get_obj_annotations": {
+            "signature": {
+                "text": "get_obj_annotations(obj: 'object') -> 'dict[str, Any]'",
+                "parameters": [
+                    {
+                        "name": "obj",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "object",
+                        "default": null
+                    }
+                ],
+                "returns": "dict[str, Any]"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST build a |type|`dict` (the |dfn|`result`) as follows:",
+                        "MUST analyse the object's annotations by means of |mod|`inspect`.",
+                        "On success, MUST add the annotations to the result.",
+                        "MUST check for an attribute |value|`__type_params__` in the object.",
+                        "If it exists (as of Python 3.12), MUST iterate over the |type|`tuple` |var|`obj.__type_params__` and add pairs consisting of |var|`param.__name__` and |value|`type(param)` to the result."
+                    ]
+                },
+                "Parameters": {
+                    "obj": [
+                        "The object to be inspected."
+                    ]
+                },
+                "Returns": [
+                    "A |type|`dict` representing the object's annotations."
+                ],
+                "Raises": {
+                    "BaseException": [
+                        "MAY propagate exceptions other than |type|`TypeError` and |type|`ValueError` from module |mod|`inspect`."
+                    ]
+                }
+            }
+        },
+        "sdv.doc.waterloo.docitem_helper.gen_documentable_objects": {
+            "signature": {
+                "text": "gen_documentable_objects(obj: 'Documentable', config: 'ConfigTraversal' = ConfigTraversal()) -> 'Generator[Documentable, None, None]'",
+                "parameters": [
+                    {
+                        "name": "obj",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "Documentable",
+                        "default": null
+                    },
+                    {
+                        "name": "config",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "ConfigTraversal",
+                        "default": "ConfigTraversal()"
+                    }
+                ],
+                "returns": "Generator[Documentable, None, None]"
+            },
+            "traits": [
+                "generator"
+            ],
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ],
+                    "scope": [
+                        "public"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST create a generator object which allows depth-first tree traversal of objects in |var|`obj`.",
+                        "MUST first yield object |var|`obj` itself.",
+                        "MUST yield all objects and only objects which can have a docstring."
+                    ]
+                },
+                "Parameters": {
+                    "obj": [
+                        "The object (module, class, function, method) to examine."
+                    ],
+                    "config": [
+                        "Controls acceptance or refusal of objects during traversal."
+                    ]
+                },
+                "Returns": [
+                    "MUST return a Generator which yields objects from tree traversal of |var|`obj`"
+                ],
+                "Raises": {}
+            }
+        },
+        "sdv.doc.waterloo.docitem_helper.tracer.Context": {
+            "doc": {},
+            "doc_lines": [
+                "A list of strings built per context manager during parsing and validation. Entries can be module, class or function names, or labels."
+            ]
+        },
+        "sdv.doc.waterloo.docitem_helper.tracer": {
+            "signature": {
+                "text": "tracer.__init__(self) -> 'None'",
+                "parameters": [],
+                "returns": "None"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "class",
+                    "normative_sections": [
+                        "Contract",
+                        "Public_types"
+                    ]
+                },
+                "Terminology": {
+                    "rules on fail": [
+                        "Low-level functions may find a parsing or validation warning or error,",
+                        "but have no clue which rule has been violated. The |dfn|`rules on fail`",
+                        "mechanism allows the caller to pass the set of rules in question.",
+                        "The tracer provides a stack and api for these rule sets."
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST provide a string-valued stack API for storing context data, like \"which object/section/subsection are we in?\".",
+                        "MUST provide a to-string method for rendering the context.",
+                        "MUST maintain a list of infos, where each entry is a tuple consisting of list of Rule-IDs and a free-form message.",
+                        "MUST provide a method for adding such a info entry.",
+                        "MUST allow to query if infos have been added.",
+                        "MUST provide a method for clearing the list of infos.",
+                        "MUST provide a method for rendering the list of infos as a string.",
+                        "MUST provide a generator which allows iterating over the list of infos.",
+                        "MUST maintain a list of warnings, where each entry is a tuple consisting of one Rule-ID and a free-form message.",
+                        "MUST provide a method for adding such a warning entry.",
+                        "MUST allow to query if warnings have been added.",
+                        "MUST provide a method for clearing the list of warnings.",
+                        "MUST provide a method for rendering the list of warnings as a string.",
+                        "MUST provide a generator which allows iterating over the list of warnings.",
+                        "MUST maintain a list of errors, where each entry is a tuple consisting of one Rule-ID and a free-form message.",
+                        "MUST provide a method for adding such a error entry.",
+                        "MUST allow to query if errors have been added.",
+                        "MUST provide a method for clearing the list of errors.",
+                        "MUST provide a method for rendering the list of errors as a string.",
+                        "MUST provide a generator which allows iterating over the list of errors.",
+                        "MUST manage a set of ignore-rule instructions",
+                        "MUST provide a stack containing the current |dfn|`rule on fail` being validated against.",
+                        "MUST provide an api like |func|`push...`, |func|`pop...`, |func|`get...` for the |dfn|`rule on fail` stack.",
+                        "MUST provide a stack containing the current set of |dfn|`scopes` being validated against.",
+                        "MUST provide an api like |func|`push...`, |func|`pop...`, |func|`get...` for the |dfn|`scopes` stack."
+                    ],
+                    "constructor": [
+                        "MUST be default-constructible."
+                    ]
+                },
+                "Public_types": {
+                    "Context": [
+                        "A list of strings built per context manager during parsing and validation. Entries can be module, class or function names, or labels."
+                    ]
+                }
+            }
+        },
+        "sdv.doc.waterloo.docitem_genutil.parse_source_fragment": {
+            "signature": {
+                "text": "parse_source_fragment(profile: 'Profile', source_fragment: 'str') -> 'ast.AST | None'",
+                "parameters": [
+                    {
+                        "name": "profile",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "Profile",
+                        "default": null
+                    },
+                    {
+                        "name": "source_fragment",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    }
+                ],
+                "returns": "ast.AST | None"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ],
+                    "scope": [
+                        "extension"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST return |None| if |var|`profile` is |value|`module`.",
+                        "MUST parse |var|`source_fragment` via |mod|`ast`.",
+                        "MUST return the first top-level AST node from the parsed tree.",
+                        "MUST ensure the returned node matches |var|`profile`:",
+                        "For |value|`class`, the node MUST be |type|`ast.ClassDef`.",
+                        "For |value|`function`, |value|`method`, or |value|`inherited_method`, the node MUST be |type|`ast.FunctionDef` or |type|`ast.AsyncFunctionDef`.",
+                        "MUST reject empty parses (no top-level nodes)."
+                    ]
+                },
+                "Parameters": {
+                    "profile": "Profile used for node-type validation.",
+                    "source_fragment": [
+                        "Source fragment containing a class/function/method header (or small stub).",
+                        "Ignored if |var|`profile` is |value|`module`."
+                    ]
+                },
+                "Returns": [
+                    "|None| for profile |value|`module`, otherwise the validated first AST node."
+                ],
+                "Raises": {
+                    "SyntaxError": [
+                        "MAY be raised by |func|`ast.parse` for invalid Python syntax."
+                    ],
+                    "RuntimeError": [
+                        "MUST raise if no top-level node exists after parsing.",
+                        "MUST raise if the parsed node type does not match |var|`profile`."
+                    ]
+                }
+            }
+        },
+        "sdv.doc.waterloo.docitem_genutil.parse_signature_fragment": {
+            "signature": {
+                "text": "parse_signature_fragment(profile: 'Profile', signature: 'str') -> 'ast.AST | None'",
+                "parameters": [
+                    {
+                        "name": "profile",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "Profile",
+                        "default": null
+                    },
+                    {
+                        "name": "signature",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    }
+                ],
+                "returns": "ast.AST | None"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ],
+                    "scope": [
+                        "extension"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST turn a textual signature fragment into a small synthetic source fragment that can be parsed by |func|`parse_source_fragment`.",
+                        "MUST return |None| for profile |value|`module`.",
+                        "MUST accept signatures with or without leading |lit|`class`, |lit|`def`, or |lit|`async def` keywords.",
+                        "MUST synthesize a minimal valid body so that the resulting fragment can be parsed by |mod|`ast`.",
+                        "MUST keep the produced fragment close to the AST shape consumed by the existing template generators."
+                    ],
+                    "requires": [
+                        "MUST provide a non-empty signature for non-|value|`module` profiles."
+                    ]
+                },
+                "Parameters": {
+                    "profile": "Waterloo docstring profile to target.",
+                    "signature": [
+                        "Textual signature fragment."
+                    ]
+                },
+                "Returns": [
+                    "|None| for profile |value|`module`, otherwise the parsed AST node of the synthetic fragment."
+                ],
+                "Raises": {
+                    "RuntimeError": [
+                        "MUST raise if the signature is empty or the synthetic fragment cannot be parsed."
+                    ]
+                },
+                "Notes": {
+                    "Bridge": [
+                        "This helper exists so that MCP and IDE callers can feed a textual signature",
+                        "through the same AST-based docstring generation pipeline that is used by the",
+                        "canonical template generator script."
+                    ]
+                }
+            }
+        },
+        "sdv.doc.waterloo.docitem_genutil.infer_docstring_profile": {
+            "signature": {
+                "text": "infer_docstring_profile(obj: 'object') -> 'Profile'",
+                "parameters": [
+                    {
+                        "name": "obj",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "object",
+                        "default": null
+                    }
+                ],
+                "returns": "Profile"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ],
+                    "scope": [
+                        "extension"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST derive the best matching waterloo docstring profile from the object."
+                    ]
+                },
+                "Parameters": {
+                    "obj": [
+                        "Object to inspect."
+                    ]
+                },
+                "Returns": [],
+                "Raises": {
+                    "RuntimeError": [
+                        "MUST raise if |var|`obj` does not match any of the categories |lit|`module`, |lit|`class`, |lit|`callable`."
+                    ]
+                },
+                "Notes": {
+                    "Result": [
+                        "The |value|`inherited_method` profile is never returned because it",
+                        "does not differ from the |value|`method` profile based solely on formal criteria."
+                    ]
+                }
+            }
+        },
+        "sdv.doc.waterloo.docitem_genutil.generate_minimal_docstring": {
+            "signature": {
+                "text": "generate_minimal_docstring(obj: 'object', *, profile: 'Profile | None' = None) -> 'str'",
+                "parameters": [
+                    {
+                        "name": "obj",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "object",
+                        "default": null
+                    },
+                    {
+                        "name": "profile",
+                        "kind": "KEYWORD_ONLY",
+                        "annotation": "Profile | None",
+                        "default": "None"
+                    }
+                ],
+                "returns": "str"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ],
+                    "status": "stable",
+                    "scope": [
+                        "extension"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST generate a minimal Waterloo docstring template for |var|`obj`.",
+                        "MUST select the template by using |var|`profile` if provided.",
+                        "MUST infer the profile from |var|`obj` if |var|`profile` is |None|."
+                    ],
+                    "ensures": [
+                        "The resulting template MUST be structurally valid according to the Waterloo format."
+                    ]
+                },
+                "Parameters": {
+                    "obj": [
+                        "Object for which the docstring template is generated."
+                    ],
+                    "profile": "Optional explicit profile (`module`, `class`, `function`, `method`)."
+                },
+                "Returns": [
+                    "Generated minimal docstring template."
+                ],
+                "Raises": {
+                    "RuntimeError": [
+                        "MAY be raised if profile inference fails for |var|`obj`."
+                    ]
+                }
+            }
+        },
+        "sdv.doc.waterloo.docitem_genutil.generate_full_docstring": {
+            "signature": {
+                "text": "generate_full_docstring(obj: 'object', *, profile: 'Profile | None' = None) -> 'str'",
+                "parameters": [
+                    {
+                        "name": "obj",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "object",
+                        "default": null
+                    },
+                    {
+                        "name": "profile",
+                        "kind": "KEYWORD_ONLY",
+                        "annotation": "Profile | None",
+                        "default": "None"
+                    }
+                ],
+                "returns": "str"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ],
+                    "status": "stable",
+                    "scope": [
+                        "extension"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST generate a full Waterloo docstring template for |var|`obj`.",
+                        "MUST include the extended section set for the resolved profile.",
+                        "MUST select the template by using |var|`profile` if provided.",
+                        "MUST infer the profile from |var|`obj` if |var|`profile` is |None|."
+                    ],
+                    "ensures": [
+                        "The resulting template MUST be structurally valid according to the Waterloo format."
+                    ]
+                },
+                "Parameters": {
+                    "obj": [
+                        "Object for which the docstring template is generated."
+                    ],
+                    "profile": "Optional explicit profile (`module`, `class`, `function`, `method`)."
+                },
+                "Returns": [
+                    "Generated full docstring template."
+                ],
+                "Raises": {
+                    "RuntimeError": [
+                        "MAY be raised if profile inference fails for |var|`obj`."
+                    ]
+                }
+            }
+        },
+        "sdv.doc.waterloo.docitem_genutil.generate_minimal_docstring_from_node": {
+            "signature": {
+                "text": "generate_minimal_docstring_from_node(profile: 'Profile', node: 'ast.AST | None') -> 'str'",
+                "parameters": [
+                    {
+                        "name": "profile",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "Profile",
+                        "default": null
+                    },
+                    {
+                        "name": "node",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "ast.AST | None",
+                        "default": null
+                    }
+                ],
+                "returns": "str"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ],
+                    "status": "stable",
+                    "scope": [
+                        "extension"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST generate a minimal Waterloo docstring template from a pre-parsed AST node.",
+                        "MUST use |var|`profile` to select the target template variant.",
+                        "MUST ignore |var|`node` if |var|`profile` is |value|`module` or |value|`class`.",
+                        "MUST require a function-like AST node for profiles |value|`function` and |value|`method`."
+                    ]
+                },
+                "Parameters": {
+                    "profile": "Target profile (`module`, `class`, `function`, `method`).",
+                    "node": [
+                        "Parsed AST node for function/method generation.",
+                        "May be |None| for profile |value|`module`."
+                    ]
+                },
+                "Returns": [
+                    "Generated minimal docstring template."
+                ],
+                "Raises": {
+                    "RuntimeError": [
+                        "MUST be raised if function/method generation is requested with an incompatible AST node."
+                    ]
+                }
+            }
+        },
+        "sdv.doc.waterloo.docitem_genutil.generate_full_docstring_from_node": {
+            "signature": {
+                "text": "generate_full_docstring_from_node(profile: 'Profile', node: 'ast.AST | None') -> 'str'",
+                "parameters": [
+                    {
+                        "name": "profile",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "Profile",
+                        "default": null
+                    },
+                    {
+                        "name": "node",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "ast.AST | None",
+                        "default": null
+                    }
+                ],
+                "returns": "str"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ],
+                    "status": "stable",
+                    "scope": [
+                        "extension"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST generate a full Waterloo docstring template from a pre-parsed AST node.",
+                        "MUST use |var|`profile` to select the target template variant.",
+                        "MUST ignore |var|`node` if |var|`profile` is |value|`module` or |value|`class`.",
+                        "MUST require a function-like AST node for profiles |value|`function` and |value|`method`."
+                    ]
+                },
+                "Parameters": {
+                    "profile": "Target profile (`module`, `class`, `function`, `method`).",
+                    "node": [
+                        "Parsed AST node for function/method generation.",
+                        "May be |None| for profile |value|`module`."
+                    ]
+                },
+                "Returns": [
+                    "Generated full docstring template."
+                ],
+                "Raises": {
+                    "RuntimeError": [
+                        "MUST be raised if function/method generation is requested with an incompatible AST node."
                     ]
                 }
             }
@@ -471,18 +3542,105 @@
                 }
             }
         },
+        "wtrl_tools.ReferenceRecord": {
+            "signature": {
+                "text": "BaseModel.__init__(self, /, **data: 'Any') -> 'None'",
+                "parameters": [
+                    {
+                        "name": "data",
+                        "kind": "VAR_KEYWORD",
+                        "annotation": "Any",
+                        "default": null
+                    }
+                ],
+                "returns": "None"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "class",
+                    "normative_sections": [
+                        "Contract"
+                    ],
+                    "scope": [
+                        "extension"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST represent one incoming structured See_also reference in the Waterloo MCP server.",
+                        "MUST keep the record compact and stable so that lookup results can be reused directly by MCP clients."
+                    ],
+                    "constructor": [
+                        "MUST accept the following fields:",
+                        "- source_root_id: stable root identifier of the object that holds the See_also link.",
+                        "- source_qid: fully qualified identifier of the source object.",
+                        "- source_profile: Waterloo docstring profile of the source object.",
+                        "- is_normative: whether the See_also link was recorded in a normative section."
+                    ]
+                },
+                "Notes": {
+                    "Purpose": [
+                        "This record is the canonical Waterloo representation for reverse See_also lookups."
+                    ]
+                }
+            }
+        },
+        "wtrl_tools.ExampleRef": {
+            "signature": {
+                "text": "BaseModel.__init__(self, /, **data: 'Any') -> 'None'",
+                "parameters": [
+                    {
+                        "name": "data",
+                        "kind": "VAR_KEYWORD",
+                        "annotation": "Any",
+                        "default": null
+                    }
+                ],
+                "returns": "None"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "class",
+                    "normative_sections": [
+                        "Contract"
+                    ],
+                    "scope": [
+                        "extension"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST represent one example reference in the Waterloo MCP server.",
+                        "MUST keep the reference compact and stable so that lookup results can be reused directly by MCP clients."
+                    ],
+                    "constructor": [
+                        "MUST accept the following fields:",
+                        "- root_id: stable root identifier of the object that owns the example reference.",
+                        "- example_path: canonical path inside __WTRL_EXAMPLES__.",
+                        "- title: optional human-readable name.",
+                        "- lang: language tag of the example payload.",
+                        "- size: raw octet size of the example payload."
+                    ]
+                },
+                "Notes": {
+                    "Purpose": [
+                        "This record is the canonical Waterloo representation for structured example lookups."
+                    ]
+                }
+            }
+        },
         "wtrl_tools.list_roots": {
             "signature": {
-                "text": "list_roots(roots: 'list[Mapping[str, object]]') -> 'list[dict[str, object]]'",
+                "text": "list_roots(roots: 'list[Mapping[str, WtrlJsonNode_t]]') -> 'list[dict[str, WtrlJsonNode_t]]'",
                 "parameters": [
                     {
                         "name": "roots",
                         "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "list[Mapping[str, object]]",
+                        "annotation": "list[Mapping[str, WtrlJsonNode_t]]",
                         "default": null
                     }
                 ],
-                "returns": "list[dict[str, object]]"
+                "returns": "list[dict[str, WtrlJsonNode_t]]"
             },
             "doc": {
                 "Preamble": {
@@ -516,7 +3674,7 @@
         },
         "wtrl_tools.get_root": {
             "signature": {
-                "text": "get_root(root_id: 'str', roots: 'list[Mapping[str, object]]') -> 'dict[str, object]'",
+                "text": "get_root(root_id: 'str', roots: 'list[Mapping[str, WtrlJsonNode_t]]') -> 'dict[str, WtrlJsonNode_t]'",
                 "parameters": [
                     {
                         "name": "root_id",
@@ -527,11 +3685,11 @@
                     {
                         "name": "roots",
                         "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "list[Mapping[str, object]]",
+                        "annotation": "list[Mapping[str, WtrlJsonNode_t]]",
                         "default": null
                     }
                 ],
-                "returns": "dict[str, object]"
+                "returns": "dict[str, WtrlJsonNode_t]"
             },
             "doc": {
                 "Preamble": {
@@ -577,7 +3735,7 @@
         },
         "wtrl_tools.get_object": {
             "signature": {
-                "text": "get_object(root_id: 'str', qid: 'str', roots: 'list[Mapping[str, object]]') -> 'dict[str, object]'",
+                "text": "get_object(root_id: 'str', qid: 'str', roots: 'list[Mapping[str, WtrlJsonNode_t]]') -> 'dict[str, WtrlJsonNode_t]'",
                 "parameters": [
                     {
                         "name": "root_id",
@@ -594,11 +3752,11 @@
                     {
                         "name": "roots",
                         "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "list[Mapping[str, object]]",
+                        "annotation": "list[Mapping[str, WtrlJsonNode_t]]",
                         "default": null
                     }
                 ],
-                "returns": "dict[str, object]"
+                "returns": "dict[str, WtrlJsonNode_t]"
             },
             "doc": {
                 "Preamble": {
@@ -647,7 +3805,7 @@
         },
         "wtrl_tools.get_section": {
             "signature": {
-                "text": "get_section(root_id: 'str', qid: 'str', section: 'str', roots: 'list[Mapping[str, object]]') -> 'dict[str, object]'",
+                "text": "get_section(root_id: 'str', qid: 'str', section: 'str', roots: 'list[Mapping[str, WtrlJsonNode_t]]') -> 'dict[str, WtrlJsonNode_t]'",
                 "parameters": [
                     {
                         "name": "root_id",
@@ -670,11 +3828,11 @@
                     {
                         "name": "roots",
                         "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "list[Mapping[str, object]]",
+                        "annotation": "list[Mapping[str, WtrlJsonNode_t]]",
                         "default": null
                     }
                 ],
-                "returns": "dict[str, object]"
+                "returns": "dict[str, WtrlJsonNode_t]"
             },
             "doc": {
                 "Preamble": {
@@ -726,7 +3884,7 @@
         },
         "wtrl_tools.get_subsection": {
             "signature": {
-                "text": "get_subsection(root_id: 'str', qid: 'str', section: 'str', subsection: 'str', roots: 'list[Mapping[str, object]]') -> 'dict[str, object]'",
+                "text": "get_subsection(root_id: 'str', qid: 'str', section: 'str', subsection: 'str', roots: 'list[Mapping[str, WtrlJsonNode_t]]') -> 'dict[str, WtrlJsonNode_t]'",
                 "parameters": [
                     {
                         "name": "root_id",
@@ -755,11 +3913,11 @@
                     {
                         "name": "roots",
                         "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "list[Mapping[str, object]]",
+                        "annotation": "list[Mapping[str, WtrlJsonNode_t]]",
                         "default": null
                     }
                 ],
-                "returns": "dict[str, object]"
+                "returns": "dict[str, WtrlJsonNode_t]"
             },
             "doc": {
                 "Preamble": {
@@ -812,9 +3970,210 @@
                 }
             }
         },
+        "wtrl_tools.get_references": {
+            "signature": {
+                "text": "get_references(reference_index: 'Mapping[tuple[str, str], list[ReferenceRecord]]', root_id: 'str', qid: 'str', normative_only: 'bool' = False) -> 'list[ReferenceRecord]'",
+                "parameters": [
+                    {
+                        "name": "reference_index",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "Mapping[tuple[str, str], list[ReferenceRecord]]",
+                        "default": null
+                    },
+                    {
+                        "name": "root_id",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    },
+                    {
+                        "name": "qid",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    },
+                    {
+                        "name": "normative_only",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "bool",
+                        "default": "False"
+                    }
+                ],
+                "returns": "list[ReferenceRecord]"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ],
+                    "scope": [
+                        "extension"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST return the structured incoming See_also references for one object from the provided reverse lookup map.",
+                        "MUST treat the lookup as a simple read-only reverse-map access and filter the result when normative_only is requested."
+                    ]
+                },
+                "Parameters": {
+                    "reference_index": [
+                        "The reverse lookup map built by the server at startup."
+                    ],
+                    "root_id": [
+                        "The canonical root identifier of the object whose incoming references should be returned."
+                    ],
+                    "qid": [
+                        "The fully qualified identifier of the object whose incoming references should be returned."
+                    ],
+                    "normative_only": [
+                        "Whether to keep only references recorded from a normative See_also section."
+                    ]
+                },
+                "Returns": [
+                    "A list of incoming structured See_also reference records."
+                ],
+                "Raises": {}
+            }
+        },
+        "wtrl_tools.get_examples": {
+            "signature": {
+                "text": "get_examples(root_id: 'str', qid: 'str', roots: 'list[Mapping[str, WtrlJsonNode_t]]') -> 'list[ExampleRef]'",
+                "parameters": [
+                    {
+                        "name": "root_id",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    },
+                    {
+                        "name": "qid",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    },
+                    {
+                        "name": "roots",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "list[Mapping[str, WtrlJsonNode_t]]",
+                        "default": null
+                    }
+                ],
+                "returns": "list[ExampleRef]"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ],
+                    "scope": [
+                        "extension"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST return structured example metadata for one QID from the configured roots.",
+                        "MUST return an empty list if the object exists but has no examples.",
+                        "MUST treat the example paths as canonical references inside __WTRL_EXAMPLES__."
+                    ]
+                },
+                "Parameters": {
+                    "root_id": [
+                        "The canonical root identifier derived from the canonical absolute root path."
+                    ],
+                    "qid": [
+                        "The fully qualified identifier of the requested object inside the loaded Waterloo JSON document."
+                    ],
+                    "roots": [
+                        "The list of configured root entries."
+                    ]
+                },
+                "Returns": [
+                    "A list of ExampleRef records for the object."
+                ],
+                "Raises": {
+                    "ValueError": [
+                        "MAY raise if the root identifier or QID is unknown."
+                    ]
+                }
+            }
+        },
+        "wtrl_tools.get_example_source": {
+            "signature": {
+                "text": "get_example_source(root_id: 'str', example_path: 'str', roots: 'list[Mapping[str, WtrlJsonNode_t]]') -> 'str'",
+                "parameters": [
+                    {
+                        "name": "root_id",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    },
+                    {
+                        "name": "example_path",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    },
+                    {
+                        "name": "roots",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "list[Mapping[str, WtrlJsonNode_t]]",
+                        "default": null
+                    }
+                ],
+                "returns": "str"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ],
+                    "scope": [
+                        "extension"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST return the raw source text for one canonical example reference.",
+                        "MUST treat the example path as a canonical path inside __WTRL_EXAMPLES__."
+                    ]
+                },
+                "Parameters": {
+                    "root_id": [
+                        "The canonical root identifier derived from the canonical absolute root path."
+                    ],
+                    "example_path": [
+                        "The canonical example path returned by get_examples."
+                    ],
+                    "roots": [
+                        "The list of configured root entries."
+                    ]
+                },
+                "Returns": [
+                    "The raw example source text."
+                ],
+                "Raises": {
+                    "ValueError": [
+                        "MAY raise if the root identifier is unknown or if the example reference is unknown."
+                    ]
+                }
+            }
+        },
         "wtrl_tools.search_objects": {
             "signature": {
-                "text": "search_objects(expression: 'str', roots: 'list[Mapping[str, object]]', filter: 'SearchObjectsFilter | None' = None) -> 'list[tuple[str, str, str]]'",
+                "text": "search_objects(expression: 'str', roots: 'list[Mapping[str, WtrlJsonNode_t]]', filter: 'SearchObjectsFilter | None' = None) -> 'list[tuple[str, str, str]]'",
                 "parameters": [
                     {
                         "name": "expression",
@@ -825,7 +4184,7 @@
                     {
                         "name": "roots",
                         "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "list[Mapping[str, object]]",
+                        "annotation": "list[Mapping[str, WtrlJsonNode_t]]",
                         "default": null
                     },
                     {
@@ -875,7 +4234,7 @@
         },
         "wtrl_tools.search_sections": {
             "signature": {
-                "text": "search_sections(expression: 'str', roots: 'list[Mapping[str, object]]', filter: 'SearchSectionsFilter | None' = None) -> 'list[dict[str, object]]'",
+                "text": "search_sections(expression: 'str', roots: 'list[Mapping[str, WtrlJsonNode_t]]', filter: 'SearchSectionsFilter | None' = None) -> 'list[dict[str, WtrlJsonNode_t]]'",
                 "parameters": [
                     {
                         "name": "expression",
@@ -886,7 +4245,7 @@
                     {
                         "name": "roots",
                         "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "list[Mapping[str, object]]",
+                        "annotation": "list[Mapping[str, WtrlJsonNode_t]]",
                         "default": null
                     },
                     {
@@ -896,7 +4255,7 @@
                         "default": "None"
                     }
                 ],
-                "returns": "list[dict[str, object]]"
+                "returns": "list[dict[str, WtrlJsonNode_t]]"
             },
             "doc": {
                 "Preamble": {
@@ -936,7 +4295,7 @@
         },
         "wtrl_tools.search_text": {
             "signature": {
-                "text": "search_text(terms: 'list[str]', roots: 'list[Mapping[str, object]]', filter: 'SearchTextFilter | None' = None) -> 'list[dict[str, object]]'",
+                "text": "search_text(terms: 'list[str]', roots: 'list[Mapping[str, WtrlJsonNode_t]]', filter: 'SearchTextFilter | None' = None) -> 'list[dict[str, WtrlJsonNode_t]]'",
                 "parameters": [
                     {
                         "name": "terms",
@@ -947,7 +4306,7 @@
                     {
                         "name": "roots",
                         "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "list[Mapping[str, object]]",
+                        "annotation": "list[Mapping[str, WtrlJsonNode_t]]",
                         "default": null
                     },
                     {
@@ -957,7 +4316,7 @@
                         "default": "None"
                     }
                 ],
-                "returns": "list[dict[str, object]]"
+                "returns": "list[dict[str, WtrlJsonNode_t]]"
             },
             "doc": {
                 "Preamble": {
@@ -998,7 +4357,7 @@
         },
         "wtrl_tools.gen_docstring": {
             "signature": {
-                "text": "gen_docstring(profile: 'DocstringProfile_t', signature: 'str | None' = None, mode: 'DocstringMode_t' = 'minimal', indent_mode: 'DocstringIndentMode_t' = 'tab') -> 'dict[str, object]'",
+                "text": "gen_docstring(profile: 'DocstringProfile_t', signature: 'str | None' = None, mode: 'DocstringMode_t' = 'minimal', indent_mode: 'DocstringIndentMode_t' = 'tab', json_mode: 'DocstringJsonMode_t' = 'full') -> 'dict[str, WtrlJsonNode_t]'",
                 "parameters": [
                     {
                         "name": "profile",
@@ -1023,9 +4382,15 @@
                         "kind": "POSITIONAL_OR_KEYWORD",
                         "annotation": "DocstringIndentMode_t",
                         "default": "'tab'"
+                    },
+                    {
+                        "name": "json_mode",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "DocstringJsonMode_t",
+                        "default": "'full'"
                     }
                 ],
-                "returns": "dict[str, object]"
+                "returns": "dict[str, WtrlJsonNode_t]"
             },
             "doc": {
                 "Preamble": {
@@ -1043,7 +4408,7 @@
                 "Contract": {
                     "general": [
                         "MUST generate a Waterloo docstring template for the requested profile.",
-                        "MUST return the generated docstring together with a JSON placeholder snippet in the first implementation phase.",
+                        "MUST return the generated docstring together with a JSON snippet that represents the docstring structure and content.",
                         "MUST keep the JSON snippet compatible with the existing Waterloo JSON document shape in later phases."
                     ]
                 },
@@ -1057,10 +4422,13 @@
                     ],
                     "indent_mode": [
                         "Indentation mode for the returned docstring text, either ``tab`` or ``spc4``."
+                    ],
+                    "json_mode": [
+                        "JSON output mode, either ``full`` or ``doc_only``."
                     ]
                 },
                 "Returns": [
-                    "A dictionary with the generated ``docstring`` text and a ``json_snippet`` placeholder."
+                    "A dictionary with the generated ``docstring`` text and a ``json_snippet`` that represents the docstring structure and content."
                 ],
                 "Raises": {
                     "ValueError": [
@@ -1068,6 +4436,48 @@
                     ]
                 }
             }
+        },
+        "sdv.doc.waterloo.mcp.wtrl_tools.SearchObjectKind_t": {
+            "doc": {},
+            "doc_lines": [
+                "The kind of object to search for, such as module, class, callable, type, constant, or variable."
+            ]
+        },
+        "sdv.doc.waterloo.mcp.wtrl_tools.SearchTextMatchMode_t": {
+            "doc": {},
+            "doc_lines": [
+                "The mode of matching text search terms. Currently only literal matching is supported."
+            ]
+        },
+        "sdv.doc.waterloo.mcp.wtrl_tools.SearchTextTermMode_t": {
+            "doc": {},
+            "doc_lines": [
+                "The mode of combining multiple search terms in text search. Can be |value|`any` or |value|`all`."
+            ]
+        },
+        "sdv.doc.waterloo.mcp.wtrl_tools.DocstringProfile_t": {
+            "doc": {},
+            "doc_lines": [
+                "The profile to target when generating a docstring template, one of |value|`module`, |value|`class`, |value|`function`, or |value|`method`."
+            ]
+        },
+        "sdv.doc.waterloo.mcp.wtrl_tools.DocstringMode_t": {
+            "doc": {},
+            "doc_lines": [
+                "The mode of the docstring template, either |value|`minimal` or |value|`full`."
+            ]
+        },
+        "sdv.doc.waterloo.mcp.wtrl_tools.DocstringIndentMode_t": {
+            "doc": {},
+            "doc_lines": [
+                "The indentation mode for generated docstrings, either |value|`tab` or |value|`spc4`."
+            ]
+        },
+        "sdv.doc.waterloo.mcp.wtrl_tools.DocstringJsonMode_t": {
+            "doc": {},
+            "doc_lines": [
+                "The JSON output mode for generated docstrings, either |value|`full` or |value|`doc_only`."
+            ]
         }
     }
 }

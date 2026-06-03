@@ -35,11 +35,15 @@ Typical usage:
   - set `allowed_hosts = ["127.0.0.1:8000"]`
   - connect the Inspector to `http://127.0.0.1:8000/mcp`
 - inspect `tools/list`
+- call `describe_tool` with a canonical tool name
 - call `list_roots`
 - call `get_root` with a `root_id`
 - call `get_object` with a `root_id` and `qid`
 - call `get_section` with a `root_id`, `qid`, and section name
 - call `get_subsection` with a `root_id`, `qid`, section name, and subsection name
+- call `get_signature` with a `root_id` and `qid`
+- call `get_examples` with a `root_id` and `qid`
+- call `get_example_source` with a `root_id` and canonical example path
 - call `search_objects` with an expression and an optional filter object
 - call `search_sections` with an expression and an optional filter object
 - call `search_text` with a list of terms and an optional filter object
@@ -54,9 +58,10 @@ Pytest workflow:
   wire behavior stays close to the actual browser/Inspector workflow
 
 Lookup failures are currently reported as standardized tool messages with
-`MCPS-001` through `MCPS-004` prefixes, for example unknown `root_id`,
-unknown `qid`, or unknown section and subsection labels. `MCPS-005` is
-reserved for a future root-size guardrail.
+`MCPS-001` through `MCPS-007` prefixes, for example unknown `root_id`,
+unknown `qid`, unknown section and subsection labels, an unknown example
+reference, or an unknown tool name. `MCPS-005` is reserved for the root-size
+guardrail on `get_root`.
 
 The text-vs-structured error question is still open; see
 `package_main/doc/source/mcp.rst` for the normative current status.
