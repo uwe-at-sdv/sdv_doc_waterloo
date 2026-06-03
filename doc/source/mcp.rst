@@ -57,6 +57,9 @@ The MCP-server supports the following tools:
 	* - Object content access
 	  - :wtrl_cmd:`get_subsection`
 	  - Read one stored subsection of one Waterloo object.
+	* - Object inventory
+	  - :wtrl_cmd:`list_objects`
+	  - List all Waterloo objects in one configured root.
 	* - Object content access
 	  - :wtrl_cmd:`get_signature`
 	  - Read the stored signature block for one Waterloo object.
@@ -66,6 +69,9 @@ The MCP-server supports the following tools:
 	* - Reference lookup
 	  - :wtrl_cmd:`get_references`
 	  - Read structured incoming See_also references for one Waterloo object.
+	* - Graph navigation
+	  - :wtrl_cmd:`search_related`
+	  - Read the star-shaped See_also neighborhood for one Waterloo object.
 	* - Example lookup
 	  - :wtrl_cmd:`get_examples`
 	  - Read structured example metadata for one Waterloo object.
@@ -91,14 +97,17 @@ Typical agent workflow
 The lookup-oriented tools are meant to be used in a simple progression:
 
 1. :wtrl_cmd:`list_roots` to discover available roots.
-2. :wtrl_cmd:`search_objects` to find candidate objects and obtain stable ``root_id`` / ``qid`` pairs.
-3. :wtrl_cmd:`get_section` or :wtrl_cmd:`get_subsection` to inspect the relevant contract, notes, or other structured sections.
-4. :wtrl_cmd:`search_sections` when the agent wants to find section or subsection labels rather than object names.
-5. :wtrl_cmd:`describe_tool` when the agent wants to inspect the signature and Waterloo docstring of one MCP tool.
-6. :wtrl_cmd:`get_signature` when the agent wants to inspect the canonical stored signature for one object.
-7. :wtrl_cmd:`get_examples` when the agent wants to inspect available example references for one object.
-8. :wtrl_cmd:`get_example_source` when the agent wants to retrieve the raw source text for one canonical example reference.
-9. :wtrl_cmd:`search_text` when the agent wants to search the actual content text with a small set of terms.
+2. :wtrl_cmd:`list_objects` to inventory the objects in one root before drilling down.
+3. :wtrl_cmd:`search_objects` to find candidate objects and obtain stable ``root_id`` / ``qid`` pairs.
+4. :wtrl_cmd:`get_section` or :wtrl_cmd:`get_subsection` to inspect the relevant contract, notes, or other structured sections.
+5. :wtrl_cmd:`search_sections` when the agent wants to find section or subsection labels rather than object names.
+6. :wtrl_cmd:`describe_tool` when the agent wants to inspect the signature and Waterloo docstring of one MCP tool.
+7. :wtrl_cmd:`get_signature` when the agent wants to inspect the canonical stored signature for one object.
+8. :wtrl_cmd:`get_references` when the agent wants to inspect incoming structured See_also references for one object.
+9. :wtrl_cmd:`search_related` when the agent wants a compact star-shaped See_also neighborhood around one object.
+10. :wtrl_cmd:`get_examples` when the agent wants to inspect available example references for one object.
+11. :wtrl_cmd:`get_example_source` when the agent wants to retrieve the raw source text for one canonical example reference.
+12. :wtrl_cmd:`search_text` when the agent wants to search the actual content text with a small set of terms.
 
 In practice this means that the agent can start with a vague name, narrow it
 down to a canonical target, and then inspect the exact Waterloo text that

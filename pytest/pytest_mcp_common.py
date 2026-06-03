@@ -155,6 +155,22 @@ def mcp_call_tool(session_id: str, name: str, arguments: dict[str, object]) -> d
 	return result
 
 
+def mcp_call_tool_error_text(session_id: str, name: str, arguments: dict[str, object]) -> str:
+	result = mcp_call_tool(session_id, name, arguments)
+	if result.get("isError") is not True:
+		raise AssertionError(f"expected tool call to fail: {result}")
+	content = result.get("content")
+	if not isinstance(content, list) or not content:
+		raise AssertionError(f"error result has no content list: {result}")
+	first = content[0]
+	if not isinstance(first, dict):
+		raise AssertionError(f"error result first content item is not an object: {result}")
+	text = first.get("text")
+	if not isinstance(text, str):
+		raise AssertionError(f"error result first content item has no text: {result}")
+	return text
+
+
 def mcp_list_roots(session_id: str) -> list[dict[str, object]]:
 	return mcp_call_tool_entries(session_id, "list_roots", {})
 

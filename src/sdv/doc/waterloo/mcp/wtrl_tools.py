@@ -10,11 +10,11 @@ Contract:
 	general:
 		|Must| provide the tool set for the Waterloo MCP-server.
 Public_classes:
-	ExampleRef, ReferenceRecord, SearchObjectsFilter, SearchSectionsFilter, SearchTextFilter
+	ExampleRef, ObjectSummary, ReferenceRecord, RelatedRecord, SearchObjectsFilter, SearchSectionsFilter, SearchTextFilter
 Public_functions:
 	matches_segment_aware_expression,
-	list_roots, get_root, get_object, get_section, get_subsection,
-	get_references, get_signature, get_examples, get_example_source,
+	list_roots, get_root, get_object, get_section, get_subsection, list_objects,
+	get_references, search_related, get_signature, get_examples, get_example_source,
 	search_objects, search_sections, search_text, gen_docstring
 Function_overview:
 	matches_segment_aware_expression:
@@ -31,6 +31,8 @@ Function_overview:
 		[MCP tool] Resolve one named subsection of one section of one object inside one configured root and return the stored subsection value.
 	get_references:
 		[MCP tool] Return the structured incoming See_also references for one object using a reverse lookup map.
+	search_related:
+		[MCP tool] Return a compact star-shaped neighborhood around one object using the structured See_also graph.
 	get_signature:
 		[MCP tool] Return the stored signature block for one object without reconstructing it.
 	get_examples:
@@ -222,6 +224,41 @@ class ReferenceRecord(BaseModel):
 	is_normative: bool
 
 
+class RelatedRecord(BaseModel):
+	r"""
+	Preamble:
+		profile:
+			class
+		normative_sections:
+			Contract
+		scope:
+			extension
+	Contract:
+		general:
+			|Must| represent one direct related-object edge in the Waterloo MCP server.
+			|Must| keep the record compact and stable so that star-shaped graph lookups can be reused directly by MCP clients.
+		constructor:
+			|Must| accept the following fields:
+			- related_root_id: stable root identifier of the related object.
+			- related_qid: fully qualified identifier of the related object.
+			- related_profile: Waterloo docstring profile of the related object.
+			- direction: whether the edge points away from the anchor object, back to it, or both after deduplication.
+			- relation_kind: the kind of relation represented by the edge.
+			- is_normative: whether the relation was recorded in a normative section.
+	Notes:
+		Purpose:
+			This record is the canonical Waterloo representation for the first star-shaped related-object lookup.
+	"""
+	model_config = ConfigDict(extra="forbid")
+
+	related_root_id: str
+	related_qid: str
+	related_profile: DocstringProfile_t
+	direction: Literal["in", "out", "in_out"]
+	relation_kind: Literal["see_also"]
+	is_normative: bool
+
+
 class ExampleRef(BaseModel):
 	r"""
 	Preamble:
@@ -253,6 +290,45 @@ class ExampleRef(BaseModel):
 	title: str | None = None
 	lang: str
 	size: int
+
+
+class ObjectSummary(BaseModel):
+	r"""
+	Preamble:
+		profile:
+			class
+		normative_sections:
+			Contract
+		scope:
+			extension
+	Contract:
+		general:
+			|Must| represent one inventory row for one Waterloo object in the MCP server.
+			|Must| keep the record compact and stable so that clients can decide quickly whether they need to drill down further.
+		constructor:
+			|Must| accept the following fields:
+			- qid: fully qualified object identifier.
+			- profile: Waterloo docstring profile if the object has a docstring, otherwise |None|.
+			- kind: always meaningful Waterloo object kind.
+			- scope: canonical Waterloo scope name, defaulting to |value|`public`.
+			- status: Waterloo status name if present, otherwise |None|.
+			- has_doc: whether a docstring is present.
+			- has_examples: whether example references are present.
+			- has_see_also: whether the docstring contains structured |lit|`See_also` references.
+	Notes:
+		Purpose:
+			This record is the canonical Waterloo representation for root-level object inventories.
+	"""
+	model_config = ConfigDict(extra="forbid")
+
+	qid: str
+	profile: str | None = None
+	kind: SearchObjectKind_t
+	scope: str = "public"
+	status: str | None = None
+	has_doc: bool = False
+	has_examples: bool = False
+	has_see_also: bool = False
 
 
 # The Pydantic base classes are only needed for class construction above.
@@ -328,7 +404,7 @@ def _object_kind(document: Mapping[str, object], qid: str, object_record: Mappin
 	return _object_kind_from_toc(document, qid) or _object_kind_from_profile(object_record)
 
 
-def _doc_profile(object_record: Mapping[str, object]) -> str:
+def _doc_profile_or_none(object_record: Mapping[str, object]) -> str | None:
 	doc = object_record.get("doc", {})
 	if isinstance(doc, Mapping):
 		preamble = doc.get("Preamble", {})
@@ -336,7 +412,54 @@ def _doc_profile(object_record: Mapping[str, object]) -> str:
 			profile = str(preamble.get("profile", "")).strip().lower()
 			if profile in {"module", "class", "function", "method", "inherited_method"}:
 				return profile
-	return "module"
+	return None
+
+
+def _doc_profile(object_record: Mapping[str, object]) -> str:
+	return _doc_profile_or_none(object_record) or "module"
+
+
+def _doc_scope(object_record: Mapping[str, object]) -> str:
+	doc = object_record.get("doc", {})
+	if isinstance(doc, Mapping):
+		preamble = doc.get("Preamble", {})
+		if isinstance(preamble, Mapping):
+			scope_data = preamble.get("scope")
+			if isinstance(scope_data, str):
+				scope = scope_data.strip().lower()
+				if scope:
+					return scope
+			if isinstance(scope_data, list):
+				for item in scope_data:
+					scope = str(item).strip().lower()
+					if scope:
+						return scope
+	return "public"
+
+
+def _doc_status(object_record: Mapping[str, object]) -> str | None:
+	doc = object_record.get("doc", {})
+	if isinstance(doc, Mapping):
+		preamble = doc.get("Preamble", {})
+		if isinstance(preamble, Mapping):
+			status = str(preamble.get("status", "")).strip().lower()
+			if status:
+				return status
+	return None
+
+
+def _has_doc(object_record: Mapping[str, object]) -> bool:
+	doc = object_record.get("doc", {})
+	return isinstance(doc, Mapping) and isinstance(doc.get("Preamble"), Mapping)
+
+
+def _has_examples(object_record: Mapping[str, object]) -> bool:
+	examples = object_record.get("examples")
+	return isinstance(examples, list) and any(str(item).strip() for item in examples)
+
+
+def _has_see_also(object_record: Mapping[str, object]) -> bool:
+	return bool(_doc_see_also_refs(object_record))
 
 
 def _object_scopes(object_record: Mapping[str, object]) -> set[str]:
@@ -516,6 +639,62 @@ def _load_root_context(root_id: str, roots: list[Mapping[str, WtrlJsonNode_t]]) 
 	return idx, root_data, root_path, document
 
 
+def _doc_normative_sections(object_record: Mapping[str, object]) -> set[str]:
+	doc = object_record.get("doc", {})
+	if not isinstance(doc, Mapping):
+		return set()
+	preamble = doc.get("Preamble", {})
+	if not isinstance(preamble, Mapping):
+		return set()
+	sections = preamble.get("normative_sections", [])
+	if not isinstance(sections, list):
+		return set()
+	return {str(section).strip() for section in sections if str(section).strip()}
+
+
+def _doc_see_also_refs(object_record: Mapping[str, object]) -> list[str]:
+	doc = object_record.get("doc", {})
+	if not isinstance(doc, Mapping):
+		return []
+	see_also = doc.get("See_also")
+	if not isinstance(see_also, list):
+		return []
+	return [str(item).strip() for item in see_also if str(item).strip()]
+
+
+def _resolve_related_targets(
+	ref: str,
+	source_root_id: str,
+	source_qid: str,
+	qids_to_roots: Mapping[str, set[str]],
+) -> list[tuple[str, str]]:
+	candidates: list[str] = []
+	if "." in ref:
+		candidates.append(ref)
+	if "." in source_qid:
+		candidates.append(f"{source_qid.rsplit('.', 1)[0]}.{ref}")
+	else:
+		candidates.append(f"{source_qid}.{ref}")
+	candidates.append(ref)
+
+	resolved: list[tuple[str, str]] = []
+	seen_candidates: set[str] = set()
+	for cand in candidates:
+		if cand in seen_candidates:
+			continue
+		seen_candidates.add(cand)
+		root_ids = qids_to_roots.get(cand)
+		if not root_ids:
+			continue
+		if source_root_id in root_ids:
+			resolved.append((source_root_id, cand))
+			continue
+		if len(root_ids) == 1:
+			root_id = next(iter(root_ids))
+			resolved.append((root_id, cand))
+	return resolved
+
+
 def _get_root_record(root_id: str, roots: list[Mapping[str, WtrlJsonNode_t]]) -> tuple[int, Mapping[str, WtrlJsonNode_t]]:
 	return _find_root_by_id(roots, root_id)
 
@@ -541,11 +720,18 @@ def list_roots(roots: list[Mapping[str, WtrlJsonNode_t]]) -> list[dict[str, Wtrl
 		general:
 			|Must| extract attributes from the provided root entries (as given in the configuration), derive a stable root identifier from the canonical absolute path of each root locator, and return a list of dictionaries with specific keys.
 			|Must| define the |attr|`root_id` of one root as a short stable hash of that canonical absolute path, independent of labels and configuration order.
+			|Must| return one dictionary per root entry with the following mandatory attributes:
+			- |attr|`root_id`: stable hash of the canonical absolute root path.
+			- |attr|`root_index`: zero-based index in the input list.
+			- |attr|`label`: human-readable root label from configuration, or derived from path name.
+			- |attr|`kind`: root kind from configuration or derived from filesystem classification.
+			- |attr|`path`: canonical absolute path as a string.
+			- |attr|`enabled`: boolean indicating whether the root is active.
 	Parameters:
 		roots:
 			The list of root configurations to process.
 	Returns:
-		A list of dictionaries, each representing a root document with its attributes.
+		A list of dictionaries, each with the mandatory attributes described above.
 	Raises:
 	"""
 	out: list[dict[str, WtrlJsonNode_t]] = []
@@ -730,6 +916,64 @@ def get_subsection(root_id: str, qid: str, section: str, subsection: str, roots:
 	}
 
 
+def list_objects(root_id: str, roots: list[Mapping[str, WtrlJsonNode_t]]) -> list[ObjectSummary]:
+	r"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+		scope:
+			extension
+	Contract:
+		general:
+			|Must| return a compact inventory of all objects in one configured root.
+			|Must| keep the inventory deterministic by sorting rows by QID.
+			|Must| derive the public-facing scope field from the docstring when present and default it to |value|`public` otherwise.
+			|Must| leave the status field empty unless the docstring explicitly provides one.
+	Parameters:
+		root_id:
+			The canonical root identifier derived from the canonical absolute root path.
+		roots:
+			The list of configured root entries.
+	Notes:
+		Parameters:
+			MCP callers only pass ``root_id``; the server injects the root list internally.
+		Example:
+			``list_objects(root_id="...")``
+	Returns:
+		A list of ObjectSummary records, one per object in the configured root.
+	Raises:
+		ValueError:
+			|May| raise if the root identifier is unknown or the root document does not contain a usable object table.
+		FileNotFoundError:
+			|May| raise if the configured root path no longer exists.
+		json.JSONDecodeError:
+			|May| raise if the root file is not valid JSON.
+	"""
+	_, _, _, document = _load_root_context(root_id, roots)
+	objects = document.get("__WTRL_OBJECTS__", {})
+	if not isinstance(objects, Mapping):
+		raise ValueError(f"Unknown root_id: {root_id}")
+	summaries: list[ObjectSummary] = []
+	for qid, object_record in sorted(objects.items(), key=lambda item: str(item[0])):
+		if not isinstance(object_record, Mapping):
+			continue
+		summaries.append(
+			ObjectSummary(
+				qid=str(qid),
+				profile=_doc_profile_or_none(object_record),
+				kind=cast(SearchObjectKind_t, _object_kind(document, str(qid), object_record)),
+				scope=_doc_scope(object_record),
+				status=_doc_status(object_record),
+				has_doc=_has_doc(object_record),
+				has_examples=_has_examples(object_record),
+				has_see_also=_has_see_also(object_record),
+			)
+		)
+	return summaries
+
+
 def get_references(
 	reference_index: Mapping[tuple[str, str], list[ReferenceRecord]],
 	root_id: str,
@@ -748,6 +992,7 @@ def get_references(
 		general:
 			|Must| return the structured incoming See_also references for one object from the provided reverse lookup map.
 			|Must| treat the lookup as a simple read-only reverse-map access and filter the result when normative_only is requested.
+			|Must| return an empty list when the reverse map has no entry for the requested root/QID pair.
 	Parameters:
 		reference_index:
 			The reverse lookup map built by the server at startup.
@@ -775,6 +1020,176 @@ def get_references(
 	if normative_only:
 		records = [record for record in records if record.is_normative]
 	return records
+
+
+def search_related(
+	reference_index: Mapping[tuple[str, str], list[ReferenceRecord]],
+	qids_to_roots: Mapping[str, set[str]],
+	root_id: str,
+	qid: str,
+	roots: list[Mapping[str, WtrlJsonNode_t]],
+	normative_only: bool = False,
+) -> list[RelatedRecord]:
+	r"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+		scope:
+			extension
+	Contract:
+		general:
+			|Must| return the direct star-shaped neighborhood around one object using the structured See_also graph.
+			|Must| use only structured See_also relations and stay separate from full-text search.
+			|Must| keep the first version centered on one anchor object, deduplicate matching neighbors,\
+			and collapse the direct relation direction to in, out, or in_out.
+			|Must| return an empty list when the anchor object has no related neighbors in the structured graph.
+	Parameters:
+		reference_index:
+			The reverse lookup map built by the server at startup.
+		qids_to_roots:
+			The map from canonical QID to the set of root identifiers that contain that QID.
+		root_id:
+			The canonical root identifier of the anchor object whose neighborhood should be returned.
+		qid:
+			The fully qualified identifier of the anchor object whose neighborhood should be returned.
+		roots:
+			The list of configured root entries.
+		normative_only:
+			Whether to keep only relations recorded from a normative See_also section.
+	Notes:
+		Parameters:
+			MCP callers only pass ``root_id``, ``qid`` and optionally ``normative_only``;
+			the server injects ``reference_index``, ``qids_to_roots`` and ``roots`` internally.
+		Example:
+			``search_related(root_id="...", qid="...")``
+	Returns:
+		A list of RelatedRecord records for the anchor object's direct neighborhood with deduplicated neighbor entries.
+	Raises:
+		ValueError:
+			|May| raise if the root identifier is unknown, the QID is unknown, or the loaded object is not a supported Waterloo profile.
+		FileNotFoundError:
+			|May| raise if the configured root path no longer exists.
+		json.JSONDecodeError:
+			|May| raise if the root file is not valid JSON.
+	"""
+	_, _, _, document = _load_root_context(root_id, roots)
+	objects = document.get("__WTRL_OBJECTS__", {})
+	if not isinstance(objects, Mapping):
+		raise ValueError(f"Unknown qid: {qid}")
+	object_record = objects.get(qid)
+	if not isinstance(object_record, Mapping):
+		raise ValueError(f"Unknown qid: {qid}")
+	anchor_profile = _doc_profile(object_record)
+	if anchor_profile not in {"module", "class", "function", "method"}:
+		raise ValueError(f"Unknown qid: {qid}")
+	anchor_refs = _doc_see_also_refs(object_record)
+	anchor_is_normative = "See_also" in _doc_normative_sections(object_record)
+
+	root_context_cache: dict[str, tuple[int, Mapping[str, WtrlJsonNode_t], Path, dict[str, WtrlJsonNode_t]]] = {
+		root_id: (0, {}, Path(), document),
+	}
+
+	def _load_object_record(target_root_id: str, target_qid: str) -> Mapping[str, object] | None:
+		context = root_context_cache.get(target_root_id)
+		if context is None:
+			context = _load_root_context(target_root_id, roots)
+			root_context_cache[target_root_id] = context
+		_, _, _, target_document = context
+		target_objects = target_document.get("__WTRL_OBJECTS__", {})
+		if not isinstance(target_objects, Mapping):
+			return None
+		target_record = target_objects.get(target_qid)
+		if isinstance(target_record, Mapping):
+			return target_record
+		return None
+
+	related: list[RelatedRecord] = []
+	related_map: dict[tuple[str, str, str, str], dict[str, bool | set[str]]] = {}
+
+	def _related_key(related_root_id: str, related_qid: str, related_profile: str, relation_kind: str) -> tuple[str, str, str, str]:
+		return (related_root_id, related_qid, related_profile, relation_kind)
+
+	def _add_related(
+		related_root_id: str,
+		related_qid: str,
+		related_profile: str,
+		direction: str,
+		is_normative: bool,
+	) -> None:
+		key = _related_key(related_root_id, related_qid, related_profile, "see_also")
+		entry = related_map.setdefault(
+			key,
+			{
+				"directions": set(),
+				"is_normative": False,
+			},
+		)
+		directions = entry["directions"]
+		if isinstance(directions, set):
+			directions.add(direction)
+		entry["is_normative"] = bool(entry["is_normative"]) or is_normative
+
+	if not normative_only or anchor_is_normative:
+		for ref in anchor_refs:
+			for related_root_id, related_qid in _resolve_related_targets(ref, root_id, qid, qids_to_roots):
+				target_record = _load_object_record(related_root_id, related_qid)
+				if target_record is None:
+					continue
+				related_profile = _doc_profile(target_record)
+				if related_profile not in {"module", "class", "function", "method"}:
+					continue
+				_add_related(
+					related_root_id=related_root_id,
+					related_qid=related_qid,
+					related_profile=related_profile,
+					direction="out",
+					is_normative=anchor_is_normative,
+				)
+
+	for record in reference_index.get((root_id, qid), []):
+		record = record if isinstance(record, ReferenceRecord) else ReferenceRecord.model_validate(record)
+		if normative_only and not record.is_normative:
+			continue
+		_add_related(
+			related_root_id=record.source_root_id,
+			related_qid=record.source_qid,
+			related_profile=record.source_profile,
+			direction="in",
+			is_normative=record.is_normative,
+		)
+
+	for related_root_id, related_qid, related_profile, relation_kind in sorted(related_map):
+		entry = related_map[(related_root_id, related_qid, related_profile, relation_kind)]
+		directions = entry["directions"]
+		if not isinstance(directions, set):
+			continue
+		direction = "in_out" if {"in", "out"}.issubset(directions) else ("out" if "out" in directions else "in")
+		is_normative = bool(entry["is_normative"])
+		related_record = RelatedRecord(
+			related_root_id=related_root_id,
+			related_qid=related_qid,
+			related_profile=cast(DocstringProfile_t, related_profile),
+			direction=cast(Literal["in", "out", "in_out"], direction),
+			relation_kind=cast(Literal["see_also"], relation_kind),
+			is_normative=is_normative,
+		)
+		if normative_only and not related_record.is_normative:
+			continue
+		related.append(related_record)
+
+	related.sort(
+		key=lambda record: (
+			record.related_root_id,
+			record.related_qid,
+			0 if record.direction == "out" else 1 if record.direction == "in_out" else 2,
+			record.relation_kind,
+			record.related_profile,
+			0 if record.is_normative else 1,
+		)
+	)
+	return related
 
 
 def get_signature(root_id: str, qid: str, roots: list[Mapping[str, WtrlJsonNode_t]]) -> dict[str, WtrlJsonNode_t]:
@@ -807,6 +1222,10 @@ def get_signature(root_id: str, qid: str, roots: list[Mapping[str, WtrlJsonNode_
 	Raises:
 		ValueError:
 			|May| raise if the root identifier or QID is unknown.
+		FileNotFoundError:
+			|May| raise if the configured root path no longer exists.
+		json.JSONDecodeError:
+			|May| raise if the root file is not valid JSON.
 	"""
 	idx, root_data, root_path, document = _load_root_context(root_id, roots)
 	objects = document.get("__WTRL_OBJECTS__", {})
@@ -889,6 +1308,10 @@ def get_examples(
 	Raises:
 		ValueError:
 			|May| raise if the root identifier or QID is unknown.
+		FileNotFoundError:
+			|May| raise if the configured root path no longer exists.
+		json.JSONDecodeError:
+			|May| raise if the root file is not valid JSON.
 	"""
 	_, _, _, document = _load_root_context(root_id, roots)
 	objects = document.get("__WTRL_OBJECTS__", {})
@@ -964,6 +1387,10 @@ def get_example_source(
 	Raises:
 		ValueError:
 			|May| raise if the root identifier is unknown or if the example reference is unknown.
+		FileNotFoundError:
+			|May| raise if the configured root path no longer exists.
+		json.JSONDecodeError:
+			|May| raise if the root file is not valid JSON.
 	"""
 	example_entry = _example_source_entry(root_id, example_path, roots)
 	code = example_entry.get("code")
@@ -999,6 +1426,10 @@ def search_objects(
 	Returns:
 		A list of triples ``(root_id, qid, kind)`` for matching objects.
 	Raises:
+		FileNotFoundError:
+			|May| raise if a configured root path no longer exists while the search is being evaluated.
+		json.JSONDecodeError:
+			|May| raise if a root file is not valid JSON while the search is being evaluated.
 	"""
 	expression = expression.strip()
 	if not expression:
@@ -1063,6 +1494,10 @@ def search_sections(
 	Returns:
 		A list of dictionaries describing matching section or subsection labels together with their object and root location.
 	Raises:
+		FileNotFoundError:
+			|May| raise if a configured root path no longer exists while the search is being evaluated.
+		json.JSONDecodeError:
+			|May| raise if a root file is not valid JSON while the search is being evaluated.
 	"""
 	expression = expression.strip()
 	if not expression:
@@ -1157,6 +1592,10 @@ def search_text(
 	Returns:
 		A list of dictionaries describing matching text locations together with their object and root location, plus a compact excerpt.
 	Raises:
+		FileNotFoundError:
+			|May| raise if a configured root path no longer exists while the search is being evaluated.
+		json.JSONDecodeError:
+			|May| raise if a root file is not valid JSON while the search is being evaluated.
 	"""
 	terms = [str(term).strip() for term in terms if str(term).strip()]
 	if not terms:
@@ -1594,6 +2033,10 @@ def gen_docstring(
 	Raises:
 		ValueError:
 			|May| be raised if the profile requires a signature and none is given.
+		FileNotFoundError:
+			|May| be raised if the generator needs to resolve a profile-specific source and the configured root path no longer exists.
+		json.JSONDecodeError:
+			|May| be raised if a profile-specific source has invalid JSON content.
 	"""
 	if mode not in {"minimal", "full"}:
 		raise ValueError(f"unknown docstring mode: {mode}")

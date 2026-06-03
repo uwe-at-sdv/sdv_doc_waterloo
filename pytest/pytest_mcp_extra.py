@@ -1,0 +1,231 @@
+#!/usr/bin/env python3
+"""Pytests for the remaining Waterloo MCP discovery and lookup tools."""
+
+from __future__ import annotations
+
+import pytest
+
+from pytest_mcp_common import mcp_call_tool, mcp_call_tool_entries, mcp_call_tool_error_text, mcp_or_skip
+
+
+@pytest.fixture(scope="module")
+def mcp_session() -> str:
+	return mcp_or_skip()
+
+
+def _structured_result(result: dict[str, object]) -> dict[str, object]:
+	if result.get("isError") is True:
+		raise AssertionError(f"tool call failed: {result}")
+	structured = result.get("structuredContent")
+	if not isinstance(structured, dict):
+		raise AssertionError(f"missing structuredContent: {result}")
+	return structured
+
+
+def test_mcp_describe_tool_mentions_search_related(mcp_session: str) -> None:
+	result = mcp_call_tool(mcp_session, "describe_tool", {"toolname": "search_related"})
+	structured = _structured_result(result)
+	help_text = structured.get("result")
+	assert isinstance(help_text, str), structured
+	assert "search_related" in help_text, help_text
+	assert "Signature:" in help_text, help_text
+	assert "Waterloo docstring:" in help_text, help_text
+	assert "direction" in help_text, help_text
+
+
+def test_mcp_describe_tool_mentions_list_objects(mcp_session: str) -> None:
+	result = mcp_call_tool(mcp_session, "describe_tool", {"toolname": "list_objects"})
+	structured = _structured_result(result)
+	help_text = structured.get("result")
+	assert isinstance(help_text, str), structured
+	assert "list_objects" in help_text, help_text
+	assert "root_id" in help_text, help_text
+	assert "Waterloo docstring:" in help_text, help_text
+	assert "ObjectSummary" in help_text, help_text
+
+
+def test_mcp_get_signature_returns_wrapper_for_function(mcp_session: str) -> None:
+	result = mcp_call_tool(
+		mcp_session,
+		"get_signature",
+		{
+			"root_id": "root:eadb7d51f9fa",
+			"qid": "wtrl_server.build_app",
+		},
+	)
+	structured = _structured_result(result)
+	assert structured.get("qid") == "wtrl_server.build_app", structured
+	assert structured.get("profile") == "function", structured
+	signature = structured.get("signature")
+	assert isinstance(signature, dict), structured
+	assert signature.get("text") == "build_app(config: McpConfig) -> FastMCP", signature
+	parameters = signature.get("parameters")
+	assert isinstance(parameters, list) and [entry.get("name") for entry in parameters if isinstance(entry, dict)] == ["config"], signature
+	assert signature.get("returns") == "FastMCP", signature
+
+
+def test_mcp_list_objects_reports_inventory_rows(mcp_session: str) -> None:
+	entries = mcp_call_tool_entries(
+		mcp_session,
+		"list_objects",
+		{
+			"root_id": "root:352f5dfbee7c",
+		},
+	)
+	assert entries, entries
+	row = next(entry for entry in entries if entry.get("qid") == "tde4.get3DEVersion")
+	assert row.get("profile") == "function", row
+	assert row.get("kind") == "callable", row
+	assert row.get("scope") == "public", row
+	assert row.get("status") is None, row
+	assert row.get("has_doc") is True, row
+	assert row.get("has_examples") is True, row
+	assert row.get("has_see_also") is True, row
+
+
+def test_mcp_get_references_and_search_related_agree_on_tde4_widget_callback_function(
+	mcp_session: str,
+) -> None:
+	references = mcp_call_tool_entries(
+		mcp_session,
+		"get_references",
+		{
+			"root_id": "root:352f5dfbee7c",
+			"qid": "tde4.setWidgetCallbackFunction",
+		},
+	)
+	reference_qids = {entry.get("source_qid") for entry in references if isinstance(entry.get("source_qid"), str)}
+	assert "tde4.addButtonWidget" in reference_qids, references
+	assert "tde4.getWidgetCallbackFunction" in reference_qids, references
+	assert "tde4.setWidgetShortcut" in reference_qids, references
+
+	related = mcp_call_tool_entries(
+		mcp_session,
+		"search_related",
+		{
+			"root_id": "root:352f5dfbee7c",
+			"qid": "tde4.setWidgetCallbackFunction",
+		},
+	)
+	related_qids = {entry.get("related_qid") for entry in related if isinstance(entry.get("related_qid"), str)}
+	assert "tde4.addButtonWidget" in related_qids, related
+	assert "tde4.getWidgetCallbackFunction" in related_qids, related
+	assert "tde4.setWidgetShortcut" in related_qids, related
+	directions = {entry.get("direction") for entry in related if isinstance(entry.get("direction"), str)}
+	assert directions <= {"in", "out", "in_out"}, related
+
+
+def test_mcp_get_references_unknown_qid_returns_empty_list(mcp_session: str) -> None:
+	entries = mcp_call_tool_entries(
+		mcp_session,
+		"get_references",
+		{
+			"root_id": "root:eadb7d51f9fa",
+			"qid": "does.not.exist",
+		},
+	)
+	assert entries == [], entries
+
+
+def test_mcp_search_related_unknown_qid_reports_unknown_qid(mcp_session: str) -> None:
+	text = mcp_call_tool_error_text(
+		mcp_session,
+		"search_related",
+		{
+			"root_id": "root:eadb7d51f9fa",
+			"qid": "does.not.exist",
+		},
+	)
+	assert "Unknown qid: does.not.exist" in text, text
+
+
+def test_mcp_get_examples_and_source_roundtrip_for_tde4_version(mcp_session: str) -> None:
+	examples = mcp_call_tool_entries(
+		mcp_session,
+		"get_examples",
+		{
+			"root_id": "root:352f5dfbee7c",
+			"qid": "tde4.get3DEVersion",
+		},
+	)
+	assert examples, examples
+	first = examples[0]
+	example_path = first.get("example_path")
+	assert isinstance(example_path, str), first
+	assert example_path.startswith("/__WTRL_EXAMPLES__/sha256_"), example_path
+	assert first.get("lang") == "python", first
+	assert isinstance(first.get("size"), int) and first.get("size") > 0, first
+
+	result = mcp_call_tool(
+		mcp_session,
+		"get_example_source",
+		{
+			"root_id": "root:352f5dfbee7c",
+			"example_path": example_path,
+		},
+	)
+	structured = _structured_result(result)
+	source = structured.get("result")
+	assert isinstance(source, str), structured
+	assert "get3DEVersion" in source, source
+
+
+def test_mcp_get_signature_module_returns_no_signature_block(mcp_session: str) -> None:
+	result = mcp_call_tool(
+		mcp_session,
+		"get_signature",
+		{
+			"root_id": "root:eadb7d51f9fa",
+			"qid": "wtrl_tools",
+		},
+	)
+	structured = _structured_result(result)
+	assert structured.get("profile") == "module", structured
+	assert structured.get("signature") is None, structured
+
+
+def test_mcp_get_signature_unknown_qid_reports_mcps_002(mcp_session: str) -> None:
+	text = mcp_call_tool_error_text(
+		mcp_session,
+		"get_signature",
+		{
+			"root_id": "root:eadb7d51f9fa",
+			"qid": "does.not.exist",
+		},
+	)
+	assert "Unknown qid: does.not.exist" in text, text
+
+
+def test_mcp_get_examples_unknown_qid_reports_mcps_002(mcp_session: str) -> None:
+	text = mcp_call_tool_error_text(
+		mcp_session,
+		"get_examples",
+		{
+			"root_id": "root:eadb7d51f9fa",
+			"qid": "does.not.exist",
+		},
+	)
+	assert "Unknown qid: does.not.exist" in text, text
+
+
+def test_mcp_get_example_source_unknown_example_reports_mcps_006(mcp_session: str) -> None:
+	text = mcp_call_tool_error_text(
+		mcp_session,
+		"get_example_source",
+		{
+			"root_id": "root:352f5dfbee7c",
+			"example_path": "/__WTRL_EXAMPLES__/sha256_does_not_exist",
+		},
+	)
+	assert "MCPS-006 unknown example reference" in text, text
+
+
+def test_mcp_describe_tool_unknown_tool_reports_mcps_007(mcp_session: str) -> None:
+	text = mcp_call_tool_error_text(
+		mcp_session,
+		"describe_tool",
+		{
+			"toolname": "does_not_exist",
+		},
+	)
+	assert "MCPS-007 unknown tool" in text, text

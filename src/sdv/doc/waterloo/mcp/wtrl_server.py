@@ -52,7 +52,9 @@ from sdv.doc.waterloo.mcp.wtrl_tools import (
     DocstringMode_t,
     DocstringProfile_t,
     ExampleRef,
+    ObjectSummary,
     ReferenceRecord,
+    RelatedRecord,
     SearchObjectsFilter,
     SearchSectionsFilter,
     SearchTextFilter,
@@ -65,8 +67,10 @@ from sdv.doc.waterloo.mcp.wtrl_tools import (
     get_root,
     get_section,
     get_subsection,
+    list_objects,
     list_roots,
     search_objects,
+    search_related,
     search_sections,
     search_text,
     _canonical_root_path,
@@ -129,6 +133,7 @@ class ReferenceIndex:
 	"""Cached reverse reference map and root modification timestamps."""
 
 	reverse_map: dict[tuple[str, str], list[ReferenceRecord]]
+	qids_to_roots: dict[str, set[str]]
 	root_mtimes: dict[str, RootMTimeRecord]
 
 
@@ -350,9 +355,9 @@ def _resolve_reference_targets(
 
 def _build_reference_index(roots: list[RootConfig]) -> ReferenceIndex:
 	reverse_map: dict[tuple[str, str], list[ReferenceRecord]] = {}
+	qids_to_roots: dict[str, set[str]] = {}
 	root_mtimes: dict[str, RootMTimeRecord] = {}
 	objects_by_root: dict[str, list[tuple[str, Mapping[str, WtrlJsonNode_t]]]] = {}
-	qids_to_roots: dict[str, set[str]] = {}
 
 	for root in roots:
 		if not root.enabled:
@@ -399,7 +404,7 @@ def _build_reference_index(roots: list[RootConfig]) -> ReferenceIndex:
 
 	for records in reverse_map.values():
 		records.sort(key=lambda record: (record.source_root_id, record.source_qid, record.source_profile))
-	return ReferenceIndex(reverse_map=reverse_map, root_mtimes=root_mtimes)
+	return ReferenceIndex(reverse_map=reverse_map, qids_to_roots=qids_to_roots, root_mtimes=root_mtimes)
 
 
 def _resolve_config_path(config_path: Path | None) -> Path:
@@ -589,6 +594,10 @@ def build_app(config: McpConfig) -> FastMCP:
 	def _get_subsection(root_id: str, qid: str, section: str, subsection: str) -> dict[str, WtrlJsonNode_t]:
 		return get_subsection(root_id, qid, section, subsection, _root_mappings())
 
+	@mcp.tool(name="list_objects", description="List all Waterloo objects in one configured root.")
+	def _list_objects(root_id: str) -> list[ObjectSummary]:
+		return list_objects(root_id, _root_mappings())
+
 	@mcp.tool(name="get_examples", description="Read structured example metadata for one Waterloo object.")
 	def _get_examples(root_id: str, qid: str) -> list[ExampleRef]:
 		return get_examples(root_id, qid, _root_mappings())
@@ -604,6 +613,10 @@ def build_app(config: McpConfig) -> FastMCP:
 	@mcp.tool(name="get_references", description="Read structured incoming See_also references for one Waterloo object.")
 	def _get_references(root_id: str, qid: str, normative_only: bool = False) -> list[ReferenceRecord]:
 		return get_references(reference_index.reverse_map, root_id, qid, normative_only)
+
+	@mcp.tool(name="search_related", description="Read the star-shaped See_also neighborhood for one Waterloo object.")
+	def _search_related(root_id: str, qid: str, normative_only: bool = False) -> list[RelatedRecord]:
+		return search_related(reference_index.reverse_map, reference_index.qids_to_roots, root_id, qid, _root_mappings(), normative_only)
 
 	@mcp.tool(name="search_objects", description="Search Waterloo objects by expression and structural filters.")
 	def _search_objects(expression: str, filter: SearchObjectsFilter | None = None) -> list[tuple[str, str, str]]:
@@ -625,6 +638,36 @@ def build_app(config: McpConfig) -> FastMCP:
 		indent_mode: DocstringIndentMode_t = "tab",
 		json_mode: DocstringJsonMode_t = "full",
 	) -> dict[str, WtrlJsonNode_t]:
+		r"""
+		Preamble:
+			profile:
+				function
+			normative_sections:
+				Contract, Parameters, Returns, Raises
+			scope:
+				extension
+		Contract:
+			general:
+				|Must| expose the public MCP entry point for docstring template generation.
+				|Must| forward the requested profile, signature, mode, indentation mode, and JSON mode to the shared Waterloo generator.
+				|Must| keep the public MCP signature aligned with the documented tool contract.
+		Parameters:
+			profile:
+				Target Waterloo docstring profile.
+			signature:
+				Optional textual signature for non-module profiles.
+			mode:
+				Template mode, either ``minimal`` or ``full``.
+			indent_mode:
+				Indentation mode for the returned docstring text, either ``tab`` or ``spc4``.
+			json_mode:
+				JSON output mode, either ``full`` or ``doc_only``.
+		Returns:
+			A dictionary with the generated ``docstring`` text and a ``json_snippet`` that represents the docstring structure and content.
+		Raises:
+			ValueError:
+				|May| be raised if the profile requires a signature and none is given, or if the selected mode is unknown.
+		"""
 		return gen_docstring(profile=profile, signature=signature, mode=mode, indent_mode=indent_mode, json_mode=json_mode)
 
 	@mcp.tool(name="describe_tool", description="Describe one MCP tool by its canonical tool name.")
@@ -645,7 +688,8 @@ def build_app(config: McpConfig) -> FastMCP:
 			toolname:
 				The canonical MCP tool name to describe.
 		Returns:
-			A plain text help string containing the signature, the Waterloo docstring, and a short one-line example.
+			A plain text help string containing the signature and the Waterloo docstring for the requested tool.
+			Any short example text is part of the stored Waterloo docstring itself, not an extra synthetic layer.
 		Raises:
 			ValueError:
 				|May| raise if the requested tool name is unknown.
@@ -656,10 +700,12 @@ def build_app(config: McpConfig) -> FastMCP:
 			"get_object": _get_object,
 			"get_section": _get_section,
 			"get_subsection": _get_subsection,
+			"list_objects": _list_objects,
 			"get_examples": _get_examples,
 			"get_example_source": _get_example_source,
 			"get_signature": _get_signature,
 			"get_references": _get_references,
+			"search_related": _search_related,
 			"search_objects": _search_objects,
 			"search_sections": _search_sections,
 			"search_text": _search_text,
@@ -672,14 +718,16 @@ def build_app(config: McpConfig) -> FastMCP:
 			"get_object": get_object,
 			"get_section": get_section,
 			"get_subsection": get_subsection,
+			"list_objects": list_objects,
 			"get_examples": get_examples,
 			"get_example_source": get_example_source,
 			"get_signature": get_signature,
 			"get_references": get_references,
+			"search_related": search_related,
 			"search_objects": search_objects,
 			"search_sections": search_sections,
 			"search_text": search_text,
-			"gen_docstring": gen_docstring,
+			"gen_docstring": _gen_docstring,
 			"describe_tool": _describe_tool,
 		}
 		if toolname not in tool_wrappers or toolname not in tool_docs:

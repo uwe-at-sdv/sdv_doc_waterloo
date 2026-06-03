@@ -5,12 +5,14 @@ This package exposes read-only access to Waterloo data roots over MCP.
 Current v1 focus:
 - list configured roots
 - read one configured root by its `root_id`
+- list the objects in one configured root by its `root_id`
 - read one object by `root_id` and `qid`
 - read one stored section by `root_id`, `qid`, and section name
 - read one stored subsection by `root_id`, `qid`, section name, and subsection name
 - search objects by expression and structural filters
 - search section and subsection labels by expression and structural filters,
   returning compact location records without redundant match text
+- inspect the structured See_also neighborhood around one object
 - inspect the indexed Waterloo data behind them
 - keep the server simple and stdio-based for local development
 - offer Streamable HTTP for Inspector-based inspection at `/mcp`
@@ -38,15 +40,18 @@ Typical usage:
 - call `describe_tool` with a canonical tool name
 - call `list_roots`
 - call `get_root` with a `root_id`
+- call `list_objects` with a `root_id`
 - call `get_object` with a `root_id` and `qid`
 - call `get_section` with a `root_id`, `qid`, and section name
 - call `get_subsection` with a `root_id`, `qid`, section name, and subsection name
 - call `get_signature` with a `root_id` and `qid`
+- call `get_references` with a `root_id` and `qid`
 - call `get_examples` with a `root_id` and `qid`
 - call `get_example_source` with a `root_id` and canonical example path
 - call `search_objects` with an expression and an optional filter object
 - call `search_sections` with an expression and an optional filter object
 - call `search_text` with a list of terms and an optional filter object
+- call `search_related` with a `root_id` and `qid`
 
 Pytest workflow:
 - the MCP HTTP integration tests live in `package_main/pytest/pytest_mcp_*.py`
