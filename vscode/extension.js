@@ -489,6 +489,7 @@ function resolveWaterlooMcpConfigPath() {
 		], { encoding: 'utf-8', timeout: 5000, stdio: ['pipe', 'pipe', 'ignore'] }).trim();
 		if (pythonOutput.length > 0) {
 			const pkgRoot = pythonOutput;
+			// This is the canonical location for the MCP provider config file for a properly installed package.
 			const candidate = path.join(pkgRoot, 'etc', 'wtrl_mcp.stdio.toml');
 			if (fs.existsSync(candidate)) {
 				fout.appendLine(`Waterloo MCP provider: found TOML at package root: ${candidate}`);
@@ -521,8 +522,9 @@ function resolveWaterlooMcpConfigPath() {
 	const workspaceFolders = vscode.workspace.workspaceFolders || [];
 	for (const folder of workspaceFolders) {
 		const candidates = [
-			path.join(folder.uri.fsPath, "sdw", "etc", "wtrl_mcp.stdio.toml"),
+			// Development only. We should remove these once the MCP provider is stable and we have a better story for using it from the source tree.
 			path.join(folder.uri.fsPath, "etc", "wtrl_mcp.stdio.toml"),
+			path.join(folder.uri.fsPath, "sdw", "etc", "wtrl_mcp.stdio.toml"),
 			path.join(folder.uri.fsPath, "package_main", "etc", "wtrl_mcp.stdio.toml"),
 			path.join(folder.uri.fsPath, "package_main", "src", "sdv", "doc", "waterloo", "mcp", "wtrl_mcp.stdio.toml"),
 		];
