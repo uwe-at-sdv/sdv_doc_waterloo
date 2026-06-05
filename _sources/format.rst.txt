@@ -210,6 +210,7 @@ The following list explains the mnemonic prefixes and their semantics.
 * RHTM: Error messages related to rendering HTML (e.g. for :wtrl_cmd:`waterlint render-html5`)
 * XTNSN: Error messages related to extensions (e.g. for IDEs)
 * MCPS: Error messages returned by an MCP server
+* DCKR: Error messages related to rendering Docker builder output (e.g. for :wtrl_cmd:`waterlint render-docker`)
 
 .. rubric:: Miscellaneous
 

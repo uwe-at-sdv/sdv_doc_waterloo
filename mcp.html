@@ -37,125 +37,110 @@
             
   <section id="model-context-protocol">
 <h1><span class="section-number">10. </span>Model Context Protocol<a class="headerlink" href="#model-context-protocol" title="Link to this heading">¶</a></h1>
+<p>Model Context Protocol, usually abbreviated MCP, is a simple way for an
+application to expose tools and structured data to an LLM-based client.
+Instead of asking the model to inspect files directly, the client talks to a
+server that offers named tools such as discovery, lookup, and read-only data
+access.</p>
+<p>From the user’s point of view, MCP is mostly an interoperability layer:
+the client knows which tools exist, how to call them, and how to interpret
+the results. The server keeps the actual data and behavior behind a small,
+documented interface.</p>
+<p>For Waterloo, that interface is used to expose JSON-based documentation data
+and a small set of helper tools that make large documentation trees easier to
+navigate from an LLM agent or a visual inspector.</p>
 <section id="the-waterloo-mcp-server">
 <h2><span class="section-number">10.1. </span>The Waterloo MCP-Server<a class="headerlink" href="#the-waterloo-mcp-server" title="Link to this heading">¶</a></h2>
-<p>The purpose of the MCP-server is to provide a simple, standardized way
-for LLM-agents to access and query Waterloo documents in JSON format.
-While the plain JSON document is already sufficient for many use cases,
-the MCP server additionally enables efficient access to very large
-documentation artifacts that would otherwise burden the agent’s context window.
-The MCP-server is implemented as a simple HTTP server that listens for JSON-RPC requests and responds
-with JSON data. The server can be easily integrated with LLM-agents that support JSON-RPC.</p>
+<p>The Waterloo MCP-server applies that pattern to Waterloo documents in JSON
+format. It gives LLM-agents a simple, standardized way to access and query the
+documentation without loading the whole data set into the context window.
+The server is implemented as a simple HTTP server that listens for JSON-RPC
+requests and responds with JSON data. It can be integrated with LLM-agents
+that support JSON-RPC.</p>
 </section>
 <section id="executable-and-configuration">
 <h2><span class="section-number">10.2. </span>Executable and configuration<a class="headerlink" href="#executable-and-configuration" title="Link to this heading">¶</a></h2>
-<p>There is a pre-defined configuration file for the MCP-server in the Waterloo package,
-located at <code class="wtrl_file docutils literal notranslate"><span class="pre">etc/wtrl_mcp.http.toml</span></code>.
-Once the Waterloo package is installed, the MCP-server can be started by running e.g. the following command in the terminal:</p>
+<p>The Waterloo package includes a ready-to-use configuration file for the MCP
+server at <code class="wtrl_file docutils literal notranslate"><span class="pre">etc/wtrl_mcp.http.toml</span></code>.
+Once the package is installed, the server can be started in a terminal with
+the following command:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>wtrl_mcp<span class="w"> </span>--config<span class="w"> </span>etc/wtrl_mcp.http.toml
 </pre></div>
 </div>
 <p>If the argument to <code class="wtrl_cmd docutils literal notranslate"><span class="pre">--config</span></code> is an absolute path, it is used as is.
-If it is a relative path, <code class="wtrl_cmd docutils literal notranslate"><span class="pre">wtrl_mcp</span></code> first looks for the file relative
-to the current working directory and then relative to the installed Waterloo
-package root. Therefore the usual package-local configuration path is prefixed
-with <code class="docutils literal notranslate"><span class="pre">etc/</span></code>. If neither candidate exists, the server reports a clear
-configuration error and exits.</p>
+If it is a relative path, <code class="wtrl_cmd docutils literal notranslate"><span class="pre">wtrl_mcp</span></code> first looks for the file
+relative to the current working directory and then relative to the installed
+Waterloo package root. The usual package-local configuration path is therefore
+prefixed with <code class="wtrl_file docutils literal notranslate"><span class="pre">etc/</span></code>. If neither candidate exists, the server reports a
+clear configuration error and exits.</p>
 </section>
 <section id="tools">
 <h2><span class="section-number">10.3. </span>Tools<a class="headerlink" href="#tools" title="Link to this heading">¶</a></h2>
 <p>The MCP-server supports the following tools:</p>
-<table class="docutils align-default">
-<colgroup>
-<col style="width: 24.0%" />
-<col style="width: 24.0%" />
-<col style="width: 52.0%" />
-</colgroup>
-<thead>
-<tr class="row-odd"><th class="head"><p>Category</p></th>
-<th class="head"><p>Tool name</p></th>
-<th class="head"><p>What the tool does</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td><p>Root discovery and retrieval</p></td>
-<td><p><code class="wtrl_cmd docutils literal notranslate"><span class="pre">list_roots</span></code></p></td>
-<td><p>List configured Waterloo data roots.</p></td>
-</tr>
-<tr class="row-odd"><td><p>Root discovery and retrieval</p></td>
-<td><p><code class="wtrl_cmd docutils literal notranslate"><span class="pre">get_root</span></code></p></td>
-<td><p>Read one configured Waterloo data root by <code class="docutils literal notranslate"><span class="pre">root_id</span></code>.</p></td>
-</tr>
-<tr class="row-even"><td><p>Object content access</p></td>
-<td><p><code class="wtrl_cmd docutils literal notranslate"><span class="pre">get_object</span></code></p></td>
-<td><p>Read one Waterloo object by <code class="docutils literal notranslate"><span class="pre">qid</span></code> from a configured root.</p></td>
-</tr>
-<tr class="row-odd"><td><p>Object content access</p></td>
-<td><p><code class="wtrl_cmd docutils literal notranslate"><span class="pre">get_section</span></code></p></td>
-<td><p>Read one stored section of one Waterloo object.</p></td>
-</tr>
-<tr class="row-even"><td><p>Object content access</p></td>
-<td><p><code class="wtrl_cmd docutils literal notranslate"><span class="pre">get_subsection</span></code></p></td>
-<td><p>Read one stored subsection of one Waterloo object.</p></td>
-</tr>
-<tr class="row-odd"><td><p>Object content access</p></td>
-<td><p><code class="wtrl_cmd docutils literal notranslate"><span class="pre">get_signature</span></code></p></td>
-<td><p>Read the stored signature block for one Waterloo object.</p></td>
-</tr>
-<tr class="row-even"><td><p>Tool discovery</p></td>
-<td><p><code class="wtrl_cmd docutils literal notranslate"><span class="pre">describe_tool</span></code></p></td>
-<td><p>Read the Waterloo signature and docstring for one MCP tool.</p></td>
-</tr>
-<tr class="row-odd"><td><p>Reference lookup</p></td>
-<td><p><code class="wtrl_cmd docutils literal notranslate"><span class="pre">get_references</span></code></p></td>
-<td><p>Read structured incoming See_also references for one Waterloo object.</p></td>
-</tr>
-<tr class="row-even"><td><p>Graph navigation</p></td>
-<td><p><code class="wtrl_cmd docutils literal notranslate"><span class="pre">search_related</span></code></p></td>
-<td><p>Read the star-shaped See_also neighborhood for one Waterloo object.</p></td>
-</tr>
-<tr class="row-odd"><td><p>Example lookup</p></td>
-<td><p><code class="wtrl_cmd docutils literal notranslate"><span class="pre">get_examples</span></code></p></td>
-<td><p>Read structured example metadata for one Waterloo object.</p></td>
-</tr>
-<tr class="row-even"><td><p>Example lookup</p></td>
-<td><p><code class="wtrl_cmd docutils literal notranslate"><span class="pre">get_example_source</span></code></p></td>
-<td><p>Read the source text for one canonical Waterloo example reference.</p></td>
-</tr>
-<tr class="row-odd"><td><p>Search tools</p></td>
-<td><p><code class="wtrl_cmd docutils literal notranslate"><span class="pre">search_objects</span></code></p></td>
-<td><p>Search Waterloo objects by expression and structural filters.</p></td>
-</tr>
-<tr class="row-even"><td><p>Search tools</p></td>
-<td><p><code class="wtrl_cmd docutils literal notranslate"><span class="pre">search_sections</span></code></p></td>
-<td><p>Search Waterloo section and subsection labels by expression and structural filters.</p></td>
-</tr>
-<tr class="row-odd"><td><p>Search tools</p></td>
-<td><p><code class="wtrl_cmd docutils literal notranslate"><span class="pre">search_text</span></code></p></td>
-<td><p>Search Waterloo text content by terms and structural filters.</p></td>
-</tr>
-<tr class="row-even"><td><p>Authoring helper</p></td>
-<td><p><code class="wtrl_cmd docutils literal notranslate"><span class="pre">gen_docstring</span></code></p></td>
-<td><p>Generate a Waterloo docstring template for a given profile, with optional signature, template mode, and indentation mode.</p></td>
-</tr>
-</tbody>
-</table>
+<p class="rubric">Tool discovery</p>
+<ul class="simple">
+<li><p><code class="wtrl_cmd docutils literal notranslate"><span class="pre">describe_tool</span></code> — reads the Waterloo signature and docstring for one MCP tool.</p></li>
+</ul>
+<p class="rubric">Root discovery and inventory</p>
+<ul class="simple">
+<li><p><code class="wtrl_cmd docutils literal notranslate"><span class="pre">list_roots</span></code> — lists the configured Waterloo data roots.</p></li>
+<li><p><code class="wtrl_cmd docutils literal notranslate"><span class="pre">get_root</span></code> — reads one configured Waterloo data root by <code class="wtrl_var docutils literal notranslate"><span class="pre">root_id</span></code>.</p></li>
+<li><p><code class="wtrl_cmd docutils literal notranslate"><span class="pre">list_objects</span></code> — lists all Waterloo objects in one configured root.</p></li>
+</ul>
+<p class="rubric">Object content access</p>
+<ul class="simple">
+<li><p><code class="wtrl_cmd docutils literal notranslate"><span class="pre">get_object</span></code> — reads one Waterloo object by <code class="wtrl_var docutils literal notranslate"><span class="pre">qid</span></code> from a configured root.</p></li>
+<li><p><code class="wtrl_cmd docutils literal notranslate"><span class="pre">get_section</span></code> — reads one stored section of one Waterloo object.</p></li>
+<li><p><code class="wtrl_cmd docutils literal notranslate"><span class="pre">get_subsection</span></code> — reads one stored subsection of one Waterloo object.</p></li>
+<li><p><code class="wtrl_cmd docutils literal notranslate"><span class="pre">get_signature</span></code> — reads the stored signature block for one Waterloo object.</p></li>
+</ul>
+<p class="rubric">Reference and graph lookup</p>
+<ul class="simple">
+<li><p><code class="wtrl_cmd docutils literal notranslate"><span class="pre">get_references</span></code> — reads structured incoming <code class="wtrl_label docutils literal notranslate"><span class="pre">See_also</span></code> references for one Waterloo object.</p></li>
+<li><p><code class="wtrl_cmd docutils literal notranslate"><span class="pre">search_related</span></code> — reads the star-shaped <code class="wtrl_label docutils literal notranslate"><span class="pre">See_also</span></code> neighborhood for one Waterloo object.</p></li>
+</ul>
+<p class="rubric">Example lookup</p>
+<ul class="simple">
+<li><p><code class="wtrl_cmd docutils literal notranslate"><span class="pre">get_examples</span></code> — reads structured example metadata for one Waterloo object.</p></li>
+<li><p><code class="wtrl_cmd docutils literal notranslate"><span class="pre">get_example_source</span></code> — reads the source text for one canonical Waterloo example reference.</p></li>
+</ul>
+<p class="rubric">Search tools</p>
+<ul class="simple">
+<li><p><code class="wtrl_cmd docutils literal notranslate"><span class="pre">search_objects</span></code> — searches Waterloo objects by expression and structural filters.</p></li>
+<li><p><code class="wtrl_cmd docutils literal notranslate"><span class="pre">search_sections</span></code> — searches Waterloo section and subsection labels by expression and structural filters.</p></li>
+<li><p><code class="wtrl_cmd docutils literal notranslate"><span class="pre">search_text</span></code> — searches Waterloo text content by terms and structural filters.</p></li>
+</ul>
+<p class="rubric">Authoring helper</p>
+<ul class="simple">
+<li><p><code class="wtrl_cmd docutils literal notranslate"><span class="pre">gen_docstring</span></code> — generates a Waterloo docstring template for a given profile, with optional signature, template mode, and indentation mode.</p></li>
+</ul>
 </section>
 <section id="typical-agent-workflow">
 <h2><span class="section-number">10.4. </span>Typical agent workflow<a class="headerlink" href="#typical-agent-workflow" title="Link to this heading">¶</a></h2>
-<p>The lookup-oriented tools are meant to be used in a simple progression:</p>
+<p>The tools above are the catalog; the workflow below is a recommended way to
+approach them when the agent does not already know the exact tool or target.
+In practice there are two common starting points:</p>
+<ul class="simple">
+<li><p>discover the MCP tool set itself with <code class="wtrl_cmd docutils literal notranslate"><span class="pre">describe_tool</span></code></p></li>
+<li><p>discover Waterloo content with <code class="wtrl_cmd docutils literal notranslate"><span class="pre">list_roots</span></code></p></li>
+</ul>
+<p>The lookup-oriented tools are then meant to be used in a simple progression.
+This is only a recommended progression; agents that already know the target can
+jump directly to the relevant <code class="wtrl_cmd docutils literal notranslate"><span class="pre">get_*</span></code> or <code class="wtrl_cmd docutils literal notranslate"><span class="pre">search_*</span></code> tool.</p>
 <ol class="arabic simple">
 <li><p><code class="wtrl_cmd docutils literal notranslate"><span class="pre">list_roots</span></code> to discover available roots.</p></li>
+<li><p><code class="wtrl_cmd docutils literal notranslate"><span class="pre">describe_tool</span></code> when the agent wants to inspect the signature and Waterloo docstring of one MCP tool.</p></li>
+<li><p><code class="wtrl_cmd docutils literal notranslate"><span class="pre">list_objects</span></code> to inventory the objects in one root before drilling down.</p></li>
 <li><p><code class="wtrl_cmd docutils literal notranslate"><span class="pre">search_objects</span></code> to find candidate objects and obtain stable <code class="docutils literal notranslate"><span class="pre">root_id</span></code> / <code class="docutils literal notranslate"><span class="pre">qid</span></code> pairs.</p></li>
 <li><p><code class="wtrl_cmd docutils literal notranslate"><span class="pre">get_section</span></code> or <code class="wtrl_cmd docutils literal notranslate"><span class="pre">get_subsection</span></code> to inspect the relevant contract, notes, or other structured sections.</p></li>
 <li><p><code class="wtrl_cmd docutils literal notranslate"><span class="pre">search_sections</span></code> when the agent wants to find section or subsection labels rather than object names.</p></li>
-<li><p><code class="wtrl_cmd docutils literal notranslate"><span class="pre">describe_tool</span></code> when the agent wants to inspect the signature and Waterloo docstring of one MCP tool.</p></li>
 <li><p><code class="wtrl_cmd docutils literal notranslate"><span class="pre">get_signature</span></code> when the agent wants to inspect the canonical stored signature for one object.</p></li>
 <li><p><code class="wtrl_cmd docutils literal notranslate"><span class="pre">get_references</span></code> when the agent wants to inspect incoming structured See_also references for one object.</p></li>
 <li><p><code class="wtrl_cmd docutils literal notranslate"><span class="pre">search_related</span></code> when the agent wants a compact star-shaped See_also neighborhood around one object.</p></li>
 <li><p><code class="wtrl_cmd docutils literal notranslate"><span class="pre">get_examples</span></code> when the agent wants to inspect available example references for one object.</p></li>
 <li><p><code class="wtrl_cmd docutils literal notranslate"><span class="pre">get_example_source</span></code> when the agent wants to retrieve the raw source text for one canonical example reference.</p></li>
 <li><p><code class="wtrl_cmd docutils literal notranslate"><span class="pre">search_text</span></code> when the agent wants to search the actual content text with a small set of terms.</p></li>
+<li><p><code class="wtrl_cmd docutils literal notranslate"><span class="pre">gen_docstring</span></code> when the agent wants to draft or refine a Waterloo docstring template for a profile.</p></li>
 </ol>
 <p>In practice this means that the agent can start with a vague name, narrow it
 down to a canonical target, and then inspect the exact Waterloo text that
@@ -163,6 +148,7 @@ describes the object.</p>
 </section>
 <section id="using-the-mcp-server-in-vscode">
 <h2><span class="section-number">10.5. </span>Using the MCP-server in VSCode<a class="headerlink" href="#using-the-mcp-server-in-vscode" title="Link to this heading">¶</a></h2>
+<p class="rubric">HTTP transport</p>
 <p>[Last tested with VSCode 1.115.0 on 2026-05-31]</p>
 <p>With transport <code class="wtrl_lit docutils literal notranslate"><span class="pre">streamable-http</span></code>, the MCP-server is added to VSCode by:</p>
 <blockquote>
@@ -186,6 +172,27 @@ running and accessible at that URL for the integration to work. As a smoke
 test, open the MCP panel in VSCode and see whether it connects successfully.
 Then ask Copilot to run <code class="wtrl_cmd docutils literal notranslate"><span class="pre">list_roots</span></code> and check whether it returns the
 expected list of documents.</p>
+<p class="rubric">Stdio transport</p>
+<p>With transport <code class="wtrl_lit docutils literal notranslate"><span class="pre">stdio</span></code>, the setup is usually more convenient for
+day-to-day use because no separate terminal and no TCP port are needed. If the
+Waterloo extension and the Python package <code class="wtrl_file docutils literal notranslate"><span class="pre">sdv.doc.waterloo</span></code> are
+installed, VSCode can talk to the MCP-server directly through the stdio
+transport. The extension contributes the server automatically, so the user does
+not need to add a JSON server definition by hand.</p>
+<p>The default configuration lives in <code class="wtrl_file docutils literal notranslate"><span class="pre">etc/wtrl_mcp.stdio.toml</span></code>. If you
+want to customize the roots or other settings, make a copy of that file and
+point VSCode to the copy. Open the command palette with
+<code class="wtrl_key docutils literal notranslate"><span class="pre">Shift+Ctrl+P</span></code>, choose <code class="wtrl_lit docutils literal notranslate"><span class="pre">MCP:</span> <span class="pre">Open</span> <span class="pre">User</span> <span class="pre">Configuration</span></code>, and
+then set <code class="wtrl_lit docutils literal notranslate"><span class="pre">waterloo.mcpConfigPath</span></code> to your copied stdio configuration.
+The path may be absolute (recommended) or relative; if it is relative, the extension also
+looks in the open workspace and in the installed Waterloo package root.</p>
+<p>If you want to disable the automatic MCP server contribution entirely, set
+<code class="wtrl_lit docutils literal notranslate"><span class="pre">waterloo.mcpProvideServer</span></code> to <code class="docutils literal notranslate"><span class="pre">false</span></code>. Otherwise the extension will
+use the configured command and configuration path, with sensible defaults when
+no custom path is given.</p>
+<p>After saving the settings, open the MCP panel in VSCode and check whether the
+server appears. As a smoke test, ask Copilot to run <code class="wtrl_cmd docutils literal notranslate"><span class="pre">list_roots</span></code> and
+verify that the expected roots are returned.</p>
 </section>
 <section id="server-error-messages">
 <h2><span class="section-number">10.6. </span>Server error messages<a class="headerlink" href="#server-error-messages" title="Link to this heading">¶</a></h2>
@@ -207,6 +214,9 @@ not normative yet.</p>
 <p>The current implementation already prefixes tool error messages with these
 rule labels. A later version may map them more directly to structured
 JSON-RPC error payloads if the MCP SDK exposes a better hook for that.</p>
+</section>
+<section id="running-the-mcp-server-in-a-docker-container">
+<h2><span class="section-number">10.7. </span>Running the MCP-Server in a Docker container<a class="headerlink" href="#running-the-mcp-server-in-a-docker-container" title="Link to this heading">¶</a></h2>
 </section>
 </section>
 
@@ -259,11 +269,13 @@ JSON-RPC error payloads if the MCP SDK exposes a better hook for that.</p>
 <li class="toctree-l2"><a class="reference internal" href="#typical-agent-workflow">10.4. Typical agent workflow</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#using-the-mcp-server-in-vscode">10.5. Using the MCP-server in VSCode</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#server-error-messages">10.6. Server error messages</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#running-the-mcp-server-in-a-docker-container">10.7. Running the MCP-Server in a Docker container</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="reference.html">11. Reference - Core View</a></li>
 <li class="toctree-l1"><a class="reference internal" href="_test_freeform.html">12. Test: Flow control in freeform sections</a></li>
 <li class="toctree-l1"><a class="reference internal" href="_test_scope.html">13. Test: Scopes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="legal.html">14. Legal Notes</a></li>
 </ul>
 
 <div class="relations">

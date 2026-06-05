@@ -83,6 +83,24 @@ This section is normative.
   This includes active content such as ``<script>`` and disallowed document-level elements such as
   :wtrl_tag:`html`, :wtrl_tag:`head`, :wtrl_tag:`body`, and :wtrl_tag:`main`.
 
+.. _rendering_docker:
+
+.. rubric:: Rendering Docker build artifacts (render-docker)
+
+The :wtrl_cmd:`waterlint render-docker` command renders a Dockerfile together
+with companion helper scripts for building and, in non-baking mode, launching
+the resulting container. The generated artefacts are intended to make the
+deployment of a Waterloo MCP server configuration repeatable and easy to
+inspect.
+
+* [DCKR-000] -- The command-line input is incomplete or invalid, for example because :wtrl_opt:`--in` or :wtrl_opt:`--out` is missing.
+* [DCKR-001] -- The parsed configuration has an invalid structure, an unsupported transport, or an invalid root or logging field type.
+* [DCKR-002] -- A referenced root file or logging configuration file does not exist.
+* [DCKR-003] -- The input TOML file does not exist or could not be loaded.
+* [DCKR-999] -- An unspecified error occurred while rendering Docker builder output.
+
+
+
 Extension error codes
 ---------------------
 
