@@ -113,6 +113,8 @@ class SearchObjectsFilter(BaseModel):
 	Notes:
 		Purpose:
 			This model is part of the public MCP API and is intentionally small so that it can grow additively.
+	See_also:
+		search_objects
 	"""
 	model_config = ConfigDict(extra="forbid")
 
@@ -144,6 +146,8 @@ class SearchSectionsFilter(BaseModel):
 	Notes:
 		Purpose:
 			This model is part of the public MCP API and is intentionally small so that it can grow additively.
+	See_also:
+		search_sections
 	"""
 	model_config = ConfigDict(extra="forbid")
 
@@ -180,6 +184,8 @@ class SearchTextFilter(BaseModel):
 	Notes:
 		Purpose:
 			This model is part of the public MCP API and is intentionally small so that it can grow additively.
+	See_also:
+		search_text
 	"""
 	model_config = ConfigDict(extra="forbid")
 
@@ -215,6 +221,8 @@ class ReferenceRecord(BaseModel):
 	Notes:
 		Purpose:
 			This record is the canonical Waterloo representation for reverse See_also lookups.
+	See_also:
+		get_references, search_related
 	"""
 	model_config = ConfigDict(extra="forbid")
 
@@ -248,6 +256,8 @@ class RelatedRecord(BaseModel):
 	Notes:
 		Purpose:
 			This record is the canonical Waterloo representation for the first star-shaped related-object lookup.
+	See_also:
+		search_related, get_references
 	"""
 	model_config = ConfigDict(extra="forbid")
 
@@ -282,6 +292,8 @@ class ExampleRef(BaseModel):
 	Notes:
 		Purpose:
 			This record is the canonical Waterloo representation for structured example lookups.
+	See_also:
+		get_examples, get_example_source
 	"""
 	model_config = ConfigDict(extra="forbid")
 
@@ -318,6 +330,8 @@ class ObjectSummary(BaseModel):
 	Notes:
 		Purpose:
 			This record is the canonical Waterloo representation for root-level object inventories.
+	See_also:
+		list_objects, get_object
 	"""
 	model_config = ConfigDict(extra="forbid")
 
@@ -767,6 +781,8 @@ def get_root(root_id: str, roots: list[Mapping[str, WtrlJsonNode_t]]) -> dict[st
 			|May| raise if the configured root path no longer exists.
 		json.JSONDecodeError:
 			|May| raise if the root file is not valid JSON.
+	See_also:
+		list_roots
 	"""
 	idx, root_data, root_path, document = _load_root_context(root_id, roots)
 	return {**_root_summary(idx, root_data, root_path), "document": document}
@@ -800,6 +816,8 @@ def get_object(root_id: str, qid: str, roots: list[Mapping[str, WtrlJsonNode_t]]
 			|May| raise if the configured root path no longer exists.
 		json.JSONDecodeError:
 			|May| raise if the root file is not valid JSON.
+	See_also:
+		get_root, get_section, list_objects
 	"""
 	idx, root_data, root_path, document = _load_root_context(root_id, roots)
 	objects = document.get("__WTRL_OBJECTS__", {})
@@ -841,6 +859,8 @@ def get_section(root_id: str, qid: str, section: str, roots: list[Mapping[str, W
 			|May| raise if the configured root path no longer exists.
 		json.JSONDecodeError:
 			|May| raise if the root file is not valid JSON.
+	See_also:
+		get_object, get_subsection, search_sections
 	"""
 	idx, root_data, root_path, document = _load_root_context(root_id, roots)
 	objects = document.get("__WTRL_OBJECTS__", {})
@@ -890,6 +910,8 @@ def get_subsection(root_id: str, qid: str, section: str, subsection: str, roots:
 			|May| raise if the configured root path no longer exists.
 		json.JSONDecodeError:
 			|May| raise if the root file is not valid JSON.
+	See_also:
+		get_section, get_object
 	"""
 	idx, root_data, root_path, document = _load_root_context(root_id, roots)
 	objects = document.get("__WTRL_OBJECTS__", {})
@@ -950,6 +972,8 @@ def list_objects(root_id: str, roots: list[Mapping[str, WtrlJsonNode_t]]) -> lis
 			|May| raise if the configured root path no longer exists.
 		json.JSONDecodeError:
 			|May| raise if the root file is not valid JSON.
+	See_also:
+		get_object, search_objects
 	"""
 	_, _, _, document = _load_root_context(root_id, roots)
 	objects = document.get("__WTRL_OBJECTS__", {})
@@ -1011,6 +1035,8 @@ def get_references(
 	Returns:
 		A list of incoming structured See_also reference records.
 	Raises:
+	See_also:
+		search_related, get_object
 	"""
 	records = reference_index.get((root_id, qid), [])
 	records = [
@@ -1073,6 +1099,8 @@ def search_related(
 			|May| raise if the configured root path no longer exists.
 		json.JSONDecodeError:
 			|May| raise if the root file is not valid JSON.
+	See_also:
+		get_references, get_object
 	"""
 	_, _, _, document = _load_root_context(root_id, roots)
 	objects = document.get("__WTRL_OBJECTS__", {})
@@ -1226,6 +1254,8 @@ def get_signature(root_id: str, qid: str, roots: list[Mapping[str, WtrlJsonNode_
 			|May| raise if the configured root path no longer exists.
 		json.JSONDecodeError:
 			|May| raise if the root file is not valid JSON.
+	See_also:
+		get_object, search_sections
 	"""
 	idx, root_data, root_path, document = _load_root_context(root_id, roots)
 	objects = document.get("__WTRL_OBJECTS__", {})
@@ -1312,6 +1342,8 @@ def get_examples(
 			|May| raise if the configured root path no longer exists.
 		json.JSONDecodeError:
 			|May| raise if the root file is not valid JSON.
+	See_also:
+		get_example_source, get_object
 	"""
 	_, _, _, document = _load_root_context(root_id, roots)
 	objects = document.get("__WTRL_OBJECTS__", {})
@@ -1391,6 +1423,8 @@ def get_example_source(
 			|May| raise if the configured root path no longer exists.
 		json.JSONDecodeError:
 			|May| raise if the root file is not valid JSON.
+	See_also:
+		get_examples
 	"""
 	example_entry = _example_source_entry(root_id, example_path, roots)
 	code = example_entry.get("code")
@@ -1430,6 +1464,8 @@ def search_objects(
 			|May| raise if a configured root path no longer exists while the search is being evaluated.
 		json.JSONDecodeError:
 			|May| raise if a root file is not valid JSON while the search is being evaluated.
+	See_also:
+		list_objects, search_sections, search_text
 	"""
 	expression = expression.strip()
 	if not expression:
@@ -1498,6 +1534,8 @@ def search_sections(
 			|May| raise if a configured root path no longer exists while the search is being evaluated.
 		json.JSONDecodeError:
 			|May| raise if a root file is not valid JSON while the search is being evaluated.
+	See_also:
+		get_section, get_subsection, search_objects
 	"""
 	expression = expression.strip()
 	if not expression:
@@ -1596,6 +1634,8 @@ def search_text(
 			|May| raise if a configured root path no longer exists while the search is being evaluated.
 		json.JSONDecodeError:
 			|May| raise if a root file is not valid JSON while the search is being evaluated.
+	See_also:
+		search_sections, search_objects
 	"""
 	terms = [str(term).strip() for term in terms if str(term).strip()]
 	if not terms:

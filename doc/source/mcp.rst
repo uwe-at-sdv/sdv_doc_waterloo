@@ -1,113 +1,119 @@
 Model Context Protocol
 ======================
 
+Model Context Protocol, usually abbreviated MCP, is a simple way for an
+application to expose tools and structured data to an LLM-based client.
+Instead of asking the model to inspect files directly, the client talks to a
+server that offers named tools such as discovery, lookup, and read-only data
+access.
+
+From the user's point of view, MCP is mostly an interoperability layer:
+the client knows which tools exist, how to call them, and how to interpret
+the results. The server keeps the actual data and behavior behind a small,
+documented interface.
+
+For Waterloo, that interface is used to expose JSON-based documentation data
+and a small set of helper tools that make large documentation trees easier to
+navigate from an LLM agent or a visual inspector.
+
 The Waterloo MCP-Server
 -----------------------
 
-The purpose of the MCP-server is to provide a simple, standardized way
-for LLM-agents to access and query Waterloo documents in JSON format.
-While the plain JSON document is already sufficient for many use cases,
-the MCP server additionally enables efficient access to very large
-documentation artifacts that would otherwise burden the agent's context window.
-The MCP-server is implemented as a simple HTTP server that listens for JSON-RPC requests and responds
-with JSON data. The server can be easily integrated with LLM-agents that support JSON-RPC.
+The Waterloo MCP-server applies that pattern to Waterloo documents in JSON
+format. It gives LLM-agents a simple, standardized way to access and query the
+documentation without loading the whole data set into the context window.
+The server is implemented as a simple HTTP server that listens for JSON-RPC
+requests and responds with JSON data. It can be integrated with LLM-agents
+that support JSON-RPC.
 
 Executable and configuration
 ----------------------------
 
-There is a pre-defined configuration file for the MCP-server in the Waterloo package,
-located at :wtrl_file:`etc/wtrl_mcp.http.toml`.
-Once the Waterloo package is installed, the MCP-server can be started by running e.g. the following command in the terminal:
+The Waterloo package includes a ready-to-use configuration file for the MCP
+server at :wtrl_file:`etc/wtrl_mcp.http.toml`.
+Once the package is installed, the server can be started in a terminal with
+the following command:
 
 .. code-block:: bash
 
 	wtrl_mcp --config etc/wtrl_mcp.http.toml
 
 If the argument to :wtrl_cmd:`--config` is an absolute path, it is used as is.
-If it is a relative path, :wtrl_cmd:`wtrl_mcp` first looks for the file relative
-to the current working directory and then relative to the installed Waterloo
-package root. Therefore the usual package-local configuration path is prefixed
-with ``etc/``. If neither candidate exists, the server reports a clear
-configuration error and exits.
+If it is a relative path, :wtrl_cmd:`wtrl_mcp` first looks for the file
+relative to the current working directory and then relative to the installed
+Waterloo package root. The usual package-local configuration path is therefore
+prefixed with :wtrl_file:`etc/`. If neither candidate exists, the server reports a
+clear configuration error and exits.
 
 Tools
 -----
 
 The MCP-server supports the following tools:
 
-.. list-table::
-	:header-rows: 1
-	:widths: 24 24 52
+.. rubric:: Tool discovery
 
-	* - Category
-	  - Tool name
-	  - What the tool does
-	* - Root discovery and retrieval
-	  - :wtrl_cmd:`list_roots`
-	  - List configured Waterloo data roots.
-	* - Root discovery and retrieval
-	  - :wtrl_cmd:`get_root`
-	  - Read one configured Waterloo data root by ``root_id``.
-	* - Object content access
-	  - :wtrl_cmd:`get_object`
-	  - Read one Waterloo object by ``qid`` from a configured root.
-	* - Object content access
-	  - :wtrl_cmd:`get_section`
-	  - Read one stored section of one Waterloo object.
-	* - Object content access
-	  - :wtrl_cmd:`get_subsection`
-	  - Read one stored subsection of one Waterloo object.
-	* - Object inventory
-	  - :wtrl_cmd:`list_objects`
-	  - List all Waterloo objects in one configured root.
-	* - Object content access
-	  - :wtrl_cmd:`get_signature`
-	  - Read the stored signature block for one Waterloo object.
-	* - Tool discovery
-	  - :wtrl_cmd:`describe_tool`
-	  - Read the Waterloo signature and docstring for one MCP tool.
-	* - Reference lookup
-	  - :wtrl_cmd:`get_references`
-	  - Read structured incoming See_also references for one Waterloo object.
-	* - Graph navigation
-	  - :wtrl_cmd:`search_related`
-	  - Read the star-shaped See_also neighborhood for one Waterloo object.
-	* - Example lookup
-	  - :wtrl_cmd:`get_examples`
-	  - Read structured example metadata for one Waterloo object.
-	* - Example lookup
-	  - :wtrl_cmd:`get_example_source`
-	  - Read the source text for one canonical Waterloo example reference.
-	* - Search tools
-	  - :wtrl_cmd:`search_objects`
-	  - Search Waterloo objects by expression and structural filters.
-	* - Search tools
-	  - :wtrl_cmd:`search_sections`
-	  - Search Waterloo section and subsection labels by expression and structural filters.
-	* - Search tools
-	  - :wtrl_cmd:`search_text`
-	  - Search Waterloo text content by terms and structural filters.
-	* - Authoring helper
-	  - :wtrl_cmd:`gen_docstring`
-	  - Generate a Waterloo docstring template for a given profile, with optional signature, template mode, and indentation mode.
+- :wtrl_cmd:`describe_tool` — reads the Waterloo signature and docstring for one MCP tool.
+
+.. rubric:: Root discovery and inventory
+
+- :wtrl_cmd:`list_roots` — lists the configured Waterloo data roots.
+- :wtrl_cmd:`get_root` — reads one configured Waterloo data root by :wtrl_var:`root_id`.
+- :wtrl_cmd:`list_objects` — lists all Waterloo objects in one configured root.
+
+.. rubric:: Object content access
+
+- :wtrl_cmd:`get_object` — reads one Waterloo object by :wtrl_var:`qid` from a configured root.
+- :wtrl_cmd:`get_section` — reads one stored section of one Waterloo object.
+- :wtrl_cmd:`get_subsection` — reads one stored subsection of one Waterloo object.
+- :wtrl_cmd:`get_signature` — reads the stored signature block for one Waterloo object.
+
+.. rubric:: Reference and graph lookup
+
+- :wtrl_cmd:`get_references` — reads structured incoming :wtrl_label:`See_also` references for one Waterloo object.
+- :wtrl_cmd:`search_related` — reads the star-shaped :wtrl_label:`See_also` neighborhood for one Waterloo object.
+
+.. rubric:: Example lookup
+
+- :wtrl_cmd:`get_examples` — reads structured example metadata for one Waterloo object.
+- :wtrl_cmd:`get_example_source` — reads the source text for one canonical Waterloo example reference.
+
+.. rubric:: Search tools
+
+- :wtrl_cmd:`search_objects` — searches Waterloo objects by expression and structural filters.
+- :wtrl_cmd:`search_sections` — searches Waterloo section and subsection labels by expression and structural filters.
+- :wtrl_cmd:`search_text` — searches Waterloo text content by terms and structural filters.
+
+.. rubric:: Authoring helper
+
+- :wtrl_cmd:`gen_docstring` — generates a Waterloo docstring template for a given profile, with optional signature, template mode, and indentation mode.
 
 Typical agent workflow
 ----------------------
 
-The lookup-oriented tools are meant to be used in a simple progression:
+The tools above are the catalog; the workflow below is a recommended way to
+approach them when the agent does not already know the exact tool or target.
+In practice there are two common starting points:
+
+* discover the MCP tool set itself with :wtrl_cmd:`describe_tool`
+* discover Waterloo content with :wtrl_cmd:`list_roots`
+
+The lookup-oriented tools are then meant to be used in a simple progression.
+This is only a recommended progression; agents that already know the target can
+jump directly to the relevant :wtrl_cmd:`get_*` or :wtrl_cmd:`search_*` tool.
 
 1. :wtrl_cmd:`list_roots` to discover available roots.
-2. :wtrl_cmd:`list_objects` to inventory the objects in one root before drilling down.
-3. :wtrl_cmd:`search_objects` to find candidate objects and obtain stable ``root_id`` / ``qid`` pairs.
-4. :wtrl_cmd:`get_section` or :wtrl_cmd:`get_subsection` to inspect the relevant contract, notes, or other structured sections.
-5. :wtrl_cmd:`search_sections` when the agent wants to find section or subsection labels rather than object names.
-6. :wtrl_cmd:`describe_tool` when the agent wants to inspect the signature and Waterloo docstring of one MCP tool.
+2. :wtrl_cmd:`describe_tool` when the agent wants to inspect the signature and Waterloo docstring of one MCP tool.
+3. :wtrl_cmd:`list_objects` to inventory the objects in one root before drilling down.
+4. :wtrl_cmd:`search_objects` to find candidate objects and obtain stable ``root_id`` / ``qid`` pairs.
+5. :wtrl_cmd:`get_section` or :wtrl_cmd:`get_subsection` to inspect the relevant contract, notes, or other structured sections.
+6. :wtrl_cmd:`search_sections` when the agent wants to find section or subsection labels rather than object names.
 7. :wtrl_cmd:`get_signature` when the agent wants to inspect the canonical stored signature for one object.
 8. :wtrl_cmd:`get_references` when the agent wants to inspect incoming structured See_also references for one object.
 9. :wtrl_cmd:`search_related` when the agent wants a compact star-shaped See_also neighborhood around one object.
 10. :wtrl_cmd:`get_examples` when the agent wants to inspect available example references for one object.
 11. :wtrl_cmd:`get_example_source` when the agent wants to retrieve the raw source text for one canonical example reference.
 12. :wtrl_cmd:`search_text` when the agent wants to search the actual content text with a small set of terms.
+13. :wtrl_cmd:`gen_docstring` when the agent wants to draft or refine a Waterloo docstring template for a profile.
 
 In practice this means that the agent can start with a vague name, narrow it
 down to a canonical target, and then inspect the exact Waterloo text that
@@ -116,6 +122,8 @@ describes the object.
 
 Using the MCP-server in VSCode
 ------------------------------
+
+.. rubric:: HTTP transport
 
 [Last tested with VSCode 1.115.0 on 2026-05-31]
 
@@ -144,6 +152,31 @@ test, open the MCP panel in VSCode and see whether it connects successfully.
 Then ask Copilot to run :wtrl_cmd:`list_roots` and check whether it returns the
 expected list of documents.
 
+.. rubric:: Stdio transport
+
+With transport :wtrl_lit:`stdio`, the setup is usually more convenient for
+day-to-day use because no separate terminal and no TCP port are needed. If the
+Waterloo extension and the Python package :wtrl_file:`sdv.doc.waterloo` are
+installed, VSCode can talk to the MCP-server directly through the stdio
+transport. The extension contributes the server automatically, so the user does
+not need to add a JSON server definition by hand.
+
+The default configuration lives in :wtrl_file:`etc/wtrl_mcp.stdio.toml`. If you
+want to customize the roots or other settings, make a copy of that file and
+point VSCode to the copy. Open the command palette with
+:wtrl_key:`Shift+Ctrl+P`, choose :wtrl_lit:`MCP: Open User Configuration`, and
+then set :wtrl_lit:`waterloo.mcpConfigPath` to your copied stdio configuration.
+The path may be absolute (recommended) or relative; if it is relative, the extension also
+looks in the open workspace and in the installed Waterloo package root.
+
+If you want to disable the automatic MCP server contribution entirely, set
+:wtrl_lit:`waterloo.mcpProvideServer` to ``false``. Otherwise the extension will
+use the configured command and configuration path, with sensible defaults when
+no custom path is given.
+
+After saving the settings, open the MCP panel in VSCode and check whether the
+server appears. As a smoke test, ask Copilot to run :wtrl_cmd:`list_roots` and
+verify that the expected roots are returned.
 
 Server error messages
 ---------------------
@@ -168,3 +201,8 @@ The current lookup-oriented rule family is:
 The current implementation already prefixes tool error messages with these
 rule labels. A later version may map them more directly to structured
 JSON-RPC error payloads if the MCP SDK exposes a better hook for that.
+
+
+Running the MCP-Server in a Docker container
+--------------------------------------------
+

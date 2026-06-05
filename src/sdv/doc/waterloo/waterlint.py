@@ -104,6 +104,7 @@ with contextlib.redirect_stdout(sys.stderr):
 	import sdv.doc.waterloo.waterlint_gen_full as gfull
 	import sdv.doc.waterloo.waterlint_gen_minimal as gmin
 	import sdv.doc.waterloo.waterlint_gen_example_template_json as gext
+	import sdv.doc.waterloo.waterlint_render_docker as rdocker
 	import sdv.doc.waterloo.waterlint_render_html5 as rhtml5
 	import sdv.doc.waterloo.waterlint_walk as wlk
 	import sdv.doc.waterloo.docitem_tokenizer as tokenizer
@@ -139,6 +140,7 @@ SUBCOMMANDS = (
 	"walk",
 	"gen-minimal",
 	"gen-full",
+	"render-docker",
 	"list-schemas",
 	"version",
 	"version-json",
@@ -1811,6 +1813,9 @@ def _build_parser() -> argparse.ArgumentParser:
 #----- render-html5 -------------------------------------------#
 	rhtml5.build_parser(subparsers, parser_parts)
 
+#----- render-docker ------------------------------------------#
+	rdocker.build_parser(subparsers, parser_parts)
+
 #----- walk ---------------------------------------------------#
 	wlk.build_parser(subparsers, parser_parts)
 
@@ -1888,6 +1893,8 @@ def main(argv: Optional[list[str]] = None) -> int:
 		return int(carve.carve_command(args))
 	if args.command == "render-html5":
 		return rhtml5.render_html5(args)
+	if args.command == "render-docker":
+		return rdocker.render_docker(args)
 	if args.command == "walk":
 		return wlk.walk_command(args)
 	if args.command == "gen-minimal":

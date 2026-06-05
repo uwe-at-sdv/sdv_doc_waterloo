@@ -47,6 +47,10 @@ from sdv.doc.waterloo.docitem_helper import (
 	get_obj_fully_qualified_name,
 	tracer,
 )
+from sdv.doc.waterloo.waterlint_common import (
+	Origin_t,
+	TracerProtocol,
+)
 
 # Not relevant yet, but in case we set up a plugin concept,
 # vendors should be encouraged to follow semantic versioning
@@ -56,34 +60,7 @@ __version__ = "0.1.0"
 #===== Typing ================================================#
 # "obj" is a fallback, not sure if it occurs in practice.
 Kind_t: TypeAlias = Literal["mod", "cls", "func", "obj"]
-Origin_t: TypeAlias = Literal["parsing", "validation", "tool", "extension"]
 
-class TracerProtocol(Protocol):
-	r"""
-	Preamble:
-		profile:
-			class
-		normative_sections:
-			Contract
-		scope:
-			extension
-	Contract:
-		general:
-			|Must| provide a minimal set of methods for reporting\
-			errors, warnings, and info messages with a consistent interface.
-		constructor:
-			Not relevant, as this is a protocol. Implementations may have their own constructors and internal state.
-	Description:
-		Methods are |func|`add_error`, |func|`add_warning`, and |func|`add_info`,
-		which allow reporting messages with a specified rule ID, origin, and optional details.
-		See class |type|`tracer` in |file|`docitem_helper.py`.
-	"""
-	def add_error(self, rule_id: str, origin: Origin_t, msg: str, details: Dict[str, Any] | None = None) -> None:
-		"""Report a tool error."""
-	def add_warning(self, rule_id: str, origin: Origin_t, msg: str, details: Dict[str, Any] | None = None) -> None:
-		"""Report a tool warning."""
-	def add_info(self, msg: str, origin: Origin_t = "tool") -> None:
-		"""Report a tool info message."""
 #=============================================================#
 
 SOURCE_CODE_ERRORS = (AttributeError, IndexError, KeyError, NameError, AssertionError, NotImplementedError, SyntaxError)

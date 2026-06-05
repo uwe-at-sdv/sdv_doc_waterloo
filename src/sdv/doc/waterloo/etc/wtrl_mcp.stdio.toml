@@ -30,7 +30,16 @@ access_log = true
 config_path = "logging.syslog.toml"
 
 [[roots]]
+# Waterloo documentation
+path = "../mcp/doc-json/docitem_helper.wtrl.core.rfc-2119.json"
+label = "Waterloo MCP Server and Tool set Reference"
+enabled = true
+kind = "wtrl-json"
+
+[[roots]]
+# Documentation on the MCP-server
 path = "../mcp/doc-json/wtrl_mcp.wtrl.core.rfc-2119.json"
 label = "Waterloo MCP Server and Tool set Reference"
 enabled = true
 kind = "wtrl-json"
+
