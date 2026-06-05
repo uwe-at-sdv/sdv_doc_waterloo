@@ -206,7 +206,34 @@ JSON-RPC error payloads if the MCP SDK exposes a better hook for that.
 Running the MCP-Server in a Docker container
 --------------------------------------------
 
+Um einen MCP-Server plattformunabhaengig bereitstellen zu koennen, bietet
+:wtrl_cmd:`waterlint` die Moeglichkeit, aus einer MCP-Server-Konfiguration
+ein Dockerfile und je nach Modus ein oder zwei bash-Skripte zu generieren.
+
+Das Subcommand hierfuer ist :wtrl_cmd:`render-docker` und die grundlegene
+Aufrufsyntax ist:
+
+.. code-block:: bash
+
+	waterlint render-docker --in /path/to/mcp.toml --out /path/to/dockerfile
+
+Die beiden Modi sind:
+
+* :wtrl_opt:`--no-bake-roots` -- Die Rootdokumente werden soft in den Container ge-mount'et.
+* :wtrl_opt:`--bake-roots` (default) -- Die Rootdokumente werden in das Dockerimage gebacken.
+
+Um zu entwickeln bzw. die Dokumentation eines Projekts vorranzutreiben, verwenden man den Modus
+:wtrl_opt:`--no-bake-roots`, so dass man in einem Arbeits- und Testzyklus das Dockerimage
+nicht neu bauen muss, sondern einfach den Container neu starten kann.
+
+Fuer den Wirkbetrieb (Deployment) wird man den Modus :wtrl_opt:`--bake-roots`
+verwenden, damit nur ein einziges File -- das Dockerimage -- bereitgestellt werden muss.
+
+Der Ablauf zum Erzeugen des Dockerfiles und der Skripte ist im folgenden
+Diagramm dargestellt:
+
 .. image:: ../img/waterlint_pipeline_docker.svg
 	:alt: Workflow for waterlint's docker output
 	:align: center
+
 
