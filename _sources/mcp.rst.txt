@@ -206,3 +206,7 @@ JSON-RPC error payloads if the MCP SDK exposes a better hook for that.
 Running the MCP-Server in a Docker container
 --------------------------------------------
 
+.. image:: ../img/waterlint_pipeline_docker.svg
+	:alt: Workflow for waterlint's docker output
+	:align: center
+
