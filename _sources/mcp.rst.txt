@@ -203,6 +203,169 @@ rule labels. A later version may map them more directly to structured
 JSON-RPC error payloads if the MCP SDK exposes a better hook for that.
 
 
+Running the MCP Server in a Docker Container
+--------------------------------------------
+
+To provide an MCP server in a platform-independent way,
+:wtrl_cmd:`waterlint` can generate a Dockerfile and, depending on the selected mode,
+one or two helper scripts from an MCP server configuration.
+
+The corresponding subcommand is :wtrl_cmd:`render-docker`.
+The basic invocation syntax is:
+
+.. code-block:: bash
+
+	waterlint render-docker --in /path/to/mcp.toml --out /path/to/dockerfile
+
+Two operating modes are available:
+
+* :wtrl_opt:`--no-bake-roots` -- Root documents are mounted into the container at runtime.
+* :wtrl_opt:`--bake-roots` (default) -- Root documents are embedded into the Docker image.
+
+Additional options are described in the :wtrl_cmd:`waterlint` online help.
+
+During development, or while actively extending a project's documentation,
+the :wtrl_opt:`--no-bake-roots` mode is typically preferred. This avoids
+rebuilding the Docker image whenever documentation changes; restarting the
+container is sufficient.
+
+Starting such a container manually would be inconvenient because the required
+document roots must be mounted explicitly. Therefore,
+:wtrl_cmd:`waterlint render-docker` additionally generates a launch script
+for this mode. The script starts the container in the foreground and forwards
+logging output to :wtrl_lit:`stdout`.
+
+For deployment, the :wtrl_opt:`--bake-roots` mode is usually preferred,
+because only a single artifact -- the Docker image itself -- needs to be distributed.
+
+After generating the Dockerfile and scripts,
+:wtrl_cmd:`waterlint render-docker` prints a number of example Docker commands,
+including commands for running the container as a daemon.
+
+The overall workflow is illustrated in the following diagram:
+
+.. image:: ../img/waterlint_pipeline_docker.svg
+	:alt: Workflow for waterlint's Docker output
+	:align: center
+
+The package installation directory relevant for the following examples can be obtained using:
+
+.. code-block:: bash
+
+	python3 -c "import importlib.resources as r; print(r.files('sdv.doc.waterloo'))"
+
+We refer to this path as :wtrl_file:`${ROOT}`.
+
+Among other files, directory :wtrl_file:`${ROOT}/etc` contains an MCP server configuration
+and a logging configuration referenced by that server configuration:
+
+* :wtrl_file:`wtrl_mcp.http.toml`
+* :wtrl_file:`logging.toml`
+
+For example, the MCP server can be started with HTTP transport using:
+
+.. code-block:: bash
+
+	wtrl_mcp --config ${ROOT}/etc/wtrl_mcp.http.toml
+
+This configuration defines an MCP server using transport
+:wtrl_value:`streamable-http`, listening on port 13316.
+The generated Docker image automatically exposes this port.
+
+Bake Mode (:wtrl_opt:`--bake-roots`, default)
+.............................................
+
+We use the above configuration as an example for running the MCP server inside a Docker container:
+
+.. code-block:: bash
+
+	waterlint render-docker --in ${ROOT}/etc/wtrl_mcp.http.toml --out /tmp/my_wtrl_mcp
+
+This generates Dockerfile :wtrl_file:`/tmp/my_wtrl_mcp`
+and build script :wtrl_file:`/tmp/build.my_wtrl_mcp.sh`.
+
+The Docker image is then built simply by executing:
+
+.. code-block:: bash
+
+	/tmp/build.my_wtrl_mcp.sh
+
+Afterwards, Docker should list the image:
+
+.. code-block:: bash
+
+	docker image ls | grep my_wtrl_mcp
+
+.. code-block:: text
+
+	wtrl-mcp-my_wtrl_mcp    latest    bcd1f03f9682    34 seconds ago   274MB
+
+The image can now be started in the foreground for testing.
+It is important to forward the configured port number (13316 in this example):
+
+.. code-block:: bash
+
+	docker run --rm -p 13316:13316 wtrl-mcp-my_wtrl_mcp
+
+The MCP server should report messages similar to the following
+(line wrapping added for readability):
+
+.. code-block:: text
+
+	2026-06-06T06:29:03 INFO: WTRL Ready to serve via Uvicorn.
+	2026-06-06T06:29:03 INFO: WTRL Loaded 1 configured roots.
+	2026-06-06T06:29:03 INFO: WTRL Configured root:
+	                          /shared/doc/wtrl_mcp.wtrl.core.rfc-2119.eb1497962ecf.json ...
+	2026-06-06T06:29:03 INFO: WTRL Built reference index with 13 target entries
+	                          and 39 source references.
+	2026-06-06T06:29:03 INFO: Started server process [1] [_serve]
+	2026-06-06T06:29:03 INFO: Waiting for application startup. [startup]
+	2026-06-06T06:29:03 INFO: StreamableHTTP session manager started [run]
+	2026-06-06T06:29:03 INFO: Application startup complete. [startup]
+	2026-06-06T06:29:03 INFO: Uvicorn running on http://0.0.0.0:13316
+	                          (Press CTRL+C to quit) [_log_started_message]
+
+Alternatively, the container can be run as a daemon:
+
+.. code-block:: bash
+
+	docker run -d --name wtrl-mcp-my_wtrl_mcp -p 13316:13316 wtrl-mcp-my_wtrl_mcp
+
+and stopped in the usual Docker way:
+
+.. code-block:: bash
+
+	docker stop wtrl-mcp-my_wtrl_mcp
+
+No-Bake Mode (:wtrl_opt:`--no-bake-roots`)
+..........................................
+
+If the MCP server roots should not be embedded into the image,
+generate the Dockerfile as follows:
+
+.. code-block:: bash
+
+	waterlint render-docker --in ${ROOT}/etc/wtrl_mcp.http.toml --out /tmp/my_wtrl_mcp --no-bake-roots
+
+Unlike Bake Mode, an additional launch script
+:wtrl_file:`/tmp/launch.my_wtrl_mcp.sh` is generated.
+
+This script is required because manually starting the container becomes
+impractical once the MCP server roots are supplied externally.
+
+The image is built and started using:
+
+.. code-block:: bash
+
+	/tmp/build.my_wtrl_mcp.sh
+	/tmp/launch.my_wtrl_mcp.sh
+
+Logging is written to :wtrl_lit:`stdout`.
+
+The container runs in the foreground and can be stopped with
+:wtrl_key:`CTRL C`.
+
+
 Running the MCP-Server in a Docker container
 --------------------------------------------
 
@@ -210,7 +373,7 @@ Um einen MCP-Server plattformunabhaengig bereitstellen zu koennen, bietet
 :wtrl_cmd:`waterlint` die Moeglichkeit, aus einer MCP-Server-Konfiguration
 ein Dockerfile und je nach Modus ein oder zwei bash-Skripte zu generieren.
 
-Das Subcommand hierfuer ist :wtrl_cmd:`render-docker` und die grundlegene
+Das Subcommand hierfuer ist :wtrl_cmd:`render-docker`, und die grundlegene
 Aufrufsyntax ist:
 
 .. code-block:: bash
@@ -219,7 +382,7 @@ Aufrufsyntax ist:
 
 Die beiden Modi sind:
 
-* :wtrl_opt:`--no-bake-roots` -- Die Rootdokumente werden soft in den Container ge-mount'et.
+* :wtrl_opt:`--no-bake-roots` -- Die Rootdokumente werden in den Container soft-ge-mount'et.
 * :wtrl_opt:`--bake-roots` (default) -- Die Rootdokumente werden in das Dockerimage gebacken.
 
 Weitere Optionen sind in der :wtrl_cmd:`waterlint`-Onlinehilfe beschrieben.
@@ -242,5 +405,117 @@ Diagramm dargestellt:
 .. image:: ../img/waterlint_pipeline_docker.svg
 	:alt: Workflow for waterlint's docker output
 	:align: center
+
+Das fuer den Durchlauf relevante Verzeichnis bekommen wir mit
+
+.. code-block:: bash
+
+	python3 -c "import importlib.resources as r; print(r.files('sdv.doc.waterloo'))"
+
+Diesen Pfad nennen wir im folgenden :wtrl_file:`${ROOT}`.
+
+Im Verzeichnnis :wtrl_file:`${ROOT}/etc` befinden sich unter anderem ein Konfigurationsfile
+fuer den MCP-Server und ein File fuer den Logger, das vom Serverfile referenziert wird:
+
+* :wtrl_file:`wtrl_mcp.http.toml`
+* :wtrl_file:`logging.toml`
+
+Ein moeglicher Start des MCP-Servers mit HTTP-Zugriff sieht beispielsweise so aus:
+
+.. code-block:: bash
+
+	wtrl_mcp --config ${ROOT}/etc/wtrl_mcp.http.toml
+
+Diese Konfiguration konfiguriert einen MCP-Server mit dem Transport :wtrl_value:`streaming-http`,
+erreichbar ueber den Port 13316. Diese Portnummer wird in das Dockerimage uebernommen
+und 'exposed'.
+
+Bake-Modus (:wtrl_opt:`--bake-roots`, implizit)
+...............................................
+
+Wir verwenden diese Konfiguration als Beispiel, um den MCP-Server im Dockercontainer zu betreiben:
+
+.. code-block:: bash
+
+	waterlint render-docker --in ${ROOT}/etc/wtrl_mcp.http.toml --out /tmp/my_wtrl_mcp
+
+Hierbei werden das Dockerfile :wtrl_file:`/tmp/my_wtrl_mcp` und ein Build-Skript :wtrl_file:`/tmp/build.my_wtrl_mcp.sh` erzeugt.
+Das Dockerimage erzeugt man nun einfach durch den Aufruf des Build-Skripts. Per default werden die
+Roots des MCP-Servers in das Image gebacken.
+
+.. code-block:: bash
+
+	/tmp/build.my_wtrl_mcp.sh
+
+Danach sollte Docker das Image kennen:
+
+.. code-block:: bash
+
+	docker image ls | grep my_wtrl_mcp
+
+.. code-block:: text
+
+	wtrl-mcp-my_wtrl_mcp    latest    bcd1f03f9682    34 seconds ago   274MB
+
+und wir koennen es testweise im Vordergrund starten. Hierbei ist wichtig,
+dass wir die konfigurierte Portnummer (in unserem Beispiel 13316) weiterleiten.
+
+.. code-block:: bash
+
+	docker run --rm -p 13316:13316 wtrl-mcp-my_wtrl_mcp
+
+Der MCP-Server wird sich dann etwa so melden (umgebrochen fuer bessere Lesbarkeit):
+
+.. code-block:: text
+
+	2026-06-06T06:29:03 INFO: WTRL Ready to serve via Uvicorn.
+	2026-06-06T06:29:03 INFO: WTRL Loaded 1 configured roots.
+	2026-06-06T06:29:03 INFO: WTRL Configured root:
+	                          /shared/doc/wtrl_mcp.wtrl.core.rfc-2119.eb1497962ecf.json ...
+	2026-06-06T06:29:03 INFO: WTRL Built reference index with 13 target entries
+	                          and 39 source references.
+	2026-06-06T06:29:03 INFO: Started server process [1] [_serve]
+	2026-06-06T06:29:03 INFO: Waiting for application startup. [startup]
+	2026-06-06T06:29:03 INFO: StreamableHTTP session manager started [run]
+	2026-06-06T06:29:03 INFO: Application startup complete. [startup]
+	2026-06-06T06:29:03 INFO: Uvicorn running on http://0.0.0.0:13316
+	                          (Press CTRL+C to quit) [_log_started_message]
+
+Alternativ koennen wir den Container als Daemon betreiben:
+
+.. code-block:: bash
+
+	docker run -d --name wtrl-mcp-my_wtrl_mcp -p 13316:13316 wtrl-mcp-my_wtrl_mcp
+
+und wie in Docker ueblich mit
+
+.. code-block:: bash
+
+	docker stop wtrl-mcp-my_wtrl_mcp
+
+stoppen.
+
+
+No-Bake-Modus (:wtrl_opt:`--no-bake-roots`)
+...........................................
+
+Wenn die Roots des MCP-Servers nicht im Image landen sollen, erzeugt man das Dockerfile so:
+
+.. code-block:: bash
+
+	waterlint render-docker --in ${ROOT}/etc/wtrl_mcp.http.toml --out /tmp/my_wtrl_mcp --no-bake-roots
+
+Im Gegensatz zum Bake-Modus wird hierbei zusaetzlich ein Launch-Skript :wtrl_file:`/tmp/launch.my_wtrl_mcp.sh`
+erzeugt, das man aufruft, um den Container zu starten. Dieses Skript ist erforderlich, weil
+durch die externen Roots des MCP-Servers der Start des Containers von Hand unpraktikabel waere.
+Mit
+
+.. code-block:: bash
+
+	/tmp/build.my_wtrl_mcp.sh
+	/tmp/launch.my_wtrl_mcp.sh
+
+wird das Image gebaut und der Container gestartet. Das Logging erfolgt nach :wtrl_lit:`stdout`.
+Der Container laeuft im Vordergrund und wird einfach mit :wtrl_key:`CTRL C` gestoppt.
 
 

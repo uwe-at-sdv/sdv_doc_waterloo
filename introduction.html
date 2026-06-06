@@ -377,7 +377,10 @@ complete verification in all contexts.</p>
 <li><p><code class="wtrl_file docutils literal notranslate"><span class="pre">sdv.doc.waterloo.waterlint_render_html5</span></code></p></li>
 </ul>
 <p>are validated on a regular basis. The current status is</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Success: no issues found in 28 source files
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>/server/devel/sdv/privat/uwe/source/sdv_doc_waterloo/package_main/src/sdv/doc/waterloo/mcp/wtrl_server.py:398: error: Argument &quot;source_profile&quot; to &quot;ReferenceRecord&quot; has incompatible type &quot;str&quot;; expected &quot;Literal[&#39;module&#39;, &#39;class&#39;, &#39;function&#39;, &#39;method&#39;]&quot;  [arg-type]
+/server/devel/sdv/privat/uwe/source/sdv_doc_waterloo/package_main/src/sdv/doc/waterloo/mcp/wtrl_server.py:530: error: Argument &quot;log_level&quot; to &quot;FastMCP&quot; has incompatible type &quot;str&quot;; expected &quot;Literal[&#39;DEBUG&#39;, &#39;INFO&#39;, &#39;WARNING&#39;, &#39;ERROR&#39;, &#39;CRITICAL&#39;]&quot;  [arg-type]
+/server/devel/sdv/privat/uwe/source/sdv_doc_waterloo/package_main/src/sdv/doc/waterloo/mcp/wtrl_server.py:772: error: Incompatible types in assignment (expression has type &quot;Callable[[MutableMapping[str, Any], Callable[[], Awaitable[MutableMapping[str, Any]]], Callable[[MutableMapping[str, Any]], Awaitable[None]]], Awaitable[None]]&quot;, variable has type &quot;Starlette&quot;)  [assignment]
+Found 3 errors in 1 file (checked 28 source files)
 </pre></div>
 </div>
 <p>Our <code class="wtrl_lit docutils literal notranslate"><span class="pre">mypy</span></code>-configuration is:</p>
