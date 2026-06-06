@@ -97,7 +97,7 @@ inspect.
 * [DCKR-001] -- The parsed configuration has an invalid structure, an unsupported transport, or an invalid root or logging field type.
 * [DCKR-002] -- A referenced root file or logging configuration file does not exist.
 * [DCKR-003] -- The input TOML file does not exist or could not be loaded.
-* [DCKR-999] -- An unspecified error occurred while rendering Docker builder output.
+* [DCKR-999] -- An unspecified error occurred while rendering Docker build artifacts.
 
 
 
