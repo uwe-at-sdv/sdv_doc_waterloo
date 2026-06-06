@@ -72,5 +72,6 @@ version = { attr = "sdv.doc.waterloo.docitem.__version__" }
 	"schema/*.json",
 	"js/*.js",
 	"css/*.css",
-	"etc/*.toml"
+	"etc/*.toml",
+	"mcp/doc-json/*.json"
 	]
