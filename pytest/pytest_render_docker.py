@@ -15,7 +15,7 @@ ROOT_JSON = PATH_MODULE / "mcp" / "doc-json" / "wtrl_mcp.wtrl.core.rfc-2119.json
 
 def _write_modified_config(tmp_path: Path, *, transport: str | None = None) -> Path:
 	text = CONFIG.read_text(encoding="utf-8")
-	text = text.replace('../mcp/doc-json/wtrl-mcp.wtrl.core.rfc-2119.json', str(ROOT_JSON))
+	text = text.replace('../mcp/doc-json/wtrl_mcp.wtrl.core.rfc-2119.json', str(ROOT_JSON))
 	if transport is not None:
 		text = text.replace('transport = "streamable-http"', f'transport = "{transport}"')
 	path = tmp_path / "wtrl_mcp.http.toml"

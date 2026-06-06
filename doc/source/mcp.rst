@@ -210,7 +210,7 @@ Um einen MCP-Server plattformunabhaengig bereitstellen zu koennen, bietet
 :wtrl_cmd:`waterlint` die Moeglichkeit, aus einer MCP-Server-Konfiguration
 ein Dockerfile und je nach Modus ein oder zwei bash-Skripte zu generieren.
 
-Das Subcommand hierfuer ist :wtrl_cmd:`render-docker` und die grundlegene
+Das Subcommand hierfuer ist :wtrl_cmd:`render-docker`, und die grundlegene
 Aufrufsyntax ist:
 
 .. code-block:: bash
@@ -219,7 +219,7 @@ Aufrufsyntax ist:
 
 Die beiden Modi sind:
 
-* :wtrl_opt:`--no-bake-roots` -- Die Rootdokumente werden soft in den Container ge-mount'et.
+* :wtrl_opt:`--no-bake-roots` -- Die Rootdokumente werden in den Container soft-ge-mount'et.
 * :wtrl_opt:`--bake-roots` (default) -- Die Rootdokumente werden in das Dockerimage gebacken.
 
 Weitere Optionen sind in der :wtrl_cmd:`waterlint`-Onlinehilfe beschrieben.
@@ -242,5 +242,24 @@ Diagramm dargestellt:
 .. image:: ../img/waterlint_pipeline_docker.svg
 	:alt: Workflow for waterlint's docker output
 	:align: center
+
+Fuer den folgenden Beispieldurchlauf druecken wir das Installationsverzeichnis von :wtrl_mod:`sdv.doc.waterloo`
+durch :wtrl_file:`${ROOT}` aus. Im Verzeichnnis :wtrl_file:`etc` befinden sich unter anderem ein Konfigurationsfile
+fuer den MCP-Server und ein File fuer den Logger, das vom Serverfile referenziert wird:
+
+* :wtrl_file:`wtrl_mcp.http.toml`
+* :wtrl_file:`logging.toml`
+
+Ein moeglicher Start des MCP-Servers mit HTTP-Zugriff sieht beispielsweise so aus:
+
+.. code-block:: bash
+
+	wtrl_mcp --config ${ROOT}/etc/wtrl_mcp.http.toml
+
+Diese Konfiguration verwenden wir nun, um den MCP-Server im Dockercontainer zu betreiben:
+
+.. code-block:: bash
+
+	waterlint render-docker --in ${ROOT}/etc/wtrl_mcp.http.toml --out /tmp/my_wtrl_mcp
 
 
