@@ -3,13 +3,15 @@ Preamble:
 	profile:
 		module
 	normative_sections:
-		Contract, Public_functions, Public_classes
+		Contract, Public_functions
 	scope:
 		extension
 Contract:
 	general:
 		|Must| provide a function |func|`render_docker` that serves as\
 		the main entry point for the |cmd|`waterlint render-docker` subcommand.
+Public_functions:
+	render_docker, build_parser
 """
 
 from __future__ import annotations
@@ -550,6 +552,8 @@ def render_docker(args: argparse.Namespace) -> int:
 			function
 		normative_sections:
 			Contract, Parameters, Returns, Raises
+		scope:
+			extension
 	Contract:
 		general:
 			|Must| read the Waterloo MCP server configuration from the TOML file passed via |opt|`--in`.
@@ -684,6 +688,8 @@ def build_parser(
 			function
 		normative_sections:
 			Contract, Parameters, Returns, Raises
+		scope:
+			extension
 	Contract:
 		general:
 	Parameters:

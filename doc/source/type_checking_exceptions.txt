@@ -12,4 +12,4 @@ waterlint.py:874 # pragma: no cover - defensive
 waterlint.py:878 # pragma: no cover - defensive
 waterlint.py:882 # pragma: no cover - defensive
 waterlint.py:1428 # pragma: no cover - defensive
-waterlint_render_docker.py:26 # pragma: no cover - Python 3.10 fallback
+waterlint_render_docker.py:28 # pragma: no cover - Python 3.10 fallback

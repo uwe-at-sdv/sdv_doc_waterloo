@@ -46,7 +46,7 @@ import importlib.util
 import importlib.resources as importlib_resources
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Callable, cast, Dict, List, Literal, Protocol, TypeAlias, TypedDict
+from typing import Any, Callable, cast, Dict, List, Literal, TypeAlias, TypedDict
 
 import jsonschema.exceptions
 from jsonschema import Draft202012Validator
@@ -93,33 +93,6 @@ class ParserParts_t(TypedDict):
 	formatter_class: type[argparse.HelpFormatter]
 	global_opts: argparse.ArgumentParser
 	basedir_group: argparse.ArgumentParser
-
-class TracerProtocol(Protocol):
-	r"""
-	Preamble:
-		profile:
-			class
-		normative_sections:
-			Contract
-		scope:
-			extension
-	Contract:
-		general:
-			|Must| provide a minimal set of methods for reporting\
-			errors, warnings, and info messages with a consistent interface.
-		constructor:
-			Not relevant, as this is a protocol. Implementations may have their own constructors and internal state.
-	Description:
-		Methods are |func|`add_error`, |func|`add_warning`, and |func|`add_info`,
-		which allow reporting messages with a specified rule ID, origin, and optional details.
-		See class |type|`tracer` in |file|`docitem_helper.py`.
-	"""
-	def add_error(self, rule_id: str, origin: Origin_t, msg: str, details: Dict[str, Any] | None = None) -> None:
-		"""Report a tool error."""
-	def add_warning(self, rule_id: str, origin: Origin_t, msg: str, details: Dict[str, Any] | None = None) -> None:
-		"""Report a tool warning."""
-	def add_info(self, msg: str, origin: Origin_t = "tool") -> None:
-		"""Report a tool info message."""
 
 #==============================================================#
 

@@ -27,7 +27,7 @@ import importlib.resources as importlib_resources
 
 from datetime import datetime
 from pathlib import Path
-from typing import Any, cast, Dict, List, Literal, Protocol, Tuple, TypeAlias
+from typing import Any, cast, Dict, List, Literal, Tuple, TypeAlias
 from sdv.doc.waterloo.waterlint_common import (
 	WTRL_DOCITEM_VERSION,
 	WTRL_JSON_SCHEMA_VERSION,
@@ -50,9 +50,6 @@ from sdv.doc.waterloo.docitem_helper import (
 	get_obj_path,
 	)
 
-# Not relevant yet, but in case we set up a plugin concept,
-# vendors should be encouraged to follow semantic versioning
-# for their plugins.
 __version__ = "0.1.0"
 
 WTRL_WALK_DEFAULT_SHOW_FIELDS = ("qualname", "kind", "scope", "file", "lineno", "included", "reason")

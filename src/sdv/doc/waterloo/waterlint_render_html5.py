@@ -3,7 +3,7 @@ Preamble:
 	profile:
 		module
 	normative_sections:
-		Contract, Public_functions, Public_classes
+		Contract, Public_functions
 	scope:
 		extension
 Contract:
@@ -11,13 +11,7 @@ Contract:
 		|Must| provide a function |func|`render_html5` that serves as\
 		the main entry point for the |cmd|`waterlint render-html5` subcommand.
 Public_functions:
-	render_html5, build_parser
-Public_classes:
-	TracerProtocol
-Class_overview:
-	TracerProtocol:
-		A minimal public protocol defining the expected interface for the tracer instance passed
-		to |func|`render_html5`.
+	render_html5, render_html5_document, build_parser
 Function_overview:
 	render_html5:
 		Main entry point for the `waterlint render-html5` subcommand.
@@ -26,6 +20,8 @@ Function_overview:
 		presents the documented objects in a clear and navigable format.
 		The function also handles error reporting via the provided
 		tracer instance and supports various customization options for the output HTML.
+	render_html5_document:
+		Render a single HTML5 document from the merged JSON data.
 	build_parser:
 		Construct and return the argparse subparser for the render-html5 command.
 """
@@ -40,7 +36,7 @@ import sys
 import traceback
 import importlib.resources as importlib_resources
 from pathlib import Path
-from typing import Any, Dict, List, Literal, Protocol, Tuple, TypeAlias
+from typing import Any, Dict, List, Literal, Tuple, TypeAlias
 from sdv.doc.waterloo import docitem
 from sdv.doc.waterloo import waterlint_common as wl_common
 from sdv.doc.waterloo.docitem_helper import (
@@ -49,7 +45,6 @@ from sdv.doc.waterloo.docitem_helper import (
 )
 from sdv.doc.waterloo.waterlint_common import (
 	Origin_t,
-	TracerProtocol,
 )
 
 # Not relevant yet, but in case we set up a plugin concept,
@@ -504,13 +499,8 @@ a.wtrl-ref:visited { color:inherit; }
 """
 	return html
 
-# In case we create a plugin-concept for rendering to some output format,
-# this function should serve as a blueprint for the expected interface and
-# contract of such a plugin. The function name should correlate to the
-# waterlint subcommand that invokes it, and the parameters should cover all
-# necessary inputs and options for the rendering process.
-def _render_html5_document(
-	tr: TracerProtocol,
+def render_html5_document(
+	tr: tracer,
 	*,
 	input_paths: List[str],
 	out_file: str | None,
@@ -709,7 +699,7 @@ def render_html5(args: argparse.Namespace) -> int:
 					in_files.append(str(grp))
 		if not in_files:
 			raise RuntimeError("at least one --in must be provided")
-		out_path = _render_html5_document(
+		out_path = render_html5_document(
 			tr,
 			input_paths=in_files,
 			out_file=getattr(args, "out_file", None),
