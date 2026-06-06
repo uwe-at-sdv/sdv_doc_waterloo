@@ -792,8 +792,6 @@ Output layer HTML5
 
 .. wtrl_autodoc_module:: sdv.doc.waterloo.waterlint_render_html5
 
-.. wtrl_autodoc_class_full:: TracerProtocol
-
 .. wtrl_autodoc_function:: render_html5
 
 .. wtrl_pop_current_module:: sdv.doc.waterloo.waterlint_render_html5
