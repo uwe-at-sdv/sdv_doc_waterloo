@@ -245,6 +245,22 @@ def _render_security_toml(security_cfg: Mapping[str, Any] | None) -> list[str]:
 	return lines
 
 
+def _render_client_urls(security_cfg: Mapping[str, Any] | None, streamable_http_path: str) -> list[str]:
+	if security_cfg is None:
+		return []
+	allowed_hosts = security_cfg.get("allowed_hosts")
+	if not isinstance(allowed_hosts, list):
+		return []
+	path = streamable_http_path if streamable_http_path.startswith("/") else f"/{streamable_http_path}"
+	urls: list[str] = []
+	for host in allowed_hosts:
+		if not isinstance(host, str) or not host:
+			continue
+		base = host if host.startswith(("http://", "https://")) else f"http://{host}"
+		urls.append(f"{base}{path}")
+	return urls
+
+
 def _render_config_text(plan: DockerRenderPlan) -> str:
 	lines: list[str] = [
 		"# Rendered Waterloo MCP server configuration.",
@@ -273,7 +289,7 @@ def _render_dockerfile_text(plan: DockerRenderPlan) -> str:
 	lines = [
 		"# syntax=docker/dockerfile:1.7",
 		"",
-		"FROM\tpython:3.14.5-slim-trixie",
+		"FROM\t\tpython:3.14.5-slim-trixie",
 		"",
 		"RUN\t\tapt-get update \\",
 		"   \t\t && apt-get install -y --no-install-recommends bash git ca-certificates \\",
@@ -578,9 +594,9 @@ def render_docker(args: argparse.Namespace) -> int:
 			* |attr|`no_bake_roots`: Boolean switch indicating that the roots from the input TOML file are not baked into the image.
 			* |attr|`out_diag`: Optional path to a human-readable diagnostics file. Default is |lit|`stdout`.
 			* |attr|`out_diag_json`: Optional path to a JSON diagnostics file. Default is not to write JSON diagnostics.
-		Returns:
-			An integer exit code, where 0 indicates success and any non-zero value indicates an error.
-		Raises:
+	Returns:
+		An integer exit code, where 0 indicates success and any non-zero value indicates an error.
+	Raises:
 	Notes:
 		Concept:
 			The idea is to wrap a functioning MCP server configuration in a Docker image,
@@ -589,6 +605,24 @@ def render_docker(args: argparse.Namespace) -> int:
 			including transport settings, logging configuration, and roots.
 			The output is a Dockerfile that can be used to build
 			a Docker image with the specified configuration.
+		Todo:
+			An eventual |opt|`--target` option could render platform-specific helper scripts.
+			The current mental model is:
+			* |lit|`posix` remains the default target and would keep producing shell scripts such as
+			* |file|`build.<out>.sh` and, in non-bake mode, |file|`launch.<out>.sh`.
+			* |lit|`macos` would stay in the shell-script family and could add macOS-specific launch hints,
+			* while still producing files such as |file|`build.<out>.sh` and, in non-bake mode, |file|`launch.<out>.sh`.
+			* |lit|`windows` would instead produce PowerShell-oriented helper files such as
+			* |file|`build.<out>.ps1` and, in non-bake mode, |file|`launch.<out>.ps1`.
+			The Dockerfile itself would remain platform-neutral in both targets.
+			The target would only affect the helper script syntax, mount syntax, quoting, and any
+			host-side path adaptation that is needed for the launch path.
+			For bake mode the generated Dockerfile and the build helper would still be the main artefacts;
+			for non-bake mode the launch helper would remain the place where the host/container mapping is spelled out.
+			Windows-specific details such as PowerShell line continuation, environment-variable access,
+			and host path formatting should be handled there rather than in the Dockerfile.
+			Target selection could start in an |lit|`automatic` mode and later be overridden explicitly
+			with |opt|`--target` when the user wants to force a particular rendering style.
 	"""
 	tr = tracer()
 	out_diag = getattr(args, "out_diag", None)
@@ -606,21 +640,31 @@ def render_docker(args: argparse.Namespace) -> int:
 			tr.add_info(f"render-docker: launch script {plan.launch_script_path}")
 		for root in plan.roots:
 			tr.add_info(
-				"render-docker: root "
+				"render-docker: ● "
 				f"{root.root_id} -> {root.render_name} "
-				f"({root.label}, enabled={root.enabled}, kind={root.kind})"
+				f"[{root.label}, {'enabled' if root.enabled else 'disabled'}, {root.kind}]"
 			)
-		if plan.bake_roots:
-			image_tag = f"wtrl-mcp-{plan.out_path.stem}"
-			port = plan.server["port"]
-			tr.add_info("render-docker: launch the container, for example:")
-			tr.add_info(f"render-docker:   docker run --rm -p {port}:{port} {image_tag}")
-			tr.add_info(f"render-docker:   docker run -d --name {image_tag} -p {port}:{port} {image_tag}")
+		client_urls = _render_client_urls(plan.security, plan.server["streamable_http_path"])
+		if client_urls:
+			tr.add_info("render-docker: MCP client URL(s):")
+			for url in client_urls:
+				tr.add_info(f"render-docker: ● {url}")
 		plan.out_path.parent.mkdir(parents=True, exist_ok=True)
 		plan.out_path.write_text(_render_dockerfile_text(plan), encoding="utf-8")
 		_write_executable_text(plan.build_script_path, _render_build_script_text(plan))
 		if plan.launch_script_path is not None:
 			_write_executable_text(plan.launch_script_path, _render_launch_script_text(plan))
+		tr.add_info("render-docker: SUGGESTED NEXT STEPS:")
+		tr.add_info(f"render-docker: ● Run the build script: {plan.build_script_path}")
+		if plan.launch_script_path is not None:
+			tr.add_info(f"render-docker: ● Run the launch script: {plan.launch_script_path}")
+		if plan.bake_roots:
+			image_tag = f"wtrl-mcp-{plan.out_path.stem}"
+			port = plan.server["port"]
+			tr.add_info("render-docker: ● Launch the container, for example:")
+			tr.add_info(f"render-docker:   ○ docker run --rm -p {port}:{port} {image_tag}")
+			tr.add_info(f"render-docker:   ○ docker run -d --name {image_tag} -p {port}:{port} {image_tag}")
+		tr.add_info("render-docker: ● Inform your agents about the new MCP server URL.")
 	except Exception as exc:
 		tr.add_error("DCKR-999", "tool", f"Unexpected render-docker failure: {exc}")
 		if not out_diag:

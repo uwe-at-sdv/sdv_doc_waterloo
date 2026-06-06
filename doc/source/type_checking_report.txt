@@ -1,4 +1,1 @@
-/server/devel/sdv/privat/uwe/source/sdv_doc_waterloo/package_main/src/sdv/doc/waterloo/mcp/wtrl_server.py:398: error: Argument "source_profile" to "ReferenceRecord" has incompatible type "str"; expected "Literal['module', 'class', 'function', 'method']"  [arg-type]
-/server/devel/sdv/privat/uwe/source/sdv_doc_waterloo/package_main/src/sdv/doc/waterloo/mcp/wtrl_server.py:530: error: Argument "log_level" to "FastMCP" has incompatible type "str"; expected "Literal['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL']"  [arg-type]
-/server/devel/sdv/privat/uwe/source/sdv_doc_waterloo/package_main/src/sdv/doc/waterloo/mcp/wtrl_server.py:772: error: Incompatible types in assignment (expression has type "Callable[[MutableMapping[str, Any], Callable[[], Awaitable[MutableMapping[str, Any]]], Callable[[MutableMapping[str, Any]], Awaitable[None]]], Awaitable[None]]", variable has type "Starlette")  [assignment]
-Found 3 errors in 1 file (checked 28 source files)
+Success: no issues found in 28 source files

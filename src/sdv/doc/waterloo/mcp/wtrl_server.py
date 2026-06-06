@@ -29,7 +29,7 @@ import sys
 import textwrap
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Callable, Mapping, cast
+from typing import Callable, Literal, Mapping, cast
 
 try:
 	import tomllib
@@ -44,6 +44,8 @@ from mcp.server.fastmcp import FastMCP
 from mcp.server.fastmcp.server import TransportSecuritySettings
 
 logger = logging.getLogger("wtrl_mcp")
+
+LogLevel_t = Literal["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]
 
 from sdv.doc.waterloo.mcp import __version__
 from sdv.doc.waterloo.mcp.wtrl_tools import (
@@ -388,6 +390,7 @@ def _build_reference_index(roots: list[RootConfig]) -> ReferenceIndex:
 			source_profile = _doc_profile(object_record)
 			if source_profile not in {"module", "class", "function", "method"}:
 				continue
+			source_profile_t = cast(Literal["module", "class", "function", "method"], source_profile)
 			refs = _doc_see_also_refs(object_record)
 			if not refs:
 				continue
@@ -395,7 +398,7 @@ def _build_reference_index(roots: list[RootConfig]) -> ReferenceIndex:
 			source_record = ReferenceRecord(
 				source_root_id=root_id,
 				source_qid=qid_text,
-				source_profile=source_profile,
+				source_profile=source_profile_t,
 				is_normative=is_normative,
 			)
 			for ref in refs:
@@ -527,7 +530,7 @@ def build_app(config: McpConfig) -> FastMCP:
 		name="wtrl_mcp",
 		instructions=read_package_readme(),
 		debug=False,
-		log_level=config.logging.level,
+		log_level=cast(LogLevel_t, config.logging.level),
 		host=config.server.host,
 		port=config.server.port,
 		streamable_http_path=config.server.streamable_http_path,
@@ -767,7 +770,7 @@ def _run_loaded_config(config: McpConfig) -> None:
 	_configure_waterloo_logging(config)
 	mcp = build_app(config)
 	if config.server.transport == "streamable-http":
-		http_app = mcp.streamable_http_app()
+		http_app: ASGIApp = mcp.streamable_http_app()
 		if config.security.allowed_origins:
 			http_app = _wrap_browser_cors(http_app, list(config.security.allowed_origins))
 		# Streamable HTTP is exposed directly here so browser clients can

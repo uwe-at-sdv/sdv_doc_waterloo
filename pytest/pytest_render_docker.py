@@ -41,13 +41,15 @@ def test_render_docker_bake_smoke_generates_dockerfile_and_build_script(tmp_path
 	assert build_script.exists(), f"expected file not found: {build_script}"
 	assert build_script.stat().st_mode & 0o111, "build script is not executable"
 	dockerfile = out_file.read_text(encoding="utf-8")
-	assert "FROM\tpython:3.14.5-slim-trixie" in dockerfile
+	assert "FROM\t\tpython:3.14.5-slim-trixie" in dockerfile
 	assert "COPY\t\tshared/doc/ /shared/doc/" in dockerfile
 	assert 'CMD\t\t["wtrl_mcp", "--config", "/workspace/etc/wtrl_mcp.http.toml"]' in dockerfile
 	build_text = build_script.read_text(encoding="utf-8")
 	assert "docker build" in build_text
 	assert "Generated build script for my_build.docker." in build_text
 	assert "wtrl-mcp-my_build" in build_text
+	assert "http://127.0.0.1:13316/mcp" in res.stderr
+	assert "http://localhost:13316/mcp" in res.stderr
 
 
 def test_render_docker_no_bake_smoke_generates_launch_script(tmp_path: Path) -> None:
@@ -73,6 +75,8 @@ def test_render_docker_no_bake_smoke_generates_launch_script(tmp_path: Path) -> 
 	assert "-v" in launch_text
 	assert "wtrl-mcp-my_nobake" in launch_text
 	assert "mount" in launch_text
+	assert "http://127.0.0.1:13316/mcp" in res.stderr
+	assert "http://localhost:13316/mcp" in res.stderr
 
 
 def test_render_docker_rejects_non_http_transport(tmp_path: Path) -> None:
