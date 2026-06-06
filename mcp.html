@@ -230,11 +230,17 @@ Aufrufsyntax ist:</p>
 <li><p><code class="wtrl_opt docutils literal notranslate"><span class="pre">--no-bake-roots</span></code> – Die Rootdokumente werden soft in den Container ge-mount’et.</p></li>
 <li><p><code class="wtrl_opt docutils literal notranslate"><span class="pre">--bake-roots</span></code> (default) – Die Rootdokumente werden in das Dockerimage gebacken.</p></li>
 </ul>
-<p>Um zu entwickeln bzw. die Dokumentation eines Projekts vorranzutreiben, verwenden man den Modus
+<p>Weitere Optionen sind in der <code class="wtrl_cmd docutils literal notranslate"><span class="pre">waterlint</span></code>-Onlinehilfe beschrieben.</p>
+<p>Um zu entwickeln bzw. die Dokumentation eines Projekts voranzutreiben, verwenden man den Modus
 <code class="wtrl_opt docutils literal notranslate"><span class="pre">--no-bake-roots</span></code>, so dass man in einem Arbeits- und Testzyklus das Dockerimage
-nicht neu bauen muss, sondern einfach den Container neu starten kann.</p>
+nicht neu bauen muss, sondern einfach den Container neu starten kann. Fuer diesen Modus ist
+das Starten des Containers von Hand umstaendlich, daher erzeugt <code class="wtrl_cmd docutils literal notranslate"><span class="pre">waterlint</span> <span class="pre">render-docker</span></code>
+fuer diesen Modus ein Launch-Skript, das den Container im Vordergrund startet und nach <code class="wtrl_lit docutils literal notranslate"><span class="pre">stdout</span></code> loggt.</p>
 <p>Fuer den Wirkbetrieb (Deployment) wird man den Modus <code class="wtrl_opt docutils literal notranslate"><span class="pre">--bake-roots</span></code>
-verwenden, damit nur ein einziges File – das Dockerimage – bereitgestellt werden muss.</p>
+verwenden, damit nur ein einziges File – das Dockerimage – bereitgestellt werden muss.
+<code class="wtrl_cmd docutils literal notranslate"><span class="pre">waterlint</span> <span class="pre">render-docker</span></code> listet nach dem Generieren der Files
+ein paar einfache Docker-Aufrufe auf, beispielsweise um den Container
+als Daemon zu starten.</p>
 <p>Der Ablauf zum Erzeugen des Dockerfiles und der Skripte ist im folgenden
 Diagramm dargestellt:</p>
 <img alt="Workflow for waterlint's docker output" class="align-center" src="_images/waterlint_pipeline_docker.svg" />
