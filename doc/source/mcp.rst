@@ -58,6 +58,7 @@ The MCP-server supports the following tools:
 
 - :wtrl_cmd:`list_roots` — lists the configured Waterloo data roots.
 - :wtrl_cmd:`get_root` — reads one configured Waterloo data root by :wtrl_var:`root_id`.
+- :wtrl_cmd:`get_root_metadata` — reads only the compact header metadata of one configured Waterloo root by :wtrl_var:`root_id`.
 - :wtrl_cmd:`list_objects` — lists all Waterloo objects in one configured root.
 
 .. rubric:: Object content access
@@ -369,4 +370,3 @@ Logging is written to :wtrl_lit:`stdout`.
 
 The container runs in the foreground and can be stopped with
 :wtrl_key:`CTRL C`.
-

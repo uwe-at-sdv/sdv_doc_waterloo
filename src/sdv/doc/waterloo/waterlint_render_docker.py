@@ -31,8 +31,12 @@ except ModuleNotFoundError:  # pragma: no cover - Python 3.10 fallback
 import sdv.doc.waterloo.waterlint_common as wl_common
 from sdv.doc.waterloo.docitem_helper import WTRL_TRACER_JSON_SCHEMA_VERSION, tracer
 
-#===== Typing ================================================#
+# Not relevant yet, but in case we set up a plugin concept,
+# vendors should be encouraged to follow semantic versioning
+# for their plugins.
+__version__ = "0.1.0"
 
+#===== Typing ================================================#
 
 class RenderServerConfig_t(TypedDict):
 	transport: str

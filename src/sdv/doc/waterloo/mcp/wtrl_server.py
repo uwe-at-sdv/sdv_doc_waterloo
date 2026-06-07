@@ -65,6 +65,7 @@ from sdv.doc.waterloo.mcp.wtrl_tools import (
     get_examples,
     get_example_source,
     get_signature,
+    get_root_metadata,
     get_references,
     get_root,
     get_section,
@@ -585,6 +586,10 @@ def build_app(config: McpConfig) -> FastMCP:
 	def _get_root(root_id: str) -> dict[str, WtrlJsonNode_t]:
 		return get_root(root_id, _root_mappings())
 
+	@mcp.tool(name="get_root_metadata", description="Read compact header metadata for one configured Waterloo data root.")
+	def _get_root_metadata(root_id: str) -> dict[str, WtrlJsonNode_t]:
+		return get_root_metadata(root_id, _root_mappings())
+
 	@mcp.tool(name="get_object", description="Read one Waterloo object by qid from a configured root.")
 	def _get_object(root_id: str, qid: str) -> dict[str, WtrlJsonNode_t]:
 		return get_object(root_id, qid, _root_mappings())
@@ -700,6 +705,7 @@ def build_app(config: McpConfig) -> FastMCP:
 		tool_wrappers: dict[str, Callable[..., object]] = {
 			"list_roots": _list_roots,
 			"get_root": _get_root,
+			"get_root_metadata": _get_root_metadata,
 			"get_object": _get_object,
 			"get_section": _get_section,
 			"get_subsection": _get_subsection,
@@ -718,6 +724,7 @@ def build_app(config: McpConfig) -> FastMCP:
 		tool_docs: dict[str, Callable[..., object]] = {
 			"list_roots": list_roots,
 			"get_root": get_root,
+			"get_root_metadata": get_root_metadata,
 			"get_object": get_object,
 			"get_section": get_section,
 			"get_subsection": get_subsection,

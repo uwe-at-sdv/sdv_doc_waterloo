@@ -40,6 +40,7 @@ Typical usage:
 - call `describe_tool` with a canonical tool name
 - call `list_roots`
 - call `get_root` with a `root_id`
+- call `get_root_metadata` with a `root_id` when you only need the compact header metadata
 - call `list_objects` with a `root_id`
 - call `get_object` with a `root_id` and `qid`
 - call `get_section` with a `root_id`, `qid`, and section name

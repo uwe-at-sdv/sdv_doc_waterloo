@@ -64,6 +64,24 @@ def test_mcp_get_signature_returns_wrapper_for_function(mcp_session: str) -> Non
 	assert signature.get("returns") == "FastMCP", signature
 
 
+def test_mcp_get_root_metadata_returns_header_block(mcp_session: str) -> None:
+	result = mcp_call_tool(
+		mcp_session,
+		"get_root_metadata",
+		{
+			"root_id": "root:eadb7d51f9fa",
+		},
+	)
+	structured = _structured_result(result)
+	assert structured.get("root_id") == "root:eadb7d51f9fa", structured
+	assert structured.get("label") == "Waterloo MCP Server and Tool set Reference", structured
+	assert isinstance(structured.get("__WTRL_VERSION__"), dict), structured
+	assert isinstance(structured.get("__WTRL_META__"), dict), structured
+	assert isinstance(structured.get("__WTRL_ROLES__"), dict), structured
+	assert isinstance(structured.get("__WTRL_SCOPES__"), dict), structured
+	assert "document" not in structured, structured
+
+
 def test_mcp_list_objects_reports_inventory_rows(mcp_session: str) -> None:
 	entries = mcp_call_tool_entries(
 		mcp_session,

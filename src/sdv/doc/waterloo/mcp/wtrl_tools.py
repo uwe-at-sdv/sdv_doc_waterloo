@@ -13,7 +13,7 @@ Public_classes:
 	ExampleRef, ObjectSummary, ReferenceRecord, RelatedRecord, SearchObjectsFilter, SearchSectionsFilter, SearchTextFilter
 Public_functions:
 	matches_segment_aware_expression,
-	list_roots, get_root, get_object, get_section, get_subsection, list_objects,
+	list_roots, get_root, get_root_metadata, get_object, get_section, get_subsection, list_objects,
 	get_references, search_related, get_signature, get_examples, get_example_source,
 	search_objects, search_sections, search_text, gen_docstring
 Function_overview:
@@ -23,6 +23,8 @@ Function_overview:
 		[MCP tool] List the configured Waterloo roots with stable identifiers.
 	get_root:
 		[MCP tool] Resolve one configured root by its stable identifier and return the loaded JSON document.
+	get_root_metadata:
+		[MCP tool] Resolve one configured root by its stable identifier and return only the compact header metadata block.
 	get_object:
 		[MCP tool] Resolve one object by QID inside one configured root and return the loaded object record.
 	get_section:
@@ -755,6 +757,50 @@ def list_roots(roots: list[Mapping[str, WtrlJsonNode_t]]) -> list[dict[str, Wtrl
 	return out
 
 
+def get_root_metadata(root_id: str, roots: list[Mapping[str, WtrlJsonNode_t]]) -> dict[str, WtrlJsonNode_t]:
+	r"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+		scope:
+			extension
+	Contract:
+		general:
+			|Must| resolve a configured root by its canonical root identifier and return only the compact header metadata block without the full JSON document body.
+	Parameters:
+		root_id:
+			The canonical root identifier derived from the canonical absolute root path.
+		roots:
+			The list of configured root entries.
+	Notes:
+		Parameters:
+			MCP callers only pass ``root_id``; the server injects the root list internally.
+		Example:
+			``get_root_metadata(root_id="...")``
+	Returns:
+		A dictionary describing the root and containing only the compact header metadata fields from the loaded JSON document.
+	Raises:
+		ValueError:
+			|May| raise if the root identifier is unknown.
+		FileNotFoundError:
+			|May| raise if the configured root path no longer exists.
+		json.JSONDecodeError:
+			|May| raise if the root file is not valid JSON.
+	See_also:
+		list_roots, get_root
+	"""
+	idx, root_data, root_path, document = _load_root_context(root_id, roots)
+	return {
+		**_root_summary(idx, root_data, root_path),
+		"__WTRL_VERSION__": document.get("__WTRL_VERSION__", {}),
+		"__WTRL_META__": document.get("__WTRL_META__", {}),
+		"__WTRL_ROLES__": document.get("__WTRL_ROLES__", {}),
+		"__WTRL_SCOPES__": document.get("__WTRL_SCOPES__", {}),
+	}
+
+
 def get_root(root_id: str, roots: list[Mapping[str, WtrlJsonNode_t]]) -> dict[str, WtrlJsonNode_t]:
 	r"""
 	Preamble:
@@ -772,6 +818,11 @@ def get_root(root_id: str, roots: list[Mapping[str, WtrlJsonNode_t]]) -> dict[st
 			The canonical root identifier derived from the canonical absolute root path.
 		roots:
 			The list of configured root entries.
+	Notes:
+		Parameters:
+			MCP callers only pass ``root_id``; the server injects the root list internally.
+		Example:
+			``get_root(root_id="...")``
 	Returns:
 		A dictionary describing the root and containing the parsed JSON document.
 	Raises:
@@ -782,7 +833,7 @@ def get_root(root_id: str, roots: list[Mapping[str, WtrlJsonNode_t]]) -> dict[st
 		json.JSONDecodeError:
 			|May| raise if the root file is not valid JSON.
 	See_also:
-		list_roots
+		list_roots, get_root_metadata
 	"""
 	idx, root_data, root_path, document = _load_root_context(root_id, roots)
 	return {**_root_summary(idx, root_data, root_path), "document": document}
@@ -807,6 +858,11 @@ def get_object(root_id: str, qid: str, roots: list[Mapping[str, WtrlJsonNode_t]]
 			The fully qualified identifier of the requested object inside the loaded Waterloo JSON document.
 		roots:
 			The list of configured root entries.
+	Notes:
+		Parameters:
+			MCP callers only pass ``root_id`` and ``qid``; the server injects the root list internally.
+		Example:
+			``get_object(root_id="...", qid="...")``
 	Returns:
 		A dictionary describing the root, the requested QID, and the stored object record.
 	Raises:
@@ -850,6 +906,11 @@ def get_section(root_id: str, qid: str, section: str, roots: list[Mapping[str, W
 			The name of the requested stored section, for example ``Contract`` or ``Public_functions``.
 		roots:
 			The list of configured root entries.
+	Notes:
+		Parameters:
+			MCP callers only pass ``root_id``, ``qid`` and ``section``; the server injects the root list internally.
+		Example:
+			``get_section(root_id="...", qid="...", section="...")``
 	Returns:
 		A dictionary describing the root, the requested QID, the requested section, and the stored section value.
 	Raises:
@@ -901,6 +962,11 @@ def get_subsection(root_id: str, qid: str, section: str, subsection: str, roots:
 			The name of the requested subsection inside the selected section.
 		roots:
 			The list of configured root entries.
+	Notes:
+		Parameters:
+			MCP callers only pass ``root_id``, ``qid``, ``section`` and ``subsection``; the server injects the root list internally.
+		Example:
+			``get_subsection(root_id="...", qid="...", section="...", subsection="...")``
 	Returns:
 		A dictionary describing the root, the requested QID, the requested section, the requested subsection, and the stored subsection value.
 	Raises:
@@ -1453,10 +1519,15 @@ def search_objects(
 	Parameters:
 		expression:
 			The search expression. Wildcards are allowed.
-		roots:
-			The list of configured root entries.
 		filter:
 			Optional structural filters such as root ID, kind, and scope.
+		roots:
+			The list of configured root entries.
+	Notes:
+		Parameters:
+			MCP callers only pass ``expression`` and optionally ``filter``; the server injects the root list internally.
+		Example:
+			``search_objects(expression="...")``
 	Returns:
 		A list of triples ``(root_id, qid, kind)`` for matching objects.
 	Raises:
@@ -1527,6 +1598,11 @@ def search_sections(
 			Optional structural filters such as root ID, QID, kind, and scope.
 		roots:
 			The list of configured root entries.
+	Notes:
+		Parameters:
+			MCP callers only pass ``expression`` and optionally ``filter``; the server injects the root list internally.
+		Example:
+			``search_sections(expression="...")``
 	Returns:
 		A list of dictionaries describing matching section or subsection labels together with their object and root location.
 	Raises:
@@ -1627,6 +1703,11 @@ def search_text(
 			Optional structural and matching filters such as root ID, QID, kind, scope, case folding, role stripping, and term mode.
 		roots:
 			The list of configured root entries.
+	Notes:
+		Parameters:
+			MCP callers only pass ``terms`` and optionally ``filter``; the server injects the root list internally.
+		Example:
+			``search_text(terms=["..."])``
 	Returns:
 		A list of dictionaries describing matching text locations together with their object and root location, plus a compact excerpt.
 	Raises:
