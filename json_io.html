@@ -124,7 +124,7 @@ example code, and how the resulting JSON artifacts can be used to generate
 a conventional, human-readable interactive HTML documentation site.</p>
 </section>
 <section id="validating-json-input-output-and-diagnostics">
-<h2><span class="section-number">8.2. </span>Validating JSON input, output and diagnostics<a class="headerlink" href="#validating-json-input-output-and-diagnostics" title="Link to this heading">¶</a></h2>
+<span id="json-io-layer-validation"></span><h2><span class="section-number">8.2. </span>Validating JSON input, output and diagnostics<a class="headerlink" href="#validating-json-input-output-and-diagnostics" title="Link to this heading">¶</a></h2>
 <p>Any <code class="wtrl_cmd docutils literal notranslate"><span class="pre">waterlint</span></code>-related JSON data can be validated using
 <code class="wtrl_cmd docutils literal notranslate"><span class="pre">waterlint</span></code>:</p>
 <blockquote>
@@ -137,6 +137,7 @@ against the corresponding schema:</p>
 <li><p><code class="wtrl_file docutils literal notranslate"><span class="pre">schema/wtrl-json-*.*.*.schema.json</span></code> for documentation</p></li>
 <li><p><code class="wtrl_file docutils literal notranslate"><span class="pre">schema/wtrl-tracer-json-*.*.*.schema.json</span></code> for diagnostics</p></li>
 <li><p><code class="wtrl_file docutils literal notranslate"><span class="pre">schema/wtrl-example-refs-json-*.*.*.schema.json</span></code> for example references</p></li>
+<li><p><code class="wtrl_file docutils literal notranslate"><span class="pre">schema/wtrl-walk-json-*.*.*.schema.json</span></code> for structured and detailed output of subcommand <code class="wtrl_cmd docutils literal notranslate"><span class="pre">walk</span></code>.</p></li>
 </ul>
 <p>The JSON file to be validated contains the version number of the schema
 to validate against. If the category cannot be inferred, the schema can
@@ -363,14 +364,19 @@ A template can be generated with the following command:</p>
 </div></blockquote>
 <p>Apart from version numbers, the result should look like this:</p>
 <div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
-<span class="nt">&quot;$schema&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://sci-d-vis.com/schema/wtrl-example-refs-json-0.1.0.schema.json&quot;</span><span class="p">,</span>
-<span class="nt">&quot;$id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;urn:none:local:wtrl-example-refs-json:0.1.0&quot;</span><span class="p">,</span>
-<span class="nt">&quot;__WTRL_VERSION__&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="nt">&quot;waterloo&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0.6.1&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="nt">&quot;waterlint_min&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0.8.1&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="nt">&quot;schema&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0.1.0&quot;</span>
+<span class="w">        </span><span class="nt">&quot;$schema&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://sci-d-vis.com/schema/wtrl-example-refs-json-0.1.1.schema.json&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;$id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;urn:none:local:wtrl-example-refs-json:0.1.1&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;__WTRL_VERSION__&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="nt">&quot;waterloo&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0.8.1&quot;</span><span class="p">,</span>
+<span class="w">                </span><span class="nt">&quot;waterlint_min&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0.1.0&quot;</span><span class="p">,</span>
+<span class="w">                </span><span class="nt">&quot;schema&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0.1.1&quot;</span>
 <span class="w">        </span><span class="p">},</span>
-<span class="nt">&quot;__WTRL_EXAMPLE_REFS__&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{}</span>
+<span class="w">        </span><span class="nt">&quot;__WTRL_EXAMPLE_REFS__&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="nt">&quot;my_module.my_function&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">                        </span><span class="s2">&quot;path/to/example1.py&quot;</span><span class="p">,</span>
+<span class="w">                        </span><span class="s2">&quot;path/to/example2.py&quot;</span>
+<span class="w">                </span><span class="p">]</span>
+<span class="w">        </span><span class="p">}</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -540,9 +546,14 @@ For interoperability and diagnostics, the category marker
 <h2><span class="section-number">8.6. </span>Inspecting JSON documents with <code class="wtrl_cmd docutils literal notranslate"><span class="pre">jq</span></code><a class="headerlink" href="#inspecting-json-documents-with-jq" title="Link to this heading">¶</a></h2>
 <p>In this section, we present a few examples of using the JSON
 command-line processor <code class="wtrl_cmd docutils literal notranslate"><span class="pre">jq</span></code> with Waterloo JSON files.
-You can try these examples with the accompanying file
-<code class="wtrl_var docutils literal notranslate"><span class="pre">PATH</span></code> = <code class="wtrl_file docutils literal notranslate"><span class="pre">sdv/doc/waterloo/doc-json/docitem.wtrl.core.rfc-2119.json</span></code>,
-which is shipped with this package.</p>
+You can try these examples with the accompanying file</p>
+<blockquote>
+<div><p><code class="wtrl_var docutils literal notranslate"><span class="pre">PATH</span></code> = <code class="wtrl_file docutils literal notranslate"><span class="pre">sdv/doc/waterloo/doc-json/docitem.wtrl.core.rfc-2119.json</span></code>,</p>
+</div></blockquote>
+<p>which is shipped with this package.
+The examples below illustrate only a small subset of what can be achieved
+with <code class="wtrl_cmd docutils literal notranslate"><span class="pre">jq</span></code>. For a comprehensive reference, consult the official
+jq documentation at <a class="reference external" href="https://jqlang.github.io">jqlang.github.io/jq</a>.</p>
 <ul>
 <li><p>Extract a JSON node, in this case the list of documented modules:</p>
 <blockquote>
@@ -612,9 +623,6 @@ for the documented function <code class="wtrl_func docutils literal notranslate"
 </div></blockquote>
 </li>
 </ul>
-<p>The examples above illustrate only a small subset of what can be achieved
-with <code class="wtrl_cmd docutils literal notranslate"><span class="pre">jq</span></code>. For a comprehensive reference, consult the official
-jq documentation at <a class="reference external" href="https://jqlang.github.io">jqlang.github.io/jq</a>.</p>
 </section>
 </section>
 
