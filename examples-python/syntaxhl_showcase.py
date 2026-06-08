@@ -112,6 +112,8 @@ Raises:
 	CustomError:
 		|May| propagate from function |func|`some_function`. Test roles: |type|`CustomError`.
 Notes:
+	Todo:
+		Testing a label that is not predefined as a normative section.
 	Roles:
 		|attr|`ABC`
 		|cmd|`ABC`
@@ -296,6 +298,12 @@ def func_with_comment_edgecase() -> None: # todo
 			The function signature contains an inline comment,
 			which should not interfere with synthesizing a function
 			definition by appending "pass".
+		Parameters:
+			This label unveils a slight problem in TextMate's pygments lexer for
+			the waterloo docstring format, which treats "Parameters:" as a section
+			header even though it's inside the Notes section. Detected at 2026-06-08.
+		base:
+			Another edge case, same principle.
 	"""
 	pass
 
