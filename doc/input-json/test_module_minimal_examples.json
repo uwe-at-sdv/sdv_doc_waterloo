@@ -7,7 +7,7 @@
         "schema": "0.1.1"
     },
     "__WTRL_EXAMPLE_REFS__": {
-        "test_module_minimal": [
+        "mypkg.test_module_minimal": [
             "example_module_minimal.py"
 	]
     }

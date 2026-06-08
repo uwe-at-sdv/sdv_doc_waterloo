@@ -302,6 +302,32 @@ def _walk_build_json_doc(
 
 
 def walk_command(args: argparse.Namespace) -> int:
+	"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+		scope:
+			extension
+	Contract:
+		general:
+			|Must| execute the walk command and emit a walk preview in text or JSON form.
+	Parameters:
+		args:
+			Namespace containing the parsed walk command line options.
+			|must| provide the attributes expected by this command:
+			* |attr|`obj` |must| be present and contain one or more qualified identifiers passed via repeated |opt|`--obj`.
+			* At most one of |attr|`out_file` or |attr|`out_json` may be present; if neither is present, text output is written to stdout.
+			* |attr|`show` and |attr|`sort` |may| be present to control the previewed fields and ordering.
+			* |attr|`include_imported` |may| be present to control whether imported members are traversed.
+			* |attr|`basedir` |may| be present to resolve object names relative to a base directory.
+			* |attr|`out_diag` and |attr|`out_diag_json` |may| be present as optional tracer-diagnostics targets.
+			* |attr|`debug` |may| be present as a reserved global flag.
+	Returns:
+		|Must| return 0 on success, non-zero on validation or processing errors.
+	Raises:
+	"""
 	tr = tracer()
 #----- output spec --------------------------------------------#
 	out_diag	= getattr(args, "out_diag", None)

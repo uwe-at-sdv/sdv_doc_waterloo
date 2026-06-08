@@ -237,6 +237,12 @@ def carve_command(args: argparse.Namespace) -> int:
 	Parameters:
 		args:
 			Namespace containing the parsed carve command line options.
+			|must| provide the attributes expected by this command:
+			* |attr|`in_file` |must| be present and point to exactly one validated walk JSON file.
+			* |attr|`out_file` |may| be present to write the carved JSON document to a file instead of stdout.
+			* |attr|`simplify`, |attr|`drop_keep_chain`, |attr|`drop_non_basedir`, and |attr|`recompute` |may| be present to transform the walk JSON before it is written.
+			* |attr|`out_diag` and |attr|`out_diag_json` |may| be present as optional tracer-diagnostics targets.
+			* |attr|`debug` |may| be present as a reserved global flag.
 	Returns:
 		|Must| return 0 on success, non-zero on validation or processing errors.
 	Raises:

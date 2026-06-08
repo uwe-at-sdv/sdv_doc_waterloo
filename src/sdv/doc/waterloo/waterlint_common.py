@@ -208,6 +208,12 @@ def _apply_basedir(basedir: str | None, qname: str | None) -> None:
 	for pfx in prefixes:
 # Combine with the basedir and make a path from the prefixes.
 		pfx_path = Path(base_abs, *pfx.split("."))
+		init_file = pfx_path / "__init__.py"
+		if init_file.is_file():
+			existing = sys.modules.get(pfx)
+			if existing is not None and getattr(existing, "__file__", None) is None:
+				del sys.modules[pfx]
+			continue
 		if pfx in sys.modules:
 			mod = sys.modules[pfx]
 			if hasattr(mod, "__path__"):

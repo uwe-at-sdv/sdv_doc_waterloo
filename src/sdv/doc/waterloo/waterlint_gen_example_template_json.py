@@ -91,6 +91,32 @@ def _render_example_refs_template(org_or_project: str = "none", domain: str = "l
 
 
 def gen_example_template_json_command(args: argparse.Namespace, waterlint_version: str) -> int:
+	r"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+		scope:
+			extension
+	Contract:
+		general:
+			|Must| execute the gen-example-template-json command and write a template JSON document.
+	Parameters:
+		args:
+			Parsed gen-example-template-json command line options.
+			|must| provide the attributes expected by this command:
+			* |attr|`fail_on_warning` |must| be present because the command returns its warning-sensitive exit code through the common helper.
+			* |attr|`org_or_project` and |attr|`domain` |may| be present to customize the generated |attr|`$id` template.
+			* |attr|`out_file` |may| be present to write the template JSON to a file instead of stdout.
+			* |attr|`out_diag` and |attr|`out_diag_json` |may| be present as optional tracer-diagnostics targets.
+			* |attr|`debug` |may| be present as a reserved global flag.
+		waterlint_version:
+			Version string supplied by the main program for tracer metadata.
+	Returns:
+		|Must| return 0 on success, non-zero on validation or processing errors.
+	Raises:
+	"""
 	tr = tracer()
 	out_diag = getattr(args, "out_diag", None)
 	out_diag_json = getattr(args, "out_diag_json", None)

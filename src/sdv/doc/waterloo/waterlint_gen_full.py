@@ -43,6 +43,12 @@ def gen_full_command(args: argparse.Namespace, waterlint_version: str) -> int:
 	Parameters:
 		args:
 			Parsed gen-full command line options.
+			|must| provide the attributes expected by this command:
+			* |attr|`obj`: one or more qualified object names passed via repeated |opt|`--obj`; each group |must| contain at least one object name.
+			* |attr|`fail_on_warning` |must| be present because the common generator uses it for the exit code.
+			* |attr|`out_diag` and |attr|`out_diag_json` |may| be present as optional tracer-diagnostics targets.
+			* |attr|`basedir` |may| be present to resolve object names relative to a base directory.
+			* |attr|`recursive`, |attr|`missing_only`, |attr|`format`, |attr|`out_file`, |attr|`indent`, and |attr|`debug` |may| be present as generation controls.
 		waterlint_version:
 			Version string supplied by the main program for tracer metadata.
 	Returns:

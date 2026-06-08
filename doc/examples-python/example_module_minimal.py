@@ -1,4 +1,4 @@
-import test_module_minimal as m
+import mypkg.test_module_minimal as m
 
 if __name__ == "__main__":
-	print("Module test_module_minimal imported.")
+	print("Module mypkg.test_module_minimal imported.")

@@ -154,6 +154,15 @@ using the following command:
 
 	:wtrl_cmd:`waterlint render-json` :wtrl_opt:`--basedir` :wtrl_file:`path/to/basedir` :wtrl_opt:`--obj` :wtrl_mod:`module1 [module2...]`
 
+The two options are intentionally independent: :wtrl_opt:`--basedir` must point
+to the import root that makes the target modules resolvable, while
+:wtrl_opt:`--obj` names the importable modules themselves. In other words,
+`--basedir` is not the module directory to document, but the directory that
+contains the Python package root for the objects named by :wtrl_opt:`--obj`.
+For a project using the common `src/` layout, that usually means pointing
+:wtrl_opt:`--basedir` at the `src` directory and passing fully qualified module
+names such as :wtrl_mod:`sdv.doc.waterloo.waterlint`.
+
 The output path is specified either by option
 
 	:wtrl_opt:`--out` :wtrl_file:`path/to/output.json`
@@ -192,7 +201,7 @@ A summary of these options is displayed by
 
 Consider the following minimal module:
 
-.. literalinclude:: ../input-python/test_module_minimal.py
+.. literalinclude:: ../input-python/mypkg/test_module_minimal.py
 
 located for instance in :wtrl_file:`doc/input-python`
 
@@ -200,12 +209,12 @@ We render this as JSON by
 
 	:wtrl_cmd:`waterlint render-json`
 		| :wtrl_opt:`--basedir` :wtrl_file:`doc/input-python`
-		| :wtrl_opt:`--obj` :wtrl_mod:`test_module_minimal`
+		| :wtrl_opt:`--obj` :wtrl_mod:`mypkg.test_module_minimal`
 		| :wtrl_opt:`--out-dir` :wtrl_file:`doc/output-json/`
 
 Since we did not explicitly specify a target file name, scope, or flavour, the resulting file is
 
-	:wtrl_file:`doc/output-json/test_module_minimal.wtrl.core.rfc-2119.json`
+	:wtrl_file:`doc/output-json/mypkg.test_module_minimal.wtrl.core.rfc-2119.json`
 
 Let us have a look at the details. The header provides a reference to the JSON Schema
 for the output and a unique hashed identifier. Node :wtrl_value:`__WTRL_VERSION__`
@@ -295,7 +304,7 @@ In our minimal case there is only a single module and no other objects, so we ha
 	{
 	"...":"...",
 	"__WTRL_TOC_MODULES__": {
-		"test_module_minimal": "/__WTRL_OBJECTS__/test_module_minimal"
+		"mypkg.test_module_minimal": "/__WTRL_OBJECTS__/mypkg.test_module_minimal"
 		},
 	"__WTRL_TOC_CLASSES__": {},
 	"__WTRL_TOC_CALLABLES__": {},
@@ -313,8 +322,8 @@ in LLM-friendly form, i.e. sections and subsections are encoded as JSON nodes.
 	{
 	"...":"...",
 	"__WTRL_OBJECTS__": {
-		"test_module_minimal": {
-			"path": "/path/to/doc/input-python/test_module_minimal.py",
+		"mypkg.test_module_minimal": {
+			"path": "/path/to/doc/input-python/mypkg/test_module_minimal.py",
 			"doc": {
 				"Preamble": {
 					"profile": "module",
@@ -412,16 +421,17 @@ in the filesystem as follows:
 
 	doc
 	├── input-python
-	│   └── test_module_minimal.py
+	│   └── mypkg
+	│       └── test_module_minimal.py
 	├── input-json
 	│   └── test_module_minimal_examples.json
 	├── output-json
-	│   └── test_module_minimal.wtrl.core.rfc-2119.json
+	│   └── mypkg.test_module_minimal.wtrl.core.rfc-2119.json
 	└── examples-python
-	    └── example_module_minimal.py
+	        └── example_module_minimal.py
 
-Here, :wtrl_file:`test_module_minimal.py` is the original module.
-:wtrl_file:`test_module_minimal.wtrl.core.rfc-2119.json` is the JSON document
+Here, :wtrl_file:`mypkg/test_module_minimal.py` is the original module.
+:wtrl_file:`mypkg.test_module_minimal.wtrl.core.rfc-2119.json` is the JSON document
 generated in the previous section.
 :wtrl_file:`example_module_minimal.py` is a corresponding Python example:
 
@@ -440,14 +450,14 @@ Then we embed the examples using the following command:
 
 	:wtrl_cmd:`waterlint add-example-json`
 		| :wtrl_opt:`--basedir` :wtrl_file:`doc/examples-python`
-		| :wtrl_opt:`--in` :wtrl_file:`doc/output-json/test_module_minimal.wtrl.core.rfc-2119.json`
-		| :wtrl_opt:`--out` :wtrl_file:`doc/output-json/test_module_minimal.with_examples.wtrl.core.rfc-2119.json`
+		| :wtrl_opt:`--in` :wtrl_file:`doc/output-json/mypkg.test_module_minimal.wtrl.core.rfc-2119.json`
+		| :wtrl_opt:`--out` :wtrl_file:`doc/output-json/mypkg.test_module_minimal.with_examples.wtrl.core.rfc-2119.json`
 		| :wtrl_opt:`--examples` :wtrl_file:`doc/input-json/test_module_minimal_examples.json`
 
 Option :wtrl_opt:`--basedir` specifies the path to the Python examples referenced in :wtrl_file:`test_module_minimal_examples.json`.
 
-The resulting JSON file :wtrl_file:`test_module_minimal.with_examples.wtrl.core.rfc-2119.json`
-looks similar to the input :wtrl_file:`test_module_minimal.wtrl.core.rfc-2119.json`
+The resulting JSON file :wtrl_file:`mypkg.test_module_minimal.with_examples.wtrl.core.rfc-2119.json`
+looks similar to the input :wtrl_file:`mypkg.test_module_minimal.wtrl.core.rfc-2119.json`
 but the documented object is now equipped with a reference to the example node:
 
 .. code-block:: json
@@ -455,7 +465,7 @@ but the documented object is now equipped with a reference to the example node:
 	{
 	"...":"...",
 	"__WTRL_OBJECTS__": {
-		"test_module_minimal": {
+		"mypkg.test_module_minimal": {
 			"path": "...",
 			"doc": {
 				"Preamble": { "...":"..." },
@@ -464,8 +474,8 @@ but the documented object is now equipped with a reference to the example node:
 			"examples": [
 				"/__WTRL_EXAMPLES__/sha256_0a50ade00ffbebea..."
 				]
-			}
-		},
+		}
+	},
 	"...":"..."
 	}
 
@@ -480,12 +490,12 @@ The document also contains an additional node :wtrl_value:`__WTRL_EXAMPLES__` wi
 		"sha256_0a50ade00ffbebea...": {
 			"lang": "python",
 			"hash": "0a50ade00ffbebea...",
-			"code": "import test_module_minimal as m\\n\\nif __name__ == \\\"__main__\\\":\\n\\tprint(\\\"Module test_module_minimal imported.\\\")\\n",
+			"code": "import mypkg.test_module_minimal as m\\n\\nif __name__ == \\\"__main__\\\":\\n\\tprint(\\\"Module mypkg.test_module_minimal imported.\\\")\\n",
 			"referenced_by": [
-				"test_module_minimal"
+				"mypkg.test_module_minimal"
 				]
 			}
-		}
+	}
 	}
 
 Note that the example code is fully embedded in the JSON output.
@@ -590,4 +600,3 @@ jq documentation at `jqlang.github.io/jq <https://jqlang.github.io>`_.
         		| select((.value.referenced_by // []) | index("tde4.getFirstCamera"))
         		| "---- " + .key + " ----\n" + (.value.code // "")
 			) ' doc-json/tde4_with_examples.wtrl.core.rfc-2119.json
-

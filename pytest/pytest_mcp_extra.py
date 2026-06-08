@@ -50,11 +50,11 @@ def test_mcp_get_signature_returns_wrapper_for_function(mcp_session: str) -> Non
 		"get_signature",
 		{
 			"root_id": "root:eadb7d51f9fa",
-			"qid": "wtrl_server.build_app",
+			"qid": "sdv.doc.waterloo.mcp.wtrl_server.build_app",
 		},
 	)
 	structured = _structured_result(result)
-	assert structured.get("qid") == "wtrl_server.build_app", structured
+	assert structured.get("qid") == "sdv.doc.waterloo.mcp.wtrl_server.build_app", structured
 	assert structured.get("profile") == "function", structured
 	signature = structured.get("signature")
 	assert isinstance(signature, dict), structured
@@ -194,7 +194,7 @@ def test_mcp_get_signature_module_returns_no_signature_block(mcp_session: str) -
 		"get_signature",
 		{
 			"root_id": "root:eadb7d51f9fa",
-			"qid": "wtrl_tools",
+			"qid": "sdv.doc.waterloo.mcp.wtrl_tools",
 		},
 	)
 	structured = _structured_result(result)

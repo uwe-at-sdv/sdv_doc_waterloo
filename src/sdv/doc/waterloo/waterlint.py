@@ -4,12 +4,21 @@ Preamble:
 	profile:
 		module
 	normative_sections:
-		Contract
+		Contract, Public_functions
+	scope:
+		extension
 Contract:
 	general:
 		|Must| be the main entry point for the waterlint command-line tool.
 		|Must| dispatch to subcommands implemented in other modules.
 		|Must| provide shared helper functions for subcommands, if needed.
+Public_functions:
+	add_example_json_command,
+	validate_command,
+	coverage_command,
+	extract_command,
+	validate_json_command,
+	render_json_command
 """
 
 from __future__ import annotations
@@ -350,7 +359,33 @@ def _compute_example_path_for_json(path_abs: Path, basedir_abs: Path | None) -> 
 			pass
 	return str(path_abs)
 
-def _add_example_json_command(args: argparse.Namespace) -> int:
+def add_example_json_command(args: argparse.Namespace) -> int:
+	r"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+		scope:
+			extension
+	Contract:
+		general:
+			|Must| add example references to a Waterloo JSON document and write the updated JSON output.
+	Parameters:
+		args:
+			Parsed add-example-json command line options.
+			|must| provide the attributes expected by this command:
+			* |attr|`input_file` |must| name the Waterloo JSON input file.
+			* |attr|`examples_file` |must| name the JSON file containing `__WTRL_EXAMPLE_REFS__`.
+			* Exactly one of |attr|`out_file` or |attr|`out_dir` |must| be present and designate the output target.
+			* |attr|`basedir` |may| be present to resolve relative example file paths.
+			* |attr|`allow_local_paths` |may| be present to keep local source paths in the generated example records.
+			* |attr|`out_diag`, |attr|`out_diag_json`, and |attr|`debug` |may| be present as global diagnostics controls.
+			* |attr|`fail_on_warning` |must| be present because the exit code depends on it.
+	Returns:
+		|Must| return 0 on success, non-zero on validation or processing errors.
+	Raises:
+	"""
 	tr = tracer()
 	out_diag = getattr(args, "out_diag", None)
 	out_diag_json = getattr(args, "out_diag_json", None)
@@ -571,7 +606,31 @@ def _read_docstring_from_stdin() -> str:
 
 #===== Validate ===============================================#
 
-def _validate_command(args: argparse.Namespace) -> int:
+def validate_command(args: argparse.Namespace) -> int:
+	r"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+		scope:
+			extension
+	Contract:
+		general:
+			|Must| validate a Waterloo docstring or a documented object against Waterloo rules.
+	Parameters:
+		args:
+			Parsed validate command line options.
+			|must| provide the attributes expected by this command:
+			* Exactly one of |attr|`obj` or |attr|`input_file` |must| be present; if neither is present, stdin is used.
+			* |attr|`basedir` |may| be present to resolve |opt|`--obj` relative to a base directory.
+			* |attr|`ignore` |may| be present as a whitespace-separated list of ignored rule IDs.
+			* |attr|`out_diag`, |attr|`out_diag_json`, and |attr|`debug` |may| be present as global diagnostics controls.
+			* |attr|`fail_on_warning` |must| be present because the exit code depends on it.
+	Returns:
+		|Must| return 0 on success, non-zero on validation or processing errors.
+	Raises:
+	"""
 	tr = tracer()
 #----- output spec --------------------------------------------#
 	out_diag	=  getattr(args, "out_diag", None)
@@ -643,7 +702,31 @@ def _validate_command(args: argparse.Namespace) -> int:
 
 #===== Coverage ===============================================#
 
-def _coverage_command(args: argparse.Namespace) -> int:
+def coverage_command(args: argparse.Namespace) -> int:
+	r"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+		scope:
+			extension
+	Contract:
+		general:
+			|Must| validate docstring coverage for one module or class.
+	Parameters:
+		args:
+			Parsed coverage command line options.
+			|must| provide the attributes expected by this command:
+			* |attr|`obj` |must| be present and resolve to a module or class.
+			* |attr|`basedir` |may| be present to resolve |opt|`--obj` relative to a base directory.
+			* |attr|`ignore` |may| be present as a whitespace-separated list of ignored rule IDs.
+			* |attr|`out_diag`, |attr|`out_diag_json`, and |attr|`debug` |may| be present as global diagnostics controls.
+			* |attr|`fail_on_warning` |must| be present because the exit code depends on it.
+	Returns:
+		|Must| return 0 on success, non-zero on validation or processing errors.
+	Raises:
+	"""
 	tr = tracer()
 #----- output spec --------------------------------------------#
 	out_diag	=  getattr(args, "out_diag", None)
@@ -710,7 +793,32 @@ def _coverage_command(args: argparse.Namespace) -> int:
 
 #===== Extract ================================================#
 
-def _extract_command(args: argparse.Namespace) -> int:
+def extract_command(args: argparse.Namespace) -> int:
+	r"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+		scope:
+			extension
+	Contract:
+		general:
+			|Must| extract a Waterloo docstring or a docstring subsection.
+	Parameters:
+		args:
+			Parsed extract command line options.
+			|must| provide the attributes expected by this command:
+			* Exactly one of |attr|`obj`, |attr|`input_file`, or stdin input is used; if |attr|`obj` is present it |must| resolve to a documented object.
+			* |attr|`basedir` |may| be present to resolve |opt|`--obj` relative to a base directory.
+			* |attr|`section` and |attr|`subsection` |may| be present to extract only part of the docstring, and |attr|`subsection` |must| only be used together with |attr|`section`.
+			* |attr|`out_file` |may| be present to write the extracted text to a file instead of stdout.
+			* |attr|`out_diag`, |attr|`out_diag_json`, and |attr|`debug` |may| be present as global diagnostics controls.
+			* |attr|`fail_on_warning` |must| be present because the exit code depends on it.
+	Returns:
+		|Must| return 0 on success, non-zero on validation or processing errors.
+	Raises:
+	"""
 	tr = tracer()
 #----- output spec --------------------------------------------#
 	out_diag	=  getattr(args, "out_diag", None)
@@ -836,7 +944,30 @@ def _infer_schema_path_from_doc(doc: cvrt.WtrlJsonNode_t) -> tuple[Path, str]:
 		raise ValueError(f"$id conflicts with inferred category ({category}).")
 	return schema_path, category
 
-def _validate_json_command(args: argparse.Namespace) -> int:
+def validate_json_command(args: argparse.Namespace) -> int:
+	r"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+		scope:
+			extension
+	Contract:
+		general:
+			|Must| validate a Waterloo JSON document against the inferred or explicit schema.
+	Parameters:
+		args:
+			Parsed validate-json command line options.
+			|must| provide the attributes expected by this command:
+			* |attr|`input_file` |may| be present to read JSON from a file; if absent, stdin is used.
+			* |attr|`schema` |may| be present to force a specific JSON Schema file.
+			* |attr|`out_diag`, |attr|`out_diag_json`, and |attr|`debug` |may| be present as global diagnostics controls.
+			* |attr|`fail_on_warning` |must| be present because the exit code depends on it.
+	Returns:
+		|Must| return 0 on success, non-zero on validation or processing errors.
+	Raises:
+	"""
 	tr = tracer()
 #----- output spec --------------------------------------------#
 	out_diag	=  getattr(args, "out_diag", None)
@@ -889,7 +1020,32 @@ def _validate_json_command(args: argparse.Namespace) -> int:
 
 #===== Render JSON ============================================#
 
-def _render_json_command(args: argparse.Namespace) -> int:
+def render_json_command(args: argparse.Namespace) -> int:
+	r"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+		scope:
+			extension
+	Contract:
+		general:
+			|Must| render Waterloo JSON from source objects or replay a walk JSON document.
+	Parameters:
+		args:
+			Parsed render-json command line options.
+			|must| provide the attributes expected by this command:
+			* Exactly one of |attr|`in_file` or direct |attr|`obj` mode |must| be used; when direct mode is used, |attr|`obj` may be repeated and grouped.
+			* |attr|`basedir` |may| be present to resolve direct-mode objects relative to a base directory.
+			* Exactly one of |attr|`out_file` or |attr|`out_dir` |must| be present.
+			* If |attr|`out_dir` is used with multiple root objects, |attr|`out_prefix` |must| be present.
+			* |attr|`flavour`, |attr|`scope`, |attr|`include_imported`, and |attr|`allow_local_paths` |may| be present as rendering controls.
+			* |attr|`out_diag`, |attr|`out_diag_json`, and |attr|`debug` |may| be present as global diagnostics controls.
+	Returns:
+		|Must| return 0 on success, non-zero on validation or processing errors.
+	Raises:
+	"""
 	def _collect_public_members(tree: docitem.docitem_base,label: str) -> list[str]:
 		"""Extract unqualified type names from Public_types section (if present)."""
 		try:
@@ -1877,19 +2033,19 @@ def main(argv: Optional[list[str]] = None) -> int:
 
 #----- Add subcommands here -----------------------------------#
 	if args.command == "validate":
-		return _validate_command(args)
+		return validate_command(args)
 	if args.command == "coverage":
-		return _coverage_command(args)
+		return coverage_command(args)
 	if args.command == "extract":
-		return _extract_command(args)
+		return extract_command(args)
 	if args.command == "validate-json":
-		return _validate_json_command(args)
+		return validate_json_command(args)
 	if args.command == "add-example-json":
-		return _add_example_json_command(args)
+		return add_example_json_command(args)
 	if args.command == "gen-example-template-json":
 		return gext.gen_example_template_json_command(args, __version__)
 	if args.command == "render-json":
-		return _render_json_command(args)
+		return render_json_command(args)
 	if args.command == "carve":
 		return int(carve.carve_command(args))
 	if args.command == "render-html5":

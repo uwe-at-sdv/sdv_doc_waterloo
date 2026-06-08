@@ -594,14 +594,16 @@ def render_docker(args: argparse.Namespace) -> int:
 	Parameters:
 		args:
 			The parsed command-line arguments for the |cmd|`waterlint render-docker` subcommand.
-			This |must| include the following attributes:
+			|must| include the following attributes:
 			* |attr|`in`: Path to the input TOML file containing the server configuration.
 			* |attr|`out`: Path to the output file where the rendered Dockerfile should be written.
 			It |may| include:
+			* |attr|`fail_on_warning`: Whether warnings should influence the exit code.
 			* |attr|`bake_roots`: Boolean switch indicating that the roots from the input TOML file are baked into the image. This is the default.
 			* |attr|`no_bake_roots`: Boolean switch indicating that the roots from the input TOML file are not baked into the image.
 			* |attr|`out_diag`: Optional path to a human-readable diagnostics file. Default is |lit|`stdout`.
 			* |attr|`out_diag_json`: Optional path to a JSON diagnostics file. Default is not to write JSON diagnostics.
+			* |attr|`debug`: Reserved global flag for debug output.
 	Returns:
 		An integer exit code, where 0 indicates success and any non-zero value indicates an error.
 	Raises:

@@ -49,8 +49,8 @@ def test_mcp_search_sections_public_functions_hits_server_and_tools(
 		},
 	)
 	qids = _entry_qids(entries)
-	assert "wtrl_server" in qids, entries
-	assert "wtrl_tools" in qids, entries
+	assert "sdv.doc.waterloo.mcp.wtrl_server" in qids, entries
+	assert "sdv.doc.waterloo.mcp.wtrl_tools" in qids, entries
 	for entry in entries:
 		assert entry.get("section") == "Public_functions", entry
 		assert entry.get("match_kind") == "section", entry
@@ -71,7 +71,7 @@ def test_mcp_search_sections_public_types_is_tools_only(
 		},
 	)
 	qids = _entry_qids(entries)
-	assert qids == {"wtrl_tools"}, entries
+	assert qids == {"sdv.doc.waterloo.mcp.wtrl_tools"}, entries
 	for entry in entries:
 		assert entry.get("section") == "Public_types", entry
 
@@ -79,9 +79,9 @@ def test_mcp_search_sections_public_types_is_tools_only(
 @pytest.mark.parametrize(
 	"terms,expected_qid,expected_section,expected_subsection,expected_excerpt",
 	[
-		(["entry point"], "wtrl_server", "Contract", "general", "entry point"),
-		(["tool set"], "wtrl_tools", "Contract", "general", "tool set"),
-		(["compact excerpts"], "wtrl_tools", "Function_overview", "search_text", "compact excerpts"),
+		(["entry point"], "sdv.doc.waterloo.mcp.wtrl_server", "Contract", "general", "entry point"),
+		(["tool set"], "sdv.doc.waterloo.mcp.wtrl_tools", "Contract", "general", "tool set"),
+		(["compact excerpts"], "sdv.doc.waterloo.mcp.wtrl_tools", "Function_overview", "search_text", "compact excerpts"),
 	],
 )
 def test_mcp_search_text_finds_mcp_doc_phrases(
@@ -124,7 +124,7 @@ def test_mcp_get_section_function_overview_lists_docstring_tools(
 		"get_section",
 		{
 			"root_id": mcp_docs_root_id,
-			"qid": "wtrl_tools",
+			"qid": "sdv.doc.waterloo.mcp.wtrl_tools",
 			"section": "Function_overview",
 		},
 	)
@@ -149,7 +149,7 @@ def test_mcp_get_subsection_public_functions_entry_point(
 		"get_subsection",
 		{
 			"root_id": mcp_docs_root_id,
-			"qid": "wtrl_server",
+			"qid": "sdv.doc.waterloo.mcp.wtrl_server",
 			"section": "Contract",
 			"subsection": "general",
 		},

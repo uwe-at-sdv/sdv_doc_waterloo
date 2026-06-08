@@ -682,6 +682,13 @@ def render_html5(args: argparse.Namespace) -> int:
 	Parameters:
 		args:
 			Namespace containing the parsed render-html5 command line options.
+			|must| provide the attributes expected by this command:
+			* |attr|`input_files`: one or more input groups as produced by repeated |opt|`--in` options; each group |must| contain one or more Waterloo JSON file paths.
+			* Exactly one of |attr|`out_file` or |attr|`out_dir` |must| be present and designate the HTML output target.
+			* |attr|`fail_on_warning` |must| be present, because the exit code depends on it.
+			* |attr|`out_diag` and |attr|`out_diag_json` |may| be present as optional tracer-diagnostics targets.
+			* |attr|`css_file`, |attr|`additional_css_file`, |attr|`header_html_file`, |attr|`pygments_theme`, |attr|`no_render_preamble`, and |attr|`allow_raw_object_node` |may| be present as rendering controls.
+			* |attr|`debug` |may| be present as a reserved global flag.
 	Returns:
 		|Must| return 0 on success, non-zero on validation or processing errors.
 	Raises:
