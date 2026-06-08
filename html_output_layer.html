@@ -112,28 +112,28 @@ The output locations for human- and machine-readable diagnostics are specified b
 <p>Assume the JSON document from chapter <a class="reference internal" href="json_io.html"><span class="doc">The JSON I/O Layer</span></a> has already been generated
 and is located at</p>
 <blockquote>
-<div><p><code class="wtrl_file docutils literal notranslate"><span class="pre">doc/output-json/test_module_minimal.with_examples.wtrl.core.rfc-2119.json</span></code></p>
+<div><p><code class="wtrl_file docutils literal notranslate"><span class="pre">doc/output-json/mypkg.test_module_minimal.with_examples.wtrl.core.rfc-2119.json</span></code></p>
 </div></blockquote>
 <p>We can then render the interactive HTML5 output by</p>
 <blockquote>
 <div><dl>
 <dt><code class="wtrl_cmd docutils literal notranslate"><span class="pre">waterlint</span> <span class="pre">render-html5</span></code></dt><dd><div class="line-block">
-<div class="line"><code class="wtrl_opt docutils literal notranslate"><span class="pre">--in</span></code> <code class="wtrl_file docutils literal notranslate"><span class="pre">doc/output-json/test_module_minimal.with_examples.wtrl.core.rfc-2119.json</span></code></div>
-<div class="line"><code class="wtrl_opt docutils literal notranslate"><span class="pre">--out</span></code> <code class="wtrl_file docutils literal notranslate"><span class="pre">doc/output-html/test_module_minimal.with_examples.wtrl.core.rfc-2119.html</span></code></div>
+<div class="line"><code class="wtrl_opt docutils literal notranslate"><span class="pre">--in</span></code> <code class="wtrl_file docutils literal notranslate"><span class="pre">doc/output-json/mypkg.test_module_minimal.with_examples.wtrl.core.rfc-2119.json</span></code></div>
+<div class="line"><code class="wtrl_opt docutils literal notranslate"><span class="pre">--out</span></code> <code class="wtrl_file docutils literal notranslate"><span class="pre">doc/output-html/mypkg.test_module_minimal.with_examples.wtrl.core.rfc-2119.html</span></code></div>
 </div>
 </dd>
 </dl>
 </div></blockquote>
 <p>The generated artifact is then located at</p>
 <blockquote>
-<div><p><code class="wtrl_file docutils literal notranslate"><span class="pre">doc/output-html/test_module_minimal.with_examples.wtrl.core.rfc-2119.html</span></code></p>
+<div><p><code class="wtrl_file docutils literal notranslate"><span class="pre">doc/output-html/mypkg.test_module_minimal.with_examples.wtrl.core.rfc-2119.html</span></code></p>
 </div></blockquote>
 <p>If the visual style should be adapted, an additional stylesheet can be embedded:</p>
 <blockquote>
 <div><dl>
 <dt><code class="wtrl_cmd docutils literal notranslate"><span class="pre">waterlint</span> <span class="pre">render-html5</span></code></dt><dd><div class="line-block">
-<div class="line"><code class="wtrl_opt docutils literal notranslate"><span class="pre">--in</span></code> <code class="wtrl_file docutils literal notranslate"><span class="pre">doc/output-json/test_module_minimal.with_examples.wtrl.core.rfc-2119.json</span></code></div>
-<div class="line"><code class="wtrl_opt docutils literal notranslate"><span class="pre">--out</span></code> <code class="wtrl_file docutils literal notranslate"><span class="pre">doc/output-html/test_module_minimal.with_examples.wtrl.core.rfc-2119.html</span></code></div>
+<div class="line"><code class="wtrl_opt docutils literal notranslate"><span class="pre">--in</span></code> <code class="wtrl_file docutils literal notranslate"><span class="pre">doc/output-json/mypkg.test_module_minimal.with_examples.wtrl.core.rfc-2119.json</span></code></div>
+<div class="line"><code class="wtrl_opt docutils literal notranslate"><span class="pre">--out</span></code> <code class="wtrl_file docutils literal notranslate"><span class="pre">doc/output-html/mypkg.test_module_minimal.with_examples.wtrl.core.rfc-2119.html</span></code></div>
 <div class="line"><code class="wtrl_opt docutils literal notranslate"><span class="pre">--additional-css</span></code> <code class="wtrl_file docutils literal notranslate"><span class="pre">path/to/additional.css</span></code></div>
 </div>
 </dd>
@@ -147,8 +147,8 @@ passing an HTML fragment file:</p>
 <blockquote>
 <div><dl>
 <dt><code class="wtrl_cmd docutils literal notranslate"><span class="pre">waterlint</span> <span class="pre">render-html5</span></code></dt><dd><div class="line-block">
-<div class="line"><code class="wtrl_opt docutils literal notranslate"><span class="pre">--in</span></code> <code class="wtrl_file docutils literal notranslate"><span class="pre">doc/output-json/test_module_minimal.with_examples.wtrl.core.rfc-2119.json</span></code></div>
-<div class="line"><code class="wtrl_opt docutils literal notranslate"><span class="pre">--out</span></code> <code class="wtrl_file docutils literal notranslate"><span class="pre">doc/output-html/test_module_minimal.with_examples.wtrl.core.rfc-2119.html</span></code></div>
+<div class="line"><code class="wtrl_opt docutils literal notranslate"><span class="pre">--in</span></code> <code class="wtrl_file docutils literal notranslate"><span class="pre">doc/output-json/mypkg.test_module_minimal.with_examples.wtrl.core.rfc-2119.json</span></code></div>
+<div class="line"><code class="wtrl_opt docutils literal notranslate"><span class="pre">--out</span></code> <code class="wtrl_file docutils literal notranslate"><span class="pre">doc/output-html/mypkg.test_module_minimal.with_examples.wtrl.core.rfc-2119.html</span></code></div>
 <div class="line"><code class="wtrl_opt docutils literal notranslate"><span class="pre">--header-html</span></code> <code class="wtrl_file docutils literal notranslate"><span class="pre">doc/input-html/test_header_minimal.html</span></code></div>
 </div>
 </dd>
@@ -186,8 +186,8 @@ documentation self-contained and usable offline.</p>
 <blockquote>
 <div><dl>
 <dt><code class="wtrl_cmd docutils literal notranslate"><span class="pre">waterlint</span> <span class="pre">render-html5</span></code></dt><dd><div class="line-block">
-<div class="line"><code class="wtrl_opt docutils literal notranslate"><span class="pre">--in</span></code> <code class="wtrl_file docutils literal notranslate"><span class="pre">doc/output-json/test_module_minimal.with_examples.wtrl.core.rfc-2119.json</span></code></div>
-<div class="line"><code class="wtrl_opt docutils literal notranslate"><span class="pre">--out</span></code> <code class="wtrl_file docutils literal notranslate"><span class="pre">doc/output-html/test_module_minimal.with_examples.wtrl.core.rfc-2119.html</span></code></div>
+<div class="line"><code class="wtrl_opt docutils literal notranslate"><span class="pre">--in</span></code> <code class="wtrl_file docutils literal notranslate"><span class="pre">doc/output-json/mypkg.test_module_minimal.with_examples.wtrl.core.rfc-2119.json</span></code></div>
+<div class="line"><code class="wtrl_opt docutils literal notranslate"><span class="pre">--out</span></code> <code class="wtrl_file docutils literal notranslate"><span class="pre">doc/output-html/mypkg.test_module_minimal.with_examples.wtrl.core.rfc-2119.html</span></code></div>
 <div class="line"><code class="wtrl_opt docutils literal notranslate"><span class="pre">--header-html</span></code> <code class="wtrl_file docutils literal notranslate"><span class="pre">doc/input-html/test_header_tde4.html</span></code></div>
 <div class="line"><code class="wtrl_opt docutils literal notranslate"><span class="pre">--additional-css</span></code> <code class="wtrl_file docutils literal notranslate"><span class="pre">doc/input-html/test_header_tde4.css</span></code></div>
 </div>

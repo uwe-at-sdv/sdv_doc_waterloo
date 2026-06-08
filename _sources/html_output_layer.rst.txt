@@ -81,23 +81,23 @@ A summary of these options is displayed by
 Assume the JSON document from chapter :doc:`json_io` has already been generated
 and is located at
 
-	:wtrl_file:`doc/output-json/test_module_minimal.with_examples.wtrl.core.rfc-2119.json`
+	:wtrl_file:`doc/output-json/mypkg.test_module_minimal.with_examples.wtrl.core.rfc-2119.json`
 
 We can then render the interactive HTML5 output by
 
 	:wtrl_cmd:`waterlint render-html5`
-		| :wtrl_opt:`--in` :wtrl_file:`doc/output-json/test_module_minimal.with_examples.wtrl.core.rfc-2119.json`
-		| :wtrl_opt:`--out` :wtrl_file:`doc/output-html/test_module_minimal.with_examples.wtrl.core.rfc-2119.html`
+		| :wtrl_opt:`--in` :wtrl_file:`doc/output-json/mypkg.test_module_minimal.with_examples.wtrl.core.rfc-2119.json`
+		| :wtrl_opt:`--out` :wtrl_file:`doc/output-html/mypkg.test_module_minimal.with_examples.wtrl.core.rfc-2119.html`
 
 The generated artifact is then located at
 
-	:wtrl_file:`doc/output-html/test_module_minimal.with_examples.wtrl.core.rfc-2119.html`
+	:wtrl_file:`doc/output-html/mypkg.test_module_minimal.with_examples.wtrl.core.rfc-2119.html`
 
 If the visual style should be adapted, an additional stylesheet can be embedded:
 
 	:wtrl_cmd:`waterlint render-html5`
-		| :wtrl_opt:`--in` :wtrl_file:`doc/output-json/test_module_minimal.with_examples.wtrl.core.rfc-2119.json`
-		| :wtrl_opt:`--out` :wtrl_file:`doc/output-html/test_module_minimal.with_examples.wtrl.core.rfc-2119.html`
+		| :wtrl_opt:`--in` :wtrl_file:`doc/output-json/mypkg.test_module_minimal.with_examples.wtrl.core.rfc-2119.json`
+		| :wtrl_opt:`--out` :wtrl_file:`doc/output-html/mypkg.test_module_minimal.with_examples.wtrl.core.rfc-2119.html`
 		| :wtrl_opt:`--additional-css` :wtrl_file:`path/to/additional.css`
 
 Adding a custom header
@@ -107,8 +107,8 @@ The header area above the rendered documentation can also be customized by
 passing an HTML fragment file:
 
 	:wtrl_cmd:`waterlint render-html5`
-		| :wtrl_opt:`--in` :wtrl_file:`doc/output-json/test_module_minimal.with_examples.wtrl.core.rfc-2119.json`
-		| :wtrl_opt:`--out` :wtrl_file:`doc/output-html/test_module_minimal.with_examples.wtrl.core.rfc-2119.html`
+		| :wtrl_opt:`--in` :wtrl_file:`doc/output-json/mypkg.test_module_minimal.with_examples.wtrl.core.rfc-2119.json`
+		| :wtrl_opt:`--out` :wtrl_file:`doc/output-html/mypkg.test_module_minimal.with_examples.wtrl.core.rfc-2119.html`
 		| :wtrl_opt:`--header-html` :wtrl_file:`doc/input-html/test_header_minimal.html`
 
 The fragment must contain an element with ID :wtrl_value:`wtrl-title`, see rule RTHM-008 in :ref:`rendering_html`.
@@ -143,8 +143,8 @@ A more elaborate example with embedded logo and project link is shown in
 and can be used as follows:
 
 	:wtrl_cmd:`waterlint render-html5`
-		| :wtrl_opt:`--in` :wtrl_file:`doc/output-json/test_module_minimal.with_examples.wtrl.core.rfc-2119.json`
-		| :wtrl_opt:`--out` :wtrl_file:`doc/output-html/test_module_minimal.with_examples.wtrl.core.rfc-2119.html`
+		| :wtrl_opt:`--in` :wtrl_file:`doc/output-json/mypkg.test_module_minimal.with_examples.wtrl.core.rfc-2119.json`
+		| :wtrl_opt:`--out` :wtrl_file:`doc/output-html/mypkg.test_module_minimal.with_examples.wtrl.core.rfc-2119.html`
 		| :wtrl_opt:`--header-html` :wtrl_file:`doc/input-html/test_header_tde4.html`
 		| :wtrl_opt:`--additional-css` :wtrl_file:`doc/input-html/test_header_tde4.css`
 
