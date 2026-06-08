@@ -11,12 +11,14 @@ Contract:
 	general:
 		|Must| edit Waterloo walk JSON documents in a small, self-contained command module.
 Public_functions:
-	carve_command, build_parser
+	carve_qname_matches_expression, carve_command, build_parser
 Function_overview:
+	carve_qname_matches_expression:
+		Determine whether a qualified name matches a segment-aware expression with Unix shell-style wildcards.
 	carve_command:
 		Execute the carve command by loading exactly one validated walk JSON file,
 		optionally simplifying it to included entries, optionally applying a
-		prefix-based drop/keep chain, optionally recomputing the summary
+		segment-aware expression-based drop/keep chain, optionally recomputing the summary
 		statistics, and then writing the resulting document back out.
 	build_parser:
 		Construct the carve subcommand parser and connect it to the global CLI.
@@ -29,6 +31,7 @@ Notes:
 from __future__ import annotations
 
 import argparse
+import fnmatch
 import io
 import json
 import sys
@@ -86,8 +89,68 @@ def _carve_path_is_under(path: Path, prefix: Path) -> bool:
 		return False
 
 
-def _carve_qname_matches_prefix(qname: str, prefix: str) -> bool:
-	return qname == prefix or qname.startswith(prefix + ".")
+def carve_qname_matches_expression(qname: str, expression: str) -> bool:
+	r"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+		scope:
+			extension
+	Contract:
+		general:
+			|Must| determine whether the given qualified name matches the given segment-aware expression.\
+			The expression supports Unix shell-style wildcards and is matched against the qualified name as a whole,\
+			the last segment (tail), and each individual segment.
+			|Must| strip leading and trailing whitespace from the expression before processing.
+			|Must| fail to match if the stripped expression is empty.
+			|Must| use |mod|`fnmatch`-style matching for expressions containing wildcard characters |lit|`*?[]`.
+	Parameters:
+		qname:
+			The qualified name to test, typically of a function, class, or module.
+		expression:
+			The segment-aware expression to match against.
+	Returns:
+		|True| if the qualified name matches the expression, |False| otherwise.
+	Raises:
+	Notes:
+		Todo:
+			The contract needs to be finalized and the implementation may need to be adjusted accordingly.
+			The current approach is a best effort to support flexible patterns while being intuitive for common cases.
+			We are sure though about the requirement to strip whitespace and reject empty expressions,
+			as well as the general idea of matching against the whole qualified name, the tail segment, and each individual segment.
+		Examples:
+			- Expression "mypackage.*" matches "mypackage.module", "mypackage.sub.module", but not "otherpackage.module".
+			- Expression "*.helper" matches "mypackage.helper", "otherpackage.helper", but not "mypackage.util".
+			- Expression "*util*" matches "mypackage.util", "mypackage.helper.util", but not "mypackage.helper".
+			- Expression "helper" matches "mypackage.helper", "helper", but not "mypackage.util".
+	"""
+	expression = expression.strip()
+	# An empty expression is not a valid match for anything.
+	if not expression:
+		return False
+	# If the expression contains any wildcard characters, we apply fnmatch-style matching against the whole qualified name,
+	# the tail segment, and each individual segment. This allows for flexible patterns like "mypackage.*", "*.helper", or "*util*".
+	if any(ch in expression for ch in "*?[]"):
+		if fnmatch.fnmatchcase(qname, expression):
+			return True
+		tail = qname.split(".")[-1]
+		if fnmatch.fnmatchcase(tail, expression):
+			return True
+		return any(fnmatch.fnmatchcase(part, expression) for part in qname.split("."))
+	# If there are no wildcard characters, we check for exact matches against
+	# the whole qualified name, the tail segment, and each individual segment.
+	# This allows for simple patterns like "mypackage.module" or "helper".
+	if qname == expression or qname.startswith(f"{expression}."):
+		return True
+	# A final check for the tail segment is needed to allow matching the last segment
+	# without a trailing dot, e.g. "helper" should match "mypackage.helper".
+	if qname.endswith(f".{expression}"):
+		return True
+	# A final check for the tail segment alone allows matching the last segment
+	# without a dot, e.g. "helper" should match "mypackage.helper".
+	return qname.split(".")[-1] == expression
 
 
 def _carve_apply_drop_keep_filters(entries: list[dict[str, Any]], chain: list[tuple[str, str]]) -> list[dict[str, Any]]:
@@ -98,8 +161,8 @@ def _carve_apply_drop_keep_filters(entries: list[dict[str, Any]], chain: list[tu
 	for entry in entries:
 		qname = str(entry.get("qualname", ""))
 		state = keep_state
-		for op, prefix in chain:
-			if _carve_qname_matches_prefix(qname, prefix):
+		for op, expression in chain:
+			if carve_qname_matches_expression(qname, expression):
 				state = op == "keep"
 		if state:
 			out.append(entry)
@@ -178,9 +241,11 @@ def carve_command(args: argparse.Namespace) -> int:
 		|Must| return 0 on success, non-zero on validation or processing errors.
 	Raises:
 	Notes:
+		Parameters:
+			The function is called from the carve subcommand with the parsed argparse Namespace.
 		General note:
 			The function intentionally keeps the first implementation step small and self-contained.
-			Drop/keep filters are applied as an ordered prefix chain.
+			Drop/keep filters are applied as an ordered segment-aware expression chain.
 	"""
 	tr = tracer()
 	out_diag = getattr(args, "out_diag", None)
@@ -201,6 +266,7 @@ def carve_command(args: argparse.Namespace) -> int:
 			_emit_tracer(tr, out_diag, out_diag_json, debug=debug)
 			return 1
 		entries = [cast(dict[str, Any], entry) for entry in entries_raw if isinstance(entry, dict)]
+		tested = len(entries)
 		simplify = bool(getattr(args, "simplify", False))
 		drop_keep_chain = list(getattr(args, "drop_keep_chain", []) or [])
 		drop_non_basedir = bool(getattr(args, "drop_non_basedir", False))
@@ -226,6 +292,11 @@ def carve_command(args: argparse.Namespace) -> int:
 		meta["generated_at"] = datetime.now().astimezone().isoformat(timespec="seconds")
 		meta["generator"] = "waterlint.carve"
 		doc["$id"] = f"urn:waterlint:wtrl-walk-json:carve:{datetime.now().strftime('%Y%m%d%H%M%S')}"
+		kept = len(entries)
+		dropped = tested - kept
+		tr.add_info(f"Num entries tested: {tested}.")
+		tr.add_info(f"Num entries kept: {kept}.")
+		tr.add_info(f"Num entries dropped: {dropped}.")
 		if getattr(args, "out_file", None):
 			with open(args.out_file, "w", encoding="utf-8") as fh:
 				json.dump(doc, fh, indent=4)
@@ -275,8 +346,8 @@ def build_parser(
 	prsr.add_argument("--in", dest="in_file", required=True, metavar="FILE", help="Read exactly one walk JSON file.")
 	prsr.add_argument("--out", dest="out_file", metavar="FILE", help="Write walk JSON to FILE instead of stdout.")
 	prsr.add_argument("--simplify", action="store_true", help="Keep only included==true entries and recompute summary.")
-	prsr.add_argument("--drop", dest="drop_keep_chain", action=_DropKeepAction, nargs="+", metavar="QUALNAME", help="Drop entries whose qualified names match the given prefix chain. The first --drop begins with keep-all.")
-	prsr.add_argument("--keep", dest="drop_keep_chain", action=_DropKeepAction, nargs="+", metavar="QUALNAME", help="Keep entries whose qualified names match the given prefix chain. The first --keep begins with drop-all.")
+	prsr.add_argument("--drop", dest="drop_keep_chain", action=_DropKeepAction, nargs="+", metavar="QUALNAME", help="Drop entries whose qualified names match the given segment-aware expression chain. The first --drop begins with keep-all.")
+	prsr.add_argument("--keep", dest="drop_keep_chain", action=_DropKeepAction, nargs="+", metavar="QUALNAME", help="Keep entries whose qualified names match the given segment-aware expression chain. The first --keep begins with drop-all.")
 	prsr.add_argument("--drop-non-basedir", action="store_true", help="Drop entries whose file path is outside the input basedir.")
 	prsr.add_argument("--recompute", action="store_true", help="Recompute summary/statistics from current entries.")
 	prsr.add_argument("--debug", action="store_true", help="Emit debugging data to stderr (reserved)")

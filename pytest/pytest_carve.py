@@ -213,6 +213,23 @@ def test_carve_drop_keep_chain_filters_prefixes(tmp_path: Path) -> None:
 	assert doc["__WTRL_SUMMARY__"]["total"] == len(entries)
 
 
+def test_carve_drop_keep_chain_supports_globs(tmp_path: Path) -> None:
+	walk_json = _make_tree_walk_json(tmp_path)
+	out_json = tmp_path / "glob.json"
+	res = run_waterlint(
+		"carve",
+		"--in", str(walk_json),
+		"--drop", "A",
+		"--keep", "A.B0.C0.mod_D*",
+		"--out", str(out_json),
+	)
+	assert res.returncode == 0, res.stderr
+	doc = _load_json_doc(out_json)
+	entries = list(doc["__WTRL_OBJECTS__"])
+	qnames = {str(entry["qualname"]) for entry in entries}
+	assert qnames == {"A.B0.C0.mod_D0", "A.B0.C0.mod_D1"}
+
+
 def test_carve_drop_keep_chain_binary_tree_exhaustive(tmp_path: Path) -> None:
 	walk_json = _make_tree_walk_json(tmp_path)
 	leaf_modules = [

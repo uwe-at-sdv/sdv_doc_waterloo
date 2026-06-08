@@ -100,6 +100,8 @@ generated from Waterloo docstrings, how it can be enriched with informative
 example code, and how the resulting JSON artifacts can be used to generate
 a conventional, human-readable interactive HTML documentation site.
 
+.. _json_io_layer_validation:
+
 Validating JSON input, output and diagnostics
 ---------------------------------------------
 
@@ -115,6 +117,7 @@ against the corresponding schema:
 * :wtrl_file:`schema/wtrl-json-*.*.*.schema.json` for documentation
 * :wtrl_file:`schema/wtrl-tracer-json-*.*.*.schema.json` for diagnostics
 * :wtrl_file:`schema/wtrl-example-refs-json-*.*.*.schema.json` for example references
+* :wtrl_file:`schema/wtrl-walk-json-*.*.*.schema.json` for structured and detailed output of subcommand :wtrl_cmd:`walk`.
 
 The JSON file to be validated contains the version number of the schema
 to validate against. If the category cannot be inferred, the schema can
@@ -353,14 +356,19 @@ Apart from version numbers, the result should look like this:
 .. code-block:: json
 
 	{
-	"$schema": "https://sci-d-vis.com/schema/wtrl-example-refs-json-0.1.0.schema.json",
-	"$id": "urn:none:local:wtrl-example-refs-json:0.1.0",
-	"__WTRL_VERSION__": {
-		"waterloo": "0.6.1",
-		"waterlint_min": "0.8.1",
-		"schema": "0.1.0"
+		"$schema": "https://sci-d-vis.com/schema/wtrl-example-refs-json-0.1.1.schema.json",
+		"$id": "urn:none:local:wtrl-example-refs-json:0.1.1",
+		"__WTRL_VERSION__": {
+			"waterloo": "0.8.1",
+			"waterlint_min": "0.1.0",
+			"schema": "0.1.1"
 		},
-	"__WTRL_EXAMPLE_REFS__": {}
+		"__WTRL_EXAMPLE_REFS__": {
+			"my_module.my_function": [
+				"path/to/example1.py",
+				"path/to/example2.py"
+			]
+		}
 	}
 
 Examples are added to node :wtrl_value:`__WTRL_EXAMPLE_REFS__`
@@ -497,6 +505,8 @@ The reference tooling emits and expects category-specific :wtrl_attr:`$id` value
 * Example-reference mapping JSON:
 	Recommended pattern:
 	:wtrl_value:`urn:<org-or-project>:<domain>:wtrl-example-refs-json:<schema-version>`
+* Output of :wtrl_cmd:`walk`
+	:wtrl_value:`urn:waterlint:wtrl-walk-json:<waterlint-walk-version>:<timestamp>`
 
 The hash digest |should| be SHA256.
 The :wtrl_attr:`$id` value |should| be globally unique for each produced document.
@@ -510,8 +520,13 @@ Inspecting JSON documents with :wtrl_cmd:`jq`
 In this section, we present a few examples of using the JSON
 command-line processor :wtrl_cmd:`jq` with Waterloo JSON files.
 You can try these examples with the accompanying file
-:wtrl_var:`PATH` = :wtrl_file:`sdv/doc/waterloo/doc-json/docitem.wtrl.core.rfc-2119.json`,
+
+	:wtrl_var:`PATH` = :wtrl_file:`sdv/doc/waterloo/doc-json/docitem.wtrl.core.rfc-2119.json`,
+
 which is shipped with this package.
+The examples below illustrate only a small subset of what can be achieved
+with :wtrl_cmd:`jq`. For a comprehensive reference, consult the official
+jq documentation at `jqlang.github.io/jq <https://jqlang.github.io>`_.
 
 
 * Extract a JSON node, in this case the list of documented modules:
@@ -575,9 +590,4 @@ which is shipped with this package.
         		| select((.value.referenced_by // []) | index("tde4.getFirstCamera"))
         		| "---- " + .key + " ----\n" + (.value.code // "")
 			) ' doc-json/tde4_with_examples.wtrl.core.rfc-2119.json
-
-
-The examples above illustrate only a small subset of what can be achieved
-with :wtrl_cmd:`jq`. For a comprehensive reference, consult the official
-jq documentation at `jqlang.github.io/jq <https://jqlang.github.io>`_.
 

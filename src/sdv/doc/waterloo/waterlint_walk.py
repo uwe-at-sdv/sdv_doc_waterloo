@@ -50,7 +50,7 @@ from sdv.doc.waterloo.docitem_helper import (
 	get_obj_path,
 	)
 
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 
 WTRL_WALK_DEFAULT_SHOW_FIELDS = ("qualname", "kind", "scope", "file", "lineno", "included", "reason")
 WTRL_WALK_ALLOWED_SHOW_FIELDS = set(WTRL_WALK_DEFAULT_SHOW_FIELDS + ("reason_detail",))
@@ -403,8 +403,8 @@ def walk_command(args: argparse.Namespace) -> int:
 				sys.stdout.write(txt)
 		# Write summary to tracer.
 		tr.add_info(f"Num objects traversed: {len(entries)}.", "tool")
-		tr.add_info(f"Num objects included: {sum(1 for e in entries if e.get('included'))}.", "tool")
 		tr.add_info(f"Num objects excluded: {sum(1 for e in entries if not e.get('included'))}.", "tool")
+		tr.add_info(f"Num objects included: {sum(1 for e in entries if e.get('included'))}.", "tool")
 		_emit_tracer(tr, out_diag, out_diag_json)
 		return 0
 	except Exception:
