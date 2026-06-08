@@ -65,6 +65,20 @@
         }
       ]
     },
+    "section-notes": {
+      "begin": "^(\\s*)(Notes:)\\s*$",
+      "end": "^(?=(?:\\1(?:Preamble|Contract|Parameters|Returns|Raises|Notes|See_also|Definitions|Terminology|Description|Derived_from|Factory|Public_(classes|functions|methods)|(?:Class|Function|Method)_overview):|\\s*(?:\\\"\\\"\\\"|''')))",
+      "beginCaptures": {
+        "2": {
+          "name": "markup.heading.section.waterloo markup.italic.section.waterloo"
+        }
+      },
+      "patterns": [
+        {
+          "include": "#map-from-anything-to-freeform"
+        }
+      ]
+    },
     "section-preamble": {
       "begin": "^(\\s*)(Preamble:)\\s*$",
       "end": "^(?=(?:\\1(?:Preamble|Contract|Parameters|Returns|Raises|Notes|See_also|Definitions|Terminology|Description|Derived_from|Factory|Public_(classes|functions|methods)|(?:Class|Function|Method)_overview):|\\s*(?:\\\"\\\"\\\"|''')))",
@@ -388,20 +402,6 @@
     },
     "section-terminology": {
       "begin": "^(\\s*)(Terminology:)\\s*$",
-      "end": "^(?=(?:\\1(?:Preamble|Contract|Parameters|Returns|Raises|Notes|See_also|Definitions|Terminology|Description|Derived_from|Factory|Public_(classes|functions|methods)|(?:Class|Function|Method)_overview):|\\s*(?:\\\"\\\"\\\"|''')))",
-      "beginCaptures": {
-        "2": {
-          "name": "markup.heading.section.waterloo markup.italic.section.waterloo"
-        }
-      },
-      "patterns": [
-        {
-          "include": "#map-from-anything-to-freeform"
-        }
-      ]
-    },
-    "section-notes": {
-      "begin": "^(\\s*)(Notes:)\\s*$",
       "end": "^(?=(?:\\1(?:Preamble|Contract|Parameters|Returns|Raises|Notes|See_also|Definitions|Terminology|Description|Derived_from|Factory|Public_(classes|functions|methods)|(?:Class|Function|Method)_overview):|\\s*(?:\\\"\\\"\\\"|''')))",
       "beginCaptures": {
         "2": {
