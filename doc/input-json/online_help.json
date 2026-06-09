@@ -1,0 +1,368 @@
+{
+  "$schema": "https://sci-d-vis.com/schema/wtrl-online-help-0.1.0.schema.json",
+  "$id": "urn:waterlint:online-help:waterlint:0.1.0",
+  "__WTRL_ONLINE_HELP__": {
+    "command": "waterlint",
+    "version_note": "This document is an experimental LLM-readable online help representation.",
+    "summary": "Command-line toolkit for Waterloo docstrings, JSON artifacts, HTML rendering, example embedding, and MCP packaging.",
+    "usage": "waterlint [-h] [--help-all] {help,validate,coverage,extract,validate-json,add-example-json,render-json,carve,render-html5,render-docker,walk,gen-minimal,gen-full,gen-example-template-json,list-schemas,version,version-json} ...",
+    "global_options": [
+      {
+        "flags": ["-h", "--help"],
+        "kind": "help",
+        "description": "Show the top-level help text and exit."
+      },
+      {
+        "flags": ["--help-all"],
+        "kind": "help",
+        "description": "Show the top-level help text plus all subcommand details."
+      }
+    ],
+    "subcommands": [
+      {
+        "name": "help",
+        "summary": "Help on a specific topic.",
+        "usage": "waterlint help [--debug] [--topic TOPIC]",
+        "options": [
+          {
+            "flags": ["--topic"],
+            "value": "TOPIC",
+            "required": false,
+            "description": "Select the topic to describe, for example validate or render-json."
+          },
+          {
+            "flags": ["--debug"],
+            "required": false,
+            "description": "Emit debugging data to stderr."
+          }
+        ]
+      },
+      {
+        "name": "validate",
+        "summary": "Validate docstrings.",
+        "usage": "waterlint validate [--basedir DIR] [--fail-on-warning] [--out-diag PATH] [--out-diag-json PATH] [--obj QUALNAME | --in FILE] [--debug] [--ignore RULES]",
+        "options": [
+          { "flags": ["--basedir"], "value": "DIR", "required": false, "description": "Base directory for resolving objects passed to --obj." },
+          { "flags": ["--fail-on-warning"], "required": false, "description": "Treat warnings as errors." },
+          { "flags": ["--out-diag"], "value": "PATH", "required": false, "description": "Write human-readable diagnostics to PATH." },
+          { "flags": ["--out-diag-json"], "value": "PATH", "required": false, "description": "Write machine-readable diagnostics to PATH." },
+          { "flags": ["--obj"], "value": "QUALNAME", "required": false, "description": "Qualified identifier of a module, class, function, or method." },
+          { "flags": ["--in"], "value": "FILE", "required": false, "description": "Read docstring text from FILE instead of resolving --obj." },
+          { "flags": ["--ignore"], "value": "RULES", "required": false, "description": "Whitespace-separated list of rule IDs to ignore for warnings." },
+          { "flags": ["--debug"], "required": false, "description": "Emit debugging data to stderr." }
+        ],
+        "constraints": [
+          {
+            "kind": "one_of",
+            "members": ["--obj", "--in"],
+            "note": "Validate either a resolved object or a docstring text file."
+          }
+        ]
+      },
+      {
+        "name": "coverage",
+        "summary": "Validate docstring coverage.",
+        "usage": "waterlint coverage [--fail-on-warning] [--out-diag PATH] [--out-diag-json PATH] [--basedir DIR] --obj QUALNAME [--ignore RULES] [--debug]",
+        "options": [
+          { "flags": ["--basedir"], "value": "DIR", "required": false, "description": "Base directory for resolving objects passed to --obj." },
+          { "flags": ["--obj"], "value": "QUALNAME", "required": true, "description": "Qualified identifier of a module or class." },
+          { "flags": ["--ignore"], "value": "RULES", "required": false, "description": "Whitespace-separated list of rule IDs to ignore for warnings." },
+          { "flags": ["--debug"], "required": false, "description": "Emit debugging data to stderr." }
+        ],
+        "constraints": [
+          {
+            "kind": "requires",
+            "if": "--obj",
+            "then": ["--basedir"],
+            "note": "A base directory is usually needed when resolving source objects."
+          }
+        ]
+      },
+      {
+        "name": "extract",
+        "summary": "Extract docstring sections.",
+        "usage": "waterlint extract [--fail-on-warning] [--out-diag PATH] [--out-diag-json PATH] [--obj QUALNAME | --in FILE] [--basedir DIR] [--out FILE] [--section SECTION] [--subsection SUBSECTION] [--debug]",
+        "options": [
+          { "flags": ["--obj"], "value": "QUALNAME", "required": false, "description": "Qualified identifier of a module, class, function, or method." },
+          { "flags": ["--in"], "value": "FILE", "required": false, "description": "Read docstring text from FILE instead of resolving --obj." },
+          { "flags": ["--basedir"], "value": "DIR", "required": false, "description": "Base directory for resolving objects passed to --obj." },
+          { "flags": ["--out"], "value": "FILE", "required": false, "description": "Write extracted text to FILE." },
+          { "flags": ["--section"], "value": "SECTION", "required": false, "description": "Select the section label to extract." },
+          { "flags": ["--subsection"], "value": "SUBSECTION", "required": false, "description": "Select the subsection label to extract." },
+          { "flags": ["--debug"], "required": false, "description": "Emit debugging data to stderr." }
+        ],
+        "constraints": [
+          {
+            "kind": "one_of",
+            "members": ["--obj", "--in"],
+            "note": "Extract either from a resolved object or from a text file."
+          },
+          {
+            "kind": "requires",
+            "if": "--subsection",
+            "then": ["--section"],
+            "note": "A subsection name only makes sense within a selected section."
+          }
+        ]
+      },
+      {
+        "name": "validate-json",
+        "summary": "Validate Waterloo JSON output.",
+        "usage": "waterlint validate-json [--fail-on-warning] [--out-diag PATH] [--out-diag-json PATH] [--in FILE] [--schema FILE] [--debug]",
+        "options": [
+          { "flags": ["--in"], "value": "FILE", "required": false, "description": "Read JSON from FILE instead of stdin." },
+          { "flags": ["--schema"], "value": "FILE", "required": false, "description": "Force a specific JSON Schema file." },
+          { "flags": ["--debug"], "required": false, "description": "Emit debugging data to stderr." }
+        ],
+        "constraints": [
+          {
+            "kind": "inference",
+            "note": "If --schema is omitted, the tool infers the schema from __WTRL_*__ markers and __WTRL_VERSION__.schema."
+          }
+        ]
+      },
+      {
+        "name": "add-example-json",
+        "summary": "Add example code mapping to Waterloo JSON.",
+        "usage": "waterlint add-example-json [--fail-on-warning] [--out-diag PATH] [--out-diag-json PATH] --in FILE --examples FILE [--basedir DIR] [--allow-local-paths | --no-allow-local-paths] (--out FILE | --out-dir DIR) [--debug]",
+        "options": [
+          { "flags": ["--in"], "value": "FILE", "required": true, "description": "Input Waterloo JSON file." },
+          { "flags": ["--examples"], "value": "FILE", "required": true, "description": "Mapping JSON with __WTRL_EXAMPLE_REFS__ entries." },
+          { "flags": ["--basedir"], "value": "DIR", "required": false, "description": "Base directory for resolving relative example file paths." },
+          { "flags": ["--allow-local-paths"], "required": false, "description": "Include local example paths in __WTRL_EXAMPLES__.path." },
+          { "flags": ["--no-allow-local-paths"], "required": false, "description": "Omit local example paths from __WTRL_EXAMPLES__.path." },
+          { "flags": ["--out"], "value": "FILE", "required": false, "description": "Write updated JSON to FILE." },
+          { "flags": ["--out-dir"], "value": "DIR", "required": false, "description": "Write updated JSON into DIR using the input filename." },
+          { "flags": ["--debug"], "required": false, "description": "Emit debugging data to stderr." }
+        ],
+        "constraints": [
+          {
+            "kind": "one_of",
+            "members": ["--out", "--out-dir"],
+            "note": "Choose exactly one output target."
+          }
+        ]
+      },
+      {
+        "name": "render-json",
+        "summary": "Render Waterloo JSON from source or replay walk JSON.",
+        "usage": "waterlint render-json [--fail-on-warning] [--out-diag PATH] [--out-diag-json PATH] [--in FILE] [--obj MODULE [MODULE ...]] [--basedir DIR] [--out FILE | --out-dir DIR] [--out-prefix PREFIX] [--flavour raw|rfc-2119|markdown] [--scope core|extension|public] [--include-imported | --no-include-imported] [--allow-local-paths | --no-allow-local-paths] [--debug]",
+        "options": [
+          { "flags": ["--in"], "value": "FILE", "required": false, "description": "Read exactly one walk JSON file and replay it." },
+          { "flags": ["--obj"], "value": "MODULE", "repeatable": true, "required": false, "description": "One or more qualified modules to render in direct mode." },
+          { "flags": ["--basedir"], "value": "DIR", "required": false, "description": "Base directory for resolving --obj in direct mode." },
+          { "flags": ["--out"], "value": "FILE", "required": false, "description": "Write JSON to FILE." },
+          { "flags": ["--out-dir"], "value": "DIR", "required": false, "description": "Write JSON into DIR with a generated filename." },
+          { "flags": ["--out-prefix"], "value": "PREFIX", "required": false, "description": "Filename prefix used with --out-dir when multiple modules are rendered." },
+          { "flags": ["--flavour"], "value": "raw|rfc-2119|markdown", "required": false, "description": "Normativity keyword flavour." },
+          { "flags": ["--scope"], "value": "core|extension|public", "required": false, "description": "Render only objects visible in the given scope." },
+          { "flags": ["--include-imported"], "required": false, "description": "Include imported members and submodules." },
+          { "flags": ["--no-include-imported"], "required": false, "description": "Exclude imported members and submodules." },
+          { "flags": ["--allow-local-paths"], "required": false, "description": "Include filesystem paths in JSON." },
+          { "flags": ["--no-allow-local-paths"], "required": false, "description": "Omit filesystem paths in JSON." },
+          { "flags": ["--debug"], "required": false, "description": "Emit debugging data to stderr." }
+        ],
+        "constraints": [
+          {
+            "kind": "mode",
+            "members": ["--in", "--obj"],
+            "note": "Use either replay mode with --in or direct mode with --obj."
+          },
+          {
+            "kind": "one_of",
+            "members": ["--out", "--out-dir"],
+            "note": "Choose one output target."
+          },
+          {
+            "kind": "requires",
+            "if": "--out-dir + multiple --obj",
+            "then": ["--out-prefix"],
+            "note": "A prefix is needed to disambiguate output files when multiple modules are rendered."
+          }
+        ]
+      },
+      {
+        "name": "carve",
+        "summary": "Edit walk JSON documents.",
+        "usage": "waterlint carve [--fail-on-warning] [--out-diag PATH] [--out-diag-json PATH] --in FILE [--out FILE] [--simplify] [--drop QUALNAME [QUALNAME ...]] [--keep QUALNAME [QUALNAME ...]] [--drop-non-basedir] [--recompute] [--debug]",
+        "options": [
+          { "flags": ["--in"], "value": "FILE", "required": true, "description": "Read exactly one walk JSON file." },
+          { "flags": ["--out"], "value": "FILE", "required": false, "description": "Write walk JSON to FILE." },
+          { "flags": ["--simplify"], "required": false, "description": "Keep only included==true entries and recompute summary." },
+          { "flags": ["--drop"], "value": "QUALNAME", "repeatable": true, "required": false, "description": "Drop entries whose qualified names match the given expression chain." },
+          { "flags": ["--keep"], "value": "QUALNAME", "repeatable": true, "required": false, "description": "Keep entries whose qualified names match the given expression chain." },
+          { "flags": ["--drop-non-basedir"], "required": false, "description": "Drop entries whose file path is outside the input basedir." },
+          { "flags": ["--recompute"], "required": false, "description": "Recompute summary/statistics from current entries." },
+          { "flags": ["--debug"], "required": false, "description": "Emit debugging data to stderr." }
+        ]
+      },
+      {
+        "name": "render-html5",
+        "summary": "Render Waterloo JSON to bundled HTML5.",
+        "usage": "waterlint render-html5 [--fail-on-warning] [--out-diag PATH] [--out-diag-json PATH] --in JSON [JSON ...] (--out HTML | --out-dir DIR) [--css FILE] [--additional-css FILE] [--header-html FILE] [--pygments-theme THEME] [--no-render-preamble] [--allow-raw-object-node | --no-allow-raw-object-node] [--debug]",
+        "options": [
+          { "flags": ["--in"], "value": "JSON", "repeatable": true, "required": true, "description": "One or more Waterloo JSON files." },
+          { "flags": ["--out"], "value": "HTML", "required": false, "description": "Write HTML to a file." },
+          { "flags": ["--out-dir"], "value": "DIR", "required": false, "description": "Write HTML into a directory using a generated filename." },
+          { "flags": ["--css"], "value": "FILE", "required": false, "description": "Primary CSS file to embed instead of the built-in default CSS." },
+          { "flags": ["--additional-css"], "value": "FILE", "required": false, "description": "Additional CSS file to append after the primary CSS." },
+          { "flags": ["--header-html"], "value": "FILE", "required": false, "description": "HTML fragment file used instead of the built-in header markup." },
+          { "flags": ["--pygments-theme"], "value": "THEME", "required": false, "description": "Pygments style name for rendered examples." },
+          { "flags": ["--no-render-preamble"], "required": false, "description": "Do not render section Preamble in HTML output." },
+          { "flags": ["--allow-raw-object-node"], "required": false, "description": "Include collapsible section Raw object node in HTML output." },
+          { "flags": ["--no-allow-raw-object-node"], "required": false, "description": "Exclude the Raw object node section from HTML output." },
+          { "flags": ["--debug"], "required": false, "description": "Emit debugging data to stderr." }
+        ],
+        "constraints": [
+          {
+            "kind": "one_of",
+            "members": ["--out", "--out-dir"],
+            "note": "Choose one HTML output target."
+          },
+          {
+            "kind": "exclusive",
+            "members": ["--allow-raw-object-node", "--no-allow-raw-object-node"],
+            "note": "These are opposing boolean switches."
+          }
+        ]
+      },
+      {
+        "name": "render-docker",
+        "summary": "Render a Dockerfile and helper scripts for a Waterloo MCP configuration.",
+        "usage": "waterlint render-docker [--fail-on-warning] [--out-diag PATH] [--out-diag-json PATH] --in FILE --out FILE [--debug] [--bake-roots | --no-bake-roots]",
+        "options": [
+          { "flags": ["--in"], "value": "FILE", "required": true, "description": "Waterloo MCP TOML configuration file." },
+          { "flags": ["--out"], "value": "FILE", "required": true, "description": "Write the rendered Dockerfile to FILE." },
+          { "flags": ["--bake-roots"], "required": false, "description": "Bake configured roots into the image." },
+          { "flags": ["--no-bake-roots"], "required": false, "description": "Keep configured roots external and generate a launch script." },
+          { "flags": ["--debug"], "required": false, "description": "Emit debugging data to stderr." }
+        ]
+      },
+      {
+        "name": "walk",
+        "summary": "Walk documentable objects and preview traversal/filtering.",
+        "usage": "waterlint walk [--fail-on-warning] [--out-diag PATH] [--out-diag-json PATH] [--basedir DIR] --obj QUALNAME [QUALNAME ...] [--out FILE | --out-json FILE] [--show FIELDS] [--sort FIELDS] [--include-imported | --no-include-imported] [--debug]",
+        "options": [
+          { "flags": ["--basedir"], "value": "DIR", "required": false, "description": "Base directory for resolving objects passed to --obj." },
+          { "flags": ["--obj"], "value": "QUALNAME", "repeatable": true, "required": true, "description": "One or more qualified identifiers to traverse." },
+          { "flags": ["--out"], "value": "FILE", "required": false, "description": "Write human-readable traversal output to FILE." },
+          { "flags": ["--out-json"], "value": "FILE", "required": false, "description": "Write machine-readable traversal output to FILE." },
+          { "flags": ["--show"], "value": "FIELDS", "required": false, "description": "Comma-separated list of fields to show in text output." },
+          { "flags": ["--sort"], "value": "FIELDS", "required": false, "description": "Comma-separated list of fields to sort by." },
+          { "flags": ["--include-imported"], "required": false, "description": "Include imported members and submodules." },
+          { "flags": ["--no-include-imported"], "required": false, "description": "Exclude imported members and submodules." },
+          { "flags": ["--debug"], "required": false, "description": "Emit debugging data to stderr." }
+        ],
+        "constraints": [
+          {
+            "kind": "one_of",
+            "members": ["--out", "--out-json"],
+            "note": "Choose the output representation."
+          }
+        ]
+      },
+      {
+        "name": "gen-minimal",
+        "summary": "Generate minimal Waterloo docstring skeletons.",
+        "usage": "waterlint gen-minimal [--fail-on-warning] [--out-diag PATH] [--out-diag-json PATH] [--basedir DIR] --obj QUALNAME [QUALNAME ...] [--recursive] [--missing-only] [--format raw|json] [--out FILE] [--indent tab|spc4] [--debug]",
+        "options": [
+          { "flags": ["--basedir"], "value": "DIR", "required": false, "description": "Base directory for resolving objects passed to --obj." },
+          { "flags": ["--obj"], "value": "QUALNAME", "repeatable": true, "required": true, "description": "One or more qualified objects to generate skeletons for." },
+          { "flags": ["--recursive"], "required": false, "description": "Recursively traverse documentable objects below each --obj." },
+          { "flags": ["--missing-only"], "required": false, "description": "Generate only for objects without docstring." },
+          { "flags": ["--format"], "value": "raw|json", "required": false, "description": "Output format." },
+          { "flags": ["--out"], "value": "FILE", "required": false, "description": "Write output to FILE." },
+          { "flags": ["--indent"], "value": "tab|spc4", "required": false, "description": "Indent unit for generated docstring text." },
+          { "flags": ["--debug"], "required": false, "description": "Emit debugging data to stderr." }
+        ]
+      },
+      {
+        "name": "gen-full",
+        "summary": "Generate full Waterloo docstring skeletons.",
+        "usage": "waterlint gen-full [--fail-on-warning] [--out-diag PATH] [--out-diag-json PATH] [--basedir DIR] --obj QUALNAME [QUALNAME ...] [--recursive] [--missing-only] [--format raw|json] [--out FILE] [--indent tab|spc4] [--debug]",
+        "options": [
+          { "flags": ["--basedir"], "value": "DIR", "required": false, "description": "Base directory for resolving objects passed to --obj." },
+          { "flags": ["--obj"], "value": "QUALNAME", "repeatable": true, "required": true, "description": "One or more qualified objects to generate skeletons for." },
+          { "flags": ["--recursive"], "required": false, "description": "Recursively traverse documentable objects below each --obj." },
+          { "flags": ["--missing-only"], "required": false, "description": "Generate only for objects without docstring." },
+          { "flags": ["--format"], "value": "raw|json", "required": false, "description": "Output format." },
+          { "flags": ["--out"], "value": "FILE", "required": false, "description": "Write output to FILE." },
+          { "flags": ["--indent"], "value": "tab|spc4", "required": false, "description": "Indent unit for generated docstring text." },
+          { "flags": ["--debug"], "required": false, "description": "Emit debugging data to stderr." }
+        ]
+      },
+      {
+        "name": "gen-example-template-json",
+        "summary": "Generate template JSON for __WTRL_EXAMPLE_REFS__ mappings.",
+        "usage": "waterlint gen-example-template-json [--fail-on-warning] [--out-diag PATH] [--out-diag-json PATH] [--org-or-project TEXT] [--domain TEXT] [--out FILE] [--debug]",
+        "options": [
+          { "flags": ["--org-or-project"], "value": "TEXT", "required": false, "description": "Value for the <org-or-project> segment of the $id." },
+          { "flags": ["--domain"], "value": "TEXT", "required": false, "description": "Value for the <domain> segment of the $id." },
+          { "flags": ["--out"], "value": "FILE", "required": false, "description": "Write template JSON to FILE." },
+          { "flags": ["--debug"], "required": false, "description": "Emit debugging data to stderr." }
+        ]
+      },
+      {
+        "name": "list-schemas",
+        "summary": "List available Waterloo JSON Schemas.",
+        "usage": "waterlint list-schemas [--fail-on-warning] [--out-diag PATH] [--out-diag-json PATH] [--debug]",
+        "options": [
+          { "flags": ["--debug"], "required": false, "description": "Emit debugging data to stderr." }
+        ]
+      },
+      {
+        "name": "version",
+        "summary": "Print waterlint version string.",
+        "usage": "waterlint version [--fail-on-warning] [--out-diag PATH] [--out-diag-json PATH] [--debug]",
+        "options": [
+          { "flags": ["--debug"], "required": false, "description": "Emit debugging data to stderr." }
+        ]
+      },
+      {
+        "name": "version-json",
+        "summary": "Print JSON with Waterloo schema versions.",
+        "usage": "waterlint version-json [--fail-on-warning] [--out-diag PATH] [--out-diag-json PATH] [--debug]",
+        "options": [
+          { "flags": ["--debug"], "required": false, "description": "Emit debugging data to stderr." }
+        ]
+      }
+    ],
+    "constraint_examples": [
+      {
+        "title": "Direct object mode",
+        "pattern": {
+          "command": "render-json",
+          "requires": ["--basedir", "--obj"],
+          "forbids": ["--in"]
+        },
+        "meaning": "The tool resolves Python objects from a base directory instead of replaying a walk JSON file."
+      },
+      {
+        "title": "Replay mode",
+        "pattern": {
+          "command": "render-json",
+          "requires": ["--in"],
+          "forbids": ["--obj"]
+        },
+        "meaning": "The tool renders JSON by replaying a walk JSON document."
+      },
+      {
+        "title": "Section/subsection dependency",
+        "pattern": {
+          "command": "extract",
+          "requires": ["--section"],
+          "conditional": {
+            "if": "--subsection",
+            "then": ["--section"]
+          }
+        },
+        "meaning": "Subsection extraction only makes sense within an explicitly selected section."
+      }
+    ],
+    "notes": [
+      "This document intentionally mixes hard constraints and softer guidance.",
+      "It is a sketch for future LLM-readable online help, not a canonical schema.",
+      "A more mature version could split command definitions, option definitions, and validation rules into separate objects."
+    ]
+  }
+}

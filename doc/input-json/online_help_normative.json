@@ -1,0 +1,231 @@
+{
+  "$schema": "https://sci-d-vis.com/schema/wtrl-online-help-0.1.0.schema.json",
+  "$id": "urn:waterlint:online-help:waterlint:normative:0.1.0",
+  "__WTRL_ONLINE_HELP__": {
+    "Preamble": {
+      "profile": "module",
+      "normative_sections": ["Contract", "Subcommands", "Notes"]
+    },
+    "Contract": {
+      "general": [
+        "The document |Must| describe the command-line interface of waterlint in a way that an LLM can use as a structured help source.",
+        "The document |Should| preserve the top-level command, global flags, subcommands, options, and option constraints.",
+        "The document |May| contain explanatory notes and examples, but those are secondary to the normative command structure."
+      ],
+      "requires": [
+        "The top-level object |Must| define the command name, a usage string, and a list of global options.",
+        "Each subcommand |Must| define at least a name, a summary, a usage string, and an option list.",
+        "Each option that takes a value |Must| state that value placeholder explicitly.",
+        "Every non-trivial option relation |Should| be represented as an explicit constraint."
+      ],
+      "ensures": [
+        "The reader can distinguish direct-object mode from replay mode for render-json.",
+        "The reader can see which switches are mutually exclusive and which options imply other options.",
+        "The reader can infer which arguments are required, optional, repeatable, or alternative forms of the same choice."
+      ],
+      "invariants": [
+        "The top-level command name is always waterlint.",
+        "Subcommand names |Must| match the actual CLI subcommands.",
+        "Option flags |Must| be written exactly as they appear on the command line.",
+        "A constraint that uses an option name |Must| reference a defined option in the same command or at the top level."
+      ]
+    },
+    "Top_level": {
+      "command": "waterlint",
+      "usage": "waterlint [-h] [--help-all] {help,validate,coverage,extract,validate-json,add-example-json,render-json,carve,render-html5,render-docker,walk,gen-minimal,gen-full,gen-example-template-json,list-schemas,version,version-json} ...",
+      "global_options": [
+        {
+          "flags": ["-h", "--help"],
+          "kind": "help",
+          "summary": "Show the top-level help text and exit."
+        },
+        {
+          "flags": ["--help-all"],
+          "kind": "help",
+          "summary": "Show the top-level help text plus all subcommand details."
+        }
+      ],
+      "notes": [
+        "The top-level parser acts as a dispatcher to the subcommands.",
+        "Global help options are available regardless of the chosen subcommand."
+      ]
+    },
+    "Subcommands": [
+      {
+        "name": "validate",
+        "summary": "Validate docstrings.",
+        "usage": "waterlint validate [--basedir DIR] [--fail-on-warning] [--out-diag PATH] [--out-diag-json PATH] [--obj QUALNAME | --in FILE] [--debug] [--ignore RULES]",
+        "Contract": {
+          "general": [
+            "This subcommand |Must| validate either a resolved object or raw docstring text.",
+            "The diagnostics output |Should| remain optional and external to the validation result."
+          ],
+          "requires": [
+            "The caller |Must| provide exactly one of --obj or --in.",
+            "When --obj is used, the object |Should| be resolvable from --basedir if the object lives in source code."
+          ],
+          "ensures": [
+            "The tool reports warning and error diagnostics in a way that can be consumed by humans or machines.",
+            "The tool can treat warnings as errors when requested."
+          ],
+          "invariants": [
+            "The subcommand name remains validate.",
+            "The meaning of --ignore is stable across validation invocations."
+          ]
+        },
+        "options": [
+          {"flags": ["--basedir"], "value": "DIR", "required": false, "meaning": "Base directory for resolving objects passed to --obj."},
+          {"flags": ["--fail-on-warning"], "required": false, "meaning": "Treat warnings as errors."},
+          {"flags": ["--out-diag"], "value": "PATH", "required": false, "meaning": "Write human-readable diagnostics to PATH."},
+          {"flags": ["--out-diag-json"], "value": "PATH", "required": false, "meaning": "Write machine-readable diagnostics to PATH."},
+          {"flags": ["--obj"], "value": "QUALNAME", "required": false, "meaning": "Qualified identifier of a module, class, function, or method."},
+          {"flags": ["--in"], "value": "FILE", "required": false, "meaning": "Read docstring text from FILE instead of resolving --obj."},
+          {"flags": ["--debug"], "required": false, "meaning": "Emit debugging data to stderr."},
+          {"flags": ["--ignore"], "value": "RULES", "required": false, "meaning": "Whitespace-separated list of rule IDs to ignore for warnings."}
+        ],
+        "constraints": [
+          {
+            "kind": "exclusive",
+            "members": ["--obj", "--in"],
+            "meaning": "Use either object validation or text validation, not both."
+          }
+        ]
+      },
+      {
+        "name": "coverage",
+        "summary": "Validate docstring coverage.",
+        "usage": "waterlint coverage [--fail-on-warning] [--out-diag PATH] [--out-diag-json PATH] [--basedir DIR] --obj QUALNAME [--ignore RULES] [--debug]",
+        "Contract": {
+          "general": [
+            "This subcommand |Must| assess coverage for a documentable object tree.",
+            "The object argument |Should| identify a module or class whose public surface is being audited."
+          ],
+          "requires": [
+            "The caller |Must| provide --obj.",
+            "The caller |Should| provide --basedir when the qualified name is not already import-resolvable."
+          ],
+          "ensures": [
+            "The tool produces coverage diagnostics that distinguish documented, under-documented, and missing docstrings.",
+            "The result can be used as a gate in CI."
+          ],
+          "invariants": [
+            "Coverage is computed against the selected object tree only.",
+            "The warning policy is controlled by --fail-on-warning and the global diagnostics settings."
+          ]
+        },
+        "options": [
+          {"flags": ["--basedir"], "value": "DIR", "required": false, "meaning": "Base directory for resolving objects passed to --obj."},
+          {"flags": ["--obj"], "value": "QUALNAME", "required": true, "meaning": "Qualified identifier of a module or class."},
+          {"flags": ["--ignore"], "value": "RULES", "required": false, "meaning": "Whitespace-separated list of rule IDs to ignore for warnings."},
+          {"flags": ["--debug"], "required": false, "meaning": "Emit debugging data to stderr."}
+        ]
+      },
+      {
+        "name": "render-json",
+        "summary": "Render Waterloo JSON from source or replay walk JSON.",
+        "usage": "waterlint render-json [--fail-on-warning] [--out-diag PATH] [--out-diag-json PATH] [--in FILE] [--obj MODULE [MODULE ...]] [--basedir DIR] [--out FILE | --out-dir DIR] [--out-prefix PREFIX] [--flavour raw|rfc-2119|markdown] [--scope core|extension|public] [--include-imported | --no-include-imported] [--allow-local-paths | --no-allow-local-paths] [--debug]",
+        "Contract": {
+          "general": [
+            "This subcommand |Must| support two operating modes: direct source rendering and walk replay.",
+            "The output |Should| remain a single JSON artifact or a directory of JSON artifacts.",
+            "The generated document |May| contain local filesystem paths unless explicitly suppressed."
+          ],
+          "requires": [
+            "Replay mode |Must| use --in and direct mode |Must| use --obj.",
+            "Direct mode |Must| also provide --basedir.",
+            "When multiple modules are rendered and --out-dir is used, the caller |Must| provide --out-prefix."
+          ],
+          "ensures": [
+            "The tool emits a Waterloo JSON document with the expected structural markers.",
+            "The selected flavour and scope are reflected in the JSON metadata.",
+            "The resulting file name encodes the rendered object identity in a predictable way."
+          ],
+          "invariants": [
+            "A walk JSON replay and a direct source render are mutually exclusive input modes.",
+            "The object identity used in the JSON tree is stable for the same import resolution context.",
+            "Imported-member inclusion is controlled only by the include-imported switches."
+          ]
+        },
+        "options": [
+          {"flags": ["--in"], "value": "FILE", "required": false, "meaning": "Read exactly one walk JSON file and replay it."},
+          {"flags": ["--obj"], "value": "MODULE", "repeatable": true, "required": false, "meaning": "One or more qualified modules to render in direct mode."},
+          {"flags": ["--basedir"], "value": "DIR", "required": false, "meaning": "Base directory for resolving --obj in direct mode."},
+          {"flags": ["--out"], "value": "FILE", "required": false, "meaning": "Write JSON to FILE."},
+          {"flags": ["--out-dir"], "value": "DIR", "required": false, "meaning": "Write JSON into DIR with a generated filename."},
+          {"flags": ["--out-prefix"], "value": "PREFIX", "required": false, "meaning": "Filename prefix used with --out-dir."},
+          {"flags": ["--flavour"], "value": "raw|rfc-2119|markdown", "required": false, "meaning": "Normativity keyword flavour."},
+          {"flags": ["--scope"], "value": "core|extension|public", "required": false, "meaning": "Render only objects visible in the given scope."},
+          {"flags": ["--include-imported"], "required": false, "meaning": "Include imported members and submodules."},
+          {"flags": ["--no-include-imported"], "required": false, "meaning": "Exclude imported members and submodules."},
+          {"flags": ["--allow-local-paths"], "required": false, "meaning": "Include filesystem paths in JSON."},
+          {"flags": ["--no-allow-local-paths"], "required": false, "meaning": "Omit filesystem paths in JSON."},
+          {"flags": ["--debug"], "required": false, "meaning": "Emit debugging data to stderr."}
+        ],
+        "constraints": [
+          {
+            "kind": "mode",
+            "members": ["--in", "--obj"],
+            "meaning": "Choose either replay mode or direct mode."
+          },
+          {
+            "kind": "exclusive",
+            "members": ["--out", "--out-dir"],
+            "meaning": "Choose one output destination."
+          }
+        ]
+      },
+      {
+        "name": "render-html5",
+        "summary": "Render Waterloo JSON to bundled HTML5.",
+        "usage": "waterlint render-html5 [--fail-on-warning] [--out-diag PATH] [--out-diag-json PATH] --in JSON [JSON ...] (--out HTML | --out-dir DIR) [--css FILE] [--additional-css FILE] [--header-html FILE] [--pygments-theme THEME] [--no-render-preamble] [--allow-raw-object-node | --no-allow-raw-object-node] [--debug]",
+        "Contract": {
+          "general": [
+            "This subcommand |Must| transform Waterloo JSON into a single bundled HTML5 document.",
+            "The generated HTML |Should| remain self-contained unless custom assets are explicitly added.",
+            "The tool |May| render multiple JSON inputs in one invocation."
+          ],
+          "requires": [
+            "The caller |Must| provide one or more input JSON files via --in.",
+            "The caller |Must| choose exactly one of --out or --out-dir.",
+            "The caller |Must| treat --allow-raw-object-node and --no-allow-raw-object-node as mutually exclusive."
+          ],
+          "ensures": [
+            "The HTML output includes the rendered docstring tree for the selected object(s).",
+            "The header fragment, if supplied, can influence the visible title area.",
+            "The selected CSS inputs are embedded or appended in the output."
+          ],
+          "invariants": [
+            "HTML output is derived from the JSON structure, not from raw source text.",
+            "The title and subtitle placeholders in a custom header are populated dynamically.",
+            "The output remains a single HTML file per invocation target."
+          ]
+        },
+        "options": [
+          {"flags": ["--in"], "value": "JSON", "repeatable": true, "required": true, "meaning": "One or more Waterloo JSON files."},
+          {"flags": ["--out"], "value": "HTML", "required": false, "meaning": "Write HTML to a file."},
+          {"flags": ["--out-dir"], "value": "DIR", "required": false, "meaning": "Write HTML into a directory using a generated filename."},
+          {"flags": ["--css"], "value": "FILE", "required": false, "meaning": "Primary CSS file to embed instead of the built-in default CSS."},
+          {"flags": ["--additional-css"], "value": "FILE", "required": false, "meaning": "Additional CSS file to append after the primary CSS."},
+          {"flags": ["--header-html"], "value": "FILE", "required": false, "meaning": "HTML fragment file used instead of the built-in header markup."},
+          {"flags": ["--pygments-theme"], "value": "THEME", "required": false, "meaning": "Pygments style name for rendered examples."},
+          {"flags": ["--no-render-preamble"], "required": false, "meaning": "Do not render section Preamble in HTML output."},
+          {"flags": ["--allow-raw-object-node"], "required": false, "meaning": "Include collapsible section Raw object node in HTML output."},
+          {"flags": ["--no-allow-raw-object-node"], "required": false, "meaning": "Exclude the Raw object node section from HTML output."},
+          {"flags": ["--debug"], "required": false, "meaning": "Emit debugging data to stderr."}
+        ],
+        "constraints": [
+          {
+            "kind": "exclusive",
+            "members": ["--out", "--out-dir"],
+            "meaning": "Choose one HTML output target."
+          }
+        ]
+      }
+    ],
+    "Notes": [
+      "This structure is intentionally close to the existing Waterloo docstring vocabulary.",
+      "The Contract blocks are only an experiment, but they demonstrate how an online-help JSON could carry normative expectations.",
+      "A future version could split each command into preamble, contract, options, examples, and constraints as separate typed subobjects."
+    ]
+  }
+}
