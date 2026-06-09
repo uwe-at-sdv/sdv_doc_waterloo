@@ -34,7 +34,10 @@ from sdv.doc.waterloo.docitem_helper import WTRL_TRACER_JSON_SCHEMA_VERSION, tra
 # Not relevant yet, but in case we set up a plugin concept,
 # vendors should be encouraged to follow semantic versioning
 # for their plugins.
-__version__ = "0.1.0"
+__version__ = "0.1.1"
+# Changelog:
+# 0.1.1 [2026-06-09]: Fix the default build script GitHub token path to be outside the repository.
+# 0.1.0 [2026-06-06]: Initial version.
 
 #===== Typing ================================================#
 
@@ -360,7 +363,11 @@ def _render_build_script_text(plan: DockerRenderPlan) -> str:
 			"SCRIPT_DIR=$(CDPATH= cd -- \"$(dirname -- \"$0\")\" && pwd)",
 			f"DOCKERFILE=\"$SCRIPT_DIR/{plan.out_path.name}\"",
 			f"IMAGE_TAG=\"wtrl-mcp-{plan.out_path.stem}\"",
-			"GITHUB_TOKEN_FILE=\"$SCRIPT_DIR/../etc/secrets/github.token\"",
+			# Only required as long as our github repository is private. We can remove this when
+			# the repository is public. The secret is not part of the github repository and must
+			# be provided by the user in a file at the specified path on the machine where the
+			# build script is executed.
+			"GITHUB_TOKEN_FILE=\"/server/devel/sdv/privat/uwe/source/sdv_doc_waterloo/etc/secrets/github.token\"",
 			"",
 			'BUILD_DIR=$(mktemp -d "${TMPDIR:-/tmp}/wtrl-mcp-build.XXXXXX")',
 			'trap \'rm -rf "$BUILD_DIR"\' EXIT HUP INT TERM',

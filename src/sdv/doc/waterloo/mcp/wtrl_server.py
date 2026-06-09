@@ -3,19 +3,24 @@ Preamble:
 	profile:
 		module
 	normative_sections:
-		Contract, Public_functions
+		Contract, Public_functions, Public_constants
 	scope:
 		extension
 Contract:
 	general:
 		|Must| provide the entry point for the Waterloo MCP server.
 Public_functions:
-	read_package_readme, build_app
+	read_package_readme, build_app, load_config
 Function_overview:
 	read_package_readme:
 		Provide the content of the package README as a string for use as MCP instructions.
 	build_app:
 		Build the MCP app according to the provided configuration, including loading the configured data roots and defining the MCP tools for accessing them.
+	load_config:
+		Load and validate a Waterloo MCP TOML configuration file, returning a normalized McpConfig object for server startup.
+Public_constants:
+	WTRL_TOOL_DOCS:
+		A global registry mapping canonical tool names to their unwrapped function objects
 """
 
 from __future__ import annotations
@@ -29,7 +34,7 @@ import sys
 import textwrap
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Callable, Literal, Mapping, cast
+from typing import Callable, Final, Literal, Mapping, cast
 
 try:
 	import tomllib
@@ -83,6 +88,29 @@ from sdv.doc.waterloo.mcp.wtrl_tools import (
 )
 
 # Run browser-based MCP-inspector with npx @modelcontextprotocol/inspector 
+
+#----- begin constants and global variables ------------------#
+# Global tool documentation registry
+WTRL_TOOL_DOCS: Final[dict[str, Callable[..., object]]] = {
+	"list_roots": list_roots,
+	"get_root": get_root,
+	"get_root_metadata": get_root_metadata,
+	"get_object": get_object,
+	"get_section": get_section,
+	"get_subsection": get_subsection,
+	"list_objects": list_objects,
+	"get_examples": get_examples,
+	"get_example_source": get_example_source,
+	"get_signature": get_signature,
+	"get_references": get_references,
+	"search_related": search_related,
+	"search_objects": search_objects,
+	"search_sections": search_sections,
+	"search_text": search_text,
+	"gen_docstring": gen_docstring,
+	"describe_tool": None,  # Will be set after function definition
+}
+#----- end constants and global variables --------------------#
 
 #----- begin helper classes for toml config parsing ----------#
 @dataclass(frozen=True)
@@ -151,6 +179,7 @@ class McpConfig:
 	source_path: Path
 
 #----- end helper classes for toml config parsing ------------#
+
 
 def read_package_readme() -> str:
 	r"""
@@ -370,7 +399,13 @@ def _build_reference_index(roots: list[RootConfig]) -> ReferenceIndex:
 		root_mtimes[root_id] = _root_mtime_record(root_id, root_path)
 		try:
 			document = _read_json_document(str(root_path))
-		except Exception:
+		except Exception as exc:
+			logger.error(
+				"Failed to load Waterloo root '%s' from %s: %s",
+				root.label,
+				root_path,
+				exc,
+			)
 			continue
 		if not isinstance(document, Mapping):
 			continue
@@ -451,7 +486,32 @@ def _parse_roots(raw_roots: object, config_dir: Path) -> list[RootConfig]:
 
 
 def load_config(config_path: Path | None = None) -> McpConfig:
-	"""Load a Waterloo MCP TOML configuration file."""
+	r"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+		scope:
+			extension
+	Contract:
+		general:
+			|Must| load and validate a Waterloo MCP TOML configuration file.
+			|Must| resolve relative configuration paths against supported lookup locations.
+			|Must| return a normalized |type|`McpConfig` object for server startup.
+	Parameters:
+		config_path:
+			Optional path to the TOML configuration file.
+			If omitted, the default package-local configuration path is used.
+	Returns:
+		A parsed and validated |type|`McpConfig` instance.
+	Raises:
+		FileNotFoundError:
+			|May| be raised if the configuration file cannot be found.
+		ValueError:
+			|May| be raised if required TOML sections are missing or invalid,
+			or if configured transport values are unsupported.
+	"""
 	path = _resolve_config_path(config_path)
 	if not path.exists():
 		if config_path is not None and not config_path.is_absolute():
@@ -501,7 +561,6 @@ def load_config(config_path: Path | None = None) -> McpConfig:
 		)
 	roots = _parse_roots(roots_data, config_dir)
 	return McpConfig(server=server, security=security, logging=logging_cfg, roots=roots, source_path=path)
-
 
 def build_app(config: McpConfig) -> FastMCP:
 	r"""
@@ -646,36 +705,6 @@ def build_app(config: McpConfig) -> FastMCP:
 		indent_mode: DocstringIndentMode_t = "tab",
 		json_mode: DocstringJsonMode_t = "full",
 	) -> dict[str, WtrlJsonNode_t]:
-		r"""
-		Preamble:
-			profile:
-				function
-			normative_sections:
-				Contract, Parameters, Returns, Raises
-			scope:
-				extension
-		Contract:
-			general:
-				|Must| expose the public MCP entry point for docstring template generation.
-				|Must| forward the requested profile, signature, mode, indentation mode, and JSON mode to the shared Waterloo generator.
-				|Must| keep the public MCP signature aligned with the documented tool contract.
-		Parameters:
-			profile:
-				Target Waterloo docstring profile.
-			signature:
-				Optional textual signature for non-module profiles.
-			mode:
-				Template mode, either ``minimal`` or ``full``.
-			indent_mode:
-				Indentation mode for the returned docstring text, either ``tab`` or ``spc4``.
-			json_mode:
-				JSON output mode, either ``full`` or ``doc_only``.
-		Returns:
-			A dictionary with the generated ``docstring`` text and a ``json_snippet`` that represents the docstring structure and content.
-		Raises:
-			ValueError:
-				|May| be raised if the profile requires a signature and none is given, or if the selected mode is unknown.
-		"""
 		return gen_docstring(profile=profile, signature=signature, mode=mode, indent_mode=indent_mode, json_mode=json_mode)
 
 	@mcp.tool(name="describe_tool", description="Describe one MCP tool by its canonical tool name.")
@@ -721,30 +750,13 @@ def build_app(config: McpConfig) -> FastMCP:
 			"gen_docstring": _gen_docstring,
 			"describe_tool": _describe_tool,
 		}
-		tool_docs: dict[str, Callable[..., object]] = {
-			"list_roots": list_roots,
-			"get_root": get_root,
-			"get_root_metadata": get_root_metadata,
-			"get_object": get_object,
-			"get_section": get_section,
-			"get_subsection": get_subsection,
-			"list_objects": list_objects,
-			"get_examples": get_examples,
-			"get_example_source": get_example_source,
-			"get_signature": get_signature,
-			"get_references": get_references,
-			"search_related": search_related,
-			"search_objects": search_objects,
-			"search_sections": search_sections,
-			"search_text": search_text,
-			"gen_docstring": _gen_docstring,
-			"describe_tool": _describe_tool,
-		}
-		if toolname not in tool_wrappers or toolname not in tool_docs:
+		if toolname not in tool_wrappers or toolname not in WTRL_TOOL_DOCS:
 			raise ValueError(f"MCPS-007 unknown tool: {toolname}")
-		return _tool_help_text(toolname, tool_wrappers[toolname], tool_docs[toolname])
+		return _tool_help_text(toolname, tool_wrappers[toolname], WTRL_TOOL_DOCS[toolname])
 
-	logger.info("Ready to serve via Uvicorn.")
+	WTRL_TOOL_DOCS["describe_tool"] = _describe_tool
+
+	logger.info("wtrl_mcp %s ready, serving %d tools.", __version__, len(WTRL_TOOL_DOCS))
 	logger.info(f"Loaded {len(config.roots)} configured roots.")
 	for root in config.roots:
 		logger.info(f"Configured root: {root.path} '{root.label}' (enabled={root.enabled}, kind={root.kind})")
