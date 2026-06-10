@@ -772,7 +772,7 @@ the preamble and serves as metadata.
      - free-form text
      - Can be both
      - Needs paragraph-capable text
-   * - :wtrl_label:`Derived_from.<item>`
+   * - :wtrl_label:`Derived_from`
      - list of qualified identifiers
      - Normative
      - Implied by content kind

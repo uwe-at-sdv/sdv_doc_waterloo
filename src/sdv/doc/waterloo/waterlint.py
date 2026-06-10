@@ -117,6 +117,7 @@ with contextlib.redirect_stdout(sys.stderr):
 	import sdv.doc.waterloo.waterlint_gen_example_template_json as gext
 	import sdv.doc.waterloo.waterlint_render_docker as rdocker
 	import sdv.doc.waterloo.waterlint_render_html5 as rhtml5
+	import sdv.doc.waterloo.waterlint_explain_section as exsec
 	import sdv.doc.waterloo.waterlint_walk as wlk
 	import sdv.doc.waterloo.docitem_tokenizer as tokenizer
 	from sdv.doc.waterloo.docitem_helper import (
@@ -148,6 +149,7 @@ SUBCOMMANDS = (
 	"render-json",
 	"carve",
 	"render-html5",
+	"explain-section",
 	"walk",
 	"gen-minimal",
 	"gen-full",
@@ -1622,6 +1624,9 @@ def _help_carve() -> None:
 def _help_render_html5() -> None:
 	print("Render Waterloo JSON documents into one bundled HTML5 file.")
 
+def _help_explain_section() -> None:
+	print("Explain the structure of a Waterloo section label.")
+
 def _help_gen_minimal() -> None:
 	print("Generate minimal Waterloo docstring skeletons.")
 
@@ -1665,6 +1670,8 @@ def _help_topic_command(args: argparse.Namespace) -> int:
 						_help_carve()
 					if cmd == "render-html5":
 						_help_render_html5()
+					if cmd == "explain-section":
+						_help_explain_section()
 					if cmd == "gen-minimal":
 						_help_gen_minimal()
 					if cmd == "gen-full":
@@ -1971,6 +1978,9 @@ def _build_parser() -> argparse.ArgumentParser:
 #----- render-html5 -------------------------------------------#
 	rhtml5.build_parser(subparsers, parser_parts)
 
+#----- explain-section ---------------------------------------#
+	exsec.build_parser(subparsers, parser_parts)
+
 #----- render-docker ------------------------------------------#
 	rdocker.build_parser(subparsers, parser_parts)
 
@@ -2051,6 +2061,8 @@ def main(argv: Optional[list[str]] = None) -> int:
 		return int(carve.carve_command(args))
 	if args.command == "render-html5":
 		return rhtml5.render_html5(args)
+	if args.command == "explain-section":
+		return exsec.explain_section_command(args)
 	if args.command == "render-docker":
 		return rdocker.render_docker(args)
 	if args.command == "walk":
