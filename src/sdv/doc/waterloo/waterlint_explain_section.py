@@ -14,9 +14,9 @@ Public_functions:
 	explain_section_command, build_parser
 Function_overview:
 	explain_section_command:
-		Render a prototype explanation for a Waterloo section label in raw text or JSON.
+		Render a profile-specific explanation for a Waterloo section label in raw text or JSON.
 	build_parser:
-		Construct and return the argparse subparser for the explain-section command.
+		Construct and return the argparse subparser for the explain-section command, including the required profile selector.
 """
 
 from __future__ import annotations
@@ -26,7 +26,7 @@ import json
 import sys
 
 from sdv.doc.waterloo import waterlint_common as wl_common
-from sdv.doc.waterloo.waterlint_explain_common import get_section_explanation, render_explanation_json, render_explanation_text
+from sdv.doc.waterloo.waterlint_explain_common import build_section_explanation, render_explanation_json, render_explanation_text
 
 
 def explain_section_command(args: argparse.Namespace) -> int:
@@ -34,9 +34,13 @@ def explain_section_command(args: argparse.Namespace) -> int:
 	if not isinstance(label, str) or not label:
 		print("Missing required section label.", file=sys.stderr)
 		return 1
-	spec = get_section_explanation(label)
+	profile = getattr(args, "profile", None)
+	if profile not in ("module", "class", "function", "method", "inherited_method"):
+		print("Missing required profile.", file=sys.stderr)
+		return 1
+	spec = build_section_explanation(label, profile)
 	if spec is None:
-		print(f"Unknown section label: {label}", file=sys.stderr)
+		print(f"Unknown section label/profile combination: {label} / {profile}", file=sys.stderr)
 		return 1
 	out_json = getattr(args, "out_json", None)
 	out_file = getattr(args, "out_file", None)
@@ -61,11 +65,17 @@ def build_parser(
 ) -> argparse.ArgumentParser:
 	prsr = subparsers.add_parser(
 		"explain-section",
-		help="Explain the structure of a Waterloo section",
+		help="Explain the structure of a Waterloo section for a profile",
 		parents=[parser_parts["global_opts"]],
 		formatter_class=parser_parts["formatter_class"],
 	)
 	prsr.add_argument("--label", required=True, metavar="LABEL", help="Section label to explain.")
+	prsr.add_argument(
+		"--profile",
+		required=True,
+		choices=["module", "class", "function", "method", "inherited_method"],
+		help="Docstring profile to explain the label for.",
+	)
 	prsr_out = prsr.add_mutually_exclusive_group()
 	prsr_out.add_argument("--out", dest="out_file", metavar="FILE", help="Write raw explanation text to FILE instead of stdout.")
 	prsr_out.add_argument("--out-json", dest="out_json", metavar="FILE", help="Write JSON explanation to FILE and suppress raw output.")

@@ -11,10 +11,10 @@ Contract:
 	general:
 		|Must| provide shared explanation data and renderers for waterlint explain commands.
 Public_functions:
-	get_section_explanation, render_explanation_text, render_explanation_json
+	build_section_explanation, render_explanation_text, render_explanation_json
 Function_overview:
-	get_section_explanation:
-		Look up a section explanation by label.
+	build_section_explanation:
+		Build a profile-specific section explanation for a label.
 	render_explanation_text:
 		Render a section explanation as raw text.
 	render_explanation_json:
@@ -23,42 +23,62 @@ Function_overview:
 
 from __future__ import annotations
 
-from typing import Any, Dict, Final, List, Literal, TypedDict
+from typing import Any, Final, Dict, List, Literal, TypedDict
 
-# The single source of truth for semantic markup roles.
-# These are cited in each explanation of sections and subsections, where applicable.
 from sdv.doc.waterloo.docitem_helper import WTRL_MARKUP_ROLES
 
-# The normative documentation classifies each section and subsection role
-# as one of these categories, which controls the expected content and formatting.
-# Sections without textual content are considered as cateogry "STRUCTURE".
-# We keep in mind that normativity is per section (BinNorm), so whenever
-# a section is normative, all its subsections are normative as well.
-#
-# Example: Section "Contract" is a normative section of category "STRUCTURE" that contains no
-# textual content itself but only defines subsections like "general", and depending on profile
-# "constructor" or "requires"/"ensures"/"invariants".
-#
-# Example: Section "Returns" is a normative section of category "FREEFORM_TEXT"
-# that contains a freeform textual description of the return value.
-#
-SectionBodyCategory_t = Literal["STRUCTURE","IDENTIFIER","QUALIFIED_IDENTIFIER","LIST_OF_IDENTIFIERS","LIST_OF_QUALIFIED_IDENTIFIERS","ITEMIZED_TEXT","FREEFORM_TEXT"]
+SectionBodyCategory_t = Literal[
+	"STRUCTURE",
+	"IDENTIFIER",
+	"QUALIFIED_IDENTIFIER",
+	"LIST_OF_IDENTIFIERS",
+	"LIST_OF_QUALIFIED_IDENTIFIERS",
+	"ITEMIZED_TEXT",
+	"FREEFORM_TEXT",
+]
+
+Profile_t = Literal["module", "class", "function", "method", "inherited_method"]
+
+Normativity_t = Literal["not_applicable", "normative", "informative", "can_be_both"]
+
+LabelKind_t = Literal["IDENTIFIER", "QUALIFIED_IDENTIFIER", "ANY_STRING", "NOT_APPLICABLE"]
+
 
 class SectionBodyCategoryExplanation_t(TypedDict):
 	semantic_markup_allowed: bool
 	explanation: list[str]
 
-Normativity_t = Literal["not_applicable", "normative", "informative", "can_be_both"]
 
 class LabelCategoryInfo_t(TypedDict):
 	category: SectionBodyCategory_t
 	normativity: Normativity_t
+	label_kind: LabelKind_t
+	hint: str
+
+
+class ExplainSection_t(TypedDict):
+	profile: Profile_t
+	label: str
+	title: str
+	body_category: SectionBodyCategory_t
+	normativity: Normativity_t
+	label_kind: LabelKind_t
+	available_profiles: list[Profile_t]
+	allowed_subsections: list[str]
+	role_notes: list[str]
+	body: list[str]
+	template: list[str]
+	hint: list[str]
+	try_next: list[str]
+
+
+WTRL_MARKUP_ROLE_LIST: Final[list[str]] = [role for role in WTRL_MARKUP_ROLES.strip("()").split("|") if role]
 
 ExplainSectionBodyCategory: Final[Dict[str, SectionBodyCategoryExplanation_t]] = {
 	"STRUCTURE": {
 		"semantic_markup_allowed": False,
 		"explanation": [
-			"The section/subsection contains no freeform text but only defines a structure of subsections and roles."
+			"The section/subsection contains no freeform text but only defines a structure of subsections and roles.",
 		],
 	},
 	"IDENTIFIER": {
@@ -88,17 +108,8 @@ ExplainSectionBodyCategory: Final[Dict[str, SectionBodyCategoryExplanation_t]] =
 	"ITEMIZED_TEXT": {
 		"semantic_markup_allowed": True,
 		"explanation": [
-			"The section/subsection body is expected to be a list of freeform text entries,",
-			"which are typically interpreted as an executable contract.",
-			"Itemization is expressed by bullets and lines, not by decorative spacing, for example:",
-			"* item 1",
-			"* item 2",
-			"+ item 2.1",
-			"+ item 2.2",
-			"- item 2.2.1",
-			"- item 2.2.2",
-			"* item 3",
-			"Bullets only express level structure and have no semantic meaning or predefined graphical representation.",
+			"The section/subsection body is expected to be a list of freeform text entries.",
+			"Itemization is expressed by bullets and lines, not by decorative spacing.",
 		],
 	},
 	"FREEFORM_TEXT": {
@@ -106,68 +117,59 @@ ExplainSectionBodyCategory: Final[Dict[str, SectionBodyCategoryExplanation_t]] =
 		"explanation": [
 			"The section/subsection body is expected to be freeform text, for example a general description or a note.",
 			"As opposed to itemized text, the body is not expected to be structured into separate entries but can be a single freeform block.",
-			"Itemization is expressed by bullets and lines, not by decorative spacing, for example:",
-			"* item 1",
-			"* item 2",
-			"+ item 2.1",
-			"+ item 2.2",
-			"- item 2.2.1",
-			"- item 2.2.2",
-			"* item 3",
-			"Bullets only express level structure and have no semantic meaning or predefined graphical representation.",
 		],
 	},
 }
 
 LABEL_TO_CATEGORY: Final[Dict[str, LabelCategoryInfo_t]] = {
-	"Preamble": {"category": "STRUCTURE", "normativity": "not_applicable"},
-	"Preamble.profile": {"category": "IDENTIFIER", "normativity": "not_applicable"},
-	"Preamble.normative_sections": {"category": "LIST_OF_IDENTIFIERS", "normativity": "not_applicable"},
-	"Preamble.status": {"category": "IDENTIFIER", "normativity": "not_applicable"},
-	"Preamble.scope": {"category": "LIST_OF_IDENTIFIERS", "normativity": "not_applicable"},
-	"Definitions": {"category": "STRUCTURE", "normativity": "not_applicable"},
-	"Definitions.<item>": {"category": "FREEFORM_TEXT", "normativity": "normative"},
-	"Definitions._inherit": {"category": "LIST_OF_IDENTIFIERS", "normativity": "normative"},
-	"Terminology": {"category": "STRUCTURE", "normativity": "not_applicable"},
-	"Terminology.<item>": {"category": "FREEFORM_TEXT", "normativity": "informative"},
-	"Contract": {"category": "STRUCTURE", "normativity": "not_applicable"},
-	"Contract.general": {"category": "ITEMIZED_TEXT", "normativity": "normative"},
-	"Contract.constructor": {"category": "ITEMIZED_TEXT", "normativity": "normative"},
-	"Contract.base": {"category": "QUALIFIED_IDENTIFIER", "normativity": "normative"},
-	"Contract.traits": {"category": "LIST_OF_IDENTIFIERS", "normativity": "normative"},
-	"Contract.invariants": {"category": "ITEMIZED_TEXT", "normativity": "normative"},
-	"Contract.requires": {"category": "ITEMIZED_TEXT", "normativity": "normative"},
-	"Contract.ensures": {"category": "ITEMIZED_TEXT", "normativity": "normative"},
-	"Description": {"category": "FREEFORM_TEXT", "normativity": "can_be_both"},
-	"Derived_from": {"category": "LIST_OF_QUALIFIED_IDENTIFIERS", "normativity": "normative"},
-	"Factory": {"category": "STRUCTURE", "normativity": "not_applicable"},
-	"Factory.<item>": {"category": "ITEMIZED_TEXT", "normativity": "normative"},
-	"Public_classes": {"category": "LIST_OF_QUALIFIED_IDENTIFIERS", "normativity": "normative"},
-	"Public_functions": {"category": "LIST_OF_QUALIFIED_IDENTIFIERS", "normativity": "normative"},
-	"Public_methods": {"category": "LIST_OF_QUALIFIED_IDENTIFIERS", "normativity": "normative"},
-	"Class_overview": {"category": "STRUCTURE", "normativity": "not_applicable"},
-	"Class_overview.<item>": {"category": "FREEFORM_TEXT", "normativity": "informative"},
-	"Method_overview": {"category": "STRUCTURE", "normativity": "not_applicable"},
-	"Method_overview.<item>": {"category": "FREEFORM_TEXT", "normativity": "informative"},
-	"Function_overview": {"category": "STRUCTURE", "normativity": "not_applicable"},
-	"Function_overview.<item>": {"category": "FREEFORM_TEXT", "normativity": "informative"},
-	"Public_types": {"category": "STRUCTURE", "normativity": "not_applicable"},
-	"Public_types.<item>": {"category": "FREEFORM_TEXT", "normativity": "normative"},
-	"Public_variables": {"category": "STRUCTURE", "normativity": "not_applicable"},
-	"Public_variables.<item>": {"category": "FREEFORM_TEXT", "normativity": "normative"},
-	"Public_constants": {"category": "STRUCTURE", "normativity": "not_applicable"},
-	"Public_constants.<item>": {"category": "FREEFORM_TEXT", "normativity": "normative"},
-	"Parameters": {"category": "STRUCTURE", "normativity": "not_applicable"},
-	"Parameters.<item>": {"category": "FREEFORM_TEXT", "normativity": "normative"},
-	"Returns": {"category": "FREEFORM_TEXT", "normativity": "normative"},
-	"Raises": {"category": "STRUCTURE", "normativity": "not_applicable"},
-	"Raises.<item>": {"category": "ITEMIZED_TEXT", "normativity": "normative"},
-	"Notes": {"category": "STRUCTURE", "normativity": "not_applicable"},
-	"Notes.<item>": {"category": "FREEFORM_TEXT", "normativity": "informative"},
-	"See_also": {"category": "LIST_OF_QUALIFIED_IDENTIFIERS", "normativity": "can_be_both"},
+	"Preamble": {"category": "STRUCTURE", "normativity": "not_applicable", "label_kind": "NOT_APPLICABLE", "hint": ""},
+	"Preamble.profile": {"category": "IDENTIFIER", "normativity": "not_applicable", "label_kind": "NOT_APPLICABLE", "hint": ""},
+	"Preamble.normative_sections": {"category": "LIST_OF_IDENTIFIERS", "normativity": "not_applicable", "label_kind": "NOT_APPLICABLE", "hint": ""},
+	"Preamble.status": {"category": "IDENTIFIER", "normativity": "not_applicable", "label_kind": "NOT_APPLICABLE", "hint": ""},
+	"Preamble.scope": {"category": "LIST_OF_IDENTIFIERS", "normativity": "not_applicable", "label_kind": "NOT_APPLICABLE", "hint": ""},
+	"Definitions": {"category": "STRUCTURE", "normativity": "not_applicable", "label_kind": "NOT_APPLICABLE", "hint": ""},
+	"Definitions.<item>": {"category": "FREEFORM_TEXT", "normativity": "normative", "label_kind": "IDENTIFIER", "hint": ""},
+	"Definitions._inherit": {"category": "LIST_OF_IDENTIFIERS", "normativity": "normative", "label_kind": "NOT_APPLICABLE", "hint": ""},
+	"Terminology": {"category": "STRUCTURE", "normativity": "not_applicable", "label_kind": "NOT_APPLICABLE", "hint": ""},
+	"Terminology.<item>": {"category": "FREEFORM_TEXT", "normativity": "informative", "label_kind": "ANY_STRING", "hint": ""},
+	"Contract": {"category": "STRUCTURE", "normativity": "not_applicable", "label_kind": "NOT_APPLICABLE", "hint": ""},
+	"Contract.general": {"category": "ITEMIZED_TEXT", "normativity": "normative", "label_kind": "NOT_APPLICABLE", "hint": ""},
+	"Contract.constructor": {"category": "ITEMIZED_TEXT", "normativity": "normative", "label_kind": "NOT_APPLICABLE", "hint": ""},
+	"Contract.base": {"category": "QUALIFIED_IDENTIFIER", "normativity": "normative", "label_kind": "NOT_APPLICABLE", "hint": ""},
+	"Contract.traits": {"category": "LIST_OF_IDENTIFIERS", "normativity": "normative", "label_kind": "NOT_APPLICABLE", "hint": ""},
+	"Contract.invariants": {"category": "ITEMIZED_TEXT", "normativity": "normative", "label_kind": "NOT_APPLICABLE", "hint": ""},
+	"Contract.requires": {"category": "ITEMIZED_TEXT", "normativity": "normative", "label_kind": "NOT_APPLICABLE", "hint": ""},
+	"Contract.ensures": {"category": "ITEMIZED_TEXT", "normativity": "normative", "label_kind": "NOT_APPLICABLE", "hint": ""},
+	"Description": {"category": "FREEFORM_TEXT", "normativity": "can_be_both", "label_kind": "NOT_APPLICABLE", "hint": ""},
+	"Derived_from": {"category": "LIST_OF_QUALIFIED_IDENTIFIERS", "normativity": "normative", "label_kind": "NOT_APPLICABLE", "hint": ""},
+	"Factory": {"category": "STRUCTURE", "normativity": "not_applicable", "label_kind": "NOT_APPLICABLE", "hint": ""},
+	"Factory.<item>": {"category": "ITEMIZED_TEXT", "normativity": "normative", "label_kind": "QUALIFIED_IDENTIFIER", "hint": ""},
+	"Public_classes": {"category": "LIST_OF_QUALIFIED_IDENTIFIERS", "normativity": "normative", "label_kind": "NOT_APPLICABLE", "hint": ""},
+	"Public_functions": {"category": "LIST_OF_QUALIFIED_IDENTIFIERS", "normativity": "normative", "label_kind": "NOT_APPLICABLE", "hint": ""},
+	"Public_methods": {"category": "LIST_OF_QUALIFIED_IDENTIFIERS", "normativity": "normative", "label_kind": "NOT_APPLICABLE", "hint": ""},
+	"Class_overview": {"category": "STRUCTURE", "normativity": "not_applicable", "label_kind": "NOT_APPLICABLE", "hint": ""},
+	"Class_overview.<item>": {"category": "FREEFORM_TEXT", "normativity": "informative", "label_kind": "IDENTIFIER", "hint": ""},
+	"Method_overview": {"category": "STRUCTURE", "normativity": "not_applicable", "label_kind": "NOT_APPLICABLE", "hint": ""},
+	"Method_overview.<item>": {"category": "FREEFORM_TEXT", "normativity": "informative", "label_kind": "IDENTIFIER", "hint": ""},
+	"Function_overview": {"category": "STRUCTURE", "normativity": "not_applicable", "label_kind": "NOT_APPLICABLE", "hint": ""},
+	"Function_overview.<item>": {"category": "FREEFORM_TEXT", "normativity": "informative", "label_kind": "IDENTIFIER", "hint": ""},
+	"Public_types": {"category": "STRUCTURE", "normativity": "not_applicable", "label_kind": "NOT_APPLICABLE", "hint": ""},
+	"Public_types.<item>": {"category": "FREEFORM_TEXT", "normativity": "normative", "label_kind": "IDENTIFIER", "hint": ""},
+	"Public_variables": {"category": "STRUCTURE", "normativity": "not_applicable", "label_kind": "NOT_APPLICABLE", "hint": ""},
+	"Public_variables.<item>": {"category": "FREEFORM_TEXT", "normativity": "normative", "label_kind": "IDENTIFIER", "hint": ""},
+	"Public_constants": {"category": "STRUCTURE", "normativity": "not_applicable", "label_kind": "NOT_APPLICABLE", "hint": ""},
+	"Public_constants.<item>": {"category": "FREEFORM_TEXT", "normativity": "normative", "label_kind": "IDENTIFIER", "hint": ""},
+	"Parameters": {"category": "STRUCTURE", "normativity": "not_applicable", "label_kind": "NOT_APPLICABLE", "hint": ""},
+	"Parameters.<item>": {"category": "FREEFORM_TEXT", "normativity": "normative", "label_kind": "IDENTIFIER", "hint": ""},
+	"Returns": {"category": "FREEFORM_TEXT", "normativity": "normative", "label_kind": "NOT_APPLICABLE", "hint": ""},
+	"Raises": {"category": "STRUCTURE", "normativity": "not_applicable", "label_kind": "NOT_APPLICABLE", "hint": ""},
+	"Raises.<item>": {"category": "ITEMIZED_TEXT", "normativity": "normative", "label_kind": "QUALIFIED_IDENTIFIER", "hint": ""},
+	"Notes": {"category": "STRUCTURE", "normativity": "not_applicable", "label_kind": "NOT_APPLICABLE", "hint": ""},
+	"Notes.<item>": {"category": "FREEFORM_TEXT", "normativity": "informative", "label_kind": "ANY_STRING", "hint": ""},
+	"See_also": {"category": "LIST_OF_QUALIFIED_IDENTIFIERS", "normativity": "can_be_both", "label_kind": "NOT_APPLICABLE", "hint": ""},
 }
 
-SECTION_TO_SUBSECTIONS_BY_PROFILE = {
+SECTION_TO_SUBSECTIONS_BY_PROFILE: Final[Dict[Profile_t, Dict[str, List[str]]]] = {
 	"module": {
 		"Preamble": ["profile", "normative_sections", "status", "scope"],
 		"Definitions": ["<item>"],
@@ -237,227 +239,174 @@ SECTION_TO_SUBSECTIONS_BY_PROFILE = {
 	},
 }
 
-# Main section names per profile, derived from the normative section/subsection map.
-SECTIONS_BY_PROFILE: Final[Dict[str, List[str]]] = {
+SECTIONS_BY_PROFILE: Final[Dict[Profile_t, List[str]]] = {
 	profile: list(section_map.keys())
 	for profile, section_map in SECTION_TO_SUBSECTIONS_BY_PROFILE.items()
 }
 
-class ExplainSection_t(TypedDict):
-	label: str
-	title: str
-	category: str
-	normativity: str
-	role_notes: list[str]
-	roles: list[str]
-	body: list[str]
-	template: list[str]
-	hint: list[str]
-	try_next: list[str]
-
-
 _COMMON_ROLE_NOTES = [
 	"Semantic roles are the named sub-parts used inside a body, for example parameters, return values, notes, or references.",
+	"Inline markup roles are: " + ", ".join(WTRL_MARKUP_ROLE_LIST) + ".",
 	"Keep one indentation level per nesting level; structure is expressed by TAB-indented bullets and lines, not by decorative spacing.",
 ]
 
-_COMMON_HINTS = {
-	"Contract": [
-		"try waterlint explain-section --label Contract",
-		"Contract is the normative core of the docstring section.",
-	],
-	"Preamble": [
-		"try waterlint explain-section --label Preamble",
-		"Preamble declares the profile and the normative section set.",
-	],
-	"Parameters": [
-		"try waterlint explain-section --label Parameters",
-		"Parameters list formal arguments in a callable docstring.",
-	],
-	"Returns": [
-		"try waterlint explain-section --label Returns",
-		"Returns describes the returned value or object.",
-	],
-	"Raises": [
-		"try waterlint explain-section --label Raises",
-		"Raises lists documented exceptions and their conditions.",
-	],
-	"Notes": [
-		"try waterlint explain-section --label Notes",
-		"Notes stays informative unless the surrounding profile explicitly makes it normative.",
-	],
-}
-
-_SECTION_CATALOG: dict[str, ExplainSection_t] = {
+_BASE_SECTION_SPECS: Dict[str, Dict[str, Any]] = {
 	"Contract": {
-		"label": "Contract",
 		"title": "Contract",
-		"category": "normative section",
+		"body_category": "STRUCTURE",
 		"normativity": "normative",
-		"role_notes": _COMMON_ROLE_NOTES,
-		"roles": [
-			"general",
-			"constructor",
-			"requires",
-			"ensures",
-			"invariants",
-		],
 		"body": [
 			"Contract contains the rules that the section enforces.",
 			"It is the place where the validator expects the normative core of the object.",
 		],
-		"template": [
-			"Contract:",
-			"\tgeneral:",
-			"\t\t...",
-			"\tconstructor:",
-			"\t\t...",
+		"hint": [
+			"try waterlint explain-section --label Contract",
+			"Contract is the normative core of the docstring section.",
 		],
-		"hint": _COMMON_HINTS["Contract"],
-		"try_next": [
-			"waterlint explain-subsection --label constructor",
-		],
+		"try_next": ["waterlint explain-subsection --label constructor"],
 	},
 	"Preamble": {
-		"label": "Preamble",
 		"title": "Preamble",
-		"category": "profile declaration section",
+		"body_category": "STRUCTURE",
 		"normativity": "normative",
-		"role_notes": _COMMON_ROLE_NOTES,
-		"roles": [
-			"profile",
-			"normative_sections",
-			"status",
-			"scope",
-		],
 		"body": [
 			"Preamble declares which profile the docstring follows and which sections are normative.",
 			"It is the entry point for validating the rest of the document.",
 		],
-		"template": [
-			"Preamble:",
-			"\tprofile:",
-			"\t\tclass",
-			"\tnormative_sections:",
-			"\t\tContract",
+		"hint": [
+			"try waterlint explain-section --label Preamble",
+			"Preamble declares the profile and the normative section set.",
 		],
-		"hint": _COMMON_HINTS["Preamble"],
 		"try_next": [
 			"waterlint explain-subsection --label profile",
 			"waterlint explain-subsection --label normative_sections",
 		],
 	},
 	"Parameters": {
-		"label": "Parameters",
 		"title": "Parameters",
-		"category": "callable body section",
+		"body_category": "STRUCTURE",
 		"normativity": "normative for callables",
-		"role_notes": _COMMON_ROLE_NOTES,
-		"roles": [
-			"parameter name",
-			"parameter description",
-		],
 		"body": [
-			"Parameters documents the callable signature in a structured way.",
-			"Each parameter becomes a subsection entry with an explanatory body.",
+			"Parameters documents callable arguments in a structured way.",
 		],
-		"template": [
-			"Parameters:",
-			"\targs:",
-			"\t\t...",
+		"hint": [
+			"try waterlint explain-section --label Parameters",
+			"Parameters list formal arguments in a callable docstring.",
 		],
-		"hint": _COMMON_HINTS["Parameters"],
-		"try_next": [
-			"waterlint explain-subsection --label args",
-		],
+		"try_next": ["waterlint explain-subsection --label args"],
 	},
 	"Returns": {
-		"label": "Returns",
 		"title": "Returns",
-		"category": "callable body section",
+		"body_category": "FREEFORM_TEXT",
 		"normativity": "normative for callables",
-		"role_notes": _COMMON_ROLE_NOTES,
-		"roles": [
-			"return value",
-			"return description",
-		],
 		"body": [
 			"Returns documents what the callable yields or returns.",
 		],
-		"template": [
-			"Returns:",
-			"\t...",
+		"hint": [
+			"try waterlint explain-section --label Returns",
+			"Returns describes the returned value or object.",
 		],
-		"hint": _COMMON_HINTS["Returns"],
-		"try_next": [
-			"waterlint explain-subsection --label return_value",
-		],
+		"try_next": ["waterlint explain-subsection --label return_value"],
 	},
 	"Raises": {
-		"label": "Raises",
 		"title": "Raises",
-		"category": "callable body section",
+		"body_category": "STRUCTURE",
 		"normativity": "normative for callables",
-		"role_notes": _COMMON_ROLE_NOTES,
-		"roles": [
-			"exception name",
-			"exception condition",
-		],
 		"body": [
 			"Raises documents documented exception conditions.",
 		],
-		"template": [
-			"Raises:",
-			"\tValueError:",
-			"\t\t...",
+		"hint": [
+			"try waterlint explain-section --label Raises",
+			"Raises lists documented exceptions and their conditions.",
 		],
-		"hint": _COMMON_HINTS["Raises"],
-		"try_next": [
-			"waterlint explain-subsection --label ValueError",
-		],
+		"try_next": ["waterlint explain-subsection --label ValueError"],
 	},
 	"Notes": {
-		"label": "Notes",
 		"title": "Notes",
-		"category": "informational section",
+		"body_category": "STRUCTURE",
 		"normativity": "informative by default",
-		"role_notes": _COMMON_ROLE_NOTES,
-		"roles": [
-			"note topic",
-			"note body",
-		],
 		"body": [
 			"Notes are used for additional guidance that is not part of the normative contract.",
 		],
-		"template": [
-			"Notes:",
-			"\tGeneral note:",
-			"\t\t...",
+		"hint": [
+			"try waterlint explain-section --label Notes",
+			"Notes stays informative unless the surrounding profile explicitly makes it normative.",
 		],
-		"hint": _COMMON_HINTS["Notes"],
-		"try_next": [
-			"waterlint explain-section --label Notes",
-		],
+		"try_next": ["waterlint explain-section --label Notes"],
 	},
 }
 
 
-def get_section_explanation(label: str) -> ExplainSection_t | None:
-	return _SECTION_CATALOG.get(label)
+def _available_profiles_for_label(label: str) -> list[Profile_t]:
+	return [profile for profile, section_map in SECTION_TO_SUBSECTIONS_BY_PROFILE.items() if label in section_map]
+
+
+def build_section_explanation(label: str, profile: Profile_t) -> ExplainSection_t | None:
+	section_map = SECTION_TO_SUBSECTIONS_BY_PROFILE.get(profile)
+	if section_map is None or label not in section_map:
+		return None
+	base = _BASE_SECTION_SPECS.get(label)
+	if base is None:
+		return None
+	cat_info = LABEL_TO_CATEGORY.get(label, {"category": "STRUCTURE", "normativity": "informative", "label_kind": "NOT_APPLICABLE", "hint": ""})
+	allowed_subsections = list(section_map.get(label, []))
+	template: list[str] = [f"{label}:"]
+	if cat_info["category"] == "STRUCTURE":
+		for subsection in allowed_subsections:
+			template.append(f"\t{subsection}:")
+			template.append("\t\t...")
+	elif cat_info["category"] == "FREEFORM_TEXT":
+		template.append("\t...")
+	elif cat_info["category"] == "LIST_OF_IDENTIFIERS":
+		template.append("\titem_1")
+		template.append("\titem_2")
+	elif cat_info["category"] == "LIST_OF_QUALIFIED_IDENTIFIERS":
+		template.append("\tpackage.module.Class")
+		template.append("\tpackage.module.function")
+	elif cat_info["category"] == "IDENTIFIER":
+		template.append("\tidentifier")
+	elif cat_info["category"] == "QUALIFIED_IDENTIFIER":
+		template.append("\tpackage.module.Class")
+	else:
+		template.append("\t...")
+	hint = list(base["hint"])
+	hint.insert(0, f"Profile: {profile}")
+	hint.append(f"Allowed subsections for {label}: {', '.join(allowed_subsections) if allowed_subsections else 'none'}")
+	hint.append(f"try waterlint explain-section --label {label} --profile {profile}")
+	return {
+		"profile": profile,
+		"label": label,
+		"title": base["title"],
+		"body_category": cat_info["category"],
+		"normativity": base["normativity"],
+		"label_kind": cat_info["label_kind"],
+		"available_profiles": _available_profiles_for_label(label),
+		"allowed_subsections": allowed_subsections,
+		"role_notes": list(_COMMON_ROLE_NOTES),
+		"body": list(base["body"]),
+		"template": template,
+		"hint": hint,
+		"try_next": list(base["try_next"]),
+	}
 
 
 def render_explanation_text(spec: ExplainSection_t) -> str:
 	lines: list[str] = []
+	lines.append(f"Profile: {spec['profile']}")
 	lines.append(f"Label: {spec['label']}")
 	lines.append(f"Title: {spec['title']}")
-	lines.append(f"Category: {spec['category']}")
+	lines.append(f"Body category: {spec['body_category']}")
 	lines.append(f"Normativity: {spec['normativity']}")
+	lines.append(f"Label kind: {spec['label_kind']}")
+	lines.append("Available profiles:")
+	for profile in spec["available_profiles"]:
+		lines.append(f"\t- {profile}")
+	lines.append("Allowed subsections:")
+	for subsection in spec["allowed_subsections"]:
+		lines.append(f"\t- {subsection}")
 	lines.append("Role notes:")
-	for role in spec["role_notes"]:
-		lines.append(f"\t- {role}")
-	lines.append("Roles:")
-	for role in spec["roles"]:
-		lines.append(f"\t- {role}")
+	for note in spec["role_notes"]:
+		lines.append(f"\t- {note}")
 	lines.append("Body:")
 	for line in spec["body"]:
 		lines.append(f"\t{line}")
@@ -477,12 +426,15 @@ def render_explanation_text(spec: ExplainSection_t) -> str:
 def render_explanation_json(spec: ExplainSection_t) -> dict[str, Any]:
 	return {
 		"kind": "section_explanation",
+		"profile": spec["profile"],
 		"label": spec["label"],
 		"title": spec["title"],
-		"category": spec["category"],
+		"body_category": spec["body_category"],
 		"normativity": spec["normativity"],
+		"label_kind": spec["label_kind"],
+		"available_profiles": list(spec["available_profiles"]),
+		"allowed_subsections": list(spec["allowed_subsections"]),
 		"role_notes": list(spec["role_notes"]),
-		"roles": list(spec["roles"]),
 		"body": list(spec["body"]),
 		"template": list(spec["template"]),
 		"hint": list(spec["hint"]),
