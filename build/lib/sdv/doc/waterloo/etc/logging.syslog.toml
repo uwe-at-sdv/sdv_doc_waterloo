@@ -1,0 +1,68 @@
+# Waterloo MCP logging configuration template for syslog.
+#
+# This file is intended to be used as the logging config_path in wtrl_mcp.toml.
+# It is a reduced variant of logging.toml that routes the Uvicorn loggers to
+# syslog instead of the terminal.
+#
+# Notes:
+# - Many Linux systems expose syslog at /dev/log.
+# - Other systems may use a different local socket or a network endpoint.
+# - Adjust the address below to match your host.
+# - The dictConfig key "()" is used for the Uvicorn formatter factory.
+
+version = 1
+disable_existing_loggers = false
+
+[formatters.default]
+"()" = "uvicorn.logging.DefaultFormatter"
+fmt = "%(levelprefix)s %(message)s"
+# Cannot recommend to use colors with syslog, does not seem to
+# work properly; last tested 2026-05-31 on Mint Linux.
+use_colors = false
+
+[formatters.waterloo]
+"()" = "uvicorn.logging.DefaultFormatter"
+fmt = "%(levelprefix)s WTRL %(message)s"
+use_colors = false
+
+# Syslog example:
+# - Many Linux systems expose a local syslog socket at /dev/log.
+# - Some systems use a different socket or a UDP/TCP endpoint.
+# - If you enable this handler, switch the logger handlers below from
+#   "default"/"access" to "syslog" as needed.
+#
+[handlers.syslog]
+class = "logging.handlers.SysLogHandler"
+formatter = "default"
+address = "/dev/log"
+facility = "local0"
+
+[handlers.waterloo]
+class = "logging.handlers.SysLogHandler"
+formatter = "waterloo"
+address = "/dev/log"
+facility = "local0"
+
+[loggers.uvicorn]
+level = "INFO"
+handlers = ["syslog"]
+propagate = false
+
+[loggers."uvicorn.error"]
+level = "INFO"
+handlers = ["syslog"]
+propagate = false
+
+[loggers."uvicorn.access"]
+level = "INFO"
+handlers = ["syslog"]
+propagate = false
+
+[loggers."wtrl_mcp"]
+level = "INFO"
+handlers = ["waterloo"]
+propagate = false
+
+[root]
+level = "INFO"
+handlers = ["syslog"]

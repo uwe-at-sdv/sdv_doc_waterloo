@@ -37,6 +37,7 @@ SectionBodyCategory_t = Literal[
 	"FREEFORM_TEXT",
 ]
 
+
 Profile_t = Literal["module", "class", "function", "method", "inherited_method"]
 
 Normativity_t = Literal["not_applicable", "normative", "informative", "can_be_both"]
@@ -46,7 +47,9 @@ LabelKind_t = Literal["IDENTIFIER", "QUALIFIED_IDENTIFIER", "LIST_OF_IDENTIFIERS
 MustExist_t = Literal["yes", "no", "depends_on_context"]
 
 class SectionBodyCategoryExplanation_t(TypedDict):
-	semantic_markup_allowed: bool
+	markup_allowed: bool
+	renders_outer_bullets: bool
+	inner_lists_allowed: bool
 	explanation: list[str]
 
 
@@ -66,6 +69,20 @@ class SubsectionExplainInfo_t(TypedDict):
 	label_kind: LabelKind_t
 
 
+class ItemizationExplain_t(TypedDict, total=False):
+	allowed: bool
+	renders_outer_bullets: bool
+	inner_lists_allowed: bool
+	reason: str
+	explanation: list[str]
+
+
+class FeatureExplain_t(TypedDict, total=False):
+	allowed: bool
+	reason: str
+	explanation: list[str]
+
+
 class ExplainSection_t(TypedDict):
 	profile: Profile_t
 	label: str
@@ -75,58 +92,118 @@ class ExplainSection_t(TypedDict):
 	label_kind: LabelKind_t
 	available_profiles: list[Profile_t]
 	subsections: list[SubsectionExplainInfo_t]
-	role_notes: list[str]
 	body: list[str]
 	template: list[str]
 	hint: list[str]
 	try_next: list[str]
+	itemization: ItemizationExplain_t
+	markup: FeatureExplain_t
 
 
 WTRL_MARKUP_ROLE_LIST: Final[list[str]] = [role for role in WTRL_MARKUP_ROLES.strip("()").split("|") if role]
 
+EXPLAIN_TEMPLATES: Final[Dict[SectionBodyCategory_t, list[str]]] = {
+	"STRUCTURE": [
+		"{label}:",
+		"\t{subsection}:",
+		"\t\t...",
+	],
+	"IDENTIFIER": [
+		"{label}:",
+		"\tidentifier",
+	],
+	"QUALIFIED_IDENTIFIER": [
+		"{label}:",
+		"\tpackage.module.Class",
+	],
+	"LIST_OF_IDENTIFIERS": [
+		"{label}:",
+		"\titem_1, item_2, item_3, ...",
+	],
+	"LIST_OF_QUALIFIED_IDENTIFIERS": [
+		"{label}:",
+		"\tpkg.mod.Class1, pkg.mod.Class2, pkg.mod.Class3, ...",
+	],
+	"ITEMIZED_TEXT": [
+		"{label}:",
+		"\t|MUST| do this.",
+		"\t|MUST| do that.",
+		"\t|Must| do the following task consisting of these steps:",
+		"\t+ |Must| do step1",
+		"\t+ |Must| do step2",
+	],
+	"FREEFORM_TEXT": [
+		"{label}:",
+		"\t...",
+	],
+}
+
 ExplainSectionBodyCategory: Final[Dict[str, SectionBodyCategoryExplanation_t]] = {
 	"STRUCTURE": {
-		"semantic_markup_allowed": False,
+		"markup_allowed": False,
+		"renders_outer_bullets": False,
+		"inner_lists_allowed": False,
+		"reason": "Structured section with subsection-only content.",
 		"explanation": [
 			"The section/subsection contains no freeform text but only defines a structure of subsections and roles.",
 		],
 	},
 	"IDENTIFIER": {
-		"semantic_markup_allowed": False,
+		"markup_allowed": False,
+		"renders_outer_bullets": False,
+		"inner_lists_allowed": False,
+		"reason": "Single identifier body.",
 		"explanation": [
 			"The section/subsection body is expected to be a single identifier, for example a scope or status marker.",
 		],
 	},
 	"QUALIFIED_IDENTIFIER": {
-		"semantic_markup_allowed": False,
+		"markup_allowed": False,
+		"renders_outer_bullets": False,
+		"inner_lists_allowed": False,
+		"reason": "Single qualified identifier body.",
 		"explanation": [
 			"The section/subsection body is expected to be a single qualified identifier, for example a fully qualified type name or a reference to another documented object.",
 		],
 	},
 	"LIST_OF_IDENTIFIERS": {
-		"semantic_markup_allowed": False,
+		"markup_allowed": False,
+		"renders_outer_bullets": False,
+		"inner_lists_allowed": False,
+		"reason": "Flat list of identifiers.",
 		"explanation": [
 			"The section/subsection body is expected to be a list of identifiers, for example a list of definition items.",
 		],
 	},
 	"LIST_OF_QUALIFIED_IDENTIFIERS": {
-		"semantic_markup_allowed": False,
+		"markup_allowed": False,
+		"renders_outer_bullets": False,
+		"inner_lists_allowed": False,
+		"reason": "Flat list of qualified identifiers.",
 		"explanation": [
 			"The section/subsection body is expected to be a list of qualified identifiers, for example a list of method or class names.",
 		],
 	},
 	"ITEMIZED_TEXT": {
-		"semantic_markup_allowed": True,
+		"markup_allowed": True,
+		"renders_outer_bullets": True,
+		"inner_lists_allowed": True,
+		"reason": "Rendered with outer bullets; inner lists allowed.",
 		"explanation": [
-			"The section/subsection body is expected to be a list of freeform text entries.",
-			"Itemization is expressed by bullets and lines, not by decorative spacing.",
+			"The section/subsection body is rendered with outer bullets for each logical line.",
+			"Waterloo itemization is flat in the source text: nesting is expressed by the choice of list marker, not by indentation.",
+			"Inner lists may still be built inside a logical item.",
 		],
 	},
 	"FREEFORM_TEXT": {
-		"semantic_markup_allowed": True,
+		"markup_allowed": True,
+		"renders_outer_bullets": False,
+		"inner_lists_allowed": True,
+		"reason": "Rendered without outer bullets; inner lists allowed.",
 		"explanation": [
-			"The section/subsection body is expected to be freeform text, for example a general description or a note.",
-			"As opposed to itemized text, the body is not expected to be structured into separate entries but can be a single freeform block.",
+			"The section/subsection body is rendered without outer bullets.",
+			"The body may still contain inner lists when the content benefits from structured sub-points.",
+			"As opposed to itemized text, the main body is not split into outer list items by the renderer.",
 		],
 	},
 }
@@ -353,74 +430,99 @@ SECTION_PROPERTIES: Final[Dict[str, SectionPropertyInfo_t]] = {
 	"See_also": {"category": "LIST_OF_QUALIFIED_IDENTIFIERS", "normativity": "can_be_both", "label_kind": "NOT_APPLICABLE", "profile": ["module","class","function","method","inherited_method"], "must_exist": "no", "hint": ""},
 }
 
+_PROFILE_ORDER: Final[list[Profile_t]] = ["module", "class", "function", "method", "inherited_method"]
+
+SECTION_SUBSECTIONS: Final[Dict[str, Dict[Profile_t, List[str]]]] = {
+	"Preamble": {
+		profile: ["profile", "normative_sections", "status", "scope"]
+		for profile in _PROFILE_ORDER
+	},
+	"Definitions": {
+		profile: ["<item>", "_inherit"] if profile in ("class", "function", "method", "inherited_method") else ["<item>"]
+		for profile in _PROFILE_ORDER
+	},
+	"Terminology": {
+		profile: ["<item>"]
+		for profile in _PROFILE_ORDER
+	},
+	"Description": {
+		profile: []
+		for profile in _PROFILE_ORDER
+	},
+	"Notes": {
+		profile: ["<item>"]
+		for profile in _PROFILE_ORDER
+	},
+	"See_also": {
+		profile: []
+		for profile in _PROFILE_ORDER
+	},
+	"Contract": {
+		"module": ["general"],
+		"class": ["general", "constructor", "traits"],
+		"function": ["general", "invariants", "requires", "ensures"],
+		"method": ["general", "invariants", "requires", "ensures"],
+		"inherited_method": ["general", "base"],
+	},
+	"Public_classes": {
+		"module": [],
+		"class": [],
+	},
+	"Class_overview": {
+		profile: ["<item>"]
+		for profile in ("module", "class")
+	},
+	"Public_functions": {
+		"module": [],
+	},
+	"Function_overview": {
+		"module": ["<item>"],
+	},
+	"Public_types": {
+		profile: ["<item>"]
+		for profile in ("module", "class")
+	},
+	"Public_variables": {
+		profile: ["<item>"]
+		for profile in ("module", "class")
+	},
+	"Public_constants": {
+		profile: ["<item>"]
+		for profile in ("module", "class")
+	},
+	"Derived_from": {
+		"class": [],
+	},
+	"Public_methods": {
+		"class": [],
+	},
+	"Method_overview": {
+		"class": ["<item>"],
+	},
+	"Factory": {
+		"class": ["<item>"],
+	},
+	"Parameters": {
+		profile: ["<item>"]
+		for profile in ("function", "method")
+	},
+	"Returns": {
+		profile: []
+		for profile in ("function", "method")
+	},
+	"Raises": {
+		profile: ["<item>"]
+		for profile in ("function", "method")
+	},
+}
+
 SECTION_TO_SUBSECTIONS_BY_PROFILE: Final[Dict[Profile_t, Dict[str, List[str]]]] = {
-	"module": {
-		"Preamble": ["profile", "normative_sections", "status", "scope"],
-		"Definitions": ["<item>"],
-		"Terminology": ["<item>"],
-		"Description": [],
-		"Notes": ["<item>"],
-		"See_also": [],
-		"Contract": ["general"],
-		"Public_classes": [],
-		"Class_overview": ["<item>"],
-		"Public_functions": [],
-		"Function_overview": ["<item>"],
-		"Public_types": ["<item>"],
-		"Public_variables": ["<item>"],
-		"Public_constants": ["<item>"],
-	},
-	"class": {
-		"Preamble": ["profile", "normative_sections", "status", "scope"],
-		"Definitions": ["<item>", "_inherit"],
-		"Terminology": ["<item>"],
-		"Description": [],
-		"Notes": ["<item>"],
-		"See_also": [],
-		"Contract": ["general", "constructor", "traits"],
-		"Derived_from": [],
-		"Public_classes": [],
-		"Class_overview": ["<item>"],
-		"Public_methods": [],
-		"Method_overview": ["<item>"],
-		"Public_types": ["<item>"],
-		"Public_variables": ["<item>"],
-		"Public_constants": ["<item>"],
-		"Factory": ["<item>"],
-	},
-	"function": {
-		"Preamble": ["profile", "normative_sections", "status", "scope"],
-		"Definitions": ["<item>", "_inherit"],
-		"Terminology": ["<item>"],
-		"Description": [],
-		"Notes": ["<item>"],
-		"See_also": [],
-		"Contract": ["general", "invariants", "requires", "ensures"],
-		"Parameters": ["<item>"],
-		"Returns": [],
-		"Raises": ["<item>"],
-	},
-	"method": {
-		"Preamble": ["profile", "normative_sections", "status", "scope"],
-		"Definitions": ["<item>", "_inherit"],
-		"Terminology": ["<item>"],
-		"Description": [],
-		"Notes": ["<item>"],
-		"See_also": [],
-		"Contract": ["general", "invariants", "requires", "ensures"],
-		"Parameters": ["<item>"],
-		"Returns": [],
-		"Raises": ["<item>"],
-	},
-	"inherited_method": {
-		"Preamble": ["profile", "normative_sections", "status", "scope"],
-		"Definitions": ["<item>", "_inherit"],
-		"Terminology": ["<item>"],
-		"Description": [],
-		"Notes": ["<item>"],
-		"See_also": [],
-		"Contract": ["general", "base"],
-	},
+	profile: {
+		label: list(profile_map[profile])
+		for label, profile_map in SECTION_SUBSECTIONS.items()
+		if profile in profile_map
+	}
+	for profile in _PROFILE_ORDER
 }
 
 SECTIONS_BY_PROFILE: Final[Dict[Profile_t, List[str]]] = {
@@ -428,22 +530,54 @@ SECTIONS_BY_PROFILE: Final[Dict[Profile_t, List[str]]] = {
 	for profile, section_map in SECTION_TO_SUBSECTIONS_BY_PROFILE.items()
 }
 
-_COMMON_ROLE_NOTES = [
-	"Semantic roles are the named sub-parts used inside a body, for example parameters, return values, notes, or references.",
-	"Inline markup roles are: " + ", ".join(WTRL_MARKUP_ROLE_LIST) + ".",
-	"Keep one indentation level per nesting level; structure is expressed by TAB-indented bullets and lines, not by decorative spacing.",
-]
-
 _BASE_SECTION_SPECS: Dict[str, Dict[str, Any]] = {
+	"Definitions": {
+		"title": "Definitions",
+		"body": [
+			"Definitions introduces normative terms that are used later in the docstring.",
+			"Each subsection label is a comma-separated list of identifiers.",
+			"The first identifier names the canonical term; following identifiers name spelling or form variations of the same term.",
+			"For example, the term sensitive may be introduced together with Sensitive and Sensitivity.",
+		],
+		"hint": [
+			"try waterlint explain-section --label Definitions --profile class",
+			"Definitions is the normative glossary of the docstring scope; each subsection header is a CSV list of Identifier tokens, with the first token naming the term and the remaining tokens naming variations.",
+		],
+		"try_next": ["waterlint explain-subsection --label <item>"],
+	},
+	"Terminology": {
+		"title": "Terminology",
+		"body": [
+			"Terminology collects informative term explanations and background notes.",
+			"It helps readers understand the document without adding new normative requirements.",
+		],
+		"hint": [
+			"try waterlint explain-section --label Terminology --profile class",
+			"Terminology is informative and complements Definitions.",
+		],
+		"try_next": ["waterlint explain-subsection --label <item>"],
+	},
+	"Description": {
+		"title": "Description",
+		"body": [
+			"Description gives the general prose description of the object or scope.",
+			"It may be normative or informative depending on the surrounding profile and context.",
+		],
+		"hint": [
+			"try waterlint explain-section --label Description --profile module",
+			"Description is the general prose block for a documented object.",
+		],
+		"try_next": ["waterlint explain-subsection --label <item>"],
+	},
 	"Contract": {
 		"title": "Contract",
 		"body": [
-			"Contract contains the rules that the section enforces.",
-			"It is the place where the validator expects the normative core of the object.",
+			"Contract contains the normative rules that the section enforces.",
+			"It is the place where the validator expects the executable core of the documented object.",
 		],
 		"hint": [
 			"try waterlint explain-section --label Contract",
-			"Contract is the normative core of the docstring section.",
+			"Contract is the normative core of the docstring section and the place where the tool checks the required structure.",
 		],
 		"try_next": ["waterlint explain-subsection --label constructor"],
 	},
@@ -451,11 +585,11 @@ _BASE_SECTION_SPECS: Dict[str, Dict[str, Any]] = {
 		"title": "Preamble",
 		"body": [
 			"Preamble declares which profile the docstring follows and which sections are normative.",
-			"It is the entry point for validating the rest of the document.",
+			"It is the entry point for validating the rest of the document and for interpreting the remaining sections.",
 		],
 		"hint": [
 			"try waterlint explain-section --label Preamble",
-			"Preamble declares the profile and the normative section set.",
+			"Preamble declares the profile, the normative section set, and the overall validation context.",
 		],
 		"try_next": [
 			"waterlint explain-subsection --label profile",
@@ -466,10 +600,11 @@ _BASE_SECTION_SPECS: Dict[str, Dict[str, Any]] = {
 		"title": "Parameters",
 		"body": [
 			"Parameters documents callable arguments in a structured way.",
+			"Each subsection header names one formal parameter, and the subsection body explains its role, constraints, and expected value shape.",
 		],
 		"hint": [
 			"try waterlint explain-section --label Parameters",
-			"Parameters list formal arguments in a callable docstring.",
+			"Parameters lists the formal arguments of a callable and explains each argument separately.",
 		],
 		"try_next": ["waterlint explain-subsection --label args"],
 	},
@@ -477,10 +612,11 @@ _BASE_SECTION_SPECS: Dict[str, Dict[str, Any]] = {
 		"title": "Returns",
 		"body": [
 			"Returns documents what the callable yields or returns.",
+			"The block explains the value shape, the semantic meaning, and any important postconditions for the result.",
 		],
 		"hint": [
 			"try waterlint explain-section --label Returns",
-			"Returns describes the returned value or object.",
+			"Returns describes the returned value or object and its expected meaning.",
 		],
 		"try_next": ["waterlint explain-subsection --label return_value"],
 	},
@@ -488,10 +624,11 @@ _BASE_SECTION_SPECS: Dict[str, Dict[str, Any]] = {
 		"title": "Raises",
 		"body": [
 			"Raises documents documented exception conditions.",
+			"Each subsection header names an exception type, and the subsection body explains the condition under which it is raised.",
 		],
 		"hint": [
 			"try waterlint explain-section --label Raises",
-			"Raises lists documented exceptions and their conditions.",
+			"Raises lists the documented exception types and the conditions that trigger them.",
 		],
 		"try_next": ["waterlint explain-subsection --label ValueError"],
 	},
@@ -499,6 +636,7 @@ _BASE_SECTION_SPECS: Dict[str, Dict[str, Any]] = {
 		"title": "Notes",
 		"body": [
 			"Notes are used for additional guidance that is not part of the normative contract.",
+			"They are the place for caveats, examples, implementation notes, and other reader-oriented information.",
 		],
 		"hint": [
 			"try waterlint explain-section --label Notes",
@@ -506,22 +644,181 @@ _BASE_SECTION_SPECS: Dict[str, Dict[str, Any]] = {
 		],
 		"try_next": ["waterlint explain-section --label Notes"],
 	},
+	"See_also": {
+		"title": "See_also",
+		"body": [
+			"See_also lists related documented objects or references.",
+			"It is typically used to connect the current object to sibling sections, inherited material, or external targets.",
+		],
+		"hint": [
+			"try waterlint explain-section --label See_also --profile module",
+			"See_also is the cross-reference section for related documented objects and targets.",
+		],
+		"try_next": ["waterlint explain-subsection --label <item>"],
+	},
+	"Public_classes": {
+		"title": "Public_classes",
+		"body": [
+			"Public_classes lists the public class objects that belong to this module or class.",
+			"Each entry is a fully qualified class name.",
+		],
+		"hint": [
+			"try waterlint explain-section --label Public_classes --profile module",
+			"Public_classes is the scope-local list of public classes.",
+		],
+		"try_next": ["waterlint explain-subsection --label <item>"],
+	},
+	"Public_functions": {
+		"title": "Public_functions",
+		"body": [
+			"Public_functions lists the public function objects that belong to this module.",
+			"Each entry is a fully qualified function name.",
+		],
+		"hint": [
+			"try waterlint explain-section --label Public_functions --profile module",
+			"Public_functions is the module-local list of public functions.",
+		],
+		"try_next": ["waterlint explain-subsection --label <item>"],
+	},
+	"Public_methods": {
+		"title": "Public_methods",
+		"body": [
+			"Public_methods lists the public method objects that belong to this class.",
+			"Each entry is a fully qualified method name.",
+		],
+		"hint": [
+			"try waterlint explain-section --label Public_methods --profile class",
+			"Public_methods is the class-local list of public methods.",
+		],
+		"try_next": ["waterlint explain-subsection --label <item>"],
+	},
+	"Public_types": {
+		"title": "Public_types",
+		"body": [
+			"Public_types lists the public type declarations exported by the current scope.",
+			"Each entry names a public type, type alias, or other type-level declaration that is meant to be visible to readers and tools.",
+		],
+		"hint": [
+			"try waterlint explain-section --label Public_types --profile module",
+			"Public_types is the scope-local list of public type declarations and aliases.",
+		],
+		"try_next": ["waterlint explain-subsection --label <item>"],
+	},
+	"Public_variables": {
+		"title": "Public_variables",
+		"body": [
+			"Public_variables lists public variables that belong to this module or class.",
+			"Each entry names a public variable exported by the scope.",
+		],
+		"hint": [
+			"try waterlint explain-section --label Public_variables --profile module",
+			"Public_variables is the scope-local list of public variables.",
+		],
+		"try_next": ["waterlint explain-subsection --label <item>"],
+	},
+	"Public_constants": {
+		"title": "Public_constants",
+		"body": [
+			"Public_constants lists public constants that belong to this module or class.",
+			"Each entry names a public constant exported by the scope.",
+		],
+		"hint": [
+			"try waterlint explain-section --label Public_constants --profile module",
+			"Public_constants is the scope-local list of public constants.",
+		],
+		"try_next": ["waterlint explain-subsection --label <item>"],
+	},
+	"Class_overview": {
+		"title": "Class_overview",
+		"body": [
+			"Class_overview gives a short prose summary for each public class in the current scope.",
+			"Each item is a reader-oriented narrative for one class, not a normative declaration.",
+		],
+		"hint": [
+			"try waterlint explain-section --label Class_overview --profile module",
+			"Class_overview is the informative companion to Public_classes.",
+		],
+		"try_next": ["waterlint explain-subsection --label <item>"],
+	},
+	"Method_overview": {
+		"title": "Method_overview",
+		"body": [
+			"Method_overview gives a short prose summary for each public method in the current class.",
+			"Each item is a reader-oriented narrative for one method, not a normative declaration.",
+		],
+		"hint": [
+			"try waterlint explain-section --label Method_overview --profile class",
+			"Method_overview is the informative companion to Public_methods.",
+		],
+		"try_next": ["waterlint explain-subsection --label <item>"],
+	},
+	"Function_overview": {
+		"title": "Function_overview",
+		"body": [
+			"Function_overview gives a short prose summary for each public function in the current module.",
+			"Each item is a reader-oriented narrative for one function, not a normative declaration.",
+		],
+		"hint": [
+			"try waterlint explain-section --label Function_overview --profile module",
+			"Function_overview is the informative companion to Public_functions.",
+		],
+		"try_next": ["waterlint explain-subsection --label <item>"],
+	},
+	"Derived_from": {
+		"title": "Derived_from",
+		"body": [
+			"Derived_from lists the qualified identifiers that this class is derived from.",
+			"It records the immediate ancestry or derivation sources of the class.",
+		],
+		"hint": [
+			"try waterlint explain-section --label Derived_from --profile class",
+			"Derived_from names the class ancestry or derivation sources as qualified identifiers.",
+		],
+		"try_next": ["waterlint explain-subsection --label <item>"],
+	},
+	"Factory": {
+		"title": "Factory",
+		"body": [
+			"Factory describes creation or retrieval entry points for the class.",
+			"Use it for alternate constructors, class methods, or other qualified entry points that create, load, or return a related object.",
+		],
+		"hint": [
+			"try waterlint explain-section --label Factory --profile class",
+			"Factory is the creation-oriented companion to the class contract.",
+		],
+		"try_next": ["waterlint explain-subsection --label <item>"],
+	},
 }
 
 
 def _available_profiles_for_label(label: str) -> list[Profile_t]:
-	return [profile for profile, section_map in SECTION_TO_SUBSECTIONS_BY_PROFILE.items() if label in section_map]
+	profile_map = SECTION_SUBSECTIONS.get(label, {})
+	return [profile for profile in _PROFILE_ORDER if profile in profile_map]
+
+
+def _build_template_lines(label: str, body_category: SectionBodyCategory_t, allowed_subsections: list[str]) -> list[str]:
+	if body_category == "STRUCTURE":
+		template = [EXPLAIN_TEMPLATES["STRUCTURE"][0].format(label=label)]
+		for subsection in allowed_subsections:
+			template.append(EXPLAIN_TEMPLATES["STRUCTURE"][1].format(subsection=subsection))
+			template.append(EXPLAIN_TEMPLATES["STRUCTURE"][2])
+		return template
+	return [line.format(label=label) for line in EXPLAIN_TEMPLATES[body_category]]
 
 
 def build_section_explanation(label: str, profile: Profile_t) -> ExplainSection_t | None:
-	section_map = SECTION_TO_SUBSECTIONS_BY_PROFILE.get(profile)
-	if section_map is None or label not in section_map:
+	profile_map = SECTION_SUBSECTIONS.get(label)
+	if profile_map is None or profile not in profile_map:
 		return None
 	base = _BASE_SECTION_SPECS.get(label)
 	if base is None:
 		return None
-	cat_info = SECTION_PROPERTIES.get(label, {"category": "STRUCTURE", "normativity": "informative", "label_kind": "NOT_APPLICABLE", "hint": ""})
-	allowed_subsections = list(section_map.get(label, []))
+	# We assume that the label exists in the mapping, so we can directly access it without checking for existence.
+	# The caller must ensure that the label exists in the mapping before calling this function.
+	cat_info = SECTION_PROPERTIES.get(label)
+	if cat_info is None:
+		return None
+	allowed_subsections = list(profile_map.get(profile, []))
 	subsections: list[SubsectionExplainInfo_t] = []
 	for subsection in allowed_subsections:
 		sub_label = f"{label}.{subsection}"
@@ -537,30 +834,62 @@ def build_section_explanation(label: str, profile: Profile_t) -> ExplainSection_
 				"label_kind": sub_info["label_kind"],
 			}
 		)
-	template: list[str] = [f"{label}:"]
-	if cat_info["category"] == "STRUCTURE":
-		for subsection in allowed_subsections:
-			template.append(f"\t{subsection}:")
-			template.append("\t\t...")
-	elif cat_info["category"] == "FREEFORM_TEXT":
-		template.append("\t...")
-	elif cat_info["category"] == "LIST_OF_IDENTIFIERS":
-		template.append("\titem_1")
-		template.append("\titem_2")
-	elif cat_info["category"] == "LIST_OF_QUALIFIED_IDENTIFIERS":
-		template.append("\tpackage.module.Class")
-		template.append("\tpackage.module.function")
-	elif cat_info["category"] == "IDENTIFIER":
-		template.append("\tidentifier")
-	elif cat_info["category"] == "QUALIFIED_IDENTIFIER":
-		template.append("\tpackage.module.Class")
-	else:
-		template.append("\t...")
+	template = _build_template_lines(label, cat_info["category"], allowed_subsections)
 	hint = list(base["hint"])
 	hint.insert(0, f"Profile: {profile}")
 	hint.append(f"Subsections for {label}: {', '.join(allowed_subsections) if allowed_subsections else 'none'}")
 	hint.append(f"try waterlint explain-section --label {label} --profile {profile}")
-	return {
+
+	feature_category = ExplainSectionBodyCategory[cat_info["category"]]
+	itemization: ItemizationExplain_t = {
+		"allowed": feature_category["renders_outer_bullets"],
+		"renders_outer_bullets": feature_category["renders_outer_bullets"],
+		"inner_lists_allowed": feature_category["inner_lists_allowed"],
+		"reason": feature_category["reason"],
+	}
+	if feature_category["inner_lists_allowed"]:
+		itemization_lines = [
+			"Waterloo itemization inside the body is flat in the source text.",
+			"Inner lists are expressed by the choice of list marker, not by indentation.",
+			"Inner lists may be nested inside a logical item when the content needs sub-points.",
+			"Example:",
+			"|Must| do this.",
+			"|Must| do that.",
+			"|Must| do the following task consisting of these steps:",
+			"+ |Must| do step1",
+			"+ |Must| do step2",
+		]
+		if feature_category["renders_outer_bullets"]:
+			itemization_lines.append(
+				"Renderers may also add outer bullets for each logical line in target formats such as Sphinx / reST."
+			)
+		else:
+			itemization_lines.append(
+				"Renderers do not add outer bullets for the body itself, but inner lists remain available."
+			)
+		itemization["explanation"] = itemization_lines
+	if feature_category["markup_allowed"]:
+		markup_token_lines = [
+			"Waterloo docstrings use inline markup tokens only in free-form content lines.",
+			"Inline markup tokens must not occur in section labels, subsection labels, or list entries in Identifier / Qualified Identifier sections.",
+			"Tokens currently available: |Must|, |must|, |must_not|, |should|, |should_not|, |may|, |may_not|, |None|, |Self|, |True|, |False|.",
+			"Semantic roles use the form |role|`content`, where role is one of: "
+			+ ", ".join(WTRL_MARKUP_ROLE_LIST)
+			+ ".",
+			"Renderers should map the tokens to well-defined target-format constructs and preserve them when no translation is available.",
+		]
+		markup: FeatureExplain_t = {
+			"allowed": True,
+			"reason": "The body category permits semantic markup.",
+			"explanation": markup_token_lines,
+		}
+	else:
+		markup = {
+			"allowed": False,
+			"reason": "The body category does not permit semantic markup.",
+		}
+
+	explanation: ExplainSection_t = {
 		"profile": profile,
 		"label": label,
 		"title": base["title"],
@@ -569,50 +898,18 @@ def build_section_explanation(label: str, profile: Profile_t) -> ExplainSection_
 		"label_kind": cat_info["label_kind"],
 		"available_profiles": _available_profiles_for_label(label),
 		"subsections": subsections,
-		"role_notes": list(_COMMON_ROLE_NOTES),
 		"body": list(base["body"]),
 		"template": template,
 		"hint": hint,
 		"try_next": list(base["try_next"]),
+		"itemization": itemization,
+		"markup": markup,
 	}
+	return explanation
 
 
 def render_explanation_text(spec: ExplainSection_t) -> str:
-	lines: list[str] = []
-	lines.append(f"Profile: {spec['profile']}")
-	lines.append(f"Label: {spec['label']}")
-	lines.append(f"Title: {spec['title']}")
-	lines.append(f"Body category: {spec['body_category']}")
-	lines.append(f"Normativity: {spec['normativity']}")
-	lines.append(f"Label kind: {spec['label_kind']}")
-	lines.append("Available profiles:")
-	for profile in spec["available_profiles"]:
-		lines.append(f"\t- {profile}")
-	lines.append("Subsections:")
-	if spec["subsections"]:
-		for subsection in spec["subsections"]:
-			lines.append(
-				f"\t- {subsection['label']} (normativity={subsection['normativity']}, must_exist={subsection['must_exist']}, label_kind={subsection['label_kind']})"
-			)
-	else:
-		lines.append("\t- none")
-	lines.append("Role notes:")
-	for note in spec["role_notes"]:
-		lines.append(f"\t- {note}")
-	lines.append("Body:")
-	for line in spec["body"]:
-		lines.append(f"\t{line}")
-	lines.append("Template:")
-	for line in spec["template"]:
-		lines.append(f"\t{line}")
-	lines.append("Hint:")
-	for line in spec["hint"]:
-		lines.append(f"\t{line}")
-	if spec["try_next"]:
-		lines.append("Try:")
-		for line in spec["try_next"]:
-			lines.append(f"\t{line}")
-	return "\n".join(lines) + "\n"
+	return "LATER - must implement JSON first"
 
 
 def render_explanation_json(spec: ExplainSection_t) -> dict[str, Any]:
@@ -626,9 +923,10 @@ def render_explanation_json(spec: ExplainSection_t) -> dict[str, Any]:
 		"label_kind": spec["label_kind"],
 		"available_profiles": list(spec["available_profiles"]),
 		"subsections": list(spec["subsections"]),
-		"role_notes": list(spec["role_notes"]),
 		"body": list(spec["body"]),
 		"template": list(spec["template"]),
 		"hint": list(spec["hint"]),
 		"try": list(spec["try_next"]),
+		"itemization": dict(spec["itemization"]),
+		"markup": dict(spec["markup"]),
 	}
