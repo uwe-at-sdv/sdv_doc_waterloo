@@ -37,7 +37,7 @@ allowed_origins = ["http://gilgamesh:6274"]
 
 [[roots]]
 # Possible kind at current state of development: wtrl-json.
-path = "doc-json/wtrl-mcp.wtrl.core.rfc-2119.json"
+path = "doc-json/wtrl_mcp.wtrl.core.rfc-2119.json"
 label = "Waterloo MCP Server and Tool set Reference"
 enabled = true
 kind = "wtrl-json"
