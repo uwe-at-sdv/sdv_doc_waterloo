@@ -59,6 +59,13 @@ class SectionPropertyInfo_t(TypedDict):
 	hint: str
 
 
+class SubsectionExplainInfo_t(TypedDict):
+	label: str
+	normativity: Normativity_t
+	must_exist: MustExist_t
+	label_kind: LabelKind_t
+
+
 class ExplainSection_t(TypedDict):
 	profile: Profile_t
 	label: str
@@ -67,7 +74,7 @@ class ExplainSection_t(TypedDict):
 	normativity: Normativity_t
 	label_kind: LabelKind_t
 	available_profiles: list[Profile_t]
-	allowed_subsections: list[str]
+	subsections: list[SubsectionExplainInfo_t]
 	role_notes: list[str]
 	body: list[str]
 	template: list[str]
@@ -515,6 +522,21 @@ def build_section_explanation(label: str, profile: Profile_t) -> ExplainSection_
 		return None
 	cat_info = SECTION_PROPERTIES.get(label, {"category": "STRUCTURE", "normativity": "informative", "label_kind": "NOT_APPLICABLE", "hint": ""})
 	allowed_subsections = list(section_map.get(label, []))
+	subsections: list[SubsectionExplainInfo_t] = []
+	for subsection in allowed_subsections:
+		sub_label = f"{label}.{subsection}"
+		sub_info = SECTION_PROPERTIES.get(
+			sub_label,
+			{"normativity": "informative", "must_exist": "no", "label_kind": "NOT_APPLICABLE"},
+		)
+		subsections.append(
+			{
+				"label": subsection,
+				"normativity": sub_info["normativity"],
+				"must_exist": sub_info["must_exist"],
+				"label_kind": sub_info["label_kind"],
+			}
+		)
 	template: list[str] = [f"{label}:"]
 	if cat_info["category"] == "STRUCTURE":
 		for subsection in allowed_subsections:
@@ -536,7 +558,7 @@ def build_section_explanation(label: str, profile: Profile_t) -> ExplainSection_
 		template.append("\t...")
 	hint = list(base["hint"])
 	hint.insert(0, f"Profile: {profile}")
-	hint.append(f"Allowed subsections for {label}: {', '.join(allowed_subsections) if allowed_subsections else 'none'}")
+	hint.append(f"Subsections for {label}: {', '.join(allowed_subsections) if allowed_subsections else 'none'}")
 	hint.append(f"try waterlint explain-section --label {label} --profile {profile}")
 	return {
 		"profile": profile,
@@ -546,7 +568,7 @@ def build_section_explanation(label: str, profile: Profile_t) -> ExplainSection_
 		"normativity": cat_info["normativity"],
 		"label_kind": cat_info["label_kind"],
 		"available_profiles": _available_profiles_for_label(label),
-		"allowed_subsections": allowed_subsections,
+		"subsections": subsections,
 		"role_notes": list(_COMMON_ROLE_NOTES),
 		"body": list(base["body"]),
 		"template": template,
@@ -566,9 +588,14 @@ def render_explanation_text(spec: ExplainSection_t) -> str:
 	lines.append("Available profiles:")
 	for profile in spec["available_profiles"]:
 		lines.append(f"\t- {profile}")
-	lines.append("Allowed subsections:")
-	for subsection in spec["allowed_subsections"]:
-		lines.append(f"\t- {subsection}")
+	lines.append("Subsections:")
+	if spec["subsections"]:
+		for subsection in spec["subsections"]:
+			lines.append(
+				f"\t- {subsection['label']} (normativity={subsection['normativity']}, must_exist={subsection['must_exist']}, label_kind={subsection['label_kind']})"
+			)
+	else:
+		lines.append("\t- none")
 	lines.append("Role notes:")
 	for note in spec["role_notes"]:
 		lines.append(f"\t- {note}")
@@ -598,7 +625,7 @@ def render_explanation_json(spec: ExplainSection_t) -> dict[str, Any]:
 		"normativity": spec["normativity"],
 		"label_kind": spec["label_kind"],
 		"available_profiles": list(spec["available_profiles"]),
-		"allowed_subsections": list(spec["allowed_subsections"]),
+		"subsections": list(spec["subsections"]),
 		"role_notes": list(spec["role_notes"]),
 		"body": list(spec["body"]),
 		"template": list(spec["template"]),
