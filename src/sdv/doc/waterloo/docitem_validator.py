@@ -519,9 +519,41 @@ Notes:
 #----- general, constructor must exist ------------------------#
 	with traced_section(tr, "Contract"):
 		if "general" not in node_contract.items():
-			raise_validation_error(tr,obj,"CON-023","Section 'general' does not exist.")
+			details = {
+				"found": [
+					"Contract:",
+				] + [f"\t{subsection}:" for subsection in node_contract.items()],
+				"expected": [
+					"Contract:",
+					"\tgeneral:",
+					"\t\t...",
+					"\tconstructor:",
+					"\t\t...",
+				],
+				"hint": "The Contract section requires subsection 'general'.",
+			}
+			out = "Subsection 'general' does not exist."
+			tr.add_error("CON-023", "validation", out, details)
+			raise ValidationError(out)
 		if "constructor" not in node_contract.items():
-			raise_validation_error(tr,obj,"CON-007","Section 'constructor' does not exist.")
+			details = {
+				"found": [
+					"Contract:",
+					"\tgeneral:",
+					"\t\t...",
+				],
+				"expected": [
+					"Contract:",
+					"\tgeneral:",
+					"\t\t...",
+					"\tconstructor:",
+					"\t\t...",
+				],
+				"hint": "In profile 'class', the Contract section requires subsection 'constructor' in addition to 'general'.",
+			}
+			out = "Subsection 'constructor' does not exist."
+			tr.add_error("CON-007", "validation", out, details)
+			raise ValidationError(out)
 
 		if "api" in node_contract.items():
 			node_api = node_contract._items["api"]

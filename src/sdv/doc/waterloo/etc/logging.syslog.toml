@@ -14,15 +14,15 @@ version = 1
 disable_existing_loggers = false
 
 [formatters.default]
-"()" = "uvicorn.logging.DefaultFormatter"
-fmt = "%(levelprefix)s %(message)s"
+"()" = "sdv.doc.waterloo.mcp.wtrl_logging.GroupingFormatter"
+fmt = "[%(wtrl_request_id)s] %(levelprefix)s %(message)s"
 # Cannot recommend to use colors with syslog, does not seem to
 # work properly; last tested 2026-05-31 on Mint Linux.
 use_colors = false
 
 [formatters.waterloo]
-"()" = "uvicorn.logging.DefaultFormatter"
-fmt = "%(levelprefix)s WTRL %(message)s"
+"()" = "sdv.doc.waterloo.mcp.wtrl_logging.GroupingFormatter"
+fmt = "[%(wtrl_request_id)s] %(levelprefix)s WTRL %(message)s"
 use_colors = false
 
 # Syslog example:

@@ -18,14 +18,14 @@ version = 1
 disable_existing_loggers = false
 
 [formatters.default]
-"()" = "uvicorn.logging.DefaultFormatter"
-fmt = "%(asctime)s %(levelprefix)s %(message)s [%(funcName)s]"
+"()" = "sdv.doc.waterloo.mcp.wtrl_logging.GroupingFormatter"
+fmt = "[%(wtrl_request_id)s] %(asctime)s %(levelprefix)s %(message)s [%(funcName)s]"
 datefmt = "%Y-%m-%dT%H:%M:%S"
 use_colors = true
 
 [formatters.access]
-"()" = "uvicorn.logging.AccessFormatter"
-fmt = '%(asctime)s %(levelprefix)s %(client_addr)s "%(request_line)s" %(status_code)s [%(funcName)s]'
+"()" = "sdv.doc.waterloo.mcp.wtrl_logging.GroupingAccessFormatter"
+fmt = '[%(wtrl_request_id)s] %(asctime)s %(levelprefix)s %(client_addr)s "%(request_line)s" %(status_code)s [%(funcName)s]'
 datefmt = "%Y-%m-%dT%H:%M:%S"
 use_colors = true
 
@@ -40,8 +40,8 @@ formatter = "access"
 stream = "ext://sys.stdout"
 
 [formatters.waterloo]
-"()" = "uvicorn.logging.DefaultFormatter"
-fmt = "%(asctime)s %(levelprefix)s WTRL %(message)s"
+"()" = "sdv.doc.waterloo.mcp.wtrl_logging.GroupingFormatter"
+fmt = "[%(wtrl_request_id)s] %(asctime)s %(levelprefix)s WTRL %(message)s"
 datefmt = "%Y-%m-%dT%H:%M:%S"
 use_colors = true
 

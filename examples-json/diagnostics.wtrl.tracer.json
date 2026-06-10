@@ -1,9 +1,9 @@
 {
-	"$schema": "https://sci-d-vis.com/schema/wtrl-tracer-json-0.0.2.schema.json",
+	"$schema": "https://sci-d-vis.com/schema/wtrl-tracer-json-0.1.0.schema.json",
 	"$id": "urn:waterlint:wtrl-tracer-json:0.2.4:c992279d4887f9389c95e0e4a1d3efc3",
 	"__WTRL_VERSION__": {
 		"waterloo": "0.3.0",
-		"schema": "0.0.2"
+		"schema": "0.1.0"
 	},
 	"__WTRL_DEBUG__": [
 		{
@@ -27,7 +27,17 @@
 			"origin":"validation",
 			"context":["some","context"],
 			"rule-id":"XXX-999",
-			"msg":"Some warning"
+			"msg":"Some warning",
+			"expected":[
+				"Expected shape:",
+				"  Contract:",
+				"    constructor:"
+			],
+			"found":[
+				"Contract:",
+				"  general:"
+			],
+			"hint":"For a class profile, the contract section should define constructor."
 		}
 	],
 	"__WTRL_ERROR__": [
@@ -36,7 +46,18 @@
 			"origin":"validation",
 			"context":["some","context"],
 			"rule-id":"XXX-999",
-			"msg":"Some error"
+			"msg":"Some error",
+			"expected":[
+				"Contract:",
+				"  constructor:",
+				"    <normative description>"
+			],
+			"found":[
+				"Contract:",
+				"  general:",
+				"    ..."
+			],
+			"hint":"In profile 'class', the Contract section requires subsection 'constructor'."
 		}
 	]
 }

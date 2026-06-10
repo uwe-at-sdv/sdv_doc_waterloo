@@ -174,7 +174,7 @@ Error response shape:
 	    "error": 1
 	  },
 	  "diagnostics": {
-	    "$schema": "https://sci-d-vis.com/schema/wtrl-tracer-json-0.0.2.schema.json",
+	    "$schema": "https://sci-d-vis.com/schema/wtrl-tracer-json-0.1.0.schema.json",
 	    "...": "full tracer document"
 	  }
 	}
@@ -359,7 +359,7 @@ Successful response:
 	    "error": 0
 	  },
 	  "diagnostics": {
-	    "$schema": "https://sci-d-vis.com/schema/wtrl-tracer-json-0.0.2.schema.json",
+	    "$schema": "https://sci-d-vis.com/schema/wtrl-tracer-json-0.1.0.schema.json",
 	    "...": "full tracer document"
 	  }
 	}
@@ -380,7 +380,7 @@ Error response (shape):
 	    "error": 1
 	  },
 	  "diagnostics": {
-	    "$schema": "https://sci-d-vis.com/schema/wtrl-tracer-json-0.0.2.schema.json",
+	    "$schema": "https://sci-d-vis.com/schema/wtrl-tracer-json-0.1.0.schema.json",
 	    "__WTRL_ERROR__": [
 	      {
 	        "rule-id": "XTNSN-012"

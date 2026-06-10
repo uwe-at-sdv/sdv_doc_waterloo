@@ -9,6 +9,7 @@ import pkgutil,inspect,importlib
 import ast
 import textwrap
 import builtins
+from datetime import datetime
 from weakref import WeakKeyDictionary
 from contextlib import contextmanager
 
@@ -155,7 +156,7 @@ RULE_ID_WHITELIST: Final[Dict[str, WHITELIST_REASON]] = {
 
 #===== Constants ==============================================#
 
-WTRL_TRACER_JSON_SCHEMA_VERSION = "0.0.2"
+WTRL_TRACER_JSON_SCHEMA_VERSION = "0.1.0"
 
 RE_RULE_ID : Final[str] = r"[A-Z][A-Z][A-Z]+-[0-9][0-9][0-9]+"
 RE_RULE_ID_COMPILED : Final[re.Pattern[str]] = re.compile(RE_RULE_ID)
@@ -1419,6 +1420,36 @@ Public_types:
 		t += "Warnings:\n" + self.to_string_warnings() + "\n"
 		t += "Error:\n" + self.to_string_errors() + "\n"
 		return t
+	def _format_diagnostic_details(self, details: Details) -> str:
+		lines: list[str] = []
+		label_color = "\x1b[38;2;119;119;119m"
+		label_reset = "\x1b[0m"
+		for key in ("found", "expected"):
+			value = details.get(key)
+			if isinstance(value, list) and value:
+				lines.append(f"\t{label_color}{key}:{label_reset}")
+				for line in value:
+					if isinstance(line, str):
+						lines.append(f"\t\t{line}")
+		hint = details.get("hint")
+		if isinstance(hint, str) and hint:
+			lines.append(f"\t{label_color}hint:{label_reset} {hint}")
+		return "".join(f"{line}\n" for line in lines)
+	def _format_diagnostic_line(self, kind: str, origin: Origin, context: tracer.Context, rule_id: RuleId | None, msg: str, details: Details | None = None) -> str:
+		color_map = {
+			"Debug": "\x1b[35m",
+			"Info": "\x1b[32m",
+			"Warning": "\x1b[33m",
+			"Error": "\x1b[31m",
+		}
+		color = color_map.get(kind, "\x1b[0m")
+		head = f"- {color}{kind}\x1b[0m [{origin}] - [{'->'.join(context)}]"
+		if rule_id is not None:
+			head += f" [Rule {rule_id}]"
+		head += f" {msg}\n"
+		if isinstance(details, dict) and details:
+			head += self._format_diagnostic_details(details)
+		return head
 # Refcopy debug, infos, warnings from tr to self.
 # Refcopy errors from tr to self as warnings.
 # We use this e.g. in waterlint render-json.
@@ -1446,22 +1477,41 @@ Public_types:
 			t += self.to_string_errors()
 		t += "----- Tracer----->8---------------------------------------------\n"
 		return t
-	def build_json(self,severity: Severity) -> dict[str, Any]:
+	def build_json(
+		self,
+		severity: Severity,
+		*,
+		schema_version: str | None = None,
+		waterloo_version: str | None = None,
+		id_prefix: str | None = None,
+		include_debug: bool = True,
+	) -> dict[str, Any]:
+		def _lift_diagnostic_fields(entry: dict[str, Any], details: Details | None = None) -> Details:
+			if not isinstance(details, dict):
+				return {}
+			details_payload = dict(details)
+			for key in ("expected", "found", "hint"):
+				if key in details_payload:
+					entry[key] = details_payload.pop(key)
+			return details_payload
+		schema_version = WTRL_TRACER_JSON_SCHEMA_VERSION if schema_version is None else schema_version
 		doc: dict[str, Any] = {
-			"$schema": f"https://sci-d-vis.com/schema/wtrl-tracer-json-{WTRL_TRACER_JSON_SCHEMA_VERSION}.schema.json",
-#			"$id": f"urn:waterlint:{__version__}:diag:{datetime.now().strftime('%Y%m%d%H%M%S')}",
+			"$schema": f"https://sci-d-vis.com/schema/wtrl-tracer-json-{schema_version}.schema.json",
 			"__WTRL_VERSION__": {
-#				"waterloo": docitem.__version__,
-				"schema": WTRL_TRACER_JSON_SCHEMA_VERSION,
+				"schema": schema_version,
 			},
 			"__WTRL_INFO__": [],
 			"__WTRL_WARNING__": [],
 			"__WTRL_ERROR__": [],
 		}
-		if severity <= self.Severity.DEBUG:
+		if waterloo_version is not None:
+			cast(dict[str, Any], doc["__WTRL_VERSION__"])["waterloo"] = waterloo_version
+		if id_prefix is not None:
+			doc["$id"] = f"{id_prefix}:{datetime.now().strftime('%Y%m%d%H%M%S')}"
+		if include_debug and severity <= self.Severity.DEBUG:
 			doc["__WTRL_DEBUG__"] = []
 #----- Debug notes --------------------------------------------#
-		if severity <= self.Severity.DEBUG:
+		if include_debug and severity <= self.Severity.DEBUG:
 			for context,origin,msg in self.gen_debug_notes():
 				dentry: dict[str, Any] = {"kind": "debug", "origin": origin, "msg": msg}
 				dentry["context"] = context
@@ -1477,14 +1527,14 @@ Public_types:
 			for context,rule_id,origin,msg,details in self.gen_warnings():
 				entry = {"kind": "warning", "origin": origin, "rule-id": rule_id, "msg": msg}
 				entry["context"] = context
-				entry["details"] = details
+				entry["details"] = _lift_diagnostic_fields(entry, details)
 				cast(list[dict[str, Any]], doc["__WTRL_WARNING__"]).append(entry)
 #----- Errors -------------------------------------------------#
 		if severity <= self.Severity.ERROR:
 			for context,rule_id,origin,msg,details in self.gen_errors():
 				entry = {"kind": "error", "origin": origin, "rule-id": rule_id, "msg": msg}
 				entry["context"] = context
-				entry["details"] = details
+				entry["details"] = _lift_diagnostic_fields(entry, details)
 				cast(list[dict[str, Any]], doc["__WTRL_ERROR__"]).append(entry)
 		return doc
 
@@ -1507,7 +1557,7 @@ Public_types:
 	def add_debug_note(self,msg : str,origin: Origin = "tool") -> None:
 		self._debug.append((copy.copy(self._names),origin,msg))
 	def to_string_debug_notes(self) -> str:
-		return "".join([f"- \x1b[35mDebug\x1b[0m [{origin}] - [{'->'.join(context)}] {msg}\n"  for context,origin,msg in self._debug])
+		return "".join([self._format_diagnostic_line("Debug", origin, context, None, msg) for context,origin,msg in self._debug])
 # Implement your own pretty printing.
 	def gen_debug_notes(self) -> Generator[Tuple[tracer.Context,Origin,str],None,None]:
 		for context,origin,msg in self._debug:
@@ -1520,7 +1570,7 @@ Public_types:
 	def add_info(self,msg : str,origin: Origin = "tool") -> None:
 		self._infos.append((copy.copy(self._names),origin,msg))
 	def to_string_infos(self) -> str:
-		return "".join([f"- \x1b[32mInfo\x1b[0m [{origin}] - [{'->'.join(context)}] {msg}\n"  for context,origin,msg in self._infos])
+		return "".join([self._format_diagnostic_line("Info", origin, context, None, msg) for context,origin,msg in self._infos])
 # Implement your own pretty printing.
 	def gen_infos(self) -> Generator[Tuple[tracer.Context,Origin,str],None,None]:
 		for context,origin,msg in self._infos:
@@ -1533,7 +1583,7 @@ Public_types:
 	def add_warning(self,rule_id : RuleId, origin: Origin, msg : str,/,details: Details | None = None) -> None:
 		self._warnings.append((copy.copy(self._names),rule_id,origin,msg,details or {}))
 	def to_string_warnings(self) -> str:
-		return "".join([f"- \x1b[33mWarning\x1b[0m [{origin}] - [{'->'.join(context)}] [Rule {rid}] {msg}\n"  for context,rid,origin,msg,details in self._warnings])
+		return "".join([self._format_diagnostic_line("Warning", origin, context, rid, msg, details) for context,rid,origin,msg,details in self._warnings])
 # Implement your own pretty printing.
 	def gen_warnings(self) -> Generator[Tuple[tracer.Context,RuleId,Origin,str,Details],None,None]:
 		for context,rid,origin,msg,details in self._warnings:
@@ -1546,7 +1596,7 @@ Public_types:
 	def add_error(self,rule_id : RuleId, origin: Origin, msg : str,/,details: Details | None = None) -> None:
 		self._errors.append((copy.copy(self._names),rule_id,origin,msg,details or {}))
 	def to_string_errors(self) -> str:
-		return "".join([f"- \x1b[31mError\x1b[0m [{origin}] - [{'->'.join(context)}] [Rule {rid}] {msg}\n"  for context,rid,origin,msg,details in self._errors])
+		return "".join([self._format_diagnostic_line("Error", origin, context, rid, msg, details) for context,rid,origin,msg,details in self._errors])
 # Implement your own pretty printing.
 	def gen_errors(self) -> Generator[Tuple[tracer.Context,RuleId,Origin,str,Details],None,None]:
 		for context,rid,origin,msg,details in self._errors:

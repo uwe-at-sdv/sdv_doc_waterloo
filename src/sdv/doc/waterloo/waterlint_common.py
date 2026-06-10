@@ -44,7 +44,6 @@ import sys
 import traceback
 import importlib.util
 import importlib.resources as importlib_resources
-from datetime import datetime
 from pathlib import Path
 from typing import Any, Callable, cast, Dict, List, Literal, TypeAlias, TypedDict
 
@@ -468,40 +467,15 @@ def build_tracer_json_doc(
 		General note:
 			The resulting JSON document includes metadata such as schema version and Waterloo version,
 			as well as arrays of diagnostic entries categorized by severity (info, warning, error)
-			and optionally debug entries.
+		and optionally debug entries.
 		"""
-	doc: dict[str, Any] = {
-		"$schema": f"{WTRL_SCHEMA_URI_BASE}/wtrl-tracer-json-{schema_version}.schema.json",
-		"$id": f"{id_prefix}:{datetime.now().strftime('%Y%m%d%H%M%S')}",
-		"__WTRL_VERSION__": {
-			"waterloo": waterloo_version,
-			"schema": schema_version,
-		},
-		"__WTRL_INFO__": [],
-		"__WTRL_WARNING__": [],
-		"__WTRL_ERROR__": [],
-	}
-	if include_debug:
-		doc["__WTRL_DEBUG__"] = []
-		for context, origin, msg in tr.gen_debug_notes():
-			dentry: dict[str, Any] = {"kind": "debug", "origin": origin, "msg": msg}
-			dentry["context"] = context
-			cast(list[dict[str, Any]], doc["__WTRL_DEBUG__"]).append(dentry)
-	for context, origin, msg in tr.gen_infos():
-		entry: dict[str, Any] = {"kind": "info", "origin": origin, "msg": msg}
-		entry["context"] = context
-		cast(list[dict[str, Any]], doc["__WTRL_INFO__"]).append(entry)
-	for context, rule_id, origin, msg, details in tr.gen_warnings():
-		entry = {"kind": "warning", "origin": origin, "rule-id": rule_id, "msg": msg}
-		entry["context"] = context
-		entry["details"] = details
-		cast(list[dict[str, Any]], doc["__WTRL_WARNING__"]).append(entry)
-	for context, rule_id, origin, msg, details in tr.gen_errors():
-		entry = {"kind": "error", "origin": origin, "rule-id": rule_id, "msg": msg}
-		entry["context"] = context
-		entry["details"] = details
-		cast(list[dict[str, Any]], doc["__WTRL_ERROR__"]).append(entry)
-	return doc
+	return tr.build_json(
+		tr.Severity.DEBUG if include_debug else tr.Severity.INFO,
+		schema_version=schema_version,
+		waterloo_version=waterloo_version,
+		id_prefix=id_prefix,
+		include_debug=include_debug,
+	)
 
 
 def emit_tracer(

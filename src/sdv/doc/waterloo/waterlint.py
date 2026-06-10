@@ -53,7 +53,8 @@ from jsonschema import Draft202012Validator
 #from jsonschema import JSONDecodeError
 import jsonschema.exceptions
 
-__version__ = "0.15.0"
+__version__ = "0.16.0"
+# - 0.16.0 [2026-06-10]	More details in error message (in progress)
 # - 0.15.0 [2026-06-05]	Subcommand 'render-docker'
 # - 0.14.1 [2026-05-26]	Subcommand 'render-html5': Entries in Public_* and *_overview sections are now links.
 # - 0.14.0 [2026-05-25]	Subcommand `carve` now final, including exhaustive pytests.

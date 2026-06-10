@@ -1,31 +1,42 @@
 r"""
-Preamble:
-	profile:
-		module
-	normative_sections:
-		Contract, Public_functions, Public_constants
-	scope:
-		extension
-Contract:
-	general:
-		|Must| provide the entry point for the Waterloo MCP server.
-Public_functions:
-	read_package_readme, build_app, load_config
-Function_overview:
-	read_package_readme:
-		Provide the content of the package README as a string for use as MCP instructions.
-	build_app:
-		Build the MCP app according to the provided configuration, including loading the configured data roots and defining the MCP tools for accessing them.
-	load_config:
-		Load and validate a Waterloo MCP TOML configuration file, returning a normalized McpConfig object for server startup.
-Public_constants:
-	WTRL_TOOL_DOCS:
-		A global registry mapping canonical tool names to their unwrapped function objects
+	Preamble:
+		profile:
+			module
+		normative_sections:
+			Contract, Public_classes, Public_functions, Public_constants, Public_variables
+		scope:
+			extension
+	Contract:
+		general:
+			|Must| provide the entry point for the Waterloo MCP server.
+	Public_classes:
+		_RequestLogGroupMiddleware
+	Class_overview:
+		_RequestLogGroupMiddleware:
+			Internal ASGI middleware that assigns a request id and log-group key to each HTTP request so the server logs can be grouped per request.
+	Public_functions:
+		read_package_readme, build_app, load_config, parse_roots
+	Function_overview:
+		read_package_readme:
+			Provide the content of the package README as a string for use as MCP instructions.
+		build_app:
+			Build the MCP app according to the provided configuration, including loading the configured data roots and defining the MCP tools for accessing them.
+		load_config:
+			Load and validate a Waterloo MCP TOML configuration file, returning a normalized McpConfig object for server startup.
+		parse_roots:
+			Parse and validate the roots configuration, returning a list of RootConfig objects.
+	Public_constants:
+		WTRL_TOOL_DOCS:
+			A global registry mapping canonical tool names to their unwrapped function objects
+	Public_variables:
+		logger:
+			A module-level logger for the Waterloo MCP server.
 """
 
 from __future__ import annotations
 
 import argparse
+import importlib.resources
 import inspect
 import logging
 import logging.config
@@ -47,8 +58,6 @@ from starlette.types import ASGIApp
 
 from mcp.server.fastmcp import FastMCP
 from mcp.server.fastmcp.server import TransportSecuritySettings
-
-logger = logging.getLogger("wtrl_mcp")
 
 LogLevel_t = Literal["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]
 
@@ -86,10 +95,18 @@ from sdv.doc.waterloo.mcp.wtrl_tools import (
     _root_id_for_path,
     WtrlJsonNode_t,
 )
+from sdv.doc.waterloo.mcp.wtrl_logging import (
+    allocate_request_id,
+    set_log_group_key,
+    reset_request_id,
+    set_request_id,
+)
 
 # Run browser-based MCP-inspector with npx @modelcontextprotocol/inspector 
 
 #----- begin constants and global variables ------------------#
+logger = logging.getLogger("wtrl_mcp")
+
 # Global tool documentation registry
 WTRL_TOOL_DOCS: Final[dict[str, Callable[..., object]]] = {
 	"list_roots": list_roots,
@@ -244,12 +261,32 @@ def _package_root() -> Path:
 	return Path(__file__).resolve().parent.parent
 
 
+def _logging_toml_resource_path() -> str:
+	"""Resolve the absolute path to the installed etc/logging.toml package resource."""
+	ref = importlib.resources.files("sdv.doc.waterloo").joinpath("etc/logging.toml")
+	return str(ref)
+
+
+def _default_root_json_resource_path() -> str:
+	"""Resolve the absolute path to the installed mcp/doc-json default root JSON resource."""
+	ref = importlib.resources.files("sdv.doc.waterloo.mcp").joinpath("doc-json/wtrl_mcp.wtrl.core.rfc-2119.json")
+	return str(ref)
+
+
 def _template_text() -> str:
-	return """# Waterloo MCP server configuration template
+	logging_toml = _logging_toml_resource_path()
+	default_root_json = _default_root_json_resource_path()
+	return f"""# Waterloo MCP server configuration template
 #
 # Save this under etc/ as wtrl_mcp.http.toml or wtrl_mcp.stdio.toml and edit it.
 # Relative paths are resolved against the current directory and the installed
 # Waterloo package root, so the etc/ prefix is intentional.
+#
+# A sequence like
+# $ wtrl_mcp --gen-config-template > /tmp/mcp.toml
+# $ wtrl_mcp --config /tmp/mcp.toml
+# should run out of the box with the default configuration,
+# which includes one root with the default root JSON resource.
 
 [server]
 # transport = "stdio"
@@ -264,17 +301,20 @@ streamable_http_path = "/mcp"
 [security]
 # allowed_hosts = ["127.0.0.1:8000"]
 allowed_hosts = ["127.0.0.1:8000"]
-# allowed_origins = ["http://localhost:6274"]
-allowed_origins = ["http://gilgamesh:6274"]
+# Enter your allowed origins here. This is important if you want to inspect
+# the MCP server with a browser-based client like the MCP Inspector.
+# allowed_origins = ["http://myhost:6274"]
 
 [logging]
 # level = "INFO"
-# config_path = "package_main/src/sdv/doc/waterloo/mcp/logging.toml"
 # access_log = true
+config_path = \"{logging_toml}\"
 
 [[roots]]
 # Possible kind at current state of development: wtrl-json.
-path = "doc-json/wtrl_mcp.wtrl.core.rfc-2119.json"
+# This is a default path in order to get started quickly,
+# but you can change it to point to any valid Waterloo JSON file.
+path = \"{default_root_json}\"
 label = "Waterloo MCP Server and Tool set Reference"
 enabled = true
 kind = "wtrl-json"
@@ -460,7 +500,43 @@ def _resolve_config_path(config_path: Path | None) -> Path:
 			return candidate
 	return config_path
 
-def _parse_roots(raw_roots: object, config_dir: Path) -> list[RootConfig]:
+def parse_roots(raw_roots: object, config_dir: Path) -> list[RootConfig]:
+	r"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+		scope:
+			extension
+	Contract:
+		general:
+			|Must| parse the raw |attr|`[[roots]]` entries from the TOML configuration.
+			|Must| validate that at least one root entry is present and properly structured.
+			|Must| expand user home directory references (|file|`~`) in all paths.
+			|Must| resolve relative paths against |var|`config_dir`.
+			|Must| use absolute paths as-is after home expansion.
+			|Must| canonicalize all final paths via |func|`resolve()` to follow symlinks and normalize separators.
+			|Must| apply label fallback: use path basename if no label, or full path if basename is empty.
+			|Must| apply field defaults: |attr|`enabled` defaults to |value|`True`, |attr|`kind` defaults to |value|`"directory"`.
+			|Must| return a list of normalized |type|`RootConfig` records with absolute paths.
+	Parameters:
+		raw_roots:
+			The raw configuration data from the |attr|`[[roots]]` section of the TOML file.
+			|Must| be a list of TOML tables, where each table represents one Waterloo root.
+		config_dir:
+			The absolute parent directory of the configuration file itself.
+			Used as the base directory for resolving relative paths in root entries.
+	Returns:
+		A list of |type|`RootConfig` records, one per validated root entry.
+		All |attr|`path` fields are resolved to absolute filesystem paths.
+	Raises:
+		ValueError:
+			|May| be raised if |var|`raw_roots` is not a non-empty list,
+			if any entry is not a TOML table,
+			if any entry lacks a |attr|`path` field,
+			or if field values cannot be coerced to expected types.
+	"""
 	roots: list[RootConfig] = []
 	if not isinstance(raw_roots, list) or not raw_roots:
 		raise ValueError("Configuration file must contain at least one [[roots]] entry.")
@@ -546,6 +622,9 @@ def load_config(config_path: Path | None = None) -> McpConfig:
 		allowed_hosts=[str(item) for item in security_data.get("allowed_hosts", [])],
 		allowed_origins=[str(item) for item in security_data.get("allowed_origins", [])],
 	)
+	# If a logging config path is provided, we will attempt to load it during server startup
+	# and pass it to uvicorn. If the path is invalid or the file cannot be loaded,
+	# the server will fail to start with an error message.
 	logging_cfg = LoggingConfig(
 		level=str(logging_data.get("level", "INFO")).strip().upper(),
 		config_path=(
@@ -559,7 +638,7 @@ def load_config(config_path: Path | None = None) -> McpConfig:
 			config_path=(config_dir / logging_cfg.config_path).resolve(),
 			access_log=logging_cfg.access_log,
 		)
-	roots = _parse_roots(roots_data, config_dir)
+	roots = parse_roots(roots_data, config_dir)
 	return McpConfig(server=server, security=security, logging=logging_cfg, roots=roots, source_path=path)
 
 def build_app(config: McpConfig) -> FastMCP:
@@ -779,6 +858,65 @@ def _wrap_browser_cors(app: ASGIApp, origins: list[str]) -> ASGIApp:
 	)
 
 
+class _RequestLogGroupMiddleware:
+	r"""
+	Preamble:
+		profile:
+			class
+		normative_sections:
+			Contract
+		scope:
+			extension
+	Contract:
+		general:
+			|Must| wrap an ASGI application and assign a request id to each HTTP request.
+			|Must| set the request-local log-group key before handing control to the wrapped application.
+			|Must| preserve the request id for the duration of the request task so that application logs and access logs can use the same prefix.
+			|May| leave non-HTTP scopes untouched.
+		constructor:
+			|Must| take the ASGI application to wrap as a parameter.
+			|Must_not| start the server or handle any requests itself.
+	Notes:
+		Purpose:
+			This middleware keeps the log grouping logic local to the MCP server entry point.
+			It lets the formatter show a visible request prefix without forcing the rest of the application to know about the logging transport details.
+		Behavior:
+			The request id is generated sequentially and is currently only intended for human-readable log grouping.
+	"""
+
+	def __init__(self, app: ASGIApp) -> None:
+		self._app = app
+
+	async def __call__(self, scope: dict[str, object], receive, send) -> None:  # type: ignore[override]
+		if scope.get("type") != "http":
+			await self._app(scope, receive, send)
+			return
+
+		request_id = allocate_request_id()
+		method = str(scope.get("method", "HTTP"))
+		path = str(scope.get("path", ""))
+		session_id = None
+		headers = scope.get("headers")
+		if isinstance(headers, list):
+			for key, value in headers:
+				if isinstance(key, bytes) and key.lower() == b"mcp-session-id" and isinstance(value, bytes):
+					session_id = value.decode("utf-8", errors="replace")
+					break
+		group_key = f"{request_id} {method} {path}"
+		if session_id:
+			group_key = f"{group_key} session={session_id}"
+
+		request_token = set_request_id(request_id)
+		set_log_group_key(group_key)
+		# Keep the request id alive for the rest of the request task so that
+		# both the application logs and the later Uvicorn access log line can
+		# see the same request prefix.
+		try:
+			await self._app(scope, receive, send)
+		finally:
+			reset_request_id(request_token)
+
+
 def _print_config_error(exc: Exception) -> None:
 	"""Print a user-facing configuration error."""
 	print(f"wtrl_mcp: {exc}", file=sys.stderr)
@@ -787,11 +925,13 @@ def _print_config_error(exc: Exception) -> None:
 def _run_loaded_config(config: McpConfig) -> None:
 	"""Run the server according to a loaded configuration."""
 	_configure_waterloo_logging(config)
+	logger.info("Using configuration file: %s", config.source_path.resolve())
 	mcp = build_app(config)
 	if config.server.transport == "streamable-http":
 		http_app: ASGIApp = mcp.streamable_http_app()
 		if config.security.allowed_origins:
 			http_app = _wrap_browser_cors(http_app, list(config.security.allowed_origins))
+		http_app = _RequestLogGroupMiddleware(http_app)
 		# Streamable HTTP is exposed directly here so browser clients can
 		# negotiate CORS. SSE stays out of v1.
 		uvicorn.run(
