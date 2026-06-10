@@ -41,18 +41,21 @@ Profile_t = Literal["module", "class", "function", "method", "inherited_method"]
 
 Normativity_t = Literal["not_applicable", "normative", "informative", "can_be_both"]
 
-LabelKind_t = Literal["IDENTIFIER", "QUALIFIED_IDENTIFIER", "ANY_STRING", "NOT_APPLICABLE"]
+LabelKind_t = Literal["IDENTIFIER", "QUALIFIED_IDENTIFIER", "LIST_OF_IDENTIFIERS", "ANY_STRING", "NOT_APPLICABLE"]
 
+MustExist_t = Literal["yes", "no", "depends_on_context"]
 
 class SectionBodyCategoryExplanation_t(TypedDict):
 	semantic_markup_allowed: bool
 	explanation: list[str]
 
 
-class LabelCategoryInfo_t(TypedDict):
+class SectionPropertyInfo_t(TypedDict):
 	category: SectionBodyCategory_t
 	normativity: Normativity_t
 	label_kind: LabelKind_t
+	profile: list[Profile_t] | None
+	must_exist: MustExist_t
 	hint: str
 
 
@@ -121,52 +124,226 @@ ExplainSectionBodyCategory: Final[Dict[str, SectionBodyCategoryExplanation_t]] =
 	},
 }
 
-LABEL_TO_CATEGORY: Final[Dict[str, LabelCategoryInfo_t]] = {
-	"Preamble": {"category": "STRUCTURE", "normativity": "not_applicable", "label_kind": "NOT_APPLICABLE", "hint": ""},
-	"Preamble.profile": {"category": "IDENTIFIER", "normativity": "not_applicable", "label_kind": "NOT_APPLICABLE", "hint": ""},
-	"Preamble.normative_sections": {"category": "LIST_OF_IDENTIFIERS", "normativity": "not_applicable", "label_kind": "NOT_APPLICABLE", "hint": ""},
-	"Preamble.status": {"category": "IDENTIFIER", "normativity": "not_applicable", "label_kind": "NOT_APPLICABLE", "hint": ""},
-	"Preamble.scope": {"category": "LIST_OF_IDENTIFIERS", "normativity": "not_applicable", "label_kind": "NOT_APPLICABLE", "hint": ""},
-	"Definitions": {"category": "STRUCTURE", "normativity": "not_applicable", "label_kind": "NOT_APPLICABLE", "hint": ""},
-	"Definitions.<item>": {"category": "FREEFORM_TEXT", "normativity": "normative", "label_kind": "IDENTIFIER", "hint": ""},
-	"Definitions._inherit": {"category": "LIST_OF_IDENTIFIERS", "normativity": "normative", "label_kind": "NOT_APPLICABLE", "hint": ""},
-	"Terminology": {"category": "STRUCTURE", "normativity": "not_applicable", "label_kind": "NOT_APPLICABLE", "hint": ""},
-	"Terminology.<item>": {"category": "FREEFORM_TEXT", "normativity": "informative", "label_kind": "ANY_STRING", "hint": ""},
-	"Contract": {"category": "STRUCTURE", "normativity": "not_applicable", "label_kind": "NOT_APPLICABLE", "hint": ""},
-	"Contract.general": {"category": "ITEMIZED_TEXT", "normativity": "normative", "label_kind": "NOT_APPLICABLE", "hint": ""},
-	"Contract.constructor": {"category": "ITEMIZED_TEXT", "normativity": "normative", "label_kind": "NOT_APPLICABLE", "hint": ""},
-	"Contract.base": {"category": "QUALIFIED_IDENTIFIER", "normativity": "normative", "label_kind": "NOT_APPLICABLE", "hint": ""},
-	"Contract.traits": {"category": "LIST_OF_IDENTIFIERS", "normativity": "normative", "label_kind": "NOT_APPLICABLE", "hint": ""},
-	"Contract.invariants": {"category": "ITEMIZED_TEXT", "normativity": "normative", "label_kind": "NOT_APPLICABLE", "hint": ""},
-	"Contract.requires": {"category": "ITEMIZED_TEXT", "normativity": "normative", "label_kind": "NOT_APPLICABLE", "hint": ""},
-	"Contract.ensures": {"category": "ITEMIZED_TEXT", "normativity": "normative", "label_kind": "NOT_APPLICABLE", "hint": ""},
-	"Description": {"category": "FREEFORM_TEXT", "normativity": "can_be_both", "label_kind": "NOT_APPLICABLE", "hint": ""},
-	"Derived_from": {"category": "LIST_OF_QUALIFIED_IDENTIFIERS", "normativity": "normative", "label_kind": "NOT_APPLICABLE", "hint": ""},
-	"Factory": {"category": "STRUCTURE", "normativity": "not_applicable", "label_kind": "NOT_APPLICABLE", "hint": ""},
-	"Factory.<item>": {"category": "ITEMIZED_TEXT", "normativity": "normative", "label_kind": "QUALIFIED_IDENTIFIER", "hint": ""},
-	"Public_classes": {"category": "LIST_OF_QUALIFIED_IDENTIFIERS", "normativity": "normative", "label_kind": "NOT_APPLICABLE", "hint": ""},
-	"Public_functions": {"category": "LIST_OF_QUALIFIED_IDENTIFIERS", "normativity": "normative", "label_kind": "NOT_APPLICABLE", "hint": ""},
-	"Public_methods": {"category": "LIST_OF_QUALIFIED_IDENTIFIERS", "normativity": "normative", "label_kind": "NOT_APPLICABLE", "hint": ""},
-	"Class_overview": {"category": "STRUCTURE", "normativity": "not_applicable", "label_kind": "NOT_APPLICABLE", "hint": ""},
-	"Class_overview.<item>": {"category": "FREEFORM_TEXT", "normativity": "informative", "label_kind": "IDENTIFIER", "hint": ""},
-	"Method_overview": {"category": "STRUCTURE", "normativity": "not_applicable", "label_kind": "NOT_APPLICABLE", "hint": ""},
-	"Method_overview.<item>": {"category": "FREEFORM_TEXT", "normativity": "informative", "label_kind": "IDENTIFIER", "hint": ""},
-	"Function_overview": {"category": "STRUCTURE", "normativity": "not_applicable", "label_kind": "NOT_APPLICABLE", "hint": ""},
-	"Function_overview.<item>": {"category": "FREEFORM_TEXT", "normativity": "informative", "label_kind": "IDENTIFIER", "hint": ""},
-	"Public_types": {"category": "STRUCTURE", "normativity": "not_applicable", "label_kind": "NOT_APPLICABLE", "hint": ""},
-	"Public_types.<item>": {"category": "FREEFORM_TEXT", "normativity": "normative", "label_kind": "IDENTIFIER", "hint": ""},
-	"Public_variables": {"category": "STRUCTURE", "normativity": "not_applicable", "label_kind": "NOT_APPLICABLE", "hint": ""},
-	"Public_variables.<item>": {"category": "FREEFORM_TEXT", "normativity": "normative", "label_kind": "IDENTIFIER", "hint": ""},
-	"Public_constants": {"category": "STRUCTURE", "normativity": "not_applicable", "label_kind": "NOT_APPLICABLE", "hint": ""},
-	"Public_constants.<item>": {"category": "FREEFORM_TEXT", "normativity": "normative", "label_kind": "IDENTIFIER", "hint": ""},
-	"Parameters": {"category": "STRUCTURE", "normativity": "not_applicable", "label_kind": "NOT_APPLICABLE", "hint": ""},
-	"Parameters.<item>": {"category": "FREEFORM_TEXT", "normativity": "normative", "label_kind": "IDENTIFIER", "hint": ""},
-	"Returns": {"category": "FREEFORM_TEXT", "normativity": "normative", "label_kind": "NOT_APPLICABLE", "hint": ""},
-	"Raises": {"category": "STRUCTURE", "normativity": "not_applicable", "label_kind": "NOT_APPLICABLE", "hint": ""},
-	"Raises.<item>": {"category": "ITEMIZED_TEXT", "normativity": "normative", "label_kind": "QUALIFIED_IDENTIFIER", "hint": ""},
-	"Notes": {"category": "STRUCTURE", "normativity": "not_applicable", "label_kind": "NOT_APPLICABLE", "hint": ""},
-	"Notes.<item>": {"category": "FREEFORM_TEXT", "normativity": "informative", "label_kind": "ANY_STRING", "hint": ""},
-	"See_also": {"category": "LIST_OF_QUALIFIED_IDENTIFIERS", "normativity": "can_be_both", "label_kind": "NOT_APPLICABLE", "hint": ""},
+# * This mapping is a machine-readable representation of a subset of the rules defined in the documentation standard.
+#   The documentation remains the Single Source of Truth for the standard, and this mapping is a distilled representation
+#   of the relevant rules for the explain command.
+# * For attributes "profile" and "must_exist" we assume orthogonality in the sense that there are no mixed cases
+#   where a label is required in some profiles but not in others. If such cases arise, the structure
+#   of this mapping would need to be changed to be profile-specific.
+# * Whenever "label_kind" is not "NOT_APPLICABLE", we must specify the rules for the label kind
+#   in the comment above the respective entry, for example "label_kind" rules: DEF-004, DEF-005.
+SECTION_PROPERTIES: Final[Dict[str, SectionPropertyInfo_t]] = {
+	# Normativity does not apply to Preamble because normativity is declared therein, and normativity
+	# does not apply to subsections because they are normative if and only if the surrounding section is normative (BinNorm).
+	# "profile" rules: DOC-003, DOC-004, DOC-005, DOC-006
+	# "normativity" rules: not_applicable
+	# "must_exist" rules: PRE-001
+	"Preamble": {"category": "STRUCTURE", "normativity": "not_applicable", "label_kind": "NOT_APPLICABLE", "profile": ["module","class","function","method","inherited_method"], "must_exist": "yes", "hint": ""},
+	# "profile" rules: DOC-003, DOC-004, DOC-005, DOC-006, PRE-003
+	# "normativity" rules: not_applicable
+	# "must_exist" rules: PRE-003
+	"Preamble.profile": {"category": "IDENTIFIER", "normativity": "not_applicable", "label_kind": "NOT_APPLICABLE", "profile": ["module","class","function","method","inherited_method"], "must_exist": "yes", "hint": ""},
+	# "profile" rules: DOC-003, DOC-004, DOC-005, DOC-006, PRE-006
+	# "normativity" rules: not_applicable
+	# "must_exist" rules: PRE-006
+	"Preamble.normative_sections": {"category": "LIST_OF_IDENTIFIERS", "normativity": "not_applicable", "label_kind": "NOT_APPLICABLE", "profile": ["module","class","function","method","inherited_method"], "must_exist": "yes", "hint": ""},
+	# "profile" rules: PRE-016, PRE-019, STA-001
+	# "normativity" rules: not_applicable
+	# "must_exist" rules: STA-001
+	"Preamble.status": {"category": "IDENTIFIER", "normativity": "not_applicable", "label_kind": "NOT_APPLICABLE", "profile": ["function","method"], "must_exist": "no", "hint": ""},
+	# "profile" rules: DOC-003, DOC-004, DOC-005, DOC-006, SCP-001
+	# "normativity" rules: not_applicable
+	# "must_exist" rules: SCP-001
+	"Preamble.scope": {"category": "LIST_OF_IDENTIFIERS", "normativity": "not_applicable", "label_kind": "NOT_APPLICABLE", "profile": ["module","class","function","method","inherited_method"], "must_exist": "no", "hint": ""},
+
+	# "profile" rules: DOC-003, DOC-004, DOC-005, DOC-006
+	# "normativity" rules: DEF-002
+	# "must_exist" rules: DEF-001
+	"Definitions": {"category": "STRUCTURE", "normativity": "normative", "label_kind": "NOT_APPLICABLE", "profile": ["module","class","function","method","inherited_method"], "must_exist": "no", "hint": ""},
+	# "profile" rules: DOC-003, DOC-004, DOC-005, DOC-006, DEF-003
+	# "label_kind" rules: DEF-004, DEF-005
+	# "normativity" rules: BinNorm, DEF-002
+	# "must_exist" rules: DEF-020
+	"Definitions.<item>": {"category": "FREEFORM_TEXT", "normativity": "normative", "label_kind": "LIST_OF_IDENTIFIERS", "profile": ["module","class","function","method","inherited_method"], "must_exist": "no", "hint": ""},
+	# "profile" rules: DEF-011, DEF-012
+	# "normativity" rules: BinNorm, DEF-002
+	# "must_exist" rules: DEF-012
+	"Definitions._inherit": {"category": "LIST_OF_IDENTIFIERS", "normativity": "normative", "label_kind": "NOT_APPLICABLE", "profile": ["class","function","method","inherited_method"], "must_exist": "no", "hint": ""},
+
+	# Terminology is the informative sister of Definitions. It is not allowed to contain normativity keywords but rather general explanations of terms.
+	# "profile" rules: DOC-003, DOC-004, DOC-005, DOC-006
+	# "normativity" rules: TERM-002, TERM-003
+	# "must_exist" rules: TERM-001
+	"Terminology": {"category": "STRUCTURE", "normativity": "informative", "label_kind": "NOT_APPLICABLE", "profile": ["module","class","function","method","inherited_method"], "must_exist": "no", "hint": ""},
+	# "profile" rules: DOC-003, DOC-004, DOC-005, DOC-006, TERM-004
+	# "label_kind" rules: TERM-005, TERM-006
+	# "normativity" rules: BinNorm, TERM-002
+	# "must_exist" rules: TERM-009
+	"Terminology.<item>": {"category": "FREEFORM_TEXT", "normativity": "informative", "label_kind": "ANY_STRING", "profile": ["module","class","function","method","inherited_method"], "must_exist": "no", "hint": ""},
+
+	# "profile" rules: DOC-003, DOC-004, DOC-005, DOC-006
+	# "normativity" rules: CON-002
+	# "must_exist" rules: CON-001
+	"Contract": {"category": "STRUCTURE", "normativity": "normative", "label_kind": "NOT_APPLICABLE", "profile": ["module","class","function","method","inherited_method"], "must_exist": "yes", "hint": ""},
+	# "profile" rules: CON-022, CON-023, CON-024, CON-036
+	# "normativity" rules: BinNorm, CON-002
+	# "must_exist" rules: CON-022, CON-023, CON-024, CON-036
+	"Contract.general": {"category": "ITEMIZED_TEXT", "normativity": "normative", "label_kind": "NOT_APPLICABLE", "profile": ["module","class","function","method","inherited_method"], "must_exist": "yes", "hint": ""},
+	# "profile" rules: CON-007
+	# "normativity" rules: BinNorm, CON-002
+	# "must_exist" rules: CON-007
+	"Contract.constructor": {"category": "ITEMIZED_TEXT", "normativity": "normative", "label_kind": "NOT_APPLICABLE", "profile": ["class"], "must_exist": "yes", "hint": ""},
+	# "profile" rules: CON-039
+	# "normativity" rules: BinNorm, CON-002
+	# "must_exist" rules: CON-039
+	"Contract.base": {"category": "QUALIFIED_IDENTIFIER", "normativity": "normative", "label_kind": "NOT_APPLICABLE", "profile": ["inherited_method"], "must_exist": "yes", "hint": ""},
+	# "profile" rules: CON-012
+	# "normativity" rules: BinNorm, CON-002
+	# "must_exist" rules: CON-012
+	"Contract.traits": {"category": "LIST_OF_IDENTIFIERS", "normativity": "normative", "label_kind": "NOT_APPLICABLE", "profile": ["class"], "must_exist": "no", "hint": ""},
+	# "profile" rules: CON-025
+	# "normativity" rules: BinNorm, CON-002
+	# "must_exist" rules: CON-025
+	"Contract.invariants": {"category": "ITEMIZED_TEXT", "normativity": "normative", "label_kind": "NOT_APPLICABLE", "profile": ["function","method"], "must_exist": "no", "hint": ""},
+	# "profile" rules: CON-047
+	# "normativity" rules: BinNorm, CON-002
+	# "must_exist" rules: CON-047
+	"Contract.requires": {"category": "ITEMIZED_TEXT", "normativity": "normative", "label_kind": "NOT_APPLICABLE", "profile": ["function","method"], "must_exist": "no", "hint": ""},
+	# "profile" rules: CON-049
+	# "normativity" rules: BinNorm, CON-002
+	# "must_exist" rules: CON-049
+	"Contract.ensures": {"category": "ITEMIZED_TEXT", "normativity": "normative", "label_kind": "NOT_APPLICABLE", "profile": ["function","method"], "must_exist": "no", "hint": ""},
+
+	# "profile" rules: DOC-003, DOC-004, DOC-005, DOC-006
+	# "normativity" rules: DESC-002
+	# "must_exist" rules: DESC-001
+	"Description": {"category": "FREEFORM_TEXT", "normativity": "can_be_both", "label_kind": "NOT_APPLICABLE", "profile": ["module","class","function","method","inherited_method"], "must_exist": "no", "hint": ""},
+
+	# "profile" rules: DOC-004
+	# "normativity" rules: DER-004
+	# "must_exist" rules: DER-001
+	"Derived_from": {"category": "LIST_OF_QUALIFIED_IDENTIFIERS", "normativity": "normative", "label_kind": "NOT_APPLICABLE", "profile": ["class"], "must_exist": "no", "hint": ""},
+
+	# "profile" rules: DOC-004
+	# "normativity" rules: FAC-009
+	# "must_exist" rules: FAC-001
+	"Factory": {"category": "STRUCTURE", "normativity": "normative", "label_kind": "NOT_APPLICABLE", "profile": ["class"], "must_exist": "no", "hint": ""},
+	# "profile" rules: FAC-004
+	# "label_kind" rules: FAC-005
+	# "normativity" rules: BinNorm, FAC-009
+	# "must_exist" rules: FAC-004
+	"Factory.<item>": {"category": "FREEFORM_TEXT", "normativity": "normative", "label_kind": "QUALIFIED_IDENTIFIER", "profile": ["class"], "must_exist": "no", "hint": ""},
+
+	# "profile" rules: DOC-003, DOC-004
+	# "normativity" rules: MPCL-002, CPCL-002
+	# "must_exist" rules: MPCL-001, CPCL-001
+	"Public_classes": {"category": "LIST_OF_QUALIFIED_IDENTIFIERS", "normativity": "normative", "label_kind": "NOT_APPLICABLE", "profile": ["module","class"], "must_exist": "no", "hint": ""},
+	# "profile" rules: DOC-003
+	# "normativity" rules: MPFN-002
+	# "must_exist" rules: MPFN-001
+	"Public_functions": {"category": "LIST_OF_QUALIFIED_IDENTIFIERS", "normativity": "normative", "label_kind": "NOT_APPLICABLE", "profile": ["module"], "must_exist": "no", "hint": ""},
+	# "profile" rules: DOC-004
+	# "normativity" rules: CPMT-002
+	# "must_exist" rules: CPMT-001
+	"Public_methods": {"category": "LIST_OF_QUALIFIED_IDENTIFIERS", "normativity": "normative", "label_kind": "NOT_APPLICABLE", "profile": ["class"], "must_exist": "no", "hint": ""},
+	# "profile" rules: DOC-003, DOC-004
+	# "normativity" rules: MPTYP-002, CPTYP-002
+	# "must_exist" rules: MPTYP-001, CPTYP-001
+	"Public_types": {"category": "STRUCTURE", "normativity": "normative", "label_kind": "NOT_APPLICABLE", "profile": ["module","class"], "must_exist": "no", "hint": ""},
+	# "profile" rules: MPTYP-003, CPTYP-003
+	# "label_kind" rules: MPTYP-004, CPTYP-004
+	# "normativity" rules: BinNorm, MPTYP-002, CPTYP-002
+	# "must_exist" rules: MPTYP-003, CPTYP-003
+	"Public_types.<item>": {"category": "FREEFORM_TEXT", "normativity": "normative", "label_kind": "IDENTIFIER", "profile": ["module","class"], "must_exist": "no", "hint": ""},
+	# "profile" rules: DOC-003, DOC-004
+	# "normativity" rules: MPVAR-002, CPVAR-002
+	# "must_exist" rules: MPVAR-001, CPVAR-001
+	"Public_variables": {"category": "STRUCTURE", "normativity": "normative", "label_kind": "NOT_APPLICABLE", "profile": ["module","class"], "must_exist": "no", "hint": ""},
+	# "profile" rules: MPVAR-003, CPVAR-003
+	# "label_kind" rules: MPVAR-004, CPVAR-004
+	# "normativity" rules: BinNorm, MPVAR-002, CPVAR-002
+	# "must_exist" rules: MPVAR-003, CPVAR-003
+	"Public_variables.<item>": {"category": "FREEFORM_TEXT", "normativity": "normative", "label_kind": "IDENTIFIER", "profile": ["module","class"], "must_exist": "no", "hint": ""},
+	# "profile" rules: DOC-003, DOC-004
+	# "normativity" rules: MPCON-002, CPCON-002
+	# "must_exist" rules: MPCON-001, CPCON-001
+	"Public_constants": {"category": "STRUCTURE", "normativity": "normative", "label_kind": "NOT_APPLICABLE", "profile": ["module","class"], "must_exist": "no", "hint": ""},
+	# "profile" rules: MPCON-003, CPCON-003
+	# "label_kind" rules: MPCON-004, CPCON-004
+	# "normativity" rules: BinNorm, MPCON-002, CPCON-002
+	# "must_exist" rules: MPCON-003, CPCON-003
+	"Public_constants.<item>": {"category": "FREEFORM_TEXT", "normativity": "normative", "label_kind": "IDENTIFIER", "profile": ["module","class"], "must_exist": "no", "hint": ""},
+
+	# "profile" rules: DOC-003, DOC-004
+	# "normativity" rules: MCLO-002, CCLO-002
+	# "must_exist" rules: MCLO-001, CCLO-001
+	"Class_overview": {"category": "STRUCTURE", "normativity": "informative", "label_kind": "NOT_APPLICABLE", "profile": ["module","class"], "must_exist": "no", "hint": ""},
+	# "profile" rules: MCLO-004, CCLO-004
+	# "label_kind" rules: MCLO-005, CCLO-005
+	# "normativity" rules: BinNorm, MCLO-002, CCLO-002
+	# "must_exist" rules: MCLO-010, CCLO-010
+	"Class_overview.<item>": {"category": "FREEFORM_TEXT", "normativity": "informative", "label_kind": "IDENTIFIER", "profile": ["module","class"], "must_exist": "no", "hint": ""},
+
+	# "profile" rules: DOC-004
+	# "normativity" rules: CMTO-002
+	# "must_exist" rules: CMTO-001
+	"Method_overview": {"category": "STRUCTURE", "normativity": "informative", "label_kind": "NOT_APPLICABLE", "profile": ["class"], "must_exist": "no", "hint": ""},
+	# "profile" rules: CMTO-004
+	# "label_kind" rules: CMTO-005
+	# "normativity" rules: BinNorm, CMTO-002
+	# "must_exist" rules: CMTO-010
+	"Method_overview.<item>": {"category": "FREEFORM_TEXT", "normativity": "informative", "label_kind": "IDENTIFIER", "profile": ["class"], "must_exist": "no", "hint": ""},
+	
+	# "profile" rules: DOC-003
+	# "normativity" rules: MFNO-002
+	# "must_exist" rules: MFNO-001
+	"Function_overview": {"category": "STRUCTURE", "normativity": "informative", "label_kind": "NOT_APPLICABLE", "profile": ["module"], "must_exist": "no", "hint": ""},
+	# "profile" rules: MFNO-004
+	# "label_kind" rules: MFNO-005
+	# "normativity" rules: BinNorm, MFNO-002
+	# "must_exist" rules: MFNO-010
+	"Function_overview.<item>": {"category": "FREEFORM_TEXT", "normativity": "informative", "label_kind": "IDENTIFIER", "profile": ["module"], "must_exist": "no", "hint": ""},
+
+	# We classify Parameters.<items>."must_exists" as "depends_on_context" because for any given value of <item>
+	# it can be determined whether it must exist or not, but there is no general rule that applies to all items of the same label.
+	# "profile" rules: DOC-005
+	# "normativity" rules: PAR-002
+	# "must_exist" rules: PAR-001
+	"Parameters": {"category": "STRUCTURE", "normativity": "normative", "label_kind": "NOT_APPLICABLE", "profile": ["function","method"], "must_exist": "yes", "hint": ""},
+	# "profile" rules: PAR-008
+	# "label_kind" rules: PAR-006
+	# "normativity" rules: BinNorm, PAR-002
+	# "must_exist" rules: PAR-004, PAR-005
+	"Parameters.<item>": {"category": "FREEFORM_TEXT", "normativity": "normative", "label_kind": "IDENTIFIER", "profile": ["function","method"], "must_exist": "depends_on_context", "hint": ""},
+
+	# "profile" rules: DOC-005
+	# "normativity" rules: RET-002
+	# "must_exist" rules: RET-001
+	"Returns": {"category": "FREEFORM_TEXT", "normativity": "normative", "label_kind": "NOT_APPLICABLE", "profile": ["function","method"], "must_exist": "yes", "hint": ""},
+	# "profile" rules: DOC-005
+	# "normativity" rules: RAI-002
+	# "must_exist" rules: RAI-001
+	"Raises": {"category": "STRUCTURE", "normativity": "normative", "label_kind": "NOT_APPLICABLE", "profile": ["function","method"], "must_exist": "yes", "hint": ""},
+	# "profile" rules: RAI-011
+	# "label_kind" rules: RAI-008
+	# "normativity" rules: BinNorm, RAI-002
+	# "must_exist" rules: RAI-011
+	"Raises.<item>": {"category": "FREEFORM_TEXT", "normativity": "normative", "label_kind": "QUALIFIED_IDENTIFIER", "profile": ["function","method"], "must_exist": "no", "hint": ""},
+
+	# "profile" rules: DOC-003, DOC-004, DOC-005, DOC-006
+	# "normativity" rules: NOTE-002
+	# "must_exist" rules: NOTE-001
+	"Notes": {"category": "STRUCTURE", "normativity": "informative", "label_kind": "NOT_APPLICABLE", "profile": ["module","class","function","method","inherited_method"], "must_exist": "no", "hint": ""},
+	# "profile" rules: DOC-003, DOC-004, DOC-005, DOC-006, NOTE-005
+	# "label_kind" rules: NOTE-006
+	# "normativity" rules: BinNorm, NOTE-002
+	# "must_exist" rules: NOTE-008
+	"Notes.<item>": {"category": "FREEFORM_TEXT", "normativity": "informative", "label_kind": "ANY_STRING", "profile": ["module","class","function","method","inherited_method"], "must_exist": "no", "hint": ""},
+
+	# "profile" rules: DOC-003, DOC-004, DOC-005, DOC-006
+	# "normativity" rules: SEE-011
+	# "must_exist" rules: SEE-001
+	"See_also": {"category": "LIST_OF_QUALIFIED_IDENTIFIERS", "normativity": "can_be_both", "label_kind": "NOT_APPLICABLE", "profile": ["module","class","function","method","inherited_method"], "must_exist": "no", "hint": ""},
 }
 
 SECTION_TO_SUBSECTIONS_BY_PROFILE: Final[Dict[Profile_t, Dict[str, List[str]]]] = {
@@ -253,8 +430,6 @@ _COMMON_ROLE_NOTES = [
 _BASE_SECTION_SPECS: Dict[str, Dict[str, Any]] = {
 	"Contract": {
 		"title": "Contract",
-		"body_category": "STRUCTURE",
-		"normativity": "normative",
 		"body": [
 			"Contract contains the rules that the section enforces.",
 			"It is the place where the validator expects the normative core of the object.",
@@ -267,8 +442,6 @@ _BASE_SECTION_SPECS: Dict[str, Dict[str, Any]] = {
 	},
 	"Preamble": {
 		"title": "Preamble",
-		"body_category": "STRUCTURE",
-		"normativity": "normative",
 		"body": [
 			"Preamble declares which profile the docstring follows and which sections are normative.",
 			"It is the entry point for validating the rest of the document.",
@@ -284,8 +457,6 @@ _BASE_SECTION_SPECS: Dict[str, Dict[str, Any]] = {
 	},
 	"Parameters": {
 		"title": "Parameters",
-		"body_category": "STRUCTURE",
-		"normativity": "normative for callables",
 		"body": [
 			"Parameters documents callable arguments in a structured way.",
 		],
@@ -297,8 +468,6 @@ _BASE_SECTION_SPECS: Dict[str, Dict[str, Any]] = {
 	},
 	"Returns": {
 		"title": "Returns",
-		"body_category": "FREEFORM_TEXT",
-		"normativity": "normative for callables",
 		"body": [
 			"Returns documents what the callable yields or returns.",
 		],
@@ -310,8 +479,6 @@ _BASE_SECTION_SPECS: Dict[str, Dict[str, Any]] = {
 	},
 	"Raises": {
 		"title": "Raises",
-		"body_category": "STRUCTURE",
-		"normativity": "normative for callables",
 		"body": [
 			"Raises documents documented exception conditions.",
 		],
@@ -323,8 +490,6 @@ _BASE_SECTION_SPECS: Dict[str, Dict[str, Any]] = {
 	},
 	"Notes": {
 		"title": "Notes",
-		"body_category": "STRUCTURE",
-		"normativity": "informative by default",
 		"body": [
 			"Notes are used for additional guidance that is not part of the normative contract.",
 		],
@@ -348,7 +513,7 @@ def build_section_explanation(label: str, profile: Profile_t) -> ExplainSection_
 	base = _BASE_SECTION_SPECS.get(label)
 	if base is None:
 		return None
-	cat_info = LABEL_TO_CATEGORY.get(label, {"category": "STRUCTURE", "normativity": "informative", "label_kind": "NOT_APPLICABLE", "hint": ""})
+	cat_info = SECTION_PROPERTIES.get(label, {"category": "STRUCTURE", "normativity": "informative", "label_kind": "NOT_APPLICABLE", "hint": ""})
 	allowed_subsections = list(section_map.get(label, []))
 	template: list[str] = [f"{label}:"]
 	if cat_info["category"] == "STRUCTURE":
@@ -378,7 +543,7 @@ def build_section_explanation(label: str, profile: Profile_t) -> ExplainSection_
 		"label": label,
 		"title": base["title"],
 		"body_category": cat_info["category"],
-		"normativity": base["normativity"],
+		"normativity": cat_info["normativity"],
 		"label_kind": cat_info["label_kind"],
 		"available_profiles": _available_profiles_for_label(label),
 		"allowed_subsections": allowed_subsections,

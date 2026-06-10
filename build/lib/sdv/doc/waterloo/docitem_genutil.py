@@ -1,0 +1,789 @@
+r"""
+Preamble:
+	profile:
+		module
+	normative_sections:
+		Contract, Public_functions
+	scope:
+		extension
+Contract:
+	general:
+		|Must| provide functions for generating minimal and full waterloo docstring templates.
+Description:
+	This module is intended for IDE-extension workflows.
+	A typical use case is a VSCode context-menu action on a |lit|`class` or |lit|`def` line:
+	parse the selected header fragment, infer/select a profile, and generate a minimal or full Waterloo docstring template.
+Public_functions:
+	parse_source_fragment, infer_docstring_profile
+	generate_minimal_docstring, generate_full_docstring
+	generate_minimal_docstring_from_node, generate_full_docstring_from_node
+"""
+
+from __future__ import annotations
+
+import inspect
+import ast
+from types import ModuleType
+from typing import Any, Callable, Literal
+
+from sdv.doc.waterloo.docitem_helper import *
+
+def parse_source_fragment(profile: Profile, source_fragment: str) -> ast.AST | None:
+	r"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+		scope:
+			extension
+	Contract:
+		general:
+			|Must| return |None| if |var|`profile` is |value|`module`.
+			|Must| parse |var|`source_fragment` via |mod|`ast`.
+			|Must| return the first top-level AST node from the parsed tree.
+			|Must| ensure the returned node matches |var|`profile`:
+			For |value|`class`, the node |must| be |type|`ast.ClassDef`.
+			For |value|`function` or |value|`method`, the node |must| be |type|`ast.FunctionDef` or |type|`ast.AsyncFunctionDef`.
+			|Must| reject empty parses (no top-level nodes).
+
+	Parameters:
+		profile:
+			Profile used for node-type validation.
+		source_fragment:
+			Source fragment containing a class/function header (or small stub).
+			Ignored if |var|`profile` is |value|`module`.
+	Returns:
+		|None| for profile |value|`module`, otherwise the validated first AST node.
+	Raises:
+		SyntaxError:
+			|May| be raised by |func|`ast.parse` for invalid Python syntax.
+		RuntimeError:
+			|Must| raise if no top-level node exists after parsing.
+			|Must| raise if the parsed node type does not match |var|`profile`.
+	"""
+	if profile == "module":
+		return None
+	tree = ast.parse(source_fragment)
+	if not tree.body:
+		raise RuntimeError("source_fragment is empty after parsing")
+	node: ast.AST = tree.body[0]
+	if profile == "class" and not isinstance(node, ast.ClassDef):
+		raise RuntimeError("source_fragment does not parse to a class header")
+	if profile in {"function", "method"} and not isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+		raise RuntimeError("source_fragment does not parse to a function/method header")
+	return node
+
+def infer_docstring_profile(obj: object) -> Profile:
+	r"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+		scope:
+			extension
+	Contract:
+		general:
+			|Must| derive the best matching waterloo docstring profile from the object.
+	Parameters:
+		obj:
+			Object to inspect.
+	Returns:
+	Raises:
+		RuntimeError:
+			|Must| raise if |var|`obj` does not match any of the categories |lit|`module`, |lit|`class`, |lit|`callable`.
+	Notes:
+		Result:
+			The |value|`inherited_method` profile is never returned because it
+			does not differ from the |value|`method` profile based solely on formal criteria.
+			
+	"""
+	if is_obj_module(obj):
+		return "module"
+	if is_obj_class(obj):
+		return "class"
+	if is_obj_method_like(obj):
+		return "method"
+	if is_obj_function(obj):
+		return "function"
+	raise RuntimeError(f"cannot infer docstring profile for object type {type(obj).__name__}")
+
+
+def _parameter_names_from_callable(
+	obj: object,
+	*,
+	drop_first_receiver: bool = False,
+) -> list[str]:
+	try:
+		sig = inspect.signature(cast_callable(obj))
+	except Exception:
+		return []
+	names: list[str] = []
+	for p in sig.parameters.values():
+		names.append(str(p.name))
+	if drop_first_receiver and names:
+		first = names[0]
+		if first in {"self", "cls", "mcls"}:
+			names = names[1:]
+	return names
+
+
+def _parameter_names_from_function_node(
+	node: ast.FunctionDef | ast.AsyncFunctionDef,
+	*,
+	drop_first_receiver: bool = False,
+) -> list[str]:
+	names: list[str] = []
+	for arg in node.args.posonlyargs:
+		names.append(arg.arg)
+	for arg in node.args.args:
+		names.append(arg.arg)
+	if drop_first_receiver and names:
+		first = names[0]
+		if first in {"self", "cls", "mcls"}:
+			names = names[1:]
+	for arg in node.args.kwonlyargs:
+		names.append(arg.arg)
+	return names
+
+
+def cast_callable(obj: object) -> Callable[..., Any]:
+	return obj if callable(obj) else _raise_not_callable(obj)
+
+
+def _raise_not_callable(obj: object) -> Callable[..., Any]:
+	raise RuntimeError(f"object is not callable: {type(obj).__name__}")
+
+
+def _full_returns_line(obj: object) -> str:
+	try:
+		sig = inspect.signature(cast_callable(obj))
+	except Exception:
+		return "\t|Must| return ..."
+	ann = sig.return_annotation
+	if ann is inspect.Signature.empty:
+		return "\t|Must| return ..."
+	if ann is None:
+		return "\t|Must| return |None|."
+	if ann is bool:
+		return "\t|Must| return |True| if ... and |False| otherwise."
+	if ann is str:
+		return "\t|Must| return ..."
+	ann_str = str(ann)
+	if ann_str in {"None", "NoneType"}:
+		return "\t|Must| return |None|."
+	if ann_str == "Self" or "typing.Self" in ann_str:
+		return "\t|Must| return |Self| for fluent-style chaining."
+	if ann_str == "<class 'bool'>":
+		return "\t|Must| return |True| if ... and |False| otherwise."
+	return "\t|Must| return ..."
+
+
+def _full_returns_line_from_node(node: ast.FunctionDef | ast.AsyncFunctionDef) -> str:
+	ann = node.returns
+	if ann is None:
+		return "\t|Must| return ..."
+	if isinstance(ann, ast.Constant) and ann.value is None:
+		return "\t|Must| return |None|."
+	if isinstance(ann, ast.Name):
+		if ann.id == "None":
+			return "\t|Must| return |None|."
+		if ann.id == "Self":
+			return "\t|Must| return |Self| for fluent-style chaining."
+		if ann.id == "bool":
+			return "\t|Must| return |True| if ... and |False| otherwise."
+	return "\t|Must| return ..."
+
+
+def _minimal_docstring_for_module() -> str:
+	lines = [
+		'r"""',
+		"Preamble:",
+		"\tprofile:",
+		"\t\tmodule",
+		"\tnormative_sections:",
+		"\t\tContract",
+		"Contract:",
+		"\tgeneral:",
+		'"""',
+		"",
+	]
+	return "\n".join(lines)
+
+
+def _minimal_docstring_for_class() -> str:
+	lines = [
+		'r"""',
+		"Preamble:",
+		"\tprofile:",
+		"\t\tclass",
+		"\tnormative_sections:",
+		"\t\tContract",
+		"Contract:",
+		"\tgeneral:",
+		"\tconstructor:",
+		'"""',
+		"",
+	]
+	return "\n".join(lines)
+
+
+def _minimal_docstring_for_function(obj: object) -> str:
+	parameter_names = _parameter_names_from_callable(obj)
+	lines = [
+		'r"""',
+		"Preamble:",
+		"\tprofile:",
+		"\t\tfunction",
+		"\tnormative_sections:",
+		"\t\tContract, Parameters, Returns, Raises",
+		"Contract:",
+		"\tgeneral:",
+		"Parameters:",
+	]
+	for name in parameter_names:
+		lines.extend(
+			[
+				f"\t{name}:",
+				"\t\t...",
+			]
+		)
+	lines.extend(
+		[
+			"Returns:",
+			"Raises:",
+			'"""',
+			"",
+		]
+	)
+	return "\n".join(lines)
+
+
+def _minimal_docstring_for_method(obj: object) -> str:
+	parameter_names = _parameter_names_from_callable(obj, drop_first_receiver=True)
+	lines = [
+		'r"""',
+		"Preamble:",
+		"\tprofile:",
+		"\t\tmethod",
+		"\tnormative_sections:",
+		"\t\tContract, Parameters, Returns, Raises",
+		"Contract:",
+		"\tgeneral:",
+		"Parameters:",
+	]
+	for name in parameter_names:
+		lines.extend(
+			[
+				f"\t{name}:",
+				"\t\t...",
+			]
+		)
+	lines.extend(
+		[
+			"Returns:",
+			"Raises:",
+			'"""',
+			"",
+		]
+	)
+	return "\n".join(lines)
+
+
+def _minimal_docstring_for_function_node(node: ast.FunctionDef | ast.AsyncFunctionDef) -> str:
+	parameter_names = _parameter_names_from_function_node(node)
+	lines = [
+		'r"""',
+		"Preamble:",
+		"\tprofile:",
+		"\t\tfunction",
+		"\tnormative_sections:",
+		"\t\tContract, Parameters, Returns, Raises",
+		"Contract:",
+		"\tgeneral:",
+		"Parameters:",
+	]
+	for name in parameter_names:
+		lines.extend([f"\t{name}:", "\t\t..."])
+	lines.extend(["Returns:", "Raises:", '"""', ""])
+	return "\n".join(lines)
+
+
+def _minimal_docstring_for_method_node(node: ast.FunctionDef | ast.AsyncFunctionDef) -> str:
+	parameter_names = _parameter_names_from_function_node(node, drop_first_receiver=True)
+	lines = [
+		'r"""',
+		"Preamble:",
+		"\tprofile:",
+		"\t\tmethod",
+		"\tnormative_sections:",
+		"\t\tContract, Parameters, Returns, Raises",
+		"Contract:",
+		"\tgeneral:",
+		"Parameters:",
+	]
+	for name in parameter_names:
+		lines.extend([f"\t{name}:", "\t\t..."])
+	lines.extend(["Returns:", "Raises:", '"""', ""])
+	return "\n".join(lines)
+
+
+def _full_docstring_for_module() -> str:
+	lines = [
+		'r"""',
+		"Preamble:",
+		"\tprofile:",
+		"\t\tmodule",
+		"\tnormative_sections:",
+		"\t\tDefinitions, Contract, Public_classes, Public_functions, Public_types, Public_variables, Public_constants, See_also",
+		"\tscope:",
+		"\t\tpublic",
+		"Definitions:",
+		"\tExampleTerm:",
+		"\t\t...",
+		"Terminology:",
+		"\tExample term:",
+		"\t\t...",
+		"Contract:",
+		"\tgeneral:",
+		"\t\t|Must| define the externally visible behavior of this module.",
+		"Description:",
+		"\t...",
+		"Notes:",
+		"\tGeneral note:",
+		"\t\t...",
+		"Public_classes:",
+		"Class_overview:",
+		"Public_functions:",
+		"Function_overview:",
+		"Public_types:",
+		"Public_variables:",
+		"Public_constants:",
+		"See_also:",
+		'"""',
+		"",
+	]
+	return "\n".join(lines)
+
+
+def _full_docstring_for_class() -> str:
+	lines = [
+		'r"""',
+		"Preamble:",
+		"\tprofile:",
+		"\t\tclass",
+		"\tnormative_sections:",
+		"\t\tDefinitions, Contract, Derived_from, Public_classes, Public_methods, Public_types, Public_variables, Public_constants, Factory, See_also",
+		"\tscope:",
+		"\t\tpublic",
+		"Definitions:",
+		"\tExampleTerm:",
+		"\t\t...",
+		"Terminology:",
+		"\tExample term:",
+		"\t\t...",
+		"Contract:",
+		"\tgeneral:",
+		"\t\t|Must| define the externally visible behavior of this class.",
+		"\tconstructor:",
+		"\t\t|Must| define construction requirements and guarantees.",
+		"\ttraits:",
+		"Description:",
+		"\t...",
+		"Derived_from:",
+		"Notes:",
+		"\tGeneral note:",
+		"\t\t...",
+		"Public_classes:",
+		"Class_overview:",
+		"Public_methods:",
+		"Method_overview:",
+		"Public_types:",
+		"Public_variables:",
+		"Public_constants:",
+		"Factory:",
+		"See_also:",
+		'"""',
+		"",
+	]
+	return "\n".join(lines)
+
+
+def _full_docstring_for_function(obj: object) -> str:
+	parameter_names = _parameter_names_from_callable(obj)
+	lines = [
+		'r"""',
+		"Preamble:",
+		"\tprofile:",
+		"\t\tfunction",
+		"\tnormative_sections:",
+		"\t\tDefinitions, Contract, Parameters, Returns, Raises, See_also",
+		"\tstatus:",
+		"\t\tstable",
+		"\tscope:",
+		"\t\tpublic",
+		"Definitions:",
+		"\tExampleTerm:",
+		"\t\t...",
+		"Terminology:",
+		"\tExample term:",
+		"\t\t...",
+		"Contract:",
+		"\tgeneral:",
+		"\t\t|Must| define the externally visible behavior of this callable.",
+		"\tinvariants:",
+		"\t\t|Must| preserve all documented invariants across valid calls.",
+		"\trequires:",
+		"\t\t|Must| define preconditions for valid input.",
+		"\tensures:",
+		"\t\t|Must| define postconditions for successful execution.",
+		"Description:",
+		"\t...",
+		"Parameters:",
+	]
+	for name in parameter_names:
+		lines.extend(
+			[
+				f"\t{name}:",
+				"\t\t...",
+			]
+		)
+	lines.extend(
+		[
+			"Returns:",
+			_full_returns_line(obj),
+			"Raises:",
+			"\tBaseException:",
+			"\t\t|Must| raise if...",
+			"Notes:",
+			"\tGeneral note:",
+			"\t\t...",
+			"See_also:",
+			'"""',
+			"",
+		]
+	)
+	return "\n".join(lines)
+
+
+def _full_docstring_for_method(obj: object) -> str:
+	parameter_names = _parameter_names_from_callable(obj, drop_first_receiver=True)
+	lines = [
+		'r"""',
+		"Preamble:",
+		"\tprofile:",
+		"\t\tmethod",
+		"\tnormative_sections:",
+		"\t\tDefinitions, Contract, Parameters, Returns, Raises, See_also",
+		"\tstatus:",
+		"\t\tstable",
+		"\tscope:",
+		"\t\tpublic",
+		"Definitions:",
+		"\tExampleTerm:",
+		"\t\t...",
+		"Terminology:",
+		"\tExample term:",
+		"\t\t...",
+		"Contract:",
+		"\tgeneral:",
+		"\t\t|Must| define the externally visible behavior of this method.",
+		"\tinvariants:",
+		"\t\t|Must| preserve all documented invariants across valid calls.",
+		"\trequires:",
+		"\t\t|Must| define preconditions for valid input.",
+		"\tensures:",
+		"\t\t|Must| define postconditions for successful execution.",
+		"Description:",
+		"\t...",
+		"Parameters:",
+	]
+	for name in parameter_names:
+		lines.extend(
+			[
+				f"\t{name}:",
+				"\t\t...",
+			]
+		)
+	lines.extend(
+		[
+			"Returns:",
+			_full_returns_line(obj),
+			"Raises:",
+			"\tBaseException:",
+			"\t\t|Must| raise if...",
+			"Notes:",
+			"\tGeneral note:",
+			"\t\t...",
+			"See_also:",
+			'"""',
+			"",
+		]
+	)
+	return "\n".join(lines)
+
+
+def _full_docstring_for_function_node(node: ast.FunctionDef | ast.AsyncFunctionDef) -> str:
+	parameter_names = _parameter_names_from_function_node(node)
+	lines = [
+		'r"""',
+		"Preamble:",
+		"\tprofile:",
+		"\t\tfunction",
+		"\tnormative_sections:",
+		"\t\tDefinitions, Contract, Parameters, Returns, Raises, See_also",
+		"\tstatus:",
+		"\t\tstable",
+		"\tscope:",
+		"\t\tpublic",
+		"Definitions:",
+		"\tExampleTerm:",
+		"\t\t...",
+		"Terminology:",
+		"\tExample term:",
+		"\t\t...",
+		"Contract:",
+		"\tgeneral:",
+		"\t\t|Must| define the externally visible behavior of this callable.",
+		"\tinvariants:",
+		"\t\t|Must| preserve all documented invariants across valid calls.",
+		"\trequires:",
+		"\t\t|Must| define preconditions for valid input.",
+		"\tensures:",
+		"\t\t|Must| define postconditions for successful execution.",
+		"Description:",
+		"\t...",
+		"Parameters:",
+	]
+	for name in parameter_names:
+		lines.extend([f"\t{name}:", "\t\t..."])
+	lines.extend(
+		[
+			"Returns:",
+			_full_returns_line_from_node(node),
+			"Raises:",
+			"\tBaseException:",
+			"\t\t|Must| raise if...",
+			"Notes:",
+			"\tGeneral note:",
+			"\t\t...",
+			"See_also:",
+			'"""',
+			"",
+		]
+	)
+	return "\n".join(lines)
+
+
+def _full_docstring_for_method_node(node: ast.FunctionDef | ast.AsyncFunctionDef) -> str:
+	parameter_names = _parameter_names_from_function_node(node, drop_first_receiver=True)
+	lines = [
+		'r"""',
+		"Preamble:",
+		"\tprofile:",
+		"\t\tmethod",
+		"\tnormative_sections:",
+		"\t\tDefinitions, Contract, Parameters, Returns, Raises, See_also",
+		"\tstatus:",
+		"\t\tstable",
+		"\tscope:",
+		"\t\tpublic",
+		"Definitions:",
+		"\tExampleTerm:",
+		"\t\t...",
+		"Terminology:",
+		"\tExample term:",
+		"\t\t...",
+		"Contract:",
+		"\tgeneral:",
+		"\t\t|Must| define the externally visible behavior of this method.",
+		"\tinvariants:",
+		"\t\t|Must| preserve all documented invariants across valid calls.",
+		"\trequires:",
+		"\t\t|Must| define preconditions for valid input.",
+		"\tensures:",
+		"\t\t|Must| define postconditions for successful execution.",
+		"Description:",
+		"\t...",
+		"Parameters:",
+	]
+	for name in parameter_names:
+		lines.extend([f"\t{name}:", "\t\t..."])
+	lines.extend(
+		[
+			"Returns:",
+			_full_returns_line_from_node(node),
+			"Raises:",
+			"\tBaseException:",
+			"\t\t|Must| raise if...",
+			"Notes:",
+			"\tGeneral note:",
+			"\t\t...",
+			"See_also:",
+			'"""',
+			"",
+		]
+	)
+	return "\n".join(lines)
+
+
+def generate_minimal_docstring(obj: object, *, profile: Profile | None = None) -> str:
+	r"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+		status:
+			stable
+		scope:
+			extension
+	Contract:
+		general:
+			|Must| generate a minimal Waterloo docstring template for |var|`obj`.
+			|Must| select the template by using |var|`profile` if provided.
+			|Must| infer the profile from |var|`obj` if |var|`profile` is |None|.
+		ensures:
+			The resulting template |must| be structurally valid according to the Waterloo format.
+	Parameters:
+		obj:
+			Object for which the docstring template is generated.
+		profile:
+			Optional explicit profile (`module`, `class`, `function`, `method`).
+			If |None|, the profile is inferred from |var|`obj`.
+	Returns:
+		Generated minimal docstring template.
+	Raises:
+		RuntimeError:
+			|May| be raised if profile inference fails for |var|`obj`.
+	"""
+	k = profile or infer_docstring_profile(obj)
+	if k == "module":
+		return _minimal_docstring_for_module()
+	if k == "class":
+		return _minimal_docstring_for_class()
+	if k == "method":
+		return _minimal_docstring_for_method(obj)
+	return _minimal_docstring_for_function(obj)
+
+
+def generate_full_docstring(obj: object, *, profile: Profile | None = None) -> str:
+	r"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+		status:
+			stable
+		scope:
+			extension
+	Contract:
+		general:
+			|Must| generate a full Waterloo docstring template for |var|`obj`.
+			|Must| include the extended section set for the resolved profile.
+			|Must| select the template by using |var|`profile` if provided.
+			|Must| infer the profile from |var|`obj` if |var|`profile` is |None|.
+		ensures:
+			The resulting template |must| be structurally valid according to the Waterloo format.
+	Parameters:
+		obj:
+			Object for which the docstring template is generated.
+		profile:
+			Optional explicit profile (`module`, `class`, `function`, `method`).
+			If |None|, the profile is inferred from |var|`obj`.
+	Returns:
+		Generated full docstring template.
+	Raises:
+		RuntimeError:
+			|May| be raised if profile inference fails for |var|`obj`.
+	"""
+	k = profile or infer_docstring_profile(obj)
+	if k == "module":
+		return _full_docstring_for_module()
+	if k == "class":
+		return _full_docstring_for_class()
+	if k == "method":
+		return _full_docstring_for_method(obj)
+	return _full_docstring_for_function(obj)
+
+
+def generate_minimal_docstring_from_node(profile: Profile, node: ast.AST | None) -> str:
+	r"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+		status:
+			stable
+		scope:
+			extension
+	Contract:
+		general:
+			|Must| generate a minimal Waterloo docstring template from a pre-parsed AST node.
+			|Must| use |var|`profile` to select the target template variant.
+			|Must| ignore |var|`node` if |var|`profile` is |value|`module` or |value|`class`.
+			|Must| require a function-like AST node for profiles |value|`function` and |value|`method`.
+	Parameters:
+		profile:
+			Target profile (`module`, `class`, `function`, `method`).
+		node:
+			Parsed AST node for function/method generation.
+			May be |None| for profile |value|`module`.
+	Returns:
+		Generated minimal docstring template.
+	Raises:
+		RuntimeError:
+			|Must| be raised if function/method generation is requested with an incompatible AST node.
+	"""
+	if profile == "module":
+		return _minimal_docstring_for_module()
+	if profile == "class":
+		return _minimal_docstring_for_class()
+	if not isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+		raise RuntimeError("function/method generation requires ast.FunctionDef or ast.AsyncFunctionDef node")
+	if profile == "method":
+		return _minimal_docstring_for_method_node(node)
+	return _minimal_docstring_for_function_node(node)
+
+
+def generate_full_docstring_from_node(profile: Profile, node: ast.AST | None) -> str:
+	r"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+		status:
+			stable
+		scope:
+			extension
+	Contract:
+		general:
+			|Must| generate a full Waterloo docstring template from a pre-parsed AST node.
+			|Must| use |var|`profile` to select the target template variant.
+			|Must| ignore |var|`node` if |var|`profile` is |value|`module` or |value|`class`.
+			|Must| require a function-like AST node for profiles |value|`function` and |value|`method`.
+	Parameters:
+		profile:
+			Target profile (`module`, `class`, `function`, `method`).
+		node:
+			Parsed AST node for function/method generation.
+			May be |None| for profile |value|`module`.
+	Returns:
+		Generated full docstring template.
+	Raises:
+		RuntimeError:
+			|Must| be raised if function/method generation is requested with an incompatible AST node.
+	"""
+	if profile == "module":
+		return _full_docstring_for_module()
+	if profile == "class":
+		return _full_docstring_for_class()
+	if not isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+		raise RuntimeError("function/method generation requires ast.FunctionDef or ast.AsyncFunctionDef node")
+	if profile == "method":
+		return _full_docstring_for_method_node(node)
+	return _full_docstring_for_function_node(node)

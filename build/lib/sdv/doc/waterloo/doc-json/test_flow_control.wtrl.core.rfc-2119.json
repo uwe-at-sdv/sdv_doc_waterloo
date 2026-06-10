@@ -1,0 +1,362 @@
+{
+    "$schema": "https://sci-d-vis.com/schema/wtrl-json-0.1.0.schema.json",
+    "$id": "urn:waterlint:wtrl-json:0.9.1:core:rfc-2119:f389fd3e930a41030c4646e956aba7e4e8cbd8d3d3c8f048ff37c84be4a8dc9f",
+    "__WTRL_VERSION__": {
+        "waterloo": "0.6.1",
+        "schema": "0.1.0"
+    },
+    "__WTRL_META__": {
+        "generated_at": "2026-05-07T16:42:31+02:00",
+        "generator": "waterlint",
+        "scope": "core",
+        "flavour": "rfc-2119"
+    },
+    "__WTRL_ROLES__": {
+        "attr": "Attribute name",
+        "cmd": "Shell or CLI command",
+        "dfn": "Definition of a term",
+        "file": "File or path",
+        "func": "Function or callable",
+        "key": "Key on the keyboard",
+        "label": "Section/Subsection label",
+        "lit": "Literal text or code",
+        "mod": "Module name",
+        "op": "Operator symbol",
+        "opt": "Command-line option or flag",
+        "tag": "Tag or marker",
+        "term": "Domain-specific term",
+        "type": "Type name or annotation",
+        "value": "Concrete value",
+        "var": "Variable name",
+        "var_type": "Variable and type, like 'var:type'"
+    },
+    "__WTRL_SCOPES__": {
+        "public": {
+            "value": 10,
+            "description": ""
+        },
+        "extension": {
+            "value": 20,
+            "description": ""
+        },
+        "core": {
+            "value": 30,
+            "description": ""
+        }
+    },
+    "__WTRL_TOC_MODULES__": {
+        "test_flow_control": "/__WTRL_OBJECTS__/test_flow_control"
+    },
+    "__WTRL_TOC_CLASSES__": {
+        "test_flow_control.X": "/__WTRL_OBJECTS__/test_flow_control.X"
+    },
+    "__WTRL_TOC_CALLABLES__": {
+        "test_flow_control.f": "/__WTRL_OBJECTS__/test_flow_control.f"
+    },
+    "__WTRL_TOC_TYPES__": {
+        "test_flow_control.MyType": "/__WTRL_OBJECTS__/test_flow_control.MyType"
+    },
+    "__WTRL_TOC_VARIABLES__": {
+        "test_flow_control.my_variable": "/__WTRL_OBJECTS__/test_flow_control.my_variable"
+    },
+    "__WTRL_TOC_CONSTANTS__": {
+        "test_flow_control.my_constant": "/__WTRL_OBJECTS__/test_flow_control.my_constant"
+    },
+    "__WTRL_OBJECTS__": {
+        "test_flow_control.MyType": {
+            "doc": {},
+            "doc_lines": [
+                "|label|`Public_types` is normative. The content",
+                "is a sequence of paragraphs.",
+                "This is the second paragraph. A single pipe character \"|\" separates paragraphs",
+                "within the freeform text.",
+                "|",
+                "Itemizations and enumerations are possible:",
+                "# Numbered item",
+                "* An item",
+                "* An item",
+                "# Numbered item"
+            ]
+        },
+        "test_flow_control.my_variable": {
+            "doc": {},
+            "doc_lines": [
+                "|label|`Public_variables` is normative. The content",
+                "is a sequence of paragraphs.",
+                "This is the second paragraph. A single pipe character \"|\" separates paragraphs",
+                "within the freeform text.",
+                "|",
+                "Itemizations and enumerations are possible:",
+                "# Numbered item",
+                "* An item",
+                "* An item",
+                "# Numbered item"
+            ]
+        },
+        "test_flow_control.my_constant": {
+            "doc": {},
+            "doc_lines": [
+                "|label|`Public_constants` is normative. The content",
+                "is a sequence of paragraphs.",
+                "This is the second paragraph. A single pipe character \"|\" separates paragraphs",
+                "within the freeform text.",
+                "|",
+                "Itemizations and enumerations are possible:",
+                "* An item",
+                "+ A subitem",
+                "- A subsubitem",
+                "- A subsubitem",
+                "+ A subitem",
+                "* An item"
+            ]
+        },
+        "test_flow_control": {
+            "doc": {
+                "Preamble": {
+                    "profile": "module",
+                    "normative_sections": [
+                        "Contract",
+                        "Definitions",
+                        "Public_classes",
+                        "Public_functions",
+                        "Public_types",
+                        "Public_variables",
+                        "Public_constants"
+                    ]
+                },
+                "Contract": {
+                    "general": []
+                },
+                "Description": [
+                    "We test several freeform and bullet-list scenarios. A |label|`Description` section",
+                    "is freeform content. A single pipe character \"|\" separates paragraphs",
+                    "within the freeform text.",
+                    "|",
+                    "This is the second paragraph. Here is an enumeration:",
+                    "# Item 1",
+                    "# Item 2"
+                ],
+                "Definitions": {
+                    "Term_A": {
+                        "variations": [],
+                        "text": [
+                            "Definition content is freeform  A single pipe character \"|\" separates paragraphs",
+                            "within the freeform text.",
+                            "|",
+                            "This is the second paragraph. Here is an enumeration",
+                            "# Numbered item with long text, so that we use the backslash in order to create a logical line.",
+                            "# Numbered item"
+                        ]
+                    }
+                },
+                "Public_classes": [
+                    "X"
+                ],
+                "Public_functions": [
+                    "f"
+                ],
+                "Class_overview": {
+                    "X": [
+                        "A class overview is not normative. The content",
+                        "is a sequence of paragraphs.",
+                        "This is the second paragraph. A single pipe character \"|\" separates paragraphs",
+                        "within the freeform text.",
+                        "|",
+                        "Itemizations and enumerations are possible:",
+                        "* An item",
+                        "# Numbered item",
+                        "# Numbered item",
+                        "* An item"
+                    ]
+                },
+                "Function_overview": {
+                    "f": [
+                        "A class overview is not normative. The content",
+                        "is a sequence of paragraphs.",
+                        "This is the second paragraph. A single pipe character \"|\" separates paragraphs",
+                        "within the freeform text.",
+                        "|",
+                        "Itemizations and enumerations are possible:",
+                        "# Numbered item",
+                        "* An item",
+                        "* An item",
+                        "# Numbered item"
+                    ]
+                },
+                "Public_types": {
+                    "MyType": [
+                        "|label|`Public_types` is normative. The content",
+                        "is a sequence of paragraphs.",
+                        "This is the second paragraph. A single pipe character \"|\" separates paragraphs",
+                        "within the freeform text.",
+                        "|",
+                        "Itemizations and enumerations are possible:",
+                        "# Numbered item",
+                        "* An item",
+                        "* An item",
+                        "# Numbered item"
+                    ]
+                },
+                "Public_variables": {
+                    "my_variable": [
+                        "|label|`Public_variables` is normative. The content",
+                        "is a sequence of paragraphs.",
+                        "This is the second paragraph. A single pipe character \"|\" separates paragraphs",
+                        "within the freeform text.",
+                        "|",
+                        "Itemizations and enumerations are possible:",
+                        "# Numbered item",
+                        "* An item",
+                        "* An item",
+                        "# Numbered item"
+                    ]
+                },
+                "Public_constants": {
+                    "my_constant": [
+                        "|label|`Public_constants` is normative. The content",
+                        "is a sequence of paragraphs.",
+                        "This is the second paragraph. A single pipe character \"|\" separates paragraphs",
+                        "within the freeform text.",
+                        "|",
+                        "Itemizations and enumerations are possible:",
+                        "* An item",
+                        "+ A subitem",
+                        "- A subsubitem",
+                        "- A subsubitem",
+                        "+ A subitem",
+                        "* An item"
+                    ]
+                }
+            }
+        },
+        "test_flow_control.X": {
+            "signature": {
+                "text": "object.__init__(self, /, *args, **kwargs)",
+                "parameters": [
+                    {
+                        "name": "args",
+                        "kind": "VAR_POSITIONAL",
+                        "annotation": null,
+                        "default": null
+                    },
+                    {
+                        "name": "kwargs",
+                        "kind": "VAR_KEYWORD",
+                        "annotation": null,
+                        "default": null
+                    }
+                ],
+                "returns": null
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "class",
+                    "normative_sections": [
+                        "Contract",
+                        "Factory"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "Subsections in |label|`Contract` are line-based. This is the first logical line. Use backslash to merge physical lines to a logical line.",
+                        "This is the second logical line. Itemization is not supported inside these logical lines.",
+                        "A sequence of logical lines in the contract is meant to represent a line-by-line executable contract."
+                    ],
+                    "constructor": [
+                        "Same format as |label|`Contract.general`.",
+                        "This is the second logical line."
+                    ]
+                },
+                "Factory": {
+                    "make_X": [
+                        "Line-based text flow is enforced as in |label|`Contract`. Use backslash to merge physical lines to a logical line.",
+                        "This is the second logical line. Factories are not so different from constructors in terms of documentation. The content is interpreted as a line-by-line executable contract."
+                    ]
+                }
+            }
+        },
+        "test_flow_control.f": {
+            "signature": {
+                "text": "f(rng: 'Tuple[int, int]', b: 'str') -> 'Tuple[float, int, List[str]]'",
+                "parameters": [
+                    {
+                        "name": "rng",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "Tuple[int, int]",
+                        "default": null
+                    },
+                    {
+                        "name": "b",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    }
+                ],
+                "returns": "Tuple[float, int, List[str]]"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "Same format as for profile |value|`class`.",
+                        "Second line."
+                    ],
+                    "requires": [
+                        "Same format as |label|`Contract.general`",
+                        "Second line."
+                    ],
+                    "ensures": [
+                        "Same format as |label|`Contract.general`",
+                        "Second line."
+                    ],
+                    "invariants": [
+                        "Same format as |label|`Contract.general`",
+                        "Second line."
+                    ]
+                },
+                "Returns": [
+                    "As opposed to the |label|`Contract` sections,",
+                    "the |label|`Return` section is intepreted as a freeform text.",
+                    "A single pipe character \"|\" separates paragraphs within the freeform text.",
+                    "|",
+                    "The free form allows us to itemize and enumerate. We can use this in",
+                    "order to describe the structure of the returned value, e.g.",
+                    "|",
+                    "The returned value has the form |var|`(u,v,[r,s])` where",
+                    "* |var|`u` is ...",
+                    "* |var|`v` is ...",
+                    "* |var|`[r,s]` consist of the following:",
+                    "+ |var|`r` which is ...",
+                    "+ |var|`s` which is ..."
+                ],
+                "Parameters": {
+                    "rng": [
+                        "Like the |label|`Returns` section, parameter entries support",
+                        "freeform text with itemization and enumeration, which allows",
+                        "to resolve the inner structure of parameters. Example",
+                        "* Component |value|`0` is the beginning of the range.",
+                        "* Component |value|`1` is the (eclusive) end of the range."
+                    ],
+                    "b": [
+                        "Nonetheless, line-by-line executable contract style is",
+                        "possible by explicit itemization:",
+                        "* MUST represent ...",
+                        "* MUST fulfill ...",
+                        "This may overlap with the |label|`requires` section.",
+                        "In case of a thematic overlap, a detailed |label|`requires` section",
+                        "should be preferred."
+                    ]
+                },
+                "Raises": {}
+            }
+        }
+    }
+}

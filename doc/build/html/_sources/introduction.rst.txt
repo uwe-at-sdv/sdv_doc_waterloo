@@ -1,0 +1,721 @@
+Introduction
+============
+
+Informative: The final phrasing of the English text benefits from
+LLM-assisted polishing.
+
+About Waterloo Docstrings
+-------------------------
+
+Waterloo Docstrings (simply called "Waterloo" in this document)
+is a specification and tooling ecosystem for Python docstrings with a
+strong emphasis on **machine-verifiable normativity**.
+
+At its core, Waterloo defines a structured docstring format that allows authors
+to express normative requirements, guarantees, and constraints in a way that is
+both human-readable and mechanically checkable. These docstrings are not treated
+as passive comments, but as executable contracts that can be parsed, validated,
+and reasoned about by tools.
+
+The project consists of several closely related parts:
+
+* a formal specification of the Waterloo docstring format,
+* a parser and validation toolkit,
+* a command-line validator and linter
+* a Sphinx extension for rendering structured, contract-aware documentation
+* a transformation layer for exporting docstrings to other formats.
+
+Waterloo is designed to complement existing Python documentation practices rather
+than replace them. Free-form explanatory text remains fully supported, but is
+clearly separated from normative content. This separation allows tools, reviewers,
+and AI systems to reliably distinguish between binding requirements and informative
+context.
+
+The primary goal of Waterloo is to make documentation precise, reviewable, and
+resistant to drift as code evolves, while remaining practical for real-world
+development workflows.
+
+
+Why normative documentation?
+----------------------------
+
+Most documentation in software projects is written as free-form prose. This works well for humans:
+we infer intent from context, tolerate ambiguity, and fill gaps using experience. However,
+prose is inherently underspecified. It often answers what something roughly does,
+but not what must always be true.
+
+Normative documentation closes this gap by expressing requirements as explicit rules.
+Instead of "this function returns a value" it states: it must return :wtrl_value:`None`,
+it must not modify input, or it should raise :wtrl_type:`RuntimeError` under defined circumstances.
+Such statements define a contract: a set of constraints that the implementation and its callers can rely on.
+
+This is valuable for three reasons:
+
+.. rubric:: Consistency and reviewability
+
+Normative rules make assumptions visible. They reduce misunderstandings and make API
+reviews less subjective, because requirements can be checked against a concrete list of obligations.
+
+.. rubric:: Machine-verifiable structure
+
+When rules are written in a structured format, tools can validate them. A validator
+can detect missing sections, incomplete parameter coverage, unknown exceptions, or inconsistent API listings. This improves documentation quality without requiring "perfect prose".
+
+.. rubric:: A specification layer for automation and AI
+
+Modern development increasingly involves automated tooling and AI assistants.
+These systems benefit from explicit constraints. A normative contract provides a compact, unambiguous representation of intent that is easier to interpret than informal text and helps reduce guesswork and hallucination.
+
+Waterloo uses a docstring format that keeps the machine-readable part strict and predictable
+while allowing free-form human explanation where appropriate. The goal is not to replace
+readable documentation, but to add a reliable contract layer that can be validated and used by tools.
+
+
+Normativity keywords and their scope
+------------------------------------
+
+Waterloo uses normativity keywords such as :wtrl_lit:`\|Must\|`, :wtrl_lit:`\|Must_not\|`, :wtrl_lit:`\|Should\|`, and :wtrl_lit:`\|May\|`
+to express requirements, guarantees, and permissions in natural language.
+These keywords are inspired by RFC 2119, but Waterloo assigns them a stricter role
+within a machine-verifiable documentation system.
+
+In Waterloo docstrings, **structural normativity is primary**: a section is normative **if and only if**
+it is listed in :wtrl_label:`normative_sections` in the so-called :wtrl_label:`Preamble` of the docstring.
+However, normativity keywords are still used for two specific purposes:
+
+1. to express obligations and permissions of the documented object, and
+2. to enable validators to detect inconsistencies and to classify diagnostic severity.
+
+.. rubric:: Structural normativity is primary
+
+Waterloo follows the principle of *Binary Normativity* (|BinNorm|).
+Each section of a docstring (including its subsections) is either normative or informative,
+and this distinction is declared explicitly in :wtrl_label:`Preamble.normative_sections`.
+
+Validators use this structural information as the authoritative source of normativity.
+
+.. rubric:: Keyword-based consistency rules
+
+While keywords do not *create* normativity on their own, they are used to enforce
+self-consistency between structure and content.
+
+In particular:
+
+* If an informative section contains normativity keywords in tokenized form,
+  this is invalid. Any section that contains tokenized normativity keywords
+  |must| be listed in :wtrl_label:`normative_sections`.
+  Normative sections, however, are not required to contain normativity keywords.
+  Many normative sections consist of declarative or referential content only.
+
+This rule prevents the introduction of normative obligations in sections
+that are explicitly declared as informative.
+
+.. rubric:: Diagnostics and severity mapping
+
+Normativity keywords also support a predictable diagnostic policy.
+Validators must map violations to diagnostic severities based on the keyword class.
+
+For example:
+
+* A violated |Must| / |Must_not| requirement results in an error.
+* A violated |Should| / |Should_not| recommendation results in a warning.
+
+This mapping is defined by the Waterloo specification and is not expressed via
+natural-language compositions such as "only if", "unless", or similar constructs.
+
+.. rubric:: Avoiding implicit negation and ambiguity
+
+Natural-language constructs such as "only", "unless", or "except if" introduce
+implicit negation and mode-dependent semantics that are difficult to interpret
+consistently, both for humans and for tools.
+
+For example, a sentence like:
+
+.. code:: text
+
+	Tools |may| treat unresolved references as errors only in normative mode.
+
+implicitly encodes a prohibition for non-normative mode, which is not reliably
+captured by RFC-style normativity keywords.
+
+Waterloo therefore expresses validator rules explicitly and structurally rather than
+relying on linguistic composition of normativity keywords.
+
+.. rubric:: Summary
+
+* Normativity of sections is declared structurally via :wtrl_label:`normative_sections`.
+* Tokenized normativity keywords are forbidden in informative sections and trigger
+  consistency checks.
+* Validators must map |Should| to warnings and |Must| to errors via an explicit policy.
+* Validation rules are expressed structurally, not via ambiguous natural-language
+  compositions.
+
+
+
+Recipients and output formats
+------------------------------
+
+Docstrings or docstrings translated into other formats can
+in principle be processed by humans, LLMs (AI) and parsers (non-AI).
+For human readers and LLMs, the purpose is to use the documented
+objects (modules, classes, callables) for further software.
+Parsers form the frontend for various types of software, such as validators;
+It must be able to check the documentation for internal consistency and it must
+be able to check it against the documented software.
+
+This raises the question of suitable output formats. In the current version,
+there are converters to HTML (via Sphinx), JSON, YAML and Markdown.
+
+At this stage, JSON and YAML output are provided as a toolkit for building
+custom translators and integrations. The docstring subtree representation is
+stable, but the surrounding JSON/YAML envelope may evolve until a formal schema
+is published. The following table provides an overview of which format is suitable for whom:
+
+.. list-table:: Output format vs. recipient
+	:widths: 20 20 20 20
+	:header-rows: 1
+
+	* -
+	  - Human
+	  - AI agent/LLM
+	  - Parser/validator
+	* - HTML (Sphinx)
+	  - very good
+	  - very poor
+	  - very poor
+	* - JSON
+	  - poor
+	  - optimal
+	  - very good
+	* - YAML
+	  - good
+	  - very good
+	  - very good
+	* - Markdown
+	  - good
+	  - poor
+	  - poor
+	* - Original (:wtrl_var:`__doc__`)
+	  - good
+	  - good
+	  - good
+
+YAML is therefore a good compromise for all three groups of recipients,
+whereas JSON (according to LLMs) is optimal for LLMs/AI agents.
+Apart from the output format, Waterloo provides three flavours for the
+displaying the normativity keywords:
+
+* :wtrl_value:`RAW` -- Waterloo style with pipe delimiters
+* :wtrl_value:`RFC_2119` -- In capital letters, very widely used style
+* :wtrl_value:`MARKDOWN` -- With double asterisks as delimiters
+
+The output formats can be combined with these flavours.
+The choice of flavour is less critical in Waterloo due to the |BinNorm| principle
+(see section :ref:`principles`), as normativity is primarily encoded through
+structure rather than typography.
+
+
+.. _principles:
+
+Basic principles of Waterloo Docstrings
+---------------------------------------
+
+This project follows a strict set of principles to transform documentation from 
+passive text into a **machine-verifiable specification**. Our goal is to bridge 
+the gap between human readability, AI assistance, and automated validation.
+
+The abbreviations used for the principles below are descriptive identifiers
+introduced by this specification. Except for well-known terms such as SSoT,
+they are not intended to mirror existing standard acronyms.
+
+* **[LoII, LoIO] Locality of Information (Input & Output)** --
+  Normative definitions reside exactly where they apply (e.g., directly within 
+  the module, class, or function docstring). Both source and rendered output 
+  must keep this information bundled to prevent context fragmentation.
+
+* **[SSoT] Single Source of Truth** --
+  Every normative requirement is defined once. To avoid contradictions, 
+  normative statements must never be repeated or qualified elsewhere in 
+  the documentation.
+
+* **[BinNorm] Binary Normativity** --
+  The distinction between *normative* (binding) and *informative* (contextual) 
+  content is absolute. We apply a **single, simple rule** to mark normative 
+  sections, ensuring no ambiguity for users or tools.
+
+* **[SoSaC] Separation of Structure and Content** --
+  The documentation layout follows a strict schema that can be validated 
+  automatically. While the content remains natural language, it utilizes 
+  standardized keywords (e.g., |Must|, |Should|, |May|) to enable 
+  logical reasoning by AI agents and test suites.
+
+* **[SCaA] Self-Consistency and Autarky** --
+  Each object's documentation must be interpretable on its own. We prioritize 
+  reliability over DRY (*Don't Repeat Yourself*) -- human readers and AI agents 
+  should understand the requirements even without access to the full toolkit 
+  or external references.
+
+* **[DrPrv] Drift Prevention** --
+  The documentation is an integral part of the code's lifecycle. Automated 
+  validators ensure that the structural integrity is maintained, 
+  effectively preventing "documentation drift" as the codebase evolves.
+
+* **[MVAuth] Machine-Verifiable Authority** --
+  By formalizing the structure, we allow external tools to verify if the 
+  implementation matches the normative claims, treating documentation as 
+  an executable contract.
+
+
+Scope and limits of the principles
+----------------------------------
+
+The principles stated above describe the architectural intent of Waterloo Docstrings.
+They guide the design and usage of the format, but they are not themselves normative rules.
+Their applicability must be interpreted within practical and technical constraints.
+
+Waterloo distinguishes strictly between **normative rules** (which are formally enforced)
+and **design principles** (which describe structural goals).
+The latter admit contextual limitations, as outlined below.
+
+
+.. rubric:: LoII -- Locality of Information (Input)
+
+LoII requires that normative definitions reside directly within the docstring
+of the object to which they apply.
+In practice, complex systems may require supplementary material such as
+diagrams, tables, or multimedia resources.
+Such material may reside outside the docstring without violating the structural
+integrity of Waterloo.
+LoII applies to normative textual definitions.
+Explanatory or illustrative resources may be external.
+
+
+.. rubric:: LoIO -- Locality of Information (Output)
+
+LoIO encourages that rendered documentation preserves the structural bundling
+of normative content.
+However, presentation-layer decisions (such as separating extensive examples
+or cross-cutting demonstrations) may lead to selective redistribution of content
+in rendered form.
+LoIO governs structural coherence, not pedagogical layout.
+
+
+.. rubric:: SSoT -- Single Source of Truth
+
+
+SSoT is a foundational principle of Waterloo and admits no practical limitation.
+Normative requirements must not be duplicated or contradicted elsewhere.
+References to a normative rule are permitted, but independent restatements
+of the same requirement are not. If a conflict arises, SSoT has priority.
+Normative requirements must never be duplicated, even at the expense
+of strict locality.
+
+
+.. rubric:: BinNorm -- Binary Normativity
+
+The distinction between normative and informative content in Waterloo
+is structural and absolute.
+Normativity is defined at the level of sections.
+Each section is assigned exactly one normativity state:
+either normative or informative.
+Sections constitute the largest contiguous structural units
+with a well-defined normativity classification.
+Normativity does not depend on wording, emphasis, or context,
+but solely on structural placement.
+This binary partitioning is inherent to the format definition
+and does not admit contextual relaxation or mixed states.
+
+
+.. rubric:: SoSaC -- Separation of Structure and Content
+
+
+SoSaC is intrinsic to the design of Waterloo Docstrings.
+The structural schema is strictly defined and machine-validated.
+Natural-language content remains flexible within that structure.
+No practical limitation of this principle is foreseen.
+
+
+.. rubric:: SCaA -- Self-Consistency and Autarky
+
+SCaA requires that each documented object be structurally interpretable on its own.
+This principle applies to structural completeness, not to total informational isolation.
+External references may provide additional explanation or context.
+However, the **structural** understanding of a docstring must not depend
+on external material.
+
+A practical sanity check for structural autarky is the following:
+
+Present an isolated Waterloo docstring -- without surrounding source code
+or tooling context -- to a general-purpose language model and request
+an assessment of its structure and meaning.
+
+Even without prior knowledge of Waterloo, such models typically:
+
+* recognize the presence of a strict structural schema,
+* distinguish normative from informative content,
+* identify binding requirements expressed via standardized keywords,
+* and interpret the document as a specification rather than informal prose.
+
+This observation is not used as a formal proof of correctness.
+However, it provides empirical evidence that Waterloo docstrings
+are self-describing at the structural level.
+Structural autarky is achieved when the format communicates
+its constraints through its own organization,
+without requiring external documentation
+to interpret its normative structure.
+
+.. rubric:: DrPrv -- Drift Prevention
+
+Drift prevention is a design objective rather than a binary property.
+The degree to which documentation drift is prevented depends on:
+
+* the strictness of tooling,
+* integration into development workflows,
+* adherence by maintainers.
+
+Waterloo provides mechanisms to reduce drift, but it cannot eliminate
+it categorically.
+
+
+.. rubric:: MVAuth -- Machine-Verifiable Authority
+
+Machine-verifiable authority is an aspirational principle.
+The extent to which implementation can be automatically verified against
+documentation depends on tooling, type information, and test coverage.
+Waterloo enables machine-verifiable contracts but does not guarantee
+complete verification in all contexts.
+
+
+Project status
+--------------
+
+Static typechecking
+...................
+
+We use :wtrl_lit:`mypy` for static typechecking. The modules
+
+* :wtrl_file:`sdv.doc.waterloo.docitem`
+* :wtrl_file:`sdv.doc.waterloo.docitem_base`
+* :wtrl_file:`sdv.doc.waterloo.docitem_contract`
+* :wtrl_file:`sdv.doc.waterloo.docitem_convert`
+* :wtrl_file:`sdv.doc.waterloo.docitem_docstring`
+* :wtrl_file:`sdv.doc.waterloo.docitem_genutil`
+* :wtrl_file:`sdv.doc.waterloo.docitem_helper`
+* :wtrl_file:`sdv.doc.waterloo.docitem_preamble`
+* :wtrl_file:`sdv.doc.waterloo.docitem_sections`
+* :wtrl_file:`sdv.doc.waterloo.docitem_sphinx`
+* :wtrl_file:`sdv.doc.waterloo.docitem_tokenizer`
+* :wtrl_file:`sdv.doc.waterloo.docitem_validator`
+* :wtrl_file:`sdv.doc.waterloo.waterlint`
+* :wtrl_file:`sdv.doc.waterloo.waterlint_render_html5`
+
+are validated on a regular basis. The current status is
+
+.. literalinclude:: type_checking_report.txt
+	:language: none
+
+Our :wtrl_lit:`mypy`-configuration is:
+
+.. literalinclude:: ../../mypy.ini
+
+Exceptions from typechecking are:
+
+.. literalinclude:: type_checking_exceptions.txt
+	:language: none
+
+Pytest
+......
+
+Pytest files are located in :wtrl_file:`pytest` at repository level.
+
+* :wtrl_file:`pytest_lexer_golden.py`
+* :wtrl_file:`pytest_validation.py`
+* :wtrl_file:`pytest_vscode_docstring_generation.py`
+
+Dependencies
+------------
+
+.. rubric:: Requires packages (will be installed by Pip)
+
+* :wtrl_mod:`jsonschema` -- ``python3 -m pip install jsonschema``
+* :wtrl_mod:`jsonpointer` -- ``python3 -m pip install jsonpointer``
+
+.. rubric:: Recommended additional software
+
+* :wtrl_cmd:`jq` -- Command-line JSON processor
+  (Created by Stephen Dolan and the `jq community <https://jqlang.github.io>`_).
+  
+  Available via:
+  
+  * **Official Website:** `jqlang.github.io/jq <https://jqlang.github.io>`_
+  * **Source:** `GitHub Repository <https://github.com>`_
+  * **Installation:** Most package managers (e.g., ``sudo apt install jq``, ``brew install jq``, or ``choco install jq``).
+
+  Using :wtrl_cmd:`jq`, you can inspect machine-readable JSON documentation,
+  for example to identify documented modules or objects, and to query associated metadata.
+
+
+Versioning
+----------
+
+This section is informative.
+
+Waterloo consists of several components that may evolve independently.
+These currently include:
+
+	* the Python library implementing the Waterloo docstring model,
+	* the command line tool :wtrl_cmd:`waterlint`,
+	* the JSON schema used for interchange and validation,
+	* and potentially additional subsystems in the future.
+
+Each subsystem maintains its own semantic version number of the form
+:wtrl_value:`X.Y.Z`.
+
+In addition to these subsystem versions, Waterloo defines a single
+:wtrl_dfn:`main version`. The main version serves as the externally
+communicated compatibility version of the Waterloo specification and
+toolchain.
+
+The main version is intended to remain stable over long periods of time.
+A change of the major component indicates an intentional incompatibility
+with previously valid Waterloo documents or tools.
+
+
+Subsystem versions
+..................
+
+Subsystems may evolve independently and therefore maintain their own
+version numbers. A version change in one subsystem does not directly
+modify the version numbers of other subsystems.
+
+Subsystem versions exist primarily to track development and internal
+evolution of the individual components.
+
+
+Main version derivation
+.......................
+
+The main version reflects the highest-order change among the subsystem
+versions that occur within a release. The following interpretation is used:
+
+	* If a subsystem performs a patch update (:wtrl_value:`X.Y.Z -> X.Y.(Z+1)`),
+	  the patch component of the main version is increased.
+
+	* If a subsystem performs a minor update (:wtrl_value:`X.Y.Z -> X.(Y+1).0`),
+	  the minor component of the main version is increased and the patch
+	  component is reset to zero.
+
+	* If a subsystem performs a major update (:wtrl_value:`X.Y.Z -> (X+1).0.0`),
+	  the major component of the main version is increased and the minor and
+	  patch components are reset to zero.
+
+If several subsystems change within the same release, the main version
+reflects the highest-order change (major overrides minor, minor overrides
+patch).
+
+
+Compatibility interpretation
+............................
+
+The major component of the main version represents the compatibility
+level of the Waterloo specification.
+
+As a design goal, the major version is expected to remain stable for as
+long as possible. A major version change would normally correspond to a
+deliberate and incompatible modification of the specification, such as:
+
+	* changes that invalidate previously valid Waterloo docstrings,
+	* changes that alter the semantic interpretation of existing rules,
+	* structural changes requiring modifications to existing documentation.
+
+Such changes are expected to be rare.
+
+Minor and patch updates are used for incremental evolution of the
+specification, tooling improvements, clarifications, and additional
+features that remain compatible with existing Waterloo documents.
+
+Possible future enhancements
+----------------------------
+
+Introductory examples
+---------------------
+
+This section is informative.
+
+
+Module
+......
+
+Let us do an example: In directory :wtrl_file:`doc/examples` you see a file :wtrl_file:`test_docitem_module.py`.
+On module level this is equipped with a basic Waterloo docstring:
+
+.. literalinclude:: ../examples/test_docitem_module.py
+	:language: python
+
+In order to render this in Sphinx, we add the directive
+
+.. code::
+
+	.. wtrl_autodoc_module:: test_docitem_module
+
+at the position in the document where the docstring is supposed to be rendered, and get:
+
+.. wtrl_autodoc_module:: test_docitem_module
+
+Although this example is oversimplified and pretty useless, because no API has been declared,
+we can point out some of the principles of the Waterloo format.
+
+	* First of all, it is based on indentation. This means it uses a considerable amount of
+	  space on the input side, but remains human-readable. Indentation can be done by
+	  multiples of tab characters or four spaces. We prefer tab characters for our
+	  examples.
+
+Within the docstring we then have :wtrl_dfn:`sections`, and within the sections there may be
+:wtrl_dfn:`subsections` (or text content, as we shall see later). Let us have a look at the details: 
+
+	* Each docstring starts with a :wtrl_label:`Preamble`, which contains a subsection
+	  :wtrl_label:`profile` allowing a certain set of profile specifiers. In our case
+	  it reads :wtrl_value:`module` because we are going to implement the docstring of
+	  a module. The extension could derive this information from the context, yet for
+	  normativity it is important to create self-contained documentation snippets
+	  instead of relying on non-documentary context.
+
+	* The :wtrl_label:`Preamble` requires a subsection :wtrl_label:`normative_sections`
+	  which clearly and uniquely specifies which of the subsequent sections are normative.
+	  All others are informative by definition.
+
+	* Each Waterloo docstring must contain a section :wtrl_label:`Contract`, as shown in the example,
+	  and it must be declared normative.
+
+Module and class
+................
+
+In the next example we have a module and a class docstring, and we consider the class as
+part of the public API of the module:
+
+.. literalinclude:: ../examples/test_docitem_module_2.py
+	:language: python
+
+We render the module docstring as before:
+
+.. code::
+
+	.. wtrl_autodoc_module:: test_docitem_module_2
+
+and the class docstring by
+
+.. code::
+
+	.. wtrl_autodoc_class:: test_docitem_module_2.MyClass
+
+The result is:
+
+.. wtrl_autodoc_module:: test_docitem_module_2
+
+.. wtrl_autodoc_class:: test_docitem_module_2.MyClass
+
+
+Module, class and method
+........................
+
+Finally, let us add a method to the class and attach a docstring.
+
+.. literalinclude:: ../examples/test_docitem_module_3.py
+	:language: python
+
+The module, class and method docstrings are rendered by
+
+.. code::
+
+	.. wtrl_autodoc_module:: test_docitem_module_3
+
+	.. wtrl_autodoc_class:: test_docitem_module_3.MyClass
+
+	.. wtrl_autodoc_method:: test_docitem_module_3.MyClass.greeting
+
+and the result is:
+
+.. wtrl_autodoc_module:: test_docitem_module_3
+
+.. wtrl_autodoc_class:: test_docitem_module_3.MyClass
+
+.. wtrl_autodoc_method:: test_docitem_module_3.MyClass.greeting
+
+Convenience: module and class stack
+-----------------------------------
+
+Repeating the module and the class each time a function, method, type or constant
+is addressed by means of qualified identifier (dot notation) can become a little annoying.
+Therefore the extension is equipped with state stacks for modules and classes.
+
+.. rubric:: Modules
+
+Once you push a module name to the stack, all subsequent
+qualified identifiers for objects will be assumed to belong to that module:
+
+.. code:: rst
+
+	.. wtrl_push_current_module:: test_docitem_module_3
+
+This pushes the module name to the module stack and creates a message in the document:
+
+.. wtrl_push_current_module:: test_docitem_module_3
+
+Now since we have a default module, a class in the module is simply addressed by for instance:
+
+.. code:: rst
+
+	.. wtrl_autodoc_class:: MyClass
+
+instead of
+
+.. code:: rst
+
+	.. wtrl_autodoc_class:: test_docitem_module_3.MyClass
+
+In order to close the domain of the default module, add a directive:
+
+.. code:: rst
+
+	.. wtrl_pop_current_module:: test_docitem_module_3
+
+and in the text you will see:
+
+.. wtrl_pop_current_module:: test_docitem_module_3
+
+.. rubric:: Classes
+
+The same mechanism is provided for class level as well. The purpose here is to avoid
+repeating the class name over and over again in comprehensive documentations
+of methods. The push-command reads:
+
+.. code:: rst
+
+	.. wtrl_push_current_class:: test_docitem_module_3.MyClass
+
+which creates a text snippet:
+
+.. wtrl_push_current_class:: test_docitem_module_3.MyClass
+
+whereas the pop-command is
+
+.. code:: rst
+
+	.. wtrl_pop_current_class:: test_docitem_module_3.MyClass
+
+which is rendered as:
+
+.. wtrl_pop_current_class:: test_docitem_module_3.MyClass
+
+
+Project Name
+------------
+
+This subsection is informative.
+
+The name of the project is loosely inspired by the song "Waterloo Sunset"
+by The Kinks, which refers to the London Underground station *Waterloo*.
+The station itself, in turn, is named after the Battle of Waterloo in Belgium.
+
+Any deeper semantic connection to the project should not be assumed.
+Nevertheless, the historical reference is not entirely inappropriate.

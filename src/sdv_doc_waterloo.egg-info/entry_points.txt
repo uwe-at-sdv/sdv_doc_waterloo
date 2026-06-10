@@ -1,0 +1,3 @@
+[console_scripts]
+waterlint = sdv.doc.waterloo.waterlint:main
+wtrl_mcp = sdv.doc.waterloo.mcp.wtrl_server:main

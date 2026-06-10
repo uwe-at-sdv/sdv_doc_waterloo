@@ -1,0 +1,13 @@
+jsonschema
+jsonpointer
+docutils
+mcp
+
+[:python_version < "3.11"]
+tomli
+
+[dev]
+pytest
+
+[sphinx]
+sphinx
