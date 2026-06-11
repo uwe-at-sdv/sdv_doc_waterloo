@@ -125,16 +125,18 @@ a conventional, human-readable interactive HTML documentation site.</p>
 </section>
 <section id="validating-json-input-output-and-diagnostics">
 <span id="json-io-layer-validation"></span><h2><span class="section-number">8.2. </span>Validating JSON input, output and diagnostics<a class="headerlink" href="#validating-json-input-output-and-diagnostics" title="Link to this heading">¶</a></h2>
-<p>Any <code class="wtrl_cmd docutils literal notranslate"><span class="pre">waterlint</span></code>-related JSON data can be validated using
-<code class="wtrl_cmd docutils literal notranslate"><span class="pre">waterlint</span></code>:</p>
+<p>Any Waterloo-related JSON artifact can be validated with
+<code class="wtrl_cmd docutils literal notranslate"><span class="pre">waterlint</span> <span class="pre">validate-json</span></code>:</p>
 <blockquote>
 <div><p><code class="wtrl_cmd docutils literal notranslate"><span class="pre">waterlint</span> <span class="pre">validate-json</span></code> <code class="wtrl_opt docutils literal notranslate"><span class="pre">--in</span></code> <code class="wtrl_file docutils literal notranslate"><span class="pre">path/to/validate.json</span></code></p>
 </div></blockquote>
-<p>This command attempts to infer the category of the input data
+<p>It attempts to infer the category of the input data
 (documentation, diagnostics, or example references) and validates it
 against the corresponding schema:</p>
 <ul class="simple">
 <li><p><code class="wtrl_file docutils literal notranslate"><span class="pre">schema/wtrl-json-*.*.*.schema.json</span></code> for documentation</p></li>
+<li><p><code class="wtrl_file docutils literal notranslate"><span class="pre">schema/wtrl-explain-section-json-*.*.*.schema.json</span></code> for section explanations</p></li>
+<li><p><code class="wtrl_file docutils literal notranslate"><span class="pre">schema/wtrl-explain-subsection-json-*.*.*.schema.json</span></code> for subsection explanations</p></li>
 <li><p><code class="wtrl_file docutils literal notranslate"><span class="pre">schema/wtrl-tracer-json-*.*.*.schema.json</span></code> for diagnostics</p></li>
 <li><p><code class="wtrl_file docutils literal notranslate"><span class="pre">schema/wtrl-example-refs-json-*.*.*.schema.json</span></code> for example references</p></li>
 <li><p><code class="wtrl_file docutils literal notranslate"><span class="pre">schema/wtrl-walk-json-*.*.*.schema.json</span></code> for structured and detailed output of subcommand <code class="wtrl_cmd docutils literal notranslate"><span class="pre">walk</span></code>.</p></li>
@@ -526,10 +528,21 @@ The resulting LLM-readable document therefore remains a single file.</p>
 <section id="json-document-categories-and-conventions">
 <h2><span class="section-number">8.5. </span>JSON document categories and conventions<a class="headerlink" href="#json-document-categories-and-conventions" title="Link to this heading">¶</a></h2>
 <p>This section is normative.</p>
-<p>The reference tooling emits and expects category-specific <code class="wtrl_attr docutils literal notranslate"><span class="pre">$id</span></code> values.</p>
+<p>The reference tooling emits and expects category-specific
+<code class="wtrl_attr docutils literal notranslate"><span class="pre">$id</span></code> values for these JSON categories.</p>
 <ul class="simple">
 <li><dl class="simple">
 <dt>Waterloo API JSON (from <code class="wtrl_cmd docutils literal notranslate"><span class="pre">render-json</span></code>):</dt><dd><p><code class="wtrl_value docutils literal notranslate"><span class="pre">urn:waterlint:wtrl-json:&lt;waterlint-version&gt;:&lt;scope&gt;:&lt;flavour&gt;:&lt;hash&gt;</span></code></p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Explain-section JSON (from <code class="wtrl_cmd docutils literal notranslate"><span class="pre">explain-section</span></code>):</dt><dd><p><code class="wtrl_value docutils literal notranslate"><span class="pre">urn:waterlint:wtrl-explain-section-json:&lt;waterlint-version&gt;:&lt;timestamp&gt;</span></code></p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Explain-subsection JSON (from <code class="wtrl_cmd docutils literal notranslate"><span class="pre">explain-subsection</span></code>):</dt><dd><p><code class="wtrl_value docutils literal notranslate"><span class="pre">urn:waterlint:wtrl-explain-subsection-json:&lt;waterlint-version&gt;:&lt;timestamp&gt;</span></code></p>
 </dd>
 </dl>
 </li>
@@ -545,7 +558,7 @@ The resulting LLM-readable document therefore remains a single file.</p>
 </dl>
 </li>
 <li><dl class="simple">
-<dt>Output of <code class="wtrl_cmd docutils literal notranslate"><span class="pre">walk</span></code></dt><dd><p><code class="wtrl_value docutils literal notranslate"><span class="pre">urn:waterlint:wtrl-walk-json:&lt;waterlint-walk-version&gt;:&lt;timestamp&gt;</span></code></p>
+<dt>Output of <code class="wtrl_cmd docutils literal notranslate"><span class="pre">walk</span></code>:</dt><dd><p><code class="wtrl_value docutils literal notranslate"><span class="pre">urn:waterlint:wtrl-walk-json:&lt;waterlint-walk-version&gt;:&lt;timestamp&gt;</span></code></p>
 </dd>
 </dl>
 </li>
