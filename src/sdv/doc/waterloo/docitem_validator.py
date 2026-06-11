@@ -2,7 +2,7 @@ from __future__ import annotations
 from types import FunctionType, ModuleType
 from typing import Any, Callable, Dict, Final, get_type_hints, get_origin, get_args, Generator, Iterable, Iterator, List, NewType, NoReturn, Sequence, Set, Tuple, Type, TypeAlias, TypeGuard, Union, cast
 
-from sdv.doc.waterloo.docitem_helper import explain_try_self_for_section, explain_try_self_for_subsection, render_allowed_identifiers, render_expected_identifier, render_expected_snippet, render_identifier_lines, render_source_snippet, render_deduplicated_identifiers, render_normative_section_details, render_exactly_one_identifier_details
+from sdv.doc.waterloo.docitem_helper import explain_try_self_for_section, explain_try_self_for_subsection, render_allowed_identifiers, render_expected_identifier, render_expected_snippet, render_identifier_lines, render_source_snippet, render_deduplicated_identifiers, render_normative_section_details, render_exactly_one_identifier_details, render_normativity_keyword_details, render_overview_requires_section_details, render_name_object_consistency_details, render_exception_reference_details
 from sdv.doc.waterloo.docitem_docstring import *
 
 #===== Typechecking ===========================================#
@@ -349,7 +349,8 @@ Notes:
 			for cls_name in node_pc.items():
 				attr = _check_exists(cls_name, "MPCL-004")
 				if not is_obj_class(attr):
-					raise_validation_error(tr, obj, "MPCL-005", f"Entry '{cls_name}' is not a class.")
+					details = render_name_object_consistency_details("Public_classes", node_pc.items(), profile)
+					raise_validation_error(tr, obj, "MPCL-005", f"Entry '{cls_name}' is not a class.", details)
 #----- Public functions ---------------------------------------#
 	with traced_section(tr, "Public_functions"):
 		if "Public_functions" in top.items():
@@ -357,45 +358,53 @@ Notes:
 			for func_name in node_pf.items():
 				attr = _check_exists(func_name, "MPFN-004")
 				if not is_obj_function(attr):
-					raise_validation_error(tr, obj, "MPFN-005", f"Entry '{func_name}' is not a function.")
+					details = render_name_object_consistency_details("Public_functions", node_pf.items(), profile)
+					raise_validation_error(tr, obj, "MPFN-005", f"Entry '{func_name}' is not a function.", details)
 
 #----- Class overview -----------------------------------------#
 	with traced_section(tr, "Class_overview"):
 		if "Class_overview" in top.items():
 			if "Public_classes" not in top.items():
-				raise_validation_error(tr, obj, "MCLO-003",f"'Class_overview' requires section 'Public_classes'.")
+				details = render_overview_requires_section_details("Class_overview", "Public_classes", profile)
+				raise_validation_error(tr, obj, "MCLO-003",f"'Class_overview' requires section 'Public_classes'.", details)
 			node_co = top._items["Class_overview"]
 			node_pc = top._items["Public_classes"]
 			for cls_name in node_co.items():
 				attr = _check_exists(cls_name, "MCLO-008")
 				if not is_obj_class(attr):
-					raise_validation_error(tr, obj, "MCLO-009", f"Entry '{cls_name}' is not a class.")
+					details = render_name_object_consistency_details("Class_overview", node_co.items(), profile, overview_item=cls_name)
+					raise_validation_error(tr, obj, "MCLO-009", f"Entry '{cls_name}' is not a class.", details)
 				if not node_pc.has_item(cls_name):
 					raise_validation_error(tr, obj, "MCLO-011", f"Entry '{cls_name}' is not found in section 'Public_classes'.")
 #----- ensure SSoT principle ----------------------------------#
 			for cls_name in node_co.items():
 				cls_node = node_co.item(cls_name)
 				if cls_node.has_norm_keywords():
-					raise_validation_error(tr, obj, "MCLO-007", f"Entry '{cls_name}' in Class_overview must not contain normativity keywords; content is informational only.")
+					details = render_normativity_keyword_details("Class_overview", cls_name, cls_node.items(), profile)
+					raise_validation_error(tr, obj, "MCLO-007", f"Entry '{cls_name}' in Class_overview must not contain normativity keywords; content is informational only.", details)
 
 #----- Function overview --------------------------------------#
 	with traced_section(tr, "Function_overview"):
 		if "Function_overview" in top.items():
 			if "Public_functions" not in top.items():
-				raise_validation_error(tr, obj, "MFNO-003",f"'Function_overview' requires section 'Public_functions'.")
+				details = render_overview_requires_section_details("Function_overview", "Public_functions", profile)
+				raise_validation_error(tr, obj, "MFNO-003",f"'Function_overview' requires section 'Public_functions'.", details)
 			node_fo = top._items["Function_overview"]
 			node_pf = top._items["Public_functions"]
 			for fn_name in node_fo.items():
 				attr = _check_exists(fn_name, "MFNO-008")
 				if not is_obj_function(attr):
-					raise_validation_error(tr, obj, "MFNO-009", f"Entry '{fn_name}' is not a function.")
+					details = render_name_object_consistency_details("Function_overview", node_fo.items(), profile, overview_item=fn_name)
+					raise_validation_error(tr, obj, "MFNO-009", f"Entry '{fn_name}' is not a function.", details)
 				if not node_pf.has_item(fn_name):
-					raise_validation_error(tr, obj, "MFNO-011", f"Entry '{fn_name}' is not found in section 'Public_classes'.")
+					details = render_name_object_consistency_details("Function_overview", node_fo.items(), profile, overview_item=fn_name)
+					raise_validation_error(tr, obj, "MFNO-011", f"Entry '{fn_name}' is not found in section 'Public_functions'.", details)
 #----- ensure SSoT principle ----------------------------------#
 			for fn_name in node_fo.items():
 				fn_node = node_fo.item(fn_name)
 				if fn_node.has_norm_keywords():
-					raise_validation_error(tr, obj, "MFNO-007", f"Entry '{fn_name}' in Function_overview must not contain normativity keywords; content is informational only.")
+					details = render_normativity_keyword_details("Function_overview", fn_name, fn_node.items(), profile)
+					raise_validation_error(tr, obj, "MFNO-007", f"Entry '{fn_name}' in Function_overview must not contain normativity keywords; content is informational only.", details)
 
 #----- Public types -------------------------------------------#
 	with traced_section(tr, "Public_types"):
@@ -698,7 +707,8 @@ Notes:
 			for cls_name in node_pc.items():
 				attr = _check_exists(cls_name, "CPCL-004")
 				if not is_obj_class(attr):
-					raise_validation_error(tr, obj, "CPCL-005", f"Entry '{cls_name}' is not a class.")
+					details = render_name_object_consistency_details("Public_classes", node_pc.items(), profile)
+					raise_validation_error(tr, obj, "CPCL-005", f"Entry '{cls_name}' is not a class.", details)
 #----- Public methods -----------------------------------------#
 	with traced_section(tr, "Public_methods"):
 		if "Public_methods" in top.items():
@@ -706,45 +716,53 @@ Notes:
 			for meth_name in node_pm.items():
 				attr = _check_exists(meth_name, "CPMT-004")
 				if not is_obj_function(attr):
-					raise_validation_error(tr, obj, "CPMT-005", f"Entry '{meth_name}' is not a method.")
+					details = render_name_object_consistency_details("Public_methods", node_pm.items(), profile)
+					raise_validation_error(tr, obj, "CPMT-005", f"Entry '{meth_name}' is not a method.", details)
 
 #----- Class overview -----------------------------------------#
 	with traced_section(tr, "Class_overview"):
 		if "Class_overview" in top.items():
 			if "Public_classes" not in top.items():
-				raise_validation_error(tr, obj, "CCLO-003",f"'Class_overview' requires section 'Public_classes'.")
+				details = render_overview_requires_section_details("Class_overview", "Public_classes", profile)
+				raise_validation_error(tr, obj, "CCLO-003",f"'Class_overview' requires section 'Public_classes'.", details)
 			node_co = top._items["Class_overview"]
 			node_pm = top._items["Public_classes"]
 			for cls_name in node_co.items():
 				attr = _check_exists(cls_name, "CCLO-008")
 				if not is_obj_class(attr):
-					raise_validation_error(tr, obj, "CCLO-009", f"Entry '{cls_name}' is not a class.")
+					details = render_name_object_consistency_details("Class_overview", node_co.items(), profile, overview_item=cls_name)
+					raise_validation_error(tr, obj, "CCLO-009", f"Entry '{cls_name}' is not a class.", details)
 				if not node_pc.has_item(cls_name):
 					raise_validation_error(tr, obj, "CCLO-011", f"Entry '{cls_name}' is not found in section 'Public_classes'.")
 #----- ensure SSoT principle ----------------------------------#
 			for cls_name in node_co.items():
 				cls_node = node_co.item(cls_name)
 				if cls_node.has_norm_keywords():
-					raise_validation_error(tr, obj, "CCLO-007", f"Entry '{cls_name}' in Class_overview must not contain normativity keywords; content is informational only.")
+					details = render_normativity_keyword_details("Class_overview", cls_name, cls_node.items(), profile)
+					raise_validation_error(tr, obj, "CCLO-007", f"Entry '{cls_name}' in Class_overview must not contain normativity keywords; content is informational only.", details)
 
 #----- Method overview ----------------------------------------#
 	with traced_section(tr, "Method_overview"):
 		if "Method_overview" in top.items():
 			if "Public_methods" not in top.items():
-				raise_validation_error(tr, obj, "CMTO-003",f"'Method_overview' requires section 'Public_methods'.")
+				details = render_overview_requires_section_details("Method_overview", "Public_methods", profile)
+				raise_validation_error(tr, obj, "CMTO-003",f"'Method_overview' requires section 'Public_methods'.", details)
 			node_mo = top._items["Method_overview"]
 			node_pm = top._items["Public_methods"]
 			for m_name in node_mo.items():
 				attr = _check_exists(m_name, "CMTO-008")
 				if not is_obj_function(attr):
-					raise_validation_error(tr, obj, "CMTO-009", f"Entry '{m_name}' is not a method.")
+					details = render_name_object_consistency_details("Method_overview", node_mo.items(), profile, overview_item=m_name)
+					raise_validation_error(tr, obj, "CMTO-009", f"Entry '{m_name}' is not a method.", details)
 				if not node_pm.has_item(m_name):
-					raise_validation_error(tr, obj, "CMTO-011", f"Entry '{m_name}' is not found in section 'Public_methods'.")
+					details = render_name_object_consistency_details("Method_overview", node_mo.items(), profile, overview_item=m_name)
+					raise_validation_error(tr, obj, "CMTO-011", f"Entry '{m_name}' is not found in section 'Public_methods'.", details)
 #----- ensure SSoT principle ----------------------------------#
 			for m_name in node_mo.items():
 				m_node = node_mo.item(m_name)
 				if m_node.has_norm_keywords():
-					raise_validation_error(tr, obj, "CMTO-007", f"Entry '{m_name}' in Method_overview must not contain normativity keywords; content is informational only.")
+					details = render_normativity_keyword_details("Method_overview", m_name, m_node.items(), profile)
+					raise_validation_error(tr, obj, "CMTO-007", f"Entry '{m_name}' in Method_overview must not contain normativity keywords; content is informational only.", details)
 
 #----- Public types -------------------------------------------#
 	with traced_section(tr, "Public_types"):
@@ -764,7 +782,8 @@ Notes:
 			for var_name in node_pv.items():
 				attr = _check_exists(var_name, "CPVAR-005")
 				if not is_obj_named_value(attr):
-					raise_validation_error(tr, obj, "CPVAR-008", f"Entry '{var_name}' must refer to a named value, not callable/class.")
+					details = render_name_object_consistency_details("Public_variables", node_pv.items(), profile, overview_item=var_name)
+					raise_validation_error(tr, obj, "CPVAR-008", f"Entry '{var_name}' must refer to a named value, not callable/class.", details)
 
 #----- Public constants ---------------------------------------#
 	with traced_section(tr, "Public_constants"):
@@ -774,9 +793,11 @@ Notes:
 			for const_name in node_pcst.items():
 				attr = _check_exists(const_name, "CPCON-005")
 				if not is_obj_named_value(attr):
-					raise_validation_error(tr, obj, "CPCON-009", f"Entry '{const_name}' must refer to a named value, not callable/class.")
+					details = render_name_object_consistency_details("Public_constants", node_pcst.items(), profile, overview_item=const_name)
+					raise_validation_error(tr, obj, "CPCON-009", f"Entry '{const_name}' must refer to a named value, not callable/class.", details)
 				if const_name in ann and not is_attr_final(cast(ModuleType | type, obj), const_name):
-					raise_validation_error(tr, obj, "CPCON-006", f"Constant '{const_name}' is annotated but not Final.")
+					details = render_name_object_consistency_details("Public_constants", node_pcst.items(), profile, overview_item=const_name)
+					raise_validation_error(tr, obj, "CPCON-006", f"Constant '{const_name}' is annotated but not Final.", details)
 
 
 #===== Scope Monotonicity Rules ===============================#
@@ -983,10 +1004,12 @@ Notes:
 						if p in ("self","cls"):
 							continue
 						if p not in param_names:
-							raise_validation_error(tr,obj,"PAR-005",f"Parameter '{p}' documented but not in signature {param_names}.")
+							details = render_parameter_signature_details("Parameters", doc_params, [q for q in doc_params if q != p], profile)
+							raise_validation_error(tr,obj,"PAR-005",f"Parameter '{p}' documented but not in signature {param_names}.", details)
 					for p in param_names:
 						if p not in doc_params:
-							raise_validation_error(tr,obj,"PAR-004",f"Parameter '{p}' in signature but not documented.")
+							details = render_parameter_signature_details("Parameters", doc_params, doc_params + [p], profile)
+							raise_validation_error(tr,obj,"PAR-004",f"Parameter '{p}' in signature but not documented.", details)
 #===== Returns must exist =====================================#
 		with traced_section(tr, "Returns"):
 			if "Returns" not in top.items():
@@ -1055,9 +1078,11 @@ Notes:
 						exc_obj = None
 				exc_cls = exc_obj if is_obj_class(exc_obj) else None
 				if exc_cls is None or not is_obj_class(exc_cls):
-					raise_validation_error(tr,obj,"RAI-004", f"Exception '{exc_name}' listed in Raises does not refer to an existing class.")
+					details = render_exception_reference_details(exc_name, profile, expected_kind="qualified identifier")
+					raise_validation_error(tr,obj,"RAI-004", f"Exception '{exc_name}' listed in Raises does not refer to an existing class.", details)
 				if not issubclass(exc_cls, BaseException):
-					raise_validation_error(tr,obj,"RAI-007", f"Exception '{exc_name}' is not a subclass of BaseException.")
+					details = render_exception_reference_details(exc_name, profile, expected_kind="subclass of BaseException")
+					raise_validation_error(tr,obj,"RAI-007", f"Exception '{exc_name}' is not a subclass of BaseException.", details)
 
 def validate_docstring_inherited_method(tr : tracer, obj: object, top : docitem_docstring_inherited_method,node_contract : docitem_map_base,node_normative_sections : docitem_list_base, _seen: Dict[object,docitem_docstring_base] | None = None) -> None:
 	"""
@@ -1520,7 +1545,8 @@ See_also:
 					if node_term.empty():
 						warn_validation(tr,obj,"TERM-008","Term content should not be empty.")
 					if node_term.has_norm_keywords():
-						raise_validation_error(tr, obj, "TERM-003",f"Term content has normativity keywords; content is informational only.")
+						details = render_normativity_keyword_details("Terminology", name, node_term.items(), profile)
+						raise_validation_error(tr, obj, "TERM-003",f"Term content has normativity keywords; content is informational only.", details)
 
 #===== If See_also exists, more tests apply ===================#
 		with traced_section(tr, "See_also"):
@@ -1598,7 +1624,8 @@ See_also:
 						if node_note.empty():
 							warn_validation(tr,obj,"NOTE-009","Note content should not be empty.")
 						if node_note.has_norm_keywords():
-							raise_validation_error(tr, obj, "NOTE-003",f"Note content must not contain normativity keywords; content is informational only.")
+							details = render_normativity_keyword_details("Notes", name, node_note.items(), profile)
+							raise_validation_error(tr, obj, "NOTE-003",f"Note content must not contain normativity keywords; content is informational only.", details)
 # Cases
 		profile = get_profile(top)
 		if profile == "module":
@@ -1710,7 +1737,8 @@ Notes:
 					raise_validation_error(tr,obj,"CPCL-004",f"Class '{name}' listed in Public_classes but does not exist.")
 				cls_obj = getattr(obj, name)
 				if not is_obj_class(cls_obj):
-					raise_validation_error(tr,obj,"CPCL-005",f"Member '{name}' listed in Public_classes is not a class.")
+					details = render_name_object_consistency_details("Public_classes", public_classes, "class")
+					raise_validation_error(tr,obj,"CPCL-005",f"Member '{name}' listed in Public_classes is not a class.", details)
 				doc_c2 = get_obj_docstring(cls_obj)
 				if not doc_c2.strip():
 					warn_validation(tr,obj,"CPCL-007",f"Class '{name}' is listed in Public_classes but has no valid docstring.")
@@ -1806,7 +1834,8 @@ Notes:
 				meth_obj = getattr(obj, name_of_member)
 				func_obj2: Callable[..., Any] | None = get_func_obj_from_callable(meth_obj)
 				if func_obj2 is None or not is_obj_function(func_obj2):
-					raise_validation_error(tr,obj,"CPMT-005",f"Member '{name_of_member}' listed in Public_methods is not a method.")
+					details = render_name_object_consistency_details("Public_methods", public_methods, "class")
+					raise_validation_error(tr,obj,"CPMT-005",f"Member '{name_of_member}' listed in Public_methods is not a method.", details)
 				docm2 = get_obj_docstring(func_obj2)
 				if not docm2.strip():
 					warn_validation(tr,obj,"CPMT-007",f"Class {get_obj_name(obj)}: method '{name_of_member}' is listed in Public_methods but has no valid docstring.")
@@ -2001,7 +2030,8 @@ Notes:
 					raise_validation_error(tr,obj,"MPCL-004",f"Class '{name_of_member}' listed in Public_classes but does not exist.")
 				cls_obj = getattr(obj, name_of_member)
 				if not is_obj_class(cls_obj):
-					raise_validation_error(tr,obj,"MPCL-005",f"Member '{name_of_member}' listed in Public_classes is not a class.")
+					details = render_name_object_consistency_details("Public_classes", public_classes, "module")
+					raise_validation_error(tr,obj,"MPCL-005",f"Member '{name_of_member}' listed in Public_classes is not a class.", details)
 				doc_c2 = get_obj_docstring(cls_obj)
 				if not doc_c2.strip():
 					warn_validation(tr,obj,"MPCL-007",f"Class '{name_of_member}' listed in Public_classes but has no valid docstring.")
@@ -2093,7 +2123,8 @@ Notes:
 					raise_validation_error(tr,obj,"MPFN-004",f"Function '{name_of_member}' listed in Public_functions but does not exist.")
 				func_obj = getattr(obj, name_of_member)
 				if not is_obj_function(func_obj):
-					raise_validation_error(tr,obj,"MPFN-005",f"Member '{name_of_member}' listed in Public_functions is not a function.")
+					details = render_name_object_consistency_details("Public_functions", public_functions, "module")
+					raise_validation_error(tr,obj,"MPFN-005",f"Member '{name_of_member}' listed in Public_functions is not a function.", details)
 				doc_f2 = get_obj_docstring(func_obj)
 				if not doc_f2.strip():
 					warn_validation(tr,obj,"MPFN-007",f"Module {obj.__name__}: function '{name_of_member}' is listed in Public_functions but has no valid docstring.")

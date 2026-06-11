@@ -58,7 +58,9 @@ def test_explain_subsection_matrix_profile_section(profile: str, label: str, tmp
 	assert doc["label"] == label, doc
 	assert doc["title"] == label, doc
 	assert doc["section_title"] == section_label, doc
-	assert doc["body_category"] == props["category"], doc
+	assert doc["body"]["category"] == props["category"], doc
+	assert isinstance(doc["body"]["explanation"], list), doc
+	assert isinstance(doc["body"]["content"], list), doc
 	assert doc["normativity"] == props["normativity"], doc
 	assert doc["label_kind"] == props["label_kind"], doc
 	assert doc["must_exist"] == props["must_exist"], doc
@@ -66,7 +68,6 @@ def test_explain_subsection_matrix_profile_section(profile: str, label: str, tmp
 	assert doc["try_self"] == f"waterlint explain-subsection --label {label} --profile PROFILE", doc
 	assert doc["try_next"] == [f"waterlint explain-section --label {section_label} --profile PROFILE"], doc
 	assert isinstance(doc["hint"], list), doc
-	assert isinstance(doc["body"], list), doc
 	assert isinstance(doc["template"], list), doc
 
 

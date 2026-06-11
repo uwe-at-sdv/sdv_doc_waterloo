@@ -118,17 +118,22 @@ class FeatureExplain_t(TypedDict, total=False):
 	explanation: list[str]
 
 
+class BodyExplain_t(TypedDict):
+	category: SectionBodyCategory_t
+	explanation: list[str]
+	content: list[str]
+
+
 class ExplainSection_t(TypedDict):
 	profile: Profile_t
 	label: str
 	title: str
-	body_category: SectionBodyCategory_t
+	body: BodyExplain_t
 	normativity: Normativity_t
 	label_kind: LabelKind_t
 	must_exist: MustExist_t
 	available_profiles: list[Profile_t]
 	subsections: list[SubsectionExplainInfo_t]
-	body: list[str]
 	template: list[str]
 	hint: list[str]
 	try_self: str
@@ -144,12 +149,11 @@ class ExplainSubsection_t(TypedDict):
 	label: str
 	title: str
 	section_title: str
-	body_category: SectionBodyCategory_t
+	body: BodyExplain_t
 	normativity: Normativity_t
 	label_kind: LabelKind_t
 	must_exist: MustExist_t
 	available_profiles: list[Profile_t]
-	body: list[str]
 	template: list[str]
 	hint: list[str]
 	try_self: str
@@ -193,7 +197,8 @@ EXPLAIN_TEMPLATES: Final[Dict[SectionBodyCategory_t, list[str]]] = {
 	"FREEFORM_TEXT": [
 		"{label}:",
 		"\t...",
-	],
+		"\t|",
+		],
 }
 
 ExplainSectionBodyCategory: Final[Dict[SectionBodyCategory_t, SectionBodyCategoryExplanation_t]] = {
@@ -261,9 +266,10 @@ ExplainSectionBodyCategory: Final[Dict[SectionBodyCategory_t, SectionBodyCategor
 		"explanation": [
 			"The section/subsection body is rendered without outer bullets.",
 			"The body may still contain inner lists when the content benefits from structured sub-points.",
+			"A line containing only `|` and optional whitespace denotes a paragraph boundary in the rendered output.",
 			"As opposed to itemized text, the main body is not split into outer list items by the renderer.",
 		],
-	},
+	}
 }
 
 
@@ -886,14 +892,17 @@ def _render_explain_text(spec: dict[str, Any], include_section_context: bool = F
 		lines.append(f"Section: {spec['section_label']}")
 		lines.append(f"Subsection: {spec['subsection_label']}")
 	lines.append(f"Title: {spec['title']}")
-	lines.append(f"Body category: {spec['body_category']}")
+	lines.append(f"Body category: {spec['body']['category']}")
+	lines.append("Body explanation:")
+	for line in spec["body"]["explanation"]:
+		lines.append(f"  {line}")
+	lines.append("Body content:")
+	for line in spec["body"]["content"]:
+		lines.append(f"  {line}")
 	lines.append(f"Normativity: {spec['normativity']}")
 	lines.append(f"Label kind: {spec['label_kind']}")
 	lines.append(f"Must exist: {spec['must_exist']}")
 	lines.append(f"Available profiles: {', '.join(spec['available_profiles']) if spec['available_profiles'] else 'none'}")
-	lines.append("Body:")
-	for line in spec["body"]:
-		lines.append(f"  {line}")
 	lines.append("Template:")
 	for line in spec["template"]:
 		lines.append(f"  {line}")
@@ -1020,13 +1029,16 @@ def build_section_explanation(label: str, profile: Profile_t) -> ExplainSection_
 		"profile": profile,
 		"label": label,
 		"title": base["title"],
-		"body_category": cat_info["category"],
+		"body": {
+			"category": cat_info["category"],
+			"explanation": list(ExplainSectionBodyCategory[cat_info["category"]]["explanation"]),
+			"content": list(base["body"]),
+		},
 		"normativity": cat_info["normativity"],
 		"label_kind": cat_info["label_kind"],
 		"must_exist": cat_info["must_exist"],
 		"available_profiles": _available_profiles_for_label(label),
 		"subsections": subsections,
-		"body": list(base["body"]),
 		"template": template,
 		"hint": hint,
 		"try_self": try_self,
@@ -1065,12 +1077,15 @@ def build_subsection_explanation(label: str, profile: Profile_t) -> ExplainSubse
 		"label": label,
 		"title": base["title"],
 		"section_title": _BASE_SECTION_SPECS.get(section_label, {"title": section_label})["title"],
-		"body_category": sub_info["category"],
+		"body": {
+			"category": sub_info["category"],
+			"explanation": list(ExplainSectionBodyCategory[sub_info["category"]]["explanation"]),
+			"content": list(base["body"]),
+		},
 		"normativity": sub_info["normativity"],
 		"label_kind": sub_info["label_kind"],
 		"must_exist": sub_info["must_exist"],
 		"available_profiles": _available_profiles_for_subsection_label(label),
-		"body": list(base["body"]),
 		"template": template,
 		"hint": hint,
 		"try_self": try_self,
@@ -1090,13 +1105,16 @@ def render_explanation_json(spec: ExplainSection_t) -> dict[str, Any]:
 		"profile": spec["profile"],
 		"label": spec["label"],
 		"title": spec["title"],
-		"body_category": spec["body_category"],
 		"normativity": spec["normativity"],
 		"label_kind": spec["label_kind"],
 		"must_exist": spec["must_exist"],
 		"available_profiles": list(spec["available_profiles"]),
 		"subsections": list(spec["subsections"]),
-		"body": list(spec["body"]),
+		"body": {
+			"category": spec["body"]["category"],
+			"explanation": list(spec["body"]["explanation"]),
+			"content": list(spec["body"]["content"]),
+		},
 		"template": list(spec["template"]),
 		"hint": list(spec["hint"]),
 		"try_self": spec["try_self"],
@@ -1119,12 +1137,15 @@ def render_subsection_explanation_json(spec: ExplainSubsection_t) -> dict[str, A
 		"label": spec["label"],
 		"title": spec["title"],
 		"section_title": spec["section_title"],
-		"body_category": spec["body_category"],
 		"normativity": spec["normativity"],
 		"label_kind": spec["label_kind"],
 		"must_exist": spec["must_exist"],
 		"available_profiles": list(spec["available_profiles"]),
-		"body": list(spec["body"]),
+		"body": {
+			"category": spec["body"]["category"],
+			"explanation": list(spec["body"]["explanation"]),
+			"content": list(spec["body"]["content"]),
+		},
 		"template": list(spec["template"]),
 		"hint": list(spec["hint"]),
 		"try_self": spec["try_self"],

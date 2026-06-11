@@ -1,12 +1,12 @@
 {
     "$schema": "https://sci-d-vis.com/schema/wtrl-json-0.1.0.schema.json",
-    "$id": "urn:waterlint:wtrl-json:0.16.0:core:rfc-2119:7e2545b623119374200519532671af7a1647285a3eb5b2dbd27dbd5110d6c7dd",
+    "$id": "urn:waterlint:wtrl-json:0.16.1:core:rfc-2119:3a5ea0c786d126070c8d3f5d0ebb08cad9642e75506b002ed62b3e696697dd85",
     "__WTRL_VERSION__": {
         "waterloo": "0.8.1",
         "schema": "0.1.0"
     },
     "__WTRL_META__": {
-        "generated_at": "2026-06-11T15:48:27+02:00",
+        "generated_at": "2026-06-11T22:24:31+02:00",
         "generator": "waterlint",
         "scope": "core",
         "flavour": "rfc-2119"
@@ -57,6 +57,7 @@
         "sdv.doc.waterloo.docitem_convert": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_convert"
     },
     "__WTRL_TOC_CLASSES__": {
+        "sdv.doc.waterloo.docitem_helper.WHITELIST_REASON": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.WHITELIST_REASON",
         "sdv.doc.waterloo.docitem_helper.Trait": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.Trait",
         "sdv.doc.waterloo.docitem_helper.Scope": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.Scope",
         "sdv.doc.waterloo.docitem_helper.Flavour": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.Flavour",
@@ -127,7 +128,11 @@
         "sdv.doc.waterloo.docitem_helper.explain_try_self_for_subsection": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.explain_try_self_for_subsection",
         "sdv.doc.waterloo.docitem_helper.render_normative_section_details": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.render_normative_section_details",
         "sdv.doc.waterloo.docitem_helper.render_missing_entry_details": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.render_missing_entry_details",
+        "sdv.doc.waterloo.docitem_helper.render_overview_requires_section_details": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.render_overview_requires_section_details",
+        "sdv.doc.waterloo.docitem_helper.render_name_object_consistency_details": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.render_name_object_consistency_details",
+        "sdv.doc.waterloo.docitem_helper.render_normativity_keyword_details": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.render_normativity_keyword_details",
         "sdv.doc.waterloo.docitem_helper.render_exactly_one_identifier_details": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.render_exactly_one_identifier_details",
+        "sdv.doc.waterloo.docitem_helper.render_parameter_signature_details": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.render_parameter_signature_details",
         "sdv.doc.waterloo.docitem_helper.get_source_docstring": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.get_source_docstring",
         "sdv.doc.waterloo.docitem_helper.render_source_snippet": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.render_source_snippet",
         "sdv.doc.waterloo.docitem_helper.render_expected_snippet": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.render_expected_snippet",
@@ -137,8 +142,10 @@
         "sdv.doc.waterloo.docitem_helper.render_identifier_lines": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.render_identifier_lines",
         "sdv.doc.waterloo.docitem_helper.render_deduplicated_identifiers": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.render_deduplicated_identifiers",
         "sdv.doc.waterloo.docitem_helper.render_unique_identifiers": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.render_unique_identifiers",
+        "sdv.doc.waterloo.docitem_helper.is_annotatable": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.is_annotatable",
         "sdv.doc.waterloo.docitem_helper.is_attr_annotated": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.is_attr_annotated",
         "sdv.doc.waterloo.docitem_helper.is_attr_final": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.is_attr_final",
+        "sdv.doc.waterloo.docitem_helper.is_list_of_str": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.is_list_of_str",
         "sdv.doc.waterloo.docitem_helper.is_obj_module": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.is_obj_module",
         "sdv.doc.waterloo.docitem_helper.is_obj_class": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.is_obj_class",
         "sdv.doc.waterloo.docitem_helper.is_obj_function": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.is_obj_function",
@@ -153,7 +160,18 @@
         "sdv.doc.waterloo.docitem_helper.get_func_obj_from_callable": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.get_func_obj_from_callable",
         "sdv.doc.waterloo.docitem_helper.get_obj_docstring": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.get_obj_docstring",
         "sdv.doc.waterloo.docitem_helper.get_obj_annotations": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.get_obj_annotations",
+        "sdv.doc.waterloo.docitem_helper.get_obj_decorators": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.get_obj_decorators",
         "sdv.doc.waterloo.docitem_helper.gen_documentable_objects": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.gen_documentable_objects",
+        "sdv.doc.waterloo.docitem_helper.traced_section": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.traced_section",
+        "sdv.doc.waterloo.docitem_helper.rule_on_fail": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.rule_on_fail",
+        "sdv.doc.waterloo.docitem_helper.raise_has_no_docstring": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.raise_has_no_docstring",
+        "sdv.doc.waterloo.docitem_helper.raise_parsing_error": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.raise_parsing_error",
+        "sdv.doc.waterloo.docitem_helper.raise_parsing_error_expected_but_got": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.raise_parsing_error_expected_but_got",
+        "sdv.doc.waterloo.docitem_helper.raise_parsing_error_invalid_label": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.raise_parsing_error_invalid_label",
+        "sdv.doc.waterloo.docitem_helper.raise_validation_error": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.raise_validation_error",
+        "sdv.doc.waterloo.docitem_helper.raise_validation_error_expected_but_got": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.raise_validation_error_expected_but_got",
+        "sdv.doc.waterloo.docitem_helper.warn_parsing": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.warn_parsing",
+        "sdv.doc.waterloo.docitem_helper.warn_validation": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.warn_validation",
         "sdv.doc.waterloo.docitem_tokenizer.get_num_indent": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_tokenizer.get_num_indent",
         "sdv.doc.waterloo.docitem_tokenizer.parse_indent_docstring": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_tokenizer.parse_indent_docstring",
         "sdv.doc.waterloo.docitem_tokenizer.get_tree_of_section": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_tokenizer.get_tree_of_section",
@@ -268,6 +286,16 @@
         "sdv.doc.waterloo.docitem.FLAVOUR_TAG_MAP": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem.FLAVOUR_TAG_MAP",
         "sdv.doc.waterloo.docitem.FORMAT_TAG_MAP": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem.FORMAT_TAG_MAP",
         "sdv.doc.waterloo.docitem.STATUS_TAG_MAP": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem.STATUS_TAG_MAP",
+        "sdv.doc.waterloo.docitem_helper.WHITELIST_REASON.UNSPECIFIED_RULE": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.WHITELIST_REASON.UNSPECIFIED_RULE",
+        "sdv.doc.waterloo.docitem_helper.WHITELIST_REASON.MAY_EXIST_RULE": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.WHITELIST_REASON.MAY_EXIST_RULE",
+        "sdv.doc.waterloo.docitem_helper.WHITELIST_REASON.STRUCTURE_RULE": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.WHITELIST_REASON.STRUCTURE_RULE",
+        "sdv.doc.waterloo.docitem_helper.WHITELIST_REASON.SEMANTIC_RULE": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.WHITELIST_REASON.SEMANTIC_RULE",
+        "sdv.doc.waterloo.docitem_helper.WHITELIST_REASON.UNRELATED_RULE": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.WHITELIST_REASON.UNRELATED_RULE",
+        "sdv.doc.waterloo.docitem_helper.WHITELIST_REASON.ANTICIPATED_RULE": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.WHITELIST_REASON.ANTICIPATED_RULE",
+        "sdv.doc.waterloo.docitem_helper.WHITELIST_REASON.FALLBACK_RULE": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.WHITELIST_REASON.FALLBACK_RULE",
+        "sdv.doc.waterloo.docitem_helper.WHITELIST_REASON.RELAY_RULE": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.WHITELIST_REASON.RELAY_RULE",
+        "sdv.doc.waterloo.docitem_helper.WHITELIST_REASON.BAD_IMPLEMENTATION_RULE": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.WHITELIST_REASON.BAD_IMPLEMENTATION_RULE",
+        "sdv.doc.waterloo.docitem_helper.WHITELIST_REASON.EXISTS_AS_COMMENT_RULE": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.WHITELIST_REASON.EXISTS_AS_COMMENT_RULE",
         "sdv.doc.waterloo.docitem_helper.Trait.ABSTRACT": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.Trait.ABSTRACT",
         "sdv.doc.waterloo.docitem_helper.Trait.FINAL": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.Trait.FINAL",
         "sdv.doc.waterloo.docitem_helper.Scope.PUBLIC": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.Scope.PUBLIC",
@@ -786,47 +814,130 @@
                 }
             }
         },
-        "sdv.doc.waterloo.docitem_helper.explain_try_self_for_section": {
+        "sdv.doc.waterloo.docitem_helper.WHITELIST_REASON.UNSPECIFIED_RULE": {
+            "doc": {},
+            "doc_lines": [
+                "No explicit reason was recorded."
+            ]
+        },
+        "sdv.doc.waterloo.docitem_helper.WHITELIST_REASON.MAY_EXIST_RULE": {
+            "doc": {},
+            "doc_lines": [
+                "The rule may exist in the corpus."
+            ]
+        },
+        "sdv.doc.waterloo.docitem_helper.WHITELIST_REASON.STRUCTURE_RULE": {
+            "doc": {},
+            "doc_lines": [
+                "The rule is a structural rule."
+            ]
+        },
+        "sdv.doc.waterloo.docitem_helper.WHITELIST_REASON.SEMANTIC_RULE": {
+            "doc": {},
+            "doc_lines": [
+                "The rule is a semantic rule."
+            ]
+        },
+        "sdv.doc.waterloo.docitem_helper.WHITELIST_REASON.UNRELATED_RULE": {
+            "doc": {},
+            "doc_lines": [
+                "The rule is unrelated to the current module."
+            ]
+        },
+        "sdv.doc.waterloo.docitem_helper.WHITELIST_REASON.ANTICIPATED_RULE": {
+            "doc": {},
+            "doc_lines": [
+                "The rule is expected to appear later."
+            ]
+        },
+        "sdv.doc.waterloo.docitem_helper.WHITELIST_REASON.FALLBACK_RULE": {
+            "doc": {},
+            "doc_lines": [
+                "The rule acts as a fallback."
+            ]
+        },
+        "sdv.doc.waterloo.docitem_helper.WHITELIST_REASON.RELAY_RULE": {
+            "doc": {},
+            "doc_lines": [
+                "The rule is relayed to another rule."
+            ]
+        },
+        "sdv.doc.waterloo.docitem_helper.WHITELIST_REASON.BAD_IMPLEMENTATION_RULE": {
+            "doc": {},
+            "doc_lines": [
+                "The rule is a placeholder for a bad implementation case."
+            ]
+        },
+        "sdv.doc.waterloo.docitem_helper.WHITELIST_REASON.EXISTS_AS_COMMENT_RULE": {
+            "doc": {},
+            "doc_lines": [
+                "The rule exists only as a comment-level trace."
+            ]
+        },
+        "sdv.doc.waterloo.docitem_helper.WHITELIST_REASON": {
             "signature": {
-                "text": "explain_try_self_for_section(label: 'str', profile: 'str') -> 'str'",
+                "text": "object.__init__(self, /, *args, **kwargs)",
                 "parameters": [
                     {
-                        "name": "label",
-                        "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "str",
+                        "name": "args",
+                        "kind": "VAR_POSITIONAL",
+                        "annotation": null,
                         "default": null
                     },
                     {
-                        "name": "profile",
-                        "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "str",
+                        "name": "kwargs",
+                        "kind": "VAR_KEYWORD",
+                        "annotation": null,
                         "default": null
                     }
                 ],
-                "returns": "str"
+                "returns": null
             },
             "doc": {
                 "Preamble": {
-                    "profile": "function",
+                    "profile": "class",
                     "normative_sections": [
                         "Contract",
-                        "Returns"
+                        "Public_constants"
                     ]
                 },
                 "Contract": {
                     "general": [
-                        "MUST build the canonical self-explanation command for a section label and profile."
+                        "MUST enumerate the legacy rule-whitelist reasons used by this helper layer."
                     ]
                 },
-                "Parameters": {
-                    "label": [
-                        "The section label to explain."
+                "Public_constants": {
+                    "UNSPECIFIED_RULE": [
+                        "No explicit reason was recorded."
                     ],
-                    "profile": "The docstring profile to use as the explain context."
-                },
-                "Returns": [
-                    "The canonical |wtrl_cmd|`explain-section` command for the given label and profile."
-                ]
+                    "MAY_EXIST_RULE": [
+                        "The rule may exist in the corpus."
+                    ],
+                    "STRUCTURE_RULE": [
+                        "The rule is a structural rule."
+                    ],
+                    "SEMANTIC_RULE": [
+                        "The rule is a semantic rule."
+                    ],
+                    "UNRELATED_RULE": [
+                        "The rule is unrelated to the current module."
+                    ],
+                    "ANTICIPATED_RULE": [
+                        "The rule is expected to appear later."
+                    ],
+                    "FALLBACK_RULE": [
+                        "The rule acts as a fallback."
+                    ],
+                    "RELAY_RULE": [
+                        "The rule is relayed to another rule."
+                    ],
+                    "BAD_IMPLEMENTATION_RULE": [
+                        "The rule is a placeholder for a bad implementation case."
+                    ],
+                    "EXISTS_AS_COMMENT_RULE": [
+                        "The rule exists only as a comment-level trace."
+                    ]
+                }
             }
         },
         "sdv.doc.waterloo.docitem_helper": {
@@ -847,13 +958,13 @@
                     ]
                 },
                 "Public_classes": [
-                    "WHITELIST_REASON",
                     "Trait",
                     "Scope",
                     "Flavour",
                     "Format",
                     "Status",
-                    "ConfigTraversal"
+                    "ConfigTraversal",
+                    "tracer"
                 ],
                 "Public_functions": [
                     "explain_try_self_for_section",
@@ -961,6 +1072,52 @@
                 }
             }
         },
+        "sdv.doc.waterloo.docitem_helper.explain_try_self_for_section": {
+            "signature": {
+                "text": "explain_try_self_for_section(label: 'str', profile: 'str') -> 'str'",
+                "parameters": [
+                    {
+                        "name": "label",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    },
+                    {
+                        "name": "profile",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    }
+                ],
+                "returns": "str"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST build the canonical self-explanation command for a section label and profile."
+                    ]
+                },
+                "Parameters": {
+                    "label": [
+                        "The section label to explain."
+                    ],
+                    "profile": "The docstring profile to use as the explain context."
+                },
+                "Returns": [
+                    "The canonical |wtrl_cmd|`explain-section` command for the given label and profile."
+                ],
+                "Raises": {}
+            }
+        },
         "sdv.doc.waterloo.docitem_helper.explain_try_self_for_subsection": {
             "signature": {
                 "text": "explain_try_self_for_subsection(label: 'str', profile: 'str') -> 'str'",
@@ -985,7 +1142,9 @@
                     "profile": "function",
                     "normative_sections": [
                         "Contract",
-                        "Returns"
+                        "Parameters",
+                        "Returns",
+                        "Raises"
                     ]
                 },
                 "Contract": {
@@ -1001,7 +1160,8 @@
                 },
                 "Returns": [
                     "The canonical |wtrl_cmd|`explain-subsection` command for the given label and profile."
-                ]
+                ],
+                "Raises": {}
             }
         },
         "sdv.doc.waterloo.docitem_helper.render_normative_section_details": {
@@ -1040,7 +1200,9 @@
                     "profile": "function",
                     "normative_sections": [
                         "Contract",
-                        "Returns"
+                        "Parameters",
+                        "Returns",
+                        "Raises"
                     ]
                 },
                 "Contract": {
@@ -1062,7 +1224,8 @@
                 },
                 "Returns": [
                     "A details dictionary with |token|`found`, |token|`expected`, and |token|`hint`."
-                ]
+                ],
+                "Raises": {}
             }
         },
         "sdv.doc.waterloo.docitem_helper.render_missing_entry_details": {
@@ -1106,7 +1269,10 @@
                 "Preamble": {
                     "profile": "function",
                     "normative_sections": [
-                        "Contract"
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
                     ]
                 },
                 "Contract": {
@@ -1131,7 +1297,191 @@
                 },
                 "Returns": [
                     "A details dictionary with |attr|`found`, |attr|`expected`, and |attr|`hint`."
-                ]
+                ],
+                "Raises": {}
+            }
+        },
+        "sdv.doc.waterloo.docitem_helper.render_overview_requires_section_details": {
+            "signature": {
+                "text": "render_overview_requires_section_details(overview_label: 'str', required_section: 'str', profile: 'str') -> 'dict[str, Any]'",
+                "parameters": [
+                    {
+                        "name": "overview_label",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    },
+                    {
+                        "name": "required_section",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    },
+                    {
+                        "name": "profile",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    }
+                ],
+                "returns": "dict[str, Any]"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST render compact validation details for overview sections that require a normative companion section."
+                    ]
+                },
+                "Parameters": {
+                    "overview_label": [
+                        "The overview section label, such as |token|`Class_overview`."
+                    ],
+                    "required_section": [
+                        "The normative section that must be added, such as |token|`Public_classes`."
+                    ],
+                    "profile": "The docstring profile used for the |wtrl_cmd|`explain-section` hint."
+                },
+                "Returns": [
+                    "A details dictionary with |token|`found`, |token|`expected`, and |token|`hint`."
+                ],
+                "Raises": {}
+            }
+        },
+        "sdv.doc.waterloo.docitem_helper.render_name_object_consistency_details": {
+            "signature": {
+                "text": "render_name_object_consistency_details(label: 'str', current_entries: 'Iterable[str]', profile: 'str', *, overview_item: 'str | None' = None) -> 'dict[str, Any]'",
+                "parameters": [
+                    {
+                        "name": "label",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    },
+                    {
+                        "name": "current_entries",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "Iterable[str]",
+                        "default": null
+                    },
+                    {
+                        "name": "profile",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    },
+                    {
+                        "name": "overview_item",
+                        "kind": "KEYWORD_ONLY",
+                        "annotation": "str | None",
+                        "default": "None"
+                    }
+                ],
+                "returns": "dict[str, Any]"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST render compact validation details for name/object consistency checks."
+                    ]
+                },
+                "Parameters": {
+                    "label": [
+                        "The section label to render."
+                    ],
+                    "current_entries": [
+                        "The current raw entries from the section."
+                    ],
+                    "profile": "The docstring profile used for the hint.",
+                    "overview_item": [
+                        "If provided, render an overview entry instead of a flat identifier list."
+                    ]
+                },
+                "Returns": [
+                    "A details dictionary with |token|`found`, |token|`expected`, and |token|`hint`."
+                ],
+                "Raises": {}
+            }
+        },
+        "sdv.doc.waterloo.docitem_helper.render_normativity_keyword_details": {
+            "signature": {
+                "text": "render_normativity_keyword_details(section_label: 'str', entry_name: 'str', current_lines: 'Iterable[str]', profile: 'str') -> 'dict[str, Any]'",
+                "parameters": [
+                    {
+                        "name": "section_label",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    },
+                    {
+                        "name": "entry_name",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    },
+                    {
+                        "name": "current_lines",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "Iterable[str]",
+                        "default": null
+                    },
+                    {
+                        "name": "profile",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    }
+                ],
+                "returns": "dict[str, Any]"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST build standardized validation details for an entry that must not contain normativity keywords."
+                    ]
+                },
+                "Parameters": {
+                    "section_label": [
+                        "The overview section label, such as |token|`Class_overview`."
+                    ],
+                    "entry_name": [
+                        "The entry label that violates the rule."
+                    ],
+                    "current_lines": [
+                        "The raw lines found in the entry."
+                    ],
+                    "profile": "The docstring profile used for the |wtrl_cmd|`explain-section` hint."
+                },
+                "Returns": [
+                    "A details dictionary with |token|`found`, |token|`expected`, and |token|`hint`."
+                ],
+                "Raises": {}
             }
         },
         "sdv.doc.waterloo.docitem_helper.render_exactly_one_identifier_details": {
@@ -1163,7 +1513,10 @@
                 "Preamble": {
                     "profile": "function",
                     "normative_sections": [
-                        "Contract"
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
                     ]
                 },
                 "Contract": {
@@ -1182,7 +1535,72 @@
                 },
                 "Returns": [
                     "A details dictionary with |attr|`found`, |attr|`expected`, and |attr|`hint`."
-                ]
+                ],
+                "Raises": {}
+            }
+        },
+        "sdv.doc.waterloo.docitem_helper.render_parameter_signature_details": {
+            "signature": {
+                "text": "render_parameter_signature_details(section_label: 'str', current_entries: 'Iterable[str]', expected_entries: 'Iterable[str]', profile: 'str') -> 'dict[str, Any]'",
+                "parameters": [
+                    {
+                        "name": "section_label",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    },
+                    {
+                        "name": "current_entries",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "Iterable[str]",
+                        "default": null
+                    },
+                    {
+                        "name": "expected_entries",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "Iterable[str]",
+                        "default": null
+                    },
+                    {
+                        "name": "profile",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    }
+                ],
+                "returns": "dict[str, Any]"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST build standardized validation details for a parameter/signature mismatch."
+                    ]
+                },
+                "Parameters": {
+                    "section_label": [
+                        "The label to render in the snippets."
+                    ],
+                    "current_entries": [
+                        "The current raw parameter entries."
+                    ],
+                    "expected_entries": [
+                        "The corrected parameter entries to show in the expected snippet."
+                    ],
+                    "profile": "The docstring profile used for the |wtrl_cmd|`explain-section` hint."
+                },
+                "Returns": [
+                    "A details dictionary with |attr|`found`, |attr|`expected`, and |attr|`hint`."
+                ],
+                "Raises": {}
             }
         },
         "sdv.doc.waterloo.docitem_helper.get_source_docstring": {
@@ -1231,11 +1649,7 @@
                 "Returns": [
                     "MUST return the raw source docstring text, or the empty string if none is available."
                 ],
-                "Raises": {
-                    "Exception": [
-                        "MAY raise any exception encountered during source retrieval or parsing, as these are considered implementation details that the caller should not rely on."
-                    ]
-                },
+                "Raises": {},
                 "Notes": {
                     "Implementation": [
                         "The helper uses a source-first strategy to preserve original indentation and tab characters in Python 3.13+.",
@@ -1269,7 +1683,10 @@
                 "Preamble": {
                     "profile": "function",
                     "normative_sections": [
-                        "Contract"
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
                     ]
                 },
                 "Contract": {
@@ -1288,7 +1705,8 @@
                 },
                 "Returns": [
                     "A compact list of lines that renders the section label followed by subsection placeholders."
-                ]
+                ],
+                "Raises": {}
             }
         },
         "sdv.doc.waterloo.docitem_helper.render_expected_snippet": {
@@ -1314,7 +1732,10 @@
                 "Preamble": {
                     "profile": "function",
                     "normative_sections": [
-                        "Contract"
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
                     ]
                 },
                 "Contract": {
@@ -1332,7 +1753,8 @@
                 },
                 "Returns": [
                     "The canonical expected section snippet as a list of lines."
-                ]
+                ],
+                "Raises": {}
             }
         },
         "sdv.doc.waterloo.docitem_helper.render_allowed_identifier": {
@@ -1358,7 +1780,10 @@
                 "Preamble": {
                     "profile": "function",
                     "normative_sections": [
-                        "Contract"
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
                     ]
                 },
                 "Contract": {
@@ -1376,7 +1801,8 @@
                 },
                 "Returns": [
                     "A compact list of lines that states the allowed identifier values in one line."
-                ]
+                ],
+                "Raises": {}
             }
         },
         "sdv.doc.waterloo.docitem_helper.render_expected_identifier": {
@@ -1402,7 +1828,10 @@
                 "Preamble": {
                     "profile": "function",
                     "normative_sections": [
-                        "Contract"
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
                     ]
                 },
                 "Contract": {
@@ -1420,7 +1849,8 @@
                 },
                 "Returns": [
                     "A compact list of lines that states the expected syntax in the Waterloo snippet format."
-                ]
+                ],
+                "Raises": {}
             }
         },
         "sdv.doc.waterloo.docitem_helper.render_allowed_identifiers": {
@@ -1446,7 +1876,10 @@
                 "Preamble": {
                     "profile": "function",
                     "normative_sections": [
-                        "Contract"
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
                     ]
                 },
                 "Contract": {
@@ -1464,7 +1897,8 @@
                 },
                 "Returns": [
                     "A compact list of lines that states the allowed identifier values in one line."
-                ]
+                ],
+                "Raises": {}
             }
         },
         "sdv.doc.waterloo.docitem_helper.render_identifier_lines": {
@@ -1490,7 +1924,10 @@
                 "Preamble": {
                     "profile": "function",
                     "normative_sections": [
-                        "Contract"
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
                     ]
                 },
                 "Contract": {
@@ -1508,7 +1945,8 @@
                 },
                 "Returns": [
                     "A compact list of lines that states the identifier values in one line without semantic normalization."
-                ]
+                ],
+                "Raises": {}
             }
         },
         "sdv.doc.waterloo.docitem_helper.render_deduplicated_identifiers": {
@@ -1534,7 +1972,10 @@
                 "Preamble": {
                     "profile": "function",
                     "normative_sections": [
-                        "Contract"
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
                     ]
                 },
                 "Contract": {
@@ -1552,7 +1993,8 @@
                 },
                 "Returns": [
                     "A compact list of lines that states the deduplicated identifier values in one line."
-                ]
+                ],
+                "Raises": {}
             }
         },
         "sdv.doc.waterloo.docitem_helper.render_unique_identifiers": {
@@ -1578,7 +2020,10 @@
                 "Preamble": {
                     "profile": "function",
                     "normative_sections": [
-                        "Contract"
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
                     ]
                 },
                 "Contract": {
@@ -1596,7 +2041,8 @@
                 },
                 "Returns": [
                     "A compact list of lines that states the canonical identifier values and mentions uniqueness."
-                ]
+                ],
+                "Raises": {}
             }
         },
         "sdv.doc.waterloo.docitem_helper.Trait.ABSTRACT": {
@@ -2009,6 +2455,48 @@
                 }
             }
         },
+        "sdv.doc.waterloo.docitem_helper.is_annotatable": {
+            "signature": {
+                "text": "is_annotatable(obj: 'Any') -> 'TypeGuard[AnnotatableObject]'",
+                "parameters": [
+                    {
+                        "name": "obj",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "Any",
+                        "default": null
+                    }
+                ],
+                "returns": "TypeGuard[AnnotatableObject]"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ],
+                    "scope": [
+                        "public"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST decide whether |var|`obj` is one of the annotatable runtime object kinds supported by the helper layer."
+                    ]
+                },
+                "Parameters": {
+                    "obj": [
+                        "The object to test."
+                    ]
+                },
+                "Returns": [
+                    "|True| if |var|`obj` is annotatable, else |False|."
+                ],
+                "Raises": {}
+            }
+        },
         "sdv.doc.waterloo.docitem_helper.is_attr_annotated": {
             "signature": {
                 "text": "is_attr_annotated(obj: 'AnnotatableObject', attr: 'str') -> 'bool'",
@@ -2127,6 +2615,48 @@
                         "2026-02-04"
                     ]
                 }
+            }
+        },
+        "sdv.doc.waterloo.docitem_helper.is_list_of_str": {
+            "signature": {
+                "text": "is_list_of_str(val: 'Any') -> 'TypeGuard[List[str]]'",
+                "parameters": [
+                    {
+                        "name": "val",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "Any",
+                        "default": null
+                    }
+                ],
+                "returns": "TypeGuard[List[str]]"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ],
+                    "scope": [
+                        "extension"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST decide whether |var|`val` is a list whose items are all strings."
+                    ]
+                },
+                "Parameters": {
+                    "val": [
+                        "The value to test."
+                    ]
+                },
+                "Returns": [
+                    "|True| if |var|`val` is a list of strings, else |False|."
+                ],
+                "Raises": {}
             }
         },
         "sdv.doc.waterloo.docitem_helper.is_obj_module": {
@@ -2833,6 +3363,48 @@
                 }
             }
         },
+        "sdv.doc.waterloo.docitem_helper.get_obj_decorators": {
+            "signature": {
+                "text": "get_obj_decorators(obj: 'object') -> 'List[str]'",
+                "parameters": [
+                    {
+                        "name": "obj",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "object",
+                        "default": null
+                    }
+                ],
+                "returns": "List[str]"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ],
+                    "scope": [
+                        "public"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST return the decorator lines from the source text of a callable object, if available."
+                    ]
+                },
+                "Parameters": {
+                    "obj": [
+                        "The callable object whose decorator lines should be extracted."
+                    ]
+                },
+                "Returns": [
+                    "A list of source lines that start with |token|`@`."
+                ],
+                "Raises": {}
+            }
+        },
         "sdv.doc.waterloo.docitem_helper.gen_documentable_objects": {
             "signature": {
                 "text": "gen_documentable_objects(obj: 'Documentable', config: 'ConfigTraversal' = ConfigTraversal()) -> 'Generator[Documentable, None, None]'",
@@ -2954,6 +3526,699 @@
                         "A list of strings built per context manager during parsing and validation. Entries can be module, class or function names, or labels."
                     ]
                 }
+            }
+        },
+        "sdv.doc.waterloo.docitem_helper.traced_section": {
+            "signature": {
+                "text": "traced_section(tr: 'tracer', name: 'str') -> 'Generator[None, None, None]'",
+                "parameters": [
+                    {
+                        "name": "tr",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "tracer",
+                        "default": null
+                    },
+                    {
+                        "name": "name",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    }
+                ],
+                "returns": "Generator[None, None, None]"
+            },
+            "decorators": [
+                "@contextmanager"
+            ],
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ],
+                    "scope": [
+                        "public"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST temporarily push |var|`name` onto the tracer context unless it is already on top."
+                    ]
+                },
+                "Parameters": {
+                    "tr": [
+                        "The tracer whose context stack should be managed."
+                    ],
+                    "name": [
+                        "The context name to push."
+                    ]
+                },
+                "Returns": [
+                    "A context manager yielding nothing."
+                ],
+                "Raises": {}
+            }
+        },
+        "sdv.doc.waterloo.docitem_helper.rule_on_fail": {
+            "signature": {
+                "text": "rule_on_fail(tr: 'tracer', rule_id: 'RuleId') -> 'Generator[None, None, None]'",
+                "parameters": [
+                    {
+                        "name": "tr",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "tracer",
+                        "default": null
+                    },
+                    {
+                        "name": "rule_id",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "RuleId",
+                        "default": null
+                    }
+                ],
+                "returns": "Generator[None, None, None]"
+            },
+            "decorators": [
+                "@contextmanager"
+            ],
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ],
+                    "scope": [
+                        "public"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST temporarily push the given rule identifier onto the tracer's rule-on-fail stack."
+                    ]
+                },
+                "Parameters": {
+                    "tr": [
+                        "The tracer whose failure-rule stack should be managed."
+                    ],
+                    "rule_id": [
+                        "The rule identifier to push for the duration of the context."
+                    ]
+                },
+                "Returns": [
+                    "A context manager yielding nothing."
+                ],
+                "Raises": {}
+            }
+        },
+        "sdv.doc.waterloo.docitem_helper.raise_has_no_docstring": {
+            "signature": {
+                "text": "raise_has_no_docstring(tr: 'tracer', rule_id: 'RuleId', obj: 'object') -> 'NoReturn'",
+                "parameters": [
+                    {
+                        "name": "tr",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "tracer",
+                        "default": null
+                    },
+                    {
+                        "name": "rule_id",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "RuleId",
+                        "default": null
+                    },
+                    {
+                        "name": "obj",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "object",
+                        "default": null
+                    }
+                ],
+                "returns": "NoReturn"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ],
+                    "scope": [
+                        "public"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST raise a parsing error that states that the object has no docstring."
+                    ]
+                },
+                "Parameters": {
+                    "tr": [
+                        "The tracer that should receive the error."
+                    ],
+                    "rule_id": [
+                        "The rule identifier to report."
+                    ],
+                    "obj": [
+                        "The object whose missing docstring should be reported."
+                    ]
+                },
+                "Returns": [
+                    "No return value."
+                ],
+                "Raises": {
+                    "ParseError": [
+                        "Always raised."
+                    ]
+                }
+            }
+        },
+        "sdv.doc.waterloo.docitem_helper.raise_parsing_error": {
+            "signature": {
+                "text": "raise_parsing_error(tr: 'tracer', rule_id: 'RuleId', msg: 'str', details: 'dict[str, Any] | None' = None) -> 'NoReturn'",
+                "parameters": [
+                    {
+                        "name": "tr",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "tracer",
+                        "default": null
+                    },
+                    {
+                        "name": "rule_id",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "RuleId",
+                        "default": null
+                    },
+                    {
+                        "name": "msg",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    },
+                    {
+                        "name": "details",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "dict[str, Any] | None",
+                        "default": "None"
+                    }
+                ],
+                "returns": "NoReturn"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ],
+                    "scope": [
+                        "public"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST raise a parsing error with the given message and optional diagnostic details."
+                    ]
+                },
+                "Parameters": {
+                    "tr": [
+                        "The tracer that should receive the error."
+                    ],
+                    "rule_id": [
+                        "The rule identifier to report."
+                    ],
+                    "msg": [
+                        "The parsing error message."
+                    ],
+                    "details": [
+                        "Additional diagnostic details."
+                    ]
+                },
+                "Returns": [
+                    "No return value."
+                ],
+                "Raises": {
+                    "ParseError": [
+                        "Always raised."
+                    ]
+                }
+            }
+        },
+        "sdv.doc.waterloo.docitem_helper.raise_parsing_error_expected_but_got": {
+            "signature": {
+                "text": "raise_parsing_error_expected_but_got(tr: 'tracer', rule_id: 'RuleId', expected: 'str', got: 'str', details: 'dict[str, Any] | None' = None) -> 'NoReturn'",
+                "parameters": [
+                    {
+                        "name": "tr",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "tracer",
+                        "default": null
+                    },
+                    {
+                        "name": "rule_id",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "RuleId",
+                        "default": null
+                    },
+                    {
+                        "name": "expected",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    },
+                    {
+                        "name": "got",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    },
+                    {
+                        "name": "details",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "dict[str, Any] | None",
+                        "default": "None"
+                    }
+                ],
+                "returns": "NoReturn"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ],
+                    "scope": [
+                        "public"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST raise a parsing error that compares the expected and actual values."
+                    ]
+                },
+                "Parameters": {
+                    "tr": [
+                        "The tracer that should receive the error."
+                    ],
+                    "rule_id": [
+                        "The rule identifier to report."
+                    ],
+                    "expected": [
+                        "The expected textual value."
+                    ],
+                    "got": [
+                        "The actual textual value."
+                    ],
+                    "details": [
+                        "Optional diagnostic details to attach to the tracer error."
+                    ]
+                },
+                "Returns": [
+                    "No return value."
+                ],
+                "Raises": {
+                    "ParseError": [
+                        "Always raised."
+                    ]
+                }
+            }
+        },
+        "sdv.doc.waterloo.docitem_helper.raise_parsing_error_invalid_label": {
+            "signature": {
+                "text": "raise_parsing_error_invalid_label(tr: 'tracer', rule_id: 'RuleId', found: 'str', allowed: 'Iterable[str]') -> 'NoReturn'",
+                "parameters": [
+                    {
+                        "name": "tr",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "tracer",
+                        "default": null
+                    },
+                    {
+                        "name": "rule_id",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "RuleId",
+                        "default": null
+                    },
+                    {
+                        "name": "found",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    },
+                    {
+                        "name": "allowed",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "Iterable[str]",
+                        "default": null
+                    }
+                ],
+                "returns": "NoReturn"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ],
+                    "scope": [
+                        "public"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST raise a parsing error that reports an invalid label and the allowed labels."
+                    ]
+                },
+                "Parameters": {
+                    "tr": [
+                        "The tracer that should receive the error."
+                    ],
+                    "rule_id": [
+                        "The rule identifier to report."
+                    ],
+                    "found": [
+                        "The invalid label that was found."
+                    ],
+                    "allowed": [
+                        "The allowed label values."
+                    ]
+                },
+                "Returns": [
+                    "No return value."
+                ],
+                "Raises": {
+                    "ParseError": [
+                        "Always raised."
+                    ]
+                }
+            }
+        },
+        "sdv.doc.waterloo.docitem_helper.raise_validation_error": {
+            "signature": {
+                "text": "raise_validation_error(tr: 'tracer', obj: 'object', rule_id: 'RuleId', msg: 'str', details: 'dict[str, Any] | None' = None) -> 'NoReturn'",
+                "parameters": [
+                    {
+                        "name": "tr",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "tracer",
+                        "default": null
+                    },
+                    {
+                        "name": "obj",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "object",
+                        "default": null
+                    },
+                    {
+                        "name": "rule_id",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "RuleId",
+                        "default": null
+                    },
+                    {
+                        "name": "msg",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    },
+                    {
+                        "name": "details",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "dict[str, Any] | None",
+                        "default": "None"
+                    }
+                ],
+                "returns": "NoReturn"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ],
+                    "scope": [
+                        "public"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST raise a validation error with the given message and optional diagnostic details."
+                    ]
+                },
+                "Parameters": {
+                    "tr": [
+                        "The tracer that should receive the error."
+                    ],
+                    "obj": [
+                        "The object being validated."
+                    ],
+                    "rule_id": [
+                        "The rule identifier to report."
+                    ],
+                    "msg": [
+                        "The validation error message."
+                    ],
+                    "details": [
+                        "Additional diagnostic details."
+                    ]
+                },
+                "Returns": [
+                    "No return value."
+                ],
+                "Raises": {
+                    "ValidationError": [
+                        "Always raised."
+                    ]
+                }
+            }
+        },
+        "sdv.doc.waterloo.docitem_helper.raise_validation_error_expected_but_got": {
+            "signature": {
+                "text": "raise_validation_error_expected_but_got(tr: 'tracer', obj: 'object', rule_id: 'RuleId', expected: 'str', got: 'str') -> 'NoReturn'",
+                "parameters": [
+                    {
+                        "name": "tr",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "tracer",
+                        "default": null
+                    },
+                    {
+                        "name": "obj",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "object",
+                        "default": null
+                    },
+                    {
+                        "name": "rule_id",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "RuleId",
+                        "default": null
+                    },
+                    {
+                        "name": "expected",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    },
+                    {
+                        "name": "got",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    }
+                ],
+                "returns": "NoReturn"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ],
+                    "scope": [
+                        "public"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST raise a validation error that compares the expected and actual values."
+                    ]
+                },
+                "Parameters": {
+                    "tr": [
+                        "The tracer that should receive the error."
+                    ],
+                    "obj": [
+                        "The object being validated."
+                    ],
+                    "rule_id": [
+                        "The rule identifier to report."
+                    ],
+                    "expected": [
+                        "The expected textual value."
+                    ],
+                    "got": [
+                        "The actual textual value."
+                    ]
+                },
+                "Returns": [
+                    "No return value."
+                ],
+                "Raises": {
+                    "ValidationError": [
+                        "Always raised."
+                    ]
+                }
+            }
+        },
+        "sdv.doc.waterloo.docitem_helper.warn_parsing": {
+            "signature": {
+                "text": "warn_parsing(tr: 'tracer', rule_id: 'RuleId', msg: 'str') -> 'None'",
+                "parameters": [
+                    {
+                        "name": "tr",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "tracer",
+                        "default": null
+                    },
+                    {
+                        "name": "rule_id",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "RuleId",
+                        "default": null
+                    },
+                    {
+                        "name": "msg",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    }
+                ],
+                "returns": "None"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ],
+                    "scope": [
+                        "public"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST record a parsing warning unless the rule is ignored."
+                    ]
+                },
+                "Parameters": {
+                    "tr": [
+                        "The tracer that should receive the warning."
+                    ],
+                    "rule_id": [
+                        "The rule identifier to report."
+                    ],
+                    "msg": [
+                        "The warning message."
+                    ]
+                },
+                "Returns": [
+                    "No return value."
+                ],
+                "Raises": {}
+            }
+        },
+        "sdv.doc.waterloo.docitem_helper.warn_validation": {
+            "signature": {
+                "text": "warn_validation(tr: 'tracer', obj: 'object', rule_id: 'RuleId', msg: 'str') -> 'None'",
+                "parameters": [
+                    {
+                        "name": "tr",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "tracer",
+                        "default": null
+                    },
+                    {
+                        "name": "obj",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "object",
+                        "default": null
+                    },
+                    {
+                        "name": "rule_id",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "RuleId",
+                        "default": null
+                    },
+                    {
+                        "name": "msg",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    }
+                ],
+                "returns": "None"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ],
+                    "scope": [
+                        "public"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST record a validation warning unless the rule is ignored."
+                    ]
+                },
+                "Parameters": {
+                    "tr": [
+                        "The tracer that should receive the warning."
+                    ],
+                    "obj": [
+                        "The object being validated."
+                    ],
+                    "rule_id": [
+                        "The rule identifier to report."
+                    ],
+                    "msg": [
+                        "The warning message."
+                    ]
+                },
+                "Returns": [
+                    "No return value."
+                ],
+                "Raises": {}
             }
         },
         "sdv.doc.waterloo.docitem_tokenizer.get_num_indent": {
@@ -9980,13 +11245,13 @@
         },
         "sdv.doc.waterloo.docitem_convert.to_string_legend_yaml": {
             "signature": {
-                "text": "to_string_legend_yaml(config: 'YamlConfig' = <sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f40a01e2cf0>) -> 'str'",
+                "text": "to_string_legend_yaml(config: 'YamlConfig' = <sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f2e9c002f90>) -> 'str'",
                 "parameters": [
                     {
                         "name": "config",
                         "kind": "POSITIONAL_OR_KEYWORD",
                         "annotation": "YamlConfig",
-                        "default": "<sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f40a01e2cf0>"
+                        "default": "<sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f2e9c002f90>"
                     }
                 ],
                 "returns": "str"
@@ -10023,7 +11288,7 @@
         },
         "sdv.doc.waterloo.docitem_convert.to_string_signature_yaml": {
             "signature": {
-                "text": "to_string_signature_yaml(obj: 'object', config: 'YamlConfig' = <sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f409fed4410>) -> 'str'",
+                "text": "to_string_signature_yaml(obj: 'object', config: 'YamlConfig' = <sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f2e9bcf82d0>) -> 'str'",
                 "parameters": [
                     {
                         "name": "obj",
@@ -10035,7 +11300,7 @@
                         "name": "config",
                         "kind": "POSITIONAL_OR_KEYWORD",
                         "annotation": "YamlConfig",
-                        "default": "<sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f409fed4410>"
+                        "default": "<sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f2e9bcf82d0>"
                     }
                 ],
                 "returns": "str"
@@ -10105,7 +11370,7 @@
         },
         "sdv.doc.waterloo.docitem_convert.to_string_yaml": {
             "signature": {
-                "text": "to_string_yaml(tree: 'DocstringTree', flavour: 'Flavour', config: 'YamlConfig' = <sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f409fed4550>) -> 'str'",
+                "text": "to_string_yaml(tree: 'DocstringTree', flavour: 'Flavour', config: 'YamlConfig' = <sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f2e9bcf8410>) -> 'str'",
                 "parameters": [
                     {
                         "name": "tree",
@@ -10123,7 +11388,7 @@
                         "name": "config",
                         "kind": "POSITIONAL_OR_KEYWORD",
                         "annotation": "YamlConfig",
-                        "default": "<sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f409fed4550>"
+                        "default": "<sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f2e9bcf8410>"
                     }
                 ],
                 "returns": "str"

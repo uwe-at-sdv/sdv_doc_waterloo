@@ -26,7 +26,6 @@
 		"label",
 		"title",
 		"section_title",
-		"body_category",
 		"normativity",
 		"label_kind",
 		"must_exist",
@@ -61,6 +60,26 @@
 				"ITEMIZED_TEXT",
 				"FREEFORM_TEXT"
 			]
+		},
+		"body": {
+			"type": "object",
+			"additionalProperties": false,
+			"required": [
+				"category",
+				"explanation",
+				"content"
+			],
+			"properties": {
+				"category": {
+					"$ref": "#/$defs/body_category"
+				},
+				"explanation": {
+					"$ref": "#/$defs/string_array"
+				},
+				"content": {
+					"$ref": "#/$defs/string_array"
+				}
+			}
 		},
 		"normativity": {
 			"type": "string",
@@ -234,9 +253,6 @@
 		"section_title": {
 			"type": "string"
 		},
-		"body_category": {
-			"$ref": "#/$defs/body_category"
-		},
 		"normativity": {
 			"$ref": "#/$defs/normativity"
 		},
@@ -250,7 +266,7 @@
 			"$ref": "#/$defs/profile_array"
 		},
 		"body": {
-			"$ref": "#/$defs/string_array"
+			"$ref": "#/$defs/body"
 		},
 		"template": {
 			"$ref": "#/$defs/string_array"

@@ -892,9 +892,15 @@ Raises:
 	RuntimeError:
 		|Must| raise if validation fails.
 		"""
-# Expect list of strings
+		# Expect list of strings
 		if not is_list_of_str(lines):
-			raise_parsing_error_expected_but_got(tr,"RET-005","list of strings",f"{lines}")
+			found = ["Returns:"] + [f"\t{line}" for line in to_string_tree(lines).splitlines()]
+			details = {
+				"found": found,
+				"expected": ["<do not add subsections in section Returns>"],
+				"hint": "waterlint explain-section --label Returns --profile function",
+			}
+			raise_parsing_error_expected_but_got(tr,"RET-005","list of strings",f"{lines}", details)
 		self.set_items(lines)
 
 #===== end section Returns ====================================#
@@ -956,9 +962,15 @@ Raises:
 	RuntimeError:
 		|Must| raise if validation fails.
 		"""
-# Expect list of strings
+		# Expect list of strings
 		if not is_list_of_str(lines):
-			raise_parsing_error_expected_but_got(tr,"DESC-004","list of strings",f"{lines}")
+			found = ["Description:"] + [f"\t{line}" for line in to_string_tree(lines).splitlines()]
+			details = {
+				"found": found,
+				"expected": ["<do not add subsections in section Description>"],
+				"hint": "waterlint explain-section --label Description --profile PROFILE",
+			}
+			raise_parsing_error_expected_but_got(tr,"DESC-004","list of strings",f"{lines}", details)
 		self._items = lines
 
 #===== end section Description ================================#

@@ -49,7 +49,9 @@ def test_explain_section_matrix_profile_section(profile: str, label: str, tmp_pa
 	assert doc["kind"] == "section_explanation", doc
 	assert doc["profile"] == profile, doc
 	assert doc["label"] == label, doc
-	assert doc["body_category"] == SECTION_PROPERTIES[label]["category"], doc
+	assert doc["body"]["category"] == SECTION_PROPERTIES[label]["category"], doc
+	assert isinstance(doc["body"]["explanation"], list), doc
+	assert isinstance(doc["body"]["content"], list), doc
 	assert doc["normativity"] == SECTION_PROPERTIES[label]["normativity"], doc
 	assert doc["label_kind"] == SECTION_PROPERTIES[label]["label_kind"], doc
 	assert doc["must_exist"] == SECTION_PROPERTIES[label]["must_exist"], doc

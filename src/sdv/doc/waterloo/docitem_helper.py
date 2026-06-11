@@ -619,6 +619,135 @@ def render_missing_entry_details(container_label: str, current_entries: Iterable
 	}
 
 
+def render_overview_requires_section_details(overview_label: str, required_section: str, profile: str) -> dict[str, Any]:
+	"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+	Contract:
+		general:
+			|Must| render compact validation details for overview sections that require a normative companion section.
+	Parameters:
+		overview_label:
+			The overview section label, such as |token|`Class_overview`.
+		required_section:
+			The normative section that must be added, such as |token|`Public_classes`.
+		profile:
+			The docstring profile used for the |wtrl_cmd|`explain-section` hint.
+	Returns:
+		A details dictionary with |token|`found`, |token|`expected`, and |token|`hint`.
+	Raises:
+	"""
+	return {
+		"found": [f"{overview_label}", "\t..."],
+		"expected": [f"<add normative section {required_section}>"],
+		"hint": explain_try_self_for_section(required_section, profile),
+	}
+
+
+def render_name_object_consistency_details(label: str, current_entries: Iterable[str], profile: str, *, overview_item: str | None = None) -> dict[str, Any]:
+	"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+	Contract:
+		general:
+			|Must| render compact validation details for name/object consistency checks.
+	Parameters:
+		label:
+			The section label to render.
+		current_entries:
+			The current raw entries from the section.
+		profile:
+			The docstring profile used for the hint.
+		overview_item:
+			If provided, render an overview entry instead of a flat identifier list.
+	Returns:
+		A details dictionary with |token|`found`, |token|`expected`, and |token|`hint`.
+	Raises:
+	"""
+	if overview_item is None:
+		return {
+			"found": render_identifier_lines(label, current_entries),
+			"expected": ["<check name/object consistency>"],
+			"hint": explain_try_self_for_section(label, profile),
+		}
+	return {
+		"found": render_source_snippet(label, [overview_item]),
+		"expected": ["<check name/object consistency>"],
+		"hint": explain_try_self_for_subsection(f"{label}.<item>", profile),
+	}
+
+
+def render_normativity_keyword_details(section_label: str, entry_name: str, current_lines: Iterable[str], profile: str) -> dict[str, Any]:
+	"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+	Contract:
+		general:
+			|Must| build standardized validation details for an entry that must not contain normativity keywords.
+	Parameters:
+		section_label:
+			The overview section label, such as |token|`Class_overview`.
+		entry_name:
+			The entry label that violates the rule.
+		current_lines:
+			The raw lines found in the entry.
+		profile:
+			The docstring profile used for the |wtrl_cmd|`explain-section` hint.
+	Returns:
+		A details dictionary with |token|`found`, |token|`expected`, and |token|`hint`.
+	Raises:
+	"""
+	found_lines = list(current_lines)
+	if not found_lines:
+		found_lines = ["..."]
+	return {
+		"found": [f"{section_label}:", f"\t{entry_name}:"] + [f"\t\t{line}" for line in found_lines],
+		"expected": [f"{section_label}:", f"\t{entry_name}:", "\t\t<don't use normativity keyword>"],
+		"hint": explain_try_self_for_section(section_label, profile),
+	}
+
+
+def render_exception_reference_details(exception_name: str, profile: str, *, expected_kind: Literal["qualified identifier", "subclass of BaseException"]) -> dict[str, Any]:
+	"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+	Contract:
+		general:
+			|Must| build standardized validation details for a Raises entry that must resolve to an exception class.
+	Parameters:
+		exception_name:
+			The exception entry name found in the Raises section.
+		profile:
+			The docstring profile used for the |wtrl_cmd|`explain-subsection` hint.
+		expected_kind:
+			Either |token|`qualified identifier` or |token|`subclass of BaseException`.
+	Returns:
+		A details dictionary with |token|`found`, |token|`expected`, and |token|`hint`.
+	Raises:
+	"""
+	if expected_kind == "qualified identifier":
+		expected = ["<check for typos or qualify properly>"]
+	else:
+		expected = ["<refer to an Exception class derived from BaseException>"]
+	return {
+		"found": render_source_snippet("Raises", [exception_name]),
+		"expected": expected,
+		"hint": explain_try_self_for_subsection("Raises.<item>", profile),
+	}
+
+
 def render_exactly_one_identifier_details(label: str, current_entries: Iterable[str], profile: str) -> dict[str, Any]:
 	"""
 	Preamble:
@@ -645,6 +774,43 @@ def render_exactly_one_identifier_details(label: str, current_entries: Iterable[
 		"found": render_identifier_lines(label, current),
 		"expected": render_expected_identifier(label, "identifier"),
 		"hint": explain_try_self_for_subsection(label, profile),
+	}
+
+
+def render_parameter_signature_details(
+	section_label: str,
+	current_entries: Iterable[str],
+	expected_entries: Iterable[str],
+	profile: str,
+) -> dict[str, Any]:
+	"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+	Contract:
+		general:
+			|Must| build standardized validation details for a parameter/signature mismatch.
+	Parameters:
+		section_label:
+			The label to render in the snippets.
+		current_entries:
+			The current raw parameter entries.
+		expected_entries:
+			The corrected parameter entries to show in the expected snippet.
+		profile:
+			The docstring profile used for the |wtrl_cmd|`explain-section` hint.
+	Returns:
+		A details dictionary with |attr|`found`, |attr|`expected`, and |attr|`hint`.
+	Raises:
+	"""
+	current = list(current_entries)
+	expected = list(expected_entries)
+	return {
+		"found": render_source_snippet(section_label, current),
+		"expected": render_expected_snippet(section_label, expected),
+		"hint": explain_try_self_for_section(section_label, profile),
 	}
 
 _SOURCE_DOCSTRING_CACHE: Dict[int, str] = {}
@@ -2201,7 +2367,8 @@ Public_types:
 						lines.append(f"\t\t{line}")
 		hint = details.get("hint")
 		if isinstance(hint, str) and hint:
-			lines.append(f"\t{label_color}hint:{label_reset} {hint}")
+			lines.append(f"\t{label_color}hint:{label_reset}")
+			lines.append(f"\t\t{hint}")
 		return "".join(f"{line}\n" for line in lines)
 	def _format_diagnostic_line(self, kind: str, origin: Origin, context: tracer.Context, rule_id: RuleId | None, msg: str, details: Details | None = None) -> str:
 		color_map = {
@@ -2549,7 +2716,7 @@ def raise_parsing_error(tr : tracer, rule_id: RuleId, msg : str, details: dict[s
 	tr.add_error(rule_id, "parsing", out, details)
 	raise ParseError(out)
 
-def raise_parsing_error_expected_but_got(tr : tracer, rule_id: RuleId, expected : str, got : str) -> NoReturn:
+def raise_parsing_error_expected_but_got(tr : tracer, rule_id: RuleId, expected : str, got : str, details: dict[str, Any] | None = None) -> NoReturn:
 	"""
 	Preamble:
 		profile:
@@ -2570,6 +2737,8 @@ def raise_parsing_error_expected_but_got(tr : tracer, rule_id: RuleId, expected 
 			The expected textual value.
 		got:
 			The actual textual value.
+		details:
+			Optional diagnostic details to attach to the tracer error.
 	Returns:
 		No return value.
 	Raises:
@@ -2577,7 +2746,7 @@ def raise_parsing_error_expected_but_got(tr : tracer, rule_id: RuleId, expected 
 			Always raised.
 	"""
 	out = f"expected {expected}, but got '{got}'"
-	tr.add_error(rule_id, "parsing", out)
+	tr.add_error(rule_id, "parsing", out, details)
 	raise ParseError(out)
 
 def raise_parsing_error_invalid_label(tr : tracer, rule_id: RuleId,found : str,allowed : Iterable[str]) -> NoReturn:
