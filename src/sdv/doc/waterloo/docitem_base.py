@@ -448,21 +448,26 @@ class docitem_list_of_symbols_base(docitem_list_base):
 		for ref in logical_refs:
 # We allow a comma separated string of qualified identifiers.
 # Strip due to rule LQID-003
-			segments = map(str.strip,ref.split(","))
-			what = "unspecified"
-			if pattern == self.ValuePattern.QUALIFIED_IDENTIFIER:
-				re_compiled = RE_QUALIFIED_IDENTIFIER_COMPILED
-				what = "qualified identifier"
-			elif pattern == self.ValuePattern.IDENTIFIER:
-				re_compiled = RE_IDENTIFIER_COMPILED
-				what = "identifier"
-			for seg in segments:
-				if seg in seen:
-					raise_parsing_error(tr, "LQID-004", f"duplicate entry {seg}.")
-				if not re_compiled.fullmatch(seg):
-					raise_parsing_error_expected_but_got(tr,"LQID-002",what,f'{seg}')
-				refs_split.append(seg)
-				seen.add(seg)
+				segments = map(str.strip,ref.split(","))
+				what = "unspecified"
+				if pattern == self.ValuePattern.QUALIFIED_IDENTIFIER:
+					re_compiled = RE_QUALIFIED_IDENTIFIER_COMPILED
+					what = "qualified identifier"
+				elif pattern == self.ValuePattern.IDENTIFIER:
+					re_compiled = RE_IDENTIFIER_COMPILED
+					what = "identifier"
+				for seg in segments:
+					if seg in seen:
+						details = {
+							"found": render_identifier_lines("Contract.traits", refs_split + [seg]),
+							"expected": render_deduplicated_identifiers("Contract.traits", refs_split + [seg]),
+							"hint": explain_try_self_for_subsection("Contract.traits", "class"),
+						}
+						raise_parsing_error(tr, "LQID-004", f"duplicate identifier '{seg}' occurs more than once.", details)
+					if not re_compiled.fullmatch(seg):
+						raise_parsing_error_expected_but_got(tr,"LQID-002",what,f'{seg}')
+					refs_split.append(seg)
+					seen.add(seg)
 # We have a flat list, rule LQID-005.
 		self.set_items(refs_split)
 	def __str__(self) -> str:

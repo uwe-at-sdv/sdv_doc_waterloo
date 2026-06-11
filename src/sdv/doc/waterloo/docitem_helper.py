@@ -1,3 +1,55 @@
+"""
+Preamble:
+	profile:
+		module
+	normative_sections:
+		Contract, Public_constants, Public_classes, Public_functions, Public_types
+Contract:
+	general:
+		|Must| provide shared helper functions, constants, and type aliases for Waterloo docstring validation and explanation.
+Public_classes:
+	Trait, Scope, Flavour, Format, Status, ConfigTraversal, tracer
+Public_functions:
+	explain_try_self_for_section, explain_try_self_for_subsection, render_normative_section_details, render_missing_entry_details, render_exactly_one_identifier_details, render_source_snippet, render_expected_snippet, render_allowed_identifier, render_expected_identifier, render_allowed_identifiers, render_identifier_lines, render_deduplicated_identifiers, render_unique_identifiers, get_source_docstring, is_annotatable, is_attr_annotated, is_attr_final, is_list_of_str, is_obj_module, is_obj_class, is_obj_function, is_obj_method_like, is_obj_named_value, is_obj_documentable, get_obj_direct_module, get_obj_name, get_obj_fully_qualified_name, get_obj_path, build_anchor, get_func_obj_from_callable, get_obj_docstring, get_obj_annotations, get_obj_decorators, gen_documentable_objects, traced_section, rule_on_fail, raise_has_no_docstring, raise_parsing_error, raise_parsing_error_expected_but_got, raise_parsing_error_invalid_label, raise_validation_error, raise_validation_error_expected_but_got, warn_parsing, warn_validation
+Public_types:
+	Profile:
+		Supported profile labels for the helper layer.
+	DocstringSubtree:
+		Recursive docstring tree node type.
+	DocstringTree:
+		A full docstring tree represented as a list of subtree values.
+	AnnotatableObject:
+		Objects that can be annotated by the helper layer.
+	RuleId:
+		Rule identifier type alias.
+	Origin:
+		Tracer origin labels.
+	Details:
+		Tracer details payload.
+	Scopes:
+		A set of scope values.
+	Documentable:
+		Objects that can be traversed by the helper functions.
+	AstDocNode:
+		An AST node type relevant for docstring extraction.
+Public_constants:
+	RULE_ID_WHITELIST:
+		Whitelist reasons for legacy rule identifiers used by the helper layer.
+	SECTION_PROPERTIES:
+		Common section metadata shared by the validator and explain commands.
+	CANONICAL_ORDER_OF_SECTIONS:
+		Canonical subsection ordering for section snippets and expected snippets.
+	TRAIT_TAG_MAP:
+		Trait tag mapping for trait labels.
+	SCOPE_TAG_MAP:
+		Scope tag mapping for visibility selection.
+	FLAVOUR_TAG_MAP:
+		Flavour tag mapping for normativity keyword rendering.
+	FORMAT_TAG_MAP:
+		Output format tag mapping for string-related output.
+	STATUS_TAG_MAP:
+		Status tag mapping for Preamble.status.
+"""
 from __future__ import annotations
 from enum import Enum,IntEnum
 from types import FunctionType, MappingProxyType, ModuleType
@@ -22,6 +74,37 @@ except:
 #===== Rule-ID Whitelist ======================================#
 # Valid whitelist reasons in tokenized form:
 class WHITELIST_REASON(IntEnum):
+	"""
+	Preamble:
+		profile:
+			class
+		normative_sections:
+			Contract, Public_constants
+	Contract:
+		general:
+			|Must| enumerate the legacy rule-whitelist reasons used by this helper layer.
+	Public_constants:
+		UNSPECIFIED_RULE:
+			No explicit reason was recorded.
+		MAY_EXIST_RULE:
+			The rule may exist in the corpus.
+		STRUCTURE_RULE:
+			The rule is a structural rule.
+		SEMANTIC_RULE:
+			The rule is a semantic rule.
+		UNRELATED_RULE:
+			The rule is unrelated to the current module.
+		ANTICIPATED_RULE:
+			The rule is expected to appear later.
+		FALLBACK_RULE:
+			The rule acts as a fallback.
+		RELAY_RULE:
+			The rule is relayed to another rule.
+		BAD_IMPLEMENTATION_RULE:
+			The rule is a placeholder for a bad implementation case.
+		EXISTS_AS_COMMENT_RULE:
+			The rule exists only as a comment-level trace.
+	"""
 # should be avoided:
 	UNSPECIFIED_RULE	= 0
 # will definitely appear:
@@ -196,6 +279,374 @@ RE_WTRL_ANGLE_WTRL_REF_COMPILED: Final[re.Pattern[str]] = re.compile(RE_WTRL_ANG
 #CSV_SECTIONS = frozenset(["normative_sections", "scopes", "Public_classes", "Public_methods", "Public_functions", "See_also"])
 SINGLE_STRING_SECTIONS = frozenset(["profile","status"])
 
+# Shared section catalog for the Waterloo docstring standard.
+# This is the common rule metadata that both the docitem validator and the waterlint explain layer
+# need to consume, so the source lives here on the docitem side of the dependency.
+SECTION_PROPERTIES: Final[dict[str, dict[str, Any]]] = {
+	# Normativity does not apply to Preamble because normativity is declared therein, and normativity
+	# does not apply to subsections because they are normative if and only if the surrounding section is normative (BinNorm).
+	# "profile" rules: DOC-003, DOC-004, DOC-005, DOC-006
+	# "normativity" rules: not_applicable
+	# "must_exist" rules: PRE-001
+	"Preamble": {"category": "STRUCTURE", "normativity": "not_applicable", "label_kind": "FIXED", "profile": ["module","class","function","method","inherited_method"], "must_exist": "yes", "hint": ""},
+	# "profile" rules: DOC-003, DOC-004, DOC-005, DOC-006, PRE-003
+	# "normativity" rules: not_applicable
+	# "must_exist" rules: PRE-003
+	"Preamble.profile": {"category": "IDENTIFIER", "normativity": "not_applicable", "label_kind": "FIXED", "profile": ["module","class","function","method","inherited_method"], "must_exist": "yes", "hint": ""},
+	# "profile" rules: DOC-003, DOC-004, DOC-005, DOC-006, PRE-006
+	# "normativity" rules: not_applicable
+	# "must_exist" rules: PRE-006
+	"Preamble.normative_sections": {"category": "LIST_OF_IDENTIFIERS", "normativity": "not_applicable", "label_kind": "FIXED", "profile": ["module","class","function","method","inherited_method"], "must_exist": "yes", "hint": ""},
+	# "profile" rules: PRE-016, PRE-019, STA-001
+	# "normativity" rules: not_applicable
+	# "must_exist" rules: STA-001
+	"Preamble.status": {"category": "IDENTIFIER", "normativity": "not_applicable", "label_kind": "FIXED", "profile": ["function","method"], "must_exist": "no", "hint": ""},
+	# "profile" rules: DOC-003, DOC-004, DOC-005, DOC-006, SCP-001
+	# "normativity" rules: not_applicable
+	# "must_exist" rules: SCP-001
+	"Preamble.scope": {"category": "LIST_OF_IDENTIFIERS", "normativity": "not_applicable", "label_kind": "FIXED", "profile": ["module","class","function","method","inherited_method"], "must_exist": "no", "hint": ""},
+
+	# "profile" rules: DOC-003, DOC-004, DOC-005, DOC-006
+	# "normativity" rules: DEF-002
+	# "must_exist" rules: DEF-001
+	"Definitions": {"category": "STRUCTURE", "normativity": "normative", "label_kind": "FIXED", "profile": ["module","class","function","method","inherited_method"], "must_exist": "no", "hint": ""},
+	# "profile" rules: DOC-003, DOC-004, DOC-005, DOC-006, DEF-003
+	# "label_kind" rules: DEF-004, DEF-005
+	# "normativity" rules: BinNorm, DEF-002
+	# "must_exist" rules: DEF-020
+	"Definitions.<item>": {"category": "FREEFORM_TEXT", "normativity": "normative", "label_kind": "LIST_OF_IDENTIFIERS", "profile": ["module","class","function","method","inherited_method"], "must_exist": "no", "hint": ""},
+	# "profile" rules: DEF-011, DEF-012
+	# "normativity" rules: BinNorm, DEF-002
+	# "must_exist" rules: DEF-012
+	"Definitions._inherit": {"category": "LIST_OF_IDENTIFIERS", "normativity": "normative", "label_kind": "FIXED", "profile": ["class","function","method","inherited_method"], "must_exist": "no", "hint": ""},
+
+	# Terminology is the informative sister of Definitions. It is not allowed to contain normativity keywords but rather general explanations of terms.
+	# "profile" rules: DOC-003, DOC-004, DOC-005, DOC-006
+	# "normativity" rules: TERM-002, TERM-003
+	# "must_exist" rules: TERM-001
+	"Terminology": {"category": "STRUCTURE", "normativity": "informative", "label_kind": "FIXED", "profile": ["module","class","function","method","inherited_method"], "must_exist": "no", "hint": ""},
+	# "profile" rules: DOC-003, DOC-004, DOC-005, DOC-006, TERM-004
+	# "label_kind" rules: TERM-005, TERM-006
+	# "normativity" rules: BinNorm, TERM-002
+	# "must_exist" rules: TERM-009
+	"Terminology.<item>": {"category": "FREEFORM_TEXT", "normativity": "informative", "label_kind": "ANY_STRING", "profile": ["module","class","function","method","inherited_method"], "must_exist": "no", "hint": ""},
+
+	# "profile" rules: DOC-003, DOC-004, DOC-005, DOC-006
+	# "normativity" rules: CON-002
+	# "must_exist" rules: CON-001
+	"Contract": {"category": "STRUCTURE", "normativity": "normative", "label_kind": "FIXED", "profile": ["module","class","function","method","inherited_method"], "must_exist": "yes", "hint": ""},
+	# "profile" rules: CON-022, CON-023, CON-024, CON-036
+	# "normativity" rules: BinNorm, CON-002
+	# "must_exist" rules: CON-022, CON-023, CON-024, CON-036
+	"Contract.general": {"category": "ITEMIZED_TEXT", "normativity": "normative", "label_kind": "FIXED", "profile": ["module","class","function","method","inherited_method"], "must_exist": "yes", "hint": ""},
+	# "profile" rules: CON-007
+	# "normativity" rules: BinNorm, CON-002
+	# "must_exist" rules: CON-007
+	"Contract.constructor": {"category": "ITEMIZED_TEXT", "normativity": "normative", "label_kind": "FIXED", "profile": ["class"], "must_exist": "yes", "hint": ""},
+	# "profile" rules: CON-039
+	# "normativity" rules: BinNorm, CON-002
+	# "must_exist" rules: CON-039
+	"Contract.base": {"category": "QUALIFIED_IDENTIFIER", "normativity": "normative", "label_kind": "FIXED", "profile": ["inherited_method"], "must_exist": "yes", "hint": ""},
+	# "profile" rules: CON-012
+	# "normativity" rules: BinNorm, CON-002
+	# "must_exist" rules: CON-012
+	"Contract.traits": {"category": "LIST_OF_IDENTIFIERS", "normativity": "normative", "label_kind": "FIXED", "profile": ["class"], "must_exist": "no", "hint": ""},
+	# "profile" rules: CON-025
+	# "normativity" rules: BinNorm, CON-002
+	# "must_exist" rules: CON-025
+	"Contract.invariants": {"category": "ITEMIZED_TEXT", "normativity": "normative", "label_kind": "FIXED", "profile": ["function","method"], "must_exist": "no", "hint": ""},
+	# "profile" rules: CON-047
+	# "normativity" rules: BinNorm, CON-002
+	# "must_exist" rules: CON-047
+	"Contract.requires": {"category": "ITEMIZED_TEXT", "normativity": "normative", "label_kind": "FIXED", "profile": ["function","method"], "must_exist": "no", "hint": ""},
+	# "profile" rules: CON-049
+	# "normativity" rules: BinNorm, CON-002
+	# "must_exist" rules: CON-049
+	"Contract.ensures": {"category": "ITEMIZED_TEXT", "normativity": "normative", "label_kind": "FIXED", "profile": ["function","method"], "must_exist": "no", "hint": ""},
+
+	# "profile" rules: DOC-003, DOC-004, DOC-005, DOC-006
+	# "normativity" rules: DESC-002
+	# "must_exist" rules: DESC-001
+	"Description": {"category": "FREEFORM_TEXT", "normativity": "can_be_both", "label_kind": "FIXED", "profile": ["module","class","function","method","inherited_method"], "must_exist": "no", "hint": ""},
+
+	# "profile" rules: DOC-004
+	# "normativity" rules: DER-004
+	# "must_exist" rules: DER-001
+	"Derived_from": {"category": "LIST_OF_QUALIFIED_IDENTIFIERS", "normativity": "normative", "label_kind": "FIXED", "profile": ["class"], "must_exist": "no", "hint": ""},
+
+	# "profile" rules: DOC-004
+	# "normativity" rules: FAC-009
+	# "must_exist" rules: FAC-001
+	"Factory": {"category": "STRUCTURE", "normativity": "normative", "label_kind": "FIXED", "profile": ["class"], "must_exist": "no", "hint": ""},
+	# "profile" rules: FAC-004
+	# "label_kind" rules: FAC-005
+	# "normativity" rules: BinNorm, FAC-009
+	# "must_exist" rules: FAC-004
+	"Factory.<item>": {"category": "FREEFORM_TEXT", "normativity": "normative", "label_kind": "QUALIFIED_IDENTIFIER", "profile": ["class"], "must_exist": "no", "hint": ""},
+
+	# "profile" rules: DOC-003, DOC-004
+	# "normativity" rules: MPCL-002, CPCL-002
+	# "must_exist" rules: MPCL-001, CPCL-001
+	"Public_classes": {"category": "LIST_OF_QUALIFIED_IDENTIFIERS", "normativity": "normative", "label_kind": "FIXED", "profile": ["module","class"], "must_exist": "no", "hint": ""},
+	# "profile" rules: DOC-003
+	# "normativity" rules: MPFN-002
+	# "must_exist" rules: MPFN-001
+	"Public_functions": {"category": "LIST_OF_QUALIFIED_IDENTIFIERS", "normativity": "normative", "label_kind": "FIXED", "profile": ["module"], "must_exist": "no", "hint": ""},
+	# "profile" rules: DOC-004
+	# "normativity" rules: CPMT-002
+	# "must_exist" rules: CPMT-001
+	"Public_methods": {"category": "LIST_OF_QUALIFIED_IDENTIFIERS", "normativity": "normative", "label_kind": "FIXED", "profile": ["class"], "must_exist": "no", "hint": ""},
+	# "profile" rules: DOC-003, DOC-004
+	# "normativity" rules: MPTYP-002, CPTYP-002
+	# "must_exist" rules: MPTYP-001, CPTYP-001
+	"Public_types": {"category": "STRUCTURE", "normativity": "normative", "label_kind": "FIXED", "profile": ["module","class"], "must_exist": "no", "hint": ""},
+	# "profile" rules: MPTYP-003, CPTYP-003
+	# "label_kind" rules: MPTYP-004, CPTYP-004
+	# "normativity" rules: BinNorm, MPTYP-002, CPTYP-002
+	# "must_exist" rules: MPTYP-003, CPTYP-003
+	"Public_types.<item>": {"category": "FREEFORM_TEXT", "normativity": "normative", "label_kind": "IDENTIFIER", "profile": ["module","class"], "must_exist": "no", "hint": ""},
+	# "profile" rules: DOC-003, DOC-004
+	# "normativity" rules: MPVAR-002, CPVAR-002
+	# "must_exist" rules: MPVAR-001, CPVAR-001
+	"Public_variables": {"category": "STRUCTURE", "normativity": "normative", "label_kind": "FIXED", "profile": ["module","class"], "must_exist": "no", "hint": ""},
+	# "profile" rules: MPVAR-003, CPVAR-003
+	# "label_kind" rules: MPVAR-004, CPVAR-004
+	# "normativity" rules: BinNorm, MPVAR-002, CPVAR-002
+	# "must_exist" rules: MPVAR-003, CPVAR-003
+	"Public_variables.<item>": {"category": "FREEFORM_TEXT", "normativity": "normative", "label_kind": "IDENTIFIER", "profile": ["module","class"], "must_exist": "no", "hint": ""},
+	# "profile" rules: DOC-003, DOC-004
+	# "normativity" rules: MPCON-002, CPCON-002
+	# "must_exist" rules: MPCON-001, CPCON-001
+	"Public_constants": {"category": "STRUCTURE", "normativity": "normative", "label_kind": "FIXED", "profile": ["module","class"], "must_exist": "no", "hint": ""},
+	# "profile" rules: MPCON-003, CPCON-003
+	# "label_kind" rules: MPCON-004, CPCON-004
+	# "normativity" rules: BinNorm, MPCON-002, CPCON-002
+	# "must_exist" rules: MPCON-003, CPCON-003
+	"Public_constants.<item>": {"category": "FREEFORM_TEXT", "normativity": "normative", "label_kind": "IDENTIFIER", "profile": ["module","class"], "must_exist": "no", "hint": ""},
+
+	# "profile" rules: DOC-003, DOC-004
+	# "normativity" rules: MCLO-002, CCLO-002
+	# "must_exist" rules: MCLO-001, CCLO-001
+	"Class_overview": {"category": "STRUCTURE", "normativity": "informative", "label_kind": "FIXED", "profile": ["module","class"], "must_exist": "no", "hint": ""},
+	# "profile" rules: MCLO-004, CCLO-004
+	# "label_kind" rules: MCLO-005, CCLO-005
+	# "normativity" rules: BinNorm, MCLO-002, CCLO-002
+	# "must_exist" rules: MCLO-010, CCLO-010
+	"Class_overview.<item>": {"category": "FREEFORM_TEXT", "normativity": "informative", "label_kind": "IDENTIFIER", "profile": ["module","class"], "must_exist": "no", "hint": ""},
+
+	# "profile" rules: DOC-004
+	# "normativity" rules: CMTO-002
+	# "must_exist" rules: CMTO-001
+	"Method_overview": {"category": "STRUCTURE", "normativity": "informative", "label_kind": "FIXED", "profile": ["class"], "must_exist": "no", "hint": ""},
+	# "profile" rules: CMTO-004
+	# "label_kind" rules: CMTO-005
+	# "normativity" rules: BinNorm, CMTO-002
+	# "must_exist" rules: CMTO-010
+	"Method_overview.<item>": {"category": "FREEFORM_TEXT", "normativity": "informative", "label_kind": "IDENTIFIER", "profile": ["class"], "must_exist": "no", "hint": ""},
+	
+	# "profile" rules: DOC-003
+	# "normativity" rules: MFNO-002
+	# "must_exist" rules: MFNO-001
+	"Function_overview": {"category": "STRUCTURE", "normativity": "informative", "label_kind": "FIXED", "profile": ["module"], "must_exist": "no", "hint": ""},
+	# "profile" rules: MFNO-004
+	# "label_kind" rules: MFNO-005
+	# "normativity" rules: BinNorm, MFNO-002
+	# "must_exist" rules: MFNO-010
+	"Function_overview.<item>": {"category": "FREEFORM_TEXT", "normativity": "informative", "label_kind": "IDENTIFIER", "profile": ["module"], "must_exist": "no", "hint": ""},
+
+	# We classify Parameters.<items>."must_exists" as "depends_on_context" because for any given value of <item>
+	# it can be determined whether it must exist or not, but there is no general rule that applies to all items of the same label.
+	# "profile" rules: DOC-005
+	# "normativity" rules: PAR-002
+	# "must_exist" rules: PAR-001
+	"Parameters": {"category": "STRUCTURE", "normativity": "normative", "label_kind": "FIXED", "profile": ["function","method"], "must_exist": "yes", "hint": ""},
+	# "profile" rules: PAR-008
+	# "label_kind" rules: PAR-006
+	# "normativity" rules: BinNorm, PAR-002
+	# "must_exist" rules: PAR-004, PAR-005
+	"Parameters.<item>": {"category": "FREEFORM_TEXT", "normativity": "normative", "label_kind": "IDENTIFIER", "profile": ["function","method"], "must_exist": "depends_on_context", "hint": ""},
+
+	# "profile" rules: DOC-005
+	# "normativity" rules: RET-002
+	# "must_exist" rules: RET-001
+	"Returns": {"category": "FREEFORM_TEXT", "normativity": "normative", "label_kind": "FIXED", "profile": ["function","method"], "must_exist": "yes", "hint": ""},
+	# "profile" rules: DOC-005
+	# "normativity" rules: RAI-002
+	# "must_exist" rules: RAI-001
+	"Raises": {"category": "STRUCTURE", "normativity": "normative", "label_kind": "FIXED", "profile": ["function","method"], "must_exist": "yes", "hint": ""},
+	# "profile" rules: RAI-011
+	# "label_kind" rules: RAI-008
+	# "normativity" rules: BinNorm, RAI-002
+	# "must_exist" rules: RAI-011
+	"Raises.<item>": {"category": "FREEFORM_TEXT", "normativity": "normative", "label_kind": "QUALIFIED_IDENTIFIER", "profile": ["function","method"], "must_exist": "no", "hint": ""},
+
+	# "profile" rules: DOC-003, DOC-004, DOC-005, DOC-006
+	# "normativity" rules: NOTE-002
+	# "must_exist" rules: NOTE-001
+	"Notes": {"category": "STRUCTURE", "normativity": "informative", "label_kind": "FIXED", "profile": ["module","class","function","method","inherited_method"], "must_exist": "no", "hint": ""},
+	# "profile" rules: DOC-003, DOC-004, DOC-005, DOC-006, NOTE-005
+	# "label_kind" rules: NOTE-006
+	# "normativity" rules: BinNorm, NOTE-002
+	# "must_exist" rules: NOTE-008
+	"Notes.<item>": {"category": "FREEFORM_TEXT", "normativity": "informative", "label_kind": "ANY_STRING", "profile": ["module","class","function","method","inherited_method"], "must_exist": "no", "hint": ""},
+
+	# "profile" rules: DOC-003, DOC-004, DOC-005, DOC-006
+	# "normativity" rules: SEE-011
+	# "must_exist" rules: SEE-001
+	"See_also": {"category": "LIST_OF_QUALIFIED_IDENTIFIERS", "normativity": "can_be_both", "label_kind": "FIXED", "profile": ["module","class","function","method","inherited_method"], "must_exist": "no", "hint": ""},
+}
+
+
+def explain_try_self_for_section(label: str, profile: str) -> str:
+	"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+	Contract:
+		general:
+			|Must| build the canonical self-explanation command for a section label and profile.
+	Parameters:
+		label:
+			The section label to explain.
+		profile:
+			The docstring profile to use as the explain context.
+	Returns:
+		The canonical |wtrl_cmd|`explain-section` command for the given label and profile.
+	Raises:
+	"""
+	return f"waterlint explain-section --label {label} --profile {profile}"
+
+
+def explain_try_self_for_subsection(label: str, profile: str) -> str:
+	"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+	Contract:
+		general:
+			|Must| build the canonical self-explanation command for a fully qualified subsection label and profile.
+	Parameters:
+		label:
+			The fully qualified subsection label to explain.
+		profile:
+			The docstring profile to use as the explain context.
+	Returns:
+		The canonical |wtrl_cmd|`explain-subsection` command for the given label and profile.
+	Raises:
+	"""
+	return f"waterlint explain-subsection --label {label} --profile {profile}"
+
+
+def render_normative_section_details(section_label: str, normative_sections: Iterable[str], profile: str, *, action: Literal["add", "remove"]) -> dict[str, Any]:
+	"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+	Contract:
+		general:
+			|Must| build standardized validation details for normative section membership checks.
+	Parameters:
+		section_label:
+			The section label that should be added to or removed from the normative section set.
+		normative_sections:
+			The current normative section labels.
+		profile:
+			The docstring profile used for the |wtrl_cmd|`explain-section` hint.
+		action:
+			Either |token|`add` when the section should be present, or |token|`remove` when it should be absent.
+	Returns:
+		A details dictionary with |token|`found`, |token|`expected`, and |token|`hint`.
+	Raises:
+	"""
+	current = list(normative_sections)
+	if action == "add":
+		expected = [*current, section_label]
+	else:
+		expected = [item for item in current if item != section_label]
+	return {
+		"found": render_identifier_lines("Preamble.normative_sections", current),
+		"expected": render_deduplicated_identifiers("Preamble.normative_sections", expected),
+		"hint": explain_try_self_for_section(section_label, profile),
+	}
+
+
+def render_missing_entry_details(container_label: str, current_entries: Iterable[str], missing_entry: str, profile: str, *, top_level: bool = False) -> dict[str, Any]:
+	"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+	Contract:
+		general:
+			|Must| build standardized validation details for a missing entry in a section-like container.
+	Parameters:
+		container_label:
+			The section label that contains the missing entry.
+		current_entries:
+			The currently present entry labels in the container.
+		missing_entry:
+			The entry label that should be added.
+		profile:
+			The docstring profile used for the |cmd|`explain-*` hint.
+		top_level:
+			Use a top-level list rendering when the container itself is the document root rather than a nested section.
+	Returns:
+		A details dictionary with |attr|`found`, |attr|`expected`, and |attr|`hint`.
+	Raises:
+	"""
+	current = list(current_entries)
+	found = [e for e in current for e in (e, "\t...")]
+	expected = [e for e in [*current, missing_entry] for e in (e, "\t...")]
+	if top_level:
+		# This is a special marker case for the document root level, which is not rendered
+		# with a section header and therefore needs a custom label in the snippets and hints.
+		return {
+			"found": found,
+			"expected": expected,
+			"hint": explain_try_self_for_section(missing_entry, profile),
+		}
+	return {
+		"found": render_source_snippet(container_label, current),
+		"expected": render_expected_snippet(container_label, expected),
+		"hint": explain_try_self_for_subsection(f"{container_label}.{missing_entry}", profile),
+	}
+
+
+def render_exactly_one_identifier_details(label: str, current_entries: Iterable[str], profile: str) -> dict[str, Any]:
+	"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+	Contract:
+		general:
+			|Must| build standardized validation details for a subsection that must contain exactly one identifier.
+	Parameters:
+		label:
+			The qualified subsection label to render in the snippets and hint.
+		current_entries:
+			The current raw entries from the subsection.
+		profile:
+			The docstring profile used for the |wtrl_cmd|`explain-subsection` hint.
+	Returns:
+		A details dictionary with |attr|`found`, |attr|`expected`, and |attr|`hint`.
+	Raises:
+	"""
+	current = list(current_entries)
+	return {
+		"found": render_identifier_lines(label, current),
+		"expected": render_expected_identifier(label, "identifier"),
+		"hint": explain_try_self_for_subsection(label, profile),
+	}
+
 _SOURCE_DOCSTRING_CACHE: Dict[int, str] = {}
 AstDocNode: TypeAlias = Union[ast.ClassDef, ast.FunctionDef, ast.AsyncFunctionDef]
 # Per-module AST cache used to preserve raw docstring indentation and tabs.
@@ -210,7 +661,7 @@ def get_source_docstring(o: object) -> str:
 		profile:
 			function
 		normative_sections:
-			Contract, Parameters, Returns, Notes
+			Contract, Parameters, Returns, Raises
 	Contract:
 		general:
 			|Must| return a raw source docstring for |var|`o` if the defining source text can be obtained.
@@ -229,11 +680,13 @@ def get_source_docstring(o: object) -> str:
 			Any documentable object whose defining source docstring should be extracted.
 	Returns:
 		|Must| return the raw source docstring text, or the empty string if none is available.
+	Raises:
 	Notes:
-		The helper uses a source-first strategy to preserve original indentation and tab characters in Python 3.13+.
-		Docstrings are cached by object identity, while parsed module ASTs are cached separately by module object.
-		The AST path is slower than runtime __doc__ access, but caching keeps the repeated cost manageable.
-		Further performance improvements can be added later by caching validation results for repeated objects.
+		Implementation:
+			The helper uses a source-first strategy to preserve original indentation and tab characters in Python 3.13+.
+			Docstrings are cached by object identity, while parsed module ASTs are cached separately by module object.
+			The AST path is slower than runtime __doc__ access, but caching keeps the repeated cost manageable.
+			Further performance improvements can be added later by caching validation results for repeated objects.
 	"""
 	key = id(o)
 	if key in _SOURCE_DOCSTRING_CACHE:
@@ -361,6 +814,268 @@ CANONICAL_ORDER_OF_SECTIONS : Final[Dict[str,None | Sequence[str]]] = {
 	"Notes"			: None,
 	"See_also"		: None,
 	}
+
+
+def render_source_snippet(section_label: str, subsections: Iterable[str] | None = None) -> list[str]:
+	"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+	Contract:
+		general:
+			|Must| render a compact section snippet with canonical subsection ordering.
+	Parameters:
+		section_label:
+			The section label to render.
+		subsections:
+			The subsection labels to render under the section label. If omitted, the canonical order for the
+			section is used when available.
+	Returns:
+		A compact list of lines that renders the section label followed by subsection placeholders.
+	Raises:
+	"""
+	canonical = CANONICAL_ORDER_OF_SECTIONS.get(section_label)
+	if subsections is None:
+		ordered = list(canonical) if canonical is not None else []
+	else:
+		ordered = list(subsections)
+		if canonical is not None:
+			order = {name: index for index, name in enumerate(canonical)}
+			ordered.sort(key=lambda name: order.get(name, len(order)))
+	lines = [f"{section_label}:"]
+	for subsection in ordered:
+		lines.append(f"\t{subsection}:")
+		lines.append("\t\t...")
+	return lines
+
+
+def render_expected_snippet(section_label: str, subsections: Iterable[str] | None = None) -> list[str]:
+	"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+	Contract:
+		general:
+			|Must| render the canonical expected snippet for a section.
+	Parameters:
+		section_label:
+			The section label to render.
+		subsections:
+			The subsection labels to render under the section label.
+	Returns:
+		The canonical expected section snippet as a list of lines.
+	Raises:
+	"""
+	return render_source_snippet(section_label, subsections)
+
+
+def render_allowed_identifier(label: str, identifiers: Iterable[str]) -> list[str]:
+	"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+	Contract:
+		general:
+			|Must| render a compact snippet for a subsection that expects exactly one identifier.
+	Parameters:
+		label:
+			The subsection label to render.
+		identifiers:
+			The allowed identifier values.
+	Returns:
+		A compact list of lines that states the allowed identifier values in one line.
+	Raises:
+	"""
+	if "." in label:
+		section_label, subsection_label = label.split(".", 1)
+	else:
+		section_label, subsection_label = label, None
+	items = list(dict.fromkeys(identifiers))
+	if not items:
+		items = ["..."]
+	lines = [f"{section_label}:"]
+	if subsection_label is not None:
+		lines.append(f"\t{subsection_label}:")
+		lines.append(f"\t\t<one of: {{ {', '.join(items)} }}>")
+	else:
+		lines.append(f"\t<one of: {{ {', '.join(items)} }}>")
+	return lines
+
+
+def render_expected_identifier(label: str, expected_kind: Literal["identifier", "qualified identifier"]) -> list[str]:
+	"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+	Contract:
+		general:
+			|Must| render the expected syntax for a single identifier-like value.
+	Parameters:
+		label:
+			The subsection label to render.
+		expected_kind:
+			Use |token|`identifier` or |token|`qualified identifier` to describe the expected syntax class.
+	Returns:
+		A compact list of lines that states the expected syntax in the Waterloo snippet format.
+	Raises:
+	"""
+	if "." in label:
+		section_label, subsection_label = label.split(".", 1)
+	else:
+		section_label, subsection_label = label, None
+	lines = [f"{section_label}:"]
+	if subsection_label is not None:
+		lines.append(f"\t{subsection_label}:")
+		lines.append(f"\t\t<{expected_kind}>")
+	else:
+		lines.append(f"\t<{expected_kind}>")
+	return lines
+
+
+def render_allowed_identifiers(label: str, identifiers: Iterable[str]) -> list[str]:
+	"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+	Contract:
+		general:
+			|Must| render a compact snippet for a subsection that expects a list of identifiers.
+	Parameters:
+		label:
+			The subsection label to render.
+		identifiers:
+			The allowed identifier values.
+	Returns:
+		A compact list of lines that states the allowed identifier values in one line.
+	Raises:
+	"""
+	if "." in label:
+		section_label, subsection_label = label.split(".", 1)
+	else:
+		section_label, subsection_label = label, None
+	items = list(dict.fromkeys(identifiers))
+	if not items:
+		items = ["..."]
+	lines = [f"{section_label}:"]
+	if subsection_label is not None:
+		lines.append(f"\t{subsection_label}:")
+		lines.append(f"\t\t<some of: {{ {', '.join(items)} }}>")
+	else:
+		lines.append(f"\t<some of: {{ {', '.join(items)} }}>")
+	return lines
+
+
+def render_identifier_lines(label: str, identifiers: Iterable[str]) -> list[str]:
+	"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+	Contract:
+		general:
+			|Must| render the found identifiers of a list-valued subsection in a compact form.
+	Parameters:
+		label:
+			The subsection label to render.
+		identifiers:
+			The identifier values exactly as found.
+	Returns:
+		A compact list of lines that states the identifier values in one line without semantic normalization.
+	Raises:
+	"""
+	if "." in label:
+		section_label, subsection_label = label.split(".", 1)
+	else:
+		section_label, subsection_label = label, None
+	items = list(identifiers)
+	if not items:
+		items = ["..."]
+	lines = [f"{section_label}:"]
+	if subsection_label is not None:
+		lines.append(f"\t{subsection_label}:")
+		lines.append(f"\t\t{', '.join(items)}")
+	else:
+		lines.append(f"\t{', '.join(items)}")
+	return lines
+
+
+def render_deduplicated_identifiers(label: str, identifiers: Iterable[str]) -> list[str]:
+	"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+	Contract:
+		general:
+			|Must| render a compact snippet for a subsection after removing duplicate identifiers.
+	Parameters:
+		label:
+			The subsection label to render.
+		identifiers:
+			The identifier values with duplicates removed while preserving the first occurrence order.
+	Returns:
+		A compact list of lines that states the deduplicated identifier values in one line.
+	Raises:
+	"""
+	if "." in label:
+		section_label, subsection_label = label.split(".", 1)
+	else:
+		section_label, subsection_label = label, None
+	items = list(dict.fromkeys(identifiers))
+	if not items:
+		items = ["..."]
+	lines = [f"{section_label}:"]
+	if subsection_label is not None:
+		lines.append(f"\t{subsection_label}:")
+		lines.append(f"\t\t{', '.join(items)}")
+	else:
+		lines.append(f"\t{', '.join(items)}")
+	return lines
+
+
+def render_unique_identifiers(label: str, identifiers: Iterable[str]) -> list[str]:
+	"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+	Contract:
+		general:
+			|Must| render a compact snippet for a subsection that requires unique identifiers.
+	Parameters:
+		label:
+			The subsection label to render.
+		identifiers:
+			The canonical identifier values.
+	Returns:
+		A compact list of lines that states the canonical identifier values and mentions uniqueness.
+	Raises:
+	"""
+	lines = render_deduplicated_identifiers(label, identifiers)
+	if "." in label:
+		section_label, subsection_label = label.split(".", 1)
+	else:
+		section_label, subsection_label = label, None
+	if subsection_label is not None:
+		lines.append("\t\t(each identifier may occur at most once)")
+	else:
+		lines.append("\t(each identifier may occur at most once)")
+	return lines
+
+
 
 class Trait(StrEnum):
 	"""
@@ -627,6 +1342,24 @@ Scopes: TypeAlias = Set[Scope]
 Documentable: TypeAlias = ModuleType | type[object] | Callable[..., Any]
 
 def is_annotatable(obj: Any) -> TypeGuard[AnnotatableObject]:
+	"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+		scope:
+			public
+	Contract:
+		general:
+			|Must| decide whether |var|`obj` is one of the annotatable runtime object kinds supported by the helper layer.
+	Parameters:
+		obj:
+			The object to test.
+	Returns:
+		|True| if |var|`obj` is annotatable, else |False|.
+	Raises:
+	"""
 	return isinstance(obj, (type, ModuleType, FunctionType))
 
 def is_attr_annotated(obj : AnnotatableObject, attr: str) -> bool:
@@ -690,6 +1423,24 @@ def is_attr_final(obj : AnnotatableObject, attr: str) -> bool:
 	return get_origin(hint) is Final
 
 def is_list_of_str(val: Any) -> TypeGuard[List[str]]:
+	"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+		scope:
+			extension
+	Contract:
+		general:
+			|Must| decide whether |var|`val` is a list whose items are all strings.
+	Parameters:
+		val:
+			The value to test.
+	Returns:
+		|True| if |var|`val` is a list of strings, else |False|.
+	Raises:
+	"""
 	if not isinstance(val,list):
 		return False
 	for item in val:
@@ -1250,7 +2001,24 @@ def get_obj_annotations(obj: object) -> dict[str, Any]:
 
 
 def get_obj_decorators(obj: object) -> List[str]:
-	"""Return decorator lines for a callable object from its source text, if available."""
+	"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+		scope:
+			public
+	Contract:
+		general:
+			|Must| return the decorator lines from the source text of a callable object, if available.
+	Parameters:
+		obj:
+			The callable object whose decorator lines should be extracted.
+	Returns:
+		A list of source lines that start with |token|`@`.
+	Raises:
+	"""
 	try:
 		code = inspect.getsource(cast(Callable[...,Any],obj))
 		return [line.strip() for line in code.splitlines() if line.strip().startswith('@')]
@@ -1634,6 +2402,26 @@ Public_types:
 
 @contextmanager
 def traced_section(tr: tracer, name: str) -> Generator[None, None, None]:
+	"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+		scope:
+			public
+	Contract:
+		general:
+			|Must| temporarily push |var|`name` onto the tracer context unless it is already on top.
+	Parameters:
+		tr:
+			The tracer whose context stack should be managed.
+		name:
+			The context name to push.
+	Returns:
+		A context manager yielding nothing.
+	Raises:
+	"""
 	something_pushed = False
 	if not tr.has_top(name):
 		tr.push(name)
@@ -1645,6 +2433,26 @@ def traced_section(tr: tracer, name: str) -> Generator[None, None, None]:
 			tr.pop()
 @contextmanager
 def rule_on_fail(tr: tracer, rule_id: RuleId) -> Generator[None, None, None]:
+	"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+		scope:
+			public
+	Contract:
+		general:
+			|Must| temporarily push the given rule identifier onto the tracer's rule-on-fail stack.
+	Parameters:
+		tr:
+			The tracer whose failure-rule stack should be managed.
+		rule_id:
+			The rule identifier to push for the duration of the context.
+	Returns:
+		A context manager yielding nothing.
+	Raises:
+	"""
 	tr.push_rule_on_fail(rule_id)
 	try:
 		yield
@@ -1670,6 +2478,30 @@ class NoContentError(RuntimeError):
 		super().__init__(msg)
 
 def raise_has_no_docstring(tr : tracer, rule_id: RuleId, obj : object) -> NoReturn:
+	"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+		scope:
+			public
+	Contract:
+		general:
+			|Must| raise a parsing error that states that the object has no docstring.
+	Parameters:
+		tr:
+			The tracer that should receive the error.
+		rule_id:
+			The rule identifier to report.
+		obj:
+			The object whose missing docstring should be reported.
+	Returns:
+		No return value.
+	Raises:
+		ParseError:
+			Always raised.
+	"""
 	if is_obj_module(obj):
 		categ = "module"
 #		name = obj.__name__
@@ -1686,17 +2518,95 @@ def raise_has_no_docstring(tr : tracer, rule_id: RuleId, obj : object) -> NoRetu
 	tr.add_error(rule_id, "parsing", msg)
 	raise ParseError(msg)
 
-def raise_parsing_error(tr : tracer, rule_id: RuleId, msg : str) -> NoReturn:
+def raise_parsing_error(tr : tracer, rule_id: RuleId, msg : str, details: dict[str, Any] | None = None) -> NoReturn:
+	"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+		scope:
+			public
+	Contract:
+		general:
+			|Must| raise a parsing error with the given message and optional diagnostic details.
+	Parameters:
+		tr:
+			The tracer that should receive the error.
+		rule_id:
+			The rule identifier to report.
+		msg:
+			The parsing error message.
+		details:
+			Additional diagnostic details.
+	Returns:
+		No return value.
+	Raises:
+		ParseError:
+			Always raised.
+	"""
 	out = msg
-	tr.add_error(rule_id, "parsing", out)
+	tr.add_error(rule_id, "parsing", out, details)
 	raise ParseError(out)
 
 def raise_parsing_error_expected_but_got(tr : tracer, rule_id: RuleId, expected : str, got : str) -> NoReturn:
+	"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+		scope:
+			public
+	Contract:
+		general:
+			|Must| raise a parsing error that compares the expected and actual values.
+	Parameters:
+		tr:
+			The tracer that should receive the error.
+		rule_id:
+			The rule identifier to report.
+		expected:
+			The expected textual value.
+		got:
+			The actual textual value.
+	Returns:
+		No return value.
+	Raises:
+		ParseError:
+			Always raised.
+	"""
 	out = f"expected {expected}, but got '{got}'"
 	tr.add_error(rule_id, "parsing", out)
 	raise ParseError(out)
 
 def raise_parsing_error_invalid_label(tr : tracer, rule_id: RuleId,found : str,allowed : Iterable[str]) -> NoReturn:
+	"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+		scope:
+			public
+	Contract:
+		general:
+			|Must| raise a parsing error that reports an invalid label and the allowed labels.
+	Parameters:
+		tr:
+			The tracer that should receive the error.
+		rule_id:
+			The rule identifier to report.
+		found:
+			The invalid label that was found.
+		allowed:
+			The allowed label values.
+	Returns:
+		No return value.
+	Raises:
+		ParseError:
+			Always raised.
+	"""
 	details : str = ""
 	if found[-1] != ":":
 		details = " (the colon seems to be missing)"
@@ -1704,26 +2614,125 @@ def raise_parsing_error_invalid_label(tr : tracer, rule_id: RuleId,found : str,a
 	tr.add_error(rule_id, "parsing", out)
 	raise ParseError(out)
 
-def raise_validation_error(tr : tracer,obj: object, rule_id: RuleId, msg : str) -> NoReturn:
+def raise_validation_error(tr : tracer,obj: object, rule_id: RuleId, msg : str, details: dict[str, Any] | None = None) -> NoReturn:
+	"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+		scope:
+			public
+	Contract:
+		general:
+			|Must| raise a validation error with the given message and optional diagnostic details.
+	Parameters:
+		tr:
+			The tracer that should receive the error.
+		obj:
+			The object being validated.
+		rule_id:
+			The rule identifier to report.
+		msg:
+			The validation error message.
+		details:
+			Additional diagnostic details.
+	Returns:
+		No return value.
+	Raises:
+		ValidationError:
+			Always raised.
+	"""
 	out = msg
-	tr.add_error(rule_id, "validation", out)
+	tr.add_error(rule_id, "validation", out, details)
 	raise ValidationError(out)
 
 def raise_validation_error_expected_but_got(tr : tracer,obj: object, rule_id: RuleId, expected : str, got : str) -> NoReturn:
+	"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+		scope:
+			public
+	Contract:
+		general:
+			|Must| raise a validation error that compares the expected and actual values.
+	Parameters:
+		tr:
+			The tracer that should receive the error.
+		obj:
+			The object being validated.
+		rule_id:
+			The rule identifier to report.
+		expected:
+			The expected textual value.
+		got:
+			The actual textual value.
+	Returns:
+		No return value.
+	Raises:
+		ValidationError:
+			Always raised.
+	"""
 	out = f"expected {expected}, but got {got}"
 	tr.add_error(rule_id, "validation", out)
 	raise ParseError(out)
 
 
 def warn_parsing(tr : tracer, rule_id: RuleId, msg : str) -> None:
+	"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+		scope:
+			public
+	Contract:
+		general:
+			|Must| record a parsing warning unless the rule is ignored.
+	Parameters:
+		tr:
+			The tracer that should receive the warning.
+		rule_id:
+			The rule identifier to report.
+		msg:
+			The warning message.
+	Returns:
+		No return value.
+	Raises:
+	"""
 	if tr.should_ignore_rule(rule_id):
 		return
 	tr.add_warning(rule_id,"parsing",msg)
 
-"""
-Record a validation warning without raising.
-"""
 def warn_validation(tr: tracer, obj: object, rule_id: RuleId, msg: str) -> None:
+	"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+		scope:
+			public
+	Contract:
+		general:
+			|Must| record a validation warning unless the rule is ignored.
+	Parameters:
+		tr:
+			The tracer that should receive the warning.
+		obj:
+			The object being validated.
+		rule_id:
+			The rule identifier to report.
+		msg:
+			The warning message.
+	Returns:
+		No return value.
+	Raises:
+	"""
 	if tr.should_ignore_rule(rule_id):
 		return
 	tr.add_warning(rule_id, "validation", msg)

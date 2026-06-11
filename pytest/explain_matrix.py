@@ -33,6 +33,7 @@ def main() -> int:
 					"body_category": spec["body_category"],
 					"normativity": spec["normativity"],
 					"label_kind": spec["label_kind"],
+					"must_exist": spec["must_exist"],
 					"available_profiles": list(spec["available_profiles"]),
 					"subsections": list(spec["subsections"]),
 					"body": list(spec["body"]),
@@ -40,7 +41,8 @@ def main() -> int:
 					"markup": dict(spec["markup"]),
 					"template": list(spec["template"]),
 					"hint": list(spec["hint"]),
-					"try": list(spec["try_next"]),
+					"try_self": spec["try_self"],
+					"try_next": list(spec["try_next"]),
 				}
 			)
 		matrix.append(profile_entry)

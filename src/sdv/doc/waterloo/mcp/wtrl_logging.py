@@ -142,7 +142,7 @@ def reset_request_id(token: contextvars.Token[str | None]) -> None:
 	_LOG_REQUEST_ID.reset(token)
 
 
-class _RequestIdFormatterMixin:
+class _RequestIdFormatterMixin(logging.Formatter):
 	"""Inject the current request identifier into the log record."""
 
 	def format(self, record: logging.LogRecord) -> str:

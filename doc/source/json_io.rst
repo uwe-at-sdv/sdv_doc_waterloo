@@ -105,16 +105,18 @@ a conventional, human-readable interactive HTML documentation site.
 Validating JSON input, output and diagnostics
 ---------------------------------------------
 
-Any :wtrl_cmd:`waterlint`-related JSON data can be validated using
-:wtrl_cmd:`waterlint`:
+Any Waterloo-related JSON artifact can be validated with
+:wtrl_cmd:`waterlint validate-json`:
 
 	:wtrl_cmd:`waterlint validate-json` :wtrl_opt:`--in` :wtrl_file:`path/to/validate.json`
 
-This command attempts to infer the category of the input data
+It attempts to infer the category of the input data
 (documentation, diagnostics, or example references) and validates it
 against the corresponding schema:
 
 * :wtrl_file:`schema/wtrl-json-*.*.*.schema.json` for documentation
+* :wtrl_file:`schema/wtrl-explain-section-json-*.*.*.schema.json` for section explanations
+* :wtrl_file:`schema/wtrl-explain-subsection-json-*.*.*.schema.json` for subsection explanations
 * :wtrl_file:`schema/wtrl-tracer-json-*.*.*.schema.json` for diagnostics
 * :wtrl_file:`schema/wtrl-example-refs-json-*.*.*.schema.json` for example references
 * :wtrl_file:`schema/wtrl-walk-json-*.*.*.schema.json` for structured and detailed output of subcommand :wtrl_cmd:`walk`.
@@ -506,16 +508,21 @@ JSON document categories and conventions
 
 This section is normative.
 
-The reference tooling emits and expects category-specific :wtrl_attr:`$id` values.
+The reference tooling emits and expects category-specific
+:wtrl_attr:`$id` values for these JSON categories.
 
 * Waterloo API JSON (from :wtrl_cmd:`render-json`):
 	:wtrl_value:`urn:waterlint:wtrl-json:<waterlint-version>:<scope>:<flavour>:<hash>`
+* Explain-section JSON (from :wtrl_cmd:`explain-section`):
+	:wtrl_value:`urn:waterlint:wtrl-explain-section-json:<waterlint-version>:<timestamp>`
+* Explain-subsection JSON (from :wtrl_cmd:`explain-subsection`):
+	:wtrl_value:`urn:waterlint:wtrl-explain-subsection-json:<waterlint-version>:<timestamp>`
 * Tracer diagnostics JSON:
 	:wtrl_value:`urn:waterlint:wtrl-tracer-json:<waterlint-version>:<timestamp>`
 * Example-reference mapping JSON:
 	Recommended pattern:
 	:wtrl_value:`urn:<org-or-project>:<domain>:wtrl-example-refs-json:<schema-version>`
-* Output of :wtrl_cmd:`walk`
+* Output of :wtrl_cmd:`walk`:
 	:wtrl_value:`urn:waterlint:wtrl-walk-json:<waterlint-walk-version>:<timestamp>`
 
 The hash digest |should| be SHA256.

@@ -386,7 +386,7 @@ def test_bad_preamble_normative_terminology() -> None:
 
 def test_bad_preamble_normativity_keyword_not_listed() -> None:
 	result = _run_waterlint_validate("pytest_bad_preamble.A_09")
-	_assert_error(result, "PRE-013", "not listed")
+	_assert_error(result, "PRE-013", "Description")
 
 
 def test_bad_preamble_definitions_not_normative() -> None:

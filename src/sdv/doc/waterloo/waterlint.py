@@ -53,7 +53,8 @@ from jsonschema import Draft202012Validator
 #from jsonschema import JSONDecodeError
 import jsonschema.exceptions
 
-__version__ = "0.16.0"
+__version__ = "0.16.1"
+# - 0.16.1 [2026-06-11]	More details in error message (in progress)
 # - 0.16.0 [2026-06-10]	More details in error message (in progress)
 # - 0.15.0 [2026-06-05]	Subcommand 'render-docker'
 # - 0.14.1 [2026-05-26]	Subcommand 'render-html5': Entries in Public_* and *_overview sections are now links.
@@ -118,6 +119,7 @@ with contextlib.redirect_stdout(sys.stderr):
 	import sdv.doc.waterloo.waterlint_render_docker as rdocker
 	import sdv.doc.waterloo.waterlint_render_html5 as rhtml5
 	import sdv.doc.waterloo.waterlint_explain_section as exsec
+	import sdv.doc.waterloo.waterlint_explain_subsection as exsub
 	import sdv.doc.waterloo.waterlint_walk as wlk
 	import sdv.doc.waterloo.docitem_tokenizer as tokenizer
 	from sdv.doc.waterloo.docitem_helper import (
@@ -150,6 +152,7 @@ SUBCOMMANDS = (
 	"carve",
 	"render-html5",
 	"explain-section",
+	"explain-subsection",
 	"walk",
 	"gen-minimal",
 	"gen-full",
@@ -1981,6 +1984,9 @@ def _build_parser() -> argparse.ArgumentParser:
 #----- explain-section ---------------------------------------#
 	exsec.build_parser(subparsers, parser_parts)
 
+#----- explain-subsection ------------------------------------#
+	exsub.build_parser(subparsers, parser_parts)
+
 #----- render-docker ------------------------------------------#
 	rdocker.build_parser(subparsers, parser_parts)
 
@@ -2063,6 +2069,8 @@ def main(argv: Optional[list[str]] = None) -> int:
 		return rhtml5.render_html5(args)
 	if args.command == "explain-section":
 		return exsec.explain_section_command(args)
+	if args.command == "explain-subsection":
+		return exsub.explain_subsection_command(args)
 	if args.command == "render-docker":
 		return rdocker.render_docker(args)
 	if args.command == "walk":

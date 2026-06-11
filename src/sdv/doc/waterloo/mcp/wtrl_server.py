@@ -54,7 +54,7 @@ except ModuleNotFoundError:  # pragma: no cover - Python 3.10 fallback
 
 import uvicorn
 from starlette.middleware.cors import CORSMiddleware
-from starlette.types import ASGIApp
+from starlette.types import ASGIApp, Receive, Scope, Send
 
 from mcp.server.fastmcp import FastMCP
 from mcp.server.fastmcp.server import TransportSecuritySettings
@@ -98,6 +98,7 @@ from sdv.doc.waterloo.mcp.wtrl_tools import (
 from sdv.doc.waterloo.mcp.wtrl_logging import (
     allocate_request_id,
     set_log_group_key,
+    reset_log_group_key,
     reset_request_id,
     set_request_id,
 )
@@ -108,7 +109,7 @@ from sdv.doc.waterloo.mcp.wtrl_logging import (
 logger = logging.getLogger("wtrl_mcp")
 
 # Global tool documentation registry
-WTRL_TOOL_DOCS: Final[dict[str, Callable[..., object]]] = {
+WTRL_TOOL_DOCS: Final[dict[str, Callable[..., object] | None]] = {
 	"list_roots": list_roots,
 	"get_root": get_root,
 	"get_root_metadata": get_root_metadata,
@@ -831,7 +832,10 @@ def build_app(config: McpConfig) -> FastMCP:
 		}
 		if toolname not in tool_wrappers or toolname not in WTRL_TOOL_DOCS:
 			raise ValueError(f"MCPS-007 unknown tool: {toolname}")
-		return _tool_help_text(toolname, tool_wrappers[toolname], WTRL_TOOL_DOCS[toolname])
+		tool_doc = WTRL_TOOL_DOCS[toolname]
+		if tool_doc is None:
+			raise ValueError(f"MCPS-007 unknown tool: {toolname}")
+		return _tool_help_text(toolname, tool_wrappers[toolname], tool_doc)
 
 	WTRL_TOOL_DOCS["describe_tool"] = _describe_tool
 
@@ -887,7 +891,7 @@ class _RequestLogGroupMiddleware:
 	def __init__(self, app: ASGIApp) -> None:
 		self._app = app
 
-	async def __call__(self, scope: dict[str, object], receive, send) -> None:  # type: ignore[override]
+	async def __call__(self, scope: Scope, receive: Receive, send: Send) -> None:
 		if scope.get("type") != "http":
 			await self._app(scope, receive, send)
 			return
@@ -907,7 +911,7 @@ class _RequestLogGroupMiddleware:
 			group_key = f"{group_key} session={session_id}"
 
 		request_token = set_request_id(request_id)
-		set_log_group_key(group_key)
+		group_token = set_log_group_key(group_key)
 		# Keep the request id alive for the rest of the request task so that
 		# both the application logs and the later Uvicorn access log line can
 		# see the same request prefix.
@@ -915,6 +919,7 @@ class _RequestLogGroupMiddleware:
 			await self._app(scope, receive, send)
 		finally:
 			reset_request_id(request_token)
+			reset_log_group_key(group_token)
 
 
 def _print_config_error(exc: Exception) -> None:

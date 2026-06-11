@@ -211,6 +211,7 @@ The following list explains the mnemonic prefixes and their semantics.
 * XTNSN: Error messages related to extensions (e.g. for IDEs)
 * MCPS: Error messages returned by an MCP server
 * DCKR: Error messages related to rendering Docker builder output (e.g. for :wtrl_cmd:`waterlint render-docker`)
+* XPLN: Error messages related to explain commands (e.g. for :wtrl_cmd:`waterlint explain-section` and :wtrl_cmd:`waterlint explain-subsection`)
 
 .. rubric:: Miscellaneous
 

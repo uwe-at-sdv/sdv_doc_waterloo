@@ -42,6 +42,16 @@ This section is normative.
   The tracer diagnostic output should provide sufficient detail to identify
   the underlying cause.
 
+.. rubric:: Commands explain-section and explain-subsection
+
+* [XPLN-001] -- The :wtrl_cmd:`explain-section` command received a missing, invalid, or unknown section label/profile combination.
+* [XPLN-002] -- The :wtrl_cmd:`explain-subsection` command received a missing, invalid, or unknown subsection label/profile combination.
+* [XPLN-003] -- The :wtrl_cmd:`explain-subsection` command requires a fully qualified label in the form :wtrl_lit:`SECTION.SUBSECTION`.
+
+The :wtrl_cmd:`waterlint explain-section` and :wtrl_cmd:`waterlint explain-subsection`
+commands report argument and lookup failures through the tracer and honor
+:wtrl_opt:`--out-diag` and :wtrl_opt:`--out-diag-json` like the other command-line tools.
+
 .. rubric:: JSON processing
 
 * [JSCH-000] -- Unspecified catch-all error during JSON processing.

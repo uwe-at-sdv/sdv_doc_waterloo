@@ -2,6 +2,7 @@ from __future__ import annotations
 from types import FunctionType, ModuleType
 from typing import Any, Callable, Dict, Final, get_type_hints, get_origin, get_args, Generator, Iterable, Iterator, List, NewType, NoReturn, Sequence, Set, Tuple, Type, TypeAlias, TypeGuard, Union, cast
 
+from sdv.doc.waterloo.docitem_helper import explain_try_self_for_section, explain_try_self_for_subsection, render_allowed_identifiers, render_expected_identifier, render_expected_snippet, render_identifier_lines, render_source_snippet, render_deduplicated_identifiers, render_normative_section_details, render_exactly_one_identifier_details
 from sdv.doc.waterloo.docitem_docstring import *
 
 #===== Typechecking ===========================================#
@@ -268,24 +269,40 @@ Notes:
 	Last review:
 		2026-01-23
 	"""
+	profile = get_profile(top)
 #===== Preamble ===============================================#
 	with traced_section(tr, "Preamble"):
-# Rule: Preamble must exist. We do not allow purely informative docstrings.
+	# Rule: Preamble must exist. We do not allow purely informative docstrings.
 		if not top.has_item("Preamble"):
-			raise_validation_error(tr,obj,"PRE-001","Section 'Preamble' does not exist.")
+			details = render_missing_entry_details("Document.sections", top.items(), "Preamble", profile, top_level=True)
+			raise_validation_error(tr,obj,"PRE-001","Section 'Preamble' does not exist.", details)
 #----- status -------------------------------------------------#
 		node_preamble = top.item("Preamble")
 		if node_preamble.has_item("status"):
-			raise_validation_error(tr, obj, "PRE-016", f"Subsection 'status' is not allowed for profile 'module'.")
+			found_items = list(node_preamble.items())
+			expected_items = [item for item in found_items if item != "status"]
+			details = {
+				"found": render_source_snippet("Preamble", found_items),
+				"expected": render_expected_snippet("Preamble", expected_items),
+				"hint": explain_try_self_for_section("Preamble", profile),
+			}
+			raise_validation_error(tr, obj, "PRE-016", f"Subsection 'status' is not allowed for profile 'module'.", details)
   
 #..... normative_sections must exist ..........................#
 # checked by caller
 #===== Contract must exist ====================================#
 # checked by caller
+#----- normative_sections entries -----------------------------#
+	with traced_section(tr, "normative_sections"):
+		for sec_name in node_normative_sections.items():
+			if sec_name not in top.items():
+				details = render_normative_section_details(sec_name, node_normative_sections.items(), profile, action="remove")
+				raise_validation_error(tr,obj,"PRE-012",f"Section '{sec_name}' is marked normative but does not exist.", details)
 #----- general must exist -------------------------------------#
 	with traced_section(tr, "Contract"):
 		if "general" not in node_contract.items():
-			raise_validation_error(tr,obj,"CON-022","Section 'general' does not exist.")
+			details = render_missing_entry_details("Contract", node_contract.items(), "general", profile)
+			raise_validation_error(tr,obj,"CON-022","Section 'general' does not exist.", details)
 
 		if "api" in node_contract.items():
 			node_api = node_contract._items["api"]
@@ -293,13 +310,16 @@ Notes:
 # Rule: each entry in api must refer to a normative section
 				for ref in node_api.items():
 					if ref not in node_normative_sections.items():
-						raise_validation_error(tr,obj,"PRE-011",f"Section '{ref}' is not listed in section 'Preamble.normative_sections'. We have {node_normative_sections.items()}.")
+						details = render_normative_section_details(ref, node_normative_sections.items(), profile, action="add")
+						raise_validation_error(tr,obj,"PRE-011",f"Section '{ref}' is not listed in section 'Preamble.normative_sections'.", details)
 # Overviews must never be normative
 	with traced_section(tr, "Preamble"):
 		if "Class_overview" in node_normative_sections.items():
-			raise_validation_error(tr,obj,"MCLO-002","Section 'Class_overview' must not be listed as normative.")
+			details = render_normative_section_details("Class_overview", node_normative_sections.items(), profile, action="remove")
+			raise_validation_error(tr,obj,"MCLO-002","Section 'Class_overview' must not be listed as normative.", details)
 		if "Function_overview" in node_normative_sections.items():
-			raise_validation_error(tr,obj,"MFNO-002","Section 'Function_overview' must not be listed as normative.")
+			details = render_normative_section_details("Function_overview", node_normative_sections.items(), profile, action="remove")
+			raise_validation_error(tr,obj,"MFNO-002","Section 'Function_overview' must not be listed as normative.", details)
 #===== Classes/Functions/Methods/Public_* sections ============#
 	section_normativity = [
 		("Public_classes", "MPCL-002"),
@@ -311,9 +331,11 @@ Notes:
 	for sec_name, rule_id in section_normativity:
 		with traced_section(tr, sec_name):
 			if sec_name in top.items() and sec_name not in node_normative_sections.items():
-				raise_validation_error(tr,obj,rule_id, f"Section '{sec_name}' exists but is not listed as normative.")
+				details = render_normative_section_details(sec_name, node_normative_sections.items(), profile, action="add")
+				raise_validation_error(tr,obj,rule_id, f"Section '{sec_name}' exists but is not listed as normative.", details)
 			if sec_name in node_normative_sections.items() and sec_name not in top.items():
-				raise_validation_error(tr,obj,"PRE-012",f"Section '{sec_name}' is marked normative but does not exist.")
+				details = render_normative_section_details(sec_name, node_normative_sections.items(), profile, action="remove")
+				raise_validation_error(tr,obj,"PRE-012",f"Section '{sec_name}' is marked normative but does not exist.", details)
 #===== Existence and type of public objects ===================#
 	def _check_exists(name: str, rule: str) -> object:
 		if not hasattr(obj, name):
@@ -500,19 +522,35 @@ Notes:
 	Last review:
 		2026-01-23
 	"""
+	profile = get_profile(top)
 #===== Preamble ===============================================#
 	with traced_section(tr, "Preamble"):
 # Rule: Preamble must exist. We do not allow purely informative docstrings.
 		if not top.has_item("Preamble"):
-			raise_validation_error(tr,obj,"PRE-001","Section 'Preamble' does not exist.")
+			details = render_missing_entry_details("Document.sections", top.items(), "Preamble", profile, top_level=True)
+			raise_validation_error(tr,obj,"PRE-001","Section 'Preamble' does not exist.", details)
 #----- status -------------------------------------------------#
 		node_preamble = top.item("Preamble")
 		if node_preamble.has_item("status"):
-			raise_validation_error(tr, obj, "PRE-016", f"Subsection 'status' is not allowed for profile 'class'.")
+			found_items = list(node_preamble.items())
+			expected_items = [item for item in found_items if item != "status"]
+			details = {
+				"found": render_source_snippet("Preamble", found_items),
+				"expected": render_expected_snippet("Preamble", expected_items),
+				"hint": explain_try_self_for_section("Preamble", profile),
+			}
+			raise_validation_error(tr, obj, "PRE-016", f"Subsection 'status' is not allowed for profile 'class'.", details)
 #..... profile must exist .....................................#
 # checked by caller
 #..... normative_sections must exist ..........................#
 # checked by caller
+
+#----- normative_sections entries -----------------------------#
+	with traced_section(tr, "normative_sections"):
+		for sec_name in node_normative_sections.items():
+			if sec_name not in top.items():
+				details = render_normative_section_details(sec_name, node_normative_sections.items(), profile, action="remove")
+				raise_validation_error(tr,obj,"PRE-012",f"Section '{sec_name}' is marked normative but does not exist.", details)
 
 #===== Contract must exist ====================================#
 # checked by caller
@@ -520,69 +558,72 @@ Notes:
 	with traced_section(tr, "Contract"):
 		if "general" not in node_contract.items():
 			details = {
-				"found": [
-					"Contract:",
-				] + [f"\t{subsection}:" for subsection in node_contract.items()],
-				"expected": [
-					"Contract:",
-					"\tgeneral:",
-					"\t\t...",
-					"\tconstructor:",
-					"\t\t...",
-				],
-				"hint": "The Contract section requires subsection 'general'.",
+				"found": render_source_snippet("Contract", node_contract.items()),
+				"expected": render_expected_snippet("Contract", [*node_contract.items(), "general"]),
+				"hint": explain_try_self_for_subsection("Contract.general", "class"),
 			}
-			out = "Subsection 'general' does not exist."
-			tr.add_error("CON-023", "validation", out, details)
-			raise ValidationError(out)
+			raise_validation_error(tr, obj, "CON-023", "Subsection 'general' does not exist.", details)
 		if "constructor" not in node_contract.items():
 			details = {
-				"found": [
-					"Contract:",
-					"\tgeneral:",
-					"\t\t...",
-				],
-				"expected": [
-					"Contract:",
-					"\tgeneral:",
-					"\t\t...",
-					"\tconstructor:",
-					"\t\t...",
-				],
-				"hint": "In profile 'class', the Contract section requires subsection 'constructor' in addition to 'general'.",
+				"found": render_source_snippet("Contract", node_contract.items()),
+				"expected": render_expected_snippet("Contract", [*node_contract.items(), "constructor"]),
+				"hint": explain_try_self_for_subsection("Contract.constructor", "class"),
 			}
-			out = "Subsection 'constructor' does not exist."
-			tr.add_error("CON-007", "validation", out, details)
-			raise ValidationError(out)
-
-		if "api" in node_contract.items():
-			node_api = node_contract._items["api"]
-			with traced_section(tr, "api"):
-# Rule: each entry in api must refer to a normative section
-				for ref in node_api.items():
-					if ref not in node_normative_sections.items():
-						raise_validation_error(tr,obj,"PRE-011",f"Section '{ref}' is not listed in section 'Preamble.normative_sections'. We have {node_normative_sections.items()}.")
-
+			raise_validation_error(tr, obj, "CON-007", "Subsection 'constructor' does not exist.", details)
+#----- traits -------------------------------------------------#
 		if "traits" in node_contract.items():
 			node_traits = node_contract._items["traits"]
 			with traced_section(tr, "traits"):
 				traits = list(node_traits.items())
+#..... no duplicates allowed ..................................#
+# This is most likely captured by the parser, but we check just in case.
 				if len(traits) != len(set(traits)):
-					raise_validation_error(tr, obj, "LQID-004", "Trait identifiers must not occur more than once.")
+					seen_traits : set[str] = set()
+					dup_trait = traits[-1] if traits else "trait"
+					for name in traits:
+						if name in seen_traits:
+							dup_trait = name
+							break
+						seen_traits.add(name)
+					details = {
+						"found": render_identifier_lines("Contract.traits", traits),
+						"expected": render_deduplicated_identifiers("Contract.traits", traits),
+						"hint": explain_try_self_for_subsection("Contract.traits", "class"),
+					}
+					raise_validation_error(tr, obj, "LQID-004", f"Trait identifier '{dup_trait}' occurs more than once.", details)
+#..... only allowed values ....................................#
 				for tr_name in traits:
 					if tr_name not in TRAIT_TAG_MAP:
-						raise_validation_error(tr, obj, "CON-017", f"Trait '{tr_name}' is not allowed; allowed: {sorted(TRAIT_TAG_MAP.keys())}")
+						details = {
+							"found": render_identifier_lines("Contract.traits", traits),
+							"expected": render_allowed_identifiers("Contract.traits", sorted(TRAIT_TAG_MAP.keys())),
+							"hint": explain_try_self_for_subsection("Contract.traits", "class"),
+						}
+						raise_validation_error(tr, obj, "CON-017", f"Trait '{tr_name}' is not allowed; allowed: {sorted(TRAIT_TAG_MAP.keys())}", details)
 #===== Derived_from must exist if normative ===================#
 	with traced_section(tr, "Derived_from"):
+		normative_sections = list(node_normative_sections.items())
 		if "Derived_from" in node_normative_sections.items():
 			if "Derived_from" not in top.items():
-				raise_validation_error(tr,obj,"PRE-012","Section 'Derived_from' is marked normative but does not exist.")
+				expected_sections = [item for item in normative_sections if item != "Derived_from"]
+				details = {
+					"found": render_identifier_lines("Preamble.normative_sections", normative_sections),
+					"expected": render_deduplicated_identifiers("Preamble.normative_sections", expected_sections),
+					"hint": explain_try_self_for_section("Derived_from", "class"),
+				}
+				raise_validation_error(tr,obj,"PRE-012","Section 'Derived_from' is marked normative but does not exist.", details)
 # If Derived_from present...
 		if top.has_item("Derived_from"):
 			node_derived = top.item("Derived_from")
 # ...must be normative.
 			if "Derived_from" not in node_normative_sections.items():
-				raise_validation_error(tr,obj,"DER-004",f"Section 'Derived_from' is not listed in section 'Preamble.normative_sections'. We have {node_normative_sections.items()}.")
+				expected_sections = [*normative_sections, "Derived_from"]
+				details = {
+					"found": render_identifier_lines("Preamble.normative_sections", normative_sections),
+					"expected": render_deduplicated_identifiers("Preamble.normative_sections", expected_sections),
+					"hint": explain_try_self_for_section("Derived_from", "class"),
+				}
+				raise_validation_error(tr,obj,"DER-004",f"Section 'Derived_from' is not listed in section 'Preamble.normative_sections'.", details)
 # ...entries must refer to direct base classes, but may do so using either
 # short or qualified names. We accept the canonical name of each direct base,
 # its qualname, and its fully qualified name.
@@ -602,14 +643,24 @@ Notes:
 				if len(matches) == 1:
 					continue
 				if len(matches) > 1:
-					raise_validation_error(tr,obj,"DER-013",f"Entry '{bname}' is ambiguous; please qualify it enough to resolve one of {base_desc}.")
+					details = {
+						"found": render_identifier_lines("Derived_from", [bname]),
+						"expected": render_allowed_identifiers("Derived_from", base_desc),
+						"hint": explain_try_self_for_subsection("Derived_from", "class"),
+					}
+					raise_validation_error(tr,obj,"DER-013",f"Entry '{bname}' is ambiguous; please qualify it enough to resolve one of {base_desc}.", details)
 				try:
 					resolved_obj, _ = resolve_object(bname, obj)
 				except Exception:
 					resolved_obj = None
 				if resolved_obj in base_objs:
 					continue
-				raise_validation_error(tr,obj,"DER-003",f"Class '{bname}' is not a direct base; direct bases are {base_desc}.")
+				details = {
+					"found": render_identifier_lines("Derived_from", [bname]),
+					"expected": render_allowed_identifiers("Derived_from", base_desc),
+					"hint": explain_try_self_for_subsection("Derived_from", "class"),
+				}
+				raise_validation_error(tr,obj,"DER-003",f"Class '{bname}' is not a direct base; direct bases are {base_desc}.", details)
 #===== Classes/Functions/Methods/Public_* sections ============#
 	section_normativity = [
 		("Public_classes", "CPCL-002"),
@@ -621,15 +672,19 @@ Notes:
 	for sec_name, rule_id in section_normativity:
 		with traced_section(tr, sec_name):
 			if sec_name in top.items() and sec_name not in node_normative_sections.items():
-				raise_validation_error(tr,obj,rule_id, f"Section '{sec_name}' exists but is not listed as normative.")
+				details = render_normative_section_details(sec_name, node_normative_sections.items(), profile, action="add")
+				raise_validation_error(tr,obj,rule_id, f"Section '{sec_name}' exists but is not listed as normative.", details)
 			if sec_name in node_normative_sections.items() and sec_name not in top.items():
-				raise_validation_error(tr,obj,"PRE-012",f"Section '{sec_name}' is marked normative but does not exist.")
+				details = render_normative_section_details(sec_name, node_normative_sections.items(), profile, action="remove")
+				raise_validation_error(tr,obj,"PRE-012",f"Section '{sec_name}' is marked normative but does not exist.", details)
 # Overviews must never be normative
 	with traced_section(tr, "Preamble"):
 		if "Class_overview" in node_normative_sections.items():
-			raise_validation_error(tr,obj,"CCLO-002","Section 'Class_overview' must not be listed as normative.")
+			details = render_normative_section_details("Class_overview", node_normative_sections.items(), profile, action="remove")
+			raise_validation_error(tr,obj,"CCLO-002","Section 'Class_overview' must not be listed as normative.", details)
 		if "Method_overview" in node_normative_sections.items():
-			raise_validation_error(tr,obj,"CMTO-002","Section 'Method_overview' must not be listed as normative.")
+			details = render_normative_section_details("Method_overview", node_normative_sections.items(), profile, action="remove")
+			raise_validation_error(tr,obj,"CMTO-002","Section 'Method_overview' must not be listed as normative.", details)
 #===== Existence and type of public objects ===================#
 	def _check_exists(name: str, rule: str) -> object:
 		if not hasattr(obj, name):
@@ -798,16 +853,23 @@ Notes:
 			if not top.can_see(base_scopes):
 				raise_validation_error(tr, obj, "SCP-009", f"Scope of base class ({base_scopes}) is > scope of derived class {drvd_scopes}.")
 #----- Factory ------------------------------------------------#
-	if "Factory" in top.items():
-		node_factory = top.item("Factory")
-		for item in node_factory.items():
-			try:
-				obj_factory, _ = resolve_object(item, obj)
-			except Exception:
-				raise_validation_error(tr, obj, "FAC-006", f"Factory entry '{item}' does not resolve to an existing callable.")
+	with traced_section(tr, "Factory"):
+		if "Factory" in top.items():
+			node_factory = top.item("Factory")
+			for item in node_factory.items():
+				try:
+					obj_factory, _ = resolve_object(item, obj)
+				except Exception:
+					details = {
+						"found": render_identifier_lines("Factory", [item]),
+						"expected": render_expected_identifier("Factory", "qualified identifier"),
+						"hint": explain_try_self_for_subsection("Factory.<item>", "class"),
+					}
+					raise_validation_error(tr, obj, "FAC-006", f"Factory entry '{item}' does not resolve to an existing callable.", details)
 # ...must be normative.
-		if "Factory" not in node_normative_sections.items():
-			raise_validation_error(tr,obj,"FAC-009",f"Section 'Factory' is not listed as normative.")
+			if "Factory" not in node_normative_sections.items():
+				details = render_normative_section_details("Factory", node_normative_sections.items(), profile, action="add")
+				raise_validation_error(tr,obj,"FAC-009",f"Section 'Factory' is not listed as normative.", details)
 
 def validate_docstring_method(tr : tracer, obj: Callable[..., Any], top : docitem_docstring_method,node_contract : docitem_map_base,node_normative_sections : docitem_list_base, _seen: Dict[object,docitem_docstring_base] | None = None) -> None:
 	"""
@@ -854,6 +916,7 @@ Notes:
 	Usage:
 		This function is typically not called directly. Please call |func|`validate_docstring` instead.
 	"""
+	profile = get_profile(top)
 	with traced_section(tr, "method"):
 #===== Preamble ===============================================#
 		with traced_section(tr, "Preamble"):
@@ -867,31 +930,46 @@ Notes:
 					node_status = node_preamble.item("status")
 					entries = list(node_status.items())
 					if len(entries) != 1:
-						raise_validation_error(tr,obj,"STA-002","Subsection 'status' must have exactly one entry.")
+						details = render_exactly_one_identifier_details("Preamble.status", entries, profile)
+						raise_validation_error(tr,obj,"STA-002","Subsection 'status' must have exactly one entry.", details)
 					status = entries[0]
 # Won't trigger most likely; handled during parsing.
 				if not RE_IDENTIFIER_COMPILED.fullmatch(status):
-					raise_validation_error(tr,obj,"STA-003","Subsection 'status' must be an Identifier.")
+					details = {
+						"found": render_identifier_lines("Preamble.status", [status]),
+						"expected": render_expected_identifier("Preamble.status", "identifier"),
+						"hint": explain_try_self_for_subsection("Preamble.status", profile),
+					}
+					raise_validation_error(tr,obj,"STA-003","Subsection 'status' must be an Identifier.", details)
 				if status not in STATUS_TAG_MAP:
-					raise_validation_error(tr, obj, "STA-004", f"Status '{status}' is not allowed; allowed: {sorted(STATUS_TAG_MAP.items())}")
+					details = {
+						"found": render_identifier_lines("Preamble.status", [status]),
+						"expected": render_allowed_identifier("Preamble.status", sorted(STATUS_TAG_MAP.keys())),
+						"hint": explain_try_self_for_subsection("Preamble.status", profile),
+					}
+					raise_validation_error(tr, obj, "STA-004", f"Status '{status}' is not allowed; allowed: {sorted(STATUS_TAG_MAP.items())}", details)
 #===== Contract ===============================================#
 # Contract must have a general section.
-		with traced_section(tr, "Contract"):
-			if "general" not in node_contract.items():
-				raise_validation_error(tr,obj,"CON-024","Section 'general' does not exist.")
-# If caller marks other sections normative, ensure they exist.
-			for sec in node_normative_sections.items():
-				if sec == "Contract":
-					continue
-				if sec not in top.items():
-					raise_validation_error(tr,obj,"PRE-012",f"Section '{sec}' is listed as normative but does not exist.")
+	with traced_section(tr, "Contract"):
+		if "general" not in node_contract.items():
+			details = render_missing_entry_details("Contract", node_contract.items(), "general", profile)
+			raise_validation_error(tr,obj,"CON-024","Section 'general' does not exist.", details)
+		# If caller marks other sections normative, ensure they exist.
+		for sec in node_normative_sections.items():
+			if sec == "Contract":
+				continue
+			if sec not in top.items():
+				details = render_normative_section_details(sec, node_normative_sections.items(), profile, action="remove")
+				raise_validation_error(tr,obj,"PRE-012",f"Section '{sec}' is listed as normative but does not exist.", details)
 #===== Parameters must exist ==================================#
 		with traced_section(tr, "Parameters"):
 			if "Parameters" not in top.items():
-				raise_validation_error(tr,obj,"PAR-001","Section 'Parameters' does not exist.")
+				details = render_missing_entry_details("Document.sections", top.items(), "Parameters", profile, top_level=True)
+				raise_validation_error(tr,obj,"PAR-001","Section 'Parameters' does not exist.", details)
 #----- Must be normative --------------------------------------#
 			if "Parameters" not in node_normative_sections.items():
-				raise_validation_error(tr,obj,"PAR-002",f"Section 'Parameters' is not listed as normative.")
+				details = render_normative_section_details("Parameters", node_normative_sections.items(), profile, action="add")
+				raise_validation_error(tr,obj,"PAR-002",f"Section 'Parameters' is not listed as normative.", details)
 #----- Must match signature -----------------------------------#
 			with traced_section(tr,get_obj_name(obj)):
 				try:
@@ -912,10 +990,12 @@ Notes:
 #===== Returns must exist =====================================#
 		with traced_section(tr, "Returns"):
 			if "Returns" not in top.items():
-				raise_validation_error(tr,obj,"RET-001","Section 'Returns' does not exist.")
+				details = render_missing_entry_details("Document.sections", top.items(), "Returns", profile, top_level=True)
+				raise_validation_error(tr,obj,"RET-001","Section 'Returns' does not exist.", details)
 #----- Must be normative --------------------------------------#
 			if "Returns" not in node_normative_sections.items():
-				raise_validation_error(tr,obj,"RET-002",f"Section 'Returns' is not listed as normative.")
+				details = render_normative_section_details("Returns", node_normative_sections.items(), profile, action="add")
+				raise_validation_error(tr,obj,"RET-002",f"Section 'Returns' is not listed as normative.", details)
 			node_returns = top.item("Returns")
 #----- Must be list of strings --------------------------------#
 # Not likely to trigger since this is captured somewhere else. We leave this here for completenes.
@@ -954,10 +1034,12 @@ Notes:
 #===== Raises must exist ======================================#
 		with traced_section(tr, "Raises"):
 			if "Raises" not in top.items():
-				raise_validation_error(tr,obj,"RAI-001","Section 'Raises' does not exist.")
+				details = render_missing_entry_details("Document.sections", top.items(), "Raises", profile, top_level=True)
+				raise_validation_error(tr,obj,"RAI-001","Section 'Raises' does not exist.", details)
 #----- Must be normative --------------------------------------#
 			if "Raises" not in node_normative_sections.items():
-				raise_validation_error(tr,obj,"RAI-002",f"Section 'Raises' is not listed as normative.")
+				details = render_normative_section_details("Raises", node_normative_sections.items(), profile, action="add")
+				raise_validation_error(tr,obj,"RAI-002",f"Section 'Raises' is not listed as normative.", details)
 #----- Must reference existing exception classes --------------#
 			node_raises = top._items["Raises"]
 			assert isinstance(node_raises, docitem_raises)
@@ -1021,21 +1103,25 @@ Notes:
 	Last review:
 		Docstring and function are INCOMPLETE!
 	"""
+	profile = get_profile(top)
 	with traced_section(tr, "inherited_method"):
-#===== Contract ===============================================@
+#===== Contract ===============================================#
 # Contract must have a general section.
 		with traced_section(tr, "Contract"):
 			if "general" not in node_contract.items():
-				raise_validation_error(tr,obj,"CON-036","Section 'general' does not exist.")
-# If caller marks other sections normative, ensure they exist.
+				details = render_missing_entry_details("Contract", node_contract.items(), "general", profile)
+				raise_validation_error(tr,obj,"CON-036","Section 'general' does not exist.", details)
+			# If caller marks other sections normative, ensure they exist.
 			for sec in node_normative_sections.items():
 				if sec == "Contract":
 					continue
 				if sec not in top.items():
-					raise_validation_error(tr,obj,"PRE-012",f"Section '{sec}' is listed as normative but does not exist.")
+					details = render_normative_section_details(sec, node_normative_sections.items(), profile, action="remove")
+					raise_validation_error(tr,obj,"PRE-012",f"Section '{sec}' is listed as normative but does not exist.", details)
 # Special for inherited methods.
 			if "base" not in node_contract.items():
-				raise_validation_error(tr,obj,"CON-039","Section 'base' does not exist.")
+				details = render_missing_entry_details("Contract", node_contract.items(), "base", profile)
+				raise_validation_error(tr,obj,"CON-039","Section 'base' does not exist.", details)
 			with traced_section(tr, "base"):
 				node_base = node_contract.item("base")
 				if not isinstance(node_base, docitem_base_to_inherit_from):
@@ -1261,70 +1347,89 @@ See_also:
 	_seen[obj] = top
 # Log some debug info
 	tr.add_info(f"validating '{get_obj_name(obj)}'")
+	profile = get_profile(top)
   
 	with traced_section(tr, f"{get_obj_name(obj)}"):
 #===== Preamble must exist ====================================#
 # Preamble must exist. We do not allow purely informative docstrings.
 		if "Preamble" not in top.items():
-			raise_validation_error(tr,obj,"PRE-001","Section 'Preamble' does not exist.")
+			details = render_missing_entry_details("Document.sections", top.items(), "Preamble", profile, top_level=True)
+			raise_validation_error(tr,obj,"PRE-001","Section 'Preamble' does not exist.", details)
 		node_preamble = top.item("Preamble")
 		with traced_section(tr, f"Preamble"):
 #..... profile must exist .....................................#
 # Profile must exist.
 			if not "profile" in node_preamble.items():
-				raise_validation_error(tr,obj,"PRE-003","Section 'profile' does not exist.")
+				details = render_missing_entry_details("Preamble", node_preamble.items(), "profile", profile)
+				raise_validation_error(tr,obj,"PRE-003","Section 'profile' does not exist.", details)
 # Here we know it exists.
 			node_profile = node_preamble.item("profile")
 			with traced_section(tr, "profile"):
 				assert isinstance(node_profile,docitem_list_base)
+				if len(node_profile.items()) == 0:
+					details = render_exactly_one_identifier_details("Preamble.profile", node_profile.items(), profile)
+					raise_validation_error(tr,obj,"PRE-004","Section 'profile' must have exactly one item.", details)
 				if len(node_profile.items()) > 1:
-					raise_validation_error(tr,obj,"PRE-004","Only one item allowed")
-				profile : str = get_profile(top)
-				if not RE_IDENTIFIER_COMPILED.fullmatch(profile):
-					raise_validation_error(tr,obj,"PRE-014","Expected identifier, got '{profile}'.")
+					details = render_exactly_one_identifier_details("Preamble.profile", node_profile.items(), profile)
+					raise_validation_error(tr,obj,"PRE-004","Section 'profile' must have exactly one item.", details)
+			if not RE_IDENTIFIER_COMPILED.fullmatch(profile):
+				details = {
+					"found": render_identifier_lines("Preamble.profile", [profile]),
+					"expected": render_expected_identifier("Preamble.profile", "identifier"),
+					"hint": explain_try_self_for_subsection("Preamble.profile", profile),
+				}
+				raise_validation_error(tr,obj,"PRE-014","Expected identifier, got '{profile}'.", details)
 # For the current version we tighten this rule
-				if not profile in ("module","class","function","method","inherited_method"):
-					raise_validation_error(tr,obj,"PRE-005",f"Expected one of {{'module','class','function','method','inherited_method'}}, got '{profile}'.")
+			if not profile in ("module","class","function","method","inherited_method"):
+				details = {
+					"found": render_identifier_lines("Preamble.profile", [profile]),
+					"expected": render_allowed_identifier("Preamble.profile", ("module","class","function","method","inherited_method")),
+					"hint": explain_try_self_for_subsection("Preamble.profile", profile),
+				}
+				raise_validation_error(tr,obj,"PRE-005",f"Expected one of {{'module','class','function','method','inherited_method'}}, got '{profile}'.", details)
 # The profile must match the object type. At this point it has already been
 # tested most likely, but we leave the code here for saftey.
-				check_profile_matches_object(tr, profile, obj)
+			check_profile_matches_object(tr, profile, obj)
 
 # Normative_sections must exist and be non-empty. Non-emptyness is implied by existence and normativity of Contract.
-			with traced_section(tr, "normative_sections"):
-				if "normative_sections" not in node_preamble.items():
-					raise_validation_error(tr,obj,"PRE-006","Section 'normative_sections' does not exist.")
+		with traced_section(tr, "normative_sections"):
+			if "normative_sections" not in node_preamble.items():
+				raise_validation_error(tr,obj,"PRE-006","Section 'normative_sections' does not exist.")
 # Here we know it exists.
-				node_normative_sections =  node_preamble.item("normative_sections")
-# Handle the meta case here:
-				if "Preamble" in node_normative_sections.items():
-					raise_validation_error(tr,obj,"PRE-002","Section 'Preamble' must not list itself as normative.")
+			node_normative_sections: docitem_list_base = cast(docitem_list_base, node_preamble.item("normative_sections"))
 # Chill mypy. We know it's a docitem_list_base.
-				assert isinstance(node_normative_sections,docitem_list_base)
-				seen = set()
-				for sec in node_normative_sections.items():
+			assert isinstance(node_normative_sections,docitem_list_base)
+			normative_sections = list(node_normative_sections.items())
+		seen = set()
+		for sec in node_normative_sections.items():
 # Each entry must point to an existing section.
-					if not sec in top.items():
-						raise_validation_error(tr,obj,"PRE-012",f"Entry '{sec}' does not refer to an existing section.")
+			if not sec in top.items():
+				details = render_normative_section_details(sec, normative_sections, profile, action="remove")
+				raise_validation_error(tr,obj,"PRE-012",f"Entry '{sec}' does not refer to an existing section.", details)
 #					if sec in seen:
 #						raise_validation_error(tr,obj,"LQID-004","Entry '{sec}' is duplicate.")
-					seen.add(sec)
-			with traced_section(tr, "scope"):
-				if "scope" in node_preamble.items():
-					node_scope = node_preamble.item("scope")
-					for s in node_scope.items():
-						if s not in SCOPE_TAG_MAP:
-							raise_validation_error_expected_but_got(tr,obj,"SCP-003",f"{{{','.join([s for s in SCOPE_TAG_MAP])}}}",f"'{s}'.")
+			seen.add(sec)
+# Handle the meta case here:
+		if "Preamble" in node_normative_sections.items():
+			raise_validation_error(tr,obj,"PRE-002","Section 'Preamble' must not list itself as normative.")
+		with traced_section(tr, "scope"):
+			if "scope" in node_preamble.items():
+				node_scope = node_preamble.item("scope")
+				for s in node_scope.items():
+							if s not in SCOPE_TAG_MAP:
+								raise_validation_error_expected_but_got(tr,obj,"SCP-003",f"{{{','.join([s for s in SCOPE_TAG_MAP])}}}",f"'{s}'.")
 
 # Rule: Any section containing one of the keywords of normativity
 # must be listed under normative_sections.
-			for label,item in top.items().items():
+		for label,item in top.items().items():
 # We explicitly exclude section which must not appear,
 # so that specific section rules below trigger.
-				if label in ("Notes","Class_overview","Function_overview","Method_overview"):
-					continue
-				if item.has_norm_keywords():
-					if label not in node_normative_sections.items():
-						raise_validation_error(tr,obj,"PRE-013",f"Section '{label}' contains a keyword of normativity but is not listed in normative_sections.")
+			if label in ("Notes","Class_overview","Function_overview","Method_overview","Terminology"):
+				continue
+			if item.has_norm_keywords():
+				if label not in node_normative_sections.items():
+					details = render_normative_section_details(label, node_normative_sections.items(), profile, action="add")
+					raise_validation_error(tr,obj,"PRE-013",f"Section '{label}' contains a keyword of normativity but is not listed in normative_sections.", details)
 #===== Contract must exist ====================================#
 		with traced_section(tr, "Contract"):
 			if "Contract" not in top.items():
@@ -1406,7 +1511,8 @@ See_also:
 		with traced_section(tr, "Terminology"):
 			if "Terminology" in top.items():
 				if "Terminology" in node_normative_sections.items():
-					raise_validation_error(tr,obj,"TERM-002","Section 'Terminology ' marked as normative in Preamble.")
+					details = render_normative_section_details("Terminology", node_normative_sections.items(), profile, action="remove")
+					raise_validation_error(tr,obj,"TERM-002","Section 'Terminology ' marked as normative in Preamble.", details)
 				node_terminology = top.item("Terminology")
 # Defitem content should not be empty.
 				for name in node_terminology.items():
@@ -1424,7 +1530,12 @@ See_also:
 				for item_see_also in node_see_also.items():
 # Entries must be Qualified Identifiers
 					if not RE_QUALIFIED_IDENTIFIER_COMPILED.fullmatch(item_see_also):
-						raise_validation_error(tr,obj,"SEE-002", f"See_also reference '{item_see_also}' is not a (Qualified) Identifier.")
+						details = {
+							"found": render_identifier_lines("See_also.reference", [item_see_also]),
+							"expected": render_expected_identifier("See_also.reference", "qualified identifier"),
+							"hint": explain_try_self_for_section("See_also", profile),
+						}
+						raise_validation_error(tr,obj,"SEE-002", f"See_also reference '{item_see_also}' is not a (Qualified) Identifier.", details)
 					try:
 						target_obj, target_name = resolve_object(item_see_also, obj)
 					except Exception as e:
@@ -1477,7 +1588,8 @@ See_also:
 		with traced_section(tr, "Notes"):
 			if "Notes" in top.items():
 				if "Notes" in node_normative_sections.items():
-					raise_validation_error(tr,obj,"NOTE-002","Section 'Notes' marked as normative in Preamble.")
+					details = render_normative_section_details("Notes", node_normative_sections.items(), profile, action="remove")
+					raise_validation_error(tr,obj,"NOTE-002","Section 'Notes' marked as normative in Preamble.", details)
 				node_notes = top.item("Notes")
 # Content should not be empty.
 				for name in node_notes.items():
@@ -1502,7 +1614,12 @@ See_also:
 			assert isinstance(top,docitem_docstring_inherited_method)
 			validate_docstring_inherited_method(tr,obj,top,node_contract,node_normative_sections)
 		else:
-			raise_validation_error(tr,obj,"PRE-005",f"Unknown profile: {profile}")
+			details = {
+				"found": render_identifier_lines("Preamble.profile", [profile]),
+				"expected": render_allowed_identifier("Preamble.profile", ("module","class","function","method","inherited_method")),
+				"hint": explain_try_self_for_subsection("Preamble.profile", profile),
+			}
+			raise_validation_error(tr,obj,"PRE-005",f"Unknown profile: {profile}", details)
 #===== Scope Monotonicity Rules ===============================#
 # internal references introduced by Classes, Methods, Functions, Public_* and Derived_from / inherited_method
 # are validated in their respective validators; see markers in those functions.

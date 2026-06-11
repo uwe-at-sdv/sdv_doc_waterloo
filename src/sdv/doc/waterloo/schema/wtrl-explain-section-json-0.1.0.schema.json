@@ -1,0 +1,269 @@
+{
+	"description": "Waterloo explain-section JSON schema. Provisional first draft for section explanations and validator tips.",
+	"x-published": "2026-06-11",
+	"x-changelog": [
+		{
+			"version": "0.1.0",
+			"date": "2026-06-11",
+			"changes": [
+				{
+					"type": "meta",
+					"summary": "Initial schema draft for section explanations with profile-aware bodies, templates, itemization, markup, and try_self/try_next hints."
+				}
+			]
+		}
+	],
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"$id": "https://sci-d-vis.com/schema/wtrl-explain-section-json-0.1.0.schema.json",
+	"title": "Waterloo explain-section JSON (schema 0.1.0, provisional)",
+	"type": "object",
+	"additionalProperties": false,
+	"required": [
+		"kind",
+		"profile",
+		"label",
+		"title",
+		"body_category",
+		"normativity",
+		"label_kind",
+		"must_exist",
+		"available_profiles",
+		"subsections",
+		"body",
+		"template",
+		"hint",
+		"try_self",
+		"try_next",
+		"itemization",
+		"markup"
+	],
+	"$defs": {
+		"profile": {
+			"type": "string",
+			"enum": [
+				"module",
+				"class",
+				"function",
+				"method",
+				"inherited_method"
+			]
+		},
+		"body_category": {
+			"type": "string",
+			"enum": [
+				"STRUCTURE",
+				"IDENTIFIER",
+				"QUALIFIED_IDENTIFIER",
+				"LIST_OF_IDENTIFIERS",
+				"LIST_OF_QUALIFIED_IDENTIFIERS",
+				"ITEMIZED_TEXT",
+				"FREEFORM_TEXT"
+			]
+		},
+		"normativity": {
+			"type": "string",
+			"enum": [
+				"not_applicable",
+				"normative",
+				"informative",
+				"can_be_both"
+			]
+		},
+		"label_kind": {
+			"type": "string",
+			"enum": [
+				"FIXED",
+				"IDENTIFIER",
+				"QUALIFIED_IDENTIFIER",
+				"LIST_OF_IDENTIFIERS",
+				"ANY_STRING"
+			]
+		},
+		"must_exist": {
+			"type": "string",
+			"enum": [
+				"yes",
+				"no",
+				"depends_on_context"
+			]
+		},
+		"string_array": {
+			"type": "array",
+			"items": {
+				"type": "string"
+			}
+		},
+		"profile_array": {
+			"type": "array",
+			"items": {
+				"$ref": "#/$defs/profile"
+			},
+			"minItems": 1
+		},
+		"subsection": {
+			"type": "object",
+			"additionalProperties": false,
+			"required": [
+				"label",
+				"normativity",
+				"must_exist",
+				"label_kind"
+			],
+			"properties": {
+				"label": {
+					"type": "string"
+				},
+				"normativity": {
+					"$ref": "#/$defs/normativity"
+				},
+				"must_exist": {
+					"$ref": "#/$defs/must_exist"
+				},
+				"label_kind": {
+					"$ref": "#/$defs/label_kind"
+				}
+			}
+		},
+		"itemization": {
+			"type": "object",
+			"additionalProperties": false,
+			"required": [
+				"allowed",
+				"renders_outer_bullets",
+				"inner_lists_allowed",
+				"reason"
+			],
+			"properties": {
+				"allowed": {
+					"type": "boolean"
+				},
+				"renders_outer_bullets": {
+					"type": "boolean"
+				},
+				"inner_lists_allowed": {
+					"type": "boolean"
+				},
+				"reason": {
+					"type": "string"
+				},
+				"explanation": {
+					"$ref": "#/$defs/string_array"
+				}
+			},
+			"allOf": [
+				{
+					"if": {
+						"properties": {
+							"inner_lists_allowed": {
+								"const": true
+							}
+						},
+						"required": [
+							"inner_lists_allowed"
+						]
+					},
+					"then": {
+						"required": [
+							"explanation"
+						]
+					}
+				}
+			]
+		},
+		"markup": {
+			"type": "object",
+			"additionalProperties": false,
+			"required": [
+				"allowed",
+				"reason"
+			],
+			"properties": {
+				"allowed": {
+					"type": "boolean"
+				},
+				"reason": {
+					"type": "string"
+				},
+				"explanation": {
+					"$ref": "#/$defs/string_array"
+				}
+			},
+			"allOf": [
+				{
+					"if": {
+						"properties": {
+							"allowed": {
+								"const": true
+							}
+						},
+						"required": [
+							"allowed"
+						]
+					},
+					"then": {
+						"required": [
+							"explanation"
+						]
+					}
+				}
+			]
+		}
+	},
+	"properties": {
+		"kind": {
+			"type": "string",
+			"const": "section_explanation"
+		},
+		"profile": {
+			"$ref": "#/$defs/profile"
+		},
+		"label": {
+			"type": "string"
+		},
+		"title": {
+			"type": "string"
+		},
+		"body_category": {
+			"$ref": "#/$defs/body_category"
+		},
+		"normativity": {
+			"$ref": "#/$defs/normativity"
+		},
+		"label_kind": {
+			"$ref": "#/$defs/label_kind"
+		},
+		"must_exist": {
+			"$ref": "#/$defs/must_exist"
+		},
+		"available_profiles": {
+			"$ref": "#/$defs/profile_array"
+		},
+		"subsections": {
+			"type": "array",
+			"items": {
+				"$ref": "#/$defs/subsection"
+			}
+		},
+		"body": {
+			"$ref": "#/$defs/string_array"
+		},
+		"template": {
+			"$ref": "#/$defs/string_array"
+		},
+		"hint": {
+			"$ref": "#/$defs/string_array"
+		},
+		"try_self": {
+			"type": "string"
+		},
+		"try_next": {
+			"$ref": "#/$defs/string_array"
+		},
+		"itemization": {
+			"$ref": "#/$defs/itemization"
+		},
+		"markup": {
+			"$ref": "#/$defs/markup"
+		}
+	}
+}
