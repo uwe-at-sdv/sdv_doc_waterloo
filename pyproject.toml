@@ -1,0 +1,77 @@
+[build-system]
+requires = ["setuptools>=67", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "sdv_doc_waterloo"
+description = "Waterloo - Docstring Format and Tools"
+readme = "README.md"
+requires-python = ">=3.10"
+authors = [{ name = "Uwe" }]
+license = { text = "BSD-2-Clause" }
+classifiers = [
+	"Programming Language :: Python :: 3",
+	"Programming Language :: Python :: 3.10",
+	"Operating System :: OS Independent",
+	]
+dynamic = ["version"]
+
+# Runtime dependencies required by waterlint.
+# The Sphinx extension depends on Sphinx, but Sphinx is intentionally
+# not declared here: it is a large, optional dependency that should
+# be installed explicitly by users who need the extension.
+dependencies = [
+	"jsonschema",
+	"jsonpointer",
+	"docutils",
+	"mcp",
+	"tomli; python_version < '3.11'"
+	]
+
+# Optional dependencies.
+# The "sphinx" extra installs the dependencies required for the
+# Sphinx extension. It is not installed by default.
+#
+# Install with:
+#   pip install sdv_doc_waterloo[sphinx]
+#
+# This keeps the base installation lightweight while allowing
+# users to explicitly enable Sphinx support when needed.
+[project.optional-dependencies]
+sphinx = ["sphinx"]
+dev = ["pytest"]
+
+# Console script entry points.
+# Installs a command-line executable that invokes the given
+# function inside the package.
+# Syntax: "<command> = package.module:function"
+[project.scripts]
+waterlint = "sdv.doc.waterloo.waterlint:main"
+# MCP server entry point for Waterloo data roots and tool access.
+wtrl_mcp = "sdv.doc.waterloo.mcp.wtrl_server:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["sdv*"]
+# Use PEP 420 namespace packages. This ensures that the "sdv"
+# namespace can be shared across multiple independently installed
+# projects without package conflicts.
+namespaces = true
+
+[tool.setuptools.dynamic]
+version = { attr = "sdv.doc.waterloo.docitem.__version__" }
+
+# After installation with pip, these go to site-packages/sdv/doc/waterloo/.
+# Include the PEP 561 marker file. The presence of py.typed tells type
+# checkers (e.g. mypy) that this package provides inline type hints.
+[tool.setuptools.package-data]
+"sdv.doc.waterloo" = [
+	"py.typed",
+	"_static/*.css",
+	"doc-json/*.json",
+	"schema/*.json",
+	"js/*.js",
+	"css/*.css",
+	"etc/*.toml",
+	"mcp/doc-json/*.json"
+	]

@@ -1,0 +1,19 @@
+#!/usr/bin/env python3
+
+class X:
+	r"""
+	Preamble:
+		profile:
+			class
+		normative_sections:
+			Contract, Definitions
+	Contract:
+		general:
+			|Must| demonstrate inherited definition items.
+		constructor:
+			default
+	Definitions:
+		_inherit:
+			Term_A
+	"""
+

@@ -10,7 +10,22 @@ Contract:
 Public_classes:
 	Trait, Scope, Flavour, Format, Status, ConfigTraversal, tracer
 Public_functions:
-	explain_try_self_for_section, explain_try_self_for_subsection, render_normative_section_details, render_missing_entry_details, render_exactly_one_identifier_details, render_source_snippet, render_expected_snippet, render_allowed_identifier, render_expected_identifier, render_allowed_identifiers, render_identifier_lines, render_deduplicated_identifiers, render_unique_identifiers, get_source_docstring, is_annotatable, is_attr_annotated, is_attr_final, is_list_of_str, is_obj_module, is_obj_class, is_obj_function, is_obj_method_like, is_obj_named_value, is_obj_documentable, get_obj_direct_module, get_obj_name, get_obj_fully_qualified_name, get_obj_path, build_anchor, get_func_obj_from_callable, get_obj_docstring, get_obj_annotations, get_obj_decorators, gen_documentable_objects, traced_section, rule_on_fail, raise_has_no_docstring, raise_parsing_error, raise_parsing_error_expected_but_got, raise_parsing_error_invalid_label, raise_validation_error, raise_validation_error_expected_but_got, warn_parsing, warn_validation
+	explain_try_self_for_section, explain_try_self_for_subsection,
+	render_source_snippet, render_expected_snippet, render_allowed_identifier, render_expected_identifier,
+	render_allowed_identifiers, render_identifier_lines, render_deduplicated_identifiers, render_unique_identifiers,
+	render_normativity_keyword_details, render_exception_reference_details, render_parameter_signature_details,
+	render_overview_requires_section_details, render_profile_mismatch_details, render_name_object_consistency_details,
+	render_base_method_docstring_details, render_base_method_reference_details, render_scope_relation_details,
+	render_normative_section_details, render_missing_entry_details, render_exactly_one_identifier_details,
+	render_definition_reference_details, render_inherited_definition_details, render_type_reference_details,
+	render_constant_reference_details, render_named_value_reference_details, render_overview_missing_member_details,
+	get_source_docstring, is_annotatable, is_attr_annotated, is_attr_final, is_list_of_str,
+	is_obj_module, is_obj_class, is_obj_function, is_obj_method_like, is_obj_named_value,
+	is_obj_documentable, get_obj_direct_module, get_obj_name, get_obj_fully_qualified_name,
+	get_obj_path, build_anchor, get_func_obj_from_callable, get_obj_docstring, get_obj_annotations,
+	get_obj_decorators, gen_documentable_objects, traced_section, rule_on_fail, raise_has_no_docstring,
+	raise_parsing_error, raise_parsing_error_expected_but_got, raise_parsing_error_invalid_label,
+	raise_validation_error, raise_validation_error_expected_but_got, warn_parsing, warn_validation
 Public_types:
 	Profile:
 		Supported profile labels for the helper layer.
@@ -710,6 +725,8 @@ def get_source_docstring(o: object) -> str:
 
 #===== begin render functions for verbose diagnostics ========#
 
+#----- explain command builders ------------------------------#
+
 def explain_try_self_for_section(label: str, profile: str) -> str:
 	"""
 	Preamble:
@@ -751,6 +768,8 @@ def explain_try_self_for_subsection(label: str, profile: str) -> str:
 	Raises:
 	"""
 	return f"waterlint explain-subsection --label {label} --profile {profile}"
+
+#----- source and expected snippet renderers -----------------#
 
 def render_source_snippet(section_label: str, subsections: Iterable[str] | None = None) -> list[str]:
 	"""
@@ -1011,6 +1030,8 @@ def render_unique_identifiers(label: str, identifiers: Iterable[str]) -> list[st
 		lines.append("\t(each identifier may occur at most once)")
 	return lines
 
+#----- diagnostics renderers for specific validation cases ---#
+
 def render_normative_section_details(section_label: str, normative_sections: Iterable[str], profile: str, *, action: Literal["add", "remove"]) -> dict[str, Any]:
 	"""
 	Preamble:
@@ -1153,6 +1174,43 @@ def render_name_object_consistency_details(label: str, current_entries: Iterable
 	}
 
 
+def render_profile_mismatch_details(object_name: str, object_kind: str, current_profile: str, expected_text: str, profile: str) -> dict[str, Any]:
+	"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+	Contract:
+		general:
+			|Must| render compact validation details for a profile mismatch.
+	Parameters:
+		object_name:
+			The documented object name.
+		object_kind:
+			The detected object kind such as module, class, function or method-like.
+		current_profile:
+			The profile found in the docstring.
+		expected_text:
+			The minimal correction or instruction to show in the expected snippet.
+		profile:
+			The docstring profile used for the hint.
+	Returns:
+		A details dictionary with |token|`found`, |token|`expected`, and |token|`hint`.
+	Raises:
+	"""
+	return {
+		"found": [
+			"Preamble.profile:",
+			f"\t{current_profile}",
+			f"{object_name}:",
+			f"\t{object_kind}",
+		],
+		"expected": [expected_text],
+		"hint": explain_try_self_for_subsection("Preamble.profile", profile),
+	}
+
+
 def render_normativity_keyword_details(section_label: str, entry_name: str, current_lines: Iterable[str], profile: str) -> dict[str, Any]:
 	"""
 	Preamble:
@@ -1215,6 +1273,39 @@ def render_exception_reference_details(exception_name: str, profile: str, *, exp
 		"found": render_source_snippet("Raises", [exception_name]),
 		"expected": expected,
 		"hint": explain_try_self_for_subsection("Raises.<item>", profile),
+	}
+
+
+def render_base_method_reference_details(
+	current_entries: Iterable[str],
+	expected_text: str,
+	profile: str,
+) -> dict[str, Any]:
+	"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+	Contract:
+		general:
+			|Must| build standardized validation details for a Contract.base reference problem.
+	Parameters:
+		current_entries:
+			The current raw entries found in Contract.base.
+		expected_text:
+			The minimal correction or instruction to show in the expected snippet.
+		profile:
+			The docstring profile used for the |cmd|`explain-subsection` hint.
+	Returns:
+		A details dictionary with |attr|`found`, |attr|`expected`, and |attr|`hint`.
+	Raises:
+	"""
+	current = [str(item) for item in current_entries]
+	return {
+		"found": render_source_snippet("Contract.base", current),
+		"expected": [expected_text],
+		"hint": [f"waterlint explain-subsection --label Contract.base --profile {profile}"],
 	}
 
 
@@ -1348,6 +1439,228 @@ def render_scope_relation_details(
 		"found": render_source_snippet(section_label, [reference]),
 		"expected": [expected_text],
 		"hint": [f"waterlint explain-subsection --label {section_label} --profile {profile}"],
+	}
+
+
+def render_base_method_docstring_details(base_name: str, profile: str) -> dict[str, Any]:
+	"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+	Contract:
+		general:
+			|Must| build standardized validation details for a base-method docstring problem.
+	Parameters:
+		base_name:
+			The base method name found in Contract.base.
+		profile:
+			The docstring profile used for the |cmd|`explain-subsection` hint.
+	Returns:
+		A details dictionary with |attr|`found`, |attr|`expected`, and |attr|`hint`.
+	Raises:
+	"""
+	return {
+		"found": render_identifier_lines("Contract.base", [base_name]),
+		"expected": ["<implement a Waterloo docstring in base method>"],
+		"hint": [f"waterlint explain-subsection --label Contract.base --profile {profile}"],
+	}
+
+
+def render_definition_reference_details(references: str | Iterable[str], profile: str, *, missing_definitions: bool) -> dict[str, Any]:
+	"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+	Contract:
+		general:
+			|Must| build standardized validation details for a term reference problem in Definitions.
+	Parameters:
+		references:
+			The term reference or term references found in the docstring body.
+		profile:
+			The docstring profile used for the |cmd|`explain-section` or |cmd|`explain-subsection` hint.
+		missing_definitions:
+			Whether the Definitions section itself is missing.
+	Returns:
+		A details dictionary with |attr|`found`, |attr|`expected`, and |attr|`hint`.
+	Raises:
+	"""
+	if isinstance(references, str):
+		current = [references]
+	else:
+		current = [str(reference) for reference in references]
+	if missing_definitions:
+		return {
+			"found": render_identifier_lines("term refs", sorted(dict.fromkeys(current))),
+			"expected": ["<add normative section Definitions>"],
+			"hint": explain_try_self_for_section("Definitions", profile),
+		}
+	return {
+		"found": render_identifier_lines("term", current[:1] if current else ["..."]),
+		"expected": ["<define term in Definitions>"],
+		"hint": explain_try_self_for_subsection("Definitions.<item>", profile),
+	}
+
+
+def render_inherited_definition_details(current_inherited_terms: Iterable[str], profile: str, *, expected_text: str, use_section_hint: bool = False) -> dict[str, Any]:
+	"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+	Contract:
+		general:
+			|Must| build standardized validation details for an inherited Definitions problem.
+	Parameters:
+		current_inherited_terms:
+			The inherited definition terms found in the current object.
+		profile:
+			The docstring profile used for the |cmd|`explain-subsection` hint.
+		expected_text:
+			The minimal correction or instruction to show in the expected snippet.
+		use_section_hint:
+			Whether the hint should point to the section-level |cmd|`explain-section` entry instead of the
+			subsection-level inherited definition entry.
+	Returns:
+		A details dictionary with |attr|`found`, |attr|`expected`, and |attr|`hint`.
+	Raises:
+	"""
+	current = list(dict.fromkeys(str(term) for term in current_inherited_terms))
+	if use_section_hint:
+		hint = explain_try_self_for_section("Definitions", profile)
+	else:
+		hint = explain_try_self_for_subsection("Definitions._inherit", profile)
+	return {
+		"found": render_identifier_lines("Definitions._inherit", current if current else ["..."]),
+		"expected": [expected_text],
+		"hint": hint,
+	}
+
+
+def render_type_reference_details(label: str, type_name: str, expected_text: str, profile: str) -> dict[str, Any]:
+	"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+	Contract:
+		general:
+			|Must| build standardized validation details for a Public_types reference problem.
+	Parameters:
+		label:
+			The subsection label to render.
+		type_name:
+			The type entry name found in the subsection.
+		expected_text:
+			The minimal correction or instruction to show in the expected snippet.
+		profile:
+			The docstring profile used for the |cmd|`explain-subsection` hint.
+	Returns:
+		A details dictionary with |attr|`found`, |attr|`expected`, and |attr|`hint`.
+	Raises:
+	"""
+	return {
+		"found": render_source_snippet(label, [type_name]),
+		"expected": [expected_text],
+		"hint": explain_try_self_for_subsection(f"{label}.<item>", profile),
+	}
+
+
+def render_constant_reference_details(label: str, const_name: str, expected_text: str, profile: str) -> dict[str, Any]:
+	"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+	Contract:
+		general:
+			|Must| build standardized validation details for a Public_constants reference problem.
+	Parameters:
+		label:
+			The subsection label to render.
+		const_name:
+			The constant entry name found in the subsection.
+		expected_text:
+			The minimal correction or instruction to show in the expected snippet.
+		profile:
+			The docstring profile used for the |cmd|`explain-subsection` hint.
+	Returns:
+		A details dictionary with |attr|`found`, |attr|`expected`, and |attr|`hint`.
+	Raises:
+	"""
+	return {
+		"found": render_source_snippet(label, [const_name]),
+		"expected": [expected_text],
+		"hint": explain_try_self_for_subsection(f"{label}.<item>", profile),
+	}
+
+
+def render_named_value_reference_details(label: str, name: str, expected_text: str, profile: str) -> dict[str, Any]:
+	"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+	Contract:
+		general:
+			|Must| build standardized validation details for a Public_variables reference problem.
+	Parameters:
+		label:
+			The subsection label to render.
+		name:
+			The variable entry name found in the subsection.
+		expected_text:
+			The minimal correction or instruction to show in the expected snippet.
+		profile:
+			The docstring profile used for the |cmd|`explain-subsection` hint.
+	Returns:
+		A details dictionary with |attr|`found`, |attr|`expected`, and |attr|`hint`.
+	Raises:
+	"""
+	return {
+		"found": render_source_snippet(label, [name]),
+		"expected": [expected_text],
+		"hint": explain_try_self_for_subsection(f"{label}.<item>", profile),
+	}
+
+
+def render_overview_missing_member_details(overview_label: str, public_label: str, current_entries: Iterable[str], missing_name: str, profile: str) -> dict[str, Any]:
+	"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+	Contract:
+		general:
+			|Must| build standardized validation details for an overview entry that is missing from its matching Public_* section.
+	Parameters:
+		overview_label:
+			The overview section label, such as |token|`Class_overview`.
+		public_label:
+			The matching public section label, such as |token|`Public_classes`.
+		current_entries:
+			The current raw entries from the overview section.
+		missing_name:
+			The entry name that is missing from the public section.
+		profile:
+			The docstring profile used for the |cmd|`explain-subsection` hint.
+	Returns:
+		A details dictionary with |attr|`found`, |attr|`expected`, and |attr|`hint`.
+	Raises:
+	"""
+	return {
+		"found": render_source_snippet(overview_label, [missing_name] + [str(item) for item in current_entries if str(item) != missing_name]),
+		"expected": [f"<add {missing_name} to {public_label}>"],
+		"hint": explain_try_self_for_subsection(f"{public_label}.<item>", profile),
 	}
 
 #===== end render functions for verbose diagnostics ==========#

@@ -10,12 +10,12 @@ from pathlib import Path
 
 
 # Demo naming convention:
-#   demo_ABC-123_mod.py  -> validate module object
-#   demo_ABC-123_f.py    -> validate function object "f"
-#   demo_ABC-123_m.py    -> validate method object "X.m"
-#   demo_ABC-123_X.py    -> validate class object "X"
+#   demo_ABC_123_mod.py  -> validate module object
+#   demo_ABC_123_f.py    -> validate function object "f"
+#   demo_ABC_123_m.py    -> validate method object "X.m"
+#   demo_ABC_123_X.py    -> validate class object "X"
 # The script checks that each demo actually triggers the intended rule.
-DEMO_RE = re.compile(r"^demo_(?P<rule>[A-Z]+-\d{3})_(?P<kind>mod|f|m|X)\.py$")
+DEMO_RE = re.compile(r"^demo_(?P<rule>[A-Z]+_\d{3})_(?P<kind>mod|f|m|X)\.py$")
 
 
 @dataclass(frozen=True)
@@ -33,7 +33,7 @@ def iter_demo_cases(base: Path) -> list[DemoCase]:
 		match = DEMO_RE.fullmatch(path.name)
 		if not match:
 			continue
-		rule = match.group("rule")
+		rule = match.group("rule").replace("_", "-")
 		kind = match.group("kind")
 		if kind == "mod":
 			obj = path.stem

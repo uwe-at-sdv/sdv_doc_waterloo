@@ -572,21 +572,26 @@ Notes:
 def check_profile_matches_object(tr: tracer, profile: str, obj: object) -> None:
 	if is_obj_module(obj):
 		if profile != "module":
-			raise_validation_error(tr, obj, "PRE-017", f"profile is '{profile}' but '{get_obj_name(obj)}' is a module.")
+			details = render_profile_mismatch_details(get_obj_name(obj), "module", profile, "<use profile module>", profile)
+			raise_validation_error(tr, obj, "PRE-017", f"profile is '{profile}' but '{get_obj_name(obj)}' is a module.", details)
 	elif is_obj_class(obj):
 		if profile != "class":
-			raise_validation_error(tr, obj, "PRE-018", f"profile is '{profile}' but '{get_obj_name(obj)}' is a class.")
+			details = render_profile_mismatch_details(get_obj_name(obj), "class", profile, "<use profile class>", profile)
+			raise_validation_error(tr, obj, "PRE-018", f"profile is '{profile}' but '{get_obj_name(obj)}' is a class.", details)
 	else:
 		if profile not in {"function", "method", "inherited_method"}:
 			warn_validation(tr, obj, "PRE-020", f"profile 'inherited_method' might be appropriate, cannot decide at this location in code.")
-			raise_validation_error(tr, obj, "PRE-019", f"profile is '{profile}' but '{get_obj_name(obj)}' is a function or method.")
+			details = render_profile_mismatch_details(get_obj_name(obj), "function or method", profile, "<use profile function, method or inherited_method>", profile)
+			raise_validation_error(tr, obj, "PRE-019", f"profile is '{profile}' but '{get_obj_name(obj)}' is a function or method.", details)
 		is_method_like = isinstance(obj, property) or is_obj_method_like(obj)
 		if is_method_like:
 			if profile not in {"method", "inherited_method"}:
-				raise_validation_error(tr, obj, "PRE-019", f"profile is '{profile}' but '{get_obj_name(obj)}' is method-like.")
+				details = render_profile_mismatch_details(get_obj_name(obj), "method-like", profile, "<use profile method or inherited_method>", profile)
+				raise_validation_error(tr, obj, "PRE-019", f"profile is '{profile}' but '{get_obj_name(obj)}' is method-like.", details)
 		else:
 			if profile != "function":
-				raise_validation_error(tr, obj, "PRE-019", f"profile is '{profile}' but '{get_obj_name(obj)}' is a function.")
+				details = render_profile_mismatch_details(get_obj_name(obj), "function", profile, "<use profile function>", profile)
+				raise_validation_error(tr, obj, "PRE-019", f"profile is '{profile}' but '{get_obj_name(obj)}' is a function.", details)
 
 def make_docitem_tree_from_object(tr: tracer, obj: object) -> docitem_docstring_base:
 	tree = parse_indent_docstring(tr, get_obj_docstring(obj))
