@@ -9,7 +9,7 @@ from pathlib import Path
 import pytest
 
 from pytest_common import DIR_SCHEMA, run_waterlint
-from sdv.doc.waterloo.waterlint_explain_common import SECTION_PROPERTIES
+from sdv.doc.waterloo.waterlint_explain_common import SECTION_PROPERTIES, _BASE_SUBSECTION_SPECS
 
 
 PROFILE_ORDER = ("module", "class", "function", "method", "inherited_method")
@@ -66,7 +66,14 @@ def test_explain_subsection_matrix_profile_section(profile: str, label: str, tmp
 	assert doc["must_exist"] == props["must_exist"], doc
 	assert doc["available_profiles"] == [p for p in PROFILE_ORDER if p in (props["profile"] or [])], doc
 	assert doc["try_self"] == f"waterlint explain-subsection --label {label} --profile PROFILE", doc
-	assert doc["try_next"] == [f"waterlint explain-section --label {section_label} --profile PROFILE"], doc
+	base_try_next = _BASE_SUBSECTION_SPECS[label].get("try_next", {})
+	if profile in base_try_next:
+		expected_try_next = [cmd.replace("PROFILE", profile) for cmd in base_try_next[profile]]
+	elif "*" in base_try_next:
+		expected_try_next = [cmd.replace("PROFILE", profile) for cmd in base_try_next["*"]]
+	else:
+		expected_try_next = [f"waterlint explain-section --label {section_label} --profile PROFILE"]
+	assert doc["try_next"] == expected_try_next, doc
 	assert isinstance(doc["hint"], list), doc
 	assert isinstance(doc["template"], list), doc
 

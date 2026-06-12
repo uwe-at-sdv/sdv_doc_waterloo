@@ -35,10 +35,10 @@ Public_types:
 Public_constants:
 	RULE_ID_WHITELIST:
 		Whitelist reasons for legacy rule identifiers used by the helper layer.
-	SECTION_PROPERTIES:
-		Common section metadata shared by the validator and explain commands.
 	CANONICAL_ORDER_OF_SECTIONS:
 		Canonical subsection ordering for section snippets and expected snippets.
+	CANONICAL_ORDER_OF_PROFILES:
+		Canonical profile ordering for CLI help and documentation.
 	TRAIT_TAG_MAP:
 		Trait tag mapping for trait labels.
 	SCOPE_TAG_MAP:
@@ -49,12 +49,17 @@ Public_constants:
 		Output format tag mapping for string-related output.
 	STATUS_TAG_MAP:
 		Status tag mapping for Preamble.status.
+	SECTION_PROPERTIES:
+		|Must| be a mapping from section and subsection labels to their properties relevant for explanation and validation,
+		for example body category, normativity, and profile applicability.
+		Informative: This is a carefully distilled machine-readable representation of the relevant rules
+		from the documentation standard, but the documentation remains the Single Source of Truth for the standard.
 """
 from __future__ import annotations
 from enum import Enum,IntEnum
 from types import FunctionType, MappingProxyType, ModuleType
 from typing_extensions import Self, TypeIs
-from typing import Any, Callable, Dict, Final, get_type_hints, get_origin, get_args, Generator, Iterable, Iterator, List, Literal, NewType, NoReturn, Sequence, Set, Tuple, Type, TypeAlias, TypeGuard, Union, cast
+from typing import Any, Callable, Dict, Final, get_type_hints, get_origin, get_args, Generator, Iterable, Iterator, List, Literal, NewType, NoReturn, Sequence, Set, Tuple, Type, TypeAlias, TypedDict, TypeGuard, Union, cast
 
 import sys,re,os,copy
 import pkgutil,inspect,importlib
@@ -279,10 +284,70 @@ RE_WTRL_ANGLE_WTRL_REF_COMPILED: Final[re.Pattern[str]] = re.compile(RE_WTRL_ANG
 #CSV_SECTIONS = frozenset(["normative_sections", "scopes", "Public_classes", "Public_methods", "Public_functions", "See_also"])
 SINGLE_STRING_SECTIONS = frozenset(["profile","status"])
 
-# Shared section catalog for the Waterloo docstring standard.
-# This is the common rule metadata that both the docitem validator and the waterlint explain layer
-# need to consume, so the source lives here on the docitem side of the dependency.
-SECTION_PROPERTIES: Final[dict[str, dict[str, Any]]] = {
+#===== begin section and subsection properties ===============#
+
+# NOTE ABOUT SOURCE OF TRUTH:
+# The tables in this block define the runtime-friendly structural metadata used by
+# validators, explain output, and related tooling. They are an implementation view
+# of the Waterloo section/subsection model, not the normative definition itself.
+#
+# Normative SSoT is the documentation in format.rst. If this block and format.rst
+# ever diverge, format.rst is authoritative and this block must be updated.
+
+# These axes describe semantic status and applicability in the documentation rules.
+
+Profile_t = Literal["module", "class", "function", "method", "inherited_method"]
+Normativity_t = Literal["not_applicable", "normative", "informative", "can_be_both"]
+MustExist_t = Literal["yes", "no", "depends_on_context"]
+LabelKind_t = Literal["FIXED", "IDENTIFIER", "QUALIFIED_IDENTIFIER", "LIST_OF_IDENTIFIERS", "ANY_STRING"]
+
+CANONICAL_ORDER_OF_SECTIONS : Final[Dict[str,None | Sequence[str]]] = {
+	"Preamble"		: ("profile","normative_sections","status","scope"),
+	"Definitions"		: None,
+	"Terminology"		: None,
+	"Contract"		: ("general","constructor","base","traits","invariants","requires","ensures"),
+	"Description"		: None,
+	"Derived_from"		: None,
+	"Factory"		: None,
+	"Public_classes"	: None,
+	"Class_overview"	: None,
+	"Public_functions"	: None,
+	"Function_overview"	: None,
+	"Public_methods"	: None,
+	"Method_overview"	: None,
+	"Public_types"		: None,
+	"Public_variables"	: None,
+	"Public_constants"	: None,
+	"Parameters"		: None,
+	"Returns"		: None,
+	"Raises"		: None,
+	"Notes"			: None,
+	"See_also"		: None,
+	}
+
+CANONICAL_ORDER_OF_PROFILES: Final[list[Profile_t]] = ["module", "class", "function", "method", "inherited_method"]
+
+SectionBodyCategory_t = Literal[
+	"STRUCTURE",
+	"IDENTIFIER",
+	"QUALIFIED_IDENTIFIER",
+	"LIST_OF_IDENTIFIERS",
+	"LIST_OF_QUALIFIED_IDENTIFIERS",
+	"ITEMIZED_TEXT",
+	"FREEFORM_TEXT",
+]
+
+class SectionProperty_t(TypedDict):
+	category: SectionBodyCategory_t
+	normativity: Normativity_t
+	label_kind: LabelKind_t
+	profile: list[Profile_t]
+	must_exist: MustExist_t
+	hint: str
+
+# Shared section catalog consumed by validator and explain tooling.
+# Keep this mapping synchronized with format.rst, which remains the normative SSoT.
+SECTION_PROPERTIES: Final[dict[str, SectionProperty_t]] = {
 	# Normativity does not apply to Preamble because normativity is declared therein, and normativity
 	# does not apply to subsections because they are normative if and only if the surrounding section is normative (BinNorm).
 	# "profile" rules: DOC-003, DOC-004, DOC-005, DOC-006
@@ -399,6 +464,7 @@ SECTION_PROPERTIES: Final[dict[str, dict[str, Any]]] = {
 	# "profile" rules: DOC-003, DOC-004
 	# "normativity" rules: MPTYP-002, CPTYP-002
 	# "must_exist" rules: MPTYP-001, CPTYP-001
+	
 	"Public_types": {"category": "STRUCTURE", "normativity": "normative", "label_kind": "FIXED", "profile": ["module","class"], "must_exist": "no", "hint": ""},
 	# "profile" rules: MPTYP-003, CPTYP-003
 	# "label_kind" rules: MPTYP-004, CPTYP-004
@@ -470,6 +536,7 @@ SECTION_PROPERTIES: Final[dict[str, dict[str, Any]]] = {
 	# "normativity" rules: RET-002
 	# "must_exist" rules: RET-001
 	"Returns": {"category": "FREEFORM_TEXT", "normativity": "normative", "label_kind": "FIXED", "profile": ["function","method"], "must_exist": "yes", "hint": ""},
+	
 	# "profile" rules: DOC-005
 	# "normativity" rules: RAI-002
 	# "must_exist" rules: RAI-001
@@ -496,322 +563,7 @@ SECTION_PROPERTIES: Final[dict[str, dict[str, Any]]] = {
 	"See_also": {"category": "LIST_OF_QUALIFIED_IDENTIFIERS", "normativity": "can_be_both", "label_kind": "FIXED", "profile": ["module","class","function","method","inherited_method"], "must_exist": "no", "hint": ""},
 }
 
-
-def explain_try_self_for_section(label: str, profile: str) -> str:
-	"""
-	Preamble:
-		profile:
-			function
-		normative_sections:
-			Contract, Parameters, Returns, Raises
-	Contract:
-		general:
-			|Must| build the canonical self-explanation command for a section label and profile.
-	Parameters:
-		label:
-			The section label to explain.
-		profile:
-			The docstring profile to use as the explain context.
-	Returns:
-		The canonical |wtrl_cmd|`explain-section` command for the given label and profile.
-	Raises:
-	"""
-	return f"waterlint explain-section --label {label} --profile {profile}"
-
-
-def explain_try_self_for_subsection(label: str, profile: str) -> str:
-	"""
-	Preamble:
-		profile:
-			function
-		normative_sections:
-			Contract, Parameters, Returns, Raises
-	Contract:
-		general:
-			|Must| build the canonical self-explanation command for a fully qualified subsection label and profile.
-	Parameters:
-		label:
-			The fully qualified subsection label to explain.
-		profile:
-			The docstring profile to use as the explain context.
-	Returns:
-		The canonical |wtrl_cmd|`explain-subsection` command for the given label and profile.
-	Raises:
-	"""
-	return f"waterlint explain-subsection --label {label} --profile {profile}"
-
-
-def render_normative_section_details(section_label: str, normative_sections: Iterable[str], profile: str, *, action: Literal["add", "remove"]) -> dict[str, Any]:
-	"""
-	Preamble:
-		profile:
-			function
-		normative_sections:
-			Contract, Parameters, Returns, Raises
-	Contract:
-		general:
-			|Must| build standardized validation details for normative section membership checks.
-	Parameters:
-		section_label:
-			The section label that should be added to or removed from the normative section set.
-		normative_sections:
-			The current normative section labels.
-		profile:
-			The docstring profile used for the |wtrl_cmd|`explain-section` hint.
-		action:
-			Either |token|`add` when the section should be present, or |token|`remove` when it should be absent.
-	Returns:
-		A details dictionary with |token|`found`, |token|`expected`, and |token|`hint`.
-	Raises:
-	"""
-	current = list(normative_sections)
-	if action == "add":
-		expected = [*current, section_label]
-	else:
-		expected = [item for item in current if item != section_label]
-	return {
-		"found": render_identifier_lines("Preamble.normative_sections", current),
-		"expected": render_deduplicated_identifiers("Preamble.normative_sections", expected),
-		"hint": explain_try_self_for_section(section_label, profile),
-	}
-
-
-def render_missing_entry_details(container_label: str, current_entries: Iterable[str], missing_entry: str, profile: str, *, top_level: bool = False) -> dict[str, Any]:
-	"""
-	Preamble:
-		profile:
-			function
-		normative_sections:
-			Contract, Parameters, Returns, Raises
-	Contract:
-		general:
-			|Must| build standardized validation details for a missing entry in a section-like container.
-	Parameters:
-		container_label:
-			The section label that contains the missing entry.
-		current_entries:
-			The currently present entry labels in the container.
-		missing_entry:
-			The entry label that should be added.
-		profile:
-			The docstring profile used for the |cmd|`explain-*` hint.
-		top_level:
-			Use a top-level list rendering when the container itself is the document root rather than a nested section.
-	Returns:
-		A details dictionary with |attr|`found`, |attr|`expected`, and |attr|`hint`.
-	Raises:
-	"""
-	current = list(current_entries)
-	found = [e for e in current for e in (e, "\t...")]
-	expected = [e for e in [*current, missing_entry] for e in (e, "\t...")]
-	if top_level:
-		# This is a special marker case for the document root level, which is not rendered
-		# with a section header and therefore needs a custom label in the snippets and hints.
-		return {
-			"found": found,
-			"expected": expected,
-			"hint": explain_try_self_for_section(missing_entry, profile),
-		}
-	return {
-		"found": render_source_snippet(container_label, current),
-		"expected": render_expected_snippet(container_label, expected),
-		"hint": explain_try_self_for_subsection(f"{container_label}.{missing_entry}", profile),
-	}
-
-
-def render_overview_requires_section_details(overview_label: str, required_section: str, profile: str) -> dict[str, Any]:
-	"""
-	Preamble:
-		profile:
-			function
-		normative_sections:
-			Contract, Parameters, Returns, Raises
-	Contract:
-		general:
-			|Must| render compact validation details for overview sections that require a normative companion section.
-	Parameters:
-		overview_label:
-			The overview section label, such as |token|`Class_overview`.
-		required_section:
-			The normative section that must be added, such as |token|`Public_classes`.
-		profile:
-			The docstring profile used for the |wtrl_cmd|`explain-section` hint.
-	Returns:
-		A details dictionary with |token|`found`, |token|`expected`, and |token|`hint`.
-	Raises:
-	"""
-	return {
-		"found": [f"{overview_label}", "\t..."],
-		"expected": [f"<add normative section {required_section}>"],
-		"hint": explain_try_self_for_section(required_section, profile),
-	}
-
-
-def render_name_object_consistency_details(label: str, current_entries: Iterable[str], profile: str, *, overview_item: str | None = None) -> dict[str, Any]:
-	"""
-	Preamble:
-		profile:
-			function
-		normative_sections:
-			Contract, Parameters, Returns, Raises
-	Contract:
-		general:
-			|Must| render compact validation details for name/object consistency checks.
-	Parameters:
-		label:
-			The section label to render.
-		current_entries:
-			The current raw entries from the section.
-		profile:
-			The docstring profile used for the hint.
-		overview_item:
-			If provided, render an overview entry instead of a flat identifier list.
-	Returns:
-		A details dictionary with |token|`found`, |token|`expected`, and |token|`hint`.
-	Raises:
-	"""
-	if overview_item is None:
-		return {
-			"found": render_identifier_lines(label, current_entries),
-			"expected": ["<check name/object consistency>"],
-			"hint": explain_try_self_for_section(label, profile),
-		}
-	return {
-		"found": render_source_snippet(label, [overview_item]),
-		"expected": ["<check name/object consistency>"],
-		"hint": explain_try_self_for_subsection(f"{label}.<item>", profile),
-	}
-
-
-def render_normativity_keyword_details(section_label: str, entry_name: str, current_lines: Iterable[str], profile: str) -> dict[str, Any]:
-	"""
-	Preamble:
-		profile:
-			function
-		normative_sections:
-			Contract, Parameters, Returns, Raises
-	Contract:
-		general:
-			|Must| build standardized validation details for an entry that must not contain normativity keywords.
-	Parameters:
-		section_label:
-			The overview section label, such as |token|`Class_overview`.
-		entry_name:
-			The entry label that violates the rule.
-		current_lines:
-			The raw lines found in the entry.
-		profile:
-			The docstring profile used for the |wtrl_cmd|`explain-section` hint.
-	Returns:
-		A details dictionary with |token|`found`, |token|`expected`, and |token|`hint`.
-	Raises:
-	"""
-	found_lines = list(current_lines)
-	if not found_lines:
-		found_lines = ["..."]
-	return {
-		"found": [f"{section_label}:", f"\t{entry_name}:"] + [f"\t\t{line}" for line in found_lines],
-		"expected": [f"{section_label}:", f"\t{entry_name}:", "\t\t<don't use normativity keyword>"],
-		"hint": explain_try_self_for_section(section_label, profile),
-	}
-
-
-def render_exception_reference_details(exception_name: str, profile: str, *, expected_kind: Literal["qualified identifier", "subclass of BaseException"]) -> dict[str, Any]:
-	"""
-	Preamble:
-		profile:
-			function
-		normative_sections:
-			Contract, Parameters, Returns, Raises
-	Contract:
-		general:
-			|Must| build standardized validation details for a Raises entry that must resolve to an exception class.
-	Parameters:
-		exception_name:
-			The exception entry name found in the Raises section.
-		profile:
-			The docstring profile used for the |wtrl_cmd|`explain-subsection` hint.
-		expected_kind:
-			Either |token|`qualified identifier` or |token|`subclass of BaseException`.
-	Returns:
-		A details dictionary with |token|`found`, |token|`expected`, and |token|`hint`.
-	Raises:
-	"""
-	if expected_kind == "qualified identifier":
-		expected = ["<check for typos or qualify properly>"]
-	else:
-		expected = ["<refer to an Exception class derived from BaseException>"]
-	return {
-		"found": render_source_snippet("Raises", [exception_name]),
-		"expected": expected,
-		"hint": explain_try_self_for_subsection("Raises.<item>", profile),
-	}
-
-
-def render_exactly_one_identifier_details(label: str, current_entries: Iterable[str], profile: str) -> dict[str, Any]:
-	"""
-	Preamble:
-		profile:
-			function
-		normative_sections:
-			Contract, Parameters, Returns, Raises
-	Contract:
-		general:
-			|Must| build standardized validation details for a subsection that must contain exactly one identifier.
-	Parameters:
-		label:
-			The qualified subsection label to render in the snippets and hint.
-		current_entries:
-			The current raw entries from the subsection.
-		profile:
-			The docstring profile used for the |wtrl_cmd|`explain-subsection` hint.
-	Returns:
-		A details dictionary with |attr|`found`, |attr|`expected`, and |attr|`hint`.
-	Raises:
-	"""
-	current = list(current_entries)
-	return {
-		"found": render_identifier_lines(label, current),
-		"expected": render_expected_identifier(label, "identifier"),
-		"hint": explain_try_self_for_subsection(label, profile),
-	}
-
-
-def render_parameter_signature_details(
-	section_label: str,
-	current_entries: Iterable[str],
-	expected_entries: Iterable[str],
-	profile: str,
-) -> dict[str, Any]:
-	"""
-	Preamble:
-		profile:
-			function
-		normative_sections:
-			Contract, Parameters, Returns, Raises
-	Contract:
-		general:
-			|Must| build standardized validation details for a parameter/signature mismatch.
-	Parameters:
-		section_label:
-			The label to render in the snippets.
-		current_entries:
-			The current raw parameter entries.
-		expected_entries:
-			The corrected parameter entries to show in the expected snippet.
-		profile:
-			The docstring profile used for the |wtrl_cmd|`explain-section` hint.
-	Returns:
-		A details dictionary with |attr|`found`, |attr|`expected`, and |attr|`hint`.
-	Raises:
-	"""
-	current = list(current_entries)
-	expected = list(expected_entries)
-	return {
-		"found": render_source_snippet(section_label, current),
-		"expected": render_expected_snippet(section_label, expected),
-		"hint": explain_try_self_for_section(section_label, profile),
-	}
+#===== end section and subsection properties =================#
 
 _SOURCE_DOCSTRING_CACHE: Dict[int, str] = {}
 AstDocNode: TypeAlias = Union[ast.ClassDef, ast.FunctionDef, ast.AsyncFunctionDef]
@@ -822,7 +574,7 @@ _OBJ_DOCSTRING_CACHE: Dict[int, str] = {}
 
 
 def get_source_docstring(o: object) -> str:
-	"""
+	r"""
 	Preamble:
 		profile:
 			function
@@ -836,9 +588,9 @@ def get_source_docstring(o: object) -> str:
 			|Must| cache the extracted result globally by object identity to avoid repeated source parsing.
 			|Must| cache one parsed AST per module and reuse it for subsequent lookups.
 			|Must| preserve original indentation and tabs in order to remain compatible with Waterloo parsing under Python 3.13+.
-			|Should| fall back to a direct source snippet parse when the object is a decorated or wrapper-like callable
-			that cannot be resolved reliably through the module AST.
-			The AST-based source lookup is intentionally slower than direct runtime docstring access and is therefore
+			|Should| fall back to a direct source snippet parse when the object is a decorated or wrapper-like callable\
+			that cannot be resolved reliably through the module AST.\
+			The AST-based source lookup is intentionally slower than direct runtime docstring access and is therefore\
 			implemented with caching as a first-order mitigation, not as a full performance optimization.
 			|Must| return the empty string if no source docstring can be determined.
 	Parameters:
@@ -851,7 +603,7 @@ def get_source_docstring(o: object) -> str:
 		Implementation:
 			The helper uses a source-first strategy to preserve original indentation and tab characters in Python 3.13+.
 			Docstrings are cached by object identity, while parsed module ASTs are cached separately by module object.
-			The AST path is slower than runtime __doc__ access, but caching keeps the repeated cost manageable.
+			The AST path is slower than runtime |var|`__doc__` access, but caching keeps the repeated cost manageable.
 			Further performance improvements can be added later by caching validation results for repeated objects.
 	"""
 	key = id(o)
@@ -956,31 +708,49 @@ def get_source_docstring(o: object) -> str:
 	_SOURCE_DOCSTRING_CACHE[key] = doc
 	return doc
 
+#===== begin render functions for verbose diagnostics ========#
 
-CANONICAL_ORDER_OF_SECTIONS : Final[Dict[str,None | Sequence[str]]] = {
-	"Preamble"		: ("profile","normative_sections","status","scope"),
-	"Definitions"		: None,
-	"Terminology"		: None,
-	"Contract"		: ("general","constructor","base","traits","invariants","requires","ensures"),
-	"Description"		: None,
-	"Derived_from"		: None,
-	"Factory"		: None,
-	"Public_classes"	: None,
-	"Class_overview"	: None,
-	"Public_functions"	: None,
-	"Function_overview"	: None,
-	"Public_methods"	: None,
-	"Method_overview"	: None,
-	"Public_types"		: None,
-	"Public_variables"	: None,
-	"Public_constants"	: None,
-	"Parameters"		: None,
-	"Returns"		: None,
-	"Raises"		: None,
-	"Notes"			: None,
-	"See_also"		: None,
-	}
+def explain_try_self_for_section(label: str, profile: str) -> str:
+	"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+	Contract:
+		general:
+			|Must| build the canonical self-explanation command for a section label and profile.
+	Parameters:
+		label:
+			The section label to explain.
+		profile:
+			The docstring profile to use as the explain context.
+	Returns:
+		The canonical |cmd|`explain-section` command for the given label and profile.
+	Raises:
+	"""
+	return f"waterlint explain-section --label {label} --profile {profile}"
 
+def explain_try_self_for_subsection(label: str, profile: str) -> str:
+	"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+	Contract:
+		general:
+			|Must| build the canonical self-explanation command for a fully qualified subsection label and profile.
+	Parameters:
+		label:
+			The fully qualified subsection label to explain.
+		profile:
+			The docstring profile to use as the explain context.
+	Returns:
+		The canonical |cmd|`explain-subsection` command for the given label and profile.
+	Raises:
+	"""
+	return f"waterlint explain-subsection --label {label} --profile {profile}"
 
 def render_source_snippet(section_label: str, subsections: Iterable[str] | None = None) -> list[str]:
 	"""
@@ -1241,7 +1011,346 @@ def render_unique_identifiers(label: str, identifiers: Iterable[str]) -> list[st
 		lines.append("\t(each identifier may occur at most once)")
 	return lines
 
+def render_normative_section_details(section_label: str, normative_sections: Iterable[str], profile: str, *, action: Literal["add", "remove"]) -> dict[str, Any]:
+	"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+	Contract:
+		general:
+			|Must| build standardized validation details for normative section membership checks.
+	Parameters:
+		section_label:
+			The section label that should be added to or removed from the normative section set.
+		normative_sections:
+			The current normative section labels.
+		profile:
+			The docstring profile used for the |cmd|`explain-section` hint.
+		action:
+			Either |token|`add` when the section should be present, or |token|`remove` when it should be absent.
+	Returns:
+		A details dictionary with |token|`found`, |token|`expected`, and |token|`hint`.
+	Raises:
+	"""
+	current = list(normative_sections)
+	if action == "add":
+		expected = [*current, section_label]
+	else:
+		expected = [item for item in current if item != section_label]
+	return {
+		"found": render_identifier_lines("Preamble.normative_sections", current),
+		"expected": render_deduplicated_identifiers("Preamble.normative_sections", expected),
+		"hint": explain_try_self_for_section(section_label, profile),
+	}
 
+
+def render_missing_entry_details(container_label: str, current_entries: Iterable[str], missing_entry: str, profile: str, *, top_level: bool = False) -> dict[str, Any]:
+	"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+	Contract:
+		general:
+			|Must| build standardized validation details for a missing entry in a section-like container.
+	Parameters:
+		container_label:
+			The section label that contains the missing entry.
+		current_entries:
+			The currently present entry labels in the container.
+		missing_entry:
+			The entry label that should be added.
+		profile:
+			The docstring profile used for the |cmd|`explain-*` hint.
+		top_level:
+			Use a top-level list rendering when the container itself is the document root rather than a nested section.
+	Returns:
+		A details dictionary with |attr|`found`, |attr|`expected`, and |attr|`hint`.
+	Raises:
+	"""
+	current = list(current_entries)
+	found = [e for e in current for e in (e, "\t...")]
+	expected = [e for e in [*current, missing_entry] for e in (e, "\t...")]
+	if top_level:
+		# This is a special marker case for the document root level, which is not rendered
+		# with a section header and therefore needs a custom label in the snippets and hints.
+		return {
+			"found": found,
+			"expected": expected,
+			"hint": explain_try_self_for_section(missing_entry, profile),
+		}
+	return {
+		"found": render_source_snippet(container_label, current),
+		"expected": render_expected_snippet(container_label, expected),
+		"hint": explain_try_self_for_subsection(f"{container_label}.{missing_entry}", profile),
+	}
+
+
+def render_overview_requires_section_details(overview_label: str, required_section: str, profile: str) -> dict[str, Any]:
+	"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+	Contract:
+		general:
+			|Must| render compact validation details for overview sections that require a normative companion section.
+	Parameters:
+		overview_label:
+			The overview section label, such as |token|`Class_overview`.
+		required_section:
+			The normative section that must be added, such as |token|`Public_classes`.
+		profile:
+			The docstring profile used for the |cmd|`explain-section` hint.
+	Returns:
+		A details dictionary with |token|`found`, |token|`expected`, and |token|`hint`.
+	Raises:
+	"""
+	return {
+		"found": [f"{overview_label}", "\t..."],
+		"expected": [f"<add normative section {required_section}>"],
+		"hint": explain_try_self_for_section(required_section, profile),
+	}
+
+
+def render_name_object_consistency_details(label: str, current_entries: Iterable[str], profile: str, *, overview_item: str | None = None) -> dict[str, Any]:
+	"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+	Contract:
+		general:
+			|Must| render compact validation details for name/object consistency checks.
+	Parameters:
+		label:
+			The section label to render.
+		current_entries:
+			The current raw entries from the section.
+		profile:
+			The docstring profile used for the hint.
+		overview_item:
+			If provided, render an overview entry instead of a flat identifier list.
+	Returns:
+		A details dictionary with |token|`found`, |token|`expected`, and |token|`hint`.
+	Raises:
+	"""
+	if overview_item is None:
+		return {
+			"found": render_identifier_lines(label, current_entries),
+			"expected": ["<check name/object consistency>"],
+			"hint": explain_try_self_for_section(label, profile),
+		}
+	return {
+		"found": render_source_snippet(label, [overview_item]),
+		"expected": ["<check name/object consistency>"],
+		"hint": explain_try_self_for_subsection(f"{label}.<item>", profile),
+	}
+
+
+def render_normativity_keyword_details(section_label: str, entry_name: str, current_lines: Iterable[str], profile: str) -> dict[str, Any]:
+	"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+	Contract:
+		general:
+			|Must| build standardized validation details for an entry that must not contain normativity keywords.
+	Parameters:
+		section_label:
+			The overview section label, such as |token|`Class_overview`.
+		entry_name:
+			The entry label that violates the rule.
+		current_lines:
+			The raw lines found in the entry.
+		profile:
+			The docstring profile used for the |cmd|`explain-section` hint.
+	Returns:
+		A details dictionary with |token|`found`, |token|`expected`, and |token|`hint`.
+	Raises:
+	"""
+	found_lines = list(current_lines)
+	if not found_lines:
+		found_lines = ["..."]
+	return {
+		"found": [f"{section_label}:", f"\t{entry_name}:"] + [f"\t\t{line}" for line in found_lines],
+		"expected": [f"{section_label}:", f"\t{entry_name}:", "\t\t<don't use normativity keyword>"],
+		"hint": explain_try_self_for_section(section_label, profile),
+	}
+
+
+def render_exception_reference_details(exception_name: str, profile: str, *, expected_kind: Literal["qualified identifier", "subclass of BaseException"]) -> dict[str, Any]:
+	"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+	Contract:
+		general:
+			|Must| build standardized validation details for a Raises entry that must resolve to an exception class.
+	Parameters:
+		exception_name:
+			The exception entry name found in the Raises section.
+		profile:
+			The docstring profile used for the |cmd|`explain-subsection` hint.
+		expected_kind:
+			Either |token|`qualified identifier` or |token|`subclass of BaseException`.
+	Returns:
+		A details dictionary with |token|`found`, |token|`expected`, and |token|`hint`.
+	Raises:
+	"""
+	if expected_kind == "qualified identifier":
+		expected = ["<check for typos or qualify properly>"]
+	else:
+		expected = ["<refer to an Exception class derived from BaseException>"]
+	return {
+		"found": render_source_snippet("Raises", [exception_name]),
+		"expected": expected,
+		"hint": explain_try_self_for_subsection("Raises.<item>", profile),
+	}
+
+
+def render_exactly_one_identifier_details(label: str, current_entries: Iterable[str], profile: str) -> dict[str, Any]:
+	"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+	Contract:
+		general:
+			|Must| build standardized validation details for a subsection that must contain exactly one identifier.
+	Parameters:
+		label:
+			The qualified subsection label to render in the snippets and hint.
+		current_entries:
+			The current raw entries from the subsection.
+		profile:
+			The docstring profile used for the |cmd|`explain-subsection` hint.
+	Returns:
+		A details dictionary with |attr|`found`, |attr|`expected`, and |attr|`hint`.
+	Raises:
+	"""
+	current = list(current_entries)
+	return {
+		"found": render_identifier_lines(label, current),
+		"expected": render_expected_identifier(label, "identifier"),
+		"hint": explain_try_self_for_subsection(label, profile),
+	}
+
+
+def render_parameter_signature_details(
+	section_label: str,
+	current_entries: Iterable[str],
+	expected_entries: Iterable[str],
+	profile: str,
+) -> dict[str, Any]:
+	"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+	Contract:
+		general:
+			|Must| build standardized validation details for a parameter/signature mismatch.
+	Parameters:
+		section_label:
+			The label to render in the snippets.
+		current_entries:
+			The current raw parameter entries.
+		expected_entries:
+			The corrected parameter entries to show in the expected snippet.
+		profile:
+			The docstring profile used for the |cmd|`explain-section` hint.
+	Returns:
+		A details dictionary with |attr|`found`, |attr|`expected`, and |attr|`hint`.
+	Raises:
+	"""
+	current = list(current_entries)
+	expected = list(expected_entries)
+	return {
+		"found": render_source_snippet(section_label, current),
+		"expected": render_expected_snippet(section_label, expected),
+		"hint": explain_try_self_for_section(section_label, profile),
+	}
+
+
+def render_see_also_reference_details(
+	reference: str,
+	expected_text: str,
+	profile: str,
+) -> dict[str, Any]:
+	"""
+	Preamble:
+		profile:
+			module
+		normative_sections:
+			See_also
+	Contract:
+		general:
+			|Must| build standardized validation details for a See_also reference mismatch.
+	Parameters:
+		reference:
+			The raw reference text as found in the See_also section.
+		expected_text:
+			The minimal correction or instruction to show in the expected snippet.
+		profile:
+			The docstring profile used for the |cmd|`explain-section` hint.
+	Returns:
+		A details dictionary with |attr|`found`, |attr|`expected`, and |attr|`hint`.
+	Raises:
+	"""
+	return {
+		"found": render_source_snippet("See_also", [reference]),
+		"expected": [expected_text],
+		"hint": [f"waterlint explain-section --label See_also --profile {profile}"],
+	}
+
+
+def render_scope_relation_details(
+	section_label: str,
+	reference: str,
+	expected_text: str,
+	profile: str,
+) -> dict[str, Any]:
+	"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+	Contract:
+		general:
+			|Must| build standardized validation details for a scope monotonicity violation.
+	Parameters:
+		section_label:
+			The section label to render.
+		reference:
+			The offending reference as found in the source section.
+		expected_text:
+			The minimal correction or instruction to show in the expected snippet.
+		profile:
+			The docstring profile used for the |cmd|`explain-subsection` hint.
+	Returns:
+		A details dictionary with |attr|`found`, |attr|`expected`, and |attr|`hint`.
+	Raises:
+	"""
+	return {
+		"found": render_source_snippet(section_label, [reference]),
+		"expected": [expected_text],
+		"hint": [f"waterlint explain-subsection --label {section_label} --profile {profile}"],
+	}
+
+#===== end render functions for verbose diagnostics ==========#
 
 class Trait(StrEnum):
 	"""
@@ -2877,7 +2986,7 @@ def warn_parsing(tr : tracer, rule_id: RuleId, msg : str) -> None:
 		return
 	tr.add_warning(rule_id,"parsing",msg)
 
-def warn_validation(tr: tracer, obj: object, rule_id: RuleId, msg: str) -> None:
+def warn_validation(tr: tracer, obj: object, rule_id: RuleId, msg: str, details: dict[str, Any] | None = None) -> None:
 	"""
 	Preamble:
 		profile:
@@ -2898,13 +3007,15 @@ def warn_validation(tr: tracer, obj: object, rule_id: RuleId, msg: str) -> None:
 			The rule identifier to report.
 		msg:
 			The warning message.
+		details:
+			Optional structured diagnostics payload for the warning.
 	Returns:
 		No return value.
 	Raises:
 	"""
 	if tr.should_ignore_rule(rule_id):
 		return
-	tr.add_warning(rule_id, "validation", msg)
+	tr.add_warning(rule_id, "validation", msg, details)
 
 #===== Self-test ==============================================#
 

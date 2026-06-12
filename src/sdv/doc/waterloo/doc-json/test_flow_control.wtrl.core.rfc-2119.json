@@ -6,7 +6,7 @@
         "schema": "0.1.0"
     },
     "__WTRL_META__": {
-        "generated_at": "2026-06-11T22:24:36+02:00",
+        "generated_at": "2026-06-12T10:04:15+02:00",
         "generator": "waterlint",
         "scope": "core",
         "flavour": "rfc-2119"
@@ -286,7 +286,6 @@
                     "general": [
                         "Subsections in |label|`Contract` are line-based. This is the first logical line. Use backslash to merge physical lines to a logical line.",
                         "This is the second logical line. Itemization is not supported inside these logical lines.",
-                        "|",
                         "A sequence of logical lines in the contract is meant to represent a line-by-line executable contract."
                     ],
                     "constructor": [

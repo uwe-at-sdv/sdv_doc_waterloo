@@ -1,12 +1,12 @@
 {
     "$schema": "https://sci-d-vis.com/schema/wtrl-json-0.1.0.schema.json",
-    "$id": "urn:waterlint:wtrl-json:0.16.1:core:rfc-2119:775090ca0ca847c128ef48bf9588aba360e9064a59459bbfb365c9192f199996",
+    "$id": "urn:waterlint:wtrl-json:0.16.1:core:rfc-2119:35aa8c6899b68c112c3a5abddea1f4235728c2948747d20bd38a3801bfa71684",
     "__WTRL_VERSION__": {
         "waterloo": "0.8.1",
         "schema": "0.1.0"
     },
     "__WTRL_META__": {
-        "generated_at": "2026-06-11T22:24:32+02:00",
+        "generated_at": "2026-06-12T10:04:12+02:00",
         "generator": "waterlint",
         "scope": "core",
         "flavour": "rfc-2119"
@@ -125,16 +125,9 @@
         "sdv.doc.waterloo.docitem_sphinx.context": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_sphinx.context"
     },
     "__WTRL_TOC_CALLABLES__": {
+        "sdv.doc.waterloo.docitem_helper.get_source_docstring": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.get_source_docstring",
         "sdv.doc.waterloo.docitem_helper.explain_try_self_for_section": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.explain_try_self_for_section",
         "sdv.doc.waterloo.docitem_helper.explain_try_self_for_subsection": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.explain_try_self_for_subsection",
-        "sdv.doc.waterloo.docitem_helper.render_normative_section_details": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.render_normative_section_details",
-        "sdv.doc.waterloo.docitem_helper.render_missing_entry_details": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.render_missing_entry_details",
-        "sdv.doc.waterloo.docitem_helper.render_overview_requires_section_details": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.render_overview_requires_section_details",
-        "sdv.doc.waterloo.docitem_helper.render_name_object_consistency_details": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.render_name_object_consistency_details",
-        "sdv.doc.waterloo.docitem_helper.render_normativity_keyword_details": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.render_normativity_keyword_details",
-        "sdv.doc.waterloo.docitem_helper.render_exactly_one_identifier_details": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.render_exactly_one_identifier_details",
-        "sdv.doc.waterloo.docitem_helper.render_parameter_signature_details": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.render_parameter_signature_details",
-        "sdv.doc.waterloo.docitem_helper.get_source_docstring": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.get_source_docstring",
         "sdv.doc.waterloo.docitem_helper.render_source_snippet": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.render_source_snippet",
         "sdv.doc.waterloo.docitem_helper.render_expected_snippet": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.render_expected_snippet",
         "sdv.doc.waterloo.docitem_helper.render_allowed_identifier": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.render_allowed_identifier",
@@ -143,6 +136,14 @@
         "sdv.doc.waterloo.docitem_helper.render_identifier_lines": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.render_identifier_lines",
         "sdv.doc.waterloo.docitem_helper.render_deduplicated_identifiers": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.render_deduplicated_identifiers",
         "sdv.doc.waterloo.docitem_helper.render_unique_identifiers": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.render_unique_identifiers",
+        "sdv.doc.waterloo.docitem_helper.render_normative_section_details": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.render_normative_section_details",
+        "sdv.doc.waterloo.docitem_helper.render_missing_entry_details": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.render_missing_entry_details",
+        "sdv.doc.waterloo.docitem_helper.render_overview_requires_section_details": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.render_overview_requires_section_details",
+        "sdv.doc.waterloo.docitem_helper.render_name_object_consistency_details": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.render_name_object_consistency_details",
+        "sdv.doc.waterloo.docitem_helper.render_normativity_keyword_details": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.render_normativity_keyword_details",
+        "sdv.doc.waterloo.docitem_helper.render_exception_reference_details": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.render_exception_reference_details",
+        "sdv.doc.waterloo.docitem_helper.render_exactly_one_identifier_details": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.render_exactly_one_identifier_details",
+        "sdv.doc.waterloo.docitem_helper.render_parameter_signature_details": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.render_parameter_signature_details",
         "sdv.doc.waterloo.docitem_helper.is_annotatable": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.is_annotatable",
         "sdv.doc.waterloo.docitem_helper.is_attr_annotated": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.is_attr_annotated",
         "sdv.doc.waterloo.docitem_helper.is_attr_final": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.is_attr_final",
@@ -324,13 +325,14 @@
         "sdv.doc.waterloo.docitem_base.docitem_list_of_symbols_base.ValuePattern.IDENTIFIER": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_base.docitem_list_of_symbols_base.ValuePattern.IDENTIFIER",
         "sdv.doc.waterloo.docitem_base.docitem_list_of_symbols_base.ValuePattern.QUALIFIED_IDENTIFIER": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_base.docitem_list_of_symbols_base.ValuePattern.QUALIFIED_IDENTIFIER",
         "sdv.doc.waterloo.docitem_helper.RULE_ID_WHITELIST": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.RULE_ID_WHITELIST",
-        "sdv.doc.waterloo.docitem_helper.SECTION_PROPERTIES": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.SECTION_PROPERTIES",
         "sdv.doc.waterloo.docitem_helper.CANONICAL_ORDER_OF_SECTIONS": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.CANONICAL_ORDER_OF_SECTIONS",
+        "sdv.doc.waterloo.docitem_helper.CANONICAL_ORDER_OF_PROFILES": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.CANONICAL_ORDER_OF_PROFILES",
         "sdv.doc.waterloo.docitem_helper.TRAIT_TAG_MAP": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.TRAIT_TAG_MAP",
         "sdv.doc.waterloo.docitem_helper.SCOPE_TAG_MAP": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.SCOPE_TAG_MAP",
         "sdv.doc.waterloo.docitem_helper.FLAVOUR_TAG_MAP": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.FLAVOUR_TAG_MAP",
         "sdv.doc.waterloo.docitem_helper.FORMAT_TAG_MAP": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.FORMAT_TAG_MAP",
-        "sdv.doc.waterloo.docitem_helper.STATUS_TAG_MAP": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.STATUS_TAG_MAP"
+        "sdv.doc.waterloo.docitem_helper.STATUS_TAG_MAP": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.STATUS_TAG_MAP",
+        "sdv.doc.waterloo.docitem_helper.SECTION_PROPERTIES": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.SECTION_PROPERTIES"
     },
     "__WTRL_OBJECTS__": {
         "sdv.doc.waterloo.docitem_sphinx": {
@@ -1193,11 +1195,11 @@
                     "RULE_ID_WHITELIST": [
                         "Whitelist reasons for legacy rule identifiers used by the helper layer."
                     ],
-                    "SECTION_PROPERTIES": [
-                        "Common section metadata shared by the validator and explain commands."
-                    ],
                     "CANONICAL_ORDER_OF_SECTIONS": [
                         "Canonical subsection ordering for section snippets and expected snippets."
+                    ],
+                    "CANONICAL_ORDER_OF_PROFILES": [
+                        "Canonical profile ordering for CLI help and documentation."
                     ],
                     "TRAIT_TAG_MAP": [
                         "Trait tag mapping for trait labels."
@@ -1213,539 +1215,14 @@
                     ],
                     "STATUS_TAG_MAP": [
                         "Status tag mapping for Preamble.status."
+                    ],
+                    "SECTION_PROPERTIES": [
+                        "MUST be a mapping from section and subsection labels to their properties relevant for explanation and validation,",
+                        "for example body category, normativity, and profile applicability.",
+                        "Informative: This is a carefully distilled machine-readable representation of the relevant rules",
+                        "from the documentation standard, but the documentation remains the Single Source of Truth for the standard."
                     ]
                 }
-            }
-        },
-        "sdv.doc.waterloo.docitem_helper.explain_try_self_for_section": {
-            "signature": {
-                "text": "explain_try_self_for_section(label: 'str', profile: 'str') -> 'str'",
-                "parameters": [
-                    {
-                        "name": "label",
-                        "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "str",
-                        "default": null
-                    },
-                    {
-                        "name": "profile",
-                        "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "str",
-                        "default": null
-                    }
-                ],
-                "returns": "str"
-            },
-            "doc": {
-                "Preamble": {
-                    "profile": "function",
-                    "normative_sections": [
-                        "Contract",
-                        "Parameters",
-                        "Returns",
-                        "Raises"
-                    ]
-                },
-                "Contract": {
-                    "general": [
-                        "MUST build the canonical self-explanation command for a section label and profile."
-                    ]
-                },
-                "Parameters": {
-                    "label": [
-                        "The section label to explain."
-                    ],
-                    "profile": "The docstring profile to use as the explain context."
-                },
-                "Returns": [
-                    "The canonical |wtrl_cmd|`explain-section` command for the given label and profile."
-                ],
-                "Raises": {}
-            }
-        },
-        "sdv.doc.waterloo.docitem_helper.explain_try_self_for_subsection": {
-            "signature": {
-                "text": "explain_try_self_for_subsection(label: 'str', profile: 'str') -> 'str'",
-                "parameters": [
-                    {
-                        "name": "label",
-                        "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "str",
-                        "default": null
-                    },
-                    {
-                        "name": "profile",
-                        "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "str",
-                        "default": null
-                    }
-                ],
-                "returns": "str"
-            },
-            "doc": {
-                "Preamble": {
-                    "profile": "function",
-                    "normative_sections": [
-                        "Contract",
-                        "Parameters",
-                        "Returns",
-                        "Raises"
-                    ]
-                },
-                "Contract": {
-                    "general": [
-                        "MUST build the canonical self-explanation command for a fully qualified subsection label and profile."
-                    ]
-                },
-                "Parameters": {
-                    "label": [
-                        "The fully qualified subsection label to explain."
-                    ],
-                    "profile": "The docstring profile to use as the explain context."
-                },
-                "Returns": [
-                    "The canonical |wtrl_cmd|`explain-subsection` command for the given label and profile."
-                ],
-                "Raises": {}
-            }
-        },
-        "sdv.doc.waterloo.docitem_helper.render_normative_section_details": {
-            "signature": {
-                "text": "render_normative_section_details(section_label: 'str', normative_sections: 'Iterable[str]', profile: 'str', *, action: \"Literal['add', 'remove']\") -> 'dict[str, Any]'",
-                "parameters": [
-                    {
-                        "name": "section_label",
-                        "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "str",
-                        "default": null
-                    },
-                    {
-                        "name": "normative_sections",
-                        "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "Iterable[str]",
-                        "default": null
-                    },
-                    {
-                        "name": "profile",
-                        "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "str",
-                        "default": null
-                    },
-                    {
-                        "name": "action",
-                        "kind": "KEYWORD_ONLY",
-                        "annotation": "Literal['add', 'remove']",
-                        "default": null
-                    }
-                ],
-                "returns": "dict[str, Any]"
-            },
-            "doc": {
-                "Preamble": {
-                    "profile": "function",
-                    "normative_sections": [
-                        "Contract",
-                        "Parameters",
-                        "Returns",
-                        "Raises"
-                    ]
-                },
-                "Contract": {
-                    "general": [
-                        "MUST build standardized validation details for normative section membership checks."
-                    ]
-                },
-                "Parameters": {
-                    "section_label": [
-                        "The section label that should be added to or removed from the normative section set."
-                    ],
-                    "normative_sections": [
-                        "The current normative section labels."
-                    ],
-                    "profile": "The docstring profile used for the |wtrl_cmd|`explain-section` hint.",
-                    "action": [
-                        "Either |token|`add` when the section should be present, or |token|`remove` when it should be absent."
-                    ]
-                },
-                "Returns": [
-                    "A details dictionary with |token|`found`, |token|`expected`, and |token|`hint`."
-                ],
-                "Raises": {}
-            }
-        },
-        "sdv.doc.waterloo.docitem_helper.render_missing_entry_details": {
-            "signature": {
-                "text": "render_missing_entry_details(container_label: 'str', current_entries: 'Iterable[str]', missing_entry: 'str', profile: 'str', *, top_level: 'bool' = False) -> 'dict[str, Any]'",
-                "parameters": [
-                    {
-                        "name": "container_label",
-                        "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "str",
-                        "default": null
-                    },
-                    {
-                        "name": "current_entries",
-                        "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "Iterable[str]",
-                        "default": null
-                    },
-                    {
-                        "name": "missing_entry",
-                        "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "str",
-                        "default": null
-                    },
-                    {
-                        "name": "profile",
-                        "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "str",
-                        "default": null
-                    },
-                    {
-                        "name": "top_level",
-                        "kind": "KEYWORD_ONLY",
-                        "annotation": "bool",
-                        "default": "False"
-                    }
-                ],
-                "returns": "dict[str, Any]"
-            },
-            "doc": {
-                "Preamble": {
-                    "profile": "function",
-                    "normative_sections": [
-                        "Contract",
-                        "Parameters",
-                        "Returns",
-                        "Raises"
-                    ]
-                },
-                "Contract": {
-                    "general": [
-                        "MUST build standardized validation details for a missing entry in a section-like container."
-                    ]
-                },
-                "Parameters": {
-                    "container_label": [
-                        "The section label that contains the missing entry."
-                    ],
-                    "current_entries": [
-                        "The currently present entry labels in the container."
-                    ],
-                    "missing_entry": [
-                        "The entry label that should be added."
-                    ],
-                    "profile": "The docstring profile used for the |cmd|`explain-*` hint.",
-                    "top_level": [
-                        "Use a top-level list rendering when the container itself is the document root rather than a nested section."
-                    ]
-                },
-                "Returns": [
-                    "A details dictionary with |attr|`found`, |attr|`expected`, and |attr|`hint`."
-                ],
-                "Raises": {}
-            }
-        },
-        "sdv.doc.waterloo.docitem_helper.render_overview_requires_section_details": {
-            "signature": {
-                "text": "render_overview_requires_section_details(overview_label: 'str', required_section: 'str', profile: 'str') -> 'dict[str, Any]'",
-                "parameters": [
-                    {
-                        "name": "overview_label",
-                        "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "str",
-                        "default": null
-                    },
-                    {
-                        "name": "required_section",
-                        "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "str",
-                        "default": null
-                    },
-                    {
-                        "name": "profile",
-                        "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "str",
-                        "default": null
-                    }
-                ],
-                "returns": "dict[str, Any]"
-            },
-            "doc": {
-                "Preamble": {
-                    "profile": "function",
-                    "normative_sections": [
-                        "Contract",
-                        "Parameters",
-                        "Returns",
-                        "Raises"
-                    ]
-                },
-                "Contract": {
-                    "general": [
-                        "MUST render compact validation details for overview sections that require a normative companion section."
-                    ]
-                },
-                "Parameters": {
-                    "overview_label": [
-                        "The overview section label, such as |token|`Class_overview`."
-                    ],
-                    "required_section": [
-                        "The normative section that must be added, such as |token|`Public_classes`."
-                    ],
-                    "profile": "The docstring profile used for the |wtrl_cmd|`explain-section` hint."
-                },
-                "Returns": [
-                    "A details dictionary with |token|`found`, |token|`expected`, and |token|`hint`."
-                ],
-                "Raises": {}
-            }
-        },
-        "sdv.doc.waterloo.docitem_helper.render_name_object_consistency_details": {
-            "signature": {
-                "text": "render_name_object_consistency_details(label: 'str', current_entries: 'Iterable[str]', profile: 'str', *, overview_item: 'str | None' = None) -> 'dict[str, Any]'",
-                "parameters": [
-                    {
-                        "name": "label",
-                        "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "str",
-                        "default": null
-                    },
-                    {
-                        "name": "current_entries",
-                        "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "Iterable[str]",
-                        "default": null
-                    },
-                    {
-                        "name": "profile",
-                        "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "str",
-                        "default": null
-                    },
-                    {
-                        "name": "overview_item",
-                        "kind": "KEYWORD_ONLY",
-                        "annotation": "str | None",
-                        "default": "None"
-                    }
-                ],
-                "returns": "dict[str, Any]"
-            },
-            "doc": {
-                "Preamble": {
-                    "profile": "function",
-                    "normative_sections": [
-                        "Contract",
-                        "Parameters",
-                        "Returns",
-                        "Raises"
-                    ]
-                },
-                "Contract": {
-                    "general": [
-                        "MUST render compact validation details for name/object consistency checks."
-                    ]
-                },
-                "Parameters": {
-                    "label": [
-                        "The section label to render."
-                    ],
-                    "current_entries": [
-                        "The current raw entries from the section."
-                    ],
-                    "profile": "The docstring profile used for the hint.",
-                    "overview_item": [
-                        "If provided, render an overview entry instead of a flat identifier list."
-                    ]
-                },
-                "Returns": [
-                    "A details dictionary with |token|`found`, |token|`expected`, and |token|`hint`."
-                ],
-                "Raises": {}
-            }
-        },
-        "sdv.doc.waterloo.docitem_helper.render_normativity_keyword_details": {
-            "signature": {
-                "text": "render_normativity_keyword_details(section_label: 'str', entry_name: 'str', current_lines: 'Iterable[str]', profile: 'str') -> 'dict[str, Any]'",
-                "parameters": [
-                    {
-                        "name": "section_label",
-                        "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "str",
-                        "default": null
-                    },
-                    {
-                        "name": "entry_name",
-                        "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "str",
-                        "default": null
-                    },
-                    {
-                        "name": "current_lines",
-                        "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "Iterable[str]",
-                        "default": null
-                    },
-                    {
-                        "name": "profile",
-                        "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "str",
-                        "default": null
-                    }
-                ],
-                "returns": "dict[str, Any]"
-            },
-            "doc": {
-                "Preamble": {
-                    "profile": "function",
-                    "normative_sections": [
-                        "Contract",
-                        "Parameters",
-                        "Returns",
-                        "Raises"
-                    ]
-                },
-                "Contract": {
-                    "general": [
-                        "MUST build standardized validation details for an entry that must not contain normativity keywords."
-                    ]
-                },
-                "Parameters": {
-                    "section_label": [
-                        "The overview section label, such as |token|`Class_overview`."
-                    ],
-                    "entry_name": [
-                        "The entry label that violates the rule."
-                    ],
-                    "current_lines": [
-                        "The raw lines found in the entry."
-                    ],
-                    "profile": "The docstring profile used for the |wtrl_cmd|`explain-section` hint."
-                },
-                "Returns": [
-                    "A details dictionary with |token|`found`, |token|`expected`, and |token|`hint`."
-                ],
-                "Raises": {}
-            }
-        },
-        "sdv.doc.waterloo.docitem_helper.render_exactly_one_identifier_details": {
-            "signature": {
-                "text": "render_exactly_one_identifier_details(label: 'str', current_entries: 'Iterable[str]', profile: 'str') -> 'dict[str, Any]'",
-                "parameters": [
-                    {
-                        "name": "label",
-                        "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "str",
-                        "default": null
-                    },
-                    {
-                        "name": "current_entries",
-                        "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "Iterable[str]",
-                        "default": null
-                    },
-                    {
-                        "name": "profile",
-                        "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "str",
-                        "default": null
-                    }
-                ],
-                "returns": "dict[str, Any]"
-            },
-            "doc": {
-                "Preamble": {
-                    "profile": "function",
-                    "normative_sections": [
-                        "Contract",
-                        "Parameters",
-                        "Returns",
-                        "Raises"
-                    ]
-                },
-                "Contract": {
-                    "general": [
-                        "MUST build standardized validation details for a subsection that must contain exactly one identifier."
-                    ]
-                },
-                "Parameters": {
-                    "label": [
-                        "The qualified subsection label to render in the snippets and hint."
-                    ],
-                    "current_entries": [
-                        "The current raw entries from the subsection."
-                    ],
-                    "profile": "The docstring profile used for the |wtrl_cmd|`explain-subsection` hint."
-                },
-                "Returns": [
-                    "A details dictionary with |attr|`found`, |attr|`expected`, and |attr|`hint`."
-                ],
-                "Raises": {}
-            }
-        },
-        "sdv.doc.waterloo.docitem_helper.render_parameter_signature_details": {
-            "signature": {
-                "text": "render_parameter_signature_details(section_label: 'str', current_entries: 'Iterable[str]', expected_entries: 'Iterable[str]', profile: 'str') -> 'dict[str, Any]'",
-                "parameters": [
-                    {
-                        "name": "section_label",
-                        "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "str",
-                        "default": null
-                    },
-                    {
-                        "name": "current_entries",
-                        "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "Iterable[str]",
-                        "default": null
-                    },
-                    {
-                        "name": "expected_entries",
-                        "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "Iterable[str]",
-                        "default": null
-                    },
-                    {
-                        "name": "profile",
-                        "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "str",
-                        "default": null
-                    }
-                ],
-                "returns": "dict[str, Any]"
-            },
-            "doc": {
-                "Preamble": {
-                    "profile": "function",
-                    "normative_sections": [
-                        "Contract",
-                        "Parameters",
-                        "Returns",
-                        "Raises"
-                    ]
-                },
-                "Contract": {
-                    "general": [
-                        "MUST build standardized validation details for a parameter/signature mismatch."
-                    ]
-                },
-                "Parameters": {
-                    "section_label": [
-                        "The label to render in the snippets."
-                    ],
-                    "current_entries": [
-                        "The current raw parameter entries."
-                    ],
-                    "expected_entries": [
-                        "The corrected parameter entries to show in the expected snippet."
-                    ],
-                    "profile": "The docstring profile used for the |wtrl_cmd|`explain-section` hint."
-                },
-                "Returns": [
-                    "A details dictionary with |attr|`found`, |attr|`expected`, and |attr|`hint`."
-                ],
-                "Raises": {}
             }
         },
         "sdv.doc.waterloo.docitem_helper.get_source_docstring": {
@@ -1803,6 +1280,98 @@
                         "Further performance improvements can be added later by caching validation results for repeated objects."
                     ]
                 }
+            }
+        },
+        "sdv.doc.waterloo.docitem_helper.explain_try_self_for_section": {
+            "signature": {
+                "text": "explain_try_self_for_section(label: 'str', profile: 'str') -> 'str'",
+                "parameters": [
+                    {
+                        "name": "label",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    },
+                    {
+                        "name": "profile",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    }
+                ],
+                "returns": "str"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST build the canonical self-explanation command for a section label and profile."
+                    ]
+                },
+                "Parameters": {
+                    "label": [
+                        "The section label to explain."
+                    ],
+                    "profile": "The docstring profile to use as the explain context."
+                },
+                "Returns": [
+                    "The canonical |cmd|`explain-section` command for the given label and profile."
+                ],
+                "Raises": {}
+            }
+        },
+        "sdv.doc.waterloo.docitem_helper.explain_try_self_for_subsection": {
+            "signature": {
+                "text": "explain_try_self_for_subsection(label: 'str', profile: 'str') -> 'str'",
+                "parameters": [
+                    {
+                        "name": "label",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    },
+                    {
+                        "name": "profile",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    }
+                ],
+                "returns": "str"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST build the canonical self-explanation command for a fully qualified subsection label and profile."
+                    ]
+                },
+                "Parameters": {
+                    "label": [
+                        "The fully qualified subsection label to explain."
+                    ],
+                    "profile": "The docstring profile to use as the explain context."
+                },
+                "Returns": [
+                    "The canonical |cmd|`explain-subsection` command for the given label and profile."
+                ],
+                "Raises": {}
             }
         },
         "sdv.doc.waterloo.docitem_helper.render_source_snippet": {
@@ -2186,6 +1755,500 @@
                 },
                 "Returns": [
                     "A compact list of lines that states the canonical identifier values and mentions uniqueness."
+                ],
+                "Raises": {}
+            }
+        },
+        "sdv.doc.waterloo.docitem_helper.render_normative_section_details": {
+            "signature": {
+                "text": "render_normative_section_details(section_label: 'str', normative_sections: 'Iterable[str]', profile: 'str', *, action: \"Literal['add', 'remove']\") -> 'dict[str, Any]'",
+                "parameters": [
+                    {
+                        "name": "section_label",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    },
+                    {
+                        "name": "normative_sections",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "Iterable[str]",
+                        "default": null
+                    },
+                    {
+                        "name": "profile",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    },
+                    {
+                        "name": "action",
+                        "kind": "KEYWORD_ONLY",
+                        "annotation": "Literal['add', 'remove']",
+                        "default": null
+                    }
+                ],
+                "returns": "dict[str, Any]"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST build standardized validation details for normative section membership checks."
+                    ]
+                },
+                "Parameters": {
+                    "section_label": [
+                        "The section label that should be added to or removed from the normative section set."
+                    ],
+                    "normative_sections": [
+                        "The current normative section labels."
+                    ],
+                    "profile": "The docstring profile used for the |cmd|`explain-section` hint.",
+                    "action": [
+                        "Either |token|`add` when the section should be present, or |token|`remove` when it should be absent."
+                    ]
+                },
+                "Returns": [
+                    "A details dictionary with |token|`found`, |token|`expected`, and |token|`hint`."
+                ],
+                "Raises": {}
+            }
+        },
+        "sdv.doc.waterloo.docitem_helper.render_missing_entry_details": {
+            "signature": {
+                "text": "render_missing_entry_details(container_label: 'str', current_entries: 'Iterable[str]', missing_entry: 'str', profile: 'str', *, top_level: 'bool' = False) -> 'dict[str, Any]'",
+                "parameters": [
+                    {
+                        "name": "container_label",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    },
+                    {
+                        "name": "current_entries",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "Iterable[str]",
+                        "default": null
+                    },
+                    {
+                        "name": "missing_entry",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    },
+                    {
+                        "name": "profile",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    },
+                    {
+                        "name": "top_level",
+                        "kind": "KEYWORD_ONLY",
+                        "annotation": "bool",
+                        "default": "False"
+                    }
+                ],
+                "returns": "dict[str, Any]"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST build standardized validation details for a missing entry in a section-like container."
+                    ]
+                },
+                "Parameters": {
+                    "container_label": [
+                        "The section label that contains the missing entry."
+                    ],
+                    "current_entries": [
+                        "The currently present entry labels in the container."
+                    ],
+                    "missing_entry": [
+                        "The entry label that should be added."
+                    ],
+                    "profile": "The docstring profile used for the |cmd|`explain-*` hint.",
+                    "top_level": [
+                        "Use a top-level list rendering when the container itself is the document root rather than a nested section."
+                    ]
+                },
+                "Returns": [
+                    "A details dictionary with |attr|`found`, |attr|`expected`, and |attr|`hint`."
+                ],
+                "Raises": {}
+            }
+        },
+        "sdv.doc.waterloo.docitem_helper.render_overview_requires_section_details": {
+            "signature": {
+                "text": "render_overview_requires_section_details(overview_label: 'str', required_section: 'str', profile: 'str') -> 'dict[str, Any]'",
+                "parameters": [
+                    {
+                        "name": "overview_label",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    },
+                    {
+                        "name": "required_section",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    },
+                    {
+                        "name": "profile",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    }
+                ],
+                "returns": "dict[str, Any]"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST render compact validation details for overview sections that require a normative companion section."
+                    ]
+                },
+                "Parameters": {
+                    "overview_label": [
+                        "The overview section label, such as |token|`Class_overview`."
+                    ],
+                    "required_section": [
+                        "The normative section that must be added, such as |token|`Public_classes`."
+                    ],
+                    "profile": "The docstring profile used for the |cmd|`explain-section` hint."
+                },
+                "Returns": [
+                    "A details dictionary with |token|`found`, |token|`expected`, and |token|`hint`."
+                ],
+                "Raises": {}
+            }
+        },
+        "sdv.doc.waterloo.docitem_helper.render_name_object_consistency_details": {
+            "signature": {
+                "text": "render_name_object_consistency_details(label: 'str', current_entries: 'Iterable[str]', profile: 'str', *, overview_item: 'str | None' = None) -> 'dict[str, Any]'",
+                "parameters": [
+                    {
+                        "name": "label",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    },
+                    {
+                        "name": "current_entries",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "Iterable[str]",
+                        "default": null
+                    },
+                    {
+                        "name": "profile",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    },
+                    {
+                        "name": "overview_item",
+                        "kind": "KEYWORD_ONLY",
+                        "annotation": "str | None",
+                        "default": "None"
+                    }
+                ],
+                "returns": "dict[str, Any]"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST render compact validation details for name/object consistency checks."
+                    ]
+                },
+                "Parameters": {
+                    "label": [
+                        "The section label to render."
+                    ],
+                    "current_entries": [
+                        "The current raw entries from the section."
+                    ],
+                    "profile": "The docstring profile used for the hint.",
+                    "overview_item": [
+                        "If provided, render an overview entry instead of a flat identifier list."
+                    ]
+                },
+                "Returns": [
+                    "A details dictionary with |token|`found`, |token|`expected`, and |token|`hint`."
+                ],
+                "Raises": {}
+            }
+        },
+        "sdv.doc.waterloo.docitem_helper.render_normativity_keyword_details": {
+            "signature": {
+                "text": "render_normativity_keyword_details(section_label: 'str', entry_name: 'str', current_lines: 'Iterable[str]', profile: 'str') -> 'dict[str, Any]'",
+                "parameters": [
+                    {
+                        "name": "section_label",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    },
+                    {
+                        "name": "entry_name",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    },
+                    {
+                        "name": "current_lines",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "Iterable[str]",
+                        "default": null
+                    },
+                    {
+                        "name": "profile",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    }
+                ],
+                "returns": "dict[str, Any]"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST build standardized validation details for an entry that must not contain normativity keywords."
+                    ]
+                },
+                "Parameters": {
+                    "section_label": [
+                        "The overview section label, such as |token|`Class_overview`."
+                    ],
+                    "entry_name": [
+                        "The entry label that violates the rule."
+                    ],
+                    "current_lines": [
+                        "The raw lines found in the entry."
+                    ],
+                    "profile": "The docstring profile used for the |cmd|`explain-section` hint."
+                },
+                "Returns": [
+                    "A details dictionary with |token|`found`, |token|`expected`, and |token|`hint`."
+                ],
+                "Raises": {}
+            }
+        },
+        "sdv.doc.waterloo.docitem_helper.render_exception_reference_details": {
+            "signature": {
+                "text": "render_exception_reference_details(exception_name: 'str', profile: 'str', *, expected_kind: \"Literal['qualified identifier', 'subclass of BaseException']\") -> 'dict[str, Any]'",
+                "parameters": [
+                    {
+                        "name": "exception_name",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    },
+                    {
+                        "name": "profile",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    },
+                    {
+                        "name": "expected_kind",
+                        "kind": "KEYWORD_ONLY",
+                        "annotation": "Literal['qualified identifier', 'subclass of BaseException']",
+                        "default": null
+                    }
+                ],
+                "returns": "dict[str, Any]"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST build standardized validation details for a Raises entry that must resolve to an exception class."
+                    ]
+                },
+                "Parameters": {
+                    "exception_name": [
+                        "The exception entry name found in the Raises section."
+                    ],
+                    "profile": "The docstring profile used for the |cmd|`explain-subsection` hint.",
+                    "expected_kind": [
+                        "Either |token|`qualified identifier` or |token|`subclass of BaseException`."
+                    ]
+                },
+                "Returns": [
+                    "A details dictionary with |token|`found`, |token|`expected`, and |token|`hint`."
+                ],
+                "Raises": {}
+            }
+        },
+        "sdv.doc.waterloo.docitem_helper.render_exactly_one_identifier_details": {
+            "signature": {
+                "text": "render_exactly_one_identifier_details(label: 'str', current_entries: 'Iterable[str]', profile: 'str') -> 'dict[str, Any]'",
+                "parameters": [
+                    {
+                        "name": "label",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    },
+                    {
+                        "name": "current_entries",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "Iterable[str]",
+                        "default": null
+                    },
+                    {
+                        "name": "profile",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    }
+                ],
+                "returns": "dict[str, Any]"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST build standardized validation details for a subsection that must contain exactly one identifier."
+                    ]
+                },
+                "Parameters": {
+                    "label": [
+                        "The qualified subsection label to render in the snippets and hint."
+                    ],
+                    "current_entries": [
+                        "The current raw entries from the subsection."
+                    ],
+                    "profile": "The docstring profile used for the |cmd|`explain-subsection` hint."
+                },
+                "Returns": [
+                    "A details dictionary with |attr|`found`, |attr|`expected`, and |attr|`hint`."
+                ],
+                "Raises": {}
+            }
+        },
+        "sdv.doc.waterloo.docitem_helper.render_parameter_signature_details": {
+            "signature": {
+                "text": "render_parameter_signature_details(section_label: 'str', current_entries: 'Iterable[str]', expected_entries: 'Iterable[str]', profile: 'str') -> 'dict[str, Any]'",
+                "parameters": [
+                    {
+                        "name": "section_label",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    },
+                    {
+                        "name": "current_entries",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "Iterable[str]",
+                        "default": null
+                    },
+                    {
+                        "name": "expected_entries",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "Iterable[str]",
+                        "default": null
+                    },
+                    {
+                        "name": "profile",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    }
+                ],
+                "returns": "dict[str, Any]"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST build standardized validation details for a parameter/signature mismatch."
+                    ]
+                },
+                "Parameters": {
+                    "section_label": [
+                        "The label to render in the snippets."
+                    ],
+                    "current_entries": [
+                        "The current raw parameter entries."
+                    ],
+                    "expected_entries": [
+                        "The corrected parameter entries to show in the expected snippet."
+                    ],
+                    "profile": "The docstring profile used for the |cmd|`explain-section` hint."
+                },
+                "Returns": [
+                    "A details dictionary with |attr|`found`, |attr|`expected`, and |attr|`hint`."
                 ],
                 "Raises": {}
             }
@@ -12488,16 +12551,16 @@
                 "Whitelist reasons for legacy rule identifiers used by the helper layer."
             ]
         },
-        "sdv.doc.waterloo.docitem_helper.SECTION_PROPERTIES": {
-            "doc": {},
-            "doc_lines": [
-                "Common section metadata shared by the validator and explain commands."
-            ]
-        },
         "sdv.doc.waterloo.docitem_helper.CANONICAL_ORDER_OF_SECTIONS": {
             "doc": {},
             "doc_lines": [
                 "Canonical subsection ordering for section snippets and expected snippets."
+            ]
+        },
+        "sdv.doc.waterloo.docitem_helper.CANONICAL_ORDER_OF_PROFILES": {
+            "doc": {},
+            "doc_lines": [
+                "Canonical profile ordering for CLI help and documentation."
             ]
         },
         "sdv.doc.waterloo.docitem_helper.TRAIT_TAG_MAP": {
@@ -12528,6 +12591,15 @@
             "doc": {},
             "doc_lines": [
                 "Status tag mapping for Preamble.status."
+            ]
+        },
+        "sdv.doc.waterloo.docitem_helper.SECTION_PROPERTIES": {
+            "doc": {},
+            "doc_lines": [
+                "|Must| be a mapping from section and subsection labels to their properties relevant for explanation and validation,",
+                "for example body category, normativity, and profile applicability.",
+                "Informative: This is a carefully distilled machine-readable representation of the relevant rules",
+                "from the documentation standard, but the documentation remains the Single Source of Truth for the standard."
             ]
         }
     }

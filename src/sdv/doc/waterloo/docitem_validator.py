@@ -2,7 +2,7 @@ from __future__ import annotations
 from types import FunctionType, ModuleType
 from typing import Any, Callable, Dict, Final, get_type_hints, get_origin, get_args, Generator, Iterable, Iterator, List, NewType, NoReturn, Sequence, Set, Tuple, Type, TypeAlias, TypeGuard, Union, cast
 
-from sdv.doc.waterloo.docitem_helper import explain_try_self_for_section, explain_try_self_for_subsection, render_allowed_identifiers, render_expected_identifier, render_expected_snippet, render_identifier_lines, render_source_snippet, render_deduplicated_identifiers, render_normative_section_details, render_exactly_one_identifier_details, render_normativity_keyword_details, render_overview_requires_section_details, render_name_object_consistency_details, render_exception_reference_details
+from sdv.doc.waterloo.docitem_helper import explain_try_self_for_section, explain_try_self_for_subsection, render_allowed_identifiers, render_expected_identifier, render_expected_snippet, render_identifier_lines, render_source_snippet, render_deduplicated_identifiers, render_normative_section_details, render_exactly_one_identifier_details, render_normativity_keyword_details, render_overview_requires_section_details, render_name_object_consistency_details, render_exception_reference_details, render_see_also_reference_details, render_scope_relation_details
 from sdv.doc.waterloo.docitem_docstring import *
 
 #===== Typechecking ===========================================#
@@ -462,7 +462,8 @@ Notes:
 # Cannot extract scope from docstring? Do not test scope rule.
 				continue
 			if not top.is_visible(scopes):
-				raise_validation_error(tr, obj, "SCP-005", f"Scope of class '{ref_name}' ({scopes}) is not >= module scope {top_scopes}.")
+				details = render_scope_relation_details("Public_classes", ref_name, "<check scope monotonicity>", "module")
+				raise_validation_error(tr, obj, "SCP-005", f"Scope of class '{ref_name}' ({scopes}) is not >= module scope {top_scopes}.", details)
 #----- Public functions ---------------------------------------#
 	if "Public_functions" in top.items():
 		node_functions = top.item("Public_functions")
@@ -484,7 +485,8 @@ Notes:
 # Cannot extract scope from docstring? Do not test scope rule.
 				continue
 			if not top.is_visible(scopes):
-				raise_validation_error(tr, obj, "SCP-005", f"Scope of function '{ref_name}' ({scopes}) is not >= module scope {top_scopes}.")
+				details = render_scope_relation_details("Public_functions", ref_name, "<check scope monotonicity>", "module")
+				raise_validation_error(tr, obj, "SCP-005", f"Scope of function '{ref_name}' ({scopes}) is not >= module scope {top_scopes}.", details)
 
 def validate_docstring_class(tr : tracer, obj: object, top : docitem_docstring_class,node_contract : docitem_map_base,node_normative_sections : docitem_list_base, _seen: Dict[object,docitem_docstring_base] | None = None) -> None:
 	"""
@@ -823,7 +825,8 @@ Notes:
 # Cannot extract scope from docstring? Do not test scope rule.
 				continue
 			if not top.is_visible(scopes):
-				raise_validation_error(tr, obj, "SCP-005", f"Scope of class '{ref_name}' ({scopes}) is not >= class scope {top_scopes}.")
+				details = render_scope_relation_details("Public_classes", ref_name, "<check scope monotonicity>", "class")
+				raise_validation_error(tr, obj, "SCP-005", f"Scope of class '{ref_name}' ({scopes}) is not >= class scope {top_scopes}.", details)
 #----- Public methods ---------------------------------------#
 	if "Public_methods" in top.items():
 		node_methods = top.item("Public_methods")
@@ -849,7 +852,8 @@ Notes:
 # Cannot extract scope from docstring? Do not test scope rule.
 				continue
 			if not top.is_visible(scopes):
-				raise_validation_error(tr, obj, "SCP-005", f"Scope of method '{ref_name}' ({scopes}) is not >= class scope {top_scopes}.")
+				details = render_scope_relation_details("Public_methods", ref_name, "<check scope monotonicity>", "class")
+				raise_validation_error(tr, obj, "SCP-005", f"Scope of method '{ref_name}' ({scopes}) is not >= class scope {top_scopes}.", details)
 #----- Derived_from -------------------------------------------#
 	drvd_scopes = top_scopes
 	if "Derived_from" in top.items():
@@ -872,7 +876,8 @@ Notes:
 # Cannot extract scope from docstring? Do not test scope rule.
 				continue
 			if not top.can_see(base_scopes):
-				raise_validation_error(tr, obj, "SCP-009", f"Scope of base class ({base_scopes}) is > scope of derived class {drvd_scopes}.")
+				details = render_scope_relation_details("Derived_from", base_name, "<refer to a base class at least as public as the derived class>", "class")
+				raise_validation_error(tr, obj, "SCP-009", f"Scope of base class ({base_scopes}) is less public than scope of derived class {drvd_scopes}.", details)
 #----- Factory ------------------------------------------------#
 	with traced_section(tr, "Factory"):
 		if "Factory" in top.items():
@@ -1249,7 +1254,8 @@ Notes:
 # Cannot extract scope from docstring? Do not test scope rule.
 				continue
 			if not top.can_see(base_scopes):
-				raise_validation_error(tr, obj, "SCP-008", f"Scope of base method '{base_name}' ({base_scopes}) is not >= derived method scope {top_scopes}.")
+				details = render_scope_relation_details("Contract.base", base_name, "<refer to a base method at least as public as the derived method>", "inherited_method")
+				raise_validation_error(tr, obj, "SCP-008", f"Scope of base method '{base_name}' ({base_scopes}) is less public than derived method scope {top_scopes}.", details)
 
 
 #===== helpers for See_also resolution ========================#
@@ -1441,8 +1447,13 @@ See_also:
 			if "scope" in node_preamble.items():
 				node_scope = node_preamble.item("scope")
 				for s in node_scope.items():
-							if s not in SCOPE_TAG_MAP:
-								raise_validation_error_expected_but_got(tr,obj,"SCP-003",f"{{{','.join([s for s in SCOPE_TAG_MAP])}}}",f"'{s}'.")
+					if s not in SCOPE_TAG_MAP:
+						details = {
+							"found": render_identifier_lines("Preamble.scope", [s]),
+							"expected": render_allowed_identifiers("Preamble.scope", SCOPE_TAG_MAP.keys()),
+							"hint": explain_try_self_for_subsection("Preamble.scope", profile),
+						}
+						raise_validation_error(tr, obj, "SCP-003", f"Scope tag '{s}' is not allowed.", details)
 
 # Rule: Any section containing one of the keywords of normativity
 # must be listed under normative_sections.
@@ -1556,34 +1567,34 @@ See_also:
 				for item_see_also in node_see_also.items():
 # Entries must be Qualified Identifiers
 					if not RE_QUALIFIED_IDENTIFIER_COMPILED.fullmatch(item_see_also):
-						details = {
-							"found": render_identifier_lines("See_also.reference", [item_see_also]),
-							"expected": render_expected_identifier("See_also.reference", "qualified identifier"),
-							"hint": explain_try_self_for_section("See_also", profile),
-						}
+						details = render_see_also_reference_details(item_see_also, "<identifier or qualified identifier>", profile)
 						raise_validation_error(tr,obj,"SEE-002", f"See_also reference '{item_see_also}' is not a (Qualified) Identifier.", details)
 					try:
 						target_obj, target_name = resolve_object(item_see_also, obj)
 					except Exception as e:
 						if "See_also" in node_normative_sections.items():
-							raise_validation_error(tr,obj,"SEE-004", f"See_also reference '{item_see_also}' cannot be resolved: {e} ('See_also' is normative).")
+							details = render_see_also_reference_details(item_see_also, "<refer to an existing public object>", profile)
+							raise_validation_error(tr,obj,"SEE-004", f"See_also reference '{item_see_also}' cannot be resolved: {e} ('See_also' is normative).", details)
 						else:
 							warn_validation(tr,obj,"SEE-003", f"See_also reference '{item_see_also}' cannot be resolved: {e} (informative section).")
 							continue
 					if target_obj is obj:
-						raise_validation_error(tr,obj,"SEE-005", f"See_also reference '{item_see_also}' must not refer to the object itself.")
+						details = render_see_also_reference_details(item_see_also, "<do not refer to the documented object itself>", profile)
+						raise_validation_error(tr,obj,"SEE-005", f"See_also reference '{item_see_also}' must not refer to the object itself.", details)
 					if target_obj in _seen:
 						continue
 					doc = get_obj_docstring(target_obj)
 					if not doc:
 						if is_obj_documentable(target_obj):
 # No docstring at all: always warn (SEE-006).
-							warn_validation(tr,obj,"SEE-006", f"See_also reference '{item_see_also}' has no docstring.")
+							details = render_see_also_reference_details(item_see_also, "<refer to a documented object>", profile)
+							warn_validation(tr,obj,"SEE-006", f"See_also reference '{item_see_also}' has no docstring.", details)
 # If See_also is normative and the target is a user-defined module/class/function
 # (not a builtin), escalate to SEE-008.
 						is_builtin = inspect.isbuiltin(target_obj) or getattr(target_obj, "__module__", "") == "builtins"
 						if "See_also" in node_normative_sections.items() and (is_obj_module(target_obj) or is_obj_class(target_obj) or is_obj_function(target_obj)) and not is_builtin:
-							raise_validation_error(tr,obj,"SEE-008", f"See_also reference '{item_see_also}' has no valid docstring ('See_also' is normative).")
+							details = render_see_also_reference_details(item_see_also, "<refer to a documented object with a valid Waterloo docstring>", profile)
+							raise_validation_error(tr,obj,"SEE-008", f"See_also reference '{item_see_also}' has no valid docstring ('See_also' is normative).", details)
 					else:
 # Note that we do not validate built-ins! SEE-010
 						if (is_obj_module(target_obj) or is_obj_class(target_obj) or is_obj_function(target_obj)):
@@ -1599,17 +1610,21 @@ See_also:
 							except (ParseError, SectionNotFoundError):
 								if  "See_also" in node_normative_sections.items():
 									tr.add_info("Rule SEE-009 applies","validation")
-									raise_validation_error(tr,obj,"SEE-008", f"See_also reference '{item_see_also}' has no valid docstring ('See_also' is normative).")
+									details = render_see_also_reference_details(item_see_also, "<refer to a documented object with a valid Waterloo docstring>", profile)
+									raise_validation_error(tr,obj,"SEE-008", f"See_also reference '{item_see_also}' has no valid docstring ('See_also' is normative).", details)
 								else:
-									warn_validation(tr,obj,"SEE-007", f"See_also reference '{item_see_also}' has no valid docstring (informative section).")
+									details = render_see_also_reference_details(item_see_also, "<refer to a documented object with a valid Waterloo docstring>", profile)
+									warn_validation(tr,obj,"SEE-007", f"See_also reference '{item_see_also}' has no valid docstring (informative section).", details)
 								continue
 # Scope monotonicity for See_also references (SCP-006 / SCP-007)
 							if "See_also" in node_normative_sections.items():
 								if not top.can_see(target_scopes):
-									raise_validation_error(tr,obj,"SCP-006", f"See_also reference '{item_see_also}' has scope {target_scopes} which is less public than {top.scopes()}.")
+									details = render_scope_relation_details("See_also", item_see_also, "<refer to an object at least as public as the source object>", profile)
+									raise_validation_error(tr,obj,"SCP-006", f"See_also reference '{item_see_also}' has scope {target_scopes} which is less public than {top.scopes()}.", details)
 							else:
 								if not top.can_see(target_scopes):
-									warn_validation(tr,obj,"SCP-007", f"See_also reference '{item_see_also}' has scope {target_scopes}, which is less public than {top.scopes()}.")
+									details = render_scope_relation_details("See_also", item_see_also, "<refer to an object at least as public as the source object>", profile)
+									warn_validation(tr,obj,"SCP-007", f"See_also reference '{item_see_also}' has scope {target_scopes}, which is less public than {top.scopes()}.", details)
 #===== Notes ==================================================#
 		with traced_section(tr, "Notes"):
 			if "Notes" in top.items():

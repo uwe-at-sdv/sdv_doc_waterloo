@@ -41,44 +41,26 @@ Public_types:
 	MustExist_t:
 		|Must| be a literal type describing whether a section or subsection is required to exist in a document of the relevant profile.
 Public_constants:
-	SECTION_PROPERTIES:
-		|Must| be a mapping from section and subsection labels to their properties relevant for explanation and validation,\
-		for example body category, normativity, and profile applicability.
-		Informative: This is a carefully distilled machine-readable representation of the relevant rules\
-		from the documentation standard, but the documentation remains the Single Source of Truth for the standard.
 """
 
 from __future__ import annotations
 
-from typing import Any, Final, cast, Dict, List, Literal, TypedDict
+from typing import Any, Callable, Final, cast, Dict, List, Literal, TypedDict
 
+import subprocess
+import sys
 import sdv.doc.waterloo.docitem as docitem
 from sdv.doc.waterloo import waterlint_common as wl_common
 
-from sdv.doc.waterloo.docitem_helper import SECTION_PROPERTIES as DOCITEM_SECTION_PROPERTIES
-from sdv.doc.waterloo.docitem_helper import WTRL_MARKUP_ROLES
+from sdv.doc.waterloo.docitem_helper import (
+	SECTION_PROPERTIES, WTRL_MARKUP_ROLES, CANONICAL_ORDER_OF_PROFILES,
+	Profile_t, Normativity_t, MustExist_t, LabelKind_t,
+	SectionBodyCategory_t,
+)
 
 # These two type-like axes describe structural form: what kind of label, body, or render shape is involved.
 # Source of Truth for all Section/Subsection properties is the informative section "Section property overview"
 # in the documentation standard, which in turn is derived from the normative ruleset.
-
-SectionBodyCategory_t = Literal[
-	"STRUCTURE",
-	"IDENTIFIER",
-	"QUALIFIED_IDENTIFIER",
-	"LIST_OF_IDENTIFIERS",
-	"LIST_OF_QUALIFIED_IDENTIFIERS",
-	"ITEMIZED_TEXT",
-	"FREEFORM_TEXT",
-]
-
-LabelKind_t = Literal["FIXED", "IDENTIFIER", "QUALIFIED_IDENTIFIER", "LIST_OF_IDENTIFIERS", "ANY_STRING"]
-
-# These axes describe semantic status and applicability in the documentation rules.
-
-Profile_t = Literal["module", "class", "function", "method", "inherited_method"]
-Normativity_t = Literal["not_applicable", "normative", "informative", "can_be_both"]
-MustExist_t = Literal["yes", "no", "depends_on_context"]
 
 class SectionBodyCategoryExplanation_t(TypedDict):
 	markup_allowed: bool
@@ -188,17 +170,21 @@ EXPLAIN_TEMPLATES: Final[Dict[SectionBodyCategory_t, list[str]]] = {
 	],
 	"ITEMIZED_TEXT": [
 		"{label}:",
-		"\t|MUST| do this.",
-		"\t|MUST| do that.",
-		"\t|Must| do the following task consisting of these steps:",
-		"\t+ |Must| do step1",
-		"\t+ |Must| do step2",
+		"\t|Must| do this.",
+		"\t|Must_not| do that.",
+		"\tCaller |should| provide appropriate input.",
+		"\t|May| behave like...",
+		"\t<these lines are rendered with outer bullets, and inner lists may be nested when needed.>",
 	],
 	"FREEFORM_TEXT": [
 		"{label}:",
-		"\t...",
+		"\tThis module/class/function/method has properties X, Y, and Z,",
+		"\tand is supposed to be used in contexts A, B, and C.",
 		"\t|",
-		],
+		"\tSecond paragraph starts after a line containing only `|`.",
+		"\tUse normative keywords when the section is normative.",
+		"\t<these lines are rendered as continuous text. Inner lists may be nested when needed.>",
+	],
 }
 
 ExplainSectionBodyCategory: Final[Dict[SectionBodyCategory_t, SectionBodyCategoryExplanation_t]] = {
@@ -273,34 +259,32 @@ ExplainSectionBodyCategory: Final[Dict[SectionBodyCategory_t, SectionBodyCategor
 }
 
 
-_PROFILE_ORDER: Final[list[Profile_t]] = ["module", "class", "function", "method", "inherited_method"]
-
-SECTION_PROPERTIES: Final[Dict[str, SectionPropertyInfo_t]] = cast(Dict[str, SectionPropertyInfo_t], DOCITEM_SECTION_PROPERTIES)
+# SECTION_PROPERTIES: Final[Dict[str, SectionPropertyInfo_t]] = cast(Dict[str, SectionPropertyInfo_t], SECTION_PROPERTIES)
 
 SECTION_SUBSECTIONS: Final[Dict[str, Dict[Profile_t, List[str]]]] = {
 	"Preamble": {
 		profile: ["profile", "normative_sections", "status", "scope"]
-		for profile in _PROFILE_ORDER
+		for profile in CANONICAL_ORDER_OF_PROFILES
 	},
 	"Definitions": {
 		profile: ["<item>", "_inherit"] if profile in ("class", "function", "method", "inherited_method") else ["<item>"]
-		for profile in _PROFILE_ORDER
+		for profile in CANONICAL_ORDER_OF_PROFILES
 	},
 	"Terminology": {
 		profile: ["<item>"]
-		for profile in _PROFILE_ORDER
+		for profile in CANONICAL_ORDER_OF_PROFILES
 	},
 	"Description": {
 		profile: []
-		for profile in _PROFILE_ORDER
+		for profile in CANONICAL_ORDER_OF_PROFILES
 	},
 	"Notes": {
 		profile: ["<item>"]
-		for profile in _PROFILE_ORDER
+		for profile in CANONICAL_ORDER_OF_PROFILES
 	},
 	"See_also": {
 		profile: []
-		for profile in _PROFILE_ORDER
+		for profile in CANONICAL_ORDER_OF_PROFILES
 	},
 	"Contract": {
 		"module": ["general"],
@@ -367,7 +351,7 @@ SECTION_TO_SUBSECTIONS_BY_PROFILE: Final[Dict[Profile_t, Dict[str, List[str]]]] 
 		for label, profile_map in SECTION_SUBSECTIONS.items()
 		if profile in profile_map
 	}
-	for profile in _PROFILE_ORDER
+	for profile in CANONICAL_ORDER_OF_PROFILES
 }
 
 SECTIONS_BY_PROFILE: Final[Dict[Profile_t, List[str]]] = {
@@ -379,239 +363,352 @@ _BASE_SECTION_SPECS: Dict[str, Dict[str, Any]] = {
 	"Definitions": {
 		"title": "Definitions",
 		"body": [
-			"Definitions introduces normative terms that are used later in the docstring.",
+			"'Definitions' introduces normative terms that are used later in the docstring.",
 			"Each subsection label is a comma-separated list of identifiers.",
 			"The first identifier names the canonical term; following identifiers name spelling or form variations of the same term.",
 			"For example, the term sensitive may be introduced together with Sensitive and Sensitivity.",
 		],
 		"hint": [
-			"Definitions is the normative glossary of the docstring scope; each subsection header is a CSV list of Identifier tokens, with the first token naming the term and the remaining tokens naming variations.",
+			"'Definitions' is the normative glossary of the docstring scope; each subsection header is a CSV list of Identifier tokens, with the first token naming the term and the remaining tokens naming variations.",
 		],
-		"try_next": ["waterlint explain-subsection --label <item>"],
+		"try_next": {
+			"*": ["waterlint explain-subsection --label 'Definitions.<item>' --profile PROFILE"],
+			"class": [
+				"waterlint explain-subsection --label 'Definitions.<item>' --profile class",
+				"waterlint explain-subsection --label 'Definitions._inherit' --profile class",
+			],
+			"function": [
+				"waterlint explain-subsection --label 'Definitions.<item>' --profile function",
+				"waterlint explain-subsection --label 'Definitions._inherit' --profile function",
+			],
+			"method": [
+				"waterlint explain-subsection --label 'Definitions.<item>' --profile method",
+				"waterlint explain-subsection --label 'Definitions._inherit' --profile method",
+			],
+			"inherited_method": [
+				"waterlint explain-subsection --label 'Definitions.<item>' --profile inherited_method",
+				"waterlint explain-subsection --label 'Definitions._inherit' --profile inherited_method",
+			],
+		} ,
 	},
 	"Terminology": {
 		"title": "Terminology",
 		"body": [
-			"Terminology collects informative term explanations and background notes.",
+			"'Terminology' collects informative term explanations and background notes.",
 			"It helps readers understand the document without adding new normative requirements.",
 		],
 		"hint": [
-			"Terminology is informative and complements Definitions.",
+			"'Terminology' is informative and complements 'Definitions'.",
 		],
-		"try_next": ["waterlint explain-subsection --label <item>"],
+		"try_next": {
+			"*": ["waterlint explain-subsection --label 'Terminology.<item>' --profile PROFILE"],
+		},
 	},
 	"Description": {
 		"title": "Description",
 		"body": [
-			"Description gives the general prose description of the object or scope.",
+			"'Description' gives the general prose description of the object or scope.",
 			"It may be normative or informative depending on the surrounding profile and context.",
 		],
 		"hint": [
-			"Description is the general prose block for a documented object.",
+			"'Description' is the general prose block for a documented object.",
 		],
-		"try_next": ["waterlint explain-subsection --label <item>"],
+		"try_next": {
+			"*": [],
+		},
 	},
 	"Contract": {
 		"title": "Contract",
 		"body": [
-			"Contract contains the normative rules that the section enforces.",
+			"'Contract' contains the normative rules that the section enforces.",
 			"It is the place where the validator expects the executable core of the documented object.",
 		],
 		"hint": [
-			"Contract is the normative core of the docstring section and the place where the tool checks the required structure.",
 		],
-		"try_next": ["waterlint explain-subsection --label constructor"],
+		"try_next": {
+			"*": ["waterlint explain-subsection --label 'Contract.general' --profile PROFILE"],
+			"module": [
+				"waterlint explain-subsection --label 'Contract.general' --profile module",
+			],
+			"class": [
+				"waterlint explain-subsection --label 'Contract.general' --profile class",
+				"waterlint explain-subsection --label 'Contract.constructor' --profile class",
+				"waterlint explain-subsection --label 'Contract.traits' --profile class",
+			],
+			"function": [
+				"waterlint explain-subsection --label 'Contract.general' --profile function",
+				"waterlint explain-subsection --label 'Contract.invariants' --profile function",
+				"waterlint explain-subsection --label 'Contract.requires' --profile function",
+				"waterlint explain-subsection --label 'Contract.ensures' --profile function",
+			],
+			"method": [
+				"waterlint explain-subsection --label 'Contract.general' --profile method",
+				"waterlint explain-subsection --label 'Contract.invariants' --profile method",
+				"waterlint explain-subsection --label 'Contract.requires' --profile method",
+				"waterlint explain-subsection --label 'Contract.ensures' --profile method",
+			],
+			"inherited_method": [
+				"waterlint explain-subsection --label 'Contract.general' --profile inherited_method",
+				"waterlint explain-subsection --label 'Contract.base' --profile inherited_method",
+			],
+		},
 	},
 	"Preamble": {
 		"title": "Preamble",
 		"body": [
-			"Preamble declares which profile the docstring follows and which sections are normative.",
+			"'Preamble' declares which profile the docstring follows and which sections are normative.",
 			"It is the entry point for validating the rest of the document and for interpreting the remaining sections.",
 		],
 		"hint": [
-			"Preamble declares the profile, the normative section set, and the overall validation context.",
+			"'Preamble' declares the profile, the normative section set, and the overall validation context.",
 		],
-		"try_next": [
-			"waterlint explain-subsection --label profile",
-			"waterlint explain-subsection --label normative_sections",
-		],
+		"try_next": {
+			"*": [
+				"waterlint explain-subsection --label 'Preamble.profile' --profile PROFILE",
+				"waterlint explain-subsection --label 'Preamble.normative_sections' --profile PROFILE",
+				"waterlint explain-subsection --label 'Preamble.scope' --profile PROFILE",
+			],
+			"module": [
+				"waterlint explain-subsection --label 'Preamble.profile' --profile module",
+				"waterlint explain-subsection --label 'Preamble.normative_sections' --profile module",
+				"waterlint explain-subsection --label 'Preamble.scope' --profile module",
+			],
+			"class": [
+				"waterlint explain-subsection --label 'Preamble.profile' --profile class",
+				"waterlint explain-subsection --label 'Preamble.normative_sections' --profile class",
+				"waterlint explain-subsection --label 'Preamble.scope' --profile class",
+			],
+			"function": [
+				"waterlint explain-subsection --label 'Preamble.profile' --profile function",
+				"waterlint explain-subsection --label 'Preamble.normative_sections' --profile function",
+				"waterlint explain-subsection --label 'Preamble.status' --profile function",
+				"waterlint explain-subsection --label 'Preamble.scope' --profile function",
+			],
+			"method": [
+				"waterlint explain-subsection --label 'Preamble.profile' --profile method",
+				"waterlint explain-subsection --label 'Preamble.normative_sections' --profile method",
+				"waterlint explain-subsection --label 'Preamble.status' --profile method",
+				"waterlint explain-subsection --label 'Preamble.scope' --profile method",
+			],
+			"inherited_method": [
+				"waterlint explain-subsection --label 'Preamble.profile' --profile inherited_method",
+				"waterlint explain-subsection --label 'Preamble.normative_sections' --profile inherited_method",
+				"waterlint explain-subsection --label 'Preamble.scope' --profile inherited_method",
+			],
+		},
 	},
 	"Parameters": {
 		"title": "Parameters",
 		"body": [
-			"Parameters documents callable arguments in a structured way.",
+			"'Parameters' documents callable arguments in a structured way.",
 			"Each subsection header names one formal parameter, and the subsection body explains its role, constraints, and expected value shape.",
 		],
 		"hint": [
-			"Parameters lists the formal arguments of a callable and explains each argument separately.",
+			"'Parameters' lists the formal arguments of a callable and explains each argument separately.",
 		],
-		"try_next": ["waterlint explain-subsection --label args"],
+		"try_next": {
+			"*": ["waterlint explain-subsection --label 'Parameters.<item>' --profile PROFILE"],
+		},
 	},
 	"Returns": {
 		"title": "Returns",
 		"body": [
-			"Returns documents what the callable yields or returns.",
+			"'Returns' documents what the callable yields or returns.",
 			"The block explains the value shape, the semantic meaning, and any important postconditions for the result.",
 		],
 		"hint": [
-			"Returns describes the returned value or object and its expected meaning.",
+			"'Returns' describes the returned value or object and its expected meaning.",
 		],
-		"try_next": ["waterlint explain-subsection --label return_value"],
+		"try_next": {
+			"*": [],
+		},
 	},
 	"Raises": {
 		"title": "Raises",
 		"body": [
-			"Raises documents documented exception conditions.",
+			"'Raises' documents documented exception conditions.",
 			"Each subsection header names an exception type, and the subsection body explains the condition under which it is raised.",
 			"If the callable is not supposed to raise any exceptions, the section still must be present, but left empty.",			
 		],
 		"hint": [
-			"Raises lists the documented exception types and the conditions that trigger them.",
+			"'Raises' lists the documented exception types and the conditions that trigger them.",
 		],
-		"try_next": ["waterlint explain-subsection --label ValueError"],
+		"try_next": {
+			"*": ["waterlint explain-subsection --label 'Raises.<item>' --profile PROFILE"],
+		},
 	},
 	"Notes": {
 		"title": "Notes",
 		"body": [
-			"Notes are used for additional guidance that is not part of the normative contract.",
-			"They are the place for caveats, examples, implementation notes, and other reader-oriented information.",
+			"'Notes' are used for additional guidance that is not part of the normative contract.",
+			"'Notes' are the place for caveats, examples, implementation notes, and other reader-oriented information.",
 		],
 		"hint": [
-			"Notes stays informative unless the surrounding profile explicitly makes it normative.",
+			"'Notes' stays informative unless the surrounding profile explicitly makes it normative.",
 		],
-		"try_next": ["waterlint explain-section --label Notes"],
+		"try_next": {
+			"*": ["waterlint explain-subsection --label 'Notes.<item>' --profile PROFILE"],
+		},
 	},
 	"See_also": {
 		"title": "See_also",
 		"body": [
-			"See_also lists related documented objects or references.",
+			"'See_also' lists related documented objects or references.",
 			"It is typically used to connect the current object to sibling sections, inherited material, or external targets.",
 		],
 		"hint": [
-			"See_also is the cross-reference section for related documented objects and targets.",
+			"'See_also' is the cross-reference section for related documented objects and targets.",
 		],
-		"try_next": ["waterlint explain-subsection --label <item>"],
+		"try_next": {
+			"*": [],
+		},
 	},
 	"Public_classes": {
 		"title": "Public_classes",
 		"body": [
-			"Public_classes lists the public class objects that belong to this module or class.",
+			"'Public_classes' lists the public class objects that belong to this module or class.",
 			"Each entry is a fully qualified class name.",
 		],
 		"hint": [
-			"Public_classes is the scope-local list of public classes.",
+			"'Public_classes' is the scope-local list of public classes.",
 		],
-		"try_next": ["waterlint explain-subsection --label <item>"],
+		"try_next": {
+			"*": [],
+		},
 	},
 	"Public_functions": {
 		"title": "Public_functions",
 		"body": [
-			"Public_functions lists the public function objects that belong to this module.",
+			"'Public_functions' lists the public function objects that belong to this module.",
 			"Each entry is a fully qualified function name.",
 		],
 		"hint": [
-			"Public_functions is the module-local list of public functions.",
+			"'Public_functions' is the module-local list of public functions.",
 		],
-		"try_next": ["waterlint explain-subsection --label <item>"],
+		"try_next": {
+			"*": [],
+		},
 	},
 	"Public_methods": {
 		"title": "Public_methods",
 		"body": [
-			"Public_methods lists the public method objects that belong to this class.",
+			"'Public_methods' lists the public method objects that belong to this class.",
 			"Each entry is a fully qualified method name.",
 		],
 		"hint": [
-			"Public_methods is the class-local list of public methods.",
+			"'Public_methods' is the class-local list of public methods.",
 		],
-		"try_next": ["waterlint explain-subsection --label <item>"],
+		"try_next": {
+			"*": [],
+		},
 	},
 	"Public_types": {
 		"title": "Public_types",
 		"body": [
-			"Public_types lists the public type declarations exported by the current scope.",
+			"'Public_types' lists the public type declarations exported by the current scope.",
 			"Each entry names a public type, type alias, or other type-level declaration that is meant to be visible to readers and tools.",
 		],
 		"hint": [
-			"Public_types is the scope-local list of public type declarations and aliases.",
+			"'Public_types' is the scope-local list of public type declarations and aliases.",
 		],
-		"try_next": ["waterlint explain-subsection --label <item>"],
+		"try_next": {
+			"module": ["waterlint explain-subsection --label 'Public_types.<item>' --profile module"],
+			"class": ["waterlint explain-subsection --label 'Public_types.<item>' --profile class"],
+		},
 	},
 	"Public_variables": {
 		"title": "Public_variables",
 		"body": [
-			"Public_variables lists public variables that belong to this module or class.",
+			"'Public_variables' lists public variables that belong to this module or class.",
 			"Each entry names a public variable exported by the scope.",
 		],
 		"hint": [
-			"Public_variables is the scope-local list of public variables.",
+			"'Public_variables' is the scope-local list of public variables.",
 		],
-		"try_next": ["waterlint explain-subsection --label <item>"],
+		"try_next": {
+			"module": ["waterlint explain-subsection --label 'Public_variables.<item>' --profile module"],
+			"class": ["waterlint explain-subsection --label 'Public_variables.<item>' --profile class"],
+		},
 	},
 	"Public_constants": {
 		"title": "Public_constants",
 		"body": [
-			"Public_constants lists public constants that belong to this module or class.",
+			"'Public_constants' lists public constants that belong to this module or class.",
 			"Each entry names a public constant exported by the scope.",
 		],
 		"hint": [
-			"Public_constants is the scope-local list of public constants.",
+			"'Public_constants' is the scope-local list of public constants.",
 		],
-		"try_next": ["waterlint explain-subsection --label <item>"],
+		"try_next": {
+			"module": ["waterlint explain-subsection --label 'Public_constants.<item>' --profile module"],
+			"class": ["waterlint explain-subsection --label 'Public_constants.<item>' --profile class"],
+		},
 	},
 	"Class_overview": {
 		"title": "Class_overview",
 		"body": [
-			"Class_overview gives a short prose summary for each public class in the current scope.",
+			"'Class_overview' gives a short prose summary for each public class in the current scope.",
 			"Each item is a reader-oriented narrative for one class, not a normative declaration.",
 		],
 		"hint": [
-			"Class_overview is the informative companion to Public_classes.",
+			"'Class_overview' is the informative companion to 'Public_classes'.",
 		],
-		"try_next": ["waterlint explain-subsection --label <item>"],
+		"try_next": {
+			"module": ["waterlint explain-subsection --label 'Class_overview.<item>' --profile module"],
+			"class": ["waterlint explain-subsection --label 'Class_overview.<item>' --profile class"],
+		},
 	},
 	"Method_overview": {
 		"title": "Method_overview",
 		"body": [
-			"Method_overview gives a short prose summary for each public method in the current class.",
+			"'Method_overview' gives a short prose summary for each public method in the current class.",
 			"Each item is a reader-oriented narrative for one method, not a normative declaration.",
 		],
 		"hint": [
-			"Method_overview is the informative companion to Public_methods.",
+			"'Method_overview' is the informative companion to 'Public_methods'.",
 		],
-		"try_next": ["waterlint explain-subsection --label <item>"],
+		"try_next": {
+			"class": ["waterlint explain-subsection --label 'Method_overview.<item>' --profile class"],
+		},
 	},
 	"Function_overview": {
 		"title": "Function_overview",
 		"body": [
-			"Function_overview gives a short prose summary for each public function in the current module.",
+			"'Function_overview' gives a short prose summary for each public function in the current module.",
 			"Each item is a reader-oriented narrative for one function, not a normative declaration.",
 		],
 		"hint": [
-			"Function_overview is the informative companion to Public_functions.",
+			"'Function_overview' is the informative companion to 'Public_functions'.",
 		],
-		"try_next": ["waterlint explain-subsection --label <item>"],
+		"try_next": {
+			"module": ["waterlint explain-subsection --label 'Function_overview.<item>' --profile module"],
+		},
 	},
 	"Derived_from": {
 		"title": "Derived_from",
 		"body": [
-			"Derived_from lists the qualified identifiers that this class is derived from.",
+			"'Derived_from' lists the qualified identifiers that this class is derived from.",
 			"It records the immediate ancestry or derivation sources of the class.",
 		],
 		"hint": [
-			"Derived_from names the class ancestry or derivation sources as qualified identifiers.",
+			"'Derived_from' names the class ancestry or derivation sources as qualified identifiers.",
 		],
-		"try_next": ["waterlint explain-subsection --label <item>"],
+		"try_next": {
+			"*": [],
+		},
 	},
 	"Factory": {
 		"title": "Factory",
 		"body": [
-			"Factory describes creation or retrieval entry points for the class.",
+			"'Factory' describes creation or retrieval entry points for the class.",
 			"Use it for alternate constructors, class methods, or other qualified entry points that create, load, or return a related object.",
 		],
 		"hint": [
-			"Factory is the creation-oriented companion to the class contract.",
+			"'Factory' is the creation-oriented companion to the class contract.",
 		],
-		"try_next": ["waterlint explain-subsection --label <item>"],
+		"try_next": {
+			"class": ["waterlint explain-subsection --label 'Factory.<item>' --profile class"],
+		},
 	},
 }
 
@@ -619,241 +716,297 @@ _BASE_SUBSECTION_SPECS: Dict[str, Dict[str, Any]] = {
 	"Preamble.profile": {
 		"title": "Preamble.profile",
 		"body": [
-			"Preamble.profile names the documentation profile token for the current document.",
+			"'Preamble.profile' names the documentation profile token for the current document.",
 			"It must be one of the fixed profile identifiers such as module or class.",
 		],
 		"hint": [
-			"Preamble.profile identifies which profile governs the rest of the docstring.",
+			"'Preamble.profile' identifies which profile governs the rest of the docstring.",
 		],
+		"try_next": {
+			"*": ["waterlint explain-subsection --label 'Preamble.normative_sections' --profile PROFILE"],
+		},
 	},
 	"Preamble.normative_sections": {
 		"title": "Preamble.normative_sections",
 		"body": [
-			"Preamble.normative_sections lists the section labels that are normative in this document.",
+			"'Preamble.normative_sections' lists the section labels that are normative in this document.",
 			"It is a CSV list of fixed section labels.",
 		],
 		"hint": [
-			"Preamble.normative_sections tells the validator which sections are normative.",
+			"'Preamble.normative_sections' tells the validator which sections are normative.",
 		],
+		"try_next": {
+			"*": ["waterlint explain-subsection --label 'Preamble.scope' --profile PROFILE"],
+			"function": ["waterlint explain-subsection --label 'Preamble.status' --profile function"],
+			"method": ["waterlint explain-subsection --label 'Preamble.status' --profile method"],
+		},
 	},
 	"Preamble.status": {
 		"title": "Preamble.status",
 		"body": [
-			"Preamble.status names the lifecycle status token for function or method profiles.",
-			"It is only used when the surrounding profile requires a status marker.",
+			"'Preamble.status' names the lifecycle status token for function or method profiles.",
+			"Possible values are {experimental, stable, frozen, deprecated, draft}.",
+			"If not specified, the status is assumed to be 'stable'.",
+			"This is optional metadata that may be used for filtering or informational purposes.",
+			"It does not affect the validation rules or normativity of the document.",
 		],
 		"hint": [
-			"Preamble.status captures the status marker for callable docstrings.",
+			"'Preamble.status' captures the status marker for callable docstrings.",
 		],
+		"try_next": {
+			"*": ["waterlint explain-subsection --label 'Preamble.scope' --profile PROFILE"],
+		},
 	},
 	"Preamble.scope": {
 		"title": "Preamble.scope",
 		"body": [
-			"Preamble.scope lists the scope tags that constrain the visible object set.",
+			"'Preamble.scope' lists the scope tags that constrain the visible object set.",
 			"It is a CSV list of identifiers.",
 		],
 		"hint": [
-			"Preamble.scope records the visible scope tags for the documented object.",
+			"'Preamble.scope' records the visible scope tags for the documented object.",
 		],
 	},
 	"Definitions.<item>": {
 		"title": "Definitions.<item>",
 		"body": [
-			"Each Definitions item introduces one normative term and its spelling variants.",
+			"Each Definitions item introduces one normative term and its spelling/morphological variants.",
 			"The subsection label itself is a CSV list of identifiers, with the first item naming the canonical term.",
+			"Example: A label `sensitive, Sensitive, Sensitivity` introduces the term 'sensitive' and its variants.",
+			"In order to refer to a term (e.g. `myterm`) defined in 'Definitions', use markup |term|`myterm`.",
 		],
 		"hint": [
-			"Definitions.<item> explains one glossary entry and its variants.",
+			"'Definitions.<item>' explains one glossary entry and its variants.",
 		],
+		"try_next": {
+			"class": ["waterlint explain-subsection --label 'Definitions._inherit' --profile class"],
+			"function": ["waterlint explain-subsection --label 'Definitions._inherit' --profile function"],
+			"method": ["waterlint explain-subsection --label 'Definitions._inherit' --profile method"],
+			"inherited_method": ["waterlint explain-subsection --label 'Definitions._inherit' --profile inherited_method"],
+		},
 	},
 	"Definitions._inherit": {
 		"title": "Definitions._inherit",
 		"body": [
-			"Definitions._inherit lists definition terms inherited from the surrounding scope.",
-			"It is used when a child scope reuses the glossary of its parent scope.",
+			"'Definitions._inherit' lists definition terms inherited from the surrounding module scope.",
+			"The purpose is to avoid repetition of the same glossary terms in each class or function docstring.",
+			"This introduces a violation of the principle of Locality of Information (LoII),",
+			"but it is a pragmatic compromise to avoid excessive boilerplate in class and function docstrings.",
 		],
 		"hint": [
-			"Definitions._inherit records inherited glossary terms.",
+			"'Definitions._inherit' records inherited glossary terms.",
 		],
 	},
 	"Terminology.<item>": {
 		"title": "Terminology.<item>",
 		"body": [
-			"Terminology items give informative background for one term.",
-			"They do not add new normative requirements.",
+			"'Terminology.<item>' gives informative background for one term.",
+			"As opposed to definition items, they do not add new normative requirements.",
 		],
-		"hint": [
-			"Terminology.<item> gives an informative term explanation.",
-		],
+		"hint": [ ],
 	},
 	"Notes.<item>": {
 		"title": "Notes.<item>",
 		"body": [
-			"Notes items provide extra guidance, caveats, examples, or implementation notes.",
+			"'Notes.<item>' provides extra guidance, caveats, examples, or implementation notes.",
 			"They stay informative unless the surrounding profile explicitly says otherwise.",
 		],
 		"hint": [
-			"Notes.<item> captures a reader-oriented note or example.",
+			"'Notes.<item>' captures a reader-oriented note or example.",
 		],
 	},
 	"Contract.general": {
 		"title": "Contract.general",
 		"body": [
-			"Contract.general describes the general normative contract for the documented object.",
+			"'Contract.general' describes the general normative contract for the documented object.",
 			"It is the executable core of the contract section for the current profile.",
 		],
 		"hint": [
-			"Contract.general is the general normative contract block.",
+			"'Contract.general' is the general normative contract block.",
 		],
+		"try_next": {
+			"*": ["waterlint explain-subsection --label 'Contract.invariants' --profile PROFILE"],
+			"module": ["waterlint explain-subsection --label 'Contract.general' --profile module"],
+			"class": [
+				"waterlint explain-subsection --label 'Contract.constructor' --profile class",
+				"waterlint explain-subsection --label 'Contract.traits' --profile class",
+			],
+			"function": [
+				"waterlint explain-subsection --label 'Contract.requires' --profile function",
+				"waterlint explain-subsection --label 'Contract.ensures' --profile function",
+			],
+			"method": [
+				"waterlint explain-subsection --label 'Contract.requires' --profile method",
+				"waterlint explain-subsection --label 'Contract.ensures' --profile method",
+			],
+			"inherited_method": [
+				"waterlint explain-subsection --label 'Contract.base' --profile inherited_method",
+			],
+		},
 	},
 	"Contract.constructor": {
 		"title": "Contract.constructor",
 		"body": [
-			"Contract.constructor describes the constructor contract for a class.",
+			"'Contract.constructor' describes the constructor contract for a class.",
 			"It captures the normative creation behavior of the class constructor.",
 		],
 		"hint": [
-			"Contract.constructor describes the constructor contract of the class.",
+			"'Contract.constructor' describes the constructor contract of the class.",
 		],
+		"try_next": {
+			"*": ["waterlint explain-subsection --label 'Contract.traits' --profile class"],
+		},
 	},
 	"Contract.traits": {
 		"title": "Contract.traits",
 		"body": [
-			"Contract.traits lists the traits, mixins, or related traits of the class.",
+			"'Contract.traits' lists the traits, mixins, or related traits of the class.",
 			"It is a flat list of identifiers.",
 		],
 		"hint": [
-			"Contract.traits names the class traits or mixins.",
+			"'Contract.traits' names the class traits or mixins.",
 		],
+		"try_next": {
+			"*": ["waterlint explain-subsection --label 'Contract.constructor' --profile class"],
+		},
 	},
 	"Contract.invariants": {
 		"title": "Contract.invariants",
 		"body": [
-			"Contract.invariants lists invariants that must hold for the callable or class.",
+			"'Contract.invariants' lists invariants that must hold for the callable or class.",
 			"Each logical item states one invariant clause.",
 		],
 		"hint": [
-			"Contract.invariants lists invariant clauses for the object.",
+			"'Contract.invariants' lists invariant clauses for the object.",
 		],
+		"try_next": {
+			"*": ["waterlint explain-subsection --label 'Contract.requires' --profile PROFILE"],
+		},
 	},
 	"Contract.requires": {
 		"title": "Contract.requires",
 		"body": [
-			"Contract.requires lists the preconditions that must hold before the callable runs.",
+			"'Contract.requires' lists the preconditions that must hold before the callable runs.",
 			"Each logical item states one requirement.",
 		],
 		"hint": [
-			"Contract.requires lists the preconditions of the callable.",
+			"'Contract.requires' lists the preconditions of the callable.",
 		],
+		"try_next": {
+			"*": ["waterlint explain-subsection --label 'Contract.ensures' --profile PROFILE"],
+		},
 	},
 	"Contract.ensures": {
 		"title": "Contract.ensures",
 		"body": [
-			"Contract.ensures lists the postconditions that hold after the callable returns.",
+			"'Contract.ensures' lists the postconditions that hold after the callable returns.",
 			"Each logical item states one guaranteed outcome.",
 		],
 		"hint": [
-			"Contract.ensures lists the postconditions of the callable.",
+			"'Contract.ensures' lists the postconditions of the callable.",
 		],
+		"try_next": {
+			"*": ["waterlint explain-subsection --label 'Contract.requires' --profile PROFILE"],
+		},
 	},
 	"Contract.base": {
 		"title": "Contract.base",
 		"body": [
-			"Contract.base names the base object for an inherited method.",
+			"'Contract.base' names the base object for an inherited method.",
 			"It is a single qualified identifier.",
 		],
 		"hint": [
-			"Contract.base names the inherited base object.",
+			"'Contract.base' names the inherited base object.",
 		],
 	},
 	"Factory.<item>": {
 		"title": "Factory.<item>",
 		"body": [
-			"Factory items name creation or retrieval entry points for the class.",
+			"'Factory.<item>' names creation or retrieval entry points for the class.",
 			"They are qualified identifiers that refer to the concrete factory-like callable or method.",
 		],
 		"hint": [
-			"Factory.<item> names one factory-like entry point.",
+			"'Factory.<item>' names one factory-like entry point.",
 		],
 	},
 	"Public_types.<item>": {
 		"title": "Public_types.<item>",
 		"body": [
-			"Public_types items name one public type declaration or type alias.",
+			"'Public_types.<item>' names one public type declaration or type alias.",
 			"They are visible type-level declarations exported by the current scope.",
 		],
 		"hint": [
-			"Public_types.<item> names one public type or alias.",
+			"'Public_types.<item>' names one public type or alias.",
 		],
 	},
 	"Public_variables.<item>": {
 		"title": "Public_variables.<item>",
 		"body": [
-			"Public_variables items name one public variable exported by the current scope.",
+			"'Public_variables.<item>' names one public variable exported by the current scope.",
 			"They are identifiers that are part of the public API surface.",
 		],
 		"hint": [
-			"Public_variables.<item> names one public variable.",
+			"'Public_variables.<item>' names one public variable.",
 		],
 	},
 	"Public_constants.<item>": {
 		"title": "Public_constants.<item>",
 		"body": [
-			"Public_constants items name one public constant exported by the current scope.",
+			"'Public_constants.<item>' names one public constant exported by the current scope.",
 			"They are identifiers that are part of the public API surface.",
 		],
 		"hint": [
-			"Public_constants.<item> names one public constant.",
+			"'Public_constants.<item>' names one public constant.",
 		],
 	},
 	"Class_overview.<item>": {
 		"title": "Class_overview.<item>",
 		"body": [
-			"Class_overview items provide a short prose summary for one public class.",
+			"'Class_overview.<item>' provides a short prose summary for one public class.",
 			"They are reader-oriented narrative entries, not normative declarations.",
 		],
 		"hint": [
-			"Class_overview.<item> summarizes one public class.",
+			"'Class_overview.<item>' summarizes one public class.",
 		],
 	},
 	"Method_overview.<item>": {
 		"title": "Method_overview.<item>",
 		"body": [
-			"Method_overview items provide a short prose summary for one public method.",
+			"'Method_overview.<item>' provides a short prose summary for one public method.",
 			"They are reader-oriented narrative entries, not normative declarations.",
 		],
 		"hint": [
-			"Method_overview.<item> summarizes one public method.",
+			"'Method_overview.<item>' summarizes one public method.",
 		],
 	},
 	"Function_overview.<item>": {
 		"title": "Function_overview.<item>",
 		"body": [
-			"Function_overview items provide a short prose summary for one public function.",
+			"'Function_overview.<item>' provides a short prose summary for one public function.",
 			"They are reader-oriented narrative entries, not normative declarations.",
 		],
 		"hint": [
-			"Function_overview.<item> summarizes one public function.",
+			"'Function_overview.<item>' summarizes one public function.",
 		],
 	},
 	"Parameters.<item>": {
 		"title": "Parameters.<item>",
 		"body": [
-			"Parameters items name one formal parameter and explain its role.",
+			"'Parameters.<item>' names one formal parameter and explains its role.",
 			"They describe how the callable uses the parameter and what value shape is expected.",
 		],
 		"hint": [
-			"Parameters.<item> explains one formal parameter.",
+			"'Parameters.<item>' explains one formal parameter.",
 		],
 	},
 	"Raises.<item>": {
 		"title": "Raises.<item>",
 		"body": [
-			"Raises items name one exception type and explain when it is raised.",
+			"'Raises.<item>' names one exception type and explains when it is raised.",
 			"They document one exception condition at a time.",
 		],
 		"hint": [
-			"Raises.<item> explains one exception type.",
+			"'Raises.<item>' explains one exception type.",
 		],
 	},
 }
@@ -861,7 +1014,7 @@ _BASE_SUBSECTION_SPECS: Dict[str, Dict[str, Any]] = {
 
 def _available_profiles_for_label(label: str) -> list[Profile_t]:
 	profile_map = SECTION_SUBSECTIONS.get(label, {})
-	return [profile for profile in _PROFILE_ORDER if profile in profile_map]
+	return [profile for profile in CANONICAL_ORDER_OF_PROFILES if profile in profile_map]
 
 
 def _available_profiles_for_subsection_label(label: str) -> list[Profile_t]:
@@ -869,9 +1022,7 @@ def _available_profiles_for_subsection_label(label: str) -> list[Profile_t]:
 	if sub_info is None:
 		return []
 	profiles = sub_info.get("profile")
-	if profiles is None:
-		return []
-	return [profile for profile in _PROFILE_ORDER if profile in profiles]
+	return [profile for profile in CANONICAL_ORDER_OF_PROFILES if profile in profiles]
 
 
 def _build_template_lines(label: str, body_category: SectionBodyCategory_t, allowed_subsections: list[str]) -> list[str]:
@@ -882,6 +1033,16 @@ def _build_template_lines(label: str, body_category: SectionBodyCategory_t, allo
 			template.append(EXPLAIN_TEMPLATES["STRUCTURE"][2])
 		return template
 	return [line.format(label=label) for line in EXPLAIN_TEMPLATES[body_category]]
+
+
+def _render_profile_try_next(base: Dict[str, Any], profile: Profile_t) -> list[str]:
+	try_next = base.get("try_next", {})
+	if not isinstance(try_next, dict):
+		return []
+	commands = try_next.get(profile)
+	if commands is None:
+		commands = try_next.get("*", [])
+	return [cmd.replace("PROFILE", profile) for cmd in commands]
 
 
 def _render_explain_text(spec: dict[str, Any], include_section_context: bool = False) -> str:
@@ -952,10 +1113,10 @@ def _section_or_subsection_feature(category: SectionBodyCategory_t) -> tuple[Ite
 			"Inner lists are expressed by the choice of list marker, not by indentation.",
 			"Inner lists may be nested inside a logical item when the content needs sub-points.",
 			"Example:",
-			"|Must| do this.",
-			"|Must| do that.",
 			"|Must| do the following task consisting of these steps:",
 			"+ |Must| do step1",
+			"* |Must| do step1.1",
+			"* |Must| do step1.2",
 			"+ |Must| do step2",
 		]
 		if feature_category["renders_outer_bullets"]:
@@ -1019,8 +1180,8 @@ def build_section_explanation(label: str, profile: Profile_t) -> ExplainSection_
 		)
 	template = _build_template_lines(label, cat_info["category"], allowed_subsections)
 	hint = list(base["hint"])
-	hint.insert(0, f"Profile: {profile}")
-	hint.append(f"Subsections for {label}: {', '.join(allowed_subsections) if allowed_subsections else 'none'}")
+	hint.insert(0, f"This profile: {profile}")
+	hint.append(f"Subsections for profile {profile}: {', '.join(allowed_subsections) if allowed_subsections else 'none'}")
 	try_self = f"waterlint explain-section --label {label} --profile PROFILE"
 
 	itemization, markup = _section_or_subsection_feature(cat_info["category"])
@@ -1042,7 +1203,7 @@ def build_section_explanation(label: str, profile: Profile_t) -> ExplainSection_
 		"template": template,
 		"hint": hint,
 		"try_self": try_self,
-		"try_next": list(base["try_next"]),
+		"try_next": _render_profile_try_next(base, profile),
 		"itemization": itemization,
 		"markup": markup,
 	}
@@ -1069,7 +1230,9 @@ def build_subsection_explanation(label: str, profile: Profile_t) -> ExplainSubse
 	hint.append(f"Parent section: {section_label}")
 	hint.append(f"Subsection: {subsection_label}")
 	try_self = f"waterlint explain-subsection --label {label} --profile PROFILE"
-	try_next = [f"waterlint explain-section --label {section_label} --profile PROFILE"]
+	try_next = _render_profile_try_next(base, profile)
+	if not try_next:
+		try_next = [f"waterlint explain-section --label {section_label} --profile PROFILE"]
 	return {
 		"profile": profile,
 		"section_label": section_label,
@@ -1180,3 +1343,44 @@ def _emit_explain_tracer(
 		debug=debug,
 		callback_build_json_doc=lambda tr_: _build_explain_tracer_json_doc(tr_, include_debug=debug),
 	)
+
+def _selftest_try_next(
+	label: str,
+	profile: Profile_t,
+	build_explanation: Callable[[str, Profile_t], ExplainSection_t | ExplainSubsection_t | None],
+	kind: str,
+) -> None:
+	explanations = build_explanation(label, profile)
+	if explanations is None:
+		print(f"Error: No explanation found for {kind} {label} with profile {profile}")
+		return
+	for line in explanations["try_next"]:
+		cmd = line.replace("PROFILE", profile) + " --out /dev/null"
+		result = subprocess.run(cmd, shell=True, capture_output=True, text=True)
+		if result.returncode != 0:
+			detail = (result.stderr or result.stdout).strip()
+			if detail:
+				print(f"Error ({result.returncode}) while running: {cmd}\n{detail}")
+			else:
+				print(f"Error ({result.returncode}) while running: {cmd}")
+
+
+def selftest_section_try_next() -> None:
+	for label in _BASE_SECTION_SPECS:
+		profile_map = SECTION_SUBSECTIONS.get(label, {})
+		for profile in CANONICAL_ORDER_OF_PROFILES:
+			if profile not in profile_map:
+				continue
+			_selftest_try_next(label, profile, build_section_explanation, "section")
+
+
+def selftest_subsection_try_next() -> None:
+	for label, base in _BASE_SUBSECTION_SPECS.items():
+		section_props = SECTION_PROPERTIES.get(label)
+		if section_props is None:
+			continue
+		profiles = section_props["profile"]
+		for profile in CANONICAL_ORDER_OF_PROFILES:
+			if profile not in profiles:
+				continue
+			_selftest_try_next(label, profile, build_subsection_explanation, "subsection")
