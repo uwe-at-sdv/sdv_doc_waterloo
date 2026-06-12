@@ -112,21 +112,20 @@ Method_overview:
 				method
 			normative_sections:
 				Contract, Parameters, Returns, Raises
-			scope:
-				extension
 		Contract:
 			general:
-				|Must| test whether the scope set of |self| is at least as restrictive as\
-				one of the scopes in |var|`sc_query`. This is used for upward references\
-				(e.g. derived -> base), where the referenced object must not be _more_ public.
+				|Must| test whether at least one scope in |var|`sc_query` is at least as public as\
+				at least one scope in |self|.
+				This is the visibility relation used for upward references: a referenced object\
+				|must| be at least as public as the referencing object.
 			requires:
 				Requirements of method |func|`scopes` apply.
 		Parameters:
 			sc_query:
-				The set of scopes of the referenced object.
+				The set of scope values of the referenced object.
 		Returns:
-			|True| if there exists s_obj in |self|.scopes() and s_query in |var|`sc_query`\
-			such that s_query <= s_obj; otherwise |false|.
+			|True| iff there exists s_query in |var|`sc_query` and s_self in |self|.scopes()\
+			such that s_query <= s_self.
 		Raises:
 			SectionNotFoundError:
 				|May| propagate from |func|`scopes`.
@@ -145,10 +144,10 @@ Method_overview:
 				extension
 		Contract:
 			general:
-				|Must| test compatibility of the scopes of |self|\
-				with the scopes of |var|`obj_trg`. Compatibility is\
-				given if at least one scope in |self| is less than or equal to\
-				at least one scope in the referenced object.
+				|Must| test whether at least one scope in the referenced object |var|`obj_trg`\
+				is at least as public as at least one scope in |self|.
+				This is the scope-compatibility relation used for reference edges:
+				the referenced object |must| be at least as public as |self|.
 			requires:
 				Requirements of method |func|`scopes` apply,\
 				for both |self| and |var|`obj_trg`.

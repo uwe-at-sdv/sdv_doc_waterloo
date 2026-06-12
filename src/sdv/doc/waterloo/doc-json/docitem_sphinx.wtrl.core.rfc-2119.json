@@ -1,12 +1,12 @@
 {
     "$schema": "https://sci-d-vis.com/schema/wtrl-json-0.1.0.schema.json",
-    "$id": "urn:waterlint:wtrl-json:0.16.1:core:rfc-2119:35aa8c6899b68c112c3a5abddea1f4235728c2948747d20bd38a3801bfa71684",
+    "$id": "urn:waterlint:wtrl-json:0.16.1:core:rfc-2119:7e568067cf625f5682b046fba2f5864060c028f7026e995271a67b8a6e83ee4f",
     "__WTRL_VERSION__": {
         "waterloo": "0.8.1",
         "schema": "0.1.0"
     },
     "__WTRL_META__": {
-        "generated_at": "2026-06-12T10:04:12+02:00",
+        "generated_at": "2026-06-12T16:41:36+02:00",
         "generator": "waterlint",
         "scope": "core",
         "flavour": "rfc-2119"
@@ -144,6 +144,7 @@
         "sdv.doc.waterloo.docitem_helper.render_exception_reference_details": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.render_exception_reference_details",
         "sdv.doc.waterloo.docitem_helper.render_exactly_one_identifier_details": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.render_exactly_one_identifier_details",
         "sdv.doc.waterloo.docitem_helper.render_parameter_signature_details": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.render_parameter_signature_details",
+        "sdv.doc.waterloo.docitem_helper.render_scope_relation_details": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.render_scope_relation_details",
         "sdv.doc.waterloo.docitem_helper.is_annotatable": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.is_annotatable",
         "sdv.doc.waterloo.docitem_helper.is_attr_annotated": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.is_attr_annotated",
         "sdv.doc.waterloo.docitem_helper.is_attr_final": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.is_attr_final",
@@ -1256,10 +1257,7 @@
                         "MUST cache the extracted result globally by object identity to avoid repeated source parsing.",
                         "MUST cache one parsed AST per module and reuse it for subsequent lookups.",
                         "MUST preserve original indentation and tabs in order to remain compatible with Waterloo parsing under Python 3.13+.",
-                        "SHOULD fall back to a direct source snippet parse when the object is a decorated or wrapper-like callable",
-                        "that cannot be resolved reliably through the module AST.",
-                        "The AST-based source lookup is intentionally slower than direct runtime docstring access and is therefore",
-                        "implemented with caching as a first-order mitigation, not as a full performance optimization.",
+                        "SHOULD fall back to a direct source snippet parse when the object is a decorated or wrapper-like callable that cannot be resolved reliably through the module AST. The AST-based source lookup is intentionally slower than direct runtime docstring access and is therefore implemented with caching as a first-order mitigation, not as a full performance optimization.",
                         "MUST return the empty string if no source docstring can be determined."
                     ]
                 },
@@ -1276,7 +1274,7 @@
                     "Implementation": [
                         "The helper uses a source-first strategy to preserve original indentation and tab characters in Python 3.13+.",
                         "Docstrings are cached by object identity, while parsed module ASTs are cached separately by module object.",
-                        "The AST path is slower than runtime __doc__ access, but caching keeps the repeated cost manageable.",
+                        "The AST path is slower than runtime |var|`__doc__` access, but caching keeps the repeated cost manageable.",
                         "Further performance improvements can be added later by caching validation results for repeated objects."
                     ]
                 }
@@ -2246,6 +2244,70 @@
                         "The corrected parameter entries to show in the expected snippet."
                     ],
                     "profile": "The docstring profile used for the |cmd|`explain-section` hint."
+                },
+                "Returns": [
+                    "A details dictionary with |attr|`found`, |attr|`expected`, and |attr|`hint`."
+                ],
+                "Raises": {}
+            }
+        },
+        "sdv.doc.waterloo.docitem_helper.render_scope_relation_details": {
+            "signature": {
+                "text": "render_scope_relation_details(section_label: 'str', reference: 'str', expected_text: 'str', profile: 'str') -> 'dict[str, Any]'",
+                "parameters": [
+                    {
+                        "name": "section_label",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    },
+                    {
+                        "name": "reference",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    },
+                    {
+                        "name": "expected_text",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    },
+                    {
+                        "name": "profile",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    }
+                ],
+                "returns": "dict[str, Any]"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST build standardized validation details for a scope monotonicity violation."
+                    ]
+                },
+                "Parameters": {
+                    "section_label": [
+                        "The section label to render."
+                    ],
+                    "reference": [
+                        "The offending reference as found in the source section."
+                    ],
+                    "expected_text": [
+                        "The minimal correction or instruction to show in the expected snippet."
+                    ],
+                    "profile": "The docstring profile used for the |cmd|`explain-subsection` hint."
                 },
                 "Returns": [
                     "A details dictionary with |attr|`found`, |attr|`expected`, and |attr|`hint`."
@@ -4362,7 +4424,7 @@
         },
         "sdv.doc.waterloo.docitem_helper.warn_validation": {
             "signature": {
-                "text": "warn_validation(tr: 'tracer', obj: 'object', rule_id: 'RuleId', msg: 'str') -> 'None'",
+                "text": "warn_validation(tr: 'tracer', obj: 'object', rule_id: 'RuleId', msg: 'str', details: 'dict[str, Any] | None' = None) -> 'None'",
                 "parameters": [
                     {
                         "name": "tr",
@@ -4387,6 +4449,12 @@
                         "kind": "POSITIONAL_OR_KEYWORD",
                         "annotation": "str",
                         "default": null
+                    },
+                    {
+                        "name": "details",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "dict[str, Any] | None",
+                        "default": "None"
                     }
                 ],
                 "returns": "None"
@@ -4421,6 +4489,9 @@
                     ],
                     "msg": [
                         "The warning message."
+                    ],
+                    "details": [
+                        "Optional structured diagnostics payload for the warning."
                     ]
                 },
                 "Returns": [
