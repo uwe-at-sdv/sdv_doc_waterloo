@@ -146,7 +146,7 @@ Method_overview:
 			general:
 				|Must| test whether at least one scope in the referenced object |var|`obj_trg`\
 				is at least as public as at least one scope in |self|.
-				This is the scope-compatibility relation used for reference edges:
+				This is the scope-compatibility relation used for reference edges:\
 				the referenced object |must| be at least as public as |self|.
 			requires:
 				Requirements of method |func|`scopes` apply,\
