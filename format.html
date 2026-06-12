@@ -1947,8 +1947,8 @@ Scopes are interpreted uniformly by validators, renderers, and coverage tools.</
 </ul>
 <p>The specification defines a partial order over scope values such that:</p>
 <ul class="simple">
-<li><p><code class="wtrl_value docutils literal notranslate"><span class="pre">public</span></code> &lt;= <code class="wtrl_value docutils literal notranslate"><span class="pre">extension</span></code></p></li>
-<li><p><code class="wtrl_value docutils literal notranslate"><span class="pre">extension</span></code> &lt;= <code class="wtrl_value docutils literal notranslate"><span class="pre">core</span></code></p></li>
+<li><p><code class="wtrl_func docutils literal notranslate"><span class="pre">s</span></code> ( <code class="wtrl_value docutils literal notranslate"><span class="pre">public</span></code> ) &lt;= <code class="wtrl_func docutils literal notranslate"><span class="pre">s</span></code> ( <code class="wtrl_value docutils literal notranslate"><span class="pre">extension</span></code> )</p></li>
+<li><p><code class="wtrl_func docutils literal notranslate"><span class="pre">s</span></code> ( <code class="wtrl_value docutils literal notranslate"><span class="pre">extension</span></code> ) &lt;= <code class="wtrl_func docutils literal notranslate"><span class="pre">s</span></code> ( <code class="wtrl_value docutils literal notranslate"><span class="pre">core</span></code> )</p></li>
 </ul>
 <p>This order expresses increasing internality and decreasing audience size.</p>
 </section>
@@ -1976,38 +1976,59 @@ less than or equal to at least one selected scope.</p>
 </section>
 <section id="scope-monotonicity-rule">
 <span id="section-scope-monotonicity-rule"></span><h3><span class="section-number">5.15.5. </span>Scope Monotonicity Rule<a class="headerlink" href="#scope-monotonicity-rule" title="Link to this heading">¶</a></h3>
-<p>Documented objects form a directed reference graph. A directed edge from object A
-to object B exists if and only if A establishes a reference to B.
-For such an edge, A is the source object and B is the target object.
-Reference edges arise exclusively from the following constructs:</p>
+<p>Documented objects form a directed reference graph.</p>
+<p>Reference edges arise exclusively from the constructs listed below.
+For each reference edge, the source and target objects are defined
+according to the semantics of the corresponding construct.
+The following sections constitute the only means by which reference edges
+are introduced into the documentation graph.</p>
+<p><strong>Public classes, functions, and methods</strong></p>
 <ul class="simple">
-<li><p>Entries in <code class="wtrl_label docutils literal notranslate"><span class="pre">Public_classes</span></code></p></li>
-<li><p>Entries in <code class="wtrl_label docutils literal notranslate"><span class="pre">Public_functions</span></code></p></li>
-<li><p>Entries in <code class="wtrl_label docutils literal notranslate"><span class="pre">Public_methods</span></code></p></li>
-<li><p>Subsection <code class="wtrl_label docutils literal notranslate"><span class="pre">Contract.base</span></code> in profile <code class="wtrl_value docutils literal notranslate"><span class="pre">inherited_method</span></code></p></li>
-<li><p>Entries in <code class="wtrl_label docutils literal notranslate"><span class="pre">Derived_from</span></code></p></li>
-<li><p>Entries in <code class="wtrl_label docutils literal notranslate"><span class="pre">See_also</span></code></p></li>
+<li><p>Entries in <code class="wtrl_label docutils literal notranslate"><span class="pre">Public_classes</span></code> induce reference edges from the containing module/class to the listed classes.</p></li>
+<li><p>Entries in <code class="wtrl_label docutils literal notranslate"><span class="pre">Public_functions</span></code> induce reference edges from the containing module to the listed functions.</p></li>
+<li><p>Entries in <code class="wtrl_label docutils literal notranslate"><span class="pre">Public_methods</span></code> induce reference edges from the containing class to the listed methods.</p></li>
 </ul>
-<p>No other structural or semantic relationship constitutes a reference edge
-for the purposes of scope validation.</p>
-<p>Scope compatibility is directional. For containment-style references introduced by
-<code class="wtrl_label docutils literal notranslate"><span class="pre">Public_classes</span></code>, <code class="wtrl_label docutils literal notranslate"><span class="pre">Public_functions</span></code>, <code class="wtrl_label docutils literal notranslate"><span class="pre">Public_methods</span></code>,
-<code class="wtrl_label docutils literal notranslate"><span class="pre">Contract.base</span></code>, and <code class="wtrl_label docutils literal notranslate"><span class="pre">Derived_from</span></code>, the containing object
-<code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span></code> be at least as public as the contained object; equivalently, the contained object
-<code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span></code> not be more public than the containing object.
-For <code class="wtrl_label docutils literal notranslate"><span class="pre">See_also</span></code>, <code class="wtrl_label docutils literal notranslate"><span class="pre">Derived_from</span></code>, and <code class="wtrl_label docutils literal notranslate"><span class="pre">Contract.base</span></code>
-the target object <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span></code> be at least as public as the
-source object; equivalently, the source object <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span></code> not be more public than the
-target object.</p>
-<p>In terms of the numeric scope order, this means:</p>
+<p class="rubric">Rationale (informative)</p>
+<p>This reflects the intuitive notion that the containing object “contains”
+the listed objects as part of its public API surface. The reference edge represents a contractual
+relationship: the containing object is <strong>responsible</strong> for providing access to the contained objects,
+and users of the containing object are expected to interact with the contained objects as part
+of of their usage of the containing object. The containing object must be at least as public as
+the contained objects, since otherwise it would block access to visible such objects.</p>
+<p><strong>Inheritance</strong></p>
 <ul class="simple">
-<li><p>for containment-style references, there exist s_A in scopes(A) and s_B in scopes(B) such that s_B &lt;= s_A,
-where A represents the contained object and B represents the containing object.
-Intuitively, a contained object must not be visible in a context
-where the object containing it is invisible.</p></li>
-<li><p>for <code class="wtrl_label docutils literal notranslate"><span class="pre">See_also</span></code>, there exist s_A in scopes(A) and s_B in scopes(B) such that s_B &lt;= s_A,
-where A represents the object with the <code class="wtrl_label docutils literal notranslate"><span class="pre">See_also</span></code>, <code class="wtrl_label docutils literal notranslate"><span class="pre">Derived_from</span></code>,
-or <code class="wtrl_label docutils literal notranslate"><span class="pre">Contract.base</span></code> section and B represents the object pointed to from this section.</p></li>
+<li><p>Subsection <code class="wtrl_label docutils literal notranslate"><span class="pre">Contract.base</span></code> in profile <code class="wtrl_value docutils literal notranslate"><span class="pre">inherited_method</span></code> induces a reference edge from the referenced(!) base method to the referencing(!) method.</p></li>
+<li><p>Entries in <code class="wtrl_label docutils literal notranslate"><span class="pre">Derived_from</span></code> induce reference edges from the base(!) class to the derived(!) class.</p></li>
+</ul>
+<p class="rubric">Rationale (informative)</p>
+<p>This reflects the intuitive notion that a derived class or method “refers to”
+its base class or method as part of its contract. The reference edge represents a contractual relationship:
+the derived object is <strong>obliged</strong> to uphold the contract of the base object, and users of the derived object
+are expected to rely on the guarantees provided by the base object as part of their usage of the derived object.</p>
+<p><strong>Cross-referencing</strong></p>
+<ul class="simple">
+<li><p>Entries in <code class="wtrl_label docutils literal notranslate"><span class="pre">See_also</span></code> induce reference edges from the referenced(!) objects to the referencing(!) object.</p></li>
+</ul>
+<p class="rubric">Rationale (informative)</p>
+<p>A section <code class="wtrl_label docutils literal notranslate"><span class="pre">See_also</span></code> represents an explicit warrant that the referenced objects
+are accessible and relevant to users of the referencing object. Information flows from the referenced objects
+to the referencing object, and users of the referencing object are expected to consult the referenced objects,
+therefore the referenced objects must be at least as public as the referencing object.</p>
+<p>If we define A as the source of information and B as the target of information,
+in terms of the numeric scope order, this means:</p>
+<ul class="simple">
+<li><p>For containment-style references, there exist s_A in scopes(A) and s_B in scopes(B) such that s_A &lt;= s_B,
+(“A is at least as public as B”)
+where B represents the contained object and A represents the containing object.</p></li>
+<li><p>For <code class="wtrl_label docutils literal notranslate"><span class="pre">Derived_from</span></code> and <code class="wtrl_label docutils literal notranslate"><span class="pre">Contract.base</span></code>,
+there exist s_A in scopes(A) and s_B in scopes(B) such that s_A &lt;= s_B,
+(“A is at least as public as B”)
+where A represents the referenced object
+and B represents the referencing object containing the <code class="wtrl_label docutils literal notranslate"><span class="pre">Derived_from</span></code> or <code class="wtrl_label docutils literal notranslate"><span class="pre">Contract.base</span></code> section</p></li>
+<li><p>For <code class="wtrl_label docutils literal notranslate"><span class="pre">See_also</span></code>, there exist s_A in scopes(A) and s_B in scopes(B) such that s_A &lt;= s_B,
+(“A is at least as public as B”)
+where A represents the referenced object
+and B represents the referencing object containing the <code class="wtrl_label docutils literal notranslate"><span class="pre">See_also</span></code> section.</p></li>
 </ul>
 <p>This rule is referred to as the <code class="wtrl_term docutils literal notranslate"><span class="pre">Scope</span> <span class="pre">Monotonicity</span> <span class="pre">Rule</span></code>.</p>
 </section>
