@@ -1,0 +1,30 @@
+{
+  "topic": "waterlint.command",
+  "title": "Waterlint usage",
+  "summary": "How to validate Waterloo docstrings and inspect problems.",
+  "content": [
+    {
+      "kind": "examples",
+      "items": [
+        "waterlint validate --basedir package/sdv/app/clql --obj clql.Message --out-diag-json /dev/stdout",
+        "waterlint explain-section --label Preamble --profile class --out-json /dev/stdout",
+        "waterlint explain-subsection --label Contract.general --profile class --out-json /dev/stdout",
+        "waterlint coverage --basedir package_main/src --obj sdv.doc.waterloo.docitem_helper --out-diag-json /dev/stdout"
+      ]
+    },
+    {
+      "kind": "rules",
+      "items": [
+        "Use validate after editing a docstring to check for errors and inconsistencies.",
+        "Use explain-section to learn what belongs in a section.",
+        "Use explain-subsection to learn what belongs in a subsection.",
+        "Use coverage only for whole modules that are already mostly consistent and documented.",
+        "Use --basedir to point waterlint at the module search path.",
+        "Use --obj to target the exact object.",
+        "Use --out-diag-json /dev/stdout for machine-readable diagnostics.",
+        "Use --profile to select the docstring profile for explain commands.",
+        "The supported profiles are module, class, function, method, and inherited_method."
+      ]
+    }
+  ]
+}

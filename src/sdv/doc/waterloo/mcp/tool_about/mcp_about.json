@@ -1,0 +1,23 @@
+{
+  "topic": null,
+  "title": "About",
+  "summary": "Entry point for Waterloo help topics.",
+  "topics": [
+    {
+      "key": "waterloo.structure",
+      "label": "Waterloo docstrings",
+      "summary": "Docstring structure and rules."
+    },
+    {
+      "key": "waterlint.command",
+      "label": "Waterlint usage",
+      "summary": "Validation commands, object selection, and diagnostics."
+    },
+    {
+      "key": "waterloo.markup",
+      "label": "Inline markup",
+      "summary": "Normativity keywords, value tokens, and role syntax."
+    }
+  ],
+  "hint": "Call about('waterlint.command') next."
+}

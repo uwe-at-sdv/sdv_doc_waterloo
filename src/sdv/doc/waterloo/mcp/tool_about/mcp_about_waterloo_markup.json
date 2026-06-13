@@ -1,0 +1,114 @@
+{
+  "topic": "waterloo.markup",
+  "title": "Inline markup",
+  "summary": "Normativity keywords, value tokens, roles, and examples.",
+  "content": [
+    {
+      "kind": "normativity-keywords",
+      "items": [
+        "|Must|",
+        "|Must_not|",
+        "|must|",
+        "|must_not|",
+        "|Should|",
+        "|Should_not|",
+        "|should|",
+        "|should_not|",
+        "|May|",
+        "|may|"
+      ]
+    },
+    {
+      "kind": "normativity-keyword-examples",
+      "items": [
+        "|Must| define the contract.",
+        "The caller |must| supply an object.",
+        "|Should| keep the helper small.",
+        "The helper |should| stay flat.",
+        "|May| be used for optional features.",
+        "The caller |may| provide additional arguments.",
+        "|Must_not| raise an exception."
+      ]
+    },
+    {
+      "kind": "value-tokens",
+      "items": [
+        "|None|",
+        "|Self|",
+        "|True|",
+        "|False|"
+      ]
+    },
+    {
+      "kind": "value-token-examples",
+      "items": [
+        "Use |None| when a function does not return a value.",
+        "Use |Self| for fluent interfaces that return the current instance.",
+        "Use |True| and |False| for boolean outcomes or normative clauses."
+      ]
+    },
+    {
+      "kind": "roles",
+      "items": [
+        "attr",
+        "cmd",
+        "dfn",
+        "file",
+        "func",
+        "key",
+        "label",
+        "lit",
+        "mod",
+        "norm",
+        "op",
+        "opt",
+        "ref",
+        "term",
+        "type",
+        "value",
+        "tag",
+        "var",
+        "var_type"
+      ]
+    },
+    {
+      "kind": "role-examples",
+      "items": [
+        "|attr|`kind`",
+        "|cmd|`waterlint validate --basedir package/sdv/app/clql --obj clql.Message`",
+        "|dfn|`SomeTermDefinedHere`",
+        "|file|`package_main/doc/source/format.rst`",
+        "|func|`my_function(arg1, arg2)`",
+        "|key|`CTRL-C`",
+        "|label|`Contract.general`",
+        "|lit|`root`",
+        "|lit|`stdout`",
+        "|mod|`sdv.doc.waterloo.docitem_helper`",
+        "|norm|`Must`",
+        "|op|`+`",
+        "|opt|`--out-diag-json`",
+        "|ref|`Label wtrl://some.ref`",
+        "|ref|`Label https://link.org`",
+        "|tag|`section`",
+        "|tag|`table`",
+        "|term|`SomeTermReferenced`",
+        "|type|`int`",
+        "|type|`mcp.myclass`",
+        "|value|`42`",
+        "|value|`some string`",
+        "|var|`myvar`",
+        "|var_type|`myvar:float`"
+      ]
+    },
+    {
+      "kind": "rules",
+      "items": [
+        "Do not use normativity keywords, value tokens, or role markup in labels or identifier lists.",
+        "Use normativity keywords, value tokens, and role markup in free-form or itemized text only.",
+        "Use normativity keywords only in normative sections and subsections.",
+        "Use proper capitalization, e.g. |Must| at the beginning of a sentence and |must| within a sentence.",
+        "Use |tag| for tag names without angle brackets when output layers add the brackets later."
+      ]
+    }
+  ]
+}

@@ -1,0 +1,55 @@
+{
+	"description": "Waterloo MCP about index response schema. This is the top-level entry point that lists available help topics.",
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"$id": "https://sci-d-vis.com/schema/wtrl-mcp-about-json-0.1.0.schema.json",
+	"title": "Waterloo MCP about index JSON",
+	"type": "object",
+	"additionalProperties": false,
+	"required": [
+		"topic",
+		"title",
+		"summary",
+		"topics",
+		"hint"
+	],
+	"properties": {
+		"topic": {
+			"type": "null"
+		},
+		"title": {
+			"type": "string",
+			"const": "About"
+		},
+		"summary": {
+			"type": "string"
+		},
+		"topics": {
+			"type": "array",
+			"minItems": 1,
+			"items": {
+				"type": "object",
+				"additionalProperties": false,
+				"required": [
+					"key",
+					"label",
+					"summary"
+				],
+				"properties": {
+					"key": {
+						"type": "string",
+						"pattern": "^[a-z]+(?:\\.[a-z]+)*$"
+					},
+					"label": {
+						"type": "string"
+					},
+					"summary": {
+						"type": "string"
+					}
+				}
+			}
+		},
+		"hint": {
+			"type": "string"
+		}
+	}
+}

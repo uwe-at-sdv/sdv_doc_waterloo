@@ -1,0 +1,103 @@
+{
+  "topic": "waterloo.structure",
+  "title": "Waterloo docstring structure",
+  "summary": "Profiles, sections, subsections, and scope rules.",
+  "content": [
+    {
+      "kind": "profiles",
+      "items": [
+        "module",
+        "class",
+        "function",
+        "method",
+        "inherited_method"
+      ]
+    },
+    {
+      "kind": "sections",
+      "items": [
+        "Preamble",
+        "Contract",
+        "Definitions",
+        "Terminology",
+        "Description",
+        "Derived_from",
+        "Factory",
+        "Public_classes",
+        "Class_overview",
+        "Public_functions",
+        "Function_overview",
+        "Public_methods",
+        "Method_overview",
+        "Public_types",
+        "Public_variables",
+        "Public_constants",
+        "Parameters",
+        "Returns",
+        "Raises",
+        "Notes",
+        "See_also"
+      ]
+    },
+    {
+      "kind": "subsections",
+      "items": [
+        "Preamble.profile",
+        "Preamble.normative_sections",
+        "Preamble.status",
+        "Preamble.scope",
+        "Definitions.<item>",
+        "Definitions._inherit",
+        "Terminology.<item>",
+        "Contract.general",
+        "Contract.constructor",
+        "Contract.base",
+        "Contract.traits",
+        "Contract.invariants",
+        "Contract.requires",
+        "Contract.ensures",
+        "Factory.<item>",
+        "Class_overview.<item>",
+        "Function_overview.<item>",
+        "Method_overview.<item>",
+        "Public_types.<item>",
+        "Public_variables.<item>",
+        "Public_constants.<item>",
+        "Parameters.<item>",
+        "Returns.<item>",
+        "Raises.<item>",
+        "Notes.<item>"
+      ]
+    },
+    {
+      "kind": "scope",
+      "items": [
+        "A source object must be at least as public as its target object.",
+        "Public_* sections describe contained objects that must not be more public than the container.",
+        "Derived_from and Contract.base follow the same monotonicity rule as See_also."
+      ]
+    },
+    {
+      "kind": "indentation",
+      "items": [
+        "Waterloo indentation uses only TAB and SPC4.",
+        "Some waterlint commands name these modes tab and spc4.",
+        "Follow the indentation style already used in the surrounding document.",
+        "Keep indentation consistent within one docstring.",
+        "Do not mix tabs and spaces in the same structural block.",
+        "Indentation expresses hierarchy, not just visual layout."
+      ]
+    },
+    {
+      "kind": "rules",
+      "items": [
+        "Use Preamble to declare profile and normative sections.",
+        "Derive the section and subsection inventory from SECTION_PROPERTIES.",
+        "Keep the section list consistent with the object kind and profile.",
+        "Use subsections only where SECTION_PROPERTIES defines them.",
+        "Use waterlint explain-section to inspect sections and waterlint explain-subsection to inspect subsections.",
+        "Keep scope monotonicity between source and target objects."
+      ]
+    }
+  ]
+}

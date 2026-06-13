@@ -1,0 +1,73 @@
+{
+	"description": "Waterloo MCP about topic response schema. The response uses a fixed envelope and a flat content list.",
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"$id": "https://sci-d-vis.com/schema/wtrl-mcp-about-topic-json-0.1.0.schema.json",
+	"title": "Waterloo MCP about topic JSON",
+	"type": "object",
+	"additionalProperties": false,
+	"required": [
+		"topic",
+		"title",
+		"summary",
+		"content"
+	],
+	"$defs": {
+		"topic_key": {
+			"type": "string",
+			"pattern": "^[a-z]+(?:\\.[a-z]+)*$"
+		},
+		"string_array": {
+			"type": "array",
+			"items": {
+				"type": "string"
+			}
+		},
+		"content_kind": {
+			"type": "string",
+			"enum": [
+				"examples",
+				"rules",
+				"roles",
+				"value-tokens",
+				"normativity-keywords",
+				"normativity-keyword-examples",
+				"value-token-examples",
+				"role-examples"
+			]
+		},
+		"content_block": {
+			"type": "object",
+			"additionalProperties": false,
+			"required": [
+				"kind",
+				"items"
+			],
+			"properties": {
+				"kind": {
+					"$ref": "#/$defs/content_kind"
+				},
+				"items": {
+					"$ref": "#/$defs/string_array"
+				}
+			}
+		}
+	},
+	"properties": {
+		"topic": {
+			"$ref": "#/$defs/topic_key"
+		},
+		"title": {
+			"type": "string"
+		},
+		"summary": {
+			"type": "string"
+		},
+		"content": {
+			"type": "array",
+			"minItems": 1,
+			"items": {
+				"$ref": "#/$defs/content_block"
+			}
+		}
+	}
+}
