@@ -67,6 +67,7 @@ from sdv.doc.waterloo.mcp.wtrl_tools import (
     DocstringJsonMode_t,
     DocstringMode_t,
     DocstringProfile_t,
+    about,
     ExampleRef,
     ObjectSummary,
     ReferenceRecord,
@@ -126,6 +127,7 @@ WTRL_TOOL_DOCS: Final[dict[str, Callable[..., object] | None]] = {
 	"search_sections": search_sections,
 	"search_text": search_text,
 	"gen_docstring": gen_docstring,
+	"about": about,
 	"describe_tool": None,  # Will be set after function definition
 }
 #----- end constants and global variables --------------------#
@@ -787,6 +789,10 @@ def build_app(config: McpConfig) -> FastMCP:
 	) -> dict[str, WtrlJsonNode_t]:
 		return gen_docstring(profile=profile, signature=signature, mode=mode, indent_mode=indent_mode, json_mode=json_mode)
 
+	@mcp.tool(name="about", description="Read one Waterloo help topic from the bundled about files.")
+	def _about(topic: str | None = None) -> dict[str, WtrlJsonNode_t]:
+		return about(topic)
+
 	@mcp.tool(name="describe_tool", description="Describe one MCP tool by its canonical tool name.")
 	def _describe_tool(toolname: str) -> str:
 		r"""
@@ -827,9 +833,10 @@ def build_app(config: McpConfig) -> FastMCP:
 			"search_objects": _search_objects,
 			"search_sections": _search_sections,
 			"search_text": _search_text,
-			"gen_docstring": _gen_docstring,
-			"describe_tool": _describe_tool,
-		}
+            "gen_docstring": _gen_docstring,
+            "about": _about,
+            "describe_tool": _describe_tool,
+        }
 		if toolname not in tool_wrappers or toolname not in WTRL_TOOL_DOCS:
 			raise ValueError(f"MCPS-007 unknown tool: {toolname}")
 		tool_doc = WTRL_TOOL_DOCS[toolname]

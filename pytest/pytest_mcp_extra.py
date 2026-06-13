@@ -44,6 +44,42 @@ def test_mcp_describe_tool_mentions_list_objects(mcp_session: str) -> None:
 	assert "ObjectSummary" in help_text, help_text
 
 
+def test_mcp_describe_tool_mentions_about(mcp_session: str) -> None:
+	result = mcp_call_tool(mcp_session, "describe_tool", {"toolname": "about"})
+	structured = _structured_result(result)
+	help_text = structured.get("result")
+	assert isinstance(help_text, str), structured
+	assert "about" in help_text, help_text
+	assert "topic" in help_text, help_text
+	assert "Waterloo docstring:" in help_text, help_text
+	assert "bundled package resources" in help_text, help_text
+
+
+def test_mcp_about_returns_index_topics(mcp_session: str) -> None:
+	result = mcp_call_tool(mcp_session, "about", {})
+	structured = _structured_result(result)
+	assert structured.get("topic") is None, structured
+	assert structured.get("title") == "About", structured
+	topics = structured.get("topics")
+	assert isinstance(topics, list), structured
+	keys = {entry.get("key") for entry in topics if isinstance(entry, dict)}
+	assert {"waterlint.command", "waterloo.structure", "waterloo.markup"} <= keys, structured
+	assert structured.get("hint") == "Call about('waterlint.command') next.", structured
+
+
+def test_mcp_about_returns_markup_topic(mcp_session: str) -> None:
+	result = mcp_call_tool(mcp_session, "about", {"topic": "waterloo.markup"})
+	structured = _structured_result(result)
+	assert structured.get("topic") == "waterloo.markup", structured
+	assert structured.get("title") == "Inline markup", structured
+	content = structured.get("content")
+	assert isinstance(content, list), structured
+	kinds = [entry.get("kind") for entry in content if isinstance(entry, dict)]
+	assert "role-examples" in kinds, structured
+	assert "normativity-keyword-examples" in kinds, structured
+	assert "rules" in kinds, structured
+
+
 def test_mcp_get_signature_returns_wrapper_for_function(mcp_session: str) -> None:
 	result = mcp_call_tool(
 		mcp_session,

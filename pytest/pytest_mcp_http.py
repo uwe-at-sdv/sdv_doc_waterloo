@@ -55,6 +55,7 @@ def mcp_session() -> str:
 def test_mcp_http_tools_list_includes_docstring_tools(mcp_session: str) -> None:
 	result = mcp_tools_list(mcp_session)
 	names = _tool_names(result)
+	assert "about" in names, names
 	assert "list_roots" in names, names
 	assert "gen_docstring" in names, names
 	assert "search_text" in names, names

@@ -13,12 +13,15 @@ Public_classes:
 	ExampleRef, ObjectSummary, ReferenceRecord, RelatedRecord, SearchObjectsFilter, SearchSectionsFilter, SearchTextFilter
 Public_functions:
 	matches_segment_aware_expression,
+	about,
 	list_roots, get_root, get_root_metadata, get_object, get_section, get_subsection, list_objects,
 	get_references, search_related, get_signature, get_examples, get_example_source,
 	search_objects, search_sections, search_text, gen_docstring
 Function_overview:
 	matches_segment_aware_expression:
 		Check whether a candidate name matches a given expression, which can be either a literal match or a glob pattern.
+	about:
+		Return the bundled Waterloo about topic JSON for the index or one selected topic.
 	list_roots:
 		[MCP tool] List the configured Waterloo roots with stable identifiers.
 	get_root:
@@ -72,6 +75,7 @@ from __future__ import annotations
 import fnmatch
 import ast
 import hashlib
+import importlib.resources
 import json
 import re
 from pathlib import Path
@@ -653,6 +657,49 @@ def _load_root_context(root_id: str, roots: list[Mapping[str, WtrlJsonNode_t]]) 
 	if not isinstance(document, dict):
 		raise ValueError(f"Root document must be a JSON object: {root_id}")
 	return idx, root_data, root_path, document
+
+
+def _about_resource_name(topic: str | None) -> str:
+	if topic is None:
+		return "mcp_about.json"
+	topic_key = topic.strip()
+	if not topic_key:
+		raise ValueError("about topic must not be empty")
+	return f"mcp_about_{topic_key.replace('.', '_')}.json"
+
+
+def about(topic: str | None = None) -> dict[str, WtrlJsonNode_t]:
+	r"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+		scope:
+			extension
+	Contract:
+		general:
+			|Must| load one Waterloo about help topic from the bundled package resources.
+			|Must| return the index response when |var|`topic` is |None|.
+			|Must| derive the resource file name from the requested topic key.
+			|Must| keep the help text file backed by the package resources so it can be edited without code changes.
+	Parameters:
+		topic:
+			Optional help topic key such as |lit|`waterlint.command`, |lit|`waterloo.structure`, or |lit|`waterloo.markup`.
+			If omitted, the index response is returned.
+	Returns:
+		The parsed Waterloo about JSON document for the requested topic or the index response.
+	Raises:
+		FileNotFoundError:
+			|May| raise if the about text file is missing from the package resources.
+		ValueError:
+			|May| raise if |var|`topic` is empty.
+		json.JSONDecodeError:
+			|May| raise if the about text file is not valid JSON.
+	"""
+	resource_name = _about_resource_name(topic)
+	resource = importlib.resources.files("sdv.doc.waterloo.mcp.tool_about").joinpath(resource_name)
+	return cast(dict[str, WtrlJsonNode_t], json.loads(resource.read_text(encoding="utf-8")))
 
 
 def _doc_normative_sections(object_record: Mapping[str, object]) -> set[str]:
