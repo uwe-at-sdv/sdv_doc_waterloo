@@ -204,4 +204,5 @@ def test_gen_minimal_format_raw_requires_exactly_one_target() -> None:
 		"raw",
 	)
 	assert res.returncode == 2, res.stderr
+	assert "TOOL-008" in res.stderr, res.stderr
 	assert "--format raw requires exactly one target object" in res.stderr

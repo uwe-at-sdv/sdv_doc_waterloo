@@ -48,6 +48,7 @@ from sdv.doc.waterloo.docitem_helper import (
 	Documentable,
 	get_obj_fully_qualified_name,
 	get_obj_path,
+	ResolveObjectError,
 	)
 
 __version__ = "0.1.1"
@@ -433,6 +434,10 @@ def walk_command(args: argparse.Namespace) -> int:
 		tr.add_info(f"Num objects included: {sum(1 for e in entries if e.get('included'))}.", "tool")
 		_emit_tracer(tr, out_diag, out_diag_json)
 		return 0
+	except ResolveObjectError as exc:
+		tr.add_error("TOOL-001", "tool", str(exc), exc.to_details())
+		_emit_tracer(tr, out_diag, out_diag_json)
+		return 1
 	except Exception:
 		add_traceback(tr)
 		_emit_tracer(tr, out_diag, out_diag_json)

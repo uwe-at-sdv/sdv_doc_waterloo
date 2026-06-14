@@ -106,6 +106,19 @@ def test_good_overview_module_and_class() -> None:
 	assert result.returncode == 0, result.stderr
 
 
+def test_validate_reports_import_failure_for_bad_module_import(tmp_path: Path) -> None:
+	"""A syntactically valid module with a bad import should report the import failure."""
+	mod_file = tmp_path / "test_bad_syntax.py"
+	mod_file.write_text(
+		'"""Valid module docstring."""\n'
+		"import does_not_exist_module\n",
+		encoding="utf-8",
+	)
+	result = _run_waterlint_validate_with_basedir("test_bad_syntax", str(tmp_path))
+	_assert_error(result, "TOOL-001", "Last import failure")
+	assert "No module named 'does_not_exist_module'" in result.stderr, result.stderr
+
+
 def test_bad_class_overview_cclo_cmto_x_cmto_002() -> None:
 	result = _run_waterlint_validate_with_basedir("pytest_bad_class_overview_CCLO_CMTO.X_CMTO_002")
 	_assert_error(result, "CMTO-002", "")
@@ -217,7 +230,7 @@ def test_bad_see_also_invalid_docstring_normative() -> None:
 
 def test_bad_scope_see_also_module() -> None:
 	result = _run_waterlint_validate("pytest_bad_scope_see_also")
-	_assert_error(result, "SCP-006", "which is less public")
+	_assert_error(result, "SCP-006", "Reconsider the scopes")
 
 def test_bad_scope_see_also_spam() -> None:
 	result = _run_waterlint_validate("pytest_bad_scope_see_also.spam")
@@ -225,7 +238,7 @@ def test_bad_scope_see_also_spam() -> None:
 
 def test_bad_scope_see_also_eggs() -> None:
 	result = _run_waterlint_validate("pytest_bad_scope_see_also.eggs")
-	_assert_error(result, "SCP-006", "which is less public")
+	_assert_error(result, "SCP-006", "Reconsider the scopes")
 
 #def test_bad_scope_see_also_normative_function() -> None:
 #	result = _run_waterlint_validate("pytest_bad_scope_see_also.helper")
@@ -260,30 +273,30 @@ def test_bad_status_class_status_not_allowed() -> None:
 
 def test_bad_scope_class_vs_module() -> None:
 	result = _run_waterlint_validate("pytest_bad_scope")
-	_assert_error(result, "SCP-005", "Scope of class")
+	_assert_error(result, "SCP-005", "Reconsider the scopes")
 
 def test_bad_scope_method_vs_class() -> None:
 	result = _run_waterlint_validate("pytest_bad_scope.X_extension")
-	_assert_error(result, "SCP-005", "Scope of method")
+	_assert_error(result, "SCP-005", "Reconsider the scopes")
 
 def test_bad_scope_derived_class() -> None:
 	result = _run_waterlint_validate("pytest_bad_scope.Y_public")
-	_assert_error(result, "SCP-009", "Scope of base class")
+	_assert_error(result, "SCP-009", "Reconsider the scopes")
 
 def test_bad_scope_inherited_method_vs_base() -> None:
 	result = _run_waterlint_validate("pytest_bad_scope.Y_public.f")
-	_assert_error(result, "SCP-008", "base method")
+	_assert_error(result, "SCP-008", "Reconsider the scopes")
 
 
 def test_bad_scope_module_vs_class() -> None:
 	# module scope core, class scope extension -> violation
 	result = _run_waterlint_validate("pytest_bad_scope")
-	_assert_error(result, "SCP-005", "class 'X_extension'")
+	_assert_error(result, "SCP-005", "Reconsider the scopes")
 
 
 def test_bad_scope_class_vs_base_class_B() -> None:
 	result = _run_waterlint_validate("pytest_bad_scope_base_class.B")
-	_assert_error(result, "SCP-009", "base class")
+	_assert_error(result, "SCP-009", "Reconsider the scopes")
 def test_bad_scope_class_vs_base_class_C() -> None:
 	result = _run_waterlint_validate("pytest_bad_scope_base_class.C")
 	assert result.returncode == 0, f"expected success, got {result.stderr}"
@@ -783,7 +796,7 @@ def test_bad_class_public_classes_cpcl_x01_validate_cpcl002() -> None:
 
 def test_bad_class_public_classes_cpcl_x02_validate_cpcl004() -> None:
 	result = _run_waterlint_validate_with_basedir("pytest_bad_class_public_classes_CPCL.X_02")
-	_assert_error(result, "CPCL-004", "does not exist on class")
+	_assert_error(result, "CPCL-004", "no matching object")
 
 
 def test_bad_class_public_classes_cpcl_x03_validate_cpcl005() -> None:
@@ -803,7 +816,7 @@ def test_bad_class_public_methods_cpmt_x01_validate_cpmt002() -> None:
 
 def test_bad_class_public_methods_cpmt_x02_validate_cpmt004() -> None:
 	result = _run_waterlint_validate_with_basedir("pytest_bad_class_public_methods_CPMT.X_02")
-	_assert_error(result, "CPMT-004", "does not exist on class")
+	_assert_error(result, "CPMT-004", "no matching object")
 
 
 def test_bad_class_public_methods_cpmt_x03_validate_cpmt005() -> None:
@@ -823,7 +836,7 @@ def test_bad_class_public_cptyp_cpvar_cpcon_x_cptyp_004() -> None:
 
 def test_bad_class_public_cptyp_cpvar_cpcon_x_cptyp_005() -> None:
 	result = _run_waterlint_validate_with_basedir("pytest_bad_class_public_CPTYP_CPVAR_CPCON.X_CPTYP_005")
-	_assert_error(result, "CPTYP-005", "does not exist on class")
+	_assert_error(result, "CPTYP-005", "no matching object")
 
 
 def test_bad_class_public_cptyp_cpvar_cpcon_x_cptyp_006() -> None:
@@ -848,7 +861,7 @@ def test_bad_class_public_cptyp_cpvar_cpcon_x_cpvar_004() -> None:
 
 def test_bad_class_public_cptyp_cpvar_cpcon_x_cpvar_005() -> None:
 	result = _run_waterlint_validate_with_basedir("pytest_bad_class_public_CPTYP_CPVAR_CPCON.X_CPVAR_005")
-	_assert_error(result, "CPVAR-005", "does not exist on class")
+	_assert_error(result, "CPVAR-005", "no matching object")
 
 
 def test_bad_class_public_cptyp_cpvar_cpcon_x_cpvar_006() -> None:
@@ -873,7 +886,7 @@ def test_bad_class_public_cptyp_cpvar_cpcon_x_cpcon_004() -> None:
 
 def test_bad_class_public_cptyp_cpvar_cpcon_x_cpcon_005() -> None:
 	result = _run_waterlint_validate_with_basedir("pytest_bad_class_public_CPTYP_CPVAR_CPCON.X_CPCON_005")
-	_assert_error(result, "CPCON-005", "does not exist on class")
+	_assert_error(result, "CPCON-005", "no matching object")
 
 
 def test_bad_class_public_cptyp_cpvar_cpcon_x_cpcon_006() -> None:
@@ -898,7 +911,7 @@ def test_bad_module_public_classes_mpcl_002() -> None:
 
 def test_bad_module_public_classes_mpcl_004() -> None:
 	result = _run_waterlint_validate_with_basedir("pytest_bad_module_public_classes_MPCL_004")
-	_assert_error(result, "MPCL-004", "does not exist")
+	_assert_error(result, "MPCL-004", "no matching object")
 
 
 def test_bad_module_public_classes_mpcl_005() -> None:
@@ -913,7 +926,7 @@ def test_bad_module_public_functions_mpfn_002() -> None:
 
 def test_bad_module_public_functions_mpfn_004() -> None:
 	result = _run_waterlint_validate_with_basedir("pytest_bad_module_public_functions_MPFN_004")
-	_assert_error(result, "MPFN-004", "does not exist")
+	_assert_error(result, "MPFN-004", "no matching object")
 
 
 def test_bad_module_public_functions_mpfn_005() -> None:
@@ -933,7 +946,7 @@ def test_bad_module_public_mptyp_mpvar_mpcon_m_mptyp_004() -> None:
 
 def test_bad_module_public_mptyp_mpvar_mpcon_m_mptyp_005() -> None:
 	result = _run_waterlint_validate_with_basedir("pytest_bad_module_public_MPTYP_MPVAR_MPCON.M_MPTYP_005")
-	_assert_error(result, "MPTYP-005", "does not exist on module")
+	_assert_error(result, "MPTYP-005", "no matching object")
 
 
 def test_bad_module_public_mptyp_mpvar_mpcon_m_mptyp_006() -> None:
@@ -958,7 +971,7 @@ def test_bad_module_public_mptyp_mpvar_mpcon_m_mpvar_004() -> None:
 
 def test_bad_module_public_mptyp_mpvar_mpcon_m_mpvar_005() -> None:
 	result = _run_waterlint_validate_with_basedir("pytest_bad_module_public_MPTYP_MPVAR_MPCON.M_MPVAR_005")
-	_assert_error(result, "MPVAR-005", "does not exist on module")
+	_assert_error(result, "MPVAR-005", "no matching object")
 
 
 def test_bad_module_public_mptyp_mpvar_mpcon_m_mpvar_006() -> None:
@@ -983,7 +996,7 @@ def test_bad_module_public_mptyp_mpvar_mpcon_m_mpcon_004() -> None:
 
 def test_bad_module_public_mptyp_mpvar_mpcon_m_mpcon_005() -> None:
 	result = _run_waterlint_validate_with_basedir("pytest_bad_module_public_MPTYP_MPVAR_MPCON.M_MPCON_005")
-	_assert_error(result, "MPCON-005", "does not exist on module")
+	_assert_error(result, "MPCON-005", "no matching object")
 
 
 def test_bad_module_public_mptyp_mpvar_mpcon_m_mpcon_006() -> None:

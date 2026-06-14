@@ -26,7 +26,7 @@ Public_functions:
 	is_obj_module, is_obj_class, is_obj_function, is_obj_method_like, is_attr_annotated, is_attr_final,
 	get_obj_name, get_obj_path, get_obj_annotations,
 	resolve_object, get_status, get_profile, get_num_indent,
-	parse_indent_docstring, get_tree_of_section, get_tree_of_subsection, to_string_tree,
+	parse_indent_docstring, get_tree_of_section, get_tree_of_subsection, get_scopes_of_tree_var, to_string_tree,
 	validate_docstring_method, validate_docstring_inherited_method, validate_docstring_class,
 	validate_docstring_module, validate_docstring, validate_class_class_coverage,
 	validate_class_method_coverage, validate_class_constant_coverage, validate_class_variable_coverage,
@@ -53,6 +53,8 @@ Function_overview:
 		Get tree assigned to a section label from a docstring tree.
 	get_tree_of_subsection:
 		Get tree assigned to a subsection label from a docstring tree.
+	get_scopes_of_tree_var:
+		Get scopes and explicit-scope flag from a docstring tree.
 	to_string_tree:
 		Render docstring to string
 	validate_docstring_method:

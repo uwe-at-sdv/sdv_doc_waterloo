@@ -2,7 +2,7 @@ from __future__ import annotations
 from types import FunctionType, ModuleType
 from typing import Any, Callable, Dict, Final, get_type_hints, get_origin, get_args, Generator, Iterable, Iterator, List, NewType, NoReturn, Sequence, Set, Tuple, Type, TypeAlias, TypeGuard, Union, cast
 
-from sdv.doc.waterloo.docitem_helper import explain_try_self_for_section, explain_try_self_for_subsection, render_allowed_identifiers, render_expected_identifier, render_expected_snippet, render_identifier_lines, render_source_snippet, render_deduplicated_identifiers, render_normative_section_details, render_exactly_one_identifier_details, render_normativity_keyword_details, render_overview_requires_section_details, render_name_object_consistency_details, render_exception_reference_details, render_see_also_reference_details, render_scope_relation_details, render_base_method_docstring_details, render_base_method_reference_details
+from sdv.doc.waterloo.docitem_helper import explain_try_self_for_section, explain_try_self_for_subsection, render_allowed_identifiers, render_expected_identifier, render_expected_snippet, render_identifier_lines, render_source_snippet, render_deduplicated_identifiers, render_normative_section_details, render_exactly_one_identifier_details, render_normativity_keyword_details, render_overview_requires_section_details, render_name_object_consistency_details, render_listed_object_missing_details, render_exception_reference_details, render_see_also_reference_details, render_scope_relation_details, render_base_method_docstring_details, render_base_method_reference_details
 from sdv.doc.waterloo.docitem_docstring import *
 
 #===== Typechecking ===========================================#
@@ -27,6 +27,7 @@ def _is_type_alias(value: object, ann: object | None) -> bool:
 	if str(ann).endswith("TypeAlias"):
 		return True
 	return False
+
 
 # DocitemDocstring_t = docitem_docstring_module | docitem_docstring_class | docitem_docstring_method
 
@@ -164,6 +165,7 @@ Raises:
 	"""
 	def _import_chain(qname: str) -> object:
 		parts = qname.split(".")
+		last_module_error: Exception | None = None
 		for i in range(len(parts), 0, -1):
 			mod_cand = ".".join(parts[:i])
 # We are testing candidates here like
@@ -177,6 +179,8 @@ Raises:
 			try:
 				mod = importlib.import_module(mod_cand)
 			except ModuleNotFoundError as e:
+				if i == len(parts):
+					last_module_error = e
 				continue
 # We have a module, parts [0:i]. Now let's resolve parts[i:]
 # relative to this module, by means of getattr.
@@ -186,8 +190,12 @@ Raises:
 				obj_attr = getattr(obj_attr, p)
 			return obj_attr
 # None of the candidates worked, now that is really an import error.
+		if last_module_error is not None:
+			raise ImportError(f"Could not import any module prefix from {qname} (1): {last_module_error}") from last_module_error
 		raise ImportError(f"Could not import any module prefix from {qname} (1)")
 
+	last_import_error: Exception | None = None
+	last_import_candidate: str | None = None
 	candidates: List[str] = []
 	if "." in ref:
 		candidates.append(ref)
@@ -223,9 +231,17 @@ Raises:
 		except AttributeError as e:
 			continue
 		except ImportError as e:
+			if last_import_error is None:
+				last_import_error = e
+				last_import_candidate = cand
 			continue
 #		except Exception as e:
 #			continue
+	if last_import_error is not None:
+		raise ImportError(
+			f"Could not resolve reference '{ref}' from context '{_qualified_object_name(current_obj)}'. "
+			f"Last import failure while trying '{last_import_candidate}': {last_import_error}"
+		) from last_import_error
 	raise ImportError(f"Could not resolve reference '{ref}' from context '{_qualified_object_name(current_obj)}'.")
 
 def validate_docstring_module(tr : tracer, obj: object, top : docitem_docstring_module,node_contract : docitem_map_base,node_normative_sections : docitem_list_base, _seen: Dict[object,docitem_docstring_base] | None = None) -> None:
@@ -271,6 +287,7 @@ Notes:
 		2026-01-23
 	"""
 	profile = get_profile(top)
+	top_scope_explicit = top.has_item("Preamble") and top.item("Preamble").has_item("scope")
 #===== Preamble ===============================================#
 	with traced_section(tr, "Preamble"):
 	# Rule: Preamble must exist. We do not allow purely informative docstrings.
@@ -343,8 +360,8 @@ Notes:
 			node_pc = top._items["Public_classes"]
 			for cls_name in node_pc.items():
 				if not hasattr(obj, cls_name):
-					details = render_missing_entry_details("Public_classes", node_pc.items(), cls_name, profile)
-					raise_validation_error(tr, obj, "MPCL-004", f"Entry '{cls_name}' does not exist on module.", details)
+					details = render_listed_object_missing_details("Public_classes", cls_name, "<remove entry or implement matching class>", profile)
+					raise_validation_error(tr, obj, "MPCL-004", f"Class '{cls_name}' listed in Public_classes has no matching object.", details)
 				attr = getattr(obj, cls_name)
 				if not is_obj_class(attr):
 					details = render_name_object_consistency_details("Public_classes", node_pc.items(), profile)
@@ -355,8 +372,8 @@ Notes:
 			node_pf = top._items["Public_functions"]
 			for func_name in node_pf.items():
 				if not hasattr(obj, func_name):
-					details = render_missing_entry_details("Public_functions", node_pf.items(), func_name, profile)
-					raise_validation_error(tr, obj, "MPFN-004", f"Entry '{func_name}' does not exist on module.", details)
+					details = render_listed_object_missing_details("Public_functions", func_name, "<remove entry or implement matching object>", profile)
+					raise_validation_error(tr, obj, "MPFN-004", f"Function '{func_name}' listed in Public_functions has no matching object.", details)
 				attr = getattr(obj, func_name)
 				if not is_obj_function(attr):
 					details = render_name_object_consistency_details("Public_functions", node_pf.items(), profile)
@@ -421,8 +438,8 @@ Notes:
 			ann = get_obj_annotations(obj)
 			for ty_name in node_pt.items():
 				if not hasattr(obj, ty_name):
-					details = render_missing_entry_details("Public_types", node_pt.items(), ty_name, profile)
-					raise_validation_error(tr, obj, "MPTYP-005", f"Entry '{ty_name}' does not exist on module.", details)
+					details = render_listed_object_missing_details("Public_types", ty_name, "<remove entry or implement matching type alias>", profile)
+					raise_validation_error(tr, obj, "MPTYP-005", f"Type '{ty_name}' listed in Public_types has no matching object.", details)
 				attr = getattr(obj, ty_name)
 				ann_val = ann.get(ty_name, None) if isinstance(ann, dict) else None
 				if not _is_type_alias(attr, ann_val):
@@ -435,8 +452,8 @@ Notes:
 			node_pv = top._items["Public_variables"]
 			for var_name in node_pv.items():
 				if not hasattr(obj, var_name):
-					details = render_missing_entry_details("Public_variables", node_pv.items(), var_name, profile)
-					raise_validation_error(tr, obj, "MPVAR-005", f"Entry '{var_name}' does not exist on module.", details)
+					details = render_listed_object_missing_details("Public_variables", var_name, "<remove entry or implement matching named value>", profile)
+					raise_validation_error(tr, obj, "MPVAR-005", f"Named value '{var_name}' listed in Public_variables has no matching object.", details)
 				attr = getattr(obj, var_name)
 				if not is_obj_named_value(attr):
 					details = render_named_value_reference_details("Public_variables", var_name, "<refer to a named value, not callable/class>", "module")
@@ -449,8 +466,8 @@ Notes:
 			ann = get_obj_annotations(obj)
 			for const_name in node_pcst.items():
 				if not hasattr(obj, const_name):
-					details = render_missing_entry_details("Public_constants", node_pcst.items(), const_name, profile)
-					raise_validation_error(tr, obj, "MPCON-005", f"Entry '{const_name}' does not exist on module.", details)
+					details = render_listed_object_missing_details("Public_constants", const_name, "<remove entry or implement matching named value>", profile)
+					raise_validation_error(tr, obj, "MPCON-005", f"Named value '{const_name}' listed in Public_constants has no matching object.", details)
 				attr = getattr(obj, const_name)
 				if not is_obj_named_value(attr):
 					details = render_named_value_reference_details("Public_constants", const_name, "<refer to a named value, not callable/class>", profile)
@@ -462,6 +479,7 @@ Notes:
 #===== Scope Monotonicity Rules ===============================#
 # Internal references from Public_classes / Public_functions must be compatible.
 	top_scopes = top.scopes()
+	top_scope_explicit = top.has_item("Preamble") and top.item("Preamble").has_item("scope")
 #----- Public classes -----------------------------------------#
 	if "Public_classes" in top.items():
 		node_classes = top.item("Public_classes")
@@ -477,14 +495,14 @@ Notes:
 # Class has no docstring? Do not test scope rule.
 				continue
 			try:
-				tree = parse_indent_docstring(tr_tmp,doc)
-				scopes = get_scopes_of_tree(tr_tmp,tree)
+				tree = parse_indent_docstring(tr_tmp, doc)
+				scopes, ref_scope_explicit = get_scopes_of_tree_var(tr_tmp, tree)
 			except (ParseError, SectionNotFoundError):
 # Cannot extract scope from docstring? Do not test scope rule.
 				continue
 			if not top.is_visible(scopes):
-				details = render_scope_relation_details("Public_classes", ref_name, "<refer to a class at least as public as the containing object>", "module")
-				raise_validation_error(tr, obj, "SCP-005", f"Scope of class '{ref_name}' ({scopes}) is less public than module scope {top_scopes}.", details)
+				details = render_scope_relation_details("module", top_scopes, top_scope_explicit, "class", scopes, ref_scope_explicit, "Public_classes", ref_name, "<reconsider the scopes of the module and the referenced class>", "module")
+				raise_validation_error(tr, obj, "SCP-005", f"Reconsider the scopes of the module and the referenced class '{ref_name}'.", details)
 #----- Public functions ---------------------------------------#
 	if "Public_functions" in top.items():
 		node_functions = top.item("Public_functions")
@@ -497,17 +515,17 @@ Notes:
 			tr_tmp = tracer()
 			doc = get_obj_docstring(ref_obj)
 			if not doc:
-# Class has no docstring? Do not test scope rule.
+# Function has no docstring? Do not test scope rule.
 				continue
 			try:
-				tree = parse_indent_docstring(tr_tmp,doc)
-				scopes = get_scopes_of_tree(tr_tmp,tree)
+				tree = parse_indent_docstring(tr_tmp, doc)
+				scopes, ref_scope_explicit = get_scopes_of_tree_var(tr_tmp, tree)
 			except (ParseError, SectionNotFoundError):
 # Cannot extract scope from docstring? Do not test scope rule.
 				continue
 			if not top.is_visible(scopes):
-				details = render_scope_relation_details("Public_functions", ref_name, "<refer to a function at least as public as the containing object>", "module")
-				raise_validation_error(tr, obj, "SCP-005", f"Scope of function '{ref_name}' ({scopes}) is less public than module scope {top_scopes}.", details)
+				details = render_scope_relation_details("module", top_scopes, top_scope_explicit, "function", scopes, ref_scope_explicit, "Public_functions", ref_name, "<reconsider the scopes of the module and the referenced function>", "module")
+				raise_validation_error(tr, obj, "SCP-005", f"Reconsider the scopes of the module and the referenced function '{ref_name}'.", details)
 
 def validate_docstring_class(tr : tracer, obj: object, top : docitem_docstring_class,node_contract : docitem_map_base,node_normative_sections : docitem_list_base, _seen: Dict[object,docitem_docstring_base] | None = None) -> None:
 	"""
@@ -555,6 +573,7 @@ Notes:
 		2026-01-23
 	"""
 	profile = get_profile(top)
+	top_scope_explicit = top.has_item("Preamble") and top.item("Preamble").has_item("scope")
 #===== Preamble ===============================================#
 	with traced_section(tr, "Preamble"):
 # Rule: Preamble must exist. We do not allow purely informative docstrings.
@@ -723,8 +742,8 @@ Notes:
 			node_pc = top._items["Public_classes"]
 			for cls_name in node_pc.items():
 				if not hasattr(obj, cls_name):
-					details = render_missing_entry_details("Public_classes", node_pc.items(), cls_name, profile)
-					raise_validation_error(tr, obj, "CPCL-004", f"Entry '{cls_name}' does not exist on class.", details)
+					details = render_listed_object_missing_details("Public_classes", cls_name, "<remove entry or implement matching nested class>", profile)
+					raise_validation_error(tr, obj, "CPCL-004", f"Class '{cls_name}' listed in Public_classes has no matching object.", details)
 				attr = getattr(obj, cls_name)
 				if not is_obj_class(attr):
 					details = render_name_object_consistency_details("Public_classes", node_pc.items(), profile)
@@ -735,8 +754,8 @@ Notes:
 			node_pm = top._items["Public_methods"]
 			for meth_name in node_pm.items():
 				if not hasattr(obj, meth_name):
-					details = render_missing_entry_details("Public_methods", node_pm.items(), meth_name, profile)
-					raise_validation_error(tr, obj, "CPMT-004", f"Entry '{meth_name}' does not exist on class.", details)
+					details = render_listed_object_missing_details("Public_methods", meth_name, "<remove entry or implement matching method>", profile)
+					raise_validation_error(tr, obj, "CPMT-004", f"Method '{meth_name}' listed in Public_methods has no matching object.", details)
 				attr = getattr(obj, meth_name)
 				if not is_obj_function(attr):
 					details = render_name_object_consistency_details("Public_methods", node_pm.items(), profile)
@@ -801,8 +820,8 @@ Notes:
 			ann = get_obj_annotations(obj)
 			for ty_name in node_pt.items():
 				if not hasattr(obj, ty_name):
-					details = render_missing_entry_details("Public_types", node_pt.items(), ty_name, profile)
-					raise_validation_error(tr, obj, "CPTYP-005", f"Entry '{ty_name}' does not exist on class.", details)
+					details = render_listed_object_missing_details("Public_types", ty_name, "<remove entry or implement matching type alias>", profile)
+					raise_validation_error(tr, obj, "CPTYP-005", f"Type '{ty_name}' listed in Public_types has no matching object.", details)
 				attr = getattr(obj, ty_name)
 				ann_val = ann.get(ty_name, None) if isinstance(ann, dict) else None
 				if not _is_type_alias(attr, ann_val):
@@ -815,8 +834,8 @@ Notes:
 			node_pv = top._items["Public_variables"]
 			for var_name in node_pv.items():
 				if not hasattr(obj, var_name):
-					details = render_missing_entry_details("Public_variables", node_pv.items(), var_name, profile)
-					raise_validation_error(tr, obj, "CPVAR-005", f"Entry '{var_name}' does not exist on class.", details)
+					details = render_listed_object_missing_details("Public_variables", var_name, "<remove entry or implement matching named value>", profile)
+					raise_validation_error(tr, obj, "CPVAR-005", f"Named value '{var_name}' listed in Public_variables has no matching object.", details)
 				attr = getattr(obj, var_name)
 				if not is_obj_named_value(attr):
 					details = render_name_object_consistency_details("Public_variables", node_pv.items(), profile, overview_item=var_name)
@@ -829,8 +848,8 @@ Notes:
 			ann = get_obj_annotations(obj)
 			for const_name in node_pcst.items():
 				if not hasattr(obj, const_name):
-					details = render_missing_entry_details("Public_constants", node_pcst.items(), const_name, profile)
-					raise_validation_error(tr, obj, "CPCON-005", f"Entry '{const_name}' does not exist on class.", details)
+					details = render_listed_object_missing_details("Public_constants", const_name, "<remove entry or implement matching named value>", profile)
+					raise_validation_error(tr, obj, "CPCON-005", f"Named value '{const_name}' listed in Public_constants has no matching object.", details)
 				attr = getattr(obj, const_name)
 				if not is_obj_named_value(attr):
 					details = render_name_object_consistency_details("Public_constants", node_pcst.items(), profile, overview_item=const_name)
@@ -857,14 +876,14 @@ Notes:
 # Class has no docstring? Do not test scope rule.
 				continue
 			try:
-				tree = parse_indent_docstring(tr_tmp,doc)
-				scopes = get_scopes_of_tree(tr_tmp,tree)
+				tree = parse_indent_docstring(tr_tmp, doc)
+				scopes, ref_scope_explicit = get_scopes_of_tree_var(tr_tmp, tree)
 			except (ParseError, SectionNotFoundError):
 # Cannot extract scope from docstring? Do not test scope rule.
 				continue
 			if not top.is_visible(scopes):
-				details = render_scope_relation_details("Public_classes", ref_name, "<refer to a class at least as public as the containing object>", "class")
-				raise_validation_error(tr, obj, "SCP-005", f"Scope of class '{ref_name}' ({scopes}) is less public than class scope {top_scopes}.", details)
+				details = render_scope_relation_details("class", top_scopes, top_scope_explicit, "class", scopes, ref_scope_explicit, "Public_classes", ref_name, "<reconsider the scopes of the containing class and the referenced class>", "class")
+				raise_validation_error(tr, obj, "SCP-005", f"Reconsider the scopes of the containing class and the referenced class '{ref_name}'.", details)
 #----- Public methods ---------------------------------------#
 	if "Public_methods" in top.items():
 		node_methods = top.item("Public_methods")
@@ -884,14 +903,14 @@ Notes:
 # Class has no docstring? Do not test scope rule.
 				continue
 			try:
-				tree = parse_indent_docstring(tr_tmp,doc)
-				scopes = get_scopes_of_tree(tr_tmp,tree)
+				tree = parse_indent_docstring(tr_tmp, doc)
+				scopes, ref_scope_explicit = get_scopes_of_tree_var(tr_tmp, tree)
 			except (ParseError, SectionNotFoundError):
 # Cannot extract scope from docstring? Do not test scope rule.
 				continue
 			if not top.is_visible(scopes):
-				details = render_scope_relation_details("Public_methods", ref_name, "<refer to a method at least as public as the containing object>", "class")
-				raise_validation_error(tr, obj, "SCP-005", f"Scope of method '{ref_name}' ({scopes}) is less public than class scope {top_scopes}.", details)
+				details = render_scope_relation_details("class", top_scopes, top_scope_explicit, "method", scopes, ref_scope_explicit, "Public_methods", ref_name, "<reconsider the scopes of the containing class and the referenced method>", "class")
+				raise_validation_error(tr, obj, "SCP-005", f"Reconsider the scopes of the containing class and the referenced method '{ref_name}'.", details)
 #----- Derived_from -------------------------------------------#
 	drvd_scopes = top_scopes
 	if "Derived_from" in top.items():
@@ -908,14 +927,14 @@ Notes:
 # Class has no docstring? Do not test scope rule.
 				continue
 			try:
-				tree = parse_indent_docstring(tr_tmp,doc)
-				base_scopes = get_scopes_of_tree(tr_tmp,tree)
+				tree = parse_indent_docstring(tr_tmp, doc)
+				base_scopes, base_scope_explicit = get_scopes_of_tree_var(tr_tmp, tree)
 			except (ParseError, SectionNotFoundError):
 # Cannot extract scope from docstring? Do not test scope rule.
 				continue
 			if not top.can_see(base_scopes):
-				details = render_scope_relation_details("Derived_from", base_name, "<refer to a base class at least as public as the derived class>", "class")
-				raise_validation_error(tr, obj, "SCP-009", f"Scope of base class ({base_scopes}) is less public than scope of derived class {drvd_scopes}.", details)
+				details = render_scope_relation_details("class", top_scopes, top_scope_explicit, "class", base_scopes, base_scope_explicit, "Derived_from", base_name, "<reconsider the scopes of the derived class and its base class>", "class")
+				raise_validation_error(tr, obj, "SCP-009", f"Reconsider the scopes of the derived class and its base class '{base_name}'.", details)
 #----- Factory ------------------------------------------------#
 	with traced_section(tr, "Factory"):
 		if "Factory" in top.items():
@@ -1119,7 +1138,7 @@ Notes:
 # Try to resolve the exception class name
 					exc_obj, _ = resolve_object(exc_name, obj)
 				except Exception:
-# Yet, if that fails it might still me a built-in.
+# Yet, if that fails it might still be a built-in.
 					if hasattr(builtins, exc_name):
 						exc_obj = getattr(builtins, exc_name)
 					else:
@@ -1177,6 +1196,7 @@ Notes:
 		Docstring and function are INCOMPLETE!
 	"""
 	profile = get_profile(top)
+	top_scope_explicit = top.has_item("Preamble") and top.item("Preamble").has_item("scope")
 	with traced_section(tr, "inherited_method"):
 #===== Contract ===============================================#
 # Contract must have a general section.
@@ -1302,14 +1322,14 @@ Notes:
 # Class has no docstring? Do not test scope rule.
 				continue
 			try:
-				tree = parse_indent_docstring(tr_tmp,doc)
-				base_scopes = get_scopes_of_tree(tr_tmp,tree)
+				tree = parse_indent_docstring(tr_tmp, doc)
+				base_scopes, base_scope_explicit = get_scopes_of_tree_var(tr_tmp, tree)
 			except (ParseError, SectionNotFoundError):
 # Cannot extract scope from docstring? Do not test scope rule.
 				continue
 			if not top.can_see(base_scopes):
-				details = render_scope_relation_details("Contract.base", base_name, "<refer to a base method at least as public as the derived method>", "inherited_method")
-				raise_validation_error(tr, obj, "SCP-008", f"Scope of base method '{base_name}' ({base_scopes}) is less public than derived method scope {top_scopes}.", details)
+				details = render_scope_relation_details("inherited_method", top_scopes, top_scope_explicit, "method", base_scopes, base_scope_explicit, "Contract.base", base_name, "<reconsider the scopes of the derived method and its base method>", "inherited_method")
+				raise_validation_error(tr, obj, "SCP-008", f"Reconsider the scopes of the derived method and its base method '{base_name}'.", details)
 
 
 #===== helpers for See_also resolution ========================#
@@ -1433,6 +1453,11 @@ See_also:
 # Log some debug info
 	tr.add_info(f"validating '{get_obj_name(obj)}'")
 	profile = get_profile(top)
+	try:
+		top_scopes = top.scopes()
+	except Exception:
+		top_scopes = set()
+	top_scope_explicit = top.has_item("Preamble") and top.item("Preamble").has_item("scope")
   
 	with traced_section(tr, f"{get_obj_name(obj)}"):
 #===== Preamble must exist ====================================#
@@ -1463,7 +1488,7 @@ See_also:
 					"expected": render_expected_identifier("Preamble.profile", "identifier"),
 					"hint": explain_try_self_for_subsection("Preamble.profile", profile),
 				}
-				raise_validation_error(tr,obj,"PRE-014","Expected identifier, got '{profile}'.", details)
+				raise_validation_error(tr,obj,"PRE-014",f"Expected identifier, got '{profile}'.", details)
 # For the current version we tighten this rule
 			if not profile in ("module","class","function","method","inherited_method"):
 				details = {
@@ -1671,7 +1696,7 @@ See_also:
 							tr_tmp = tracer()
 							try:
 								tree = parse_indent_docstring(tr_tmp, doc)
-								target_scopes = get_scopes_of_tree(tr_tmp, tree)
+								target_scopes, target_scope_explicit = get_scopes_of_tree_var(tr_tmp, tree)
 							except (ParseError, SectionNotFoundError):
 								if  "See_also" in node_normative_sections.items():
 									tr.add_info("Rule SEE-009 applies","validation")
@@ -1684,12 +1709,12 @@ See_also:
 # Scope monotonicity for See_also references (SCP-006 / SCP-007)
 							if "See_also" in node_normative_sections.items():
 								if not top.can_see(target_scopes):
-									details = render_scope_relation_details("See_also", item_see_also, "<refer to an object at least as public as the source object>", profile)
-									raise_validation_error(tr,obj,"SCP-006", f"See_also reference '{item_see_also}' has scope {target_scopes} which is less public than {top.scopes()}.", details)
+									details = render_scope_relation_details(profile, top_scopes, top_scope_explicit, "referenced object", target_scopes, target_scope_explicit, "See_also", item_see_also, "<reconsider the scopes of the referenced object and the referencing object>", profile)
+									raise_validation_error(tr,obj,"SCP-006", f"Reconsider the scopes of the referenced object and the referencing object '{item_see_also}'.", details)
 							else:
 								if not top.can_see(target_scopes):
-									details = render_scope_relation_details("See_also", item_see_also, "<refer to an object at least as public as the source object>", profile)
-									warn_validation(tr,obj,"SCP-007", f"See_also reference '{item_see_also}' has scope {target_scopes}, which is less public than {top.scopes()}.", details)
+									details = render_scope_relation_details(profile, top_scopes, top_scope_explicit, "referenced object", target_scopes, target_scope_explicit, "See_also", item_see_also, "<reconsider the scopes of the referenced object and the referencing object>", profile)
+									warn_validation(tr,obj,"SCP-007", f"Reconsider the scopes of the referenced object and the referencing object '{item_see_also}'.", details)
 #===== Notes ==================================================#
 		with traced_section(tr, "Notes"):
 			if "Notes" in top.items():
@@ -2203,8 +2228,8 @@ Notes:
 				if name_of_member in valid_functions:
 					continue
 				if not hasattr(obj, name_of_member):
-					details = render_name_object_consistency_details("Public_functions", public_functions, "module")
-					raise_validation_error(tr,obj,"MPFN-004",f"Function '{name_of_member}' listed in Public_functions but does not exist.", details)
+					details = render_listed_object_missing_details("Public_functions", name_of_member, "<remove entry or implement matching object>", "module")
+					raise_validation_error(tr,obj,"MPFN-004",f"Function '{name_of_member}' listed in Public_functions has no matching object.", details)
 				func_obj = getattr(obj, name_of_member)
 				if not is_obj_function(func_obj):
 					details = render_name_object_consistency_details("Public_functions", public_functions, "module")

@@ -37,6 +37,7 @@ This section is normative.
 * [TOOL-005] -- The subsection requested by :wtrl_opt:`--subsection` was not found during extraction.
 * [TOOL-006] -- The input docstring cannot be parsed for extraction.
 * [TOOL-007] -- The input docstring is not valid for the requested extraction operation.
+* [TOOL-008] -- Invalid option combination or target selection for a generation command, for example raw output requested for more than one target object.
 * [TOOL-800] -- Unspecified runtime error during analysis.
   This code is used when an unexpected exception escapes the validation process.
   The tracer diagnostic output should provide sufficient detail to identify

@@ -15,6 +15,8 @@ Public_classes:
 Public_functions:
 	tokens_to_json_pointer, load_json, emit_diagnostics, validate_json_against_schema,
 	recompute_walk_summary, build_tracer_json_doc, emit_tracer
+Public_constants:
+	DIAG_TARGET_STDOUT, DIAG_TARGET_STDERR
 Function_overview:
 	tokens_to_json_pointer:
 		Convert a list of tokens to a JSON Pointer string according to RFC 6901.
@@ -37,6 +39,7 @@ Public_types:
 
 from __future__ import annotations
 
+import contextlib
 import argparse
 import io
 import json
@@ -45,7 +48,7 @@ import traceback
 import importlib.util
 import importlib.resources as importlib_resources
 from pathlib import Path
-from typing import Any, Callable, cast, Dict, List, Literal, TypeAlias, TypedDict
+from typing import Any, Callable, cast, Dict, Final, List, Literal, TypeAlias, TypedDict
 
 import jsonschema.exceptions
 from jsonschema import Draft202012Validator
@@ -55,6 +58,7 @@ import sdv.doc.waterloo.docitem as docitem
 from sdv.doc.waterloo.docitem_helper import (
 	RE_ANSI_SGR_COMPILED,
 	get_obj_fully_qualified_name,
+	ResolveObjectError,
 	tracer,
 	)
 
@@ -97,6 +101,8 @@ class ParserParts_t(TypedDict):
 
 #===== Constants ==============================================#
 WTRL_DOCITEM_VERSION = docitem.__version__
+DIAG_TARGET_STDOUT: Final[str] = "@STDOUT"
+DIAG_TARGET_STDERR: Final[str] = "@STDERR"
 
 #----- Schema versions, keep up to date -----------------------#
 WTRL_JSON_SCHEMA_VERSION = "0.1.0"
@@ -142,8 +148,17 @@ def add_traceback(tr: tracer) -> None:
 
 def _resolve_object(qname: str) -> object:
 	# current_obj is not needed for fully qualified names; use None as context.
-	obj, _ = docitem.resolve_object(qname, None)
-	return obj
+	try:
+		obj, _ = docitem.resolve_object(qname, None)
+		return obj
+	except ImportError as exc:
+		raise ResolveObjectError(
+			ref=qname,
+			current_obj=None,
+			candidates=[qname],
+			last_error=exc,
+			msg=str(exc),
+		) from exc
 
 def _apply_basedir(basedir: str | None, qname: str | None) -> None:
 	if not qname:
@@ -503,9 +518,11 @@ def emit_tracer(
 		tr:
 			Tracer instance whose diagnostics are emitted.
 		out_path:
-			Optional path to a plain-text diagnostic output file.
+			Optional path to a plain-text diagnostic output file. Special values
+			|lit|`@STDOUT` and |lit|`@STDERR` select the corresponding standard stream.
 		out_json_path:
-			Optional path to a structured JSON diagnostic output file.
+			Optional path to a structured JSON diagnostic output file. Special values
+			|lit|`@STDOUT` and |lit|`@STDERR` select the corresponding standard stream.
 		debug:
 			|Must| select debug-level diagnostics if |var|`True`, otherwise info-level diagnostics.
 		callback_build_json_doc:
@@ -520,16 +537,30 @@ def emit_tracer(
 		ValueError:
 			|May| raise if one of the output streams is not in a writable state.
 	"""
-	if out_path:
-		with open(out_path, "w", encoding="utf-8") as fh:
-			emit_diagnostics(tr, fh, debug=debug, strip_ansi=True)
-	else:
-		severity = tr.Severity.DEBUG if debug else tr.Severity.INFO
-		print(tr.str_by_severity(severity), file=sys.stderr, end="")
+	def _strip_ansi_for_stream(stream: Any) -> bool:
+		isatty = getattr(stream, "isatty", None)
+		if callable(isatty):
+			try:
+				return not bool(isatty())
+			except Exception:
+				return True
+		return True
+
+	def _open_diag_target(path: str | None, default_stream: Any) -> contextlib.AbstractContextManager[Any]:
+		if path is None:
+			return contextlib.nullcontext(default_stream)
+		if path == DIAG_TARGET_STDOUT:
+			return contextlib.nullcontext(sys.stdout)
+		if path == DIAG_TARGET_STDERR:
+			return contextlib.nullcontext(sys.stderr)
+		return open(path, "w", encoding="utf-8")
+
+	with _open_diag_target(out_path, sys.stderr) as fh:
+		emit_diagnostics(tr, fh, debug=debug, strip_ansi=_strip_ansi_for_stream(fh))
 	if out_json_path:
 		if callback_build_json_doc is None:
 			raise RuntimeError("JSON tracer output requested but no JSON builder callback was provided.")
 		doc = callback_build_json_doc(tr)
-		with open(out_json_path, "w", encoding="utf-8") as fh:
+		with _open_diag_target(out_json_path, sys.stdout) as fh:
 			json.dump(doc, fh, indent=4)
 			fh.write("\n")

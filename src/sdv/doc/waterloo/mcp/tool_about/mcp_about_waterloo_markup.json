@@ -75,10 +75,10 @@
       "kind": "role-examples",
       "items": [
         "|attr|`kind`",
-        "|cmd|`waterlint validate --basedir package/sdv/app/clql --obj clql.Message`",
+        "|cmd|`waterlint validate` |opt|`--basedir` |file|`package/sdv/app/clql` |opt|`--obj` |value|`clql.Message`",
         "|dfn|`SomeTermDefinedHere`",
         "|file|`package_main/doc/source/format.rst`",
-        "|func|`my_function(arg1, arg2)`",
+        "|func|`my_function` ( |value|`arg1`, |value|`arg2` )",
         "|key|`CTRL-C`",
         "|label|`Contract.general`",
         "|lit|`root`",
@@ -107,6 +107,8 @@
         "Use normativity keywords, value tokens, and role markup in free-form or itemized text only.",
         "Use normativity keywords only in normative sections and subsections.",
         "Use proper capitalization, e.g. |Must| at the beginning of a sentence and |must| within a sentence.",
+        "Use |attr| for JSON keys, XML attributes, and similar constructs.",
+        "Use |label| when referring to labels, titles or captions in documents.",
         "Use |tag| for tag names without angle brackets when output layers add the brackets later."
       ]
     }

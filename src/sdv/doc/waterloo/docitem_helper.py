@@ -8,13 +8,14 @@ Contract:
 	general:
 		|Must| provide shared helper functions, constants, and type aliases for Waterloo docstring validation and explanation.
 Public_classes:
-	Trait, Scope, Flavour, Format, Status, ConfigTraversal, tracer
+	Trait, Scope, Flavour, Format, Status, ConfigTraversal, tracer, ResolveObjectError
 Public_functions:
 	explain_try_self_for_section, explain_try_self_for_subsection,
 	render_source_snippet, render_expected_snippet, render_allowed_identifier, render_expected_identifier,
 	render_allowed_identifiers, render_identifier_lines, render_deduplicated_identifiers, render_unique_identifiers,
 	render_normativity_keyword_details, render_exception_reference_details, render_parameter_signature_details,
 	render_overview_requires_section_details, render_profile_mismatch_details, render_name_object_consistency_details,
+	render_listed_object_missing_details,
 	render_base_method_docstring_details, render_base_method_reference_details, render_scope_relation_details,
 	render_normative_section_details, render_missing_entry_details, render_exactly_one_identifier_details,
 	render_definition_reference_details, render_inherited_definition_details, render_type_reference_details,
@@ -298,6 +299,201 @@ RE_WTRL_ANGLE_WTRL_REF_COMPILED: Final[re.Pattern[str]] = re.compile(RE_WTRL_ANG
 
 #CSV_SECTIONS = frozenset(["normative_sections", "scopes", "Public_classes", "Public_methods", "Public_functions", "See_also"])
 SINGLE_STRING_SECTIONS = frozenset(["profile","status"])
+
+class Trait(StrEnum):
+	"""
+	Preamble:
+		profile:
+			class
+		normative_sections:
+			Contract, Public_constants
+		scope:
+			public
+	Contract:
+		general:
+			|Must| provide constants representing the traits of a class.
+		constructor:
+			Inherit from |type|`str` and |type|`Enum`.
+	Public_constants:
+		ABSTRACT:
+			The class is abstract, i.e. it cannot be instantiated directly and is not a complete specification of the concept.
+		FINAL:
+			The class is final, i.e. it cannot be subclassed and is a complete specification of the concept.
+	"""
+	ABSTRACT = "abstract"
+	FINAL = "final"
+
+trait_tag_map = {
+	"abstract": Trait.ABSTRACT,
+	"final": Trait.FINAL
+	}
+TRAIT_TAG_MAP = MappingProxyType(trait_tag_map)
+
+# Valid profiles
+Profile = Literal["module", "class", "function", "method", "inherited_method"]
+
+# Scope values
+class Scope(IntEnum):
+	r"""
+	Preamble:
+		profile:
+			class
+		normative_sections:
+			Contract, Public_constants
+		scope:
+			public
+	Contract:
+		general:
+			|Must| provide constants representing available scopes.
+			|Must| provide a time-stable partial order for the constants.
+		constructor:
+			Inherit from |type|`int`.
+	Public_constants:
+		PUBLIC:
+			Selects the public API.
+		EXTENSION:
+			Selects the API for developers of plugin and extensions.
+		CORE:
+			Selects the API for core developers.
+	Notes:
+		Purpose:
+			The scope is an optional parameter for rendering functions.\
+			It allows to restrict the set of rendered objects to a\
+			well-defined audience.
+		Values:
+			The class only ensures the partial order but does not\
+			ensure particular values for the constants.
+	"""
+	PUBLIC		= 10
+	EXTENSION	= 20
+	CORE		= 30
+
+# Keys |must| be lower-case.
+scope_tag_map = {
+	"public": Scope.PUBLIC,
+	"extension": Scope.EXTENSION,
+	"core": Scope.CORE,
+	}
+scope_to_string = {
+	Scope.PUBLIC: "public",
+	Scope.EXTENSION: "extension",
+	Scope.CORE: "core"
+}
+
+SCOPE_TAG_MAP = MappingProxyType(scope_tag_map)	
+
+# Flavour for string output
+class Flavour(IntEnum):
+	"""
+	Preamble:
+		profile:
+			class
+		normative_sections:
+			Contract, Public_constants
+		scope:
+			public
+	Contract:
+		general:
+			|Must| provide constants representing available flavours for rendering Normativity Keywords.
+		constructor:
+			Inherit from |type|`int`.
+	Public_constants:
+		RAW:
+			Example: | + Must + |
+		RFC_2119:
+			Example: |lit|`MUST`
+		MARKDOWN:
+			Example: |lit|`**MUST**`
+	"""
+	RAW		= 0
+	RFC_2119	= 1
+	MARKDOWN	= 2
+
+flavour_tag_map = {
+	"raw":		Flavour.RAW,
+	"rfc-2119":	Flavour.RFC_2119,
+	"markdown":	Flavour.MARKDOWN,
+	}
+FLAVOUR_TAG_MAP = MappingProxyType(flavour_tag_map)	
+
+# Format for string-related output
+class Format(IntEnum):
+	"""
+	Preamble:
+		profile:
+			class
+		normative_sections:
+			Contract, Public_constants
+		scope:
+			public
+	Contract:
+		general:
+			|Must| provide constants representing available output formats for string rendering.
+		constructor:
+			Inherit from |type|`int`.
+	Public_constants:
+		JSON:
+			Javascript Object Notation
+		YAML:
+			YAML Ain't Markup Language
+		MD:
+			Markdown.
+	"""
+	JSON		= 0
+	YAML		= 1
+	MD		= 2
+
+format_tag_map = {
+	"json":		Format.JSON,
+	"yaml":		Format.YAML,
+	"md":		Format.MD
+	}
+FORMAT_TAG_MAP = MappingProxyType(format_tag_map)	
+
+class Status(StrEnum):
+	"""
+	Preamble:
+		profile:
+			class
+		normative_sections:
+			Contract, Public_constants
+		scope:
+			public
+	Contract:
+		general:
+			|Must| provide constants representing the values of subsection |label|`Preamble.status`.
+		constructor:
+			Inherit from |type|`Enum`.
+	Public_constants:
+		EXPERIMENTAL:
+			See rule |ref|`STA-004 <section_function_pramble>`.
+		STABLE:
+			See rule |ref|`STA-004 <section_function_pramble>`.
+		FROZEN:
+			See rule |ref|`STA-004 <section_function_pramble>`.
+		DEPRECATED:
+			See rule |ref|`STA-004 <section_function_pramble>`.
+		DRAFT:
+			See rule |ref|`STA-004 <section_function_pramble>`.
+	Notes:
+		LoII:
+			This docstring violates LoII in order to preserve SSoT,
+			see |label|`Public_constants`.
+	"""
+	EXPERIMENTAL	= "experimental"
+	STABLE		= "stable"
+	FROZEN		= "frozen"
+	DEPRECATED	= "deprecated"
+	DRAFT		= "draft"
+
+status_tag_map = {
+	"experimental":	Status.EXPERIMENTAL,
+	"stable":	Status.STABLE,
+	"frozen":	Status.FROZEN,
+	"deprecated":	Status.DEPRECATED,
+	"draft":	Status.DRAFT
+	}
+STATUS_TAG_MAP = MappingProxyType(status_tag_map)	
 
 #===== begin section and subsection properties ===============#
 
@@ -1174,6 +1370,36 @@ def render_name_object_consistency_details(label: str, current_entries: Iterable
 	}
 
 
+def render_listed_object_missing_details(label: str, member_name: str, expected_text: str, profile: str) -> dict[str, Any]:
+	"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+	Contract:
+		general:
+			|Must| render compact validation details for a listed object that has no matching runtime object.
+	Parameters:
+		label:
+			The section label to render.
+		member_name:
+			The listed entry name that has no matching object.
+		expected_text:
+			The minimal correction or instruction to show in the expected snippet.
+		profile:
+			The docstring profile used for the |cmd|`explain-section` hint.
+	Returns:
+		A details dictionary with |attr|`found`, |attr|`expected`, and |attr|`hint`.
+	Raises:
+	"""
+	return {
+		"found": render_source_snippet(label, [member_name]),
+		"expected": [expected_text],
+		"hint": explain_try_self_for_section(label, profile),
+	}
+
+
 def render_profile_mismatch_details(object_name: str, object_kind: str, current_profile: str, expected_text: str, profile: str) -> dict[str, Any]:
 	"""
 	Preamble:
@@ -1201,10 +1427,10 @@ def render_profile_mismatch_details(object_name: str, object_kind: str, current_
 	"""
 	return {
 		"found": [
-			"Preamble.profile:",
-			f"\t{current_profile}",
-			f"{object_name}:",
-			f"\t{object_kind}",
+			"Preamble",
+			"\tprofile:",
+			f"\t\t{current_profile}",
+			f"<but kind of object {object_name} is {object_kind}>",
 		],
 		"expected": [expected_text],
 		"hint": explain_try_self_for_subsection("Preamble.profile", profile),
@@ -1408,6 +1634,12 @@ def render_see_also_reference_details(
 
 
 def render_scope_relation_details(
+	containing_kind: str,
+	containing_scopes: Scopes,
+	is_containing_scope_explicit: bool,
+	contained_kind: str,
+	contained_scopes: Scopes,
+	is_contained_scope_explicit: bool,
 	section_label: str,
 	reference: str,
 	expected_text: str,
@@ -1423,6 +1655,18 @@ def render_scope_relation_details(
 		general:
 			|Must| build standardized validation details for a scope monotonicity violation.
 	Parameters:
+		containing_kind:
+			The kind of the containing object, such as module or class.
+		containing_scopes:
+			The scopes of the containing object.
+		is_containing_scope_explicit:
+			Whether the containing object declared its scope explicitly.
+		contained_kind:
+			The kind of the contained object, such as function, class, or method.
+		contained_scopes:
+			The scopes of the contained object.
+		is_contained_scope_explicit:
+			Whether the contained object declared its scope explicitly.
 		section_label:
 			The section label to render.
 		reference:
@@ -1435,10 +1679,18 @@ def render_scope_relation_details(
 		A details dictionary with |attr|`found`, |attr|`expected`, and |attr|`hint`.
 	Raises:
 	"""
+	def _render_scope_block(kind: str, scopes: Scopes, is_explicit: bool, *, name: str | None = None) -> list[str]:
+		scope_values = ", ".join(scope_to_string[scope] for scope in sorted(scopes, key=lambda s: getattr(s, "value", 0)))
+		scope_state = "<explicit>" if is_explicit else "<implicit>"
+		label = f"<in docstring of {kind}>" if name is None else f"<in docstring of {kind} '{name}'>"
+		return [label, "Preamble:", "\tscope:", f"\t\t{scope_values} {scope_state}"]
+
 	return {
-		"found": render_source_snippet(section_label, [reference]),
+		"found": _render_scope_block(containing_kind, containing_scopes, is_containing_scope_explicit)
+					+ render_source_snippet(section_label, [reference])
+					+ _render_scope_block(contained_kind, contained_scopes, is_contained_scope_explicit, name=reference),
 		"expected": [expected_text],
-		"hint": [f"waterlint explain-subsection --label {section_label} --profile {profile}"],
+		"hint": [f"waterlint explain-subsection --label Preamble.scope --profile {profile}"],
 	}
 
 
@@ -1664,196 +1916,6 @@ def render_overview_missing_member_details(overview_label: str, public_label: st
 	}
 
 #===== end render functions for verbose diagnostics ==========#
-
-class Trait(StrEnum):
-	"""
-	Preamble:
-		profile:
-			class
-		normative_sections:
-			Contract, Public_constants
-		scope:
-			public
-	Contract:
-		general:
-			|Must| provide constants representing the traits of a class.
-		constructor:
-			Inherit from |type|`str` and |type|`Enum`.
-	Public_constants:
-		ABSTRACT:
-			The class is abstract, i.e. it cannot be instantiated directly and is not a complete specification of the concept.
-		FINAL:
-			The class is final, i.e. it cannot be subclassed and is a complete specification of the concept.
-	"""
-	ABSTRACT = "abstract"
-	FINAL = "final"
-
-trait_tag_map = {
-	"abstract": Trait.ABSTRACT,
-	"final": Trait.FINAL
-	}
-TRAIT_TAG_MAP = MappingProxyType(trait_tag_map)
-
-# Valid profiles
-Profile = Literal["module", "class", "function", "method", "inherited_method"]
-
-# Scope values
-class Scope(IntEnum):
-	r"""
-	Preamble:
-		profile:
-			class
-		normative_sections:
-			Contract, Public_constants
-		scope:
-			public
-	Contract:
-		general:
-			|Must| provide constants representing available scopes.
-			|Must| provide a time-stable partial order for the constants.
-		constructor:
-			Inherit from |type|`int`.
-	Public_constants:
-		PUBLIC:
-			Selects the public API.
-		EXTENSION:
-			Selects the API for developers of plugin and extensions.
-		CORE:
-			Selects the API for core developers.
-	Notes:
-		Purpose:
-			The scope is an optional parameter for rendering functions.\
-			It allows to restrict the set of rendered objects to a\
-			well-defined audience.
-		Values:
-			The class only ensures the partial order but does not\
-			ensure particular values for the constants.
-	"""
-	PUBLIC		= 10
-	EXTENSION	= 20
-	CORE		= 30
-
-# Keys |must| be lower-case.
-scope_tag_map = {
-	"public": Scope.PUBLIC,
-	"extension": Scope.EXTENSION,
-	"core": Scope.CORE,
-	}
-SCOPE_TAG_MAP = MappingProxyType(scope_tag_map)	
-
-# Flavour for string output
-class Flavour(IntEnum):
-	"""
-	Preamble:
-		profile:
-			class
-		normative_sections:
-			Contract, Public_constants
-		scope:
-			public
-	Contract:
-		general:
-			|Must| provide constants representing available flavours for rendering Normativity Keywords.
-		constructor:
-			Inherit from |type|`int`.
-	Public_constants:
-		RAW:
-			Example: | + Must + |
-		RFC_2119:
-			Example: |lit|`MUST`
-		MARKDOWN:
-			Example: |lit|`**MUST**`
-	"""
-	RAW		= 0
-	RFC_2119	= 1
-	MARKDOWN	= 2
-
-flavour_tag_map = {
-	"raw":		Flavour.RAW,
-	"rfc-2119":	Flavour.RFC_2119,
-	"markdown":	Flavour.MARKDOWN,
-	}
-FLAVOUR_TAG_MAP = MappingProxyType(flavour_tag_map)	
-
-# Format for string-related output
-class Format(IntEnum):
-	"""
-	Preamble:
-		profile:
-			class
-		normative_sections:
-			Contract, Public_constants
-		scope:
-			public
-	Contract:
-		general:
-			|Must| provide constants representing available output formats for string rendering.
-		constructor:
-			Inherit from |type|`int`.
-	Public_constants:
-		JSON:
-			Javascript Object Notation
-		YAML:
-			YAML Ain't Markup Language
-		MD:
-			Markdown.
-	"""
-	JSON		= 0
-	YAML		= 1
-	MD		= 2
-
-format_tag_map = {
-	"json":		Format.JSON,
-	"yaml":		Format.YAML,
-	"md":		Format.MD
-	}
-FORMAT_TAG_MAP = MappingProxyType(format_tag_map)	
-
-class Status(StrEnum):
-	"""
-	Preamble:
-		profile:
-			class
-		normative_sections:
-			Contract, Public_constants
-		scope:
-			public
-	Contract:
-		general:
-			|Must| provide constants representing the values of subsection |label|`Preamble.status`.
-		constructor:
-			Inherit from |type|`Enum`.
-	Public_constants:
-		EXPERIMENTAL:
-			See rule |ref|`STA-004 <section_function_pramble>`.
-		STABLE:
-			See rule |ref|`STA-004 <section_function_pramble>`.
-		FROZEN:
-			See rule |ref|`STA-004 <section_function_pramble>`.
-		DEPRECATED:
-			See rule |ref|`STA-004 <section_function_pramble>`.
-		DRAFT:
-			See rule |ref|`STA-004 <section_function_pramble>`.
-	Notes:
-		LoII:
-			This docstring violates LoII in order to preserve SSoT,
-			see |label|`Public_constants`.
-	"""
-	EXPERIMENTAL	= "experimental"
-	STABLE		= "stable"
-	FROZEN		= "frozen"
-	DEPRECATED	= "deprecated"
-	DRAFT		= "draft"
-
-status_tag_map = {
-	"experimental":	Status.EXPERIMENTAL,
-	"stable":	Status.STABLE,
-	"frozen":	Status.FROZEN,
-	"deprecated":	Status.DEPRECATED,
-	"draft":	Status.DRAFT
-	}
-STATUS_TAG_MAP = MappingProxyType(status_tag_map)	
-
 
 #===== Config =================================================#
 
@@ -2791,6 +2853,11 @@ Public_types:
 		if isinstance(hint, str) and hint:
 			lines.append(f"\t{label_color}hint:{label_reset}")
 			lines.append(f"\t\t{hint}")
+		elif isinstance(hint, list) and hint:
+			lines.append(f"\t{label_color}hint:{label_reset}")
+			for line in hint:
+				if isinstance(line, str) and line:
+					lines.append(f"\t\t{line}")
 		return "".join(f"{line}\n" for line in lines)
 	def _format_diagnostic_line(self, kind: str, origin: Origin, context: tracer.Context, rule_id: RuleId | None, msg: str, details: Details | None = None) -> str:
 		color_map = {
@@ -3065,6 +3132,51 @@ class SubsectionNotFoundError(RuntimeError):
 class NoContentError(RuntimeError):
 	def __init__(self,msg : str) -> None:
 		super().__init__(msg)
+
+class ResolveObjectError(RuntimeError):
+	def __init__(
+		self,
+		ref: str,
+		current_obj: object,
+		candidates: Sequence[str] | None = None,
+		last_candidate: str | None = None,
+		last_error: Exception | None = None,
+		msg: str | None = None,
+	) -> None:
+		self.ref = ref
+		self.current_obj = current_obj
+		self.current_obj_name = get_obj_fully_qualified_name(current_obj) if current_obj is not None else "None"
+		self.candidates = list(candidates or [])
+		self.last_candidate = last_candidate
+		self.last_error = last_error
+		if msg is None:
+			msg = f"Could not resolve reference '{ref}' from context '{self.current_obj_name}'."
+		super().__init__(msg)
+
+	def to_details(self) -> dict[str, Any]:
+		found = [
+			"Resolve_object:",
+			f"\tref: {self.ref}",
+			f"\tcontext: {self.current_obj_name}",
+		]
+		if self.last_candidate is not None:
+			found.append(f"\tlast_candidate: {self.last_candidate}")
+		if self.last_error is not None:
+			last_error_txt = str(self.last_error)
+			if last_error_txt.startswith("Could not resolve reference ") and "Last import failure while trying " in last_error_txt:
+				last_error_txt = last_error_txt.split("Last import failure while trying ", 1)[1]
+				last_error_txt = last_error_txt.split("': ", 1)[-1]
+			found.append(f"\tlast_error: {last_error_txt}")
+		details: dict[str, Any] = {
+			"found": found,
+			"expected": ["<check spelling, installation, or qualification>"],
+			"hint": [
+				"Check for a typo.",
+				"Make sure the package is installed or importable.",
+				"Qualify the reference with the correct module path.",
+			],
+		}
+		return details
 
 def raise_has_no_docstring(tr : tracer, rule_id: RuleId, obj : object) -> NoReturn:
 	"""

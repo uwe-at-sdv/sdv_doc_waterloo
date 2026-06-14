@@ -3,6 +3,18 @@ from types import FunctionType, ModuleType
 from typing import Any, Callable, Dict, Final, get_type_hints, get_origin, get_args, Generator, Iterable, Iterator, List, NewType, NoReturn, Sequence, Set, Tuple, Type, TypeAlias, TypeGuard, Union, cast
 
 from sdv.doc.waterloo.docitem_tokenizer import *
+from sdv.doc.waterloo.docitem_helper import (
+	explain_try_self_for_section,
+	explain_try_self_for_subsection,
+	render_allowed_identifier,
+	render_deduplicated_identifiers,
+	render_expected_identifier,
+	render_expected_snippet,
+	render_identifier_lines,
+	render_missing_entry_details,
+	render_normative_section_details,
+	render_source_snippet,
+)
 
 # Import section modules
 from sdv.doc.waterloo.docitem_sections import *
@@ -236,7 +248,12 @@ Method_overview:
 				if label == "Preamble":
 					found_preamble = True
 				elif not found_preamble:
-					raise_parsing_error(tr,"PRE-001","Preamble is not first.")
+					details = {
+						"found": render_source_snippet("Document.sections", [label]),
+						"expected": ["<place Preamble before any other section>"],
+						"hint": explain_try_self_for_section("Preamble", get_profile_of_tree(tr, cast(DocstringTree, tree))),
+					}
+					raise_parsing_error(tr,"PRE-001","Preamble is not first.", details)
 				items,pos = expect_list(tr,tree,pos)
 				if label in seen:
 					raise_parsing_error(tr,"PRSR-007",f"Duplicate label '{label}'.")
@@ -504,17 +521,37 @@ def make_docitem_tree_from_docstring_tree(tr : tracer, tree : DocstringTree) -> 
 	try:
 		profile = get_profile_of_tree(tr,tree)
 	except SectionNotFoundError:
-		raise_parsing_error(tr,"PRE-001","Section 'Preamble' not found.")
+		details = {
+			"found": ["Document.sections:", "\t..."],
+			"expected": ["<place Preamble before any other section>"],
+			"hint": ["waterlint explain-section --label Preamble --profile PROFILE"],
+		}
+		raise_parsing_error(tr,"PRE-001","Section 'Preamble' not found.", details)
 	except SubsectionNotFoundError:
-		raise_parsing_error(tr,"PRE-003","Subsection 'Preamble.profile' not found.")
+		details = {
+			"found": ["Preamble:", "\t..."],
+			"expected": ["<add subsection Preamble.profile>"],
+			"hint": ["waterlint explain-subsection --label Preamble.profile --profile PROFILE"],
+		}
+		raise_parsing_error(tr,"PRE-003","Subsection 'Preamble.profile' not found.", details)
 	except NoContentError:
-		raise_parsing_error(tr,"PRE-004","Section 'Preamble.profile' must have exactly one item.")
+		details = {
+			"found": render_identifier_lines("Preamble.profile", []),
+			"expected": ["<exactly one item>"],
+			"hint": ["waterlint explain-subsection --label Preamble.profile --profile PROFILE"],
+		}
+		raise_parsing_error(tr,"PRE-004","Section 'Preamble.profile' must have exactly one item.", details)
 	except Exception as exc:
 		raise
 # This looks redundant because later we directly check for allowed profiles, but
 # we should check the rules in certain order so that behaviour remains predictible.
 	if not RE_IDENTIFIER_COMPILED.fullmatch(profile):
-		raise_parsing_error(tr,"PRE-014","'Preamble.profile' must be an identifier.")
+		details = {
+			"found": render_identifier_lines("Preamble.profile", [profile]),
+			"expected": render_expected_identifier("Preamble.profile", "identifier"),
+			"hint": ["waterlint explain-subsection --label Preamble.profile --profile PROFILE"],
+		}
+		raise_parsing_error(tr,"PRE-014","'Preamble.profile' must be an identifier.", details)
 # Now we know the profile is an identifier.
 	di_node : docitem_docstring_base
 	if profile == "module":
@@ -526,7 +563,13 @@ def make_docitem_tree_from_docstring_tree(tr : tracer, tree : DocstringTree) -> 
 	elif profile == "inherited_method":
 		di_node = docitem_docstring_inherited_method()
 	else:
-		raise_parsing_error(tr,"PRE-005",f"invalid profile: '{profile}'")
+		allowed_profiles = ("module","class","function","method","inherited_method")
+		details = {
+			"found": render_identifier_lines("Preamble.profile", [profile]),
+			"expected": render_allowed_identifier("Preamble.profile", allowed_profiles),
+			"hint": ["waterlint explain-subsection --label Preamble.profile --profile PROFILE"],
+		}
+		raise_parsing_error(tr,"PRE-005",f"invalid profile: '{profile}'", details)
 	di_node.parse(tr,tree)
 	return di_node
 
@@ -576,7 +619,7 @@ def check_profile_matches_object(tr: tracer, profile: str, obj: object) -> None:
 			raise_validation_error(tr, obj, "PRE-017", f"profile is '{profile}' but '{get_obj_name(obj)}' is a module.", details)
 	elif is_obj_class(obj):
 		if profile != "class":
-			details = render_profile_mismatch_details(get_obj_name(obj), "class", profile, "<use profile class>", profile)
+			details = render_profile_mismatch_details(get_obj_name(obj), "class", profile, "<use profile class>", "PROFILE")
 			raise_validation_error(tr, obj, "PRE-018", f"profile is '{profile}' but '{get_obj_name(obj)}' is a class.", details)
 	else:
 		if profile not in {"function", "method", "inherited_method"}:

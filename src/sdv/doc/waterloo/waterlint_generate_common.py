@@ -10,7 +10,7 @@ Contract:
 	general:
 		|Must| provide shared implementation helpers for the gen-minimal and gen-full command family.
 Public_functions:
-	generate_command, build_parser
+	generate_command, gen_minimal_command, gen_full_command, build_parser
 Function_overview:
 	generate_command:
 		Execute the shared generation workflow for either the minimal or full mode.
@@ -34,6 +34,7 @@ from sdv.doc.waterloo import docitem_genutil as genutil
 from sdv.doc.waterloo.docitem_helper import (
 	Documentable,
 	get_obj_fully_qualified_name,
+	ResolveObjectError,
 	tracer,
 )
 from sdv.doc.waterloo import waterlint_common as wl_common
@@ -229,7 +230,36 @@ def build_parser(
 	return prsr
 
 
-def _generate_command(args: argparse.Namespace, mode: Literal["minimal", "full"], waterlint_version: str) -> int:
+def generate_command(args: argparse.Namespace, mode: Literal["minimal", "full"], waterlint_version: str) -> int:
+	r"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+		scope:
+			extension
+	Contract:
+		general:
+			|Must| execute the shared generation workflow for either the minimal or full mode.
+	Parameters:
+		args:
+			|Must| provide the following attributes, as parsed from the command line:
+			- obj: list of qualified object names to generate docstring skeletons for. Option may be repeated.
+			- recursive: whether to recursively traverse documentable objects below each --obj.
+			- missing_only: whether to generate only for objects without docstring.
+			- format: output format, either raw or json. Default is raw, or json if --recursive is set.
+			- out_file: optional file path to write output to instead of stdout.
+			- indent: indent unit for generated docstring text, either tab or spc4 (4 spaces). Default is spc4.
+			- debug: whether to emit debugging data to stderr (reserved for future use, currently has no effect).
+		mode:
+			|Must| specify the generation mode, either "minimal" or "full".
+		waterlint_version:
+			|Must| provide the current version of Waterlint for tracer metadata.
+	Returns:
+		|Must| return 0 on success, non-zero on validation or processing errors.
+	Raises:
+	"""
 	tr = tracer()
 	out_diag = getattr(args, "out_diag", None)
 	out_diag_json = getattr(args, "out_diag_json", None)
@@ -256,11 +286,7 @@ def _generate_command(args: argparse.Namespace, mode: Literal["minimal", "full"]
 		)
 		if fmt == "raw":
 			if len(targets) != 1:
-				tr.add_error(
-					"TOOL-820",
-					"tool",
-					f"--format raw requires exactly one target object, got {len(targets)}.",
-				)
+				tr.add_error("TOOL-008", "tool", f"--format raw requires exactly one target object, got {len(targets)}.")
 				_emit_tracer(tr, out_diag, out_diag_json, waterlint_version, debug=bool(args.debug))
 				return 2
 			profile = genutil.infer_docstring_profile(targets[0])
@@ -295,8 +321,12 @@ def _generate_command(args: argparse.Namespace, mode: Literal["minimal", "full"]
 			_emit_tracer(tr, out_diag, out_diag_json, waterlint_version, debug=bool(args.debug))
 			return 1
 		raise
+	except ResolveObjectError as exc:
+		tr.add_error("TOOL-001", "tool", str(exc), exc.to_details())
+		_emit_tracer(tr, out_diag, out_diag_json, waterlint_version, debug=bool(args.debug))
+		return 1
 	except Exception as exc:
-		tr.add_error("TOOL-821", "tool", f"[{get_obj_fully_qualified_name(exc)}] {exc}")
+		tr.add_error("TOOL-800", "tool", f"[{get_obj_fully_qualified_name(exc)}] {exc}")
 		_emit_tracer(tr, out_diag, out_diag_json, waterlint_version, debug=bool(args.debug))
 		return 1
 	_emit_tracer(tr, out_diag, out_diag_json, waterlint_version, debug=bool(args.debug))
@@ -324,7 +354,7 @@ def gen_minimal_command(args: argparse.Namespace, waterlint_version: str) -> int
 		|Must| return 0 on success, non-zero on validation or processing errors.
 	Raises:
 	"""
-	return _generate_command(args, "minimal", waterlint_version)
+	return generate_command(args, "minimal", waterlint_version)
 
 
 def gen_full_command(args: argparse.Namespace, waterlint_version: str) -> int:
@@ -348,4 +378,4 @@ def gen_full_command(args: argparse.Namespace, waterlint_version: str) -> int:
 		|Must| return 0 on success, non-zero on validation or processing errors.
 	Raises:
 	"""
-	return _generate_command(args, "full", waterlint_version)
+	return generate_command(args, "full", waterlint_version)

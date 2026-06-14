@@ -8,6 +8,7 @@ from sdv.doc.waterloo.docitem_helper import *
 
 INDENT_SCHEME_TAB : Final[int] = 0
 INDENT_SCHEME_SPC4 : Final[int] = 1
+_PARSED_DOCSTRING_CACHE: Dict[str, DocstringTree] = {}
 
 def make_got_tag(subtree : DocstringSubtree,pos : int) -> str:
 	if pos < 0:
@@ -124,6 +125,8 @@ Raises:
 		|Must| raise if inconsistent indentation (tab vs space) is detected.
 		|May| propagate exceptions from |func|`get_num_indent`.
 	"""
+	if text in _PARSED_DOCSTRING_CACHE:
+		return _PARSED_DOCSTRING_CACHE[text]
 	lines = text.split("\n")
 
 # Detect indentation scheme from first indented line
@@ -211,6 +214,7 @@ Raises:
 # To be revised. Most likely ok.
 		if "\t" in content:
 			warn_parsing(tr,"TKN-009",'Line contains inner TABs. Please connect lines with escaped \\ or use a raw string notation like r"""..."""')
+	_PARSED_DOCSTRING_CACHE[text] = target
 	return target
 
 def expect_list(tr : tracer,subtree : DocstringSubtree,pos : int) -> Tuple[DocstringSubtree,int]:
@@ -391,8 +395,37 @@ def get_scopes_of_tree(tr : tracer,tree : DocstringTree) -> Scopes:
 		SectionNotFoundError:
 			|Must| raise if there is no |label|`Preamble`
 	"""
+	scopes, _ = get_scopes_of_tree_var(tr, tree)
+	return scopes
+
+
+def get_scopes_of_tree_var(tr : tracer,tree : DocstringTree) -> tuple[Scopes, bool]:
+	r"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+	Contract:
+		general:
+			|Must| extract the |label|`Preamble` from the docstring tree.
+			|Must| extract the |label|`scope` from the |label|`Preamble`.
+			|Must| return the default if |label|`scope` is not present or empty.
+			|Must| additionally return whether the scope was declared explicitly.
+	Parameters:
+		tr:
+			Tracer for providing context and collecting warnings
+		tree:
+			The docitem tree to be examined
+	Returns:
+		|Must| return a tuple |code|`(scopes, explicit)` where |var|`scopes` is the set of scopes found,
+		and |var|`explicit` is |True| iff subsection |label|`Preamble.scope` is present.
+	Raises:
+		SectionNotFoundError:
+			|Must| raise if there is no |label|`Preamble`
+	"""
 	if not tree:
-		return set([Scope.PUBLIC])
+		return set([Scope.PUBLIC]), False
 	try:
 		scopes = get_tree_of_subsection(tr,tree,"Preamble","scope")
 # No Preamble.
@@ -400,13 +433,13 @@ def get_scopes_of_tree(tr : tracer,tree : DocstringTree) -> Scopes:
 		raise
 # Preamble exists, but scope does not
 	except SubsectionNotFoundError:
-		return set([Scope.PUBLIC])
+		return set([Scope.PUBLIC]), False
 # scope exists but is empty
 	if len(scopes) == 0:
-		return set([Scope.PUBLIC])
+		return set([Scope.PUBLIC]), True
 # Ensured by parser.
 	assert is_list_of_str(scopes)
-	return set([scope_tag_map[s] for s in scopes if s in scope_tag_map])
+	return set([scope_tag_map[s] for s in scopes if s in scope_tag_map]), True
 
 def to_string_tree(tree : DocstringSubtree,indent_scheme : int = INDENT_SCHEME_TAB,indent : int = 0) -> str:
 	"""

@@ -129,6 +129,7 @@ with contextlib.redirect_stdout(sys.stderr):
 		get_obj_fully_qualified_name,
 		get_obj_path,
 		RE_ANSI_SGR_COMPILED,
+		ResolveObjectError,
 		ValidationError,
 		ParseError,
 		SectionNotFoundError,
@@ -681,6 +682,14 @@ def validate_command(args: argparse.Namespace) -> int:
 			return 1
 		else:
 			raise
+	except ResolveObjectError as e:
+		tr.add_error("TOOL-001","tool",str(e), e.to_details())
+		_emit_tracer(tr, out_diag, out_diag_json)
+		return 1
+	except ResolveObjectError as e:
+		tr.add_error("TOOL-001","tool",str(e), e.to_details())
+		_emit_tracer(tr, out_diag, out_diag_json)
+		return 1
 	except ImportError as e:
 		tr.add_error("TOOL-001","tool",str(e))
 		_emit_tracer(tr, out_diag, out_diag_json)
@@ -871,6 +880,10 @@ def extract_command(args: argparse.Namespace) -> int:
 		return 1
 	except SubsectionNotFoundError as exc:
 		tr.add_error("TOOL-005", "tool", str(exc))
+		_emit_tracer(tr, out_diag, out_diag_json)
+		return 1
+	except ResolveObjectError as exc:
+		tr.add_error("TOOL-001", "tool", str(exc), exc.to_details())
 		_emit_tracer(tr, out_diag, out_diag_json)
 		return 1
 	except ImportError as exc:
@@ -1820,12 +1833,12 @@ def _build_parser() -> argparse.ArgumentParser:
 	global_opts.add_argument(
 		"--out-diag",
 		metavar="PATH",
-		help="Write tracer diagnostics (errors/warnings) to PATH instead of stderr.",
+		help=f"Write tracer diagnostics (errors/warnings) to PATH, {wl_common.DIAG_TARGET_STDOUT}, or {wl_common.DIAG_TARGET_STDERR} instead of stderr.",
 	)
 	global_opts.add_argument(
 		"--out-diag-json",
 		metavar="PATH",
-		help="Write tracer diagnostics in machine-readable JSON format to PATH.",
+		help=f"Write tracer diagnostics in machine-readable JSON format to PATH, {wl_common.DIAG_TARGET_STDOUT}, or {wl_common.DIAG_TARGET_STDERR}.",
 	)
 
 	parser_parts: wl_common.ParserParts_t = {
