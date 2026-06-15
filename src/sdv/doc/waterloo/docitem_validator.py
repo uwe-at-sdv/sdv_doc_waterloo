@@ -292,7 +292,11 @@ Notes:
 	with traced_section(tr, "Preamble"):
 	# Rule: Preamble must exist. We do not allow purely informative docstrings.
 		if not top.has_item("Preamble"):
-			details = render_missing_entry_details("Document.sections", top.items(), "Preamble", profile, top_level=True)
+			details = {
+				"found": render_suggestion("", "No Preamble"),
+				"expected": ["Preamble:","\tprofile:","\t\t...","\tnormative_sections:","\t\t...","\t..."],
+				"hint": explain_try_self_for_section("Preamble", profile),
+			}
 			raise_validation_error(tr,obj,"PRE-001","Section 'Preamble' does not exist.", details)
 #----- status -------------------------------------------------#
 		node_preamble = top.item("Preamble")
@@ -402,7 +406,7 @@ Notes:
 			for cls_name in node_co.items():
 				cls_node = node_co.item(cls_name)
 				if cls_node.has_norm_keywords():
-					details = render_normativity_keyword_details("Class_overview", cls_name, cls_node.items(), profile)
+					details = render_normativity_keyword_details("Class_overview", cls_name, cls_node.items(), "don't use normativity keyword, give a brief informative description instead", profile)
 					raise_validation_error(tr, obj, "MCLO-007", f"Entry '{cls_name}' in Class_overview must not contain normativity keywords; content is informational only.", details)
 
 #----- Function overview --------------------------------------#
@@ -428,7 +432,7 @@ Notes:
 			for fn_name in node_fo.items():
 				fn_node = node_fo.item(fn_name)
 				if fn_node.has_norm_keywords():
-					details = render_normativity_keyword_details("Function_overview", fn_name, fn_node.items(), profile)
+					details = render_normativity_keyword_details("Function_overview", fn_name, fn_node.items(), "don't use normativity keyword, give a brief informative description instead", profile)
 					raise_validation_error(tr, obj, "MFNO-007", f"Entry '{fn_name}' in Function_overview must not contain normativity keywords; content is informational only.", details)
 
 #----- Public types -------------------------------------------#
@@ -473,7 +477,7 @@ Notes:
 					details = render_named_value_reference_details("Public_constants", const_name, "<refer to a named value, not callable/class>", profile)
 					raise_validation_error(tr, obj, "MPCON-009", f"Entry '{const_name}' must refer to a named value, not callable/class.", details)
 				if const_name in ann and not is_attr_final(cast(ModuleType | type, obj), const_name):
-					details = render_constant_reference_details("Public_constants", const_name, "<annotate the constant as Final>", profile)
+					details = render_constant_reference_details("Public_constants", const_name, "<annotate the constant as Final; don't forget to import Final from typing>", profile)
 					raise_validation_error(tr, obj, "MPCON-006", f"Constant '{const_name}' is annotated but not Final.", details)
 
 #===== Scope Monotonicity Rules ===============================#
@@ -578,7 +582,11 @@ Notes:
 	with traced_section(tr, "Preamble"):
 # Rule: Preamble must exist. We do not allow purely informative docstrings.
 		if not top.has_item("Preamble"):
-			details = render_missing_entry_details("Document.sections", top.items(), "Preamble", profile, top_level=True)
+			details = {
+				"found": render_suggestion("", "No Preamble"),
+				"expected": ["Preamble:","\tprofile:","\t\t...","\tnormative_sections:","\t\t...","\t..."],
+				"hint": explain_try_self_for_section("Preamble", profile),
+			}
 			raise_validation_error(tr,obj,"PRE-001","Section 'Preamble' does not exist.", details)
 #----- status -------------------------------------------------#
 		node_preamble = top.item("Preamble")
@@ -784,7 +792,7 @@ Notes:
 			for cls_name in node_co.items():
 				cls_node = node_co.item(cls_name)
 				if cls_node.has_norm_keywords():
-					details = render_normativity_keyword_details("Class_overview", cls_name, cls_node.items(), profile)
+					details = render_normativity_keyword_details("Class_overview", cls_name, cls_node.items(), "don't use normativity keyword, give a brief informative description instead", profile)
 					raise_validation_error(tr, obj, "CCLO-007", f"Entry '{cls_name}' in Class_overview must not contain normativity keywords; content is informational only.", details)
 
 #----- Method overview ----------------------------------------#
@@ -810,7 +818,7 @@ Notes:
 			for m_name in node_mo.items():
 				m_node = node_mo.item(m_name)
 				if m_node.has_norm_keywords():
-					details = render_normativity_keyword_details("Method_overview", m_name, m_node.items(), profile)
+					details = render_normativity_keyword_details("Method_overview", m_name, m_node.items(), "don't use normativity keyword, give a brief informative description instead", profile)
 					raise_validation_error(tr, obj, "CMTO-007", f"Entry '{m_name}' in Method_overview must not contain normativity keywords; content is informational only.", details)
 
 #----- Public types -------------------------------------------#
@@ -825,7 +833,7 @@ Notes:
 				attr = getattr(obj, ty_name)
 				ann_val = ann.get(ty_name, None) if isinstance(ann, dict) else None
 				if not _is_type_alias(attr, ann_val):
-					details = render_type_reference_details("Public_types", ty_name, "<declare a TypeAlias or NewType>", profile)
+					details = render_type_reference_details("Public_types", ty_name, "<remove entry or declare a TypeAlias or NewType>", profile)
 					raise_validation_error(tr, obj, "CPTYP-008", f"Entry '{ty_name}' is not a TypeAlias/NewType.", details)
 
 #----- Public variables ---------------------------------------#
@@ -945,8 +953,8 @@ Notes:
 				except Exception:
 					details = {
 						"found": render_identifier_lines("Factory", [item]),
-						"expected": render_expected_identifier("Factory", "qualified identifier"),
-						"hint": explain_try_self_for_subsection("Factory.<item>", "class"),
+						"expected": render_suggestion("Factory", "refer to an existing callable"),
+						"hint": explain_try_self_for_subsection(f"'Factory.<item>'", "class"),
 					}
 					raise_validation_error(tr, obj, "FAC-006", f"Factory entry '{item}' does not resolve to an existing callable.", details)
 # ...must be normative.
@@ -1510,7 +1518,11 @@ See_also:
 #===== Preamble must exist ====================================#
 # Preamble must exist. We do not allow purely informative docstrings.
 		if "Preamble" not in top.items():
-			details = render_missing_entry_details("Document.sections", top.items(), "Preamble", profile, top_level=True)
+			details = {
+				"found": render_suggestion("", "No Preamble"),
+				"expected": ["Preamble:","\tprofile:","\t\t...","\tnormative_sections:","\t\t...","\t..."],
+				"hint": explain_try_self_for_section("Preamble", profile),
+			}
 			raise_validation_error(tr,obj,"PRE-001","Section 'Preamble' does not exist.", details)
 		node_preamble = top.item("Preamble")
 		with traced_section(tr, f"Preamble"):
@@ -1551,7 +1563,11 @@ See_also:
 # Normative_sections must exist and be non-empty. Non-emptyness is implied by existence and normativity of Contract.
 		with traced_section(tr, "normative_sections"):
 			if "normative_sections" not in node_preamble.items():
-				details = render_missing_entry_details("Preamble", node_preamble.items(), "normative_sections", profile)
+				details = {
+					"found": ["Preamble:", "\t<no normative_sections>"],
+					"expected": ["Preamble:", "\tnormative_sections:", "\t\tContract <more section labels, comma separated>"],
+					"hint": explain_try_self_for_subsection("Preamble.normative_sections", profile),
+				}
 				raise_validation_error(tr,obj,"PRE-006","Section 'normative_sections' does not exist.", details)
 # Here we know it exists.
 			node_normative_sections: docitem_list_base = cast(docitem_list_base, node_preamble.item("normative_sections"))
@@ -1693,7 +1709,7 @@ See_also:
 					if node_term.empty():
 						warn_validation(tr,obj,"TERM-008","Term content should not be empty.")
 					if node_term.has_norm_keywords():
-						details = render_normativity_keyword_details("Terminology", name, node_term.items(), profile)
+						details = render_normativity_keyword_details("Terminology", name, node_term.items(), "don't use normativity keyword, describe terms informatively", profile)
 						raise_validation_error(tr, obj, "TERM-003",f"Term content has normativity keywords; content is informational only.", details)
 
 #===== If See_also exists, more tests apply ===================#
@@ -1776,7 +1792,7 @@ See_also:
 						if node_note.empty():
 							warn_validation(tr,obj,"NOTE-009","Note content should not be empty.")
 						if node_note.has_norm_keywords():
-							details = render_normativity_keyword_details("Notes", name, node_note.items(), profile)
+							details = render_normativity_keyword_details("Notes", name, node_note.items(), "don't use normativity keyword; consider moving relevant content to the Contract section", profile)
 							raise_validation_error(tr, obj, "NOTE-003",f"Note content must not contain normativity keywords; content is informational only.", details)
 # Cases
 		profile = get_profile(top)

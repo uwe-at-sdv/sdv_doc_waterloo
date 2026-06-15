@@ -1,1 +1,3 @@
-Success: no issues found in 32 source files
+/server/devel/sdv/privat/uwe/source/sdv_doc_waterloo/package_main/src/sdv/doc/waterloo/mcp/wtrl_logging.py:202: error: Unexpected keyword argument "use_colors" for "__init__" of "Formatter"  [call-arg]
+/home/uwe/.local/lib/python3.10/site-packages/mypy/typeshed/stdlib/logging/__init__.pyi: note: "__init__" of "Formatter" defined here
+Found 1 error in 1 file (checked 32 source files)

@@ -249,9 +249,9 @@ Method_overview:
 					found_preamble = True
 				elif not found_preamble:
 					details = {
-						"found": render_source_snippet("Document.sections", [label]),
-						"expected": ["<place Preamble before any other section>"],
-						"hint": explain_try_self_for_section("Preamble", get_profile_of_tree(tr, cast(DocstringTree, tree))),
+						"found": render_suggestion("", "No Preamble"),
+						"expected": ["Preamble:","\tprofile:","\t\t...","\tnormative_sections:","\t\t...","\t..."],
+						"hint": explain_try_self_for_section("Preamble", "PROFILE"),
 					}
 					raise_parsing_error(tr,"PRE-001","Preamble is not first.", details)
 				items,pos = expect_list(tr,tree,pos)
@@ -522,22 +522,22 @@ def make_docitem_tree_from_docstring_tree(tr : tracer, tree : DocstringTree) -> 
 		profile = get_profile_of_tree(tr,tree)
 	except SectionNotFoundError:
 		details = {
-			"found": ["Document.sections:", "\t..."],
-			"expected": ["<place Preamble before any other section>"],
-			"hint": ["waterlint explain-section --label Preamble --profile PROFILE"],
+			"found": render_suggestion("","No Preamble"),
+			"expected": ["Preamble:","\tprofile:","\t\t...","\tnormative_sections:","\t\t...","\t..."],
+			"hint": explain_try_self_for_section("Preamble","PROFILE"),
 		}
 		raise_parsing_error(tr,"PRE-001","Section 'Preamble' not found.", details)
 	except SubsectionNotFoundError:
 		details = {
-			"found": ["Preamble:", "\t..."],
-			"expected": ["<add subsection Preamble.profile>"],
+			"found": ["Preamble:", "\t<no profile>"],
+			"expected": ["Preamble:", "\tprofile:", f"\t\t<one of {{{', '.join(CANONICAL_ORDER_OF_PROFILES)}}}>"],
 			"hint": ["waterlint explain-subsection --label Preamble.profile --profile PROFILE"],
 		}
 		raise_parsing_error(tr,"PRE-003","Subsection 'Preamble.profile' not found.", details)
 	except NoContentError:
 		details = {
 			"found": render_identifier_lines("Preamble.profile", []),
-			"expected": ["<exactly one item>"],
+			"expected": ["Preamble:", "\tprofile:", f"\t\t<one of {{{', '.join(CANONICAL_ORDER_OF_PROFILES)}}}>"],
 			"hint": ["waterlint explain-subsection --label Preamble.profile --profile PROFILE"],
 		}
 		raise_parsing_error(tr,"PRE-004","Section 'Preamble.profile' must have exactly one item.", details)

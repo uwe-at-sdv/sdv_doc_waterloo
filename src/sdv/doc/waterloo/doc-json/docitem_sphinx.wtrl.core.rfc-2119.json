@@ -1,12 +1,12 @@
 {
     "$schema": "https://sci-d-vis.com/schema/wtrl-json-0.1.0.schema.json",
-    "$id": "urn:waterlint:wtrl-json:0.16.1:core:rfc-2119:9959cd57d3e06ef6173caabcbbcbeb32d799b2b8ed0c6def898f9a9b769a2167",
+    "$id": "urn:waterlint:wtrl-json:0.16.1:core:rfc-2119:24b3da80851c4c90f953e351aad28a0048eb594022087fe827d7903e06468b1f",
     "__WTRL_VERSION__": {
         "waterloo": "0.8.1",
         "schema": "0.1.0"
     },
     "__WTRL_META__": {
-        "generated_at": "2026-06-15T14:43:32+02:00",
+        "generated_at": "2026-06-15T19:27:37+02:00",
         "generator": "waterlint",
         "scope": "core",
         "flavour": "rfc-2119"
@@ -65,6 +65,7 @@
         "sdv.doc.waterloo.docitem_helper.Status": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.Status",
         "sdv.doc.waterloo.docitem_helper.ConfigTraversal": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.ConfigTraversal",
         "sdv.doc.waterloo.docitem_helper.tracer": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.tracer",
+        "sdv.doc.waterloo.docitem_helper.ResolveObjectError": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.ResolveObjectError",
         "sdv.doc.waterloo.docitem_base.docitem_base": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_base.docitem_base",
         "sdv.doc.waterloo.docitem_base.docitem_list_base": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_base.docitem_list_base",
         "sdv.doc.waterloo.docitem_base.docitem_map_base": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_base.docitem_map_base",
@@ -1256,6 +1257,13 @@
                         "for example body category, normativity, and profile applicability.",
                         "Informative: This is a carefully distilled machine-readable representation of the relevant rules",
                         "from the documentation standard, but the documentation remains the Single Source of Truth for the standard."
+                    ]
+                },
+                "Notes": {
+                    "Render functions": [
+                        "The render functions in this module are intended for building",
+                        "verbose diagnostic messages that include source and expected snippets",
+                        "along with suggestions on how to fix the docstring."
                     ]
                 }
             }
@@ -2608,7 +2616,7 @@
         },
         "sdv.doc.waterloo.docitem_helper.render_normativity_keyword_details": {
             "signature": {
-                "text": "render_normativity_keyword_details(section_label: 'str', entry_name: 'str', current_lines: 'Iterable[str]', profile: 'str') -> 'dict[str, Any]'",
+                "text": "render_normativity_keyword_details(section_label: 'str', entry_name: 'str', current_lines: 'Iterable[str]', suggestion: 'str', profile: 'str') -> 'dict[str, Any]'",
                 "parameters": [
                     {
                         "name": "section_label",
@@ -2626,6 +2634,12 @@
                         "name": "current_lines",
                         "kind": "POSITIONAL_OR_KEYWORD",
                         "annotation": "Iterable[str]",
+                        "default": null
+                    },
+                    {
+                        "name": "suggestion",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
                         "default": null
                     },
                     {
@@ -2661,6 +2675,9 @@
                     ],
                     "current_lines": [
                         "The raw lines found in the entry."
+                    ],
+                    "suggestion": [
+                        "A brief informative replacement suggestion for the entry."
                     ],
                     "profile": "The docstring profile used for the |cmd|`explain-section` hint."
                 },
@@ -4668,6 +4685,77 @@
                     "A context manager yielding nothing."
                 ],
                 "Raises": {}
+            }
+        },
+        "sdv.doc.waterloo.docitem_helper.ResolveObjectError": {
+            "signature": {
+                "text": "ResolveObjectError.__init__(self, ref: 'str', current_obj: 'object', candidates: 'Sequence[str] | None' = None, last_candidate: 'str | None' = None, last_error: 'Exception | None' = None, msg: 'str | None' = None) -> 'None'",
+                "parameters": [
+                    {
+                        "name": "ref",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    },
+                    {
+                        "name": "current_obj",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "object",
+                        "default": null
+                    },
+                    {
+                        "name": "candidates",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "Sequence[str] | None",
+                        "default": "None"
+                    },
+                    {
+                        "name": "last_candidate",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str | None",
+                        "default": "None"
+                    },
+                    {
+                        "name": "last_error",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "Exception | None",
+                        "default": "None"
+                    },
+                    {
+                        "name": "msg",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str | None",
+                        "default": "None"
+                    }
+                ],
+                "returns": "None"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "class",
+                    "normative_sections": [
+                        "Contract"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST be an exception class for errors during reference resolution."
+                    ],
+                    "constructor": [
+                        "MUST accept the following positional parameters:",
+                        "* |var|`ref`: the reference string that was attempted to resolve.",
+                        "* |var|`current_obj`: the object from which the reference was being resolved.",
+                        "* |var|`candidates`: an optional list of candidate strings that were considered during resolution.",
+                        "* |var|`last_candidate`: an optional string representing the last candidate that was attempted before failure.",
+                        "* |var|`last_error`: an optional exception representing the last error encountered during resolution attempts.",
+                        "* |var|`msg`: an optional custom error message. If not provided, a default message should be constructed using |var|`ref` and |var|`current_obj`."
+                    ]
+                },
+                "Notes": {
+                    "Callsites": [
+                        "Various waterlint components."
+                    ]
+                }
             }
         },
         "sdv.doc.waterloo.docitem_helper.raise_has_no_docstring": {

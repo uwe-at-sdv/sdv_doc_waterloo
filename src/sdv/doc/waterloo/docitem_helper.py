@@ -1409,7 +1409,7 @@ def render_name_object_consistency_details(label: str, current_entries: Iterable
 	return {
 		"found": render_source_snippet(label, [overview_item]),
 		"expected": ["<check name/object consistency>"],
-		"hint": explain_try_self_for_subsection(f"{label}.<item>", profile),
+		"hint": explain_try_self_for_subsection(f"'{label}.<item>'", profile),
 	}
 
 
@@ -1473,14 +1473,17 @@ def render_profile_mismatch_details(object_name: str, object_kind: str, current_
 			"Preamble",
 			"\tprofile:",
 			f"\t\t{current_profile}",
-			f"<but kind of object {object_name} is {object_kind}>",
 		],
-		"expected": [expected_text],
+		"expected": [
+			"Preamble",
+			"\tprofile:",
+			"\t\t<insert correct profile for the documented object kind>",
+			],
 		"hint": explain_try_self_for_subsection("Preamble.profile", profile),
 	}
 
 
-def render_normativity_keyword_details(section_label: str, entry_name: str, current_lines: Iterable[str], profile: str) -> dict[str, Any]:
+def render_normativity_keyword_details(section_label: str, entry_name: str, current_lines: Iterable[str], suggestion: str, profile: str) -> dict[str, Any]:
 	"""
 	Preamble:
 		profile:
@@ -1497,6 +1500,8 @@ def render_normativity_keyword_details(section_label: str, entry_name: str, curr
 			The entry label that violates the rule.
 		current_lines:
 			The raw lines found in the entry.
+		suggestion:
+			A brief informative replacement suggestion for the entry.
 		profile:
 			The docstring profile used for the |cmd|`explain-section` hint.
 	Returns:
@@ -1508,7 +1513,7 @@ def render_normativity_keyword_details(section_label: str, entry_name: str, curr
 		found_lines = ["..."]
 	return {
 		"found": [f"{section_label}:", f"\t{entry_name}:"] + [f"\t\t{line}" for line in found_lines],
-		"expected": [f"{section_label}:", f"\t{entry_name}:", "\t\t<don't use normativity keyword>"],
+		"expected": [f"{section_label}:", f"\t{entry_name}:", f"\t\t<{suggestion}>"],
 		"hint": explain_try_self_for_section(section_label, profile),
 	}
 
@@ -1863,7 +1868,7 @@ def render_type_reference_details(label: str, type_name: str, expected_text: str
 	return {
 		"found": render_source_snippet(label, [type_name]),
 		"expected": [expected_text],
-		"hint": explain_try_self_for_subsection(f"{label}.<item>", profile),
+		"hint": explain_try_self_for_subsection(f"'{label}.<item>'", profile),
 	}
 
 
@@ -1893,7 +1898,7 @@ def render_constant_reference_details(label: str, const_name: str, expected_text
 	return {
 		"found": render_source_snippet(label, [const_name]),
 		"expected": [expected_text],
-		"hint": explain_try_self_for_subsection(f"{label}.<item>", profile),
+		"hint": explain_try_self_for_subsection(f"'{label}.<item>'", profile),
 	}
 
 
@@ -1923,7 +1928,7 @@ def render_named_value_reference_details(label: str, name: str, expected_text: s
 	return {
 		"found": render_source_snippet(label, [name]),
 		"expected": [expected_text],
-		"hint": explain_try_self_for_subsection(f"{label}.<item>", profile),
+		"hint": explain_try_self_for_subsection(f"'{label}.<item>'", profile),
 	}
 
 
@@ -1955,7 +1960,7 @@ def render_overview_missing_member_details(overview_label: str, public_label: st
 	return {
 		"found": render_source_snippet(overview_label, [missing_name] + [str(item) for item in current_entries if str(item) != missing_name]),
 		"expected": [f"<add {missing_name} to {public_label}>"],
-		"hint": explain_try_self_for_subsection(f"{public_label}.<item>", profile),
+		"hint": explain_try_self_for_subsection(f"'{public_label}.<item>'", profile),
 	}
 
 #===== end render functions for verbose diagnostics ==========#
