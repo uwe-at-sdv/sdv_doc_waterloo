@@ -1,19 +1,20 @@
+
 <!DOCTYPE html>
 
-<html lang="en" data-content_root="./">
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
     <title>10. Model Context Protocol &#8212; Waterloo Docstrings 0 documentation</title>
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5f771d8e" />
-    <link rel="stylesheet" type="text/css" href="_static/basic.css?v=b08954a9" />
-    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=27fed22d" />
-    <link rel="stylesheet" type="text/css" href="_static/common_styles.css?v=27e4112a" />
-    <link rel="stylesheet" type="text/css" href="_static/alabaster_waterloo.css?v=163535b2" />
-    <script src="_static/documentation_options.js?v=8dde47fa"></script>
-    <script src="_static/doctools.js?v=fd6eb6e6"></script>
-    <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
+    <link rel="stylesheet" type="text/css" href="_static/common_styles.css" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster_waterloo.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="11. Reference - Core View" href="reference.html" />
@@ -21,9 +22,8 @@
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
-
   
-  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
   </head><body>
   
@@ -36,7 +36,7 @@
           <div class="body" role="main">
             
   <section id="model-context-protocol">
-<h1><span class="section-number">10. </span>Model Context Protocol<a class="headerlink" href="#model-context-protocol" title="Link to this heading">¶</a></h1>
+<h1><span class="section-number">10. </span>Model Context Protocol<a class="headerlink" href="#model-context-protocol" title="Permalink to this headline">¶</a></h1>
 <p>Model Context Protocol, usually abbreviated MCP, is a simple way for an
 application to expose tools and structured data to an LLM-based client.
 Instead of asking the model to inspect files directly, the client talks to a
@@ -50,7 +50,7 @@ documented interface.</p>
 and a small set of helper tools that make large documentation trees easier to
 navigate from an LLM agent or a visual inspector.</p>
 <section id="the-waterloo-mcp-server">
-<h2><span class="section-number">10.1. </span>The Waterloo MCP-Server<a class="headerlink" href="#the-waterloo-mcp-server" title="Link to this heading">¶</a></h2>
+<h2><span class="section-number">10.1. </span>The Waterloo MCP-Server<a class="headerlink" href="#the-waterloo-mcp-server" title="Permalink to this headline">¶</a></h2>
 <p>The Waterloo MCP-server applies that pattern to Waterloo documents in JSON
 format. It gives LLM-agents a simple, standardized way to access and query the
 documentation without loading the whole data set into the context window.
@@ -59,7 +59,7 @@ requests and responds with JSON data. It can be integrated with LLM-agents
 that support JSON-RPC.</p>
 </section>
 <section id="executable-and-configuration">
-<h2><span class="section-number">10.2. </span>Executable and configuration<a class="headerlink" href="#executable-and-configuration" title="Link to this heading">¶</a></h2>
+<h2><span class="section-number">10.2. </span>Executable and configuration<a class="headerlink" href="#executable-and-configuration" title="Permalink to this headline">¶</a></h2>
 <p>The Waterloo package includes a ready-to-use configuration file for the MCP
 server at <code class="wtrl_file docutils literal notranslate"><span class="pre">etc/wtrl_mcp.http.toml</span></code>.
 Once the package is installed, the server can be started in a terminal with
@@ -75,7 +75,7 @@ prefixed with <code class="wtrl_file docutils literal notranslate"><span class="
 clear configuration error and exits.</p>
 </section>
 <section id="tools">
-<h2><span class="section-number">10.3. </span>Tools<a class="headerlink" href="#tools" title="Link to this heading">¶</a></h2>
+<h2><span class="section-number">10.3. </span>Tools<a class="headerlink" href="#tools" title="Permalink to this headline">¶</a></h2>
 <p>The MCP-server supports the following tools:</p>
 <p class="rubric">Tool discovery</p>
 <ul class="simple">
@@ -117,7 +117,7 @@ clear configuration error and exits.</p>
 </ul>
 </section>
 <section id="typical-agent-workflow">
-<h2><span class="section-number">10.4. </span>Typical agent workflow<a class="headerlink" href="#typical-agent-workflow" title="Link to this heading">¶</a></h2>
+<h2><span class="section-number">10.4. </span>Typical agent workflow<a class="headerlink" href="#typical-agent-workflow" title="Permalink to this headline">¶</a></h2>
 <p>The tools above are the catalog; the workflow below is a recommended way to
 approach them when the agent does not already know the exact tool or target.
 In practice there are two common starting points:</p>
@@ -148,7 +148,7 @@ down to a canonical target, and then inspect the exact Waterloo text that
 describes the object.</p>
 </section>
 <section id="using-the-mcp-server-in-vscode">
-<h2><span class="section-number">10.5. </span>Using the MCP-server in VSCode<a class="headerlink" href="#using-the-mcp-server-in-vscode" title="Link to this heading">¶</a></h2>
+<h2><span class="section-number">10.5. </span>Using the MCP-server in VSCode<a class="headerlink" href="#using-the-mcp-server-in-vscode" title="Permalink to this headline">¶</a></h2>
 <p class="rubric">HTTP transport</p>
 <p>[Last tested with VSCode 1.115.0 on 2026-05-31]</p>
 <p>With transport <code class="wtrl_lit docutils literal notranslate"><span class="pre">streamable-http</span></code>, the MCP-server is added to VSCode by:</p>
@@ -196,7 +196,7 @@ server appears. As a smoke test, ask Copilot to run <code class="wtrl_cmd docuti
 verify that the expected roots are returned.</p>
 </section>
 <section id="server-error-messages">
-<h2><span class="section-number">10.6. </span>Server error messages<a class="headerlink" href="#server-error-messages" title="Link to this heading">¶</a></h2>
+<h2><span class="section-number">10.6. </span>Server error messages<a class="headerlink" href="#server-error-messages" title="Permalink to this headline">¶</a></h2>
 <p>This section is normative.</p>
 <p>The MCP implementation currently returns textual tool errors through the
 FastMCP transport path. The Waterloo-specific error payload classes are kept
@@ -217,7 +217,7 @@ rule labels. A later version may map them more directly to structured
 JSON-RPC error payloads if the MCP SDK exposes a better hook for that.</p>
 </section>
 <section id="running-the-mcp-server-in-a-docker-container">
-<h2><span class="section-number">10.7. </span>Running the MCP Server in a Docker Container<a class="headerlink" href="#running-the-mcp-server-in-a-docker-container" title="Link to this heading">¶</a></h2>
+<h2><span class="section-number">10.7. </span>Running the MCP Server in a Docker Container<a class="headerlink" href="#running-the-mcp-server-in-a-docker-container" title="Permalink to this headline">¶</a></h2>
 <p>To provide an MCP server in a platform-independent way,
 <code class="wtrl_cmd docutils literal notranslate"><span class="pre">waterlint</span></code> can generate a Dockerfile and, depending on the selected mode,
 one or two helper scripts from an MCP server configuration.</p>
@@ -251,8 +251,7 @@ because only a single artifact – the Docker image itself – needs to be distr
 including commands for running the container as a daemon.</p>
 <p>The generated Docker image acts as a deployable Waterloo documentation service.
 The overall workflow is illustrated in the following diagram:</p>
-<img alt="Workflow for waterlint's Docker output" class="align-center" src="_images/waterlint_pipeline_docker.svg" />
-<p>The package installation directory relevant for the following examples can be obtained using:</p>
+<img alt="Workflow for waterlint's Docker output" class="align-center" src="_images/waterlint_pipeline_docker.svg" /><p>The package installation directory relevant for the following examples can be obtained using:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import importlib.resources as r; print(r.files(&#39;sdv.doc.waterloo&#39;))&quot;</span>
 </pre></div>
 </div>
@@ -271,7 +270,7 @@ and a logging configuration referenced by that server configuration:</p>
 <code class="wtrl_value docutils literal notranslate"><span class="pre">streamable-http</span></code>, listening on port 13316.
 The generated Docker image automatically exposes this port.</p>
 <section id="bake-mode-bake-roots-default">
-<h3><span class="section-number">10.7.1. </span>Bake Mode (<code class="wtrl_opt docutils literal notranslate"><span class="pre">--bake-roots</span></code>, default)<a class="headerlink" href="#bake-mode-bake-roots-default" title="Link to this heading">¶</a></h3>
+<h3><span class="section-number">10.7.1. </span>Bake Mode (<code class="wtrl_opt docutils literal notranslate"><span class="pre">--bake-roots</span></code>, default)<a class="headerlink" href="#bake-mode-bake-roots-default" title="Permalink to this headline">¶</a></h3>
 <p>We use the above configuration as an example for running the MCP server inside a Docker container:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>waterlint<span class="w"> </span>render-docker<span class="w"> </span>--in<span class="w"> </span><span class="si">${</span><span class="nv">ROOT</span><span class="si">}</span>/etc/wtrl_mcp.http.toml<span class="w"> </span>--out<span class="w"> </span>/tmp/my_wtrl_mcp
 </pre></div>
@@ -320,7 +319,7 @@ It is important to forward the configured port number (13316 in this example):</
 </div>
 </section>
 <section id="no-bake-mode-no-bake-roots">
-<h3><span class="section-number">10.7.2. </span>No-Bake Mode (<code class="wtrl_opt docutils literal notranslate"><span class="pre">--no-bake-roots</span></code>)<a class="headerlink" href="#no-bake-mode-no-bake-roots" title="Link to this heading">¶</a></h3>
+<h3><span class="section-number">10.7.2. </span>No-Bake Mode (<code class="wtrl_opt docutils literal notranslate"><span class="pre">--no-bake-roots</span></code>)<a class="headerlink" href="#no-bake-mode-no-bake-roots" title="Permalink to this headline">¶</a></h3>
 <p>If the MCP server roots should not be embedded into the image,
 generate the Dockerfile as follows:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>waterlint<span class="w"> </span>render-docker<span class="w"> </span>--in<span class="w"> </span><span class="si">${</span><span class="nv">ROOT</span><span class="si">}</span>/etc/wtrl_mcp.http.toml<span class="w"> </span>--out<span class="w"> </span>/tmp/my_wtrl_mcp<span class="w"> </span>--no-bake-roots
@@ -347,11 +346,11 @@ impractical once the MCP server roots are supplied externally.</p>
           
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
 <p class="logo">
   <a href="index.html">
-    <img class="logo" src="_static/wtrl_logo_color_64x64.png" alt="Logo" />
+    <img class="logo" src="_static/wtrl_logo_color_64x64.png" alt="Logo"/>
     
   </a>
 </p>
@@ -363,16 +362,7 @@ impractical once the MCP server roots are supplied externally.</p>
 
 
 
-
-<search id="searchbox" style="display: none" role="search">
-    <div class="searchformwrapper">
-    <form class="search" action="search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
-      <input type="submit" value="Go" />
-    </form>
-    </div>
-</search>
-<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<h3>Navigation</h3>
 <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="introduction.html">1. Introduction</a></li>
@@ -413,6 +403,16 @@ impractical once the MCP server roots are supplied externally.</p>
   </ul></li>
 </ul>
 </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
 
 
 
@@ -426,11 +426,11 @@ impractical once the MCP server roots are supplied externally.</p>
       <div class="clearer"></div>
     </div>
     <div class="footer">
-      &#169;2026, Uwe.
+      &copy;2026, Uwe.
       
       |
-      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 9.1.0</a>
-      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.3.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |
       <a href="_sources/mcp.rst.txt"

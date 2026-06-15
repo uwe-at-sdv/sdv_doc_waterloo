@@ -1,19 +1,20 @@
+
 <!DOCTYPE html>
 
-<html lang="en" data-content_root="./">
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
     <title>7. Overview: I/O Layers &#8212; Waterloo Docstrings 0 documentation</title>
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5f771d8e" />
-    <link rel="stylesheet" type="text/css" href="_static/basic.css?v=b08954a9" />
-    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=27fed22d" />
-    <link rel="stylesheet" type="text/css" href="_static/common_styles.css?v=27e4112a" />
-    <link rel="stylesheet" type="text/css" href="_static/alabaster_waterloo.css?v=163535b2" />
-    <script src="_static/documentation_options.js?v=8dde47fa"></script>
-    <script src="_static/doctools.js?v=fd6eb6e6"></script>
-    <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
+    <link rel="stylesheet" type="text/css" href="_static/common_styles.css" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster_waterloo.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="8. The JSON I/O Layer" href="json_io.html" />
@@ -21,9 +22,8 @@
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
-
   
-  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
   </head><body>
   
@@ -36,20 +36,19 @@
           <div class="body" role="main">
             
   <section id="overview-i-o-layers">
-<h1><span class="section-number">7. </span>Overview: I/O Layers<a class="headerlink" href="#overview-i-o-layers" title="Link to this heading">¶</a></h1>
+<h1><span class="section-number">7. </span>Overview: I/O Layers<a class="headerlink" href="#overview-i-o-layers" title="Permalink to this headline">¶</a></h1>
 <p>This section is informative.</p>
 <section id="from-source-to-html">
-<h2><span class="section-number">7.1. </span>From source to HTML<a class="headerlink" href="#from-source-to-html" title="Link to this heading">¶</a></h2>
+<h2><span class="section-number">7.1. </span>From source to HTML<a class="headerlink" href="#from-source-to-html" title="Permalink to this headline">¶</a></h2>
 <p>The following diagram illustrates the typical workflow for generating
 both LLM-readable and human-readable documentation, including the
 integration of code examples. It highlights the transformation from
 source code to structured JSON artifacts and finally to rendered HTML.</p>
 <p>The individual stages of this workflow are described in detail in
 sections <a class="reference internal" href="json_io.html#json-io-layer"><span class="std std-ref">The JSON I/O Layer</span></a> and <a class="reference internal" href="html_output_layer.html#html-output-layer"><span class="std std-ref">The HTML Output Layer</span></a>.</p>
-<img alt="Workflow for waterlint's JSON/HTML output layer" class="align-center" src="_images/waterlint_pipeline.svg" />
-</section>
+<img alt="Workflow for waterlint's JSON/HTML output layer" class="align-center" src="_images/waterlint_pipeline.svg" /></section>
 <section id="walk-and-carve">
-<h2><span class="section-number">7.2. </span>Walk and carve<a class="headerlink" href="#walk-and-carve" title="Link to this heading">¶</a></h2>
+<h2><span class="section-number">7.2. </span>Walk and carve<a class="headerlink" href="#walk-and-carve" title="Permalink to this headline">¶</a></h2>
 <p><code class="wtrl_cmd docutils literal notranslate"><span class="pre">waterlint</span></code> provides a mechanism to inspect, filter, and refine
 the set of objects that enter the documentation pipeline. This functionality
 is implemented by the combination of the subcommands <code class="wtrl_cmd docutils literal notranslate"><span class="pre">walk</span></code> and
@@ -96,8 +95,7 @@ schema shape, but may simplify, filter, and recompute derived summary data.</p>
 <p>The resulting JSON artifact can then be passed directly to
 <code class="wtrl_cmd docutils literal notranslate"><span class="pre">waterlint</span> <span class="pre">render-json</span></code> instead of specifying modules explicitly,
 as illustrated in the following diagram.</p>
-<img alt="Walk, carve, and render" class="align-center" src="_images/waterlint_pipeline_carve.svg" />
-</section>
+<img alt="Walk, carve, and render" class="align-center" src="_images/waterlint_pipeline_carve.svg" /></section>
 </section>
 
 
@@ -105,11 +103,11 @@ as illustrated in the following diagram.</p>
           
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
 <p class="logo">
   <a href="index.html">
-    <img class="logo" src="_static/wtrl_logo_color_64x64.png" alt="Logo" />
+    <img class="logo" src="_static/wtrl_logo_color_64x64.png" alt="Logo"/>
     
   </a>
 </p>
@@ -121,16 +119,7 @@ as illustrated in the following diagram.</p>
 
 
 
-
-<search id="searchbox" style="display: none" role="search">
-    <div class="searchformwrapper">
-    <form class="search" action="search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
-      <input type="submit" value="Go" />
-    </form>
-    </div>
-</search>
-<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<h3>Navigation</h3>
 <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="introduction.html">1. Introduction</a></li>
@@ -162,6 +151,16 @@ as illustrated in the following diagram.</p>
   </ul></li>
 </ul>
 </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
 
 
 
@@ -175,11 +174,11 @@ as illustrated in the following diagram.</p>
       <div class="clearer"></div>
     </div>
     <div class="footer">
-      &#169;2026, Uwe.
+      &copy;2026, Uwe.
       
       |
-      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 9.1.0</a>
-      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.3.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |
       <a href="_sources/io_layers.rst.txt"
