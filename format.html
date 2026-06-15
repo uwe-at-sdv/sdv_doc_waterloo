@@ -136,6 +136,8 @@ followed by a whitespace character which allows simple, unique and robust parsin
 Informative: In this document which is written in reST, we insert a space (ASCII 32), a double-hyphen (en-dash),
 and another space (ASCII 32) between the braced Rule ID and the rule free-form text.
 When a rule is merely mentioned but not introduced, square brackets <code class="wtrl_norm docutils literal notranslate"><span class="pre">should</span> <span class="pre">not</span></code> be used.</p></li>
+<li><p>[META-005] – Obsolete rule IDs, when mentioned in prose, <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span> <span class="pre">not</span></code> be introduced with square brackets;
+square brackets <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span></code> be reserved for the point where a rule is defined.</p></li>
 </ul>
 </section>
 <section id="rule-taxonomy">
@@ -192,8 +194,10 @@ The following list explains the mnemonic prefixes and their semantics.</p>
 <p class="rubric">Tools and extensions</p>
 <ul class="simple">
 <li><p>TOOL: Error messages from <code class="wtrl_cmd docutils literal notranslate"><span class="pre">waterlint</span></code> (or other tools)</p></li>
+<li><p>JPTR: Error messages related to JSON Pointer references in tool-generated JSON</p></li>
 <li><p>JSCH: Error messages related to JSON and JSON Schema</p></li>
 <li><p>AXMPL: Error messages related to example mapping (e.g. for <code class="wtrl_cmd docutils literal notranslate"><span class="pre">waterlint</span> <span class="pre">add-example-json</span></code>)</p></li>
+<li><p>CARVE: Error messages related to carving walk input into JSON objects</p></li>
 <li><p>RHTM: Error messages related to rendering HTML (e.g. for <code class="wtrl_cmd docutils literal notranslate"><span class="pre">waterlint</span> <span class="pre">render-html5</span></code>)</p></li>
 <li><p>XTNSN: Error messages related to extensions (e.g. for IDEs)</p></li>
 <li><p>MCPS: Error messages returned by an MCP server</p></li>
@@ -887,37 +891,38 @@ the preamble and serves as metadata.</p>
 <li><p>[SCP-005] – For every internal reference introduced by sections
 <code class="wtrl_label docutils literal notranslate"><span class="pre">Public_classes</span></code>, <code class="wtrl_label docutils literal notranslate"><span class="pre">Public_functions</span></code>, or <code class="wtrl_label docutils literal notranslate"><span class="pre">Public_methods</span></code>,
 the source object <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span></code> be the documented module or class and the target object
-<code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span></code> be the referenced public class/function/method. The source object <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span></code>
-be at least as public as the target object. Validators <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span></code> apply the scope
+<code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span></code> be the referenced public class/function/method.
+The source object <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span></code> be at least as public as the target object.
+Validators <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span></code> apply the scope
 compatibility test defined in <a class="reference internal" href="#section-scope-monotonicity-rule"><span class="std std-ref">Scope Monotonicity Rule</span></a>.
 Any violation of the scope compatibility test in this case <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span></code> be reported as an error.</p></li>
 <li><p>[SCP-006] – If section <code class="wtrl_label docutils literal notranslate"><span class="pre">See_also</span></code> is listed in
 <code class="wtrl_label docutils literal notranslate"><span class="pre">Preamble.normative_sections</span></code>, then for every internal reference in
 <code class="wtrl_label docutils literal notranslate"><span class="pre">See_also</span></code> that resolves to a Waterloo-documented object, the source object
-<code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span></code> be the documented module or class and the target object <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span></code> be the referenced
-object. The source object <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span></code> be at least as public as the target object.
+<code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span></code> be the referenced object and the target object <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span></code> be the documented module or class.
+The source object <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span></code> be at least as public as the target object.
 Validators <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span></code> apply the scope compatibility test defined in
 <a class="reference internal" href="#section-scope-monotonicity-rule"><span class="std std-ref">Scope Monotonicity Rule</span></a>.
 Any violation of the scope compatibility test in this case <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span></code> be reported as an error.</p></li>
 <li><p>[SCP-007] – If section <code class="wtrl_label docutils literal notranslate"><span class="pre">See_also</span></code> is not listed in
 <code class="wtrl_label docutils literal notranslate"><span class="pre">Preamble.normative_sections</span></code>, then for every internal reference
 in <code class="wtrl_label docutils literal notranslate"><span class="pre">See_also</span></code> that resolves to a Waterloo-documented object, the source
-object <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span></code> be the documented module or class and the target object <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span></code> be the
-referenced object. The source object <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span></code> be at least as public as the target object.
+object <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span></code> be the referenced object and the target object <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span></code> be the documented module or class.
+The source object <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span></code> be at least as public as the target object.
 Validators <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span></code> apply the scope compatibility test defined in
 <a class="reference internal" href="#section-scope-monotonicity-rule"><span class="std std-ref">Scope Monotonicity Rule</span></a>.
 Any violation of the scope compatibility test in this case <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span></code> be reported as a warning.</p></li>
 <li><p>[SCP-008] – For profile <code class="wtrl_value docutils literal notranslate"><span class="pre">inherited_method</span></code>, subsection
 <code class="wtrl_label docutils literal notranslate"><span class="pre">Contract.base</span></code> introduces an internal reference from the derived
-method to the referenced base method. The source object <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span></code> be the derived
-method and the target object <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span></code> be the referenced base method. The source
-object <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span></code> be at least as public as the target object. Validators <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span></code>
-apply the scope compatibility test defined in <a class="reference internal" href="#section-scope-monotonicity-rule"><span class="std std-ref">Scope Monotonicity Rule</span></a> to this
+method to the referenced base method. The source object <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span></code> be the referenced base method and the target object <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span></code> be the derived
+method.
+The source object <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span></code> be at least as public as the target object.
+Validators <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span></code> apply the scope compatibility test defined in <a class="reference internal" href="#section-scope-monotonicity-rule"><span class="std std-ref">Scope Monotonicity Rule</span></a> to this
 reference. Any violation of the scope compatibility test in this case <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span></code> be reported as an error.</p></li>
 <li><p>[SCP-009] – Section <code class="wtrl_label docutils literal notranslate"><span class="pre">Derived_from</span></code> introduces internal references
 from the documented class to the referenced base classes. The source object <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span></code>
-be the documented class and the target object <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span></code> be one of its referenced base
-classes. The source object <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span></code> be at least as public as the target object.
+be any of its referenced base classes and the target object <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span></code> be the documented class.
+The source object <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span></code> be at least as public as the target object.
 Validators <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span></code> apply the scope compatibility test defined in
 <a class="reference internal" href="#section-scope-monotonicity-rule"><span class="std std-ref">Scope Monotonicity Rule</span></a> to each such reference that resolves to
 a Waterloo-documented object. Any scope-compatibility violation in this case
@@ -1993,7 +1998,7 @@ are introduced into the documentation graph.</p>
 the listed objects as part of its public API surface. The reference edge represents a contractual
 relationship: the containing object is <strong>responsible</strong> for providing access to the contained objects,
 and users of the containing object are expected to interact with the contained objects as part
-of of their usage of the containing object. The containing object must be at least as public as
+of their usage of the containing object. The containing object must be at least as public as
 the contained objects, since otherwise it would block access to visible such objects.</p>
 <p><strong>Inheritance</strong></p>
 <ul class="simple">
@@ -2019,18 +2024,18 @@ in terms of the numeric scope order, this means:</p>
 <ul class="simple">
 <li><p>For containment-style references, there exist s_A in scopes(A) and s_B in scopes(B) such that s_A &lt;= s_B,
 (“A is at least as public as B”)
-where B represents the contained object and A represents the containing object.</p></li>
+where A represents the <strong>containing</strong> object and B represents the <strong>contained</strong> object.</p></li>
 <li><p>For <code class="wtrl_label docutils literal notranslate"><span class="pre">Derived_from</span></code> and <code class="wtrl_label docutils literal notranslate"><span class="pre">Contract.base</span></code>,
 there exist s_A in scopes(A) and s_B in scopes(B) such that s_A &lt;= s_B,
 (“A is at least as public as B”)
-where A represents the referenced object
-and B represents the referencing object containing the <code class="wtrl_label docutils literal notranslate"><span class="pre">Derived_from</span></code> or <code class="wtrl_label docutils literal notranslate"><span class="pre">Contract.base</span></code> section</p></li>
+where A represents the <strong>referenced</strong> object
+and B represents the <strong>referencing</strong> object containing the <code class="wtrl_label docutils literal notranslate"><span class="pre">Derived_from</span></code> or <code class="wtrl_label docutils literal notranslate"><span class="pre">Contract.base</span></code> section.</p></li>
 <li><p>For <code class="wtrl_label docutils literal notranslate"><span class="pre">See_also</span></code>, there exist s_A in scopes(A) and s_B in scopes(B) such that s_A &lt;= s_B,
 (“A is at least as public as B”)
-where A represents the referenced object
-and B represents the referencing object containing the <code class="wtrl_label docutils literal notranslate"><span class="pre">See_also</span></code> section.</p></li>
+where A represents the <strong>referenced</strong> object
+and B represents the <strong>referencing</strong> object containing the <code class="wtrl_label docutils literal notranslate"><span class="pre">See_also</span></code> section.</p></li>
 </ul>
-<p>This rule is referred to as the <code class="wtrl_term docutils literal notranslate"><span class="pre">Scope</span> <span class="pre">Monotonicity</span> <span class="pre">Rule</span></code>.</p>
+<p>This rule set is referred to as the <code class="wtrl_term docutils literal notranslate"><span class="pre">Scope</span> <span class="pre">Monotonicity</span> <span class="pre">Rule</span></code>.</p>
 </section>
 <section id="non-referential-relationships">
 <h3><span class="section-number">5.15.6. </span>Non-referential relationships<a class="headerlink" href="#non-referential-relationships" title="Link to this heading">¶</a></h3>

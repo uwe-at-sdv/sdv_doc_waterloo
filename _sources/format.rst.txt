@@ -144,6 +144,9 @@ We do this by the following set of rules.
   and another space (ASCII 32) between the braced Rule ID and the rule free-form text.
   When a rule is merely mentioned but not introduced, square brackets |should_not| be used.
 
+* [META-005] -- Obsolete rule IDs, when mentioned in prose, |must_not| be introduced with square brackets;
+  square brackets |must| be reserved for the point where a rule is defined.
+
 Rule taxonomy
 -------------
 
@@ -205,8 +208,10 @@ The following list explains the mnemonic prefixes and their semantics.
 .. rubric:: Tools and extensions
 
 * TOOL: Error messages from :wtrl_cmd:`waterlint` (or other tools)
+* JPTR: Error messages related to JSON Pointer references in tool-generated JSON
 * JSCH: Error messages related to JSON and JSON Schema
 * AXMPL: Error messages related to example mapping (e.g. for :wtrl_cmd:`waterlint add-example-json`)
+* CARVE: Error messages related to carving walk input into JSON objects
 * RHTM: Error messages related to rendering HTML (e.g. for :wtrl_cmd:`waterlint render-html5`)
 * XTNSN: Error messages related to extensions (e.g. for IDEs)
 * MCPS: Error messages returned by an MCP server
@@ -869,37 +874,38 @@ Common sections for all profiles
 		* [SCP-005] -- For every internal reference introduced by sections
 		  :wtrl_label:`Public_classes`, :wtrl_label:`Public_functions`, or :wtrl_label:`Public_methods`,
 		  the source object |must| be the documented module or class and the target object
-		  |must| be the referenced public class/function/method. The source object |must|
-		  be at least as public as the target object. Validators |must| apply the scope
+		  |must| be the referenced public class/function/method.
+		  The source object |must| be at least as public as the target object.
+		  Validators |must| apply the scope
 		  compatibility test defined in :ref:`section_scope_monotonicity_rule`.
 		  Any violation of the scope compatibility test in this case |must| be reported as an error.
 		* [SCP-006] -- If section :wtrl_label:`See_also` is listed in
 		  :wtrl_label:`Preamble.normative_sections`, then for every internal reference in
 		  :wtrl_label:`See_also` that resolves to a Waterloo-documented object, the source object
-		  |must| be the documented module or class and the target object |must| be the referenced
-		  object. The source object |must| be at least as public as the target object.
+		  |must| be the referenced object and the target object |must| be the documented module or class.
+		  The source object |must| be at least as public as the target object.
 		  Validators |must| apply the scope compatibility test defined in
 		  :ref:`section_scope_monotonicity_rule`.
 		  Any violation of the scope compatibility test in this case |must| be reported as an error.
 		* [SCP-007] -- If section :wtrl_label:`See_also` is not listed in
 		  :wtrl_label:`Preamble.normative_sections`, then for every internal reference
 		  in :wtrl_label:`See_also` that resolves to a Waterloo-documented object, the source
-		  object |must| be the documented module or class and the target object |must| be the
-		  referenced object. The source object |must| be at least as public as the target object.
+		  object |must| be the referenced object and the target object |must| be the documented module or class.
+		  The source object |must| be at least as public as the target object.
 		  Validators |must| apply the scope compatibility test defined in
 		  :ref:`section_scope_monotonicity_rule`.
 		  Any violation of the scope compatibility test in this case |must| be reported as a warning.
 		* [SCP-008] -- For profile :wtrl_value:`inherited_method`, subsection
 		  :wtrl_label:`Contract.base` introduces an internal reference from the derived
-		  method to the referenced base method. The source object |must| be the derived
-		  method and the target object |must| be the referenced base method. The source
-		  object |must| be at least as public as the target object. Validators |must|
-		  apply the scope compatibility test defined in :ref:`section_scope_monotonicity_rule` to this
+		  method to the referenced base method. The source object |must| be the referenced base method and the target object |must| be the derived
+		  method.
+		  The source object |must| be at least as public as the target object.
+		  Validators |must| apply the scope compatibility test defined in :ref:`section_scope_monotonicity_rule` to this
 		  reference. Any violation of the scope compatibility test in this case |must| be reported as an error.
 		* [SCP-009] -- Section :wtrl_label:`Derived_from` introduces internal references
 		  from the documented class to the referenced base classes. The source object |must|
-		  be the documented class and the target object |must| be one of its referenced base
-		  classes. The source object |must| be at least as public as the target object.
+		  be any of its referenced base classes and the target object |must| be the documented class.
+		  The source object |must| be at least as public as the target object.
 		  Validators |must| apply the scope compatibility test defined in
 		  :ref:`section_scope_monotonicity_rule` to each such reference that resolves to
 		  a Waterloo-documented object. Any scope-compatibility violation in this case
@@ -1599,7 +1605,7 @@ This reflects the intuitive notion that the containing object "contains"
 the listed objects as part of its public API surface. The reference edge represents a contractual
 relationship: the containing object is **responsible** for providing access to the contained objects,
 and users of the containing object are expected to interact with the contained objects as part
-of of their usage of the containing object. The containing object must be at least as public as
+of their usage of the containing object. The containing object must be at least as public as
 the contained objects, since otherwise it would block access to visible such objects.
 
 **Inheritance**
@@ -1630,20 +1636,20 @@ in terms of the numeric scope order, this means:
 
 * For containment-style references, there exist s_A in scopes(A) and s_B in scopes(B) such that s_A <= s_B,
   ("A is at least as public as B")
-  where B represents the contained object and A represents the containing object.
+  where A represents the **containing** object and B represents the **contained** object.
 
 * For :wtrl_label:`Derived_from` and :wtrl_label:`Contract.base`,
   there exist s_A in scopes(A) and s_B in scopes(B) such that s_A <= s_B,
   ("A is at least as public as B")
-  where A represents the referenced object
-  and B represents the referencing object containing the :wtrl_label:`Derived_from` or :wtrl_label:`Contract.base` section
+  where A represents the **referenced** object
+  and B represents the **referencing** object containing the :wtrl_label:`Derived_from` or :wtrl_label:`Contract.base` section.
 
 * For :wtrl_label:`See_also`, there exist s_A in scopes(A) and s_B in scopes(B) such that s_A <= s_B,
   ("A is at least as public as B")
-  where A represents the referenced object
-  and B represents the referencing object containing the :wtrl_label:`See_also` section.
+  where A represents the **referenced** object
+  and B represents the **referencing** object containing the :wtrl_label:`See_also` section.
 
-This rule is referred to as the :wtrl_term:`Scope Monotonicity Rule`.
+This rule set is referred to as the :wtrl_term:`Scope Monotonicity Rule`.
 
 Non-referential relationships
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
