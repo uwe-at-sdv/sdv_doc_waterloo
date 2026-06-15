@@ -3177,6 +3177,27 @@ class NoContentError(RuntimeError):
 		super().__init__(msg)
 
 class ResolveObjectError(RuntimeError):
+	r"""
+	Preamble:
+		profile:
+			class
+		normative_sections:
+			Contract
+	Contract:
+		general:
+			|Must| be an exception class for errors during reference resolution.
+		constructor:
+			|Must| accept the following positional parameters:
+			* |var|`ref`: the reference string that was attempted to resolve.
+			* |var|`current_obj`: the object from which the reference was being resolved.
+			* |var|`candidates`: an optional list of candidate strings that were considered during resolution.
+			* |var|`last_candidate`: an optional string representing the last candidate that was attempted before failure.
+			* |var|`last_error`: an optional exception representing the last error encountered during resolution attempts.
+			* |var|`msg`: an optional custom error message. If not provided, a default message should be constructed using |var|`ref` and |var|`current_obj`.
+	Notes:
+		Callsites:
+			Various waterlint components.
+	"""
 	def __init__(
 		self,
 		ref: str,
