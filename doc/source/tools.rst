@@ -68,6 +68,12 @@ commands report argument and lookup failures through the tracer and honor
 * [JSCH-700] -- Unspecified error during JSON rendering.
 * [JSCH-800] -- Unspecified JSON schema exception.
 
+.. rubric:: JSON TOC pointer consistency
+
+* [JPTR-001] -- A pointer in :wtrl_attr:`__WTRL_TOC_MODULES__` is invalid or does not resolve.
+* [JPTR-002] -- A pointer in :wtrl_attr:`__WTRL_TOC_CLASSES__` is invalid or does not resolve.
+* [JPTR-003] -- A pointer in :wtrl_attr:`__WTRL_TOC_CALLABLES__` is invalid or does not resolve.
+
 .. rubric:: Example mapping (add-example-json)
 
 * [AXMPL-000] -- Unspecified catch-all error during example mapping.
@@ -77,6 +83,13 @@ commands report argument and lookup failures through the tracer and honor
 * [AXMPL-004] -- Example file path, file access, base directory, or UTF-8 decoding failed.
 * [AXMPL-005] -- Input or mapping file is not valid JSON.
 * [AXMPL-006] -- Mapping JSON failed schema validation or schema auto-detection.
+
+.. rubric:: Walk carving (carve)
+
+* [CARVE-001] -- Walk input is not a JSON object, or the walk document does not validate against its schema.
+* [CARVE-002] -- :wtrl_attr:`__WTRL_OBJECTS__` is not an array.
+* [CARVE-003] -- Walk input does not define a usable basedir for :wtrl_opt:`--drop-non-basedir`.
+* [CARVE-800] -- Unspecified error during walk carving.
 
 .. _rendering_html:
 
@@ -109,6 +122,12 @@ inspect.
 * [DCKR-002] -- A referenced root file or logging configuration file does not exist.
 * [DCKR-003] -- The input TOML file does not exist or could not be loaded.
 * [DCKR-999] -- An unspecified error occurred while rendering Docker build artifacts.
+
+.. rubric:: MCP server diagnostics (wtrl_mcp)
+
+* [MCPS-005] -- The requested root exceeds the root-size guardrail used by :wtrl_cmd:`get_root`.
+* [MCPS-006] -- The requested canonical example reference is unknown or malformed.
+* [MCPS-007] -- The requested MCP tool name is unknown.
 
 
 

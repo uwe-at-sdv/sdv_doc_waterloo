@@ -1,12 +1,12 @@
 {
     "$schema": "https://sci-d-vis.com/schema/wtrl-json-0.1.0.schema.json",
-    "$id": "urn:waterlint:wtrl-json:0.16.1:core:rfc-2119:7e568067cf625f5682b046fba2f5864060c028f7026e995271a67b8a6e83ee4f",
+    "$id": "urn:waterlint:wtrl-json:0.16.1:core:rfc-2119:9959cd57d3e06ef6173caabcbbcbeb32d799b2b8ed0c6def898f9a9b769a2167",
     "__WTRL_VERSION__": {
         "waterloo": "0.8.1",
         "schema": "0.1.0"
     },
     "__WTRL_META__": {
-        "generated_at": "2026-06-12T16:41:36+02:00",
+        "generated_at": "2026-06-15T12:32:07+02:00",
         "generator": "waterlint",
         "scope": "core",
         "flavour": "rfc-2119"
@@ -132,6 +132,7 @@
         "sdv.doc.waterloo.docitem_helper.render_expected_snippet": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.render_expected_snippet",
         "sdv.doc.waterloo.docitem_helper.render_allowed_identifier": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.render_allowed_identifier",
         "sdv.doc.waterloo.docitem_helper.render_expected_identifier": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.render_expected_identifier",
+        "sdv.doc.waterloo.docitem_helper.render_suggestion": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.render_suggestion",
         "sdv.doc.waterloo.docitem_helper.render_allowed_identifiers": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.render_allowed_identifiers",
         "sdv.doc.waterloo.docitem_helper.render_identifier_lines": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.render_identifier_lines",
         "sdv.doc.waterloo.docitem_helper.render_deduplicated_identifiers": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.render_deduplicated_identifiers",
@@ -140,11 +141,21 @@
         "sdv.doc.waterloo.docitem_helper.render_missing_entry_details": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.render_missing_entry_details",
         "sdv.doc.waterloo.docitem_helper.render_overview_requires_section_details": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.render_overview_requires_section_details",
         "sdv.doc.waterloo.docitem_helper.render_name_object_consistency_details": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.render_name_object_consistency_details",
+        "sdv.doc.waterloo.docitem_helper.render_listed_object_missing_details": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.render_listed_object_missing_details",
+        "sdv.doc.waterloo.docitem_helper.render_profile_mismatch_details": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.render_profile_mismatch_details",
         "sdv.doc.waterloo.docitem_helper.render_normativity_keyword_details": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.render_normativity_keyword_details",
         "sdv.doc.waterloo.docitem_helper.render_exception_reference_details": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.render_exception_reference_details",
+        "sdv.doc.waterloo.docitem_helper.render_base_method_reference_details": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.render_base_method_reference_details",
         "sdv.doc.waterloo.docitem_helper.render_exactly_one_identifier_details": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.render_exactly_one_identifier_details",
         "sdv.doc.waterloo.docitem_helper.render_parameter_signature_details": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.render_parameter_signature_details",
         "sdv.doc.waterloo.docitem_helper.render_scope_relation_details": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.render_scope_relation_details",
+        "sdv.doc.waterloo.docitem_helper.render_base_method_docstring_details": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.render_base_method_docstring_details",
+        "sdv.doc.waterloo.docitem_helper.render_definition_reference_details": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.render_definition_reference_details",
+        "sdv.doc.waterloo.docitem_helper.render_inherited_definition_details": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.render_inherited_definition_details",
+        "sdv.doc.waterloo.docitem_helper.render_type_reference_details": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.render_type_reference_details",
+        "sdv.doc.waterloo.docitem_helper.render_constant_reference_details": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.render_constant_reference_details",
+        "sdv.doc.waterloo.docitem_helper.render_named_value_reference_details": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.render_named_value_reference_details",
+        "sdv.doc.waterloo.docitem_helper.render_overview_missing_member_details": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.render_overview_missing_member_details",
         "sdv.doc.waterloo.docitem_helper.is_annotatable": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.is_annotatable",
         "sdv.doc.waterloo.docitem_helper.is_attr_annotated": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.is_attr_annotated",
         "sdv.doc.waterloo.docitem_helper.is_attr_final": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.is_attr_final",
@@ -180,6 +191,7 @@
         "sdv.doc.waterloo.docitem_tokenizer.get_tree_of_section": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_tokenizer.get_tree_of_section",
         "sdv.doc.waterloo.docitem_tokenizer.get_tree_of_subsection": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_tokenizer.get_tree_of_subsection",
         "sdv.doc.waterloo.docitem_tokenizer.get_scopes_of_tree": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_tokenizer.get_scopes_of_tree",
+        "sdv.doc.waterloo.docitem_tokenizer.get_scopes_of_tree_var": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_tokenizer.get_scopes_of_tree_var",
         "sdv.doc.waterloo.docitem_tokenizer.to_string_tree": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_tokenizer.to_string_tree",
         "sdv.doc.waterloo.docitem_base.docitem_base.parse": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_base.docitem_base.parse",
         "sdv.doc.waterloo.docitem_base.docitem_base.items": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_base.docitem_base.items",
@@ -598,6 +610,7 @@
                     "parse_indent_docstring",
                     "get_tree_of_section",
                     "get_tree_of_subsection",
+                    "get_scopes_of_tree_var",
                     "to_string_tree",
                     "validate_docstring_method",
                     "validate_docstring_inherited_method",
@@ -645,6 +658,9 @@
                     ],
                     "get_tree_of_subsection": [
                         "Get tree assigned to a subsection label from a docstring tree."
+                    ],
+                    "get_scopes_of_tree_var": [
+                        "Get scopes and explicit-scope flag from a docstring tree."
                     ],
                     "to_string_tree": [
                         "Render docstring to string"
@@ -1112,22 +1128,40 @@
                     "Format",
                     "Status",
                     "ConfigTraversal",
-                    "tracer"
+                    "tracer",
+                    "ResolveObjectError"
                 ],
                 "Public_functions": [
                     "explain_try_self_for_section",
                     "explain_try_self_for_subsection",
-                    "render_normative_section_details",
-                    "render_missing_entry_details",
-                    "render_exactly_one_identifier_details",
                     "render_source_snippet",
                     "render_expected_snippet",
                     "render_allowed_identifier",
                     "render_expected_identifier",
+                    "render_suggestion",
                     "render_allowed_identifiers",
                     "render_identifier_lines",
                     "render_deduplicated_identifiers",
                     "render_unique_identifiers",
+                    "render_normativity_keyword_details",
+                    "render_exception_reference_details",
+                    "render_parameter_signature_details",
+                    "render_overview_requires_section_details",
+                    "render_profile_mismatch_details",
+                    "render_name_object_consistency_details",
+                    "render_listed_object_missing_details",
+                    "render_base_method_docstring_details",
+                    "render_base_method_reference_details",
+                    "render_scope_relation_details",
+                    "render_normative_section_details",
+                    "render_missing_entry_details",
+                    "render_exactly_one_identifier_details",
+                    "render_definition_reference_details",
+                    "render_inherited_definition_details",
+                    "render_type_reference_details",
+                    "render_constant_reference_details",
+                    "render_named_value_reference_details",
+                    "render_overview_missing_member_details",
                     "get_source_docstring",
                     "is_annotatable",
                     "is_attr_annotated",
@@ -1222,6 +1256,375 @@
                         "for example body category, normativity, and profile applicability.",
                         "Informative: This is a carefully distilled machine-readable representation of the relevant rules",
                         "from the documentation standard, but the documentation remains the Single Source of Truth for the standard."
+                    ]
+                }
+            }
+        },
+        "sdv.doc.waterloo.docitem_helper.Trait.ABSTRACT": {
+            "doc": {},
+            "doc_lines": [
+                "The class is abstract, i.e. it cannot be instantiated directly and is not a complete specification of the concept."
+            ]
+        },
+        "sdv.doc.waterloo.docitem_helper.Trait.FINAL": {
+            "doc": {},
+            "doc_lines": [
+                "The class is final, i.e. it cannot be subclassed and is a complete specification of the concept."
+            ]
+        },
+        "sdv.doc.waterloo.docitem_helper.Trait": {
+            "signature": {
+                "text": "object.__init__(self, /, *args, **kwargs)",
+                "parameters": [
+                    {
+                        "name": "args",
+                        "kind": "VAR_POSITIONAL",
+                        "annotation": null,
+                        "default": null
+                    },
+                    {
+                        "name": "kwargs",
+                        "kind": "VAR_KEYWORD",
+                        "annotation": null,
+                        "default": null
+                    }
+                ],
+                "returns": null
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "class",
+                    "normative_sections": [
+                        "Contract",
+                        "Public_constants"
+                    ],
+                    "scope": [
+                        "public"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST provide constants representing the traits of a class."
+                    ],
+                    "constructor": [
+                        "Inherit from |type|`str` and |type|`Enum`."
+                    ]
+                },
+                "Public_constants": {
+                    "ABSTRACT": [
+                        "The class is abstract, i.e. it cannot be instantiated directly and is not a complete specification of the concept."
+                    ],
+                    "FINAL": [
+                        "The class is final, i.e. it cannot be subclassed and is a complete specification of the concept."
+                    ]
+                }
+            }
+        },
+        "sdv.doc.waterloo.docitem_helper.Scope.PUBLIC": {
+            "doc": {},
+            "doc_lines": [
+                "Selects the public API."
+            ]
+        },
+        "sdv.doc.waterloo.docitem_helper.Scope.EXTENSION": {
+            "doc": {},
+            "doc_lines": [
+                "Selects the API for developers of plugin and extensions."
+            ]
+        },
+        "sdv.doc.waterloo.docitem_helper.Scope.CORE": {
+            "doc": {},
+            "doc_lines": [
+                "Selects the API for core developers."
+            ]
+        },
+        "sdv.doc.waterloo.docitem_helper.Scope": {
+            "signature": {
+                "text": "object.__init__(self, /, *args, **kwargs)",
+                "parameters": [
+                    {
+                        "name": "args",
+                        "kind": "VAR_POSITIONAL",
+                        "annotation": null,
+                        "default": null
+                    },
+                    {
+                        "name": "kwargs",
+                        "kind": "VAR_KEYWORD",
+                        "annotation": null,
+                        "default": null
+                    }
+                ],
+                "returns": null
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "class",
+                    "normative_sections": [
+                        "Contract",
+                        "Public_constants"
+                    ],
+                    "scope": [
+                        "public"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST provide constants representing available scopes.",
+                        "MUST provide a time-stable partial order for the constants."
+                    ],
+                    "constructor": [
+                        "Inherit from |type|`int`."
+                    ]
+                },
+                "Public_constants": {
+                    "PUBLIC": [
+                        "Selects the public API."
+                    ],
+                    "EXTENSION": [
+                        "Selects the API for developers of plugin and extensions."
+                    ],
+                    "CORE": [
+                        "Selects the API for core developers."
+                    ]
+                },
+                "Notes": {
+                    "Purpose": [
+                        "The scope is an optional parameter for rendering functions. It allows to restrict the set of rendered objects to a well-defined audience."
+                    ],
+                    "Values": [
+                        "The class only ensures the partial order but does not ensure particular values for the constants."
+                    ]
+                }
+            }
+        },
+        "sdv.doc.waterloo.docitem_helper.Flavour.RAW": {
+            "doc": {},
+            "doc_lines": [
+                "Example: | + Must + |"
+            ]
+        },
+        "sdv.doc.waterloo.docitem_helper.Flavour.RFC_2119": {
+            "doc": {},
+            "doc_lines": [
+                "Example: |lit|`MUST`"
+            ]
+        },
+        "sdv.doc.waterloo.docitem_helper.Flavour.MARKDOWN": {
+            "doc": {},
+            "doc_lines": [
+                "Example: |lit|`**MUST**`"
+            ]
+        },
+        "sdv.doc.waterloo.docitem_helper.Flavour": {
+            "signature": {
+                "text": "object.__init__(self, /, *args, **kwargs)",
+                "parameters": [
+                    {
+                        "name": "args",
+                        "kind": "VAR_POSITIONAL",
+                        "annotation": null,
+                        "default": null
+                    },
+                    {
+                        "name": "kwargs",
+                        "kind": "VAR_KEYWORD",
+                        "annotation": null,
+                        "default": null
+                    }
+                ],
+                "returns": null
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "class",
+                    "normative_sections": [
+                        "Contract",
+                        "Public_constants"
+                    ],
+                    "scope": [
+                        "public"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST provide constants representing available flavours for rendering Normativity Keywords."
+                    ],
+                    "constructor": [
+                        "Inherit from |type|`int`."
+                    ]
+                },
+                "Public_constants": {
+                    "RAW": [
+                        "Example: | + Must + |"
+                    ],
+                    "RFC_2119": [
+                        "Example: |lit|`MUST`"
+                    ],
+                    "MARKDOWN": [
+                        "Example: |lit|`**MUST**`"
+                    ]
+                }
+            }
+        },
+        "sdv.doc.waterloo.docitem_helper.Format.JSON": {
+            "doc": {},
+            "doc_lines": [
+                "Javascript Object Notation"
+            ]
+        },
+        "sdv.doc.waterloo.docitem_helper.Format.YAML": {
+            "doc": {},
+            "doc_lines": [
+                "YAML Ain't Markup Language"
+            ]
+        },
+        "sdv.doc.waterloo.docitem_helper.Format.MD": {
+            "doc": {},
+            "doc_lines": [
+                "Markdown."
+            ]
+        },
+        "sdv.doc.waterloo.docitem_helper.Format": {
+            "signature": {
+                "text": "object.__init__(self, /, *args, **kwargs)",
+                "parameters": [
+                    {
+                        "name": "args",
+                        "kind": "VAR_POSITIONAL",
+                        "annotation": null,
+                        "default": null
+                    },
+                    {
+                        "name": "kwargs",
+                        "kind": "VAR_KEYWORD",
+                        "annotation": null,
+                        "default": null
+                    }
+                ],
+                "returns": null
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "class",
+                    "normative_sections": [
+                        "Contract",
+                        "Public_constants"
+                    ],
+                    "scope": [
+                        "public"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST provide constants representing available output formats for string rendering."
+                    ],
+                    "constructor": [
+                        "Inherit from |type|`int`."
+                    ]
+                },
+                "Public_constants": {
+                    "JSON": [
+                        "Javascript Object Notation"
+                    ],
+                    "YAML": [
+                        "YAML Ain't Markup Language"
+                    ],
+                    "MD": [
+                        "Markdown."
+                    ]
+                }
+            }
+        },
+        "sdv.doc.waterloo.docitem_helper.Status.EXPERIMENTAL": {
+            "doc": {},
+            "doc_lines": [
+                "See rule |ref|`STA-004 <section_function_pramble>`."
+            ]
+        },
+        "sdv.doc.waterloo.docitem_helper.Status.STABLE": {
+            "doc": {},
+            "doc_lines": [
+                "See rule |ref|`STA-004 <section_function_pramble>`."
+            ]
+        },
+        "sdv.doc.waterloo.docitem_helper.Status.FROZEN": {
+            "doc": {},
+            "doc_lines": [
+                "See rule |ref|`STA-004 <section_function_pramble>`."
+            ]
+        },
+        "sdv.doc.waterloo.docitem_helper.Status.DEPRECATED": {
+            "doc": {},
+            "doc_lines": [
+                "See rule |ref|`STA-004 <section_function_pramble>`."
+            ]
+        },
+        "sdv.doc.waterloo.docitem_helper.Status.DRAFT": {
+            "doc": {},
+            "doc_lines": [
+                "See rule |ref|`STA-004 <section_function_pramble>`."
+            ]
+        },
+        "sdv.doc.waterloo.docitem_helper.Status": {
+            "signature": {
+                "text": "object.__init__(self, /, *args, **kwargs)",
+                "parameters": [
+                    {
+                        "name": "args",
+                        "kind": "VAR_POSITIONAL",
+                        "annotation": null,
+                        "default": null
+                    },
+                    {
+                        "name": "kwargs",
+                        "kind": "VAR_KEYWORD",
+                        "annotation": null,
+                        "default": null
+                    }
+                ],
+                "returns": null
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "class",
+                    "normative_sections": [
+                        "Contract",
+                        "Public_constants"
+                    ],
+                    "scope": [
+                        "public"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST provide constants representing the values of subsection |label|`Preamble.status`."
+                    ],
+                    "constructor": [
+                        "Inherit from |type|`Enum`."
+                    ]
+                },
+                "Public_constants": {
+                    "EXPERIMENTAL": [
+                        "See rule |ref|`STA-004 <section_function_pramble>`."
+                    ],
+                    "STABLE": [
+                        "See rule |ref|`STA-004 <section_function_pramble>`."
+                    ],
+                    "FROZEN": [
+                        "See rule |ref|`STA-004 <section_function_pramble>`."
+                    ],
+                    "DEPRECATED": [
+                        "See rule |ref|`STA-004 <section_function_pramble>`."
+                    ],
+                    "DRAFT": [
+                        "See rule |ref|`STA-004 <section_function_pramble>`."
+                    ]
+                },
+                "Notes": {
+                    "LoII": [
+                        "This docstring violates LoII in order to preserve SSoT,",
+                        "see |label|`Public_constants`."
                     ]
                 }
             }
@@ -1561,6 +1964,59 @@
                 },
                 "Returns": [
                     "A compact list of lines that states the expected syntax in the Waterloo snippet format."
+                ],
+                "Raises": {}
+            }
+        },
+        "sdv.doc.waterloo.docitem_helper.render_suggestion": {
+            "signature": {
+                "text": "render_suggestion(label: 'str', suggestion: 'str') -> 'list[str]'",
+                "parameters": [
+                    {
+                        "name": "label",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    },
+                    {
+                        "name": "suggestion",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    }
+                ],
+                "returns": "list[str]"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST render a suggestion snippet either without or for a section or subsection in order to fix the docstring.",
+                        "MUST add angle brackets around the suggestion to indicate that it is a placeholder for the actual content."
+                    ],
+                    "requires": [
+                        "The suggestion SHOULD be a brief and concise plain single line text."
+                    ]
+                },
+                "Parameters": {
+                    "label": [
+                        "The section or subsection label (as qualified name) to render.",
+                        "An empty label means the suggestion is not bound to a specific section or subsection."
+                    ],
+                    "suggestion": [
+                        "A brief suggestion of what the section or subsection could be or contain."
+                    ]
+                },
+                "Returns": [
+                    "A compact list of lines that states the suggested section or subsection in one line."
                 ],
                 "Raises": {}
             }
@@ -2013,6 +2469,143 @@
                 "Raises": {}
             }
         },
+        "sdv.doc.waterloo.docitem_helper.render_listed_object_missing_details": {
+            "signature": {
+                "text": "render_listed_object_missing_details(label: 'str', member_name: 'str', expected_text: 'str', profile: 'str') -> 'dict[str, Any]'",
+                "parameters": [
+                    {
+                        "name": "label",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    },
+                    {
+                        "name": "member_name",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    },
+                    {
+                        "name": "expected_text",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    },
+                    {
+                        "name": "profile",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    }
+                ],
+                "returns": "dict[str, Any]"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST render compact validation details for a listed object that has no matching runtime object."
+                    ]
+                },
+                "Parameters": {
+                    "label": [
+                        "The section label to render."
+                    ],
+                    "member_name": [
+                        "The listed entry name that has no matching object."
+                    ],
+                    "expected_text": [
+                        "The minimal correction or instruction to show in the expected snippet."
+                    ],
+                    "profile": "The docstring profile used for the |cmd|`explain-section` hint."
+                },
+                "Returns": [
+                    "A details dictionary with |attr|`found`, |attr|`expected`, and |attr|`hint`."
+                ],
+                "Raises": {}
+            }
+        },
+        "sdv.doc.waterloo.docitem_helper.render_profile_mismatch_details": {
+            "signature": {
+                "text": "render_profile_mismatch_details(object_name: 'str', object_kind: 'str', current_profile: 'str', expected_text: 'str', profile: 'str') -> 'dict[str, Any]'",
+                "parameters": [
+                    {
+                        "name": "object_name",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    },
+                    {
+                        "name": "object_kind",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    },
+                    {
+                        "name": "current_profile",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    },
+                    {
+                        "name": "expected_text",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    },
+                    {
+                        "name": "profile",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    }
+                ],
+                "returns": "dict[str, Any]"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST render compact validation details for a profile mismatch."
+                    ]
+                },
+                "Parameters": {
+                    "object_name": [
+                        "The documented object name."
+                    ],
+                    "object_kind": [
+                        "The detected object kind such as module, class, function or method-like."
+                    ],
+                    "current_profile": [
+                        "The profile found in the docstring."
+                    ],
+                    "expected_text": [
+                        "The minimal correction or instruction to show in the expected snippet."
+                    ],
+                    "profile": "The docstring profile used for the hint."
+                },
+                "Returns": [
+                    "A details dictionary with |token|`found`, |token|`expected`, and |token|`hint`."
+                ],
+                "Raises": {}
+            }
+        },
         "sdv.doc.waterloo.docitem_helper.render_normativity_keyword_details": {
             "signature": {
                 "text": "render_normativity_keyword_details(section_label: 'str', entry_name: 'str', current_lines: 'Iterable[str]', profile: 'str') -> 'dict[str, Any]'",
@@ -2128,6 +2721,61 @@
                 },
                 "Returns": [
                     "A details dictionary with |token|`found`, |token|`expected`, and |token|`hint`."
+                ],
+                "Raises": {}
+            }
+        },
+        "sdv.doc.waterloo.docitem_helper.render_base_method_reference_details": {
+            "signature": {
+                "text": "render_base_method_reference_details(current_entries: 'Iterable[str]', expected_text: 'str', profile: 'str') -> 'dict[str, Any]'",
+                "parameters": [
+                    {
+                        "name": "current_entries",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "Iterable[str]",
+                        "default": null
+                    },
+                    {
+                        "name": "expected_text",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    },
+                    {
+                        "name": "profile",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    }
+                ],
+                "returns": "dict[str, Any]"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST build standardized validation details for a Contract.base reference problem."
+                    ]
+                },
+                "Parameters": {
+                    "current_entries": [
+                        "The current raw entries found in Contract.base."
+                    ],
+                    "expected_text": [
+                        "The minimal correction or instruction to show in the expected snippet."
+                    ],
+                    "profile": "The docstring profile used for the |cmd|`explain-subsection` hint."
+                },
+                "Returns": [
+                    "A details dictionary with |attr|`found`, |attr|`expected`, and |attr|`hint`."
                 ],
                 "Raises": {}
             }
@@ -2253,8 +2901,44 @@
         },
         "sdv.doc.waterloo.docitem_helper.render_scope_relation_details": {
             "signature": {
-                "text": "render_scope_relation_details(section_label: 'str', reference: 'str', expected_text: 'str', profile: 'str') -> 'dict[str, Any]'",
+                "text": "render_scope_relation_details(containing_kind: 'str', containing_scopes: 'Scopes', is_containing_scope_explicit: 'bool', contained_kind: 'str', contained_scopes: 'Scopes', is_contained_scope_explicit: 'bool', section_label: 'str', reference: 'str', expected_text: 'str', profile: 'str') -> 'dict[str, Any]'",
                 "parameters": [
+                    {
+                        "name": "containing_kind",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    },
+                    {
+                        "name": "containing_scopes",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "Scopes",
+                        "default": null
+                    },
+                    {
+                        "name": "is_containing_scope_explicit",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "bool",
+                        "default": null
+                    },
+                    {
+                        "name": "contained_kind",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    },
+                    {
+                        "name": "contained_scopes",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "Scopes",
+                        "default": null
+                    },
+                    {
+                        "name": "is_contained_scope_explicit",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "bool",
+                        "default": null
+                    },
                     {
                         "name": "section_label",
                         "kind": "POSITIONAL_OR_KEYWORD",
@@ -2298,6 +2982,24 @@
                     ]
                 },
                 "Parameters": {
+                    "containing_kind": [
+                        "The kind of the containing object, such as module or class."
+                    ],
+                    "containing_scopes": [
+                        "The scopes of the containing object."
+                    ],
+                    "is_containing_scope_explicit": [
+                        "Whether the containing object declared its scope explicitly."
+                    ],
+                    "contained_kind": [
+                        "The kind of the contained object, such as function, class, or method."
+                    ],
+                    "contained_scopes": [
+                        "The scopes of the contained object."
+                    ],
+                    "is_contained_scope_explicit": [
+                        "Whether the contained object declared its scope explicitly."
+                    ],
                     "section_label": [
                         "The section label to render."
                     ],
@@ -2315,373 +3017,435 @@
                 "Raises": {}
             }
         },
-        "sdv.doc.waterloo.docitem_helper.Trait.ABSTRACT": {
-            "doc": {},
-            "doc_lines": [
-                "The class is abstract, i.e. it cannot be instantiated directly and is not a complete specification of the concept."
-            ]
-        },
-        "sdv.doc.waterloo.docitem_helper.Trait.FINAL": {
-            "doc": {},
-            "doc_lines": [
-                "The class is final, i.e. it cannot be subclassed and is a complete specification of the concept."
-            ]
-        },
-        "sdv.doc.waterloo.docitem_helper.Trait": {
+        "sdv.doc.waterloo.docitem_helper.render_base_method_docstring_details": {
             "signature": {
-                "text": "object.__init__(self, /, *args, **kwargs)",
+                "text": "render_base_method_docstring_details(base_name: 'str', profile: 'str') -> 'dict[str, Any]'",
                 "parameters": [
                     {
-                        "name": "args",
-                        "kind": "VAR_POSITIONAL",
-                        "annotation": null,
+                        "name": "base_name",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
                         "default": null
                     },
                     {
-                        "name": "kwargs",
-                        "kind": "VAR_KEYWORD",
-                        "annotation": null,
+                        "name": "profile",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
                         "default": null
                     }
                 ],
-                "returns": null
+                "returns": "dict[str, Any]"
             },
             "doc": {
                 "Preamble": {
-                    "profile": "class",
+                    "profile": "function",
                     "normative_sections": [
                         "Contract",
-                        "Public_constants"
-                    ],
-                    "scope": [
-                        "public"
+                        "Parameters",
+                        "Returns",
+                        "Raises"
                     ]
                 },
                 "Contract": {
                     "general": [
-                        "MUST provide constants representing the traits of a class."
-                    ],
-                    "constructor": [
-                        "Inherit from |type|`str` and |type|`Enum`."
+                        "MUST build standardized validation details for a base-method docstring problem."
                     ]
                 },
-                "Public_constants": {
-                    "ABSTRACT": [
-                        "The class is abstract, i.e. it cannot be instantiated directly and is not a complete specification of the concept."
+                "Parameters": {
+                    "base_name": [
+                        "The base method name found in Contract.base."
                     ],
-                    "FINAL": [
-                        "The class is final, i.e. it cannot be subclassed and is a complete specification of the concept."
-                    ]
-                }
+                    "profile": "The docstring profile used for the |cmd|`explain-subsection` hint."
+                },
+                "Returns": [
+                    "A details dictionary with |attr|`found`, |attr|`expected`, and |attr|`hint`."
+                ],
+                "Raises": {}
             }
         },
-        "sdv.doc.waterloo.docitem_helper.Scope.PUBLIC": {
-            "doc": {},
-            "doc_lines": [
-                "Selects the public API."
-            ]
-        },
-        "sdv.doc.waterloo.docitem_helper.Scope.EXTENSION": {
-            "doc": {},
-            "doc_lines": [
-                "Selects the API for developers of plugin and extensions."
-            ]
-        },
-        "sdv.doc.waterloo.docitem_helper.Scope.CORE": {
-            "doc": {},
-            "doc_lines": [
-                "Selects the API for core developers."
-            ]
-        },
-        "sdv.doc.waterloo.docitem_helper.Scope": {
+        "sdv.doc.waterloo.docitem_helper.render_definition_reference_details": {
             "signature": {
-                "text": "object.__init__(self, /, *args, **kwargs)",
+                "text": "render_definition_reference_details(references: 'str | Iterable[str]', profile: 'str', *, missing_definitions: 'bool') -> 'dict[str, Any]'",
                 "parameters": [
                     {
-                        "name": "args",
-                        "kind": "VAR_POSITIONAL",
-                        "annotation": null,
+                        "name": "references",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str | Iterable[str]",
                         "default": null
                     },
                     {
-                        "name": "kwargs",
-                        "kind": "VAR_KEYWORD",
-                        "annotation": null,
+                        "name": "profile",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    },
+                    {
+                        "name": "missing_definitions",
+                        "kind": "KEYWORD_ONLY",
+                        "annotation": "bool",
                         "default": null
                     }
                 ],
-                "returns": null
+                "returns": "dict[str, Any]"
             },
             "doc": {
                 "Preamble": {
-                    "profile": "class",
+                    "profile": "function",
                     "normative_sections": [
                         "Contract",
-                        "Public_constants"
-                    ],
-                    "scope": [
-                        "public"
+                        "Parameters",
+                        "Returns",
+                        "Raises"
                     ]
                 },
                 "Contract": {
                     "general": [
-                        "MUST provide constants representing available scopes.",
-                        "MUST provide a time-stable partial order for the constants."
-                    ],
-                    "constructor": [
-                        "Inherit from |type|`int`."
+                        "MUST build standardized validation details for a term reference problem in Definitions."
                     ]
                 },
-                "Public_constants": {
-                    "PUBLIC": [
-                        "Selects the public API."
+                "Parameters": {
+                    "references": [
+                        "The term reference or term references found in the docstring body."
                     ],
-                    "EXTENSION": [
-                        "Selects the API for developers of plugin and extensions."
-                    ],
-                    "CORE": [
-                        "Selects the API for core developers."
+                    "profile": "The docstring profile used for the |cmd|`explain-section` or |cmd|`explain-subsection` hint.",
+                    "missing_definitions": [
+                        "Whether the Definitions section itself is missing."
                     ]
                 },
-                "Notes": {
-                    "Purpose": [
-                        "The scope is an optional parameter for rendering functions. It allows to restrict the set of rendered objects to a well-defined audience."
-                    ],
-                    "Values": [
-                        "The class only ensures the partial order but does not ensure particular values for the constants."
-                    ]
-                }
+                "Returns": [
+                    "A details dictionary with |attr|`found`, |attr|`expected`, and |attr|`hint`."
+                ],
+                "Raises": {}
             }
         },
-        "sdv.doc.waterloo.docitem_helper.Flavour.RAW": {
-            "doc": {},
-            "doc_lines": [
-                "Example: | + Must + |"
-            ]
-        },
-        "sdv.doc.waterloo.docitem_helper.Flavour.RFC_2119": {
-            "doc": {},
-            "doc_lines": [
-                "Example: |lit|`MUST`"
-            ]
-        },
-        "sdv.doc.waterloo.docitem_helper.Flavour.MARKDOWN": {
-            "doc": {},
-            "doc_lines": [
-                "Example: |lit|`**MUST**`"
-            ]
-        },
-        "sdv.doc.waterloo.docitem_helper.Flavour": {
+        "sdv.doc.waterloo.docitem_helper.render_inherited_definition_details": {
             "signature": {
-                "text": "object.__init__(self, /, *args, **kwargs)",
+                "text": "render_inherited_definition_details(current_inherited_terms: 'Iterable[str]', profile: 'str', *, expected_text: 'str', use_section_hint: 'bool' = False) -> 'dict[str, Any]'",
                 "parameters": [
                     {
-                        "name": "args",
-                        "kind": "VAR_POSITIONAL",
-                        "annotation": null,
+                        "name": "current_inherited_terms",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "Iterable[str]",
                         "default": null
                     },
                     {
-                        "name": "kwargs",
-                        "kind": "VAR_KEYWORD",
-                        "annotation": null,
+                        "name": "profile",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
                         "default": null
+                    },
+                    {
+                        "name": "expected_text",
+                        "kind": "KEYWORD_ONLY",
+                        "annotation": "str",
+                        "default": null
+                    },
+                    {
+                        "name": "use_section_hint",
+                        "kind": "KEYWORD_ONLY",
+                        "annotation": "bool",
+                        "default": "False"
                     }
                 ],
-                "returns": null
+                "returns": "dict[str, Any]"
             },
             "doc": {
                 "Preamble": {
-                    "profile": "class",
+                    "profile": "function",
                     "normative_sections": [
                         "Contract",
-                        "Public_constants"
-                    ],
-                    "scope": [
-                        "public"
+                        "Parameters",
+                        "Returns",
+                        "Raises"
                     ]
                 },
                 "Contract": {
                     "general": [
-                        "MUST provide constants representing available flavours for rendering Normativity Keywords."
-                    ],
-                    "constructor": [
-                        "Inherit from |type|`int`."
+                        "MUST build standardized validation details for an inherited Definitions problem."
                     ]
                 },
-                "Public_constants": {
-                    "RAW": [
-                        "Example: | + Must + |"
+                "Parameters": {
+                    "current_inherited_terms": [
+                        "The inherited definition terms found in the current object."
                     ],
-                    "RFC_2119": [
-                        "Example: |lit|`MUST`"
+                    "profile": "The docstring profile used for the |cmd|`explain-subsection` hint.",
+                    "expected_text": [
+                        "The minimal correction or instruction to show in the expected snippet."
                     ],
-                    "MARKDOWN": [
-                        "Example: |lit|`**MUST**`"
+                    "use_section_hint": [
+                        "Whether the hint should point to the section-level |cmd|`explain-section` entry instead of the",
+                        "subsection-level inherited definition entry."
                     ]
-                }
+                },
+                "Returns": [
+                    "A details dictionary with |attr|`found`, |attr|`expected`, and |attr|`hint`."
+                ],
+                "Raises": {}
             }
         },
-        "sdv.doc.waterloo.docitem_helper.Format.JSON": {
-            "doc": {},
-            "doc_lines": [
-                "Javascript Object Notation"
-            ]
-        },
-        "sdv.doc.waterloo.docitem_helper.Format.YAML": {
-            "doc": {},
-            "doc_lines": [
-                "YAML Ain't Markup Language"
-            ]
-        },
-        "sdv.doc.waterloo.docitem_helper.Format.MD": {
-            "doc": {},
-            "doc_lines": [
-                "Markdown."
-            ]
-        },
-        "sdv.doc.waterloo.docitem_helper.Format": {
+        "sdv.doc.waterloo.docitem_helper.render_type_reference_details": {
             "signature": {
-                "text": "object.__init__(self, /, *args, **kwargs)",
+                "text": "render_type_reference_details(label: 'str', type_name: 'str', expected_text: 'str', profile: 'str') -> 'dict[str, Any]'",
                 "parameters": [
                     {
-                        "name": "args",
-                        "kind": "VAR_POSITIONAL",
-                        "annotation": null,
+                        "name": "label",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
                         "default": null
                     },
                     {
-                        "name": "kwargs",
-                        "kind": "VAR_KEYWORD",
-                        "annotation": null,
+                        "name": "type_name",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    },
+                    {
+                        "name": "expected_text",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    },
+                    {
+                        "name": "profile",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
                         "default": null
                     }
                 ],
-                "returns": null
+                "returns": "dict[str, Any]"
             },
             "doc": {
                 "Preamble": {
-                    "profile": "class",
+                    "profile": "function",
                     "normative_sections": [
                         "Contract",
-                        "Public_constants"
-                    ],
-                    "scope": [
-                        "public"
+                        "Parameters",
+                        "Returns",
+                        "Raises"
                     ]
                 },
                 "Contract": {
                     "general": [
-                        "MUST provide constants representing available output formats for string rendering."
-                    ],
-                    "constructor": [
-                        "Inherit from |type|`int`."
+                        "MUST build standardized validation details for a Public_types reference problem."
                     ]
                 },
-                "Public_constants": {
-                    "JSON": [
-                        "Javascript Object Notation"
+                "Parameters": {
+                    "label": [
+                        "The subsection label to render."
                     ],
-                    "YAML": [
-                        "YAML Ain't Markup Language"
+                    "type_name": [
+                        "The type entry name found in the subsection."
                     ],
-                    "MD": [
-                        "Markdown."
-                    ]
-                }
+                    "expected_text": [
+                        "The minimal correction or instruction to show in the expected snippet."
+                    ],
+                    "profile": "The docstring profile used for the |cmd|`explain-subsection` hint."
+                },
+                "Returns": [
+                    "A details dictionary with |attr|`found`, |attr|`expected`, and |attr|`hint`."
+                ],
+                "Raises": {}
             }
         },
-        "sdv.doc.waterloo.docitem_helper.Status.EXPERIMENTAL": {
-            "doc": {},
-            "doc_lines": [
-                "See rule |ref|`STA-004 <section_function_pramble>`."
-            ]
-        },
-        "sdv.doc.waterloo.docitem_helper.Status.STABLE": {
-            "doc": {},
-            "doc_lines": [
-                "See rule |ref|`STA-004 <section_function_pramble>`."
-            ]
-        },
-        "sdv.doc.waterloo.docitem_helper.Status.FROZEN": {
-            "doc": {},
-            "doc_lines": [
-                "See rule |ref|`STA-004 <section_function_pramble>`."
-            ]
-        },
-        "sdv.doc.waterloo.docitem_helper.Status.DEPRECATED": {
-            "doc": {},
-            "doc_lines": [
-                "See rule |ref|`STA-004 <section_function_pramble>`."
-            ]
-        },
-        "sdv.doc.waterloo.docitem_helper.Status.DRAFT": {
-            "doc": {},
-            "doc_lines": [
-                "See rule |ref|`STA-004 <section_function_pramble>`."
-            ]
-        },
-        "sdv.doc.waterloo.docitem_helper.Status": {
+        "sdv.doc.waterloo.docitem_helper.render_constant_reference_details": {
             "signature": {
-                "text": "object.__init__(self, /, *args, **kwargs)",
+                "text": "render_constant_reference_details(label: 'str', const_name: 'str', expected_text: 'str', profile: 'str') -> 'dict[str, Any]'",
                 "parameters": [
                     {
-                        "name": "args",
-                        "kind": "VAR_POSITIONAL",
-                        "annotation": null,
+                        "name": "label",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
                         "default": null
                     },
                     {
-                        "name": "kwargs",
-                        "kind": "VAR_KEYWORD",
-                        "annotation": null,
+                        "name": "const_name",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    },
+                    {
+                        "name": "expected_text",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    },
+                    {
+                        "name": "profile",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
                         "default": null
                     }
                 ],
-                "returns": null
+                "returns": "dict[str, Any]"
             },
             "doc": {
                 "Preamble": {
-                    "profile": "class",
+                    "profile": "function",
                     "normative_sections": [
                         "Contract",
-                        "Public_constants"
-                    ],
-                    "scope": [
-                        "public"
+                        "Parameters",
+                        "Returns",
+                        "Raises"
                     ]
                 },
                 "Contract": {
                     "general": [
-                        "MUST provide constants representing the values of subsection |label|`Preamble.status`."
-                    ],
-                    "constructor": [
-                        "Inherit from |type|`Enum`."
+                        "MUST build standardized validation details for a Public_constants reference problem."
                     ]
                 },
-                "Public_constants": {
-                    "EXPERIMENTAL": [
-                        "See rule |ref|`STA-004 <section_function_pramble>`."
+                "Parameters": {
+                    "label": [
+                        "The subsection label to render."
                     ],
-                    "STABLE": [
-                        "See rule |ref|`STA-004 <section_function_pramble>`."
+                    "const_name": [
+                        "The constant entry name found in the subsection."
                     ],
-                    "FROZEN": [
-                        "See rule |ref|`STA-004 <section_function_pramble>`."
+                    "expected_text": [
+                        "The minimal correction or instruction to show in the expected snippet."
                     ],
-                    "DEPRECATED": [
-                        "See rule |ref|`STA-004 <section_function_pramble>`."
-                    ],
-                    "DRAFT": [
-                        "See rule |ref|`STA-004 <section_function_pramble>`."
+                    "profile": "The docstring profile used for the |cmd|`explain-subsection` hint."
+                },
+                "Returns": [
+                    "A details dictionary with |attr|`found`, |attr|`expected`, and |attr|`hint`."
+                ],
+                "Raises": {}
+            }
+        },
+        "sdv.doc.waterloo.docitem_helper.render_named_value_reference_details": {
+            "signature": {
+                "text": "render_named_value_reference_details(label: 'str', name: 'str', expected_text: 'str', profile: 'str') -> 'dict[str, Any]'",
+                "parameters": [
+                    {
+                        "name": "label",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    },
+                    {
+                        "name": "name",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    },
+                    {
+                        "name": "expected_text",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    },
+                    {
+                        "name": "profile",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    }
+                ],
+                "returns": "dict[str, Any]"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
                     ]
                 },
-                "Notes": {
-                    "LoII": [
-                        "This docstring violates LoII in order to preserve SSoT,",
-                        "see |label|`Public_constants`."
+                "Contract": {
+                    "general": [
+                        "MUST build standardized validation details for a Public_variables reference problem."
                     ]
-                }
+                },
+                "Parameters": {
+                    "label": [
+                        "The subsection label to render."
+                    ],
+                    "name": [
+                        "The variable entry name found in the subsection."
+                    ],
+                    "expected_text": [
+                        "The minimal correction or instruction to show in the expected snippet."
+                    ],
+                    "profile": "The docstring profile used for the |cmd|`explain-subsection` hint."
+                },
+                "Returns": [
+                    "A details dictionary with |attr|`found`, |attr|`expected`, and |attr|`hint`."
+                ],
+                "Raises": {}
+            }
+        },
+        "sdv.doc.waterloo.docitem_helper.render_overview_missing_member_details": {
+            "signature": {
+                "text": "render_overview_missing_member_details(overview_label: 'str', public_label: 'str', current_entries: 'Iterable[str]', missing_name: 'str', profile: 'str') -> 'dict[str, Any]'",
+                "parameters": [
+                    {
+                        "name": "overview_label",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    },
+                    {
+                        "name": "public_label",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    },
+                    {
+                        "name": "current_entries",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "Iterable[str]",
+                        "default": null
+                    },
+                    {
+                        "name": "missing_name",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    },
+                    {
+                        "name": "profile",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    }
+                ],
+                "returns": "dict[str, Any]"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST build standardized validation details for an overview entry that is missing from its matching Public_* section."
+                    ]
+                },
+                "Parameters": {
+                    "overview_label": [
+                        "The overview section label, such as |token|`Class_overview`."
+                    ],
+                    "public_label": [
+                        "The matching public section label, such as |token|`Public_classes`."
+                    ],
+                    "current_entries": [
+                        "The current raw entries from the overview section."
+                    ],
+                    "missing_name": [
+                        "The entry name that is missing from the public section."
+                    ],
+                    "profile": "The docstring profile used for the |cmd|`explain-subsection` hint."
+                },
+                "Returns": [
+                    "A details dictionary with |attr|`found`, |attr|`expected`, and |attr|`hint`."
+                ],
+                "Raises": {}
             }
         },
         "sdv.doc.waterloo.docitem_helper.ConfigTraversal": {
@@ -4863,6 +5627,62 @@
                 },
                 "Returns": [
                     "MUST return the set of scopes found, or the default., which is a set containing a single element |value|`PUBLIC`."
+                ],
+                "Raises": {
+                    "SectionNotFoundError": [
+                        "MUST raise if there is no |label|`Preamble`"
+                    ]
+                }
+            }
+        },
+        "sdv.doc.waterloo.docitem_tokenizer.get_scopes_of_tree_var": {
+            "signature": {
+                "text": "get_scopes_of_tree_var(tr: 'tracer', tree: 'DocstringTree') -> 'tuple[Scopes, bool]'",
+                "parameters": [
+                    {
+                        "name": "tr",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "tracer",
+                        "default": null
+                    },
+                    {
+                        "name": "tree",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "DocstringTree",
+                        "default": null
+                    }
+                ],
+                "returns": "tuple[Scopes, bool]"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST extract the |label|`Preamble` from the docstring tree.",
+                        "MUST extract the |label|`scope` from the |label|`Preamble`.",
+                        "MUST return the default if |label|`scope` is not present or empty.",
+                        "MUST additionally return whether the scope was declared explicitly."
+                    ]
+                },
+                "Parameters": {
+                    "tr": [
+                        "Tracer for providing context and collecting warnings"
+                    ],
+                    "tree": [
+                        "The docitem tree to be examined"
+                    ]
+                },
+                "Returns": [
+                    "MUST return a tuple |code|`(scopes, explicit)` where |var|`scopes` is the set of scopes found,",
+                    "and |var|`explicit` is |True| iff subsection |label|`Preamble.scope` is present."
                 ],
                 "Raises": {
                     "SectionNotFoundError": [
@@ -9104,14 +9924,12 @@
                         "Parameters",
                         "Returns",
                         "Raises"
-                    ],
-                    "scope": [
-                        "extension"
                     ]
                 },
                 "Contract": {
                     "general": [
-                        "MUST test whether the scope set of |self| is at least as restrictive as one of the scopes in |var|`sc_query`. This is used for upward references (e.g. derived -> base), where the referenced object must not be _more_ public."
+                        "MUST test whether at least one scope in |var|`sc_query` is at least as public as at least one scope in |self|.",
+                        "This is the visibility relation used for upward references: a referenced object MUST be at least as public as the referencing object."
                     ],
                     "requires": [
                         "Requirements of method |func|`scopes` apply."
@@ -9119,11 +9937,11 @@
                 },
                 "Parameters": {
                     "sc_query": [
-                        "The set of scopes of the referenced object."
+                        "The set of scope values of the referenced object."
                     ]
                 },
                 "Returns": [
-                    "|True| if there exists s_obj in |self|.scopes() and s_query in |var|`sc_query` such that s_query <= s_obj; otherwise |false|."
+                    "|True| iff there exists s_query in |var|`sc_query` and s_self in |self|.scopes() such that s_query <= s_self."
                 ],
                 "Raises": {
                     "SectionNotFoundError": [
@@ -9160,7 +9978,8 @@
                 },
                 "Contract": {
                     "general": [
-                        "MUST test compatibility of the scopes of |self| with the scopes of |var|`obj_trg`. Compatibility is given if at least one scope in |self| is less than or equal to at least one scope in the referenced object."
+                        "MUST test whether at least one scope in the referenced object |var|`obj_trg` is at least as public as at least one scope in |self|.",
+                        "This is the scope-compatibility relation used for reference edges: the referenced object MUST be at least as public as |self|."
                     ],
                     "requires": [
                         "Requirements of method |func|`scopes` apply, for both |self| and |var|`obj_trg`."

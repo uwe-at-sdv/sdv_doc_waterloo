@@ -144,6 +144,9 @@ We do this by the following set of rules.
   and another space (ASCII 32) between the braced Rule ID and the rule free-form text.
   When a rule is merely mentioned but not introduced, square brackets |should_not| be used.
 
+* [META-005] -- Obsolete rule IDs, when mentioned in prose, |must_not| be introduced with square brackets;
+  square brackets |must| be reserved for the point where a rule is defined.
+
 Rule taxonomy
 -------------
 
@@ -205,8 +208,10 @@ The following list explains the mnemonic prefixes and their semantics.
 .. rubric:: Tools and extensions
 
 * TOOL: Error messages from :wtrl_cmd:`waterlint` (or other tools)
+* JPTR: Error messages related to JSON Pointer references in tool-generated JSON
 * JSCH: Error messages related to JSON and JSON Schema
 * AXMPL: Error messages related to example mapping (e.g. for :wtrl_cmd:`waterlint add-example-json`)
+* CARVE: Error messages related to carving walk input into JSON objects
 * RHTM: Error messages related to rendering HTML (e.g. for :wtrl_cmd:`waterlint render-html5`)
 * XTNSN: Error messages related to extensions (e.g. for IDEs)
 * MCPS: Error messages returned by an MCP server

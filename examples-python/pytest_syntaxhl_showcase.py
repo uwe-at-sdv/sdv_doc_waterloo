@@ -241,7 +241,7 @@ def foo_empty_lines(a: int) -> float:
 			|my_fancy_role|`some content` <- should be treated as literal text, not a role.
 			|not_valid| <- should be treated as literal text, not a role.
 		Testing line connectors with whitespace:
-			This is a line with a connector at the end, followed by three spaces. \   
+			This is a line with a connector at the end, followed by three spaces. \\   
 			This is the continuation of the previous line.
 	Returns:
 		float: The input converted to a float.
