@@ -70,6 +70,11 @@ Public_constants:
 		for example body category, normativity, and profile applicability.
 		Informative: This is a carefully distilled machine-readable representation of the relevant rules
 		from the documentation standard, but the documentation remains the Single Source of Truth for the standard.
+Notes:
+	Render functions:
+		The render functions in this module are intended for building
+		verbose diagnostic messages that include source and expected snippets
+		along with suggestions on how to fix the docstring. 
 """
 from __future__ import annotations
 from enum import Enum,IntEnum
