@@ -13,7 +13,7 @@ Contract:
 
 import sys
 
-sys.modules.setdefault("demo_PRE_019_f", sys.modules[__name__])
+sys.modules.setdefault("demo_1_PRE_019_f", sys.modules[__name__])
 
 
 def f() -> None:

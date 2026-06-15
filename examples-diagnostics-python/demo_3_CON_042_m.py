@@ -1,19 +1,22 @@
+#!/usr/bin/env python3
+
 """
 Preamble:
 	profile:
 		module
 	normative_sections:
 		Contract
-	scope:
-		public
+scope:
+	public
 Contract:
 	general:
-		|Must| provide classes for the inherited-method scope demo.
+		|Must| provide a demo for the CON-042 inherited-method case.
 """
 
 import sys
 
-sys.modules.setdefault("demo_SCP_008_m", sys.modules[__name__])
+sys.modules.setdefault("demo_3_CON_042_m", sys.modules[__name__])
+
 
 class Y_extension:
 	"""
@@ -32,24 +35,10 @@ class Y_extension:
 	Public_methods:
 		m
 	"""
+
 	def m(self) -> None:
-		"""
-		Preamble:
-			profile:
-				method
-			normative_sections:
-				Contract, Parameters, Returns, Raises
-			scope:
-				extension
-		Contract:
-			general:
-				|Must| be minimal.
-		Parameters:
-		Returns:
-			|None|
-		Raises:
-		"""
 		pass
+
 
 class X(Y_extension):
 	"""
@@ -68,6 +57,7 @@ class X(Y_extension):
 	Public_methods:
 		m
 	"""
+
 	def m(self) -> None:
 		"""
 		Preamble:
@@ -81,6 +71,6 @@ class X(Y_extension):
 			general:
 				|Must| be minimal.
 			base:
-				demo_SCP_008_m.Y_extension.m
+				demo_3_CON_042_m
 		"""
 		pass

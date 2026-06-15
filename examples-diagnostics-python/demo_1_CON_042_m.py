@@ -15,7 +15,7 @@ Contract:
 
 import sys
 
-sys.modules.setdefault("demo_CON_042_m", sys.modules[__name__])
+sys.modules.setdefault("demo_1_CON_042_m", sys.modules[__name__])
 
 
 class Y_extension:
@@ -39,6 +39,25 @@ class Y_extension:
 	def m(self) -> None:
 		pass
 
+# With these it would run error-free.
+#class MissingClass(Y_extension):
+#	def m():
+#		"""
+#		Preamble:
+#			profile:
+#				method
+#			normative_sections:
+#				Contract, Parameters, Returns, Raises
+#		Contract:
+#			general:
+#		Parameters:
+#		Returns:
+#		Raises:
+#		"""
+#		pass
+#
+#class X(MissingClass):
+#	...
 
 class X(Y_extension):
 	"""
@@ -71,6 +90,6 @@ class X(Y_extension):
 			general:
 				|Must| be minimal.
 			base:
-				demo_CON_042_m.MissingClass.m
+				demo_1_CON_042_m.MissingClass.m
 		"""
 		pass

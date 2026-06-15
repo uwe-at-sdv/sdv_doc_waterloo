@@ -350,11 +350,16 @@ Raises:
 		|Must| raise if the content is not a single string.
 		|Must| raise if the string is not a qualified identifier.
 		"""
-# exactly one entry required (CON-040)
+		# exactly one entry required (CON-040)
 		if len(bases) != 1:
-			details = render_base_method_reference_details([str(entry) for entry in bases], "<exactly one qualified identifier>", "inherited_method")
+#			details = render_base_method_reference_details([str(entry) for entry in bases], "<exactly one qualified identifier>", "inherited_method")
+			details = {
+				"found": render_identifier_lines("Contract.base", [str(entry) for entry in bases]),
+				"expected": render_suggestion("Contract.base", "exactly one qualified identifier"),
+				"hint": explain_try_self_for_subsection("Contract.base", "inherited_method"),
+			}
 			raise_parsing_error_expected_but_got(tr, "CON-040", "exactly one qualified identifier", f"{bases}", details)
-# No need to set a default rule. _parse in the base class is
+	# No need to set a default rule. _parse in the base class is
 # a complete implementation of rules LQID-001 to LQID-005.
 		super()._parse(tr, bases, docitem_list_of_symbols_base.ValuePattern.QUALIFIED_IDENTIFIER)
 	def __str__(self) -> str:

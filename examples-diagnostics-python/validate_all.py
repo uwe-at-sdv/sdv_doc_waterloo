@@ -10,12 +10,12 @@ from pathlib import Path
 
 
 # Demo naming convention:
-#   demo_ABC_123_mod.py  -> validate module object
-#   demo_ABC_123_f.py    -> validate function object "f"
-#   demo_ABC_123_m.py    -> validate method object "X.m"
-#   demo_ABC_123_X.py    -> validate class object "X"
+#   demo_1_ABC_123_mod.py  -> validate module object
+#   demo_1_ABC_123_f.py    -> validate function object "f"
+#   demo_1_ABC_123_m.py    -> validate method object "X.m"
+#   demo_1_ABC_123_X.py    -> validate class object "X"
 # The script checks that each demo actually triggers the intended rule.
-DEMO_RE = re.compile(r"^demo_(?P<rule>[A-Z]+_\d{3})_(?P<kind>mod|f|m|X)\.py$")
+DEMO_RE = re.compile(r"^demo_(?P<group>[1-9])_(?P<rule>[A-Z]+_\d{3})_(?P<kind>mod|f|m|X)\.py$")
 
 
 @dataclass(frozen=True)
@@ -45,6 +45,8 @@ def iter_demo_cases(base: Path) -> list[DemoCase]:
 	return cases
 
 
+HUMAN_OUTPUT = False
+
 def main() -> int:
 	script_path = Path(__file__).resolve()
 	base = script_path.parent
@@ -66,20 +68,23 @@ def main() -> int:
 			"--obj",
 			case.obj,
 		]
-		proc = subprocess.run(cmd, capture_output=True, text=True)
-		output = (proc.stdout or "") + (proc.stderr or "")
-		ok = proc.returncode != 0 and f"[Rule {case.rule}]" in output and "DOC-001" not in output
-		status = "OK" if ok else "FAIL"
-		print(f"{status} {case.stem} -> {case.obj} (rule {case.rule})")
-		if not ok:
-			failures += 1
-			if output.strip():
-				print(output.rstrip())
-		elif "found:" in output:
-			# Keep the tracer body visible for successful matches.
-			for line in output.rstrip().splitlines():
-				if "[Rule " in line or "\tfound:" in line or "\texpected:" in line or "\thint:" in line:
-					print(line)
+		if HUMAN_OUTPUT:
+			proc = subprocess.run(cmd)
+		else:
+			proc = subprocess.run(cmd, capture_output=True, text=True)
+			output = (proc.stdout or "") + (proc.stderr or "")
+			ok = proc.returncode != 0 and f"[Rule {case.rule}]" in output and "DOC-001" not in output
+			status = "OK" if ok else "FAIL"
+			print(f"{status} {case.stem} -> {case.obj} (rule {case.rule})")
+			if not ok:
+				failures += 1
+				if output.strip():
+					print(output.rstrip())
+			elif "found:" in output:
+				# Keep the tracer body visible for successful matches.
+				for line in output.rstrip().splitlines():
+					if "[Rule " in line or "\tfound:" in line or "\texpected:" in line or "\thint:" in line:
+						print(line)
 
 	print(f"summary: {len(cases) - failures} ok, {failures} failed, {len(cases)} total")
 	return 1 if failures else 0

@@ -13,7 +13,7 @@ Contract:
 
 import sys
 
-sys.modules.setdefault("demo_PRE_019_m", sys.modules[__name__])
+sys.modules.setdefault("demo_1_PRE_019_m", sys.modules[__name__])
 
 
 class X:

@@ -10,37 +10,15 @@ scope:
 	public
 Contract:
 	general:
-		|Must| provide a demo for the CON-040 inherited-method case.
+		|Must| provide a demo for the CON-042 inherited-method case.
 """
 
 import sys
 
-sys.modules.setdefault("demo_CON_040_m", sys.modules[__name__])
+sys.modules.setdefault("demo_2_CON_042_m", sys.modules[__name__])
 
 
 class Y_extension:
-	"""
-	Preamble:
-		profile:
-			class
-		normative_sections:
-			Contract, Public_methods
-		scope:
-			extension
-	Contract:
-		general:
-			|Must| be minimal.
-		constructor:
-			|Must| be default-constructible.
-	Public_methods:
-		m
-	"""
-
-	def m(self) -> None:
-		pass
-
-
-class Z_extension:
 	"""
 	Preamble:
 		profile:
@@ -93,7 +71,6 @@ class X(Y_extension):
 			general:
 				|Must| be minimal.
 			base:
-				demo_CON_040_m.Y_extension.m
-				demo_CON_040_m.Z_extension.m
+				demo_2_CON_042_m.Y_extension
 		"""
 		pass

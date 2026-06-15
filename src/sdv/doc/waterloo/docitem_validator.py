@@ -2,7 +2,7 @@ from __future__ import annotations
 from types import FunctionType, ModuleType
 from typing import Any, Callable, Dict, Final, get_type_hints, get_origin, get_args, Generator, Iterable, Iterator, List, NewType, NoReturn, Sequence, Set, Tuple, Type, TypeAlias, TypeGuard, Union, cast
 
-from sdv.doc.waterloo.docitem_helper import explain_try_self_for_section, explain_try_self_for_subsection, render_allowed_identifiers, render_expected_identifier, render_expected_snippet, render_identifier_lines, render_source_snippet, render_deduplicated_identifiers, render_normative_section_details, render_exactly_one_identifier_details, render_normativity_keyword_details, render_overview_requires_section_details, render_name_object_consistency_details, render_listed_object_missing_details, render_exception_reference_details, render_see_also_reference_details, render_scope_relation_details, render_base_method_docstring_details, render_base_method_reference_details
+from sdv.doc.waterloo.docitem_helper import explain_try_self_for_section, explain_try_self_for_subsection, render_allowed_identifiers, render_expected_identifier, render_expected_snippet, render_identifier_lines, render_source_snippet, render_deduplicated_identifiers, render_normative_section_details, render_exactly_one_identifier_details, render_normativity_keyword_details, render_overview_requires_section_details, render_name_object_consistency_details, render_listed_object_missing_details, render_exception_reference_details, render_see_also_reference_details, render_scope_relation_details, render_base_method_reference_details, render_suggestion
 from sdv.doc.waterloo.docitem_docstring import *
 
 #===== Typechecking ===========================================#
@@ -1217,24 +1217,51 @@ Notes:
 				raise_validation_error(tr,obj,"CON-039","Section 'base' does not exist.", details)
 			with traced_section(tr, "base"):
 				node_base = node_contract.item("base")
+				base_items = list(node_base.items())
 				if not isinstance(node_base, docitem_base_to_inherit_from):
-					details = render_base_method_reference_details([], "<well-formed Contract.base section>", "inherited_method")
+#					details = render_base_method_reference_details([], "<well-formed Contract.base section>", "inherited_method")
+# We assume that this is the correct form, but the error is caught during parsing. We keep this here for completeness.
+					details = {
+						"found": render_identifier_lines("Contract.base", base_items),
+						"expected": render_suggestion("Contract.base", "well-formed Contract.base section"),
+						"hint": explain_try_self_for_section("Contract.base", profile),
+					}
 					raise_validation_error(tr,obj,"CON-040","Section 'base' malformed.", details)
-				base_items = node_base.items()
 				if len(base_items) != 1:
-					details = render_base_method_reference_details(list(base_items), "<exactly one qualified identifier>", "inherited_method")
+#					details = render_base_method_reference_details(list(base_items), "<exactly one qualified identifier>", "inherited_method")
+					details = {
+						"found": render_identifier_lines("Contract.base", base_items),
+						"expected": render_suggestion("Contract.base", "exactly one qualified identifier"),
+						"hint": explain_try_self_for_subsection("Contract.base", "inherited_method"),
+					}
 					raise_validation_error(tr,obj,"CON-040","Section 'base' must contain exactly one qualified identifier.", details)
 				base_ref = next(iter(base_items))
 				if not isinstance(base_ref, str) or not RE_QUALIFIED_IDENTIFIER_COMPILED.fullmatch(base_ref):
-					details = render_base_method_reference_details([base_ref], "<qualified identifier>", "inherited_method")
+# This is unlikely to trigger since this is captured during parsing as LQID-002, but we keep this here for completeness.
+#					details = render_base_method_reference_details([base_ref], "<qualified identifier>", "inherited_method")
+					details = {
+						"found": render_identifier_lines("Contract.base", [base_ref]),
+						"expected": render_suggestion("Contract.base", "qualified identifier referring to a base method"),
+						"hint": explain_try_self_for_subsection("Contract.base", "inherited_method"),
+					}
 					raise_validation_error(tr,obj,"CON-041",f"Entry '{base_ref}' is not a qualified identifier.", details)
 				try:
 					base_obj, _ = resolve_object(base_ref, obj)
 				except Exception as exc:
-					details = render_base_method_reference_details([base_ref], "<refer to a resolvable base method>", "inherited_method")
+#					details = render_base_method_reference_details([base_ref], "<refer to a resolvable base method>", "inherited_method")
+					details = {
+						"found": render_identifier_lines("Contract.base", [base_ref]),
+						"expected": render_suggestion("Contract.base", "qualified identifier referring to a base method"),
+						"hint": explain_try_self_for_subsection("Contract.base", "inherited_method"),
+					}
 					raise_validation_error(tr,obj,"CON-042",f"Base method '{base_ref}' cannot be resolved: {exc}", details)
 				if not (is_obj_function(base_obj)):
-					details = render_base_method_reference_details([base_ref], "<refer to a function or method>", "inherited_method")
+#					details = render_base_method_reference_details([base_ref], "<refer to a function or method>", "inherited_method")
+					details = {
+						"found": render_identifier_lines("Contract.base", [base_ref]),
+						"expected": render_suggestion("Contract.base", "refer to a function or method"),
+						"hint": explain_try_self_for_subsection("Contract.base", "inherited_method"),
+					}
 					raise_validation_error(tr,obj,"CON-042",f"Base reference '{base_ref}' is not a function or method.", details)
 				# CON-043: base_obj must belong to a base class of the documented class.
 				base_qname = getattr(base_obj, "__qualname__", "")
@@ -1254,28 +1281,48 @@ Notes:
 						owner_cls = resolve_object(f"{mod_obj.__name__}.{owner_class_name}", obj)[0]
 					except Exception:
 						owner_cls = None
-				if base_owner_cls is None or owner_cls is None or not is_obj_class(base_owner_cls) or not is_obj_class(owner_cls) or not issubclass(owner_cls, base_owner_cls):
-					details = render_base_method_reference_details([base_ref], "<refer to a base method defined on a base class of the documented class>", "inherited_method")
-					raise_validation_error(tr,obj,"CON-043",f"Base method '{base_ref}' is not defined on a base class of '{owner_class_name}'.", details)
+					if base_owner_cls is None or owner_cls is None or not is_obj_class(base_owner_cls) or not is_obj_class(owner_cls) or not issubclass(owner_cls, base_owner_cls):
+						details = {
+							"found": render_identifier_lines("Contract.base", [base_ref]),
+							"expected": render_suggestion("Contract.base", "refer to a base method defined on a base class of the documented class"),
+							"hint": explain_try_self_for_subsection("Contract.base", "inherited_method"),
+						}
+						raise_validation_error(tr,obj,"CON-043",f"Base method '{base_ref}' is not defined on a base class of '{owner_class_name}'.", details)
 				# CON-044: names must match
 				method_name = getattr(obj, "__name__", None)
 				base_name = getattr(base_obj, "__name__", None)
 				assert isinstance(base_name, str)
 				if method_name != base_name:
-					details = render_base_method_reference_details([base_name], "<make the base method name match the derived method name>", "inherited_method")
+					details = {
+						"found": render_identifier_lines("Contract.base", [base_name]),
+						"expected": render_suggestion("Contract.base", "make the base method name match the derived method name"),
+						"hint": explain_try_self_for_subsection("Contract.base", "inherited_method"),
+					}
 					raise_validation_error(tr,obj,"CON-044",f"Base method name '{base_name}' does not match '{method_name}'.", details)
 				# CON-045: referenced method must have a valid docstring.
 				if not get_obj_docstring(base_obj):
-					details = render_base_method_docstring_details(base_name, "inherited_method")
+					details = {
+						"found": render_identifier_lines("Contract.base", [base_name]),
+						"expected": render_suggestion("", "implement a Waterloo docstring in base method"),
+						"hint": explain_try_self_for_subsection("Contract.base", "inherited_method"),
+					}
 					raise_validation_error(tr,obj,"CON-045",f"Base method name '{base_name}' does not have a docstring.", details)
 				try:
 					top_base_obj = make_docitem_tree_from_object(tr,base_obj)
 					validate_docstring(tr,base_obj,top_base_obj)
 				except ParseError:
-					details = render_base_method_docstring_details(base_name, "inherited_method")
+					details = {
+						"found": render_identifier_lines("Contract.base", [base_name]),
+						"expected": render_suggestion("", "implement a Waterloo docstring in base method"),
+						"hint": explain_try_self_for_subsection("Contract.base", "inherited_method"),
+					}
 					raise_validation_error(tr,obj,"CON-045",f"Base method '{base_name}': Validation raises a ParseError.", details)
 				except ValidationError:
-					details = render_base_method_docstring_details(base_name, "inherited_method")
+					details = {
+						"found": render_identifier_lines("Contract.base", [base_name]),
+						"expected": render_suggestion("", "implement a Waterloo docstring in base method"),
+						"hint": explain_try_self_for_subsection("Contract.base", "inherited_method"),
+					}
 					raise_validation_error(tr,obj,"CON-045",f"Base method '{base_name}': Validation raises a ValidationError.", details)
 # CON-046: see what we can do - this won't be perfect.
 				try:

@@ -610,6 +610,26 @@ def test_inherited_base_not_resolvable() -> None:
 	_assert_error(result, "CON-042", "cannot be resolved")
 
 
+def test_inherited_base_not_resolvable_examples_diagnostics() -> None:
+	result = _run_waterlint_validate_with_basedir("demo_1_CON_042_m.X.m", str(ROOT / "examples-diagnostics-python"))
+	_assert_error(result, "CON-042", "cannot be resolved")
+
+
+def test_inherited_base_is_class_examples_diagnostics() -> None:
+	result = _run_waterlint_validate_with_basedir("demo_2_CON_042_m.X.m", str(ROOT / "examples-diagnostics-python"))
+	_assert_error(result, "CON-042", "not a function or method")
+
+
+def test_inherited_base_is_module_examples_diagnostics() -> None:
+	result = _run_waterlint_validate_with_basedir("demo_3_CON_042_m.X.m", str(ROOT / "examples-diagnostics-python"))
+	_assert_error(result, "CON-042", "not a function or method")
+
+
+def test_inherited_base_not_baseclass_examples_diagnostics() -> None:
+	result = _run_waterlint_validate_with_basedir("demo_1_CON_043_m.X.m", str(ROOT / "examples-diagnostics-python"))
+	_assert_error(result, "CON-043", "base class")
+
+
 def test_inherited_base_not_baseclass() -> None:
 	result = _run_waterlint_validate("pytest_bad_inheritance.Y_04.spam")
 	_assert_error(result, "CON-043", "base class")
@@ -623,6 +643,21 @@ def test_inherited_base_missing_docstring() -> None:
 def test_inherited_base_invalid_docstring() -> None:
 	result = _run_waterlint_validate("pytest_bad_inheritance.Y_06.spam")
 	_assert_error(result, "CON-045", "ParseError")
+
+
+def test_inherited_base_missing_docstring_examples_diagnostics() -> None:
+	result = _run_waterlint_validate_with_basedir("demo_1_CON_045_m.X.m", str(ROOT / "examples-diagnostics-python"))
+	_assert_error(result, "CON-045", "docstring")
+
+
+def test_inherited_base_invalid_docstring_examples_diagnostics() -> None:
+	result = _run_waterlint_validate_with_basedir("demo_2_CON_045_m.X.m", str(ROOT / "examples-diagnostics-python"))
+	_assert_error(result, "CON-045", "ParseError")
+
+
+def test_inherited_base_validation_error_examples_diagnostics() -> None:
+	result = _run_waterlint_validate_with_basedir("demo_3_CON_045_m.X.m", str(ROOT / "examples-diagnostics-python"))
+	_assert_error(result, "CON-045", "ValidationError")
 
 
 def test_bad_function_contract_requires_subsection_not_allowed() -> None:

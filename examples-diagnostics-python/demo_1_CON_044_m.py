@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 """
 Preamble:
 	profile:
@@ -8,12 +10,12 @@ scope:
 	public
 Contract:
 	general:
-		|Must| provide a demo for the CON-045 inherited-method case.
+		|Must| provide a demo for the CON-044 inherited-method case.
 """
 
 import sys
 
-sys.modules.setdefault("demo_CON_045_m", sys.modules[__name__])
+sys.modules.setdefault("demo_1_CON_044_m", sys.modules[__name__])
 
 
 class Y_extension:
@@ -31,10 +33,10 @@ class Y_extension:
 		constructor:
 			|Must| be default-constructible.
 	Public_methods:
-		m
+		n
 	"""
 
-	def m(self) -> None:
+	def n(self) -> None:
 		pass
 
 
@@ -69,6 +71,6 @@ class X(Y_extension):
 			general:
 				|Must| be minimal.
 			base:
-				demo_CON_045_m.Y_extension.m
+				demo_1_CON_044_m.Y_extension.n
 		"""
 		pass

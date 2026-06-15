@@ -11,7 +11,7 @@ Public_classes:
 	Trait, Scope, Flavour, Format, Status, ConfigTraversal, tracer, ResolveObjectError
 Public_functions:
 	explain_try_self_for_section, explain_try_self_for_subsection,
-	render_source_snippet, render_expected_snippet, render_allowed_identifier, render_expected_identifier,
+	render_source_snippet, render_expected_snippet, render_allowed_identifier, render_expected_identifier, render_suggestion,
 	render_allowed_identifiers, render_identifier_lines, render_deduplicated_identifiers, render_unique_identifiers,
 	render_normativity_keyword_details, render_exception_reference_details, render_parameter_signature_details,
 	render_overview_requires_section_details, render_profile_mismatch_details, render_name_object_consistency_details,
@@ -1090,6 +1090,44 @@ def render_expected_identifier(label: str, expected_kind: Literal["identifier", 
 		lines.append(f"\t<{expected_kind}>")
 	return lines
 
+def render_suggestion(label: str, suggestion: str) -> list[str]:
+	"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+	Contract:
+		general:
+			|Must| render a suggestion snippet either without or for a section or subsection in order to fix the docstring.
+			|Must| add angle brackets around the suggestion to indicate that it is a placeholder for the actual content.
+		requires:
+			The suggestion |should| be a brief and concise plain single line text.
+	Parameters:
+		label:
+			The section or subsection label (as qualified name) to render.
+			An empty label means the suggestion is not bound to a specific section or subsection.
+		suggestion:
+			A brief suggestion of what the section or subsection could be or contain.
+	Returns:
+		A compact list of lines that states the suggested section or subsection in one line.
+	Raises:
+	"""
+	if "." in label:
+		section_label, subsection_label = label.split(".", 1)
+	else:
+		section_label, subsection_label = label, None
+	lines = []
+	if subsection_label:
+		lines.append(f"{section_label}:")
+		lines.append(f"\t{subsection_label}:")
+		lines.append(f"\t\t<{suggestion}>")
+	elif section_label:
+		lines.append(f"{section_label}:")
+		lines.append(f"\t<{suggestion}>")
+	else:
+		lines.append(f"<{suggestion}>")
+	return lines
 
 def render_allowed_identifiers(label: str, identifiers: Iterable[str]) -> list[str]:
 	"""
