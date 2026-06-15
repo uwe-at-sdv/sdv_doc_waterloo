@@ -16,7 +16,7 @@ Public_classes:
 Public_functions:
 	f_public, f_extension, f_core
 See_also:
-	X_public
+	X_public,
 	f_public
 """
 
@@ -59,7 +59,7 @@ def f_extension() -> None:
 	Returns:
 	Raises:
 	See_also:
-		X_public, X_extension
+		X_public, X_extension,
 		f_public
 	"""
 def f_core() -> None:
@@ -80,7 +80,7 @@ def f_core() -> None:
 	Returns:
 	Raises:
 	See_also:
-		X_public, X_extension, X_core
+		X_public, X_extension, X_core,
 		f_public, f_extension
 	"""
 
@@ -167,10 +167,10 @@ class X_public:
 		Returns:
 		Raises:
 		See_also:
-			X_public.m_extension
-			X_public.Y_core
+			X_public.m_extension,
+			X_public.Y_core,
 			f_public, f_extension, f_core
-	   """
+		   """
 
 class X_extension(X_public,X_public.Y_extension):
 	r"""
@@ -227,8 +227,8 @@ class X_extension(X_public,X_public.Y_extension):
 		Returns:
 		Raises:
 		See_also:
-			X_public.m_extension, X_public.m_core
-			X_extension.Y_core
+			X_public.m_extension, X_public.m_core,
+			X_extension.Y_core,
 			f_public, f_extension, f_core
 		"""
 
@@ -247,6 +247,6 @@ class X_core:
 		constructor:
 			|Must| be constructible.
 	See_also:
-		X_public.Y_extension, X_public.Y_core
+		X_public.Y_extension, X_public.Y_core,
 		X_extension.Y_core
 	"""

@@ -293,9 +293,9 @@ Notes:
 	# Rule: Preamble must exist. We do not allow purely informative docstrings.
 		if not top.has_item("Preamble"):
 			details = {
-				"found": render_suggestion("", "No Preamble"),
-				"expected": ["Preamble:","\tprofile:","\t\t...","\tnormative_sections:","\t\t...","\t..."],
-				"hint": explain_try_self_for_section("Preamble", profile),
+				"found": render_missing_entry_details("Preamble", top.items(), "Preamble", profile, top_level=True)["found"],
+				"expected": render_missing_entry_details("Preamble", top.items(), "Preamble", profile, top_level=True)["expected"],
+				"hint": render_missing_entry_details("Preamble", top.items(), "Preamble", profile, top_level=True)["hint"],
 			}
 			raise_validation_error(tr,obj,"PRE-001","Section 'Preamble' does not exist.", details)
 #----- status -------------------------------------------------#
@@ -583,9 +583,9 @@ Notes:
 # Rule: Preamble must exist. We do not allow purely informative docstrings.
 		if not top.has_item("Preamble"):
 			details = {
-				"found": render_suggestion("", "No Preamble"),
-				"expected": ["Preamble:","\tprofile:","\t\t...","\tnormative_sections:","\t\t...","\t..."],
-				"hint": explain_try_self_for_section("Preamble", profile),
+				"found": render_missing_entry_details("Preamble", top.items(), "Preamble", profile, top_level=True)["found"],
+				"expected": render_missing_entry_details("Preamble", top.items(), "Preamble", profile, top_level=True)["expected"],
+				"hint": render_missing_entry_details("Preamble", top.items(), "Preamble", profile, top_level=True)["hint"],
 			}
 			raise_validation_error(tr,obj,"PRE-001","Section 'Preamble' does not exist.", details)
 #----- status -------------------------------------------------#
@@ -1311,7 +1311,7 @@ Notes:
 				if not get_obj_docstring(base_obj):
 					details = {
 						"found": render_identifier_lines("Contract.base", [base_name]),
-						"expected": render_suggestion("", "implement a Waterloo docstring in base method"),
+						"expected": render_suggestion("Contract.base", "implement a Waterloo docstring in base method"),
 						"hint": explain_try_self_for_subsection("Contract.base", "inherited_method"),
 					}
 					raise_validation_error(tr,obj,"CON-045",f"Base method name '{base_name}' does not have a docstring.", details)
@@ -1321,14 +1321,14 @@ Notes:
 				except ParseError:
 					details = {
 						"found": render_identifier_lines("Contract.base", [base_name]),
-						"expected": render_suggestion("", "implement a Waterloo docstring in base method"),
+						"expected": render_suggestion("Contract.base", "implement a Waterloo docstring in base method"),
 						"hint": explain_try_self_for_subsection("Contract.base", "inherited_method"),
 					}
 					raise_validation_error(tr,obj,"CON-045",f"Base method '{base_name}': Validation raises a ParseError.", details)
 				except ValidationError:
 					details = {
 						"found": render_identifier_lines("Contract.base", [base_name]),
-						"expected": render_suggestion("", "implement a Waterloo docstring in base method"),
+						"expected": render_suggestion("Contract.base", "implement a Waterloo docstring in base method"),
 						"hint": explain_try_self_for_subsection("Contract.base", "inherited_method"),
 					}
 					raise_validation_error(tr,obj,"CON-045",f"Base method '{base_name}': Validation raises a ValidationError.", details)
@@ -1519,9 +1519,9 @@ See_also:
 # Preamble must exist. We do not allow purely informative docstrings.
 		if "Preamble" not in top.items():
 			details = {
-				"found": render_suggestion("", "No Preamble"),
-				"expected": ["Preamble:","\tprofile:","\t\t...","\tnormative_sections:","\t\t...","\t..."],
-				"hint": explain_try_self_for_section("Preamble", profile),
+				"found": render_missing_entry_details("Preamble", top.items(), "Preamble", profile, top_level=True)["found"],
+				"expected": render_missing_entry_details("Preamble", top.items(), "Preamble", profile, top_level=True)["expected"],
+				"hint": render_missing_entry_details("Preamble", top.items(), "Preamble", profile, top_level=True)["hint"],
 			}
 			raise_validation_error(tr,obj,"PRE-001","Section 'Preamble' does not exist.", details)
 		node_preamble = top.item("Preamble")
@@ -1738,16 +1738,16 @@ See_also:
 						continue
 					doc = get_obj_docstring(target_obj)
 					if not doc:
-						if is_obj_documentable(target_obj):
-# No docstring at all: always warn (SEE-006).
-							details = render_see_also_reference_details(item_see_also, "<refer to a documented object>", profile)
-							warn_validation(tr,obj,"SEE-006", f"See_also reference '{item_see_also}' has no docstring.", details)
-# If See_also is normative and the target is a user-defined module/class/function
-# (not a builtin), escalate to SEE-008.
 						is_builtin = inspect.isbuiltin(target_obj) or getattr(target_obj, "__module__", "") == "builtins"
-						if "See_also" in node_normative_sections.items() and (is_obj_module(target_obj) or is_obj_class(target_obj) or is_obj_function(target_obj)) and not is_builtin:
+						is_documentable = is_obj_documentable(target_obj)
+						is_normative_target = "See_also" in node_normative_sections.items() and (is_obj_module(target_obj) or is_obj_class(target_obj) or is_obj_function(target_obj)) and not is_builtin
+						if is_normative_target:
 							details = render_see_also_reference_details(item_see_also, "<refer to a documented object with a valid Waterloo docstring>", profile)
 							raise_validation_error(tr,obj,"SEE-008", f"See_also reference '{item_see_also}' has no valid docstring ('See_also' is normative).", details)
+						if is_documentable:
+# No docstring at all: warn unless normative handling above escalated already.
+							details = render_see_also_reference_details(item_see_also, "<refer to a documented object>", profile)
+							warn_validation(tr,obj,"SEE-006", f"See_also reference '{item_see_also}' has no docstring.", details)
 					else:
 # Note that we do not validate built-ins! SEE-010
 						if (is_obj_module(target_obj) or is_obj_class(target_obj) or is_obj_function(target_obj)):

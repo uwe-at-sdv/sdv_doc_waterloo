@@ -1468,17 +1468,16 @@ def render_profile_mismatch_details(object_name: str, object_kind: str, current_
 		A details dictionary with |token|`found`, |token|`expected`, and |token|`hint`.
 	Raises:
 	"""
+	expected_text = expected_text.strip()
+	if expected_text.startswith("<") and expected_text.endswith(">") and len(expected_text) >= 2:
+		expected_text = expected_text[1:-1].strip()
 	return {
 		"found": [
 			"Preamble",
 			"\tprofile:",
 			f"\t\t{current_profile}",
 		],
-		"expected": [
-			"Preamble",
-			"\tprofile:",
-			"\t\t<insert correct profile for the documented object kind>",
-			],
+		"expected": render_suggestion("Preamble.profile", expected_text),
 		"hint": explain_try_self_for_subsection("Preamble.profile", profile),
 	}
 
@@ -1576,9 +1575,12 @@ def render_base_method_reference_details(
 	Raises:
 	"""
 	current = [str(item) for item in current_entries]
+	expected_text = expected_text.strip()
+	if expected_text.startswith("<") and expected_text.endswith(">") and len(expected_text) >= 2:
+		expected_text = expected_text[1:-1].strip()
 	return {
 		"found": render_source_snippet("Contract.base", current),
-		"expected": [expected_text],
+		"expected": render_suggestion("Contract.base", expected_text),
 		"hint": [f"waterlint explain-subsection --label Contract.base --profile {profile}"],
 	}
 

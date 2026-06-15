@@ -14,14 +14,21 @@ class X:
 		profile:
 			class
 		normative_sections:
-			Contract
+			Contract, Public_methods
 	Contract:
 		general:
 			...
 		constructor:
 			...
-		traits:
-			abstract,
-			abstract
+	Public_methods:
+		f1,f2
+		f3,f4
 	"""
-	pass
+	def f1() -> None:
+		pass
+	def f2() -> None:
+		pass
+	def fq1() -> None:
+		pass
+	def f4() -> None:
+		pass

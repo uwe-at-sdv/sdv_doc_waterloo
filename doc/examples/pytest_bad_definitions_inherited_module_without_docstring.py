@@ -16,6 +16,6 @@ class X:
 		Term_D:
 			|term|`Term_D` is like |term|`Term_B` but different.
 		_inherit:
-			Term_A,Term_B
+			Term_A,Term_B,
 			Term_Z
 	"""

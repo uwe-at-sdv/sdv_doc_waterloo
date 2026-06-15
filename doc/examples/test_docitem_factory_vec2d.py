@@ -33,7 +33,7 @@ class Vec2d:
 		vec2d:
 			All of the above via runtime polymorphism
 	Public_methods:
-		from_zero, from_comp, from_vec2d
+		from_zero, from_comp, from_vec2d,
 		gen
 	"""
 #----->8-----1

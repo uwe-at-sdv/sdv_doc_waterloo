@@ -434,7 +434,12 @@ class docitem_list_of_symbols_base(docitem_list_base):
 # Wraps are tolerated: commas at the end of a physical line continue the logical CSV list.
 			part = ref.strip()
 			if idx < len(refs) - 1 and not part.endswith(","):
-				warn_parsing(tr,"LQID-006","A non-final CSV line should end with a comma when the list is wrapped across multiple physical lines.")
+				details = {
+					"found": render_identifier_lines("Contract.traits", refs_split + [part]),
+					"expected": render_suggestion("Contract.traits", "add a trailing comma to the wrapped line."),
+					"hint": explain_try_self_for_subsection("Contract.traits", "class"),
+				}
+				raise_parsing_error(tr,"LQID-006","A non-final CSV line must end with a comma when the list is wrapped across multiple physical lines.",details)
 			if pending:
 				pending += " " + part
 			else:

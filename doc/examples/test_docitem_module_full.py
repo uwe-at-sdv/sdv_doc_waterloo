@@ -3,7 +3,7 @@ Preamble:
 	profile:
 		module
 	normative_sections:
-		Contract, Definitions, Public_classes, Public_functions
+		Contract, Definitions, Public_classes, Public_functions,
 		Public_types, Public_variables, Public_constants
 Definitions:
 	MyItem:

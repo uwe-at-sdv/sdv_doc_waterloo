@@ -249,7 +249,7 @@ Method_overview:
 					found_preamble = True
 				elif not found_preamble:
 					details = {
-						"found": render_suggestion("", "No Preamble"),
+						"found": render_suggestion("Preamble", "No Preamble"),
 						"expected": ["Preamble:","\tprofile:","\t\t...","\tnormative_sections:","\t\t...","\t..."],
 						"hint": explain_try_self_for_section("Preamble", "PROFILE"),
 					}
@@ -522,7 +522,7 @@ def make_docitem_tree_from_docstring_tree(tr : tracer, tree : DocstringTree) -> 
 		profile = get_profile_of_tree(tr,tree)
 	except SectionNotFoundError:
 		details = {
-			"found": render_suggestion("","No Preamble"),
+			"found": render_suggestion("Preamble", "No Preamble"),
 			"expected": ["Preamble:","\tprofile:","\t\t...","\tnormative_sections:","\t\t...","\t..."],
 			"hint": explain_try_self_for_section("Preamble","PROFILE"),
 		}
@@ -623,7 +623,6 @@ def check_profile_matches_object(tr: tracer, profile: str, obj: object) -> None:
 			raise_validation_error(tr, obj, "PRE-018", f"profile is '{profile}' but '{get_obj_name(obj)}' is a class.", details)
 	else:
 		if profile not in {"function", "method", "inherited_method"}:
-			warn_validation(tr, obj, "PRE-020", f"profile 'inherited_method' might be appropriate, cannot decide at this location in code.")
 			details = render_profile_mismatch_details(get_obj_name(obj), "function or method", profile, "<use profile function, method or inherited_method>", profile)
 			raise_validation_error(tr, obj, "PRE-019", f"profile is '{profile}' but '{get_obj_name(obj)}' is a function or method.", details)
 		is_method_like = isinstance(obj, property) or is_obj_method_like(obj)
@@ -638,16 +637,6 @@ def check_profile_matches_object(tr: tracer, profile: str, obj: object) -> None:
 
 def make_docitem_tree_from_object(tr: tracer, obj: object) -> docitem_docstring_base:
 	tree = parse_indent_docstring(tr, get_obj_docstring(obj))
-# We test **carefully** if the profile exists and matches. We skip the
-# test if the profile cannot be determined, in order to not shadow other
-# error messages like DOC-007.
-	try:
-		profile = get_profile_of_tree(tr,tree)
-		if profile != "":
-			check_profile_matches_object(tr,profile,obj)
-# The profile must match the object type.
-	except Exception:
-		pass
 	return make_docitem_tree_from_docstring_tree(tr, tree)
 
 #===== end Docstring ==========================================#

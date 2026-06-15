@@ -18,7 +18,7 @@ Class_overview:
 	X_not_listed_no_doc:
 		A clas without docstring
 Public_classes:
-	X_not_listed_bad_doc
+	X_not_listed_bad_doc,
 	X_not_listed_no_doc
 """
 

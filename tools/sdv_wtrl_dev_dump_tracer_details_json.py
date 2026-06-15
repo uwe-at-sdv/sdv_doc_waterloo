@@ -58,7 +58,12 @@ def main() -> int:
 		return 1
 
 	failures = 0
+	print("[",flush=True)
+	start = True
 	for case in cases:
+		if not start:
+			print(",",flush=True)
+		start = False
 		cmd = [
 			str(waterlint),
 			"validate",
@@ -66,13 +71,16 @@ def main() -> int:
 			str(base),
 			"--obj",
 			case.obj,
+			"--out-diag",
+			"/dev/null",
+			"--out-diag-json",
+			"@STDOUT"
 		]
 		# Execute waterlint and dump the diagnostics. We don't
 		# need to capture the output, just check the exit code.
 		proc = subprocess.run(cmd)
-		print("\n\n\n",file=sys.stderr)
-
-	print(f"summary: {len(cases) - failures} ok, {failures} failed, {len(cases)} total")
+		print("\n\n\n")
+	print("]")
 	return 1 if failures else 0
 
 

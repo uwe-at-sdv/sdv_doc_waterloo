@@ -651,7 +651,7 @@ state whether it applies to Identifiers or to Qualified Identifiers.
 * [LQID-003] -- Whitespace surrounding each [Qualified] Identifier |must| be stripped by tools.
 * [LQID-004] -- Each [Qualified] Identifier |must| occur at most once in the resulting list.
 * [LQID-005] -- Tools |must| treat the result as a flat list of [Qualified] Identifiers, without preserving line structure or grouping.
-* [LQID-006] -- If a CSV list is wrapped across multiple physical lines, every non-final physical line |should| end with a comma.
+* [LQID-006] -- If a CSV list is wrapped across multiple physical lines, every non-final physical line |must| end with a comma.
 
 The following warning rule applies when a section appears in a docstring but violates the LoII principle.
 This happens, for example, when definitions are imported from a module docstring into a class, function, or method docstring.

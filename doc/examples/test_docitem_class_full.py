@@ -14,7 +14,7 @@ class MyClass(MyBaseClass,MyOtherBaseClass):
 		profile:
 			class
 		normative_sections:
-			Contract, Definitions, Derived_from, Public_classes
+			Contract, Definitions, Derived_from, Public_classes,
 			Public_methods, Public_types, Public_variables, Public_constants
 	Definitions:
 		MyExampleItem:

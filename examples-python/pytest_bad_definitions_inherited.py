@@ -34,7 +34,7 @@ class X_term_not_in_module:
 		Term_D:
 			|term|`Term_D` is like |term|`Term_B` but different.
 		_inherit:
-			Term_A,Term_B
+			Term_A,Term_B,
 			Term_Z, Term_Y_does_not_exist
 	"""
 	def spam(self) -> None:
@@ -76,7 +76,7 @@ class X_duplicate_term:
 		Term_D:
 			|term|`Term_D` is like |term|`Term_B` but different.
 		_inherit:
-			Term_A,Term_B
+			Term_A,Term_B,
 			Term_Z,Term_B
 	"""
 
@@ -144,4 +144,3 @@ class X_term_redefined:
 		_inherit:
 			Term_A,Term_B,Term_Z
 	"""
-
