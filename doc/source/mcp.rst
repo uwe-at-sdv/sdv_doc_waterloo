@@ -289,6 +289,8 @@ We use the above configuration as an example for running the MCP server inside a
 
 This generates Dockerfile :wtrl_file:`/tmp/my_wtrl_mcp`
 and build script :wtrl_file:`/tmp/build.my_wtrl_mcp.sh`.
+The build script uses :wtrl_opt:`--no-cache` by default and accepts
+:wtrl_opt:`--cache` when you want to reuse Docker layers explicitly.
 
 The Docker image is then built simply by executing:
 

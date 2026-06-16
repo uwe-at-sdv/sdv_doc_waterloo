@@ -47,6 +47,8 @@ def test_render_docker_bake_smoke_generates_dockerfile_and_build_script(tmp_path
 	build_text = build_script.read_text(encoding="utf-8")
 	assert "docker build" in build_text
 	assert "Generated build script for my_build.docker." in build_text
+	assert "--no-cache" in build_text
+	assert "--cache" in build_text
 	assert "wtrl-mcp-my_build" in build_text
 	assert "http://127.0.0.1:13316/mcp" in res.stderr
 	assert "http://localhost:13316/mcp" in res.stderr
