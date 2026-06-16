@@ -1,12 +1,12 @@
 {
     "$schema": "https://sci-d-vis.com/schema/wtrl-json-0.1.0.schema.json",
-    "$id": "urn:waterlint:wtrl-json:0.16.2:core:rfc-2119:93720abc78dcea58d4b819b612721799d590839ebc24b884a4f89ce099414cee",
+    "$id": "urn:waterlint:wtrl-json:0.16.2:core:rfc-2119:968c337f37f012eb15eadb132a1eaf02bd7cb25da09a82c5b0877974440018a7",
     "__WTRL_VERSION__": {
         "waterloo": "0.8.1",
         "schema": "0.1.0"
     },
     "__WTRL_META__": {
-        "generated_at": "2026-06-16T09:54:08+02:00",
+        "generated_at": "2026-06-16T10:00:16+02:00",
         "generator": "waterlint",
         "scope": "core",
         "flavour": "rfc-2119"
