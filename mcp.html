@@ -234,7 +234,11 @@ The basic invocation syntax is:</p>
 <li><p><code class="wtrl_opt docutils literal notranslate"><span class="pre">--no-bake-roots</span></code> – Root documents are mounted into the container at runtime.</p></li>
 <li><p><code class="wtrl_opt docutils literal notranslate"><span class="pre">--bake-roots</span></code> (default) – Root documents are embedded into the Docker image.</p></li>
 </ul>
-<p>Additional options are described in the <code class="wtrl_cmd docutils literal notranslate"><span class="pre">waterlint</span></code> online help.</p>
+<p>Additional options are described in the <code class="wtrl_cmd docutils literal notranslate"><span class="pre">waterlint</span></code> online help.
+In particular, <code class="wtrl_cmd docutils literal notranslate"><span class="pre">render-docker</span></code> accepts <code class="wtrl_opt docutils literal notranslate"><span class="pre">--public-port</span></code>
+to describe the externally published container port and
+<code class="wtrl_opt docutils literal notranslate"><span class="pre">--allowed-hosts</span></code> to name the hosts that should be allowed for that
+port in the generated configuration.</p>
 <p>During development, or while actively extending a project’s documentation,
 the <code class="wtrl_opt docutils literal notranslate"><span class="pre">--no-bake-roots</span></code> mode is typically preferred. This avoids
 rebuilding the Docker image whenever documentation changes; restarting the
@@ -277,7 +281,12 @@ The generated Docker image automatically exposes this port.</p>
 </pre></div>
 </div>
 <p>This generates Dockerfile <code class="wtrl_file docutils literal notranslate"><span class="pre">/tmp/my_wtrl_mcp</span></code>
-and build script <code class="wtrl_file docutils literal notranslate"><span class="pre">/tmp/build.my_wtrl_mcp.sh</span></code>.</p>
+and build script <code class="wtrl_file docutils literal notranslate"><span class="pre">/tmp/build.my_wtrl_mcp.sh</span></code>.
+The build script uses <code class="wtrl_opt docutils literal notranslate"><span class="pre">--no-cache</span></code> by default and accepts
+<code class="wtrl_opt docutils literal notranslate"><span class="pre">--cache</span></code> when you want to reuse Docker layers explicitly.
+If the image will be published on a different port than the server listens on
+inside the container, add for example
+<code class="wtrl_opt docutils literal notranslate"><span class="pre">--public-port</span> <span class="pre">13315</span> <span class="pre">--allowed-hosts</span> <span class="pre">localhost</span> <span class="pre">127.0.0.1</span></code>.</p>
 <p>The Docker image is then built simply by executing:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>/tmp/build.my_wtrl_mcp.sh
 </pre></div>

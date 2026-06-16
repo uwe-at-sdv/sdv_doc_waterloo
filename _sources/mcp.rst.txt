@@ -228,6 +228,10 @@ Two operating modes are available:
 * :wtrl_opt:`--bake-roots` (default) -- Root documents are embedded into the Docker image.
 
 Additional options are described in the :wtrl_cmd:`waterlint` online help.
+In particular, :wtrl_cmd:`render-docker` accepts :wtrl_opt:`--public-port`
+to describe the externally published container port and
+:wtrl_opt:`--allowed-hosts` to name the hosts that should be allowed for that
+port in the generated configuration.
 
 During development, or while actively extending a project's documentation,
 the :wtrl_opt:`--no-bake-roots` mode is typically preferred. This avoids
@@ -289,6 +293,11 @@ We use the above configuration as an example for running the MCP server inside a
 
 This generates Dockerfile :wtrl_file:`/tmp/my_wtrl_mcp`
 and build script :wtrl_file:`/tmp/build.my_wtrl_mcp.sh`.
+The build script uses :wtrl_opt:`--no-cache` by default and accepts
+:wtrl_opt:`--cache` when you want to reuse Docker layers explicitly.
+If the image will be published on a different port than the server listens on
+inside the container, add for example
+:wtrl_opt:`--public-port 13315 --allowed-hosts localhost 127.0.0.1`.
 
 The Docker image is then built simply by executing:
 
