@@ -4,6 +4,7 @@ Format:
 
 - VERSION [YYYY-MM-DD]: Summary.
 
+- 0.2.3 [2026-06-16]:   Coomand about in MCP-Server
 - 0.2.2 [2026-06-01]:	Command gen_docstring in MCP-Server
 - 0.2.1 [2026-06-01]:	Minor changes in extension.js and MCP-stdio configuration
 - 0.2.0 [2026-05-31]:	MCP-Server
