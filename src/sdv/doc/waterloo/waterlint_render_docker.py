@@ -73,6 +73,8 @@ class DockerRenderPlan:
 	source_path: Path
 	base_dir: Path
 	bake_roots: bool
+	public_port: int | None
+	allowed_hosts: list[str] | None
 	server: RenderServerConfig_t
 	logging: RenderLoggingConfig_t | None
 	security: Mapping[str, Any] | None
@@ -243,6 +245,31 @@ def _render_logging_toml(logging_cfg: RenderLoggingConfig_t | None, config_path_
 	return lines
 
 
+def _effective_allowed_hosts(plan: DockerRenderPlan) -> list[str] | None:
+	if plan.allowed_hosts is not None:
+		if plan.public_port is None:
+			raise ValueError("--allowed-hosts requires --public-port.")
+		return [f"{host}:{plan.public_port}" for host in plan.allowed_hosts]
+	if plan.public_port is not None:
+		return [f"localhost:{plan.public_port}", f"127.0.0.1:{plan.public_port}"]
+	if plan.security is None:
+		return None
+	allowed_hosts = plan.security.get("allowed_hosts")
+	if not isinstance(allowed_hosts, list):
+		return None
+	return [str(item) for item in allowed_hosts]
+
+
+def _effective_security_cfg(plan: DockerRenderPlan) -> Mapping[str, Any] | None:
+	if plan.security is None and plan.public_port is None and plan.allowed_hosts is None:
+		return None
+	effective = dict(plan.security or {})
+	allowed_hosts = _effective_allowed_hosts(plan)
+	if allowed_hosts is not None:
+		effective["allowed_hosts"] = allowed_hosts
+	return effective
+
+
 def _render_security_toml(security_cfg: Mapping[str, Any] | None) -> list[str]:
 	if security_cfg is None:
 		return []
@@ -282,8 +309,9 @@ def _render_config_text(plan: DockerRenderPlan) -> str:
 		f"streamable_http_path = {_toml_value(plan.server['streamable_http_path'])}",
 		"",
 	]
-	lines.extend(_render_security_toml(plan.security))
-	if plan.security is not None:
+	effective_security = _effective_security_cfg(plan)
+	lines.extend(_render_security_toml(effective_security))
+	if effective_security is not None:
 		lines.append("")
 	if plan.logging is not None:
 		lines.extend(_render_logging_toml(plan.logging, config_path_text="logging.toml"))
@@ -368,6 +396,7 @@ def _render_build_script_text(plan: DockerRenderPlan) -> str:
 			# be provided by the user in a file at the specified path on the machine where the
 			# build script is executed.
 			"GITHUB_TOKEN_FILE=\"/server/devel/sdv/privat/uwe/source/sdv_doc_waterloo/etc/secrets/github.token\"",
+			"# Docker layer caching is off by default; pass --cache to enable it.",
 			'CACHE_FLAG="--no-cache"',
 			'while [ "$#" -gt 0 ]; do',
 			'\tcase "$1" in',
@@ -475,12 +504,30 @@ def _final_exit_code(base_code: int, tr: tracer, fail_on_warning: bool) -> int:
 def _load_render_docker_plan(args: argparse.Namespace, tr: tracer) -> DockerRenderPlan | None:
 	in_path = getattr(args, "input_file", None)
 	out_path = getattr(args, "out_file", None)
+	public_port = getattr(args, "public_port", None)
+	allowed_hosts_arg = getattr(args, "allowed_hosts", None)
 	if not in_path:
 		tr.add_error("DCKR-000", "tool", "--in is required.")
 		return None
 	if not out_path:
 		tr.add_error("DCKR-000", "tool", "--out is required.")
 		return None
+	if public_port is not None:
+		if not isinstance(public_port, int) or not (1 <= public_port <= 65535):
+			tr.add_error("DCKR-001", "tool", "--public-port must be an integer between 1 and 65535.")
+			return None
+	allowed_hosts: list[str] | None = None
+	if allowed_hosts_arg is not None:
+		if public_port is None:
+			tr.add_error("DCKR-001", "tool", "--allowed-hosts requires --public-port.")
+			return None
+		allowed_hosts = []
+		for idx, host in enumerate(allowed_hosts_arg):
+			host_text = str(host).strip()
+			if not host_text or ":" in host_text:
+				tr.add_error("DCKR-001", "tool", f"--allowed-hosts entry {idx} must be a host name without a port.")
+				return None
+			allowed_hosts.append(host_text)
 	src_path = Path(str(in_path)).expanduser().resolve()
 	if not src_path.is_file():
 		tr.add_error("DCKR-003", "tool", f"Input TOML file does not exist: {src_path}")
@@ -564,6 +611,8 @@ def _load_render_docker_plan(args: argparse.Namespace, tr: tracer) -> DockerRend
 		source_path=src_path,
 		base_dir=src_path.parent,
 		bake_roots=bake_roots,
+		public_port=public_port,
+		allowed_hosts=allowed_hosts,
 		server={"transport": transport, "host": host, "port": port, "streamable_http_path": streamable_http_path},
 		logging=logging_cfg,
 		security=security_cfg,
@@ -627,6 +676,8 @@ def render_docker(args: argparse.Namespace) -> int:
 			* |attr|`fail_on_warning`: Whether warnings should influence the exit code.
 			* |attr|`bake_roots`: Boolean switch indicating that the roots from the input TOML file are baked into the image. This is the default.
 			* |attr|`no_bake_roots`: Boolean switch indicating that the roots from the input TOML file are not baked into the image.
+			* |attr|`public_port`: Optional external port number used for generated host allowlists.
+			* |attr|`allowed_hosts`: Optional list of hostnames used together with |attr|`public_port` to generate the host allowlist.
 			* |attr|`out_diag`: Optional path to a human-readable diagnostics file. Default is |lit|`stdout`.
 			* |attr|`out_diag_json`: Optional path to a JSON diagnostics file. Default is not to write JSON diagnostics.
 			* |attr|`debug`: Reserved global flag for debug output.
@@ -669,6 +720,14 @@ def render_docker(args: argparse.Namespace) -> int:
 		if plan is None:
 			_emit_tracer(tr, out_diag, out_diag_json, debug=debug)
 			return _final_exit_code(1, tr, getattr(args, "fail_on_warning", False))
+		effective_security = _effective_security_cfg(plan)
+		if plan.public_port is not None:
+			tr.add_info(f"render-docker: public port {plan.public_port}")
+		effective_allowed_hosts = _effective_allowed_hosts(plan)
+		if effective_allowed_hosts is not None and (
+			plan.public_port is not None or plan.allowed_hosts is not None
+		):
+			tr.add_info("render-docker: host allowlist " + ", ".join(effective_allowed_hosts))
 		tr.add_info(f"render-docker: source config {plan.source_path}")
 		tr.add_info(f"render-docker: mode {'bake-roots' if plan.bake_roots else 'no-bake-roots'}")
 		tr.add_info(f"render-docker: build script {plan.build_script_path}")
@@ -680,7 +739,7 @@ def render_docker(args: argparse.Namespace) -> int:
 				f"{root.root_id} -> {root.render_name} "
 				f"[{root.label}, {'enabled' if root.enabled else 'disabled'}, {root.kind}]"
 			)
-		client_urls = _render_client_urls(plan.security, plan.server["streamable_http_path"])
+		client_urls = _render_client_urls(effective_security, plan.server["streamable_http_path"])
 		if client_urls:
 			tr.add_info("render-docker: MCP client URL(s):")
 			for url in client_urls:
@@ -696,7 +755,7 @@ def render_docker(args: argparse.Namespace) -> int:
 			tr.add_info(f"render-docker: ● Run the launch script: {plan.launch_script_path}")
 		if plan.bake_roots:
 			image_tag = f"wtrl-mcp-{plan.out_path.stem}"
-			port = plan.server["port"]
+			port = plan.public_port or plan.server["port"]
 			tr.add_info("render-docker: ● Launch the container, for example:")
 			tr.add_info(f"render-docker:   ○ docker run --rm -p {port}:{port} {image_tag}")
 			tr.add_info(f"render-docker:   ○ docker run -d --name {image_tag} -p {port}:{port} {image_tag}")
@@ -752,6 +811,20 @@ def build_parser(
 		required=True,
 		metavar="FILE",
 		help="Write the rendered Dockerfile to FILE.",
+	)
+	prsr.add_argument(
+		"--public-port",
+		dest="public_port",
+		type=int,
+		metavar="PORT",
+		help="External published port used for generated host allowlists and example docker run commands.",
+	)
+	prsr.add_argument(
+		"--allowed-hosts",
+		dest="allowed_hosts",
+		nargs="+",
+		metavar="HOST",
+		help="Hostnames to combine with --public-port when generating the host allowlist.",
 	)
 	prsr.add_argument(
 		"--debug",

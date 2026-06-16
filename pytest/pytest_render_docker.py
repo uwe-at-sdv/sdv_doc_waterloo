@@ -54,6 +54,70 @@ def test_render_docker_bake_smoke_generates_dockerfile_and_build_script(tmp_path
 	assert "http://localhost:13316/mcp" in res.stderr
 
 
+def test_render_docker_public_port_overrides_allowed_hosts(tmp_path: Path) -> None:
+	"""A public port without an explicit host list rewrites allowed_hosts to localhost and 127.0.0.1."""
+	cfg = _write_modified_config(tmp_path)
+	out_file = tmp_path / "public_port.docker"
+	res = run_waterlint(
+		"render-docker",
+		"--in",
+		str(cfg),
+		"--out",
+		str(out_file),
+		"--public-port",
+		"12345",
+	)
+	assert res.returncode == 0, res.stderr
+	build_script = tmp_path / "build.public_port.docker.sh"
+	build_text = build_script.read_text(encoding="utf-8")
+	assert 'allowed_hosts = [ "localhost:12345", "127.0.0.1:12345" ]' in build_text
+	assert "render-docker: public port 12345" in res.stderr
+	assert "http://localhost:12345/mcp" in res.stderr
+	assert "http://127.0.0.1:12345/mcp" in res.stderr
+
+
+def test_render_docker_public_port_and_allowed_hosts(tmp_path: Path) -> None:
+	"""An explicit host list is combined with the public port."""
+	cfg = _write_modified_config(tmp_path)
+	out_file = tmp_path / "public_hosts.docker"
+	res = run_waterlint(
+		"render-docker",
+		"--in",
+		str(cfg),
+		"--out",
+		str(out_file),
+		"--public-port",
+		"12345",
+		"--allowed-hosts",
+		"localhost",
+		"127.0.0.1",
+		"gilgamesh",
+	)
+	assert res.returncode == 0, res.stderr
+	build_script = tmp_path / "build.public_hosts.docker.sh"
+	build_text = build_script.read_text(encoding="utf-8")
+	assert 'allowed_hosts = [ "localhost:12345", "127.0.0.1:12345", "gilgamesh:12345" ]' in build_text
+	assert "render-docker: host allowlist localhost:12345, 127.0.0.1:12345, gilgamesh:12345" in res.stderr
+
+
+def test_render_docker_rejects_allowed_hosts_without_public_port(tmp_path: Path) -> None:
+	"""Explicit host names require an explicit public port."""
+	cfg = _write_modified_config(tmp_path)
+	out_file = tmp_path / "no_public_port.docker"
+	res = run_waterlint(
+		"render-docker",
+		"--in",
+		str(cfg),
+		"--out",
+		str(out_file),
+		"--allowed-hosts",
+		"localhost",
+	)
+	assert res.returncode == 1, f"expected exit code 1, got {res.returncode}"
+	assert "DCKR-001" in res.stderr, res.stderr
+	assert "--allowed-hosts requires --public-port" in res.stderr, res.stderr
+
+
 def test_render_docker_no_bake_smoke_generates_launch_script(tmp_path: Path) -> None:
 	"""The non-bake mode renders a build script and a foreground launch script."""
 	cfg = _write_modified_config(tmp_path)
