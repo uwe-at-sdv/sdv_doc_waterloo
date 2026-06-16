@@ -1,0 +1,32 @@
+{
+  "topic": "waterloo.introduction",
+  "title": "Waterloo introduction",
+  "summary": "What Waterloo is, what a Waterloo docstring is, and where to start.",
+  "content": [
+    {
+      "kind": "rules",
+      "items": [
+        "Waterloo is a structured docstring format for Python code.",
+        "A Waterloo docstring is indentation-based and divided into sections and nested subsections.",
+        "Normative content is tracked explicitly, typically via normative_sections.",
+        "The format is designed to be both human-readable and machine-checkable."
+      ]
+    },
+    {
+      "kind": "terms",
+      "items": [
+        "A section is a top-level docstring block such as Preamble, Contract, or See_also.",
+        "A nested subsection is a block inside a section, for example a profile entry, a contract entry, or a list item.",
+        "The documentation and the waterlint tools may refer to nested subsections with dotted names for convenience."
+      ]
+    },
+    {
+      "kind": "entry-points",
+      "items": [
+        "Use about('waterlint.command') to learn the validation workflow.",
+        "Use about('waterloo.structure') to learn the docstring shape and indentation rules.",
+        "Use about('waterloo.markup') to learn the inline markup tokens and roles."
+      ]
+    }
+  ]
+}

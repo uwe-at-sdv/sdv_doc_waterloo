@@ -818,24 +818,24 @@ def build_app(config: McpConfig) -> FastMCP:
 				|May| raise if the requested tool name is unknown.
 		"""
 		tool_wrappers: dict[str, Callable[..., object]] = {
-			"list_roots": _list_roots,
-			"get_root": _get_root,
-			"get_root_metadata": _get_root_metadata,
-			"get_object": _get_object,
-			"get_section": _get_section,
-			"get_subsection": _get_subsection,
-			"list_objects": _list_objects,
-			"get_examples": _get_examples,
-			"get_example_source": _get_example_source,
-			"get_signature": _get_signature,
-			"get_references": _get_references,
-			"search_related": _search_related,
-			"search_objects": _search_objects,
-			"search_sections": _search_sections,
-			"search_text": _search_text,
-            "gen_docstring": _gen_docstring,
             "about": _about,
             "describe_tool": _describe_tool,
+            "gen_docstring": _gen_docstring,
+			"get_examples": _get_examples,
+			"get_example_source": _get_example_source,
+			"get_object": _get_object,
+			"get_references": _get_references,
+			"get_root": _get_root,
+			"get_root_metadata": _get_root_metadata,
+			"get_section": _get_section,
+			"get_subsection": _get_subsection,
+			"get_signature": _get_signature,
+			"list_objects": _list_objects,
+			"list_roots": _list_roots,
+			"search_objects": _search_objects,
+			"search_related": _search_related,
+			"search_sections": _search_sections,
+			"search_text": _search_text,
         }
 		if toolname not in tool_wrappers or toolname not in WTRL_TOOL_DOCS:
 			raise ValueError(f"MCPS-007 unknown tool: {toolname}")
@@ -847,6 +847,10 @@ def build_app(config: McpConfig) -> FastMCP:
 	WTRL_TOOL_DOCS["describe_tool"] = _describe_tool
 
 	logger.info("wtrl_mcp %s ready, serving %d tools.", __version__, len(WTRL_TOOL_DOCS))
+	# Log the tool names.
+	for toolname in sorted(WTRL_TOOL_DOCS.keys()):
+		logger.info(f"Registered tool: {toolname}")
+	# Log the configured roots and the size of the reference index for visibility on startup.
 	logger.info(f"Loaded {len(config.roots)} configured roots.")
 	for root in config.roots:
 		logger.info(f"Configured root: {root.path} '{root.label}' (enabled={root.enabled}, kind={root.kind})")

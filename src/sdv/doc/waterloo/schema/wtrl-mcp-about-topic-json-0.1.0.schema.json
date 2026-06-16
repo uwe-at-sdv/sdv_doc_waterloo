@@ -26,6 +26,8 @@
 			"type": "string",
 			"enum": [
 				"examples",
+				"terms",
+				"entry-points",
 				"rules",
 				"roles",
 				"value-tokens",

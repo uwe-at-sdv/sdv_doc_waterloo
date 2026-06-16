@@ -16,11 +16,25 @@ def test_about_index_returns_topics() -> None:
 	index = about()
 	assert index["topic"] is None, index
 	assert index["title"] == "About", index
-	assert index["hint"] == "Call about('waterlint.command') next.", index
+	assert index["hint"] == "Call about('waterloo.introduction') next.", index
 	topics = index["topics"]
 	assert isinstance(topics, list), index
 	keys = [entry["key"] for entry in topics if isinstance(entry, dict) and isinstance(entry.get("key"), str)]
-	assert keys == ["waterloo.structure", "waterlint.command", "waterloo.markup"], keys
+	assert keys == ["waterloo.introduction", "waterloo.structure", "waterlint.command", "waterloo.markup"], keys
+
+
+def test_about_introduction_returns_flat_content_blocks() -> None:
+	introduction = about("waterloo.introduction")
+	assert introduction["topic"] == "waterloo.introduction", introduction
+	assert introduction["title"] == "Waterloo introduction", introduction
+	content = introduction["content"]
+	assert isinstance(content, list), introduction
+	kinds = [entry["kind"] for entry in content if isinstance(entry, dict) and isinstance(entry.get("kind"), str)]
+	assert kinds == [
+		"rules",
+		"terms",
+		"entry-points",
+	], kinds
 
 
 def test_about_markup_returns_flat_content_blocks() -> None:
