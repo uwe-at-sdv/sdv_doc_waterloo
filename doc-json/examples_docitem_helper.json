@@ -1,0 +1,29 @@
+{
+    "$schema": "https://sci-d-vis.com/schema/wtrl-example-refs-json-0.1.1.schema.json",
+    "$id": "urn:none:local:wtrl-example-refs-json:0.1.1",
+    "__WTRL_VERSION__": {
+        "waterloo": "0.8.1",
+        "waterlint_min": "0.1.0",
+        "schema": "0.1.1"
+    },
+    "__WTRL_EXAMPLE_REFS__": {
+        "sdv.doc.waterloo.docitem_helper.RE_RULE_ID": [
+            "package_gh-pages/doc-examples-python/api_demo_helper_re_01.py"
+        ],
+        "sdv.doc.waterloo.docitem_helper.RE_IDENTIFIER": [
+            "package_gh-pages/doc-examples-python/api_demo_helper_re_03.py"
+        ],
+        "sdv.doc.waterloo.docitem_helper.RE_QUALIFIED_IDENTIFIER": [
+            "package_gh-pages/doc-examples-python/api_demo_helper_re_03.py"
+        ],
+        "sdv.doc.waterloo.docitem_helper.RE_CSV_IDENTIFIERS": [
+            "package_gh-pages/doc-examples-python/api_demo_helper_re_02.py"
+        ],
+        "sdv.doc.waterloo.docitem_helper.RE_WTRL_MARKUP_BACKTICK": [
+            "package_gh-pages/doc-examples-python/api_demo_helper_re_04.py"
+        ],
+        "sdv.doc.waterloo.docitem_helper.RE_WTRL_ANGLE_HTTPS_REF": [
+            "package_gh-pages/doc-examples-python/api_demo_helper_re_05.py"
+        ]
+    }
+}

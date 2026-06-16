@@ -377,9 +377,7 @@ complete verification in all contexts.</p>
 <li><p><code class="wtrl_file docutils literal notranslate"><span class="pre">sdv.doc.waterloo.waterlint_render_html5</span></code></p></li>
 </ul>
 <p>are validated on a regular basis. The current status is</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>/server/devel/sdv/privat/uwe/source/sdv_doc_waterloo/package_main/src/sdv/doc/waterloo/mcp/wtrl_logging.py:202: error: Unexpected keyword argument &quot;use_colors&quot; for &quot;__init__&quot; of &quot;Formatter&quot;  [call-arg]
-/home/uwe/.local/lib/python3.10/site-packages/mypy/typeshed/stdlib/logging/__init__.pyi: note: &quot;__init__&quot; of &quot;Formatter&quot; defined here
-Found 1 error in 1 file (checked 32 source files)
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Success: no issues found in 32 source files
 </pre></div>
 </div>
 <p>Our <code class="wtrl_lit docutils literal notranslate"><span class="pre">mypy</span></code>-configuration is:</p>
@@ -403,19 +401,19 @@ Found 1 error in 1 file (checked 32 source files)
 </div>
 <p>Exceptions from typechecking are:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>docitem_convert.py:649 # pragma: no cover - defensive
-docitem_helper.py:90 # type: ignore[attr-defined]
-docitem_helper.py:92 # type: ignore[no-redef]
+docitem_helper.py:101 # type: ignore[attr-defined]
+docitem_helper.py:103 # type: ignore[no-redef]
 docitem_sphinx.py:129 # type: ignore[attr-defined]
 docitem_validator.py:10 # type: ignore
 docitem_validator.py:11 # pragma: no cover - older Python
 waterlint_carve.py:313 # pragma: no cover - defensive
-waterlint.py:710 # pragma: no cover - defensive
-waterlint.py:801 # pragma: no cover - defensive
-waterlint.py:905 # pragma: no cover - defensive
-waterlint.py:1024 # pragma: no cover - defensive
-waterlint.py:1028 # pragma: no cover - defensive
-waterlint.py:1032 # pragma: no cover - defensive
-waterlint.py:1603 # pragma: no cover - defensive
+waterlint.py:711 # pragma: no cover - defensive
+waterlint.py:802 # pragma: no cover - defensive
+waterlint.py:906 # pragma: no cover - defensive
+waterlint.py:1025 # pragma: no cover - defensive
+waterlint.py:1029 # pragma: no cover - defensive
+waterlint.py:1033 # pragma: no cover - defensive
+waterlint.py:1604 # pragma: no cover - defensive
 waterlint_render_docker.py:28 # pragma: no cover - Python 3.10 fallback
 </pre></div>
 </div>
