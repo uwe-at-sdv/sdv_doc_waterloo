@@ -49,6 +49,24 @@ Public_types:
 	AstDocNode:
 		An AST node type relevant for docstring extraction.
 Public_constants:
+	RE_RULE_ID:
+		Regular expression for rule IDs. Undocumented: RE_RULE_ID_COMPILED, the precompiled version for performance.
+	RE_IDENTIFIER:
+		Regular expression for identifiers. Undocumented: RE_IDENTIFIER_COMPILED, the precompiled version for performance.
+	RE_QUALIFIED_IDENTIFIER:
+		Regular expression for qualified identifiers. Undocumented: RE_QUALIFIED_IDENTIFIER_COMPILED, the precompiled version for performance.
+	RE_CSV_IDENTIFIERS:
+		Regular expression for comma-separated identifiers. Undocumented: RE_CSV_IDENTIFIERS_COMPILED, the precompiled version for performance.
+	WTRL_MARKUP_ROLES:
+		Regular expression for Waterloo markup roles in backtick markup.
+	RE_WTRL_MARKUP_BACKTICK:
+		Regular expression for matching Waterloo backtick markup with roles. Undocumented: RE_WTRL_MARKUP_BACKTICK_COMPILED, the precompiled version for performance.
+	RE_WTRL_ANGLE_HTTPS_REF:
+		Regular expression for matching Waterloo angle bracket HTTPS references. Undocumented: RE_WTRL_ANGLE_HTTPS_REF_COMPILED, the precompiled version for performance.
+		References consist of two parts: clear text and <link>, optionally separated by whitespace.
+	RE_WTRL_ANGLE_WTRL_REF:
+		Regular expression for matching Waterloo angle bracket wtrl references. Undocumented: RE_WTRL_ANGLE_WTRL_REF_COMPILED, the precompiled version for performance.
+		References consist of two parts: clear text and <link>, optionally separated by whitespace.
 	RULE_ID_WHITELIST:
 		Whitelist reasons for legacy rule identifiers used by the helper layer.
 	CANONICAL_ORDER_OF_SECTIONS:
@@ -276,9 +294,6 @@ RE_IDENTIFIER_COMPILED : Final[re.Pattern[str]] = re.compile(RE_IDENTIFIER)
 RE_QUALIFIED_IDENTIFIER : Final[str] = r"[A-Za-z_][A-Za-z0-9_]*([.][A-Za-z_][A-Za-z0-9_]*)*"
 RE_QUALIFIED_IDENTIFIER_COMPILED : Final[re.Pattern[str]] = re.compile(RE_QUALIFIED_IDENTIFIER)
 
-RE_LABEL : Final[str] = RE_QUALIFIED_IDENTIFIER + ":"
-RE_LABEL_COMPILED : Final[re.Pattern[str]] = re.compile(RE_LABEL)
-
 # Required for Definitions
 RE_CSV_IDENTIFIERS = r"[A-Za-z_][A-Za-z0-9_]*(\s*[,]\s*[A-Za-z_][A-Za-z0-9_]*)*"
 RE_CSV_IDENTIFIERS_COMPILED = re.compile(RE_CSV_IDENTIFIERS)
@@ -288,6 +303,7 @@ RE_ANSI_SGR: Final[str] = r"\x1b\[[0-9;]*m"
 RE_ANSI_SGR_COMPILED: Final[re.Pattern[str]] = re.compile(RE_ANSI_SGR)
 
 # Markup tokens for Waterloo roles, e.g. |type|`int` -> :wtrl_type:`int`
+# Single Source of Truth is the documentation standard.
 WTRL_MARKUP_ROLES: Final[str] = r"(attr|cmd|dfn|file|func|key|label|lit|mod|norm|op|opt|ref|tag|term|type|value|var|var_type)"
 RE_WTRL_MARKUP_BACKTICK: Final[str] = rf"\|{WTRL_MARKUP_ROLES}\|`([^`]+)`"
 RE_WTRL_MARKUP_BACKTICK_COMPILED: Final[re.Pattern[str]] = re.compile(RE_WTRL_MARKUP_BACKTICK)

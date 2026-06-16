@@ -1,12 +1,12 @@
 {
     "$schema": "https://sci-d-vis.com/schema/wtrl-json-0.1.0.schema.json",
-    "$id": "urn:waterlint:wtrl-json:0.16.1:core:rfc-2119:ebcafc9a40cab2aeca0d30f27740c7b45cf0f6d922bde4c425f4a5ee06c72e3e",
+    "$id": "urn:waterlint:wtrl-json:0.16.2:core:rfc-2119:ba017e7f99f9baa69b466df941ef4692e4ffe596eb0a51b57c49d5ef0628bdc1",
     "__WTRL_VERSION__": {
         "waterloo": "0.8.1",
         "schema": "0.1.0"
     },
     "__WTRL_META__": {
-        "generated_at": "2026-06-15T22:03:32+02:00",
+        "generated_at": "2026-06-16T09:54:05+02:00",
         "generator": "waterlint",
         "scope": "core",
         "flavour": "rfc-2119"
@@ -329,6 +329,14 @@
         "sdv.doc.waterloo.docitem_helper.Status.DRAFT": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.Status.DRAFT",
         "sdv.doc.waterloo.docitem_base.docitem_list_of_symbols_base.ValuePattern.IDENTIFIER": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_base.docitem_list_of_symbols_base.ValuePattern.IDENTIFIER",
         "sdv.doc.waterloo.docitem_base.docitem_list_of_symbols_base.ValuePattern.QUALIFIED_IDENTIFIER": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_base.docitem_list_of_symbols_base.ValuePattern.QUALIFIED_IDENTIFIER",
+        "sdv.doc.waterloo.docitem_helper.RE_RULE_ID": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.RE_RULE_ID",
+        "sdv.doc.waterloo.docitem_helper.RE_IDENTIFIER": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.RE_IDENTIFIER",
+        "sdv.doc.waterloo.docitem_helper.RE_QUALIFIED_IDENTIFIER": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.RE_QUALIFIED_IDENTIFIER",
+        "sdv.doc.waterloo.docitem_helper.RE_CSV_IDENTIFIERS": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.RE_CSV_IDENTIFIERS",
+        "sdv.doc.waterloo.docitem_helper.WTRL_MARKUP_ROLES": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.WTRL_MARKUP_ROLES",
+        "sdv.doc.waterloo.docitem_helper.RE_WTRL_MARKUP_BACKTICK": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.RE_WTRL_MARKUP_BACKTICK",
+        "sdv.doc.waterloo.docitem_helper.RE_WTRL_ANGLE_HTTPS_REF": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.RE_WTRL_ANGLE_HTTPS_REF",
+        "sdv.doc.waterloo.docitem_helper.RE_WTRL_ANGLE_WTRL_REF": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.RE_WTRL_ANGLE_WTRL_REF",
         "sdv.doc.waterloo.docitem_helper.RULE_ID_WHITELIST": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.RULE_ID_WHITELIST",
         "sdv.doc.waterloo.docitem_helper.CANONICAL_ORDER_OF_SECTIONS": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.CANONICAL_ORDER_OF_SECTIONS",
         "sdv.doc.waterloo.docitem_helper.CANONICAL_ORDER_OF_PROFILES": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.CANONICAL_ORDER_OF_PROFILES",
@@ -1083,6 +1091,32 @@
                     ]
                 },
                 "Public_constants": {
+                    "RE_RULE_ID": [
+                        "Regular expression for rule IDs. Undocumented: RE_RULE_ID_COMPILED, the precompiled version for performance."
+                    ],
+                    "RE_IDENTIFIER": [
+                        "Regular expression for identifiers. Undocumented: RE_IDENTIFIER_COMPILED, the precompiled version for performance."
+                    ],
+                    "RE_QUALIFIED_IDENTIFIER": [
+                        "Regular expression for qualified identifiers. Undocumented: RE_QUALIFIED_IDENTIFIER_COMPILED, the precompiled version for performance."
+                    ],
+                    "RE_CSV_IDENTIFIERS": [
+                        "Regular expression for comma-separated identifiers. Undocumented: RE_CSV_IDENTIFIERS_COMPILED, the precompiled version for performance."
+                    ],
+                    "WTRL_MARKUP_ROLES": [
+                        "Regular expression for Waterloo markup roles in backtick markup."
+                    ],
+                    "RE_WTRL_MARKUP_BACKTICK": [
+                        "Regular expression for matching Waterloo backtick markup with roles. Undocumented: RE_WTRL_MARKUP_BACKTICK_COMPILED, the precompiled version for performance."
+                    ],
+                    "RE_WTRL_ANGLE_HTTPS_REF": [
+                        "Regular expression for matching Waterloo angle bracket HTTPS references. Undocumented: RE_WTRL_ANGLE_HTTPS_REF_COMPILED, the precompiled version for performance.",
+                        "References consist of two parts: clear text and <link>, optionally separated by whitespace."
+                    ],
+                    "RE_WTRL_ANGLE_WTRL_REF": [
+                        "Regular expression for matching Waterloo angle bracket wtrl references. Undocumented: RE_WTRL_ANGLE_WTRL_REF_COMPILED, the precompiled version for performance.",
+                        "References consist of two parts: clear text and <link>, optionally separated by whitespace."
+                    ],
                     "RULE_ID_WHITELIST": [
                         "Whitelist reasons for legacy rule identifiers used by the helper layer."
                     ],
@@ -12286,13 +12320,13 @@
         },
         "sdv.doc.waterloo.docitem_convert.to_string_legend_yaml": {
             "signature": {
-                "text": "to_string_legend_yaml(config: 'YamlConfig' = <sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7ff420f7af90>) -> 'str'",
+                "text": "to_string_legend_yaml(config: 'YamlConfig' = <sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f381ee8ef90>) -> 'str'",
                 "parameters": [
                     {
                         "name": "config",
                         "kind": "POSITIONAL_OR_KEYWORD",
                         "annotation": "YamlConfig",
-                        "default": "<sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7ff420f7af90>"
+                        "default": "<sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f381ee8ef90>"
                     }
                 ],
                 "returns": "str"
@@ -12329,7 +12363,7 @@
         },
         "sdv.doc.waterloo.docitem_convert.to_string_signature_yaml": {
             "signature": {
-                "text": "to_string_signature_yaml(obj: 'object', config: 'YamlConfig' = <sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7ff420c84190>) -> 'str'",
+                "text": "to_string_signature_yaml(obj: 'object', config: 'YamlConfig' = <sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f381eb90190>) -> 'str'",
                 "parameters": [
                     {
                         "name": "obj",
@@ -12341,7 +12375,7 @@
                         "name": "config",
                         "kind": "POSITIONAL_OR_KEYWORD",
                         "annotation": "YamlConfig",
-                        "default": "<sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7ff420c84190>"
+                        "default": "<sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f381eb90190>"
                     }
                 ],
                 "returns": "str"
@@ -12411,7 +12445,7 @@
         },
         "sdv.doc.waterloo.docitem_convert.to_string_yaml": {
             "signature": {
-                "text": "to_string_yaml(tree: 'DocstringTree', flavour: 'Flavour', config: 'YamlConfig' = <sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7ff420c842d0>) -> 'str'",
+                "text": "to_string_yaml(tree: 'DocstringTree', flavour: 'Flavour', config: 'YamlConfig' = <sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f381eb902d0>) -> 'str'",
                 "parameters": [
                     {
                         "name": "tree",
@@ -12429,7 +12463,7 @@
                         "name": "config",
                         "kind": "POSITIONAL_OR_KEYWORD",
                         "annotation": "YamlConfig",
-                        "default": "<sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7ff420c842d0>"
+                        "default": "<sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f381eb902d0>"
                     }
                 ],
                 "returns": "str"
@@ -12552,6 +12586,56 @@
             "doc": {},
             "doc_lines": [
                 "An AST node type relevant for docstring extraction."
+            ]
+        },
+        "sdv.doc.waterloo.docitem_helper.RE_RULE_ID": {
+            "doc": {},
+            "doc_lines": [
+                "Regular expression for rule IDs. Undocumented: RE_RULE_ID_COMPILED, the precompiled version for performance."
+            ]
+        },
+        "sdv.doc.waterloo.docitem_helper.RE_IDENTIFIER": {
+            "doc": {},
+            "doc_lines": [
+                "Regular expression for identifiers. Undocumented: RE_IDENTIFIER_COMPILED, the precompiled version for performance."
+            ]
+        },
+        "sdv.doc.waterloo.docitem_helper.RE_QUALIFIED_IDENTIFIER": {
+            "doc": {},
+            "doc_lines": [
+                "Regular expression for qualified identifiers. Undocumented: RE_QUALIFIED_IDENTIFIER_COMPILED, the precompiled version for performance."
+            ]
+        },
+        "sdv.doc.waterloo.docitem_helper.RE_CSV_IDENTIFIERS": {
+            "doc": {},
+            "doc_lines": [
+                "Regular expression for comma-separated identifiers. Undocumented: RE_CSV_IDENTIFIERS_COMPILED, the precompiled version for performance."
+            ]
+        },
+        "sdv.doc.waterloo.docitem_helper.WTRL_MARKUP_ROLES": {
+            "doc": {},
+            "doc_lines": [
+                "Regular expression for Waterloo markup roles in backtick markup."
+            ]
+        },
+        "sdv.doc.waterloo.docitem_helper.RE_WTRL_MARKUP_BACKTICK": {
+            "doc": {},
+            "doc_lines": [
+                "Regular expression for matching Waterloo backtick markup with roles. Undocumented: RE_WTRL_MARKUP_BACKTICK_COMPILED, the precompiled version for performance."
+            ]
+        },
+        "sdv.doc.waterloo.docitem_helper.RE_WTRL_ANGLE_HTTPS_REF": {
+            "doc": {},
+            "doc_lines": [
+                "Regular expression for matching Waterloo angle bracket HTTPS references. Undocumented: RE_WTRL_ANGLE_HTTPS_REF_COMPILED, the precompiled version for performance.",
+                "References consist of two parts: clear text and <link>, optionally separated by whitespace."
+            ]
+        },
+        "sdv.doc.waterloo.docitem_helper.RE_WTRL_ANGLE_WTRL_REF": {
+            "doc": {},
+            "doc_lines": [
+                "Regular expression for matching Waterloo angle bracket wtrl references. Undocumented: RE_WTRL_ANGLE_WTRL_REF_COMPILED, the precompiled version for performance.",
+                "References consist of two parts: clear text and <link>, optionally separated by whitespace."
             ]
         },
         "sdv.doc.waterloo.docitem_helper.RULE_ID_WHITELIST": {
