@@ -4,6 +4,10 @@ Format:
 
 - VERSION [YYYY-MM-DD]: Summary.
 
+- 0.3.0 [2026-06-17]:
+  - Options --allowed-hosts, --public-port, --port. These are necessary
+    in order to run the server inside a docker container while still
+    being able to configure urls for accessing.
 - 0.2.1 [2026-06-16]:
   - Tool 'about': New document 'waterloo.introduction'.
 - 0.2.0 [2026-06-13]:

@@ -43,7 +43,7 @@ def test_render_docker_bake_smoke_generates_dockerfile_and_build_script(tmp_path
 	dockerfile = out_file.read_text(encoding="utf-8")
 	assert "FROM\t\tpython:3.14.5-slim-trixie" in dockerfile
 	assert "COPY\t\tshared/doc/ /shared/doc/" in dockerfile
-	assert 'CMD\t\t["wtrl_mcp", "--config", "/workspace/etc/wtrl_mcp.http.toml"]' in dockerfile
+	assert 'ENTRYPOINT\t["wtrl_mcp", "--config", "/workspace/etc/wtrl_mcp.http.toml"]' in dockerfile
 	build_text = build_script.read_text(encoding="utf-8")
 	assert "docker build" in build_text
 	assert "Generated build script for my_build.docker." in build_text
@@ -140,6 +140,7 @@ def test_render_docker_no_bake_smoke_generates_launch_script(tmp_path: Path) -> 
 	assert "docker run --rm -i -p 13316:13316" in launch_text
 	assert "-v" in launch_text
 	assert "wtrl-mcp-my_nobake" in launch_text
+	assert '"$IMAGE_TAG" "$@"' in launch_text
 	assert "mount" in launch_text
 	assert "http://127.0.0.1:13316/mcp" in res.stderr
 	assert "http://localhost:13316/mcp" in res.stderr

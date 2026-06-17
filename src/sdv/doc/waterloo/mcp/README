@@ -26,6 +26,11 @@ Typical usage:
 - use `--gen-config-template` to print a template to stdout
 - configure `transport = "stdio"` or `transport = "streamable-http"` in the
   TOML file
+- use `--port` to override the internal bind port when starting the server
+- use `--public-port` only when the externally visible port differs from the
+  bind port; it is used for host allowlists and generated URLs
+- use `--allowed-hosts` to override the host allowlist; bare host names are
+  normalized to the active port automatically
 - when regenerating the MCP doc-JSON from docstrings, use the package root
   `package_main/src/sdv/doc/waterloo/mcp` as `--basedir` and address the
   modules relative to that directory, for example `--obj wtrl_server`

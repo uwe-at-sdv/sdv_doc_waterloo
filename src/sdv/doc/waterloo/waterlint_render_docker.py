@@ -365,9 +365,11 @@ def _render_dockerfile_text(plan: DockerRenderPlan) -> str:
 			"",
 			f"EXPOSE\t\t{plan.server['port']}",
 			"",
-			"CMD\t\t[\"wtrl_mcp\", \"--config\", \"/workspace/etc/wtrl_mcp.http.toml\"]",
+			"ENTRYPOINT\t[\"wtrl_mcp\", \"--config\", \"/workspace/etc/wtrl_mcp.http.toml\"]",
 			"",
 			f"# Run with: docker run --rm -p {plan.server['port']}:{plan.server['port']} wtrl-mcp-{plan.out_path.stem}",
+			f"# Extra wtrl_mcp args can be appended after the image name, for example:",
+			f"#   docker run --rm -p {plan.server['port']}:{plan.server['port']} wtrl-mcp-{plan.out_path.stem} --allowed-hosts localhost gilgamesh",
 		]
 	)
 	return "\n".join(lines) + "\n"
@@ -466,21 +468,23 @@ def _render_build_script_text(plan: DockerRenderPlan) -> str:
 
 def _render_launch_script_text(plan: DockerRenderPlan) -> str:
 	lines = _script_header("launch", plan)
+	container_port = plan.server["port"]
+	host_port = plan.public_port or container_port
 	lines.extend(
 		[
 			"SCRIPT_DIR=$(CDPATH= cd -- \"$(dirname -- \"$0\")\" && pwd)",
 			f"IMAGE_TAG=\"wtrl-mcp-{plan.out_path.stem}\"",
 			"",
-			"set -- docker run --rm -i -p 13316:13316",
+			f"exec docker run --rm -i -p {host_port}:{container_port} \\",
 		]
 	)
 	for root in plan.roots:
 		lines.append(
-			f"set -- \"$@\" -v {shlex.quote(str(root.source_path))}:{shlex.quote(str(root.run_path))}"
+			f"\t-v {shlex.quote(str(root.source_path))}:{shlex.quote(str(root.run_path))} \\",
 		)
 	lines.extend(
 		[
-			'exec "$@" "$IMAGE_TAG"',
+			'\t"$IMAGE_TAG" "$@"',
 		]
 	)
 	return "\n".join(lines) + "\n"
@@ -755,10 +759,19 @@ def render_docker(args: argparse.Namespace) -> int:
 			tr.add_info(f"render-docker: ● Run the launch script: {plan.launch_script_path}")
 		if plan.bake_roots:
 			image_tag = f"wtrl-mcp-{plan.out_path.stem}"
-			port = plan.public_port or plan.server["port"]
+			container_port = plan.server["port"]
+			host_port = plan.public_port or container_port
 			tr.add_info("render-docker: ● Launch the container, for example:")
-			tr.add_info(f"render-docker:   ○ docker run --rm -p {port}:{port} {image_tag}")
-			tr.add_info(f"render-docker:   ○ docker run -d --name {image_tag} -p {port}:{port} {image_tag}")
+			tr.add_info(f"render-docker:   ○ docker run --rm -p {host_port}:{container_port} {image_tag}")
+			if host_port != container_port:
+				tr.add_info(
+					f"render-docker:   ○ docker run --rm -p {host_port}:{container_port} {image_tag} --public-port {host_port} --allowed-hosts localhost gilgamesh"
+				)
+			else:
+				tr.add_info(
+					f"render-docker:   ○ docker run --rm -p {host_port}:{container_port} {image_tag} --allowed-hosts localhost gilgamesh"
+				)
+			tr.add_info(f"render-docker:   ○ docker run -d --name {image_tag} -p {host_port}:{container_port} {image_tag}")
 		tr.add_info("render-docker: ● Inform your agents about the new MCP server URL.")
 	except Exception as exc:
 		tr.add_error("DCKR-999", "tool", f"Unexpected render-docker failure: {exc}")

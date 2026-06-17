@@ -249,6 +249,22 @@ def build_parser() -> argparse.ArgumentParser:
 		help="Print a TOML configuration template to stdout and exit.",
 	)
 	prsr.add_argument(
+		"--port",
+		type=int,
+		help="Override the internal server bind port.",
+	)
+	prsr.add_argument(
+		"--public-port",
+		type=int,
+		help="Override the external/public port used for host allowlists and generated URLs.",
+	)
+	prsr.add_argument(
+		"--allowed-hosts",
+		nargs="+",
+		metavar="HOST",
+		help="Override the host allowlist; bare host names are normalized to the active server port, or to --public-port when set.",
+	)
+	prsr.add_argument(
 		"--version",
 		action="version",
 		version=f"wtrl_mcp {__version__}",
@@ -303,7 +319,7 @@ streamable_http_path = "/mcp"
 
 [security]
 # allowed_hosts = ["127.0.0.1:8000"]
-allowed_hosts = ["127.0.0.1:8000"]
+allowed_hosts = ["127.0.0.1:13316"]
 # Enter your allowed origins here. This is important if you want to inspect
 # the MCP server with a browser-based client like the MCP Inspector.
 # allowed_origins = ["http://myhost:6274"]
@@ -348,6 +364,84 @@ def _configure_waterloo_logging(config: McpConfig) -> None:
 	if config.logging.config_path is None:
 		return
 	logging.config.dictConfig(_load_logging_config(config.logging.config_path))
+
+
+def _runtime_allowed_hosts(
+	config_hosts: list[str],
+	override_hosts: list[str] | None,
+	server_port: int,
+	public_port: int | None,
+	config_port: int,
+) -> list[str]:
+	"""Compute the effective host allowlist from config and runtime overrides."""
+	if override_hosts is None and public_port is None and server_port == config_port:
+		return list(config_hosts)
+	if not 1 <= server_port <= 65535:
+		raise ValueError("--port must be an integer between 1 and 65535.")
+	port = server_port if public_port is None else public_port
+	if not 1 <= port <= 65535:
+		raise ValueError("--public-port must be an integer between 1 and 65535.")
+	if public_port is None:
+		hosts = override_hosts if override_hosts is not None else config_hosts
+		effective: list[str] = []
+		for host in hosts:
+			host_text = host.strip()
+			if not host_text:
+				continue
+			if ":" in host_text:
+				host_text = host_text.rsplit(":", 1)[0]
+			effective.append(f"{host_text}:{port}")
+		return effective
+	hosts = override_hosts or ["localhost", "127.0.0.1"]
+	effective: list[str] = []
+	for host in hosts:
+		host_text = host.strip()
+		if not host_text:
+			continue
+		if ":" in host_text:
+			raise ValueError("--allowed-hosts entries must not include a port.")
+		effective.append(f"{host_text}:{port}")
+	return effective
+
+
+def _with_runtime_security_overrides(
+	config: McpConfig,
+	server_port: int | None,
+	allowed_hosts: list[str] | None,
+	public_port: int | None,
+) -> McpConfig:
+	"""Return a config with runtime security overrides applied."""
+	effective_server_port = config.server.port if server_port is None else server_port
+	effective_allowed_hosts = _runtime_allowed_hosts(
+		config.security.allowed_hosts,
+		allowed_hosts,
+		effective_server_port,
+		public_port,
+		config.server.port,
+	)
+	if (
+		effective_allowed_hosts == config.security.allowed_hosts
+		and effective_server_port == config.server.port
+		and allowed_hosts is None
+		and server_port is None
+		and public_port is None
+	):
+		return config
+	return McpConfig(
+		server=ServerConfig(
+			transport=config.server.transport,
+			host=config.server.host,
+			port=effective_server_port,
+			streamable_http_path=config.server.streamable_http_path,
+		),
+		security=SecurityConfig(
+			allowed_hosts=effective_allowed_hosts,
+			allowed_origins=config.security.allowed_origins,
+		),
+		logging=config.logging,
+		roots=config.roots,
+		source_path=config.source_path,
+	)
 
 
 def _root_mtime_record(root_id: str, root_path: Path) -> RootMTimeRecord:
@@ -846,14 +940,24 @@ def build_app(config: McpConfig) -> FastMCP:
 
 	WTRL_TOOL_DOCS["describe_tool"] = _describe_tool
 
-	logger.info("wtrl_mcp %s ready, serving %d tools.", __version__, len(WTRL_TOOL_DOCS))
+	logger.info("wtrl_mcp %s ready.", __version__)
+	# Log security stuff: allowed_hosts
+	logger.info(f"Allowed hosts is the list of urls under which the MCP server is allowed to be accessed.")
+	logger.info(f"This is important for preventing DNS rebinding attacks if the server is exposed to untrusted networks.")
+	for host in config.security.allowed_hosts:
+		logger.info(f"* Allowed host: {host}")
+	# Log security stuff: allowed_origins
+	logger.info(f"Allowed origins is the list of urls allowed to access the MCP server via CORS.")
+	for origin in config.security.allowed_origins:
+		logger.info(f"* Allowed origin: {origin}")
 	# Log the tool names.
+	logger.info("Serving %d tools.", len(WTRL_TOOL_DOCS))
 	for toolname in sorted(WTRL_TOOL_DOCS.keys()):
-		logger.info(f"Registered tool: {toolname}")
+		logger.info(f"* Registered tool: {toolname}")
 	# Log the configured roots and the size of the reference index for visibility on startup.
 	logger.info(f"Loaded {len(config.roots)} configured roots.")
 	for root in config.roots:
-		logger.info(f"Configured root: {root.path} '{root.label}' (enabled={root.enabled}, kind={root.kind})")
+		logger.info(f"* Configured root: {root.path} '{root.label}' (enabled={root.enabled}, kind={root.kind})")
 	logger.info(
 		"Built reference index with %d target entries and %d source references.",
 		len(reference_index.reverse_map),
@@ -1005,6 +1109,12 @@ def main(argv: list[str] | None = None) -> int:
 		return 0
 	try:
 		config = load_config(args.config)
+		config = _with_runtime_security_overrides(
+			config,
+			getattr(args, "port", None),
+			getattr(args, "allowed_hosts", None),
+			getattr(args, "public_port", None),
+		)
 	except (FileNotFoundError, ValueError) as exc:
 		_print_config_error(exc)
 		return 1
