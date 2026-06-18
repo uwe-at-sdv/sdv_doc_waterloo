@@ -64,7 +64,7 @@ def test_mcp_about_returns_index_topics(mcp_session: str) -> None:
 	assert isinstance(topics, list), structured
 	keys = {entry.get("key") for entry in topics if isinstance(entry, dict)}
 	assert {"waterlint.command", "waterloo.structure", "waterloo.markup"} <= keys, structured
-	assert structured.get("hint") == "Call about('waterlint.command') next.", structured
+	assert structured.get("hint") == "Call about('waterloo.introduction') next.", structured
 
 
 def test_mcp_about_returns_markup_topic(mcp_session: str) -> None:
@@ -94,7 +94,7 @@ def test_mcp_get_signature_returns_wrapper_for_function(mcp_session: str) -> Non
 	assert structured.get("profile") == "function", structured
 	signature = structured.get("signature")
 	assert isinstance(signature, dict), structured
-	assert signature.get("text") == "build_app(config: McpConfig) -> FastMCP", signature
+	assert signature.get("text") == "build_app(config: 'McpConfig') -> 'FastMCP'", signature
 	parameters = signature.get("parameters")
 	assert isinstance(parameters, list) and [entry.get("name") for entry in parameters if isinstance(entry, dict)] == ["config"], signature
 	assert signature.get("returns") == "FastMCP", signature

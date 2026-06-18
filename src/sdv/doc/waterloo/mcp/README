@@ -59,6 +59,16 @@ Typical usage:
 - call `search_text` with a list of terms and an optional filter object
 - call `search_related` with a `root_id` and `qid`
 
+Choosing a tool (response size matters):
+- to locate objects, prefer `search_objects`, `search_sections`, or
+  `search_text`, then read targeted detail with `get_object`, `get_section`,
+  or `get_subsection`
+- prefer `get_root_metadata` over `get_root` when you only need the compact
+  header metadata
+- `get_root` returns the full document body for one root and can be very
+  large; call it only when you genuinely need the complete document. The
+  `MCPS-005` guardrail may reject oversized roots.
+
 Pytest workflow:
 - the MCP HTTP integration tests live in `package_main/pytest/pytest_mcp_*.py`
 - they expect a running MCP server on `http://127.0.0.1:13316/mcp`

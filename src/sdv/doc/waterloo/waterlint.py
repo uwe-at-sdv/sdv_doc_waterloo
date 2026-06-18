@@ -705,7 +705,7 @@ def validate_command(args: argparse.Namespace) -> int:
 		_emit_tracer(tr, out_diag, out_diag_json)
 		return 1
 	except RuntimeError as exc:
-#		print(str(exc), file=sys.stderr)
+		tr.add_error("TOOL-001", "tool", str(exc))
 		_emit_tracer(tr, out_diag, out_diag_json)
 		return 1
 	except Exception as exc:  # pragma: no cover - defensive
@@ -796,7 +796,7 @@ def coverage_command(args: argparse.Namespace) -> int:
 		_emit_tracer(tr, out_diag, out_diag_json)
 		return 1
 	except RuntimeError as exc:
-#		print(str(exc), file=sys.stderr)
+		tr.add_error("TOOL-001", "tool", str(exc))
 		_emit_tracer(tr, out_diag, out_diag_json)
 		return 1
 	except Exception as exc:  # pragma: no cover - defensive

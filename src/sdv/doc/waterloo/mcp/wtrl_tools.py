@@ -854,12 +854,14 @@ def get_root(root_id: str, roots: list[Mapping[str, WtrlJsonNode_t]]) -> dict[st
 		profile:
 			function
 		normative_sections:
-			Contract, Parameters, Returns, Raises
+			Contract, Description, Parameters, Returns, Raises
 		scope:
 			extension
 	Contract:
 		general:
 			|Must| resolve a configured root by its canonical root identifier and return the root metadata together with the loaded JSON document.
+	Description:
+		This tool returns the full Waterloo JSON document body, which |may| be large. Callers |should| prefer |func|`get_root_metadata` for the header fields, or |func|`get_section`, |func|`get_object`, or |func|`search_objects` for targeted reads, and |should| call |func|`get_root` only when the complete document is genuinely required.
 	Parameters:
 		root_id:
 			The canonical root identifier derived from the canonical absolute root path.

@@ -89,6 +89,26 @@ def test_bad_function_overview_missing_public_section() -> None:
 	_assert_error(result, "MFNO-003", "Public_functions")
 
 
+def test_validate_reports_invalid_basedir() -> None:
+	"""A basedir that does not exist should fail with TOOL-001 instead of staying silent."""
+	result = subprocess.run(
+		[
+			*WATERLINT,
+			"validate",
+			"--basedir",
+			"src/sdv/doc/waterloo",
+			"--obj",
+			"mcp.wtrl_tools.get_root",
+		],
+		stdout=subprocess.PIPE,
+		stderr=subprocess.PIPE,
+		text=True,
+		check=False,
+		cwd=ROOT.parent,
+	)
+	_assert_error(result, "TOOL-001", "basedir is not a directory")
+
+
 def test_bad_method_overview_missing_public_section() -> None:
 	result = _run_waterlint_validate("pytest_bad_overview_in_class.BadMethodOverview")
 	_assert_error(result, "CMTO-003", "Public_methods")

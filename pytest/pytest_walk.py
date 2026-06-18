@@ -4,9 +4,10 @@
 from __future__ import annotations
 
 import json
+import subprocess
 from pathlib import Path
 
-from pytest_common import run_waterlint, DIR_EXAMPLES
+from pytest_common import ROOT, WATERLINT, run_waterlint, DIR_EXAMPLES
 
 
 def test_walk_json_and_schema_inference(tmp_path: Path) -> None:
@@ -94,3 +95,26 @@ def test_walk_multiple_objects(tmp_path: Path) -> None:
 	assert doc["__WTRL_META__"]["objs"] == ["test_docitem_coroutine", "test_scope_mix"]
 	assert isinstance(doc["__WTRL_OBJECTS__"], list)
 	assert len(doc["__WTRL_OBJECTS__"]) > 0
+
+
+def test_walk_reports_invalid_basedir(tmp_path: Path) -> None:
+	res = subprocess.run(
+		[
+			*WATERLINT,
+			"walk",
+			"--basedir",
+			"src/sdv/doc/waterloo",
+			"--obj",
+			"mcp.wtrl_tools.get_root",
+			"--out",
+			str(tmp_path / "walk.txt"),
+		],
+		stdout=subprocess.PIPE,
+		stderr=subprocess.PIPE,
+		text=True,
+		check=False,
+		cwd=ROOT.parent,
+	)
+	assert res.returncode == 1, res.stderr
+	assert "TOOL-001" in res.stderr, res.stderr
+	assert "basedir is not a directory" in res.stderr, res.stderr

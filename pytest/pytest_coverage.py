@@ -5,7 +5,7 @@ from __future__ import annotations
 
 import subprocess
 
-from pytest_common import WATERLINT, DIR_EXAMPLES
+from pytest_common import WATERLINT, DIR_EXAMPLES, ROOT
 
 
 def _run_waterlint_coverage(obj: str) -> subprocess.CompletedProcess[str]:
@@ -42,6 +42,26 @@ def _assert_warning(result: subprocess.CompletedProcess[str], rule: str, text: s
 def test_bad_scope_class_vs_base_class() -> None:
 	result = _run_waterlint_coverage("pytest_bad_scope_base_class")
 	_assert_error(result, "SCP-009", "base class")
+
+
+def test_coverage_reports_invalid_basedir() -> None:
+	"""A basedir that does not exist should fail with TOOL-001 instead of staying silent."""
+	result = subprocess.run(
+		[
+			*WATERLINT,
+			"coverage",
+			"--basedir",
+			"src/sdv/doc/waterloo",
+			"--obj",
+			"mcp.wtrl_tools.get_root",
+		],
+		stdout=subprocess.PIPE,
+		stderr=subprocess.PIPE,
+		text=True,
+		check=False,
+		cwd=ROOT.parent,
+	)
+	_assert_error(result, "TOOL-001", "basedir is not a directory")
 
 
 def test_good_class_in_class_ok_three_levels() -> None:

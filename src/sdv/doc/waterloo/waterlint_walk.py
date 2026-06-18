@@ -438,6 +438,10 @@ def walk_command(args: argparse.Namespace) -> int:
 		tr.add_error("TOOL-001", "tool", str(exc), exc.to_details())
 		_emit_tracer(tr, out_diag, out_diag_json)
 		return 1
+	except RuntimeError as exc:
+		tr.add_error("TOOL-001", "tool", str(exc))
+		_emit_tracer(tr, out_diag, out_diag_json)
+		return 1
 	except Exception:
 		add_traceback(tr)
 		_emit_tracer(tr, out_diag, out_diag_json)

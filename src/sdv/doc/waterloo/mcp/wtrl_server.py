@@ -813,6 +813,15 @@ def build_app(config: McpConfig) -> FastMCP:
 		lines.extend(f"  {line}" if line else "" for line in doc.splitlines())
 		return "\n".join(lines).strip()
 
+	@mcp.resource(
+		"wtrl-mcp://instructions",
+		name="instructions",
+		description="The Waterloo MCP server instructions text (the package README), served live so clients can re-read it without reconnecting.",
+		mime_type="text/plain",
+	)
+	def _instructions() -> str:
+		return read_package_readme()
+
 	@mcp.tool(name="list_roots", description="List configured Waterloo data roots.")
 	def _list_roots() -> list[dict[str, WtrlJsonNode_t]]:
 		return list_roots(_root_mappings())

@@ -19,10 +19,10 @@ Class_overview:
 	X_02:
 		Another outer class
 Public_classes:
-	X_00
-	X_01
-	X_02
-	X_03
+	X_00,
+	X_01,
+	X_02,
+	X_03,
 	X_04
 """
 
