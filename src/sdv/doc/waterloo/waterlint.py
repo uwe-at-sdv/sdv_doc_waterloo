@@ -53,7 +53,8 @@ from jsonschema import Draft202012Validator
 #from jsonschema import JSONDecodeError
 import jsonschema.exceptions
 
-__version__ = "0.16.2"
+__version__ = "0.16.3"
+# - 0.16.3 [2026-06-18] Bugfix which caused a missing error message in case of non-existing path for --basedir.
 # - 0.16.2 [2026-06-15]	More details in error message (complete);bugfixes in validation.
 # - 0.16.1 [2026-06-11]	More details in error message (in progress)
 # - 0.16.0 [2026-06-10]	More details in error message (in progress)
