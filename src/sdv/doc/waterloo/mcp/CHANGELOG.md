@@ -4,6 +4,8 @@ Format:
 
 - VERSION [YYYY-MM-DD]: Summary.
 
+- 0.3.1 [2026-06-18]:
+  - Resource "wtrl-mcp://instructions"; minor changes in describe_tool("get_root").
 - 0.3.0 [2026-06-17]:
   - Options --allowed-hosts, --public-port, --port. These are necessary
     in order to run the server inside a docker container while still
