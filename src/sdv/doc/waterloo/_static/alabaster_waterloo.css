@@ -599,9 +599,10 @@ a.wtrl_var:visited
 .wtrl_value
 	{
 	font-family:monospace;
-/*	font-weight:bold;*/
+	color:var(--sdv-value-color);
+	font-weight:var(--sdv-value-font-weight);
+	font-style:var(--sdv-value-font-style);
 	font-size:90%;
-	color:#040;
 
 	background-color:inherit;
 	}

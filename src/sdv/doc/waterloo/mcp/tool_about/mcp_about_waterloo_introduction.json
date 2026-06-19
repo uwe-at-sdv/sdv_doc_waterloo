@@ -8,7 +8,7 @@
       "items": [
         "Waterloo is a structured docstring format for Python code.",
         "A Waterloo docstring is indentation-based and divided into sections and nested subsections.",
-        "Normative content is tracked explicitly, typically via normative_sections.",
+        "Normative content is tracked explicitly via a subsection Preamble.normative_sections.",
         "The format is designed to be both human-readable and machine-checkable."
       ]
     },

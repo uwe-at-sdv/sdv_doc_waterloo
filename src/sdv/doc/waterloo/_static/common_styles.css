@@ -31,6 +31,10 @@ Current state [2023-08-08]
 	--sdv-number-font-weight:normal;
 	--sdv-number-font-style:normal;
 
+	--sdv-value-color:#004400;
+	--sdv-value-font-weight:normal;
+	--sdv-value-font-style:normal;
+
 	--sdv-preprocessor-color:#000055;
 	--sdv-preprocessor-font-weight:normal;
 	--sdv-preprocessor-font-style:normal;
@@ -38,6 +42,11 @@ Current state [2023-08-08]
 	--sdv-string-literal-color:#708238;
 	--sdv-string-literal-font-weight:normal;
 	--sdv-string-literal-font-style:normal;
+
+	--sdv-file-font-weight: normal;
+	--sdv-file-font-style: normal;
+	--sdv-file-color: #35f;;
+	--sdv-file-font-size: 95%;
 /* shit */
 	--sdv-string_literal-color:#708238;
 	--sdv-string_literal-font-weight:normal;

@@ -367,6 +367,7 @@ _BASE_SECTION_SPECS: Dict[str, Dict[str, Any]] = {
 			"Each subsection label is a comma-separated list of identifiers.",
 			"The first identifier names the canonical term; following identifiers name spelling or form variations of the same term.",
 			"For example, the term sensitive may be introduced together with Sensitive and Sensitivity.",
+			"Use inline markup |term|`...` to refer to a defined term.",
 		],
 		"hint": [
 			"'Definitions' is the normative glossary of the docstring scope; each subsection header is a CSV list of Identifier tokens, with the first token naming the term and the remaining tokens naming variations.",

@@ -109,7 +109,8 @@
         "Use proper capitalization, e.g. |Must| at the beginning of a sentence and |must| within a sentence.",
         "Use |attr| for JSON keys, XML attributes, and similar constructs.",
         "Use |label| when referring to labels, titles or captions in documents.",
-        "Use |tag| for tag names without angle brackets when output layers add the brackets later."
+        "Use |tag| for tag names without angle brackets when output layers add the brackets later.",
+	"Use |term| to refer to a term defined in the Definitions section."
       ]
     }
   ]
