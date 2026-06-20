@@ -36,6 +36,7 @@ r"""
 from __future__ import annotations
 
 import argparse
+import json
 import importlib.resources
 import inspect
 import logging
@@ -43,6 +44,7 @@ import logging.config
 import re
 import sys
 import textwrap
+from string import Template
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Callable, Final, Literal, Mapping, cast
@@ -57,7 +59,9 @@ from starlette.middleware.cors import CORSMiddleware
 from starlette.types import ASGIApp, Receive, Scope, Send
 
 from mcp.server.fastmcp import FastMCP
+from mcp.server.fastmcp.prompts.base import Message, Prompt, PromptArgument
 from mcp.server.fastmcp.server import TransportSecuritySettings
+from mcp.types import TextContent
 
 LogLevel_t = Literal["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]
 
@@ -813,6 +817,89 @@ def build_app(config: McpConfig) -> FastMCP:
 		lines.extend(f"  {line}" if line else "" for line in doc.splitlines())
 		return "\n".join(lines).strip()
 
+	def _load_prompts() -> list[Prompt]:
+		prompts_dir = importlib.resources.files(__package__).joinpath("prompts")
+		prompts: list[Prompt] = []
+		for prompt_path in sorted((entry for entry in prompts_dir.iterdir() if entry.name.endswith(".json")), key=lambda entry: entry.name):
+			prompt_data = json.loads(prompt_path.read_text(encoding="utf-8"))
+			if not isinstance(prompt_data, dict):
+				raise ValueError(f"Invalid MCP prompt definition: {prompt_path}")
+			name = prompt_data.get("name")
+			if not isinstance(name, str) or not name:
+				raise ValueError(f"Invalid MCP prompt name in {prompt_path}")
+			title = prompt_data.get("title")
+			if title is not None and not isinstance(title, str):
+				raise ValueError(f"Invalid MCP prompt title in {prompt_path}")
+			description = prompt_data.get("description")
+			if description is not None and not isinstance(description, str):
+				raise ValueError(f"Invalid MCP prompt description in {prompt_path}")
+			raw_arguments = prompt_data.get("arguments", [])
+			if not isinstance(raw_arguments, list):
+				raise ValueError(f"Invalid MCP prompt arguments in {prompt_path}")
+			arguments: list[PromptArgument] = []
+			for raw_argument in raw_arguments:
+				if not isinstance(raw_argument, dict):
+					raise ValueError(f"Invalid MCP prompt argument in {prompt_path}")
+				argument_name = raw_argument.get("name")
+				if not isinstance(argument_name, str) or not argument_name:
+					raise ValueError(f"Invalid MCP prompt argument name in {prompt_path}")
+				argument_description = raw_argument.get("description")
+				if argument_description is not None and not isinstance(argument_description, str):
+					raise ValueError(f"Invalid MCP prompt argument description in {prompt_path}")
+				required = raw_argument.get("required", False)
+				if not isinstance(required, bool):
+					raise ValueError(f"Invalid MCP prompt argument required flag in {prompt_path}")
+				arguments.append(
+					PromptArgument(
+						name=argument_name,
+						description=argument_description,
+						required=required,
+					)
+				)
+			raw_messages = prompt_data.get("messages", [])
+			if not isinstance(raw_messages, list):
+				raise ValueError(f"Invalid MCP prompt messages in {prompt_path}")
+
+			def _make_prompt_renderer(raw_messages: list[object], prompt_source: str) -> Callable[..., list[Message]]:
+				def _render_prompt(**kwargs: object) -> list[Message]:
+					substitutions = {key: str(value) for key, value in kwargs.items()}
+					messages: list[Message] = []
+					for raw_message in raw_messages:
+						if not isinstance(raw_message, dict):
+							raise ValueError(f"Invalid MCP prompt message in {prompt_source}")
+						role = raw_message.get("role")
+						if role not in ("user", "assistant"):
+							raise ValueError(f"Invalid MCP prompt message role in {prompt_source}")
+						content = raw_message.get("content")
+						if not isinstance(content, str):
+							raise ValueError(f"Invalid MCP prompt message content in {prompt_source}")
+						messages.append(
+							Message(
+								role=cast(Literal["user", "assistant"], role),
+								content=TextContent(type="text", text=Template(content).safe_substitute(substitutions)),
+							)
+						)
+					return messages
+
+				return _render_prompt
+
+			prompts.append(
+				Prompt(
+					name=name,
+					title=title,
+					description=description,
+					arguments=arguments,
+					fn=_make_prompt_renderer(raw_messages, str(prompt_path)),
+				)
+			)
+		return prompts
+
+	def _register_prompts(mcp: FastMCP) -> list[Prompt]:
+		prompts = _load_prompts()
+		for prompt in prompts:
+			mcp.add_prompt(prompt)
+		return prompts
+
 	@mcp.resource(
 		"wtrl-mcp://instructions",
 		name="instructions",
@@ -949,6 +1036,8 @@ def build_app(config: McpConfig) -> FastMCP:
 
 	WTRL_TOOL_DOCS["describe_tool"] = _describe_tool
 
+	prompts = _register_prompts(mcp)
+
 	logger.info("wtrl_mcp %s ready.", __version__)
 	# Log security stuff: allowed_hosts
 	logger.info(f"Allowed hosts is the list of urls under which the MCP server is allowed to be accessed.")
@@ -959,6 +1048,13 @@ def build_app(config: McpConfig) -> FastMCP:
 	logger.info(f"Allowed origins is the list of urls allowed to access the MCP server via CORS.")
 	for origin in config.security.allowed_origins:
 		logger.info(f"* Allowed origin: {origin}")
+	# Log the prompt names.
+	logger.info("Serving %d prompts.", len(prompts))
+	for prompt in prompts:
+		if prompt.title and prompt.title != prompt.name:
+			logger.info(f"* Registered prompt: {prompt.name} ({prompt.title})")
+		else:
+			logger.info(f"* Registered prompt: {prompt.name}")
 	# Log the tool names.
 	logger.info("Serving %d tools.", len(WTRL_TOOL_DOCS))
 	for toolname in sorted(WTRL_TOOL_DOCS.keys()):

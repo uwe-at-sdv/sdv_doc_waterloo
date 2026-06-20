@@ -155,6 +155,49 @@ def mcp_call_tool(session_id: str, name: str, arguments: dict[str, object]) -> d
 	return result
 
 
+def mcp_list_prompts(session_id: str) -> list[dict[str, object]]:
+	payload, _ = mcp_request(
+		{
+			"jsonrpc": "2.0",
+			"id": 4,
+			"method": "prompts/list",
+			"params": {},
+		},
+		session_id=session_id,
+	)
+	result = payload.get("result")
+	if not isinstance(result, dict):
+		raise AssertionError(f"prompts/list response has no result object: {payload}")
+	prompts = result.get("prompts")
+	if not isinstance(prompts, list):
+		raise AssertionError(f"prompts/list response has no prompts list: {payload}")
+	out: list[dict[str, object]] = []
+	for prompt in prompts:
+		if not isinstance(prompt, dict):
+			raise AssertionError(f"prompts/list entry is not an object: {prompt!r}")
+		out.append(cast(dict[str, object], prompt))
+	return out
+
+
+def mcp_get_prompt(session_id: str, name: str, arguments: dict[str, object]) -> dict[str, object]:
+	payload, _ = mcp_request(
+		{
+			"jsonrpc": "2.0",
+			"id": 5,
+			"method": "prompts/get",
+			"params": {
+				"name": name,
+				"arguments": arguments,
+			},
+		},
+		session_id=session_id,
+	)
+	result = payload.get("result")
+	if not isinstance(result, dict):
+		raise AssertionError(f"prompts/get response has no result object: {payload}")
+	return result
+
+
 def mcp_call_tool_error_text(session_id: str, name: str, arguments: dict[str, object]) -> str:
 	result = mcp_call_tool(session_id, name, arguments)
 	if result.get("isError") is not True:

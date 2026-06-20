@@ -1,0 +1,24 @@
+{
+  "version": 1,
+  "name": "inspect_object",
+  "title": "Inspect a Waterloo object",
+  "description": "Inspect one Waterloo object together with its signature, examples, and reverse references.",
+  "arguments": [
+    {
+      "name": "root_id",
+      "description": "The root identifier that contains the object.",
+      "required": true
+    },
+    {
+      "name": "qid",
+      "description": "The object qid to inspect.",
+      "required": true
+    }
+  ],
+  "messages": [
+    {
+      "role": "user",
+      "content": "Inspect the Waterloo object $qid in root $root_id.\n\nUse `get_object` first.\nThen inspect `get_signature`, `get_examples`, `get_references`, and `search_related`.\nIf useful, also inspect the relevant `get_section` or `get_subsection` results.\n\nSummarize:\n- the object's signature\n- its normative sections\n- its examples\n- its direct links to related objects\n"
+    }
+  ]
+}

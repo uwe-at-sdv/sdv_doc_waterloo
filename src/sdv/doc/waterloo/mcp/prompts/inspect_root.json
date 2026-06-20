@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "name": "inspect_root",
+  "title": "Inspect a Waterloo root",
+  "description": "Get a compact structural overview of one Waterloo root before drilling into objects or searches.",
+  "arguments": [
+    {
+      "name": "root_id",
+      "description": "The root identifier returned by list_roots.",
+      "required": true
+    }
+  ],
+  "messages": [
+    {
+      "role": "user",
+      "content": "Inspect the Waterloo root $root_id.\n\nUse `get_root_metadata` first.\nThen use `list_objects`.\nIf the root is large, also use `search_objects`, `search_sections`, and `search_text`\nbefore drilling into individual objects.\n\nReturn a short, structured summary with:\n- scope and kind\n- the main entry points for further inspection\n- notable search hits or object clusters\n- the next object(s) to inspect first\n"
+    }
+  ]
+}

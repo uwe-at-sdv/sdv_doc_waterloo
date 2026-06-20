@@ -4,6 +4,8 @@ Format:
 
 - VERSION [YYYY-MM-DD]: Summary.
 
+- 0.4.0 [2026-06-20]:
+  - Server serves prompts
 - 0.3.1 [2026-06-18]:
   - Resource "wtrl-mcp://instructions"; minor changes in describe_tool("get_root").
 - 0.3.0 [2026-06-17]:

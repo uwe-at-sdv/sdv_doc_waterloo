@@ -5,7 +5,14 @@ from __future__ import annotations
 
 import pytest
 
-from pytest_mcp_common import mcp_call_tool, mcp_call_tool_entries, mcp_call_tool_error_text, mcp_or_skip
+from pytest_mcp_common import (
+	mcp_call_tool,
+	mcp_call_tool_entries,
+	mcp_call_tool_error_text,
+	mcp_get_prompt,
+	mcp_list_prompts,
+	mcp_or_skip,
+)
 
 
 @pytest.fixture(scope="module")
@@ -78,6 +85,25 @@ def test_mcp_about_returns_markup_topic(mcp_session: str) -> None:
 	assert "role-examples" in kinds, structured
 	assert "normativity-keyword-examples" in kinds, structured
 	assert "rules" in kinds, structured
+
+
+def test_mcp_list_prompts_includes_bundled_prompt_defs(mcp_session: str) -> None:
+	prompts = mcp_list_prompts(mcp_session)
+	names = {prompt.get("name") for prompt in prompts if isinstance(prompt.get("name"), str)}
+	assert {"draft_docstring", "inspect_object", "inspect_root"} <= names, prompts
+
+
+def test_mcp_get_prompt_renders_inspect_root_message(mcp_session: str) -> None:
+	result = mcp_get_prompt(mcp_session, "inspect_root", {"root_id": "root:eadb7d51f9fa"})
+	assert result.get("description") == "Get a compact structural overview of one Waterloo root before drilling into objects.", result
+	messages = result.get("messages")
+	assert isinstance(messages, list) and messages, result
+	first = messages[0]
+	assert isinstance(first, dict), result
+	content = first.get("content")
+	assert isinstance(content, dict), result
+	assert content.get("type") == "text", result
+	assert "root:eadb7d51f9fa" in str(content.get("text")), result
 
 
 def test_mcp_get_signature_returns_wrapper_for_function(mcp_session: str) -> None:

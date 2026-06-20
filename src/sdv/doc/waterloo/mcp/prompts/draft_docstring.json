@@ -1,0 +1,24 @@
+{
+  "version": 1,
+  "name": "draft_docstring",
+  "title": "Draft a Waterloo docstring",
+  "description": "Draft or refine a Waterloo docstring from a callable signature or an existing object.",
+  "arguments": [
+    {
+      "name": "profile",
+      "description": "The Waterloo profile to generate, such as function, method, class, module, type, constant, or variable.",
+      "required": true
+    },
+    {
+      "name": "signature",
+      "description": "The callable signature to document.",
+      "required": false
+    }
+  ],
+  "messages": [
+    {
+      "role": "user",
+      "content": "Draft or refine a Waterloo docstring for a $profile object.\n\nIf a callable signature is available, use `gen_docstring` with that signature.\nIf you are revising an existing object, compare `get_signature`, `get_examples`, and `get_references` before proposing wording.\n\nPrefer normative sections over Notes when the text should state a rule.\n"
+    }
+  ]
+}
