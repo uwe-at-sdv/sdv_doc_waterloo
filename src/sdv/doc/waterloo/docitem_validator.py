@@ -221,13 +221,13 @@ Raises:
 		try:
 			obj = _import_chain(cand)
 			return obj, cand
-# It's important to *not* abort on AttributeError,
-# but we would like to see other problems from trying to
-# import the module.
+	# It's important to *not* abort on AttributeError,
+	# but we would like to see other problems from trying to
+	# import the module.
 		except (AssertionError,IndexError,NameError,NotImplementedError,PermissionError,SyntaxError):
 			raise
-# We leave this here explicitly, because it is important. An AttributeError
-# is perfectly normal when trying out candidates for object resolution.
+	# We leave this here explicitly, because it is important. An AttributeError
+	# is perfectly normal when trying out candidates for object resolution.
 		except AttributeError as e:
 			continue
 		except ImportError as e:
@@ -237,12 +237,20 @@ Raises:
 			continue
 #		except Exception as e:
 #			continue
+	import_hint = ""
+	if "." in ref:
+		import_hint = (
+			" Hint: a local package/module on sys.path may be shadowing the intended import, "
+			"or the module may be missing a dependency."
+		)
 	if last_import_error is not None:
 		raise ImportError(
 			f"Could not resolve reference '{ref}' from context '{_qualified_object_name(current_obj)}'. "
-			f"Last import failure while trying '{last_import_candidate}': {last_import_error}"
+			f"Last import failure while trying '{last_import_candidate}': {last_import_error}.{import_hint}"
 		) from last_import_error
-	raise ImportError(f"Could not resolve reference '{ref}' from context '{_qualified_object_name(current_obj)}'.")
+	raise ImportError(
+		f"Could not resolve reference '{ref}' from context '{_qualified_object_name(current_obj)}'.{import_hint}"
+	)
 
 def validate_docstring_module(tr : tracer, obj: object, top : docitem_docstring_module,node_contract : docitem_map_base,node_normative_sections : docitem_list_base, _seen: Dict[object,docitem_docstring_base] | None = None) -> None:
 	"""

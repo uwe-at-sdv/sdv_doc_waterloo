@@ -95,7 +95,7 @@ def test_mcp_list_prompts_includes_bundled_prompt_defs(mcp_session: str) -> None
 
 def test_mcp_get_prompt_renders_inspect_root_message(mcp_session: str) -> None:
 	result = mcp_get_prompt(mcp_session, "inspect_root", {"root_id": "root:eadb7d51f9fa"})
-	assert result.get("description") == "Get a compact structural overview of one Waterloo root before drilling into objects.", result
+	assert result.get("description") == "Get a compact structural overview of one Waterloo root before drilling into objects or searches.", result
 	messages = result.get("messages")
 	assert isinstance(messages, list) and messages, result
 	first = messages[0]

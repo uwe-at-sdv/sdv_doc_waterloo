@@ -15,10 +15,12 @@ r"""
 		_RequestLogGroupMiddleware:
 			Internal ASGI middleware that assigns a request id and log-group key to each HTTP request so the server logs can be grouped per request.
 	Public_functions:
-		read_package_readme, build_app, load_config, parse_roots
+		read_package_readme, load_prompts, build_app, load_config, parse_roots
 	Function_overview:
 		read_package_readme:
 			Provide the content of the package README as a string for use as MCP instructions.
+		load_prompts:
+			Load the bundled MCP prompt templates from the package resources and return them as FastMCP prompt objects.
 		build_app:
 			Build the MCP app according to the provided configuration, including loading the configured data roots and defining the MCP tools for accessing them.
 		load_config:
@@ -742,6 +744,115 @@ def load_config(config_path: Path | None = None) -> McpConfig:
 	roots = parse_roots(roots_data, config_dir)
 	return McpConfig(server=server, security=security, logging=logging_cfg, roots=roots, source_path=path)
 
+
+def _make_prompt_renderer(raw_messages: list[object], prompt_source: str) -> Callable[..., list[Message]]:
+	"""Build a runtime renderer for one bundled MCP prompt template."""
+
+	def _render_prompt(**kwargs: object) -> list[Message]:
+		substitutions = {key: str(value) for key, value in kwargs.items()}
+		messages: list[Message] = []
+		for raw_message in raw_messages:
+			if not isinstance(raw_message, dict):
+				raise ValueError(f"Invalid MCP prompt message in {prompt_source}")
+			role = raw_message.get("role")
+			if role not in ("user", "assistant"):
+				raise ValueError(f"Invalid MCP prompt message role in {prompt_source}")
+			content = raw_message.get("content")
+			if not isinstance(content, str):
+				raise ValueError(f"Invalid MCP prompt message content in {prompt_source}")
+			messages.append(
+				Message(
+					role=cast(Literal["user", "assistant"], role),
+					content=TextContent(type="text", text=Template(content).safe_substitute(substitutions)),
+				)
+			)
+		return messages
+
+	return _render_prompt
+
+
+def load_prompts() -> list[Prompt]:
+	r"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+		scope:
+			extension
+	Contract:
+		general:
+			|Must| load the bundled MCP prompt definitions from the package resources.
+			|Must| return one FastMCP prompt object per bundled JSON file.
+			|Must| preserve the JSON name, title, description, arguments, and message order.
+			|May| raise if a bundled prompt file is malformed or incomplete.
+	Parameters:
+	Returns:
+		The bundled prompt templates as FastMCP prompt objects.
+	Raises:
+		ValueError:
+			|May| raise if a bundled prompt definition is malformed.
+	Notes:
+		Bundled prompts:
+			- `draft_docstring`: Draft or refine a Waterloo docstring from a callable signature or an existing object.
+			- `inspect_object`: Inspect one Waterloo object together with its signature, examples, and reverse references.
+			- `inspect_root`: Get a compact structural overview of one Waterloo root before drilling into objects or searches.
+		Storage:
+			The prompt definitions are served from `sdv.doc.waterloo.mcp.prompts` at runtime rather than being hardcoded.
+	"""
+	prompts_dir = importlib.resources.files(__package__).joinpath("prompts")
+	prompts: list[Prompt] = []
+	for prompt_path in sorted((entry for entry in prompts_dir.iterdir() if entry.name.endswith(".json")), key=lambda entry: entry.name):
+		prompt_data = json.loads(prompt_path.read_text(encoding="utf-8"))
+		if not isinstance(prompt_data, dict):
+			raise ValueError(f"Invalid MCP prompt definition: {prompt_path}")
+		name = prompt_data.get("name")
+		if not isinstance(name, str) or not name:
+			raise ValueError(f"Invalid MCP prompt name in {prompt_path}")
+		title = prompt_data.get("title")
+		if title is not None and not isinstance(title, str):
+			raise ValueError(f"Invalid MCP prompt title in {prompt_path}")
+		description = prompt_data.get("description")
+		if description is not None and not isinstance(description, str):
+			raise ValueError(f"Invalid MCP prompt description in {prompt_path}")
+		raw_arguments = prompt_data.get("arguments", [])
+		if not isinstance(raw_arguments, list):
+			raise ValueError(f"Invalid MCP prompt arguments in {prompt_path}")
+		arguments: list[PromptArgument] = []
+		for raw_argument in raw_arguments:
+			if not isinstance(raw_argument, dict):
+				raise ValueError(f"Invalid MCP prompt argument in {prompt_path}")
+			argument_name = raw_argument.get("name")
+			if not isinstance(argument_name, str) or not argument_name:
+				raise ValueError(f"Invalid MCP prompt argument name in {prompt_path}")
+			argument_description = raw_argument.get("description")
+			if argument_description is not None and not isinstance(argument_description, str):
+				raise ValueError(f"Invalid MCP prompt argument description in {prompt_path}")
+			required = raw_argument.get("required", False)
+			if not isinstance(required, bool):
+				raise ValueError(f"Invalid MCP prompt argument required flag in {prompt_path}")
+			arguments.append(
+				PromptArgument(
+					name=argument_name,
+					description=argument_description,
+					required=required,
+				)
+			)
+		raw_messages = prompt_data.get("messages", [])
+		if not isinstance(raw_messages, list):
+			raise ValueError(f"Invalid MCP prompt messages in {prompt_path}")
+		prompts.append(
+			Prompt(
+				name=name,
+				title=title,
+				description=description,
+				arguments=arguments,
+				fn=_make_prompt_renderer(raw_messages, str(prompt_path)),
+			)
+		)
+	return prompts
+
+
 def build_app(config: McpConfig) -> FastMCP:
 	r"""
 	Preamble:
@@ -762,6 +873,11 @@ def build_app(config: McpConfig) -> FastMCP:
 	Raises:
 		ValueError:
 			|May| raise if the configuration is invalid in any way.
+	Notes:
+		The app currently registers the bundled prompts from `sdv.doc.waterloo.mcp.prompts`:
+			- `draft_docstring`
+			- `inspect_object`
+			- `inspect_root`
 	"""
 	"""Build the Waterloo MCP app with the configured data roots."""
 	reference_index = _build_reference_index(config.roots)
@@ -817,85 +933,8 @@ def build_app(config: McpConfig) -> FastMCP:
 		lines.extend(f"  {line}" if line else "" for line in doc.splitlines())
 		return "\n".join(lines).strip()
 
-	def _load_prompts() -> list[Prompt]:
-		prompts_dir = importlib.resources.files(__package__).joinpath("prompts")
-		prompts: list[Prompt] = []
-		for prompt_path in sorted((entry for entry in prompts_dir.iterdir() if entry.name.endswith(".json")), key=lambda entry: entry.name):
-			prompt_data = json.loads(prompt_path.read_text(encoding="utf-8"))
-			if not isinstance(prompt_data, dict):
-				raise ValueError(f"Invalid MCP prompt definition: {prompt_path}")
-			name = prompt_data.get("name")
-			if not isinstance(name, str) or not name:
-				raise ValueError(f"Invalid MCP prompt name in {prompt_path}")
-			title = prompt_data.get("title")
-			if title is not None and not isinstance(title, str):
-				raise ValueError(f"Invalid MCP prompt title in {prompt_path}")
-			description = prompt_data.get("description")
-			if description is not None and not isinstance(description, str):
-				raise ValueError(f"Invalid MCP prompt description in {prompt_path}")
-			raw_arguments = prompt_data.get("arguments", [])
-			if not isinstance(raw_arguments, list):
-				raise ValueError(f"Invalid MCP prompt arguments in {prompt_path}")
-			arguments: list[PromptArgument] = []
-			for raw_argument in raw_arguments:
-				if not isinstance(raw_argument, dict):
-					raise ValueError(f"Invalid MCP prompt argument in {prompt_path}")
-				argument_name = raw_argument.get("name")
-				if not isinstance(argument_name, str) or not argument_name:
-					raise ValueError(f"Invalid MCP prompt argument name in {prompt_path}")
-				argument_description = raw_argument.get("description")
-				if argument_description is not None and not isinstance(argument_description, str):
-					raise ValueError(f"Invalid MCP prompt argument description in {prompt_path}")
-				required = raw_argument.get("required", False)
-				if not isinstance(required, bool):
-					raise ValueError(f"Invalid MCP prompt argument required flag in {prompt_path}")
-				arguments.append(
-					PromptArgument(
-						name=argument_name,
-						description=argument_description,
-						required=required,
-					)
-				)
-			raw_messages = prompt_data.get("messages", [])
-			if not isinstance(raw_messages, list):
-				raise ValueError(f"Invalid MCP prompt messages in {prompt_path}")
-
-			def _make_prompt_renderer(raw_messages: list[object], prompt_source: str) -> Callable[..., list[Message]]:
-				def _render_prompt(**kwargs: object) -> list[Message]:
-					substitutions = {key: str(value) for key, value in kwargs.items()}
-					messages: list[Message] = []
-					for raw_message in raw_messages:
-						if not isinstance(raw_message, dict):
-							raise ValueError(f"Invalid MCP prompt message in {prompt_source}")
-						role = raw_message.get("role")
-						if role not in ("user", "assistant"):
-							raise ValueError(f"Invalid MCP prompt message role in {prompt_source}")
-						content = raw_message.get("content")
-						if not isinstance(content, str):
-							raise ValueError(f"Invalid MCP prompt message content in {prompt_source}")
-						messages.append(
-							Message(
-								role=cast(Literal["user", "assistant"], role),
-								content=TextContent(type="text", text=Template(content).safe_substitute(substitutions)),
-							)
-						)
-					return messages
-
-				return _render_prompt
-
-			prompts.append(
-				Prompt(
-					name=name,
-					title=title,
-					description=description,
-					arguments=arguments,
-					fn=_make_prompt_renderer(raw_messages, str(prompt_path)),
-				)
-			)
-		return prompts
-
 	def _register_prompts(mcp: FastMCP) -> list[Prompt]:
-		prompts = _load_prompts()
+		prompts = load_prompts()
 		for prompt in prompts:
 			mcp.add_prompt(prompt)
 		return prompts
