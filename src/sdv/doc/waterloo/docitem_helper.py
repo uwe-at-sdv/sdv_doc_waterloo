@@ -1565,11 +1565,7 @@ def render_exception_reference_details(exception_name: str, profile: str, *, exp
 	}
 
 
-def render_base_method_reference_details(
-	current_entries: Iterable[str],
-	expected_text: str,
-	profile: str,
-) -> dict[str, Any]:
+def render_base_method_reference_details(current_entries: Iterable[str], expected_text: str, profile: str) -> dict[str, Any]:
 	"""
 	Preamble:
 		profile:
@@ -1630,12 +1626,7 @@ def render_exactly_one_identifier_details(label: str, current_entries: Iterable[
 	}
 
 
-def render_parameter_signature_details(
-	section_label: str,
-	current_entries: Iterable[str],
-	expected_entries: Iterable[str],
-	profile: str,
-) -> dict[str, Any]:
+def render_parameter_signature_details(section_label: str, current_entries: Iterable[str], expected_entries: Iterable[str], profile: str) -> dict[str, Any]:
 	"""
 	Preamble:
 		profile:
@@ -1667,11 +1658,7 @@ def render_parameter_signature_details(
 	}
 
 
-def render_see_also_reference_details(
-	reference: str,
-	expected_text: str,
-	profile: str,
-) -> dict[str, Any]:
+def render_see_also_reference_details(reference: str, expected_text: str, profile: str) -> dict[str, Any]:
 	"""
 	Preamble:
 		profile:
