@@ -13,17 +13,9 @@ try:
 	import sdv.doc.waterloo.docitem as wtrl
 	import sdv.doc.waterloo.docitem_genutil as genutil
 except ImportError as e:
-	ROOT = Path(__file__).resolve().parents[2]
-	for p in (str(ROOT), str(ROOT / "package" / "src")):
-		if p not in sys.path:
-			sys.path.insert(0, p)
-	try:
-		import sdv_doc_docitem as wtrl
-		import sdv_doc_docitem_genutil as genutil
-	except ImportError:
-		print(f"Error importing Waterloo modules: {e}", file=sys.stderr)
-		print("Please download and install sdv_doc_waterloo from https://github.com/uwe-at-sdv/sdv_doc_waterloo", file=sys.stderr)
-		sys.exit(1)
+	print(f"Error importing Waterloo modules(2): {e}", file=sys.stderr)
+	print("Please download and install sdv_doc_waterloo from https://github.com/uwe-at-sdv/sdv_doc_waterloo", file=sys.stderr)
+	sys.exit(1)
 
 
 COMMAND_PING = "ping"
