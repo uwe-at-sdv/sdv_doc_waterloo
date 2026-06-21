@@ -253,7 +253,8 @@ from contextlib import contextmanager
 from sdv.doc.waterloo.docitem_docstring import *
 from sdv.doc.waterloo.docitem_validator import *
 
-__version__ = "0.8.1"
+__version__ = "0.9.0"
+# - 0.9.0 [2026-06-21]	Lots of minor changes and improvements, especially in docitem_validator.py, but also in docitem_helper.py. See commit history for details.
 # - 0.8.1 [2026-05-22]	Bugfix: Enforce LQID-002 in a tolerant way, new rule LQID-006.
 # - 0.8.0 [2026-05-08]	read AST in order to extract docstrings since __doc__ has become unusable as of Python 3.13.
 # - 0.7.0 [2026-05-08]	Rules DER-010 to DER-013 and implementation in docitem_validator.py "Derived_from"
