@@ -24,6 +24,15 @@
         ],
         "sdv.doc.waterloo.docitem_helper.RE_WTRL_ANGLE_HTTPS_REF": [
             "package_gh-pages/doc-examples-python/api_demo_helper_re_05.py"
+        ],
+        "sdv.doc.waterloo.docitem_helper.SECTION_PROPERTIES": [
+            "package_gh-pages/doc-examples-python/api_demo_helper_cnst_01.py"
+        ],
+        "sdv.doc.waterloo.docitem_helper.get_source_docstring": [
+            "package_gh-pages/doc-examples-python/api_demo_helper_inspect_01.py"
+        ],
+        "sdv.doc.waterloo.docitem_helper.tracer": [
+            "package_gh-pages/doc-examples-python/api_demo_helper_tracer_01.py"
         ]
     }
 }

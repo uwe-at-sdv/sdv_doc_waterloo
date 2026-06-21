@@ -1,12 +1,12 @@
 {
     "$schema": "https://sci-d-vis.com/schema/wtrl-json-0.1.0.schema.json",
-    "$id": "urn:waterlint:wtrl-json:0.16.2:core:rfc-2119:d92f3ca489ca0e02d70827c788de419ed2b6aaba17a017a1250c99d7b6586c1b",
+    "$id": "urn:waterlint:wtrl-json:0.16.3:core:rfc-2119:8c9d18ed591e04bd98b2a0dd6bf2bc41533b6546671014cb29339a9718f40b75",
     "__WTRL_VERSION__": {
         "waterloo": "0.8.1",
         "schema": "0.1.0"
     },
     "__WTRL_META__": {
-        "generated_at": "2026-06-16T22:46:19+02:00",
+        "generated_at": "2026-06-21T10:43:08+02:00",
         "generator": "waterlint",
         "scope": "core",
         "flavour": "rfc-2119"
@@ -364,6 +364,9 @@
                 "for example body category, normativity, and profile applicability.",
                 "Informative: This is a carefully distilled machine-readable representation of the relevant rules",
                 "from the documentation standard, but the documentation remains the Single Source of Truth for the standard."
+            ],
+            "examples": [
+                "/__WTRL_EXAMPLES__/sha256_0b419fb065ce0ebf776892841dd55912578fc6f4ee189570dc7b15012e921ed7"
             ]
         },
         "sdv.doc.waterloo.docitem_helper": {
@@ -1102,7 +1105,10 @@
                         "Further performance improvements can be added later by caching validation results for repeated objects."
                     ]
                 }
-            }
+            },
+            "examples": [
+                "/__WTRL_EXAMPLES__/sha256_9bec02fb8ded072ebb88cbe040d83b3eb3a55deee37b3dbbe547351e0a67b365"
+            ]
         },
         "sdv.doc.waterloo.docitem_helper.explain_try_self_for_section": {
             "signature": {
@@ -3990,7 +3996,10 @@
                         "A list of strings built per context manager during parsing and validation. Entries can be module, class or function names, or labels."
                     ]
                 }
-            }
+            },
+            "examples": [
+                "/__WTRL_EXAMPLES__/sha256_c2e38facab0bc683fc13536461e2e25f5e44823f67c121579099079ee55e4505"
+            ]
         },
         "sdv.doc.waterloo.docitem_helper.traced_section": {
             "signature": {
@@ -4806,6 +4815,30 @@
             "code": "#!/usr/bin/env python3\n\nimport sdv.doc.waterloo.docitem_helper as h\n\ndef test_regex() -> None:\n#----- References --------------------------------------------#\n\tprint(\"Regex RE_WTRL_ANGLE_HTTPS_REF:\",h.RE_WTRL_ANGLE_HTTPS_REF)\n\twtrl_angle_https_refs_bad = [\n\t\t\"<http://example.com>\", \"<https//example.com>\", \"<https:/example.com>\",\n\t\t\"<https:example.com>\", \"<https://>\", \"<https://example.com space>\",\n\t\t\"<https://example.com!>\", \"<https://example.com#fragment>\"\n\t]\n\twtrl_angle_https_refs_good = [\n\t\t\"label <http://example.com>\", \"label <http://example.com/path>\",\n\t\t\"label <https://example.com?query=param>\", \"label<https://example.com#fragment>\",\n\t\t\"label <https://example.com:8080>\", \"label <https://example.com:8080/path?query=param#fragment>\"\n\t]\n\ttry:     \n\t\tfor i in wtrl_angle_https_refs_bad:\n\t\t\tassert not h.RE_WTRL_ANGLE_HTTPS_REF_COMPILED.fullmatch(i), f\"Angle HTTPS reference {i} should not match the regex\"\n\t\tfor i in wtrl_angle_https_refs_good:\n\t\t\tassert h.RE_WTRL_ANGLE_HTTPS_REF_COMPILED.fullmatch(i), f\"Angle HTTPS reference {i} did not match the regex\"\n\texcept AssertionError as e:\n\t\tprint(\"Failed test:\", i)\n\t\traise e\n\ntest_regex()\n",
             "referenced_by": [
                 "sdv.doc.waterloo.docitem_helper.RE_WTRL_ANGLE_HTTPS_REF"
+            ]
+        },
+        "sha256_0b419fb065ce0ebf776892841dd55912578fc6f4ee189570dc7b15012e921ed7": {
+            "lang": "python",
+            "hash": "0b419fb065ce0ebf776892841dd55912578fc6f4ee189570dc7b15012e921ed7",
+            "code": "#!/usr/bin/env python3\n\nimport sdv.doc.waterloo.docitem_helper as h\n\n#----- Tabular representation of SECTION_PROPERTIES -----------#\ndef render_as_table() -> None:\n# Measured column widths\n\tcolw = {}\n# Gap between columns\n\tgap = 2\n# Build table head\n\tthead = {\n\t\t\"category\":\"Category\",\n\t\t\"normativity\":\"Normativity\",\n\t\t\"label_kind\":\"Label kind\",\n\t\t\"profile\":\"Profile\",\n\t\t\"must_exist\":\"Must exist\",\n\t\t\"hint\":\"Hint\"\n\t\t}\n# Do width measurement\n\tfor label,line in ({\"Label\":thead} | h.SECTION_PROPERTIES).items():\n\t\tcolw[\"label\"] = max(colw[\"label\"] if \"label\" in colw else 0,len(str(label)))\n\t\tfor key in line:\n\t\t\tcolw[key] = max(colw[key] if key in colw else 0,len(str(line[key])))\n# Render table\n\tstart = True\n\tfor label,line in ({\"Label\":thead} | h.SECTION_PROPERTIES).items():\n\t\tif start:\n\t\t\tstart = False\n\t\tprint(label + \" \" * (colw[\"label\"] - len(label) + gap),end='')\n\t\tfor key in line:\n\t\t\ttd = str(line[key])\n\t\t\tprint(td + \" \" * (colw[key] - len(td) + gap),end='')\n\t\tprint()\n\nrender_as_table()\n",
+            "referenced_by": [
+                "sdv.doc.waterloo.docitem_helper.SECTION_PROPERTIES"
+            ]
+        },
+        "sha256_9bec02fb8ded072ebb88cbe040d83b3eb3a55deee37b3dbbe547351e0a67b365": {
+            "lang": "python",
+            "hash": "9bec02fb8ded072ebb88cbe040d83b3eb3a55deee37b3dbbe547351e0a67b365",
+            "code": "#!/usr/bin/env python3\n\nimport sdv.doc.waterloo.docitem_helper as h\n\n#----- Simple example, function exploring itself --------------#\ndef test_get_source_docstring() -> None:\n\t\"A simple docstring\"\n\tprint(h.get_source_docstring(test_get_source_docstring))\n\ntest_get_source_docstring()\n",
+            "referenced_by": [
+                "sdv.doc.waterloo.docitem_helper.get_source_docstring"
+            ]
+        },
+        "sha256_c2e38facab0bc683fc13536461e2e25f5e44823f67c121579099079ee55e4505": {
+            "lang": "python",
+            "hash": "c2e38facab0bc683fc13536461e2e25f5e44823f67c121579099079ee55e4505",
+            "code": "#!/usr/bin/env python3\n\nimport sdv.doc.waterloo.docitem_helper as h\n\ndef test_tracer() -> None:\n\ttr = h.tracer()\n# The tracer collects messages from deep inside\n# the docitem parsing or validation process.\n# Make sure to provide a meaningful tag at each scope.\n\ttr.push(\"Path\")\n\ttr.push(\"To\")\n\ttr.push(\"Context\")\n\n# Pass message and origin.\n\ttr.add_debug_note(\"A debug entry\",\"test\")\n\ttr.add_info(\"An info\",\"test\")\n# Pass rule id, message and origin.\n\ttr.add_warning(\"ABC-123\",\"A warning\",\"test\")\n\ttr.add_error(\"DEF-456\",\"An error\",\"test\")\n\n\tprint(tr.str_by_severity(tr.Severity.DEBUG))\n\ntest_tracer()\n",
+            "referenced_by": [
+                "sdv.doc.waterloo.docitem_helper.tracer"
             ]
         }
     }
