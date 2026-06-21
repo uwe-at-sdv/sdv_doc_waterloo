@@ -2872,6 +2872,9 @@ class tracer:
 	Notes:
 		Last review:
 			2026-06-21
+		Parameter details:
+			This details payload is important for the MCP server, because it gives the LLM enough debugging context to interpret tracer output and decide how to react to it.
+			It usually is a dict with keys "found", "expected", and "hint"; "hint" typically contains a waterlint call for retrieving more information about the affected section or subsection.
 	"""
 	Context: TypeAlias = List[str]
 	class Severity(IntEnum):
