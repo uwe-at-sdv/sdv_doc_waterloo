@@ -13,7 +13,7 @@
 	}
 .wtrl-app {
 	display:grid;
-	grid-template-columns: 340px 1fr;
+	grid-template-columns: 420px 1fr;
 	height:100vh;
 	padding:0.5em;
 	gap:0.5em;
@@ -107,7 +107,8 @@
 	grid-template-columns:auto 1fr minmax(9rem, 16rem) auto auto;
 	grid-template-areas:
 		"search search search  search search"
-		"clear  .      history back   fwd";
+		"clear  .      history back   fwd"
+		"filter filter filter  filter filter";
 	gap:0.4em 0.5em;
 	align-items:center;
 	min-width:0;
@@ -150,6 +151,47 @@
 	overflow:hidden;
 	text-overflow:ellipsis;
 	white-space:nowrap;
+	}
+.wtrl-filter-row {
+	grid-area:filter;
+	display:grid;
+	grid-template-columns:minmax(0, 1fr) minmax(0, 1fr);
+	gap:0.5em;
+	align-items:center;
+	min-width:0;
+	}
+.wtrl-filter-pair {
+	display:flex;
+	gap:0.5em;
+	align-items:center;
+	min-width:0;
+	}
+.wtrl-filter-label {
+	flex:0 0 auto;
+	font-size:13px;
+	color:#334155;
+	}
+.wtrl-kind-filter,
+.wtrl-label-mode {
+	flex:1 1 auto;
+	min-width:0;
+	box-sizing:border-box;
+	padding:0 10px;
+	border:1px solid #bbb;
+	border-radius:0.5em;
+	background:#fff;
+	color:#334155;
+	font-size:13px;
+	height:30px;
+	line-height:30px;
+	}
+.wtrl-kind-filter:disabled {
+	opacity:0.55;
+	background:#f8fafc;
+	}
+.wtrl-label-mode:disabled {
+	opacity:0.55;
+	background:#f8fafc;
 	}
 
 /*----- Section ----------------------------------------------*/
@@ -344,6 +386,51 @@ a {
 	text-decoration: none;
 	}
 
+/*----- Hit list kinds --------------------------------------*/
+.wtrl-hit-kind-module-label {
+	color: #446622;
+	font-size:100%;	
+	font-style: italic;
+}
+.wtrl-hit-kind-class-label {
+	color:#770000;
+	font-size:100%;	
+	font-style: italic;
+	}
+.wtrl-hit-kind-callable-label {
+	color:#3040ff;
+	font-size:100%;	
+	font-style: italic;	
+}
+.wtrl-hit-kind-assignable-label {
+	color:#666;
+	font-size:100%;	
+	font-style: italic;
+	}
+.wtrl-hit-kind-type-label {
+	color:#666;
+	font-size:100%;	
+	font-style: italic;
+	}
+.wtrl-hit-kind-object-label {
+	color:#000;
+	font-size:100%;	
+	font-style: italic;
+	}
+
+.wtrl-hit-kind-object {
+	color:#000;
+	}
+.wtrl-hit-kind-callable {
+	color:#000;
+	}
+.wtrl-hit-kind-assignable {
+	color:#000;
+	}
+.wtrl-hit-kind-object-label {
+	color:#000;
+	}
+
 pre { line-height: 125%; }
 td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
 span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
@@ -431,6 +518,32 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <!--        <input id="wtrl-search" class="wtrl-input" list="wtrl-search-list" placeholder="Search qid / type / var / const" autocomplete="off" spellcheck="false"> -->
         <input id="wtrl-search" class="wtrl-input" placeholder="Search qid / type / var / const">
         <button id="wtrl-search-clear" class="wtrl-clear" type="button" aria-label="Clear search">Clear</button>
+        <div class="wtrl-filter-row">
+          <div class="wtrl-filter-pair">
+            <label for="wtrl-kind-filter" class="wtrl-filter-label">Kind</label>
+            <select id="wtrl-kind-filter" class="wtrl-kind-filter" aria-label="Kind filter">
+            <option value="*">All</option>
+            <option value="objects">Objects</option>
+            <option value="modules">Modules</option>
+            <option value="classes">Classes</option>
+            <option value="callables">Callables</option>
+            <option value="functions">Functions</option>
+            <option value="methods">Methods</option>
+            <option value="types">Types</option>
+            <option value="assignables">Assignables</option>
+            <option value="constants">Constants</option>
+            <option value="variables">Variables</option>
+            </select>
+          </div>
+          <div class="wtrl-filter-pair">
+            <label for="wtrl-label-mode" class="wtrl-filter-label">Name</label>
+            <select id="wtrl-label-mode" class="wtrl-label-mode" aria-label="Name display mode">
+              <option value="full">Full</option>
+              <option value="from-module" selected>With module</option>
+              <option value="no-module">Without module</option>
+            </select>
+          </div>
+        </div>
       </div>
       <datalist id="wtrl-search-list"></datalist>
       <div id="wtrl-hitlist" class="wtrl-hitlist"></div>
@@ -455,7 +568,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
     </main>
   </div>
   <script>
-const WTRL_DATA = {"meta": {"scope": "core", "flavour": "rfc-2119", "schema": "0.1.0", "modules": ["mypkg.test_module_minimal"], "css_primary": "html, body {\n\tmargin:0;\n\tpadding:0;\n\theight:100%;\n\toverflow:hidden;\n\tfont-family: Helvetica, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif; background:#f7f7f4; color:#1f2428;\n\t}\n.wtrl-app {\n\tdisplay:grid;\n\tgrid-template-columns: 340px 1fr;\n\theight:100vh;\n\tpadding:0.5em;\n\tgap:0.5em;\n\tbox-sizing:border-box;\n\t}\n.wtrl-side {\n\tborder:1px solid #ddd;\n\tborder-radius:.3em;\n\tmargin-bottom:1em;\n\tmargin-left:0em;\n\tmargin-right:0em;\n\tbackground:#fff;\n\tpadding-left:0.75em;\n\tpadding-right:0.75em;\n\tpadding-top: 0.5em;\n\tpadding-bottom: 1em;\n\tdisplay:flex;\n\tflex-direction:column;\n\tmin-height:0;\n\t}\n#wtrl-debug-refs {\n\tmargin-top:0.5em;\n\tmargin-bottom:0.0em;\n\tbackground-color:#efd;\n\tborder-radius:8px;\n\t}\n.wtrl-main {\n\tpadding-left:0.5em;\n\tpadding-right:0em;\n\tpadding-top: 0em;\n\tpadding-bottom: 1em;\n\tmargin-left: 0em;\n\tmin-width:0;\n\tmin-height:0;\n\tdisplay:flex;\n\tflex-direction:column;\n\toverflow:hidden;\n\t}\n.wtrl-meta {\n\tfont-size:12px;\n\tcolor:#666;\n\tmargin-bottom:0.5em;\n\t}\n.wtrl-input { width:100%; box-sizing:border-box; padding:10px 12px; border:1px solid #bbb; border-radius:8px; font-size:14px; }\n.wtrl-hitlist {\n\tmargin-left:.0em;\t\n\tmargin-right:0em;\t\n\tmargin-top:12px;\n\tpadding-left: 0em;\n\tpadding-right: 0em;\n\tmax-height:none;\n\tmin-height:0;\n\tflex:1 1 auto;\n\toverflow:auto;\n\tborder:1px solid #ddd;\n\tborder-radius:8px;\n\tbackground:#eee; }\n.wtrl-hit { display:block; width:100%; text-align:left; border:0; border-bottom:1px solid #eee; background:transparent; padding:8px 10px; font-size:13px; cursor:pointer; }\n.wtrl-hit:hover { background:#f3f6fa; }\n.wtrl-kind { color:#57606a; font-size:11px; margin-right:8px; }\n.wtrl-title { margin:0 0 10px 0; font-size:22px; }\n.wtrl-sub { margin:0 0 16px 0; color:#57606a; }\n\n.wtrl-block {\n\tborder:1px solid #ddd;\n\tborder-radius:0.3em;\n\tbackground:#fff;\n\tpadding-left: .75em;\n\tpadding-right: .75em;\n\tpadding-top: 0.75em;\n\tpadding-bottom: 0.75em;\n\tbox-sizing:border-box;\n\tflex:1 1 auto;\n\tmin-height:0;\n\twidth:100%;\n\tmax-width:100%;\n\tmax-height:none;\n\toverflow:auto;\n\t}\n\n.wtrl-signature {\n\tmargin:0 0 14px 0;\n\tfont-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;\n\tfont-size:100%;\n\tcolor:#57606a;\n\twhite-space:pre-wrap;\n\toverflow-wrap:anywhere;\n\t}\n.wtrl-search-row {\n\tdisplay:grid;\n\tgrid-template-columns:auto 1fr minmax(9rem, 16rem) auto auto;\n\tgrid-template-areas:\n\t\t\"search search search  search search\"\n\t\t\"clear  .      history back   fwd\";\n\tgap:0.4em 0.5em;\n\talign-items:center;\n\tmin-width:0;\n\t}\n#wtrl-search {\n\tgrid-area:search;\n\twidth:100%;\n\theight:30px;\n\tborder:1px solid #ccc;\n\tborder-radius:0.3em;\n\t}\n#wtrl-search-clear {\n\tgrid-area:clear;\n\theight:30px;\n\tborder:1px solid #ddd;\n\tborder-radius:0.5em;\n\t}\n#wtrl-nav-back {\n\tgrid-area:back;\n\twidth: 30px;\n\theight:30px;\n\tborder:1px solid #ddd;\n\tborder-radius:0.5em;\n\t}\n#wtrl-nav-forward {\n\tgrid-area:fwd;\n\twidth: 30px;\n\theight:30px;\n\tborder:1px solid #ddd;\n\tborder-radius:0.5em;\n\t}\n#wtrl-nav-history {\n\tgrid-area:history;\n\twidth:100%;\n\tmin-width:0;\n\tmax-width:16rem;\n\theight:30px;\n\tborder:1px solid #ddd;\n\tborder-radius:0.5em;\n\toverflow:hidden;\n\ttext-overflow:ellipsis;\n\twhite-space:nowrap;\n\t}\n\n/*----- Section ----------------------------------------------*/\n.wtrl-section {\n\tmargin-left: 0em;\n\tmargin-right: 0em;\n\tmargin-top: 0em;\n\tmargin-bottom: 0.5em;\n\tborder:1px solid #ececec;\n\tborder-radius:.3em;\n\tpadding-left: .5em;\n\tpadding-right: .5em;\n\tpadding-top: 0.3em;\n\tpadding-bottom: 0.3em;\n\tbackground:#eee;\n\t}\n.wtrl-section-head {\n\tfont-weight: normal;\n\tfont-style: italic;\n\tmargin-left: 0em;\n\tmargin-right: 0em;\n\tmargin-top: 0em;\n\tmargin-bottom: 0em;\n\tcolor:#0f172a;\n\t}\n\n/*----- Subsection -------------------------------------------*/\n.wtrl-subsection {\n\tmargin-left: 0em;\n\tmargin-right: 0em;\n\tmargin-top: 0em;\n\tmargin-bottom: 0.5em;\n\t}\n.wtrl-subsection-head {\n\tfont-weight:normal;\n\tfont-style: italic;\n\tmargin-left: 0em;\n\tmargin-right: 0em;\n\tmargin-top: 0em;\n\tmargin-bottom: 0em;\n\tmargin-left:1.5em;\n\tcolor:#1f2937;\n\t}\n\n/*----- Freeform text ----------------------------------------*/\n.wtrl-section .wtrl-text {\n\tmargin-left:1.5em;\n\tmargin-right: 0.0em;\n\tmargin-top: 0.0em;\n\tmargin-bottom: 0.5em;\n\twhite-space:pre-wrap;\n\toverflow-wrap:anywhere;\n\t}\n.wtrl-section .wtrl-subsection .wtrl-text {\n\tmargin-left:3.0em;\n\tmargin-right: 0.0em;\n\tmargin-top: 0.0em;\n\tmargin-bottom: 0.5em;\n\twhite-space:pre-wrap;\n\toverflow-wrap:anywhere;\n\t}\n.wtrl-text {\n\twhite-space:pre-wrap;\n\toverflow-wrap:anywhere;\n\t}\n/*----- Lists with text --------------------------------------*/\n.wtrl-section .wtrl-list {\n\tmargin-left: 0.0em;\n\tmargin-right: 0.0em;\n\tmargin-top: 0.5em;\n\tmargin-bottom: 0.5em;\n\t}\n.wtrl-section .wtrl-subsection .wtrl-list {\n\tmargin-left: 1.5em;\n\tmargin-right: 0.0em;\n\tmargin-top: 0.5em;\n\tmargin-bottom: 0.5em;\n\t}\n.wtrl-list li {\n\toverflow-wrap:anywhere;\n\t}\n\n.wtrl-obj {\n\tmargin:0;\n\twhite-space:pre-wrap;\n\toverflow-wrap:anywhere;\n\tfont-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;\n\tfont-size:12px;\n\tcolor:#334155;\n\t}\n\n/*----- Semantic roles ---------------------------------------*/\n.wtrl-func, .wtrl_func {\n\tcolor:#3040ff;\n\tfont-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;\n\t}\n.wtrl-type, .wtrl_type\n\t{\n\tcolor:#770000;\n\tfont-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;\n\t}\n.wtrl-var, .wtrl_var {\n\tcolor:#a00;\n\tfont-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;\n\tfont-weight: normal;\n\t}\n.wtrl-label, .wtrl_label {\n\tcolor:#1f2937;\n\tfont-style:italic;\n\t}\n.wtrl-value, .wtrl_value {\n\tcolor:#040;\n\t}\n.wtrl-mod, .wtrl_mod {\n\tcolor:#446622;\n\tfont-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;\n\t}\n.wtrl-attr, .wtrl_attr {\n\tcolor:#7c3aed;\n\t}\n.wtrl-key, .wtrl_key {\n\tcolor:#1f2937;\n\tfont-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;\n\tfont-weight: bold;\n\t}\n.wtrl-lit, .wtrl_lit {\n\tcolor:#1f2937;\n\tfont-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;\n\t}\n.wtrl-dfn, .wtrl_dfn {\n\tfont-style:italic;\n\t}\n.wtrl-term, .wtrl_term {\n\tfont-style:italic;\n\tcolor:#000;\n\t}\n.wtrl-op, .wtrl_op {\n\tcolor:#b91c1c;\n\t}\n.wtrl-file, .wtrl_file {\n\tcolor:#0f766e;\n\tfont-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;\n\t}\n.wtrl-cmd, .wtrl_cmd, .wtrl-opt, .wtrl_opt, .wtrl-tag, .wtrl_tag {\n\tcolor:#4b5563;\n\tfont-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;\n\t}\n.wtrl-ref, .wtrl_ref {\n\tcolor:#005cc5;\n\ttext-decoration-line: underline;\n\ttext-decoration-style: dotted;\n\ttext-decoration-thickness: 1px;\n\ttext-underline-offset: 0.12em;\n\t}\n.wtrl-ref.wtrl-func, .wtrl_ref.wtrl_func {\n\tcolor:#3040ff;\n\ttext-decoration-line: underline;\n\ttext-decoration-style: dotted;\n\ttext-decoration-thickness: 1px;\n\ttext-underline-offset: 0.12em;\n\t}\n.wtrl-ref.wtrl-type, .wtrl_ref.wtrl_type {\n\tcolor:#770000;\n\ttext-decoration-line: underline;\n\ttext-decoration-style: dotted;\n\ttext-decoration-thickness: 1px;\n\ttext-underline-offset: 0.12em;\n\t}\n.wtrl-ref.wtrl-var, .wtrl_ref.wtrl_var {\n\tcolor:#a00;\n\ttext-decoration-line: underline;\n\ttext-decoration-style: dotted;\n\ttext-decoration-thickness: 1px;\n\ttext-underline-offset: 0.12em;\n\t}\n.wtrl-ref.wtrl-func:visited, .wtrl_ref.wtrl_func:visited {\n\tcolor:#3040ff;\n\t}\n.wtrl-ref.wtrl-type:visited, .wtrl_ref.wtrl_type:visited {\n\tcolor:#770000;\n\t}\n.wtrl-ref.wtrl-var:visited, .wtrl_ref.wtrl_var:visited {\n\tcolor:#a00;\n\t}\n.wtrl-norm, .wtrl_norm {\n\tcolor:#b42318;\n\tfont-weight:700;\n\t}\n\n/*----- Links ------------------------------------------------*/\na {\n\ttext-decoration: none;\n\t}\n", "css_append": "", "pygments_theme": "gruvbox-light"}, "roles": {"attr": "Attribute name", "cmd": "Shell or CLI command", "dfn": "Definition of a term", "file": "File or path", "func": "Function or callable", "key": "Key on the keyboard", "label": "Section/Subsection label", "lit": "Literal text or code", "mod": "Module name", "op": "Operator symbol", "opt": "Command-line option or flag", "tag": "Tag or marker", "term": "Domain-specific term", "type": "Type name or annotation", "value": "Concrete value", "var": "Variable name", "var_type": "Variable and type, like 'var:type'"}, "scopes": {"public": {"value": 10, "description": ""}, "extension": {"value": 20, "description": ""}, "core": {"value": 30, "description": ""}}, "toc_modules": {"mypkg.test_module_minimal": "/__WTRL_OBJECTS__/mypkg.test_module_minimal"}, "toc_classes": {}, "toc_callables": {}, "toc_types": {}, "toc_variables": {}, "toc_constants": {}, "examples": {"sha256_a931e6008a5697cc206239bbde33c6d6fad20714774b2d32cadcba2e62dbc9c5": {"lang": "python", "hash": "a931e6008a5697cc206239bbde33c6d6fad20714774b2d32cadcba2e62dbc9c5", "code": "import mypkg.test_module_minimal as m\n\nif __name__ == \"__main__\":\n\tprint(\"Module mypkg.test_module_minimal imported.\")\n", "referenced_by": ["mypkg.test_module_minimal"]}}, "objects": {"mypkg.test_module_minimal": {"path": "/server/devel/sdv/privat/uwe/source/sdv_doc_waterloo/package_main/doc/input-python/mypkg/test_module_minimal.py", "doc": {"Preamble": {"profile": "module", "normative_sections": ["Contract"]}, "Contract": {"general": ["MUST demonstrate the minimal module docstring."]}}, "examples": ["/__WTRL_EXAMPLES__/sha256_a931e6008a5697cc206239bbde33c6d6fad20714774b2d32cadcba2e62dbc9c5"]}}};
+const WTRL_DATA = {"meta": {"scope": "core", "flavour": "rfc-2119", "schema": "0.1.0", "modules": ["mypkg.test_module_minimal"], "css_primary": "html, body {\n\tmargin:0;\n\tpadding:0;\n\theight:100%;\n\toverflow:hidden;\n\tfont-family: Helvetica, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif; background:#f7f7f4; color:#1f2428;\n\t}\n.wtrl-app {\n\tdisplay:grid;\n\tgrid-template-columns: 420px 1fr;\n\theight:100vh;\n\tpadding:0.5em;\n\tgap:0.5em;\n\tbox-sizing:border-box;\n\t}\n.wtrl-side {\n\tborder:1px solid #ddd;\n\tborder-radius:.3em;\n\tmargin-bottom:1em;\n\tmargin-left:0em;\n\tmargin-right:0em;\n\tbackground:#fff;\n\tpadding-left:0.75em;\n\tpadding-right:0.75em;\n\tpadding-top: 0.5em;\n\tpadding-bottom: 1em;\n\tdisplay:flex;\n\tflex-direction:column;\n\tmin-height:0;\n\t}\n#wtrl-debug-refs {\n\tmargin-top:0.5em;\n\tmargin-bottom:0.0em;\n\tbackground-color:#efd;\n\tborder-radius:8px;\n\t}\n.wtrl-main {\n\tpadding-left:0.5em;\n\tpadding-right:0em;\n\tpadding-top: 0em;\n\tpadding-bottom: 1em;\n\tmargin-left: 0em;\n\tmin-width:0;\n\tmin-height:0;\n\tdisplay:flex;\n\tflex-direction:column;\n\toverflow:hidden;\n\t}\n.wtrl-meta {\n\tfont-size:12px;\n\tcolor:#666;\n\tmargin-bottom:0.5em;\n\t}\n.wtrl-input { width:100%; box-sizing:border-box; padding:10px 12px; border:1px solid #bbb; border-radius:8px; font-size:14px; }\n.wtrl-hitlist {\n\tmargin-left:.0em;\t\n\tmargin-right:0em;\t\n\tmargin-top:12px;\n\tpadding-left: 0em;\n\tpadding-right: 0em;\n\tmax-height:none;\n\tmin-height:0;\n\tflex:1 1 auto;\n\toverflow:auto;\n\tborder:1px solid #ddd;\n\tborder-radius:8px;\n\tbackground:#eee; }\n.wtrl-hit { display:block; width:100%; text-align:left; border:0; border-bottom:1px solid #eee; background:transparent; padding:8px 10px; font-size:13px; cursor:pointer; }\n.wtrl-hit:hover { background:#f3f6fa; }\n.wtrl-kind { color:#57606a; font-size:11px; margin-right:8px; }\n.wtrl-title { margin:0 0 10px 0; font-size:22px; }\n.wtrl-sub { margin:0 0 16px 0; color:#57606a; }\n\n.wtrl-block {\n\tborder:1px solid #ddd;\n\tborder-radius:0.3em;\n\tbackground:#fff;\n\tpadding-left: .75em;\n\tpadding-right: .75em;\n\tpadding-top: 0.75em;\n\tpadding-bottom: 0.75em;\n\tbox-sizing:border-box;\n\tflex:1 1 auto;\n\tmin-height:0;\n\twidth:100%;\n\tmax-width:100%;\n\tmax-height:none;\n\toverflow:auto;\n\t}\n\n.wtrl-signature {\n\tmargin:0 0 14px 0;\n\tfont-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;\n\tfont-size:100%;\n\tcolor:#57606a;\n\twhite-space:pre-wrap;\n\toverflow-wrap:anywhere;\n\t}\n.wtrl-search-row {\n\tdisplay:grid;\n\tgrid-template-columns:auto 1fr minmax(9rem, 16rem) auto auto;\n\tgrid-template-areas:\n\t\t\"search search search  search search\"\n\t\t\"clear  .      history back   fwd\"\n\t\t\"filter filter filter  filter filter\";\n\tgap:0.4em 0.5em;\n\talign-items:center;\n\tmin-width:0;\n\t}\n#wtrl-search {\n\tgrid-area:search;\n\twidth:100%;\n\theight:30px;\n\tborder:1px solid #ccc;\n\tborder-radius:0.3em;\n\t}\n#wtrl-search-clear {\n\tgrid-area:clear;\n\theight:30px;\n\tborder:1px solid #ddd;\n\tborder-radius:0.5em;\n\t}\n#wtrl-nav-back {\n\tgrid-area:back;\n\twidth: 30px;\n\theight:30px;\n\tborder:1px solid #ddd;\n\tborder-radius:0.5em;\n\t}\n#wtrl-nav-forward {\n\tgrid-area:fwd;\n\twidth: 30px;\n\theight:30px;\n\tborder:1px solid #ddd;\n\tborder-radius:0.5em;\n\t}\n#wtrl-nav-history {\n\tgrid-area:history;\n\twidth:100%;\n\tmin-width:0;\n\tmax-width:16rem;\n\theight:30px;\n\tborder:1px solid #ddd;\n\tborder-radius:0.5em;\n\toverflow:hidden;\n\ttext-overflow:ellipsis;\n\twhite-space:nowrap;\n\t}\n.wtrl-filter-row {\n\tgrid-area:filter;\n\tdisplay:grid;\n\tgrid-template-columns:minmax(0, 1fr) minmax(0, 1fr);\n\tgap:0.5em;\n\talign-items:center;\n\tmin-width:0;\n\t}\n.wtrl-filter-pair {\n\tdisplay:flex;\n\tgap:0.5em;\n\talign-items:center;\n\tmin-width:0;\n\t}\n.wtrl-filter-label {\n\tflex:0 0 auto;\n\tfont-size:13px;\n\tcolor:#334155;\n\t}\n.wtrl-kind-filter,\n.wtrl-label-mode {\n\tflex:1 1 auto;\n\tmin-width:0;\n\tbox-sizing:border-box;\n\tpadding:0 10px;\n\tborder:1px solid #bbb;\n\tborder-radius:0.5em;\n\tbackground:#fff;\n\tcolor:#334155;\n\tfont-size:13px;\n\theight:30px;\n\tline-height:30px;\n\t}\n.wtrl-kind-filter:disabled {\n\topacity:0.55;\n\tbackground:#f8fafc;\n\t}\n.wtrl-label-mode:disabled {\n\topacity:0.55;\n\tbackground:#f8fafc;\n\t}\n\n/*----- Section ----------------------------------------------*/\n.wtrl-section {\n\tmargin-left: 0em;\n\tmargin-right: 0em;\n\tmargin-top: 0em;\n\tmargin-bottom: 0.5em;\n\tborder:1px solid #ececec;\n\tborder-radius:.3em;\n\tpadding-left: .5em;\n\tpadding-right: .5em;\n\tpadding-top: 0.3em;\n\tpadding-bottom: 0.3em;\n\tbackground:#eee;\n\t}\n.wtrl-section-head {\n\tfont-weight: normal;\n\tfont-style: italic;\n\tmargin-left: 0em;\n\tmargin-right: 0em;\n\tmargin-top: 0em;\n\tmargin-bottom: 0em;\n\tcolor:#0f172a;\n\t}\n\n/*----- Subsection -------------------------------------------*/\n.wtrl-subsection {\n\tmargin-left: 0em;\n\tmargin-right: 0em;\n\tmargin-top: 0em;\n\tmargin-bottom: 0.5em;\n\t}\n.wtrl-subsection-head {\n\tfont-weight:normal;\n\tfont-style: italic;\n\tmargin-left: 0em;\n\tmargin-right: 0em;\n\tmargin-top: 0em;\n\tmargin-bottom: 0em;\n\tmargin-left:1.5em;\n\tcolor:#1f2937;\n\t}\n\n/*----- Freeform text ----------------------------------------*/\n.wtrl-section .wtrl-text {\n\tmargin-left:1.5em;\n\tmargin-right: 0.0em;\n\tmargin-top: 0.0em;\n\tmargin-bottom: 0.5em;\n\twhite-space:pre-wrap;\n\toverflow-wrap:anywhere;\n\t}\n.wtrl-section .wtrl-subsection .wtrl-text {\n\tmargin-left:3.0em;\n\tmargin-right: 0.0em;\n\tmargin-top: 0.0em;\n\tmargin-bottom: 0.5em;\n\twhite-space:pre-wrap;\n\toverflow-wrap:anywhere;\n\t}\n.wtrl-text {\n\twhite-space:pre-wrap;\n\toverflow-wrap:anywhere;\n\t}\n/*----- Lists with text --------------------------------------*/\n.wtrl-section .wtrl-list {\n\tmargin-left: 0.0em;\n\tmargin-right: 0.0em;\n\tmargin-top: 0.5em;\n\tmargin-bottom: 0.5em;\n\t}\n.wtrl-section .wtrl-subsection .wtrl-list {\n\tmargin-left: 1.5em;\n\tmargin-right: 0.0em;\n\tmargin-top: 0.5em;\n\tmargin-bottom: 0.5em;\n\t}\n.wtrl-list li {\n\toverflow-wrap:anywhere;\n\t}\n\n.wtrl-obj {\n\tmargin:0;\n\twhite-space:pre-wrap;\n\toverflow-wrap:anywhere;\n\tfont-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;\n\tfont-size:12px;\n\tcolor:#334155;\n\t}\n\n/*----- Semantic roles ---------------------------------------*/\n.wtrl-func, .wtrl_func {\n\tcolor:#3040ff;\n\tfont-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;\n\t}\n.wtrl-type, .wtrl_type\n\t{\n\tcolor:#770000;\n\tfont-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;\n\t}\n.wtrl-var, .wtrl_var {\n\tcolor:#a00;\n\tfont-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;\n\tfont-weight: normal;\n\t}\n.wtrl-label, .wtrl_label {\n\tcolor:#1f2937;\n\tfont-style:italic;\n\t}\n.wtrl-value, .wtrl_value {\n\tcolor:#040;\n\t}\n.wtrl-mod, .wtrl_mod {\n\tcolor:#446622;\n\tfont-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;\n\t}\n.wtrl-attr, .wtrl_attr {\n\tcolor:#7c3aed;\n\t}\n.wtrl-key, .wtrl_key {\n\tcolor:#1f2937;\n\tfont-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;\n\tfont-weight: bold;\n\t}\n.wtrl-lit, .wtrl_lit {\n\tcolor:#1f2937;\n\tfont-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;\n\t}\n.wtrl-dfn, .wtrl_dfn {\n\tfont-style:italic;\n\t}\n.wtrl-term, .wtrl_term {\n\tfont-style:italic;\n\tcolor:#000;\n\t}\n.wtrl-op, .wtrl_op {\n\tcolor:#b91c1c;\n\t}\n.wtrl-file, .wtrl_file {\n\tcolor:#0f766e;\n\tfont-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;\n\t}\n.wtrl-cmd, .wtrl_cmd, .wtrl-opt, .wtrl_opt, .wtrl-tag, .wtrl_tag {\n\tcolor:#4b5563;\n\tfont-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;\n\t}\n.wtrl-ref, .wtrl_ref {\n\tcolor:#005cc5;\n\ttext-decoration-line: underline;\n\ttext-decoration-style: dotted;\n\ttext-decoration-thickness: 1px;\n\ttext-underline-offset: 0.12em;\n\t}\n.wtrl-ref.wtrl-func, .wtrl_ref.wtrl_func {\n\tcolor:#3040ff;\n\ttext-decoration-line: underline;\n\ttext-decoration-style: dotted;\n\ttext-decoration-thickness: 1px;\n\ttext-underline-offset: 0.12em;\n\t}\n.wtrl-ref.wtrl-type, .wtrl_ref.wtrl_type {\n\tcolor:#770000;\n\ttext-decoration-line: underline;\n\ttext-decoration-style: dotted;\n\ttext-decoration-thickness: 1px;\n\ttext-underline-offset: 0.12em;\n\t}\n.wtrl-ref.wtrl-var, .wtrl_ref.wtrl_var {\n\tcolor:#a00;\n\ttext-decoration-line: underline;\n\ttext-decoration-style: dotted;\n\ttext-decoration-thickness: 1px;\n\ttext-underline-offset: 0.12em;\n\t}\n.wtrl-ref.wtrl-func:visited, .wtrl_ref.wtrl_func:visited {\n\tcolor:#3040ff;\n\t}\n.wtrl-ref.wtrl-type:visited, .wtrl_ref.wtrl_type:visited {\n\tcolor:#770000;\n\t}\n.wtrl-ref.wtrl-var:visited, .wtrl_ref.wtrl_var:visited {\n\tcolor:#a00;\n\t}\n.wtrl-norm, .wtrl_norm {\n\tcolor:#b42318;\n\tfont-weight:700;\n\t}\n\n/*----- Links ------------------------------------------------*/\na {\n\ttext-decoration: none;\n\t}\n\n/*----- Hit list kinds --------------------------------------*/\n.wtrl-hit-kind-module-label {\n\tcolor: #446622;\n\tfont-size:100%;\t\n\tfont-style: italic;\n}\n.wtrl-hit-kind-class-label {\n\tcolor:#770000;\n\tfont-size:100%;\t\n\tfont-style: italic;\n\t}\n.wtrl-hit-kind-callable-label {\n\tcolor:#3040ff;\n\tfont-size:100%;\t\n\tfont-style: italic;\t\n}\n.wtrl-hit-kind-assignable-label {\n\tcolor:#666;\n\tfont-size:100%;\t\n\tfont-style: italic;\n\t}\n.wtrl-hit-kind-type-label {\n\tcolor:#666;\n\tfont-size:100%;\t\n\tfont-style: italic;\n\t}\n.wtrl-hit-kind-object-label {\n\tcolor:#000;\n\tfont-size:100%;\t\n\tfont-style: italic;\n\t}\n\n.wtrl-hit-kind-object {\n\tcolor:#000;\n\t}\n.wtrl-hit-kind-callable {\n\tcolor:#000;\n\t}\n.wtrl-hit-kind-assignable {\n\tcolor:#000;\n\t}\n.wtrl-hit-kind-object-label {\n\tcolor:#000;\n\t}\n", "css_append": "", "pygments_theme": "gruvbox-light"}, "roles": {"attr": "Attribute name", "cmd": "Shell or CLI command", "dfn": "Definition of a term", "file": "File or path", "func": "Function or callable", "key": "Key on the keyboard", "label": "Section/Subsection label", "lit": "Literal text or code", "mod": "Module name", "op": "Operator symbol", "opt": "Command-line option or flag", "tag": "Tag or marker", "term": "Domain-specific term", "type": "Type name or annotation", "value": "Concrete value", "var": "Variable name", "var_type": "Variable and type, like 'var:type'"}, "scopes": {"public": {"value": 10, "description": ""}, "extension": {"value": 20, "description": ""}, "core": {"value": 30, "description": ""}}, "toc_modules": {"mypkg.test_module_minimal": "/__WTRL_OBJECTS__/mypkg.test_module_minimal"}, "toc_classes": {}, "toc_callables": {}, "toc_types": {}, "toc_variables": {}, "toc_constants": {}, "examples": {"sha256_a931e6008a5697cc206239bbde33c6d6fad20714774b2d32cadcba2e62dbc9c5": {"lang": "python", "hash": "a931e6008a5697cc206239bbde33c6d6fad20714774b2d32cadcba2e62dbc9c5", "code": "import mypkg.test_module_minimal as m\n\nif __name__ == \"__main__\":\n\tprint(\"Module mypkg.test_module_minimal imported.\")\n", "referenced_by": ["mypkg.test_module_minimal"]}}, "objects": {"mypkg.test_module_minimal": {"path": "/server/devel/sdv/privat/uwe/source/sdv_doc_waterloo/package_main/doc/input-python/mypkg/test_module_minimal.py", "doc": {"Preamble": {"profile": "module", "normative_sections": ["Contract"]}, "Contract": {"general": ["MUST demonstrate the minimal module docstring."]}}, "examples": ["/__WTRL_EXAMPLES__/sha256_a931e6008a5697cc206239bbde33c6d6fad20714774b2d32cadcba2e62dbc9c5"]}}};
 const WTRL_INDEX = [{"label": "mypkg.test_module_minimal", "target": "mypkg.test_module_minimal", "kind": "mod", "anchor": "wtrl-mod-5:mypkg-19:test_module_minimal"}];
 const WTRL_EXAMPLES_HTML = {"sha256_a931e6008a5697cc206239bbde33c6d6fad20714774b2d32cadcba2e62dbc9c5": "<div class=\"wtrl-code\"><pre><span></span><span class=\"kn\">import</span><span class=\"w\"> </span><span class=\"nn\">mypkg.test_module_minimal</span><span class=\"w\"> </span><span class=\"k\">as</span><span class=\"w\"> </span><span class=\"nn\">m</span>\n\n<span class=\"k\">if</span> <span class=\"vm\">__name__</span> <span class=\"o\">==</span> <span class=\"s2\">&quot;__main__&quot;</span><span class=\"p\">:</span>\n\t<span class=\"nb\">print</span><span class=\"p\">(</span><span class=\"s2\">&quot;Module mypkg.test_module_minimal imported.&quot;</span><span class=\"p\">)</span>\n</pre></div>\n"};
 // The above variables are injected by waterlint_render_html5.py, the script
@@ -1611,10 +1724,101 @@ function renderHitList(entries) {
     const elemHitButton = document.createElement("button");
     elemHitButton.className = "wtrl-hit";
     elemHitButton.type = "button";
-    elemHitButton.innerHTML = `<span class="wtrl-kind">${e.kind}</span>${e.label}`;
+    const kindClass = ({
+      mod: "wtrl-hit-kind-module",
+      cls: "wtrl-hit-kind-class",
+      func: "wtrl-hit-kind-callable",
+      meth: "wtrl-hit-kind-callable",
+      type: "wtrl-hit-kind-type",
+      var: "wtrl-hit-kind-assignable",
+      const: "wtrl-hit-kind-assignable",
+      obj: "wtrl-hit-kind-object",
+    })[String(e.kind || "")] || "";
+    if (kindClass) elemHitButton.classList.add(kindClass);
+    const kindLabel = ({
+      mod: "module",
+      cls: "class",
+      func: "function",
+      meth: "method",
+      type: "type",
+      var: "variable",
+      const: "constant",
+      obj: "object",
+    })[String(e.kind || "")] || String(e.kind || "");
+    const elemKind = document.createElement("span");
+    elemKind.className = `wtrl-kind ${kindClass ? kindClass + "-label" : ""}`;
+    elemKind.textContent = kindLabel;
+    elemHitButton.appendChild(elemKind);
+
+    const elemLabel = document.createElement("span");
+    elemLabel.textContent = e.label;
+    elemHitButton.appendChild(elemLabel);
+    elemHitButton.title = e.label;
     elemHitButton.addEventListener("click", () => selectTarget(e.target, { updateHash: true }));
     elemHitlistHost.appendChild(elemHitButton);
   }
+}
+
+function kindMatchesFilter(kind, filterValue) {
+  const k = String(kind || "");
+  const f = String(filterValue || "*").toLowerCase();
+  if (f === "*" || f === "all") return true;
+  if (f === "objects") return k === "mod" || k === "cls" || k === "func" || k === "meth";
+  if (f === "modules") return k === "mod";
+  if (f === "classes") return k === "cls";
+  if (f === "callables") return k === "func" || k === "meth";
+  if (f === "functions") return k === "func";
+  if (f === "methods") return k === "meth";
+  if (f === "types") return k === "type";
+  if (f === "assignables") return k === "const" || k === "var";
+  if (f === "constants") return k === "const";
+  if (f === "variables") return k === "var";
+  return true;
+}
+
+function filterHitEntries(entries, kindFilter, queryText) {
+  const q = String(queryText || "").trim().toLowerCase();
+  return entries.filter((e) => {
+    if (!kindMatchesFilter(e.kind, kindFilter)) return false;
+    if (!q) return true;
+    return String(e.label || "").toLowerCase().includes(q);
+  });
+}
+
+function getModulePrefixes() {
+  const tocModules = (WTRL_DATA && WTRL_DATA.toc_modules && typeof WTRL_DATA.toc_modules === "object")
+    ? WTRL_DATA.toc_modules
+    : {};
+  return Object.keys(tocModules).sort((a, b) => b.length - a.length);
+}
+
+const MODULE_PREFIXES = getModulePrefixes();
+
+function getOwningModulePrefix(qid) {
+  const q = String(qid || "");
+  if (!q) return "";
+  for (const mod of MODULE_PREFIXES) {
+    if (q === mod || q.startsWith(mod + ".")) return mod;
+  }
+  return "";
+}
+
+function formatHitLabel(qid, mode) {
+  const q = String(qid || "");
+  const m = String(mode || "from-module").toLowerCase();
+  if (!q || m === "full") return q;
+
+  const mod = getOwningModulePrefix(q);
+  if (!mod) return q;
+  const modBase = mod.split(".").filter(Boolean).slice(-1)[0] || mod;
+  const suffix = (q === mod) ? "" : q.slice(mod.length + 1);
+  if (m === "from-module") {
+    return suffix ? `${modBase}.${suffix}` : modBase;
+  }
+  if (m === "no-module") {
+    return suffix || modBase;
+  }
+  return q;
 }
 
 function inferDocLinesKind(targetQid) {
@@ -1635,7 +1839,7 @@ function renderDocLines(node, targetQid, elemHost) {
   const lines = Array.isArray(node.doc_lines) ? node.doc_lines : [];
   if (lines.length === 0) return false;
 
-  const kind = inferDocLinesKind(targetQid);
+  const kind = String((node && node.doc_lines_kind) || inferDocLinesKind(targetQid) || "");
   const elemSection = document.createElement("div");
   elemSection.className = "wtrl-section";
 
@@ -1830,7 +2034,17 @@ function setupSearch() {
   const elemNavBack = byId("wtrl-nav-back");
   const elemNavForward = byId("wtrl-nav-forward");
   const elemNavHistory = byId("wtrl-nav-history");
+  const elemKindFilter = byId("wtrl-kind-filter");
+  const elemLabelMode = byId("wtrl-label-mode");
   const elemSearchList = byId("wtrl-search-list");
+  let activeSearchQuery = "";
+  let activeKindFilter = elemKindFilter ? String(elemKindFilter.value || "*") : "*";
+  let activeLabelMode = elemLabelMode ? String(elemLabelMode.value || "from-module") : "from-module";
+
+  function refreshHitList() {
+    const entries = filterHitEntries(WTRL_INDEX, activeKindFilter, activeSearchQuery);
+    renderHitList(entries.map((e) => Object.assign({}, e, { label: formatHitLabel(e.label, activeLabelMode) })));
+  }
 
   // Navigation event handlers. Note that we don't update the UI here directly;
   // instead we just update the history cursor and trigger a selectTarget(),
@@ -1856,19 +2070,26 @@ function setupSearch() {
     });
   }
   updateNavigationUi();
+  if (elemKindFilter) {
+    elemKindFilter.addEventListener("change", () => {
+      activeKindFilter = String(elemKindFilter.value || "*");
+      refreshHitList();
+    });
+  }
+  if (elemLabelMode) {
+    elemLabelMode.addEventListener("change", () => {
+      activeLabelMode = String(elemLabelMode.value || "from-module");
+      refreshHitList();
+    });
+  }
   for (const e of WTRL_INDEX) {
     const elemOption = document.createElement("option");
     elemOption.value = e.label;
     elemSearchList.appendChild(elemOption);
   }
   elemSearchInput.addEventListener("input", () => {
-    const q = elemSearchInput.value.trim().toLowerCase();
-    if (!q) {
-      renderHitList(WTRL_INDEX);
-      return;
-    }
-    const hit = WTRL_INDEX.filter(e => e.label.toLowerCase().includes(q));
-    renderHitList(hit);
+    activeSearchQuery = elemSearchInput.value.trim().toLowerCase();
+    refreshHitList();
     const exact = WTRL_INDEX.find(e => e.label === elemSearchInput.value);
     if (exact) {
       selectTarget(exact.target, { updateHash: true });
@@ -1877,10 +2098,12 @@ function setupSearch() {
   if (elemSearchClear) {
     elemSearchClear.addEventListener("click", () => {
       elemSearchInput.value = "";
-      renderHitList(WTRL_INDEX);
+      activeSearchQuery = "";
+      refreshHitList();
       elemSearchInput.focus();
     });
   }
+  refreshHitList();
 }
 
 window.addEventListener("hashchange", () => { handlerHashNavigation(); });

@@ -7,7 +7,7 @@ html, body {
 	}
 .wtrl-app {
 	display:grid;
-	grid-template-columns: 340px 1fr;
+	grid-template-columns: 420px 1fr;
 	height:100vh;
 	padding:0.5em;
 	gap:0.5em;
@@ -101,7 +101,8 @@ html, body {
 	grid-template-columns:auto 1fr minmax(9rem, 16rem) auto auto;
 	grid-template-areas:
 		"search search search  search search"
-		"clear  .      history back   fwd";
+		"clear  .      history back   fwd"
+		"filter filter filter  filter filter";
 	gap:0.4em 0.5em;
 	align-items:center;
 	min-width:0;
@@ -144,6 +145,47 @@ html, body {
 	overflow:hidden;
 	text-overflow:ellipsis;
 	white-space:nowrap;
+	}
+.wtrl-filter-row {
+	grid-area:filter;
+	display:grid;
+	grid-template-columns:minmax(0, 1fr) minmax(0, 1fr);
+	gap:0.5em;
+	align-items:center;
+	min-width:0;
+	}
+.wtrl-filter-pair {
+	display:flex;
+	gap:0.5em;
+	align-items:center;
+	min-width:0;
+	}
+.wtrl-filter-label {
+	flex:0 0 auto;
+	font-size:13px;
+	color:#334155;
+	}
+.wtrl-kind-filter,
+.wtrl-label-mode {
+	flex:1 1 auto;
+	min-width:0;
+	box-sizing:border-box;
+	padding:0 10px;
+	border:1px solid #bbb;
+	border-radius:0.5em;
+	background:#fff;
+	color:#334155;
+	font-size:13px;
+	height:30px;
+	line-height:30px;
+	}
+.wtrl-kind-filter:disabled {
+	opacity:0.55;
+	background:#f8fafc;
+	}
+.wtrl-label-mode:disabled {
+	opacity:0.55;
+	background:#f8fafc;
 	}
 
 /*----- Section ----------------------------------------------*/
@@ -336,4 +378,49 @@ html, body {
 /*----- Links ------------------------------------------------*/
 a {
 	text-decoration: none;
+	}
+
+/*----- Hit list kinds --------------------------------------*/
+.wtrl-hit-kind-module-label {
+	color: #446622;
+	font-size:100%;	
+	font-style: italic;
+}
+.wtrl-hit-kind-class-label {
+	color:#770000;
+	font-size:100%;	
+	font-style: italic;
+	}
+.wtrl-hit-kind-callable-label {
+	color:#3040ff;
+	font-size:100%;	
+	font-style: italic;	
+}
+.wtrl-hit-kind-assignable-label {
+	color:#666;
+	font-size:100%;	
+	font-style: italic;
+	}
+.wtrl-hit-kind-type-label {
+	color:#666;
+	font-size:100%;	
+	font-style: italic;
+	}
+.wtrl-hit-kind-object-label {
+	color:#000;
+	font-size:100%;	
+	font-style: italic;
+	}
+
+.wtrl-hit-kind-object {
+	color:#000;
+	}
+.wtrl-hit-kind-callable {
+	color:#000;
+	}
+.wtrl-hit-kind-assignable {
+	color:#000;
+	}
+.wtrl-hit-kind-object-label {
+	color:#000;
 	}

@@ -1154,10 +1154,101 @@ function renderHitList(entries) {
     const elemHitButton = document.createElement("button");
     elemHitButton.className = "wtrl-hit";
     elemHitButton.type = "button";
-    elemHitButton.innerHTML = `<span class="wtrl-kind">${e.kind}</span>${e.label}`;
+    const kindClass = ({
+      mod: "wtrl-hit-kind-module",
+      cls: "wtrl-hit-kind-class",
+      func: "wtrl-hit-kind-callable",
+      meth: "wtrl-hit-kind-callable",
+      type: "wtrl-hit-kind-type",
+      var: "wtrl-hit-kind-assignable",
+      const: "wtrl-hit-kind-assignable",
+      obj: "wtrl-hit-kind-object",
+    })[String(e.kind || "")] || "";
+    if (kindClass) elemHitButton.classList.add(kindClass);
+    const kindLabel = ({
+      mod: "module",
+      cls: "class",
+      func: "function",
+      meth: "method",
+      type: "type",
+      var: "variable",
+      const: "constant",
+      obj: "object",
+    })[String(e.kind || "")] || String(e.kind || "");
+    const elemKind = document.createElement("span");
+    elemKind.className = `wtrl-kind ${kindClass ? kindClass + "-label" : ""}`;
+    elemKind.textContent = kindLabel;
+    elemHitButton.appendChild(elemKind);
+
+    const elemLabel = document.createElement("span");
+    elemLabel.textContent = e.label;
+    elemHitButton.appendChild(elemLabel);
+    elemHitButton.title = e.label;
     elemHitButton.addEventListener("click", () => selectTarget(e.target, { updateHash: true }));
     elemHitlistHost.appendChild(elemHitButton);
   }
+}
+
+function kindMatchesFilter(kind, filterValue) {
+  const k = String(kind || "");
+  const f = String(filterValue || "*").toLowerCase();
+  if (f === "*" || f === "all") return true;
+  if (f === "objects") return k === "mod" || k === "cls" || k === "func" || k === "meth";
+  if (f === "modules") return k === "mod";
+  if (f === "classes") return k === "cls";
+  if (f === "callables") return k === "func" || k === "meth";
+  if (f === "functions") return k === "func";
+  if (f === "methods") return k === "meth";
+  if (f === "types") return k === "type";
+  if (f === "assignables") return k === "const" || k === "var";
+  if (f === "constants") return k === "const";
+  if (f === "variables") return k === "var";
+  return true;
+}
+
+function filterHitEntries(entries, kindFilter, queryText) {
+  const q = String(queryText || "").trim().toLowerCase();
+  return entries.filter((e) => {
+    if (!kindMatchesFilter(e.kind, kindFilter)) return false;
+    if (!q) return true;
+    return String(e.label || "").toLowerCase().includes(q);
+  });
+}
+
+function getModulePrefixes() {
+  const tocModules = (WTRL_DATA && WTRL_DATA.toc_modules && typeof WTRL_DATA.toc_modules === "object")
+    ? WTRL_DATA.toc_modules
+    : {};
+  return Object.keys(tocModules).sort((a, b) => b.length - a.length);
+}
+
+const MODULE_PREFIXES = getModulePrefixes();
+
+function getOwningModulePrefix(qid) {
+  const q = String(qid || "");
+  if (!q) return "";
+  for (const mod of MODULE_PREFIXES) {
+    if (q === mod || q.startsWith(mod + ".")) return mod;
+  }
+  return "";
+}
+
+function formatHitLabel(qid, mode) {
+  const q = String(qid || "");
+  const m = String(mode || "from-module").toLowerCase();
+  if (!q || m === "full") return q;
+
+  const mod = getOwningModulePrefix(q);
+  if (!mod) return q;
+  const modBase = mod.split(".").filter(Boolean).slice(-1)[0] || mod;
+  const suffix = (q === mod) ? "" : q.slice(mod.length + 1);
+  if (m === "from-module") {
+    return suffix ? `${modBase}.${suffix}` : modBase;
+  }
+  if (m === "no-module") {
+    return suffix || modBase;
+  }
+  return q;
 }
 
 function inferDocLinesKind(targetQid) {
@@ -1178,7 +1269,7 @@ function renderDocLines(node, targetQid, elemHost) {
   const lines = Array.isArray(node.doc_lines) ? node.doc_lines : [];
   if (lines.length === 0) return false;
 
-  const kind = inferDocLinesKind(targetQid);
+  const kind = String((node && node.doc_lines_kind) || inferDocLinesKind(targetQid) || "");
   const elemSection = document.createElement("div");
   elemSection.className = "wtrl-section";
 
@@ -1373,7 +1464,17 @@ function setupSearch() {
   const elemNavBack = byId("wtrl-nav-back");
   const elemNavForward = byId("wtrl-nav-forward");
   const elemNavHistory = byId("wtrl-nav-history");
+  const elemKindFilter = byId("wtrl-kind-filter");
+  const elemLabelMode = byId("wtrl-label-mode");
   const elemSearchList = byId("wtrl-search-list");
+  let activeSearchQuery = "";
+  let activeKindFilter = elemKindFilter ? String(elemKindFilter.value || "*") : "*";
+  let activeLabelMode = elemLabelMode ? String(elemLabelMode.value || "from-module") : "from-module";
+
+  function refreshHitList() {
+    const entries = filterHitEntries(WTRL_INDEX, activeKindFilter, activeSearchQuery);
+    renderHitList(entries.map((e) => Object.assign({}, e, { label: formatHitLabel(e.label, activeLabelMode) })));
+  }
 
   // Navigation event handlers. Note that we don't update the UI here directly;
   // instead we just update the history cursor and trigger a selectTarget(),
@@ -1399,19 +1500,26 @@ function setupSearch() {
     });
   }
   updateNavigationUi();
+  if (elemKindFilter) {
+    elemKindFilter.addEventListener("change", () => {
+      activeKindFilter = String(elemKindFilter.value || "*");
+      refreshHitList();
+    });
+  }
+  if (elemLabelMode) {
+    elemLabelMode.addEventListener("change", () => {
+      activeLabelMode = String(elemLabelMode.value || "from-module");
+      refreshHitList();
+    });
+  }
   for (const e of WTRL_INDEX) {
     const elemOption = document.createElement("option");
     elemOption.value = e.label;
     elemSearchList.appendChild(elemOption);
   }
   elemSearchInput.addEventListener("input", () => {
-    const q = elemSearchInput.value.trim().toLowerCase();
-    if (!q) {
-      renderHitList(WTRL_INDEX);
-      return;
-    }
-    const hit = WTRL_INDEX.filter(e => e.label.toLowerCase().includes(q));
-    renderHitList(hit);
+    activeSearchQuery = elemSearchInput.value.trim().toLowerCase();
+    refreshHitList();
     const exact = WTRL_INDEX.find(e => e.label === elemSearchInput.value);
     if (exact) {
       selectTarget(exact.target, { updateHash: true });
@@ -1420,10 +1528,12 @@ function setupSearch() {
   if (elemSearchClear) {
     elemSearchClear.addEventListener("click", () => {
       elemSearchInput.value = "";
-      renderHitList(WTRL_INDEX);
+      activeSearchQuery = "";
+      refreshHitList();
       elemSearchInput.focus();
     });
   }
+  refreshHitList();
 }
 
 window.addEventListener("hashchange", () => { handlerHashNavigation(); });

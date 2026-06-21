@@ -2887,10 +2887,10 @@ class tracer:
 		Contract:
 			general:
 				|Must| define the following severity levels for filtering the tracer's output:
-				- :var:`DEBUG`: for debugging notes, not relevant for end-users.
-				- :var:`INFO`: for informational messages that are relevant for end-users but do not indicate any problems.
-				- :var:`WARNING`: for potential issues that should be looked at but do not necessarily indicate a failure.
-				- :var:`ERROR`: for definite problems that indicate a failure to meet a requirement or rule.
+				- |value|`DEBUG`: for debugging notes, not relevant for end-users.
+				- |value|`INFO`: for informational messages that are relevant for end-users but do not indicate any problems.
+				- |value|`WARNING`: for potential issues that should be looked at but do not necessarily indicate a failure.
+				- |value|`ERROR`: for definite problems that indicate a failure to meet a requirement or rule.
 				|Must| assign integer values to these levels in increasing order of severity, starting with 0 for DEBUG.
 			constructor:
 				|Must| inherit from |type|`IntEnum`.
@@ -3012,13 +3012,13 @@ class tracer:
 				Specify the WTRL Tracer JSON Schema version to declare in the output. Defaults to the current version if not provided.
 				This does not affect the structure of the output, which always follows the current schema.
 				Including the schema version allows consumers to validate against the correct schema and maintain compatibility as the schema evolves.
-				* |Must| be a string in the format :lit:`"X.Y.Z"` where X, Y, and Z are non-negative integers.
+				* |Must| be a string in the format |lit|`X.Y.Z` where X, Y, and Z are non-negative integers.
 				* |Must| default to the current schema version if not provided.
 				* |Must| be included in the output under the `__WTRL_VERSION__` metadata section.
 				* |Must_not| affect the actual structure of the output, which always follows the current schema.
 			waterloo_version:
 				Optionally include the version of the Waterloo tool that generated the tracer data.
-				* |Must| be a string in the format :lit:`"X.Y.Z"` where X, Y, and Z are non-negative integers.
+				* |Must| be a string in the format |lit|`X.Y.Z` where X, Y, and Z are non-negative integers.
 			id_prefix:
 				Optionally include a prefix for the `$id` field in the output JSON.
 				* |Must| be a string if provided.

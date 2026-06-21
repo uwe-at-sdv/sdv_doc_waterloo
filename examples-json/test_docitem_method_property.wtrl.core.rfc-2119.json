@@ -2,11 +2,11 @@
     "$schema": "https://sci-d-vis.com/schema/wtrl-json-0.1.0.schema.json",
     "$id": "urn:waterlint:wtrl-json:0.16.3:core:rfc-2119:a76ce282f1990d8b69ee42edd8c6e6916fbad1afde8ddc36b9f301b5234d7dbf",
     "__WTRL_VERSION__": {
-        "waterloo": "0.8.1",
+        "waterloo": "0.9.0",
         "schema": "0.1.0"
     },
     "__WTRL_META__": {
-        "generated_at": "2026-06-21T10:43:09+02:00",
+        "generated_at": "2026-06-21T20:38:14+02:00",
         "generator": "waterlint",
         "scope": "core",
         "flavour": "rfc-2119"
@@ -64,7 +64,8 @@
             "doc": {},
             "doc_lines": [
                 "A property object providing controlled access to an internal value."
-            ]
+            ],
+            "doc_lines_kind": "variable"
         },
         "test_docitem_method_property.X.value.fget": {
             "signature": {

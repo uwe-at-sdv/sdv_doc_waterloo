@@ -53,8 +53,8 @@ from sdv.doc.waterloo.waterlint_common import (
 __version__ = "0.1.0"
 
 #===== Typing ================================================#
-# "obj" is a fallback, not sure if it occurs in practice.
-Kind_t: TypeAlias = Literal["mod", "cls", "func", "obj"]
+# "obj" is a fallback for objects that do not map to a more specific kind.
+Kind_t: TypeAlias = Literal["mod", "cls", "func", "meth", "type", "var", "const", "obj"]
 
 #=============================================================#
 
@@ -108,13 +108,25 @@ def _infer_kind_for_qid(
 	toc_modules: Dict[str, Any],
 	toc_classes: Dict[str, Any],
 	toc_callables: Dict[str, Any],
+	toc_types: Dict[str, Any],
+	toc_vars: Dict[str, Any],
+	toc_consts: Dict[str, Any],
 ) -> Kind_t:
 	if qid in toc_modules:
 		return "mod"
 	if qid in toc_classes:
 		return "cls"
 	if qid in toc_callables:
+		parent = qid.rsplit(".", 1)[0] if "." in qid else ""
+		if parent in toc_classes:
+			return "meth"
 		return "func"
+	if qid in toc_types:
+		return "type"
+	if qid in toc_vars:
+		return "var"
+	if qid in toc_consts:
+		return "const"
 	return "obj"
 
 
@@ -323,7 +335,7 @@ def _build_ui_index(merged: Dict[str, Any]) -> List[Dict[str, str]]:
 
 	index: List[Dict[str, str]] = []
 	for qid in sorted(objects.keys()):
-		kind = _infer_kind_for_qid(qid, toc_modules, toc_classes, toc_callables)
+		kind = _infer_kind_for_qid(qid, toc_modules, toc_classes, toc_callables, toc_types, toc_vars, toc_consts)
 		anchor = _build_anchor_for_qid(qid, kind)
 		index.append({"label": qid, "target": qid, "kind": kind, "anchor": anchor})
 
@@ -384,6 +396,12 @@ html, body { margin:0; padding:0; font-family: ui-sans-serif, system-ui, -apple-
 .wtrl-nav:disabled { opacity:0.45; cursor:default; background:#fff; }
 .wtrl-nav-history { flex:0 0 280px; min-width:180px; max-width:320px; box-sizing:border-box; padding:9px 10px; border:1px solid #bbb; border-radius:8px; background:#fff; color:#334155; font-size:13px; }
 .wtrl-nav-history:disabled { opacity:0.55; background:#f8fafc; }
+.wtrl-filter-row { display:grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap:8px; margin-top:8px; align-items:center; }
+.wtrl-filter-pair { display:flex; gap:8px; align-items:center; min-width:0; }
+.wtrl-filter-label { flex:0 0 auto; font-size:13px; color:#334155; }
+.wtrl-kind-filter, .wtrl-label-mode { flex:1 1 auto; min-width:0; box-sizing:border-box; padding:9px 10px; border:1px solid #bbb; border-radius:8px; background:#fff; color:#334155; font-size:13px; }
+.wtrl-kind-filter:disabled { opacity:0.55; background:#f8fafc; }
+.wtrl-label-mode:disabled { opacity:0.55; background:#f8fafc; }
 .wtrl-input { flex:1 1 auto; min-width:0; box-sizing:border-box; padding:10px 12px; border:1px solid #bbb; border-radius:8px; font-size:14px; }
 .wtrl-clear { flex:0 0 auto; padding:9px 12px; border:1px solid #bbb; border-radius:8px; background:#fff; color:#334155; cursor:pointer; }
 .wtrl-clear:hover { background:#f3f6fa; }
@@ -426,6 +444,11 @@ a.wtrl-ref.wtrl-func:visited, a.wtrl_ref.wtrl_func:visited { color:#3040ff; }
 a.wtrl-ref.wtrl-type:visited, a.wtrl_ref.wtrl_type:visited { color:#770000; }
 a.wtrl-ref.wtrl-var:visited, a.wtrl_ref.wtrl_var:visited { color:#a00; }
 a.wtrl-ref:visited { color:inherit; }
+button.wtrl-hit-kind-module { color:#770000; }
+button.wtrl-hit-kind-class { color:#770000; }
+button.wtrl-hit-kind-callable { color:#3040ff; }
+button.wtrl-hit-kind-variable { color:#308030; }
+button.wtrl-hit-kind-constant { color:#308030; }
 """
 
 	js = _load_render_js_source()
@@ -474,6 +497,32 @@ a.wtrl-ref:visited { color:inherit; }
 <!--        <input id="wtrl-search" class="wtrl-input" list="wtrl-search-list" placeholder="Search qid / type / var / const" autocomplete="off" spellcheck="false"> -->
         <input id="wtrl-search" class="wtrl-input" placeholder="Search qid / type / var / const">
         <button id="wtrl-search-clear" class="wtrl-clear" type="button" aria-label="Clear search">Clear</button>
+        <div class="wtrl-filter-row">
+          <div class="wtrl-filter-pair">
+            <label for="wtrl-kind-filter" class="wtrl-filter-label">Kind</label>
+            <select id="wtrl-kind-filter" class="wtrl-kind-filter" aria-label="Kind filter">
+            <option value="*">All</option>
+            <option value="objects">Objects</option>
+            <option value="modules">Modules</option>
+            <option value="classes">Classes</option>
+            <option value="callables">Callables</option>
+            <option value="functions">Functions</option>
+            <option value="methods">Methods</option>
+            <option value="types">Types</option>
+            <option value="assignables">Assignables</option>
+            <option value="constants">Constants</option>
+            <option value="variables">Variables</option>
+            </select>
+          </div>
+          <div class="wtrl-filter-pair">
+            <label for="wtrl-label-mode" class="wtrl-filter-label">Name</label>
+            <select id="wtrl-label-mode" class="wtrl-label-mode" aria-label="Name display mode">
+              <option value="full">Full</option>
+              <option value="from-module" selected>With module</option>
+              <option value="no-module">Without module</option>
+            </select>
+          </div>
+        </div>
       </div>
       <datalist id="wtrl-search-list"></datalist>
       <div id="wtrl-hitlist" class="wtrl-hitlist"></div>

@@ -2,11 +2,11 @@
     "$schema": "https://sci-d-vis.com/schema/wtrl-json-0.1.0.schema.json",
     "$id": "urn:waterlint:wtrl-json:0.16.3:core:rfc-2119:dc567221661c59c1b69d5c7aa94df71c0b97cefc358e25853d08be65f7f26bed",
     "__WTRL_VERSION__": {
-        "waterloo": "0.8.1",
+        "waterloo": "0.9.0",
         "schema": "0.1.0"
     },
     "__WTRL_META__": {
-        "generated_at": "2026-06-21T10:43:10+02:00",
+        "generated_at": "2026-06-21T20:38:15+02:00",
         "generator": "waterlint",
         "scope": "core",
         "flavour": "rfc-2119"
@@ -77,7 +77,8 @@
                 "* An item",
                 "* An item",
                 "# Numbered item"
-            ]
+            ],
+            "doc_lines_kind": "type"
         },
         "test_flow_control.my_variable": {
             "doc": {},
@@ -92,7 +93,8 @@
                 "* An item",
                 "* An item",
                 "# Numbered item"
-            ]
+            ],
+            "doc_lines_kind": "variable"
         },
         "test_flow_control.my_constant": {
             "doc": {},
@@ -109,7 +111,8 @@
                 "- A subsubitem",
                 "+ A subitem",
                 "* An item"
-            ]
+            ],
+            "doc_lines_kind": "constant"
         },
         "test_flow_control": {
             "doc": {

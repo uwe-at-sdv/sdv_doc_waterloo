@@ -1352,6 +1352,12 @@ def render_json_command(args: argparse.Namespace) -> int:
 						mem_entry = cast(dict[str, Any], tree_full["__WTRL_OBJECTS__"].setdefault(mem_qname, {"doc": {}}))
 						mem_entry["doc"] = {}
 						mem_entry["doc_lines"] = mem_doc
+						if sec_label == "Public_types":
+							mem_entry["doc_lines_kind"] = "type"
+						elif sec_label == "Public_variables":
+							mem_entry["doc_lines_kind"] = "variable"
+						elif sec_label == "Public_constants":
+							mem_entry["doc_lines_kind"] = "constant"
 #..... begin properties .......................................#
 # We're still in the nonaggregate case! Properties fall in this category.
 # Extract and check if it is a property
@@ -1543,6 +1549,12 @@ def render_json_command(args: argparse.Namespace) -> int:
 									mem_entry = cast(dict[str, Any], tree_full["__WTRL_OBJECTS__"].setdefault(mem_qname, {"doc": {}}))
 									mem_entry["doc"] = {}
 									mem_entry["doc_lines"] = mem_doc
+									if sec_label == "Public_types":
+										mem_entry["doc_lines_kind"] = "type"
+									elif sec_label == "Public_variables":
+										mem_entry["doc_lines_kind"] = "variable"
+									elif sec_label == "Public_constants":
+										mem_entry["doc_lines_kind"] = "constant"
 					except Exception:
 						entry2["doc"] = {}
 				else:
