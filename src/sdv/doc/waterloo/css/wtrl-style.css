@@ -1,3 +1,7 @@
+/* This style sheet defines the styles for interactive HTML5 output.
+   For waterlint render-html5, additional styles can be provided
+   by the caller via the --additional-css option. */
+/*----- Global styles ---------------------------------------*/
 html, body {
 	margin:0;
 	padding:0;
@@ -188,7 +192,7 @@ html, body {
 	background:#f8fafc;
 	}
 
-/*----- Section ----------------------------------------------*/
+/*----- Section ---------------------------------------------*/
 .wtrl-section {
 	margin-left: 0em;
 	margin-right: 0em;
@@ -212,7 +216,7 @@ html, body {
 	color:#0f172a;
 	}
 
-/*----- Subsection -------------------------------------------*/
+/*----- Subsection ------------------------------------------*/
 .wtrl-subsection {
 	margin-left: 0em;
 	margin-right: 0em;
@@ -230,20 +234,20 @@ html, body {
 	color:#1f2937;
 	}
 
-/*----- Freeform text ----------------------------------------*/
+/*----- Freeform text ---------------------------------------*/
 .wtrl-section .wtrl-text {
 	margin-left:1.5em;
 	margin-right: 0.0em;
-	margin-top: 0.0em;
-	margin-bottom: 0.5em;
+	margin-top: 0.2em;
+	margin-bottom: 0.3em;
 	white-space:pre-wrap;
 	overflow-wrap:anywhere;
 	}
 .wtrl-section .wtrl-subsection .wtrl-text {
 	margin-left:3.0em;
 	margin-right: 0.0em;
-	margin-top: 0.0em;
-	margin-bottom: 0.5em;
+	margin-top: 0.2em;
+	margin-bottom: 0.3em;
 	white-space:pre-wrap;
 	overflow-wrap:anywhere;
 	}
@@ -251,7 +255,7 @@ html, body {
 	white-space:pre-wrap;
 	overflow-wrap:anywhere;
 	}
-/*----- Lists with text --------------------------------------*/
+/*----- Lists with text -------------------------------------*/
 .wtrl-section .wtrl-list {
 	margin-left: 0.0em;
 	margin-right: 0.0em;
@@ -375,7 +379,7 @@ html, body {
 	font-weight:700;
 	}
 
-/*----- Links ------------------------------------------------*/
+/*----- Links -----------------------------------------------*/
 a {
 	text-decoration: none;
 	}
@@ -406,13 +410,17 @@ a {
 	font-size:100%;	
 	font-style: italic;
 	}
+/* Label "object" or "entry" is a fallback and is not supposed to appear. */
 .wtrl-hit-kind-object-label {
 	color:#000;
 	font-size:100%;	
 	font-style: italic;
 	}
 
-.wtrl-hit-kind-object {
+.wtrl-hit-kind-module {
+	color:#000;
+	}
+.wtrl-hit-kind-class {
 	color:#000;
 	}
 .wtrl-hit-kind-callable {
@@ -421,6 +429,7 @@ a {
 .wtrl-hit-kind-assignable {
 	color:#000;
 	}
-.wtrl-hit-kind-object-label {
+/* Fallback */
+.wtrl-hit-kind-object {
 	color:#000;
 	}

@@ -30,6 +30,7 @@ import hashlib
 import io
 import importlib.util
 import importlib.resources as importlib_resources
+import typing
 import sys, inspect, os, re,shutil, traceback
 from datetime import datetime
 from pathlib import Path
@@ -53,7 +54,9 @@ from jsonschema import Draft202012Validator
 #from jsonschema import JSONDecodeError
 import jsonschema.exceptions
 
-__version__ = "0.16.3"
+__version__ = "0.17.0"
+# - 0.17.0 [2026-06-22] Enhanced JSON output for types, constants, variables;
+#			Improved html5-rendering for these categories.
 # - 0.16.3 [2026-06-18] Bugfix which caused a missing error message in case of non-existing path for --basedir.
 # - 0.16.2 [2026-06-15]	More details in error message (complete);bugfixes in validation.
 # - 0.16.1 [2026-06-11]	More details in error message (in progress)
@@ -1078,6 +1081,25 @@ def render_json_command(args: argparse.Namespace) -> int:
 		except Exception as e:
 			return []
 
+	def _format_annotation_text(ann: object) -> str:
+		"""Render an annotation object as a compact, user-facing string."""
+		if ann is None or ann is inspect.Signature.empty or ann is inspect.Parameter.empty:
+			return ""
+		text = ann if isinstance(ann, str) else (ann.__name__ if isinstance(ann, type) else str(ann))
+		text = str(text).replace("typing_extensions.", "").replace("typing.", "")
+		if text == "None":
+			return ""
+		return text
+
+	def _member_annotation_text(obj: object, mem_name: str, ann: object) -> str:
+		"""Render a member annotation, expanding plain type aliases to their value."""
+		if ann is typing.TypeAlias or ann == "TypeAlias" or ann == "typing.TypeAlias":
+			try:
+				return _format_annotation_text(getattr(obj, mem_name))
+			except Exception:
+				return ""
+		return _format_annotation_text(ann)
+
 	def _collect_traits_for_callable(obj: object) -> list[cvrt.WtrlJsonNode_t]:
 		"""Collect machine-readable traits for callable-like objects."""
 		traits: list[cvrt.WtrlJsonNode_t] = []
@@ -1337,6 +1359,7 @@ def render_json_command(args: argparse.Namespace) -> int:
 # All entries are based on the qualified name, which is delivered by our helper.
 			qname = name_key
 # Collect nonaggregate public members for this object (module or class).
+			obj_annotations = docitem.get_obj_annotations(o)
 			for sec_label,toc_label in nonaggregate_member_sections:
 				for mem_name in _collect_public_members(tree,sec_label):
 					mem_qname = f"{qname}.{mem_name}"
@@ -1352,6 +1375,9 @@ def render_json_command(args: argparse.Namespace) -> int:
 						mem_entry = cast(dict[str, Any], tree_full["__WTRL_OBJECTS__"].setdefault(mem_qname, {"doc": {}}))
 						mem_entry["doc"] = {}
 						mem_entry["doc_lines"] = mem_doc
+						ann = _member_annotation_text(o, mem_name, obj_annotations.get(mem_name))
+						if ann:
+							mem_entry["annotation"] = ann
 						if sec_label == "Public_types":
 							mem_entry["doc_lines_kind"] = "type"
 						elif sec_label == "Public_variables":
@@ -1504,9 +1530,11 @@ def render_json_command(args: argparse.Namespace) -> int:
 					entry2["path"] = docitem.get_obj_path(sys.modules.get(modname))
 # Various attempts to get the module docstring.
 				mod_doc = None
+				mod_annotations: dict[str, Any] = {}
 				mod_obj = sys.modules.get(modname)
 				if mod_obj is not None:
 					mod_doc = docitem.get_obj_docstring(mod_obj)
+					mod_annotations = docitem.get_obj_annotations(mod_obj)
 # Scan python AST in order to get module docstring!
 				if not mod_doc:
 					mod_doc = _safe_module_docstring(modname)
@@ -1549,6 +1577,9 @@ def render_json_command(args: argparse.Namespace) -> int:
 									mem_entry = cast(dict[str, Any], tree_full["__WTRL_OBJECTS__"].setdefault(mem_qname, {"doc": {}}))
 									mem_entry["doc"] = {}
 									mem_entry["doc_lines"] = mem_doc
+									ann = _member_annotation_text(mod_obj, mem_name, mod_annotations.get(mem_name))
+									if ann:
+										mem_entry["annotation"] = ann
 									if sec_label == "Public_types":
 										mem_entry["doc_lines_kind"] = "type"
 									elif sec_label == "Public_variables":

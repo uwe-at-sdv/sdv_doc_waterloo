@@ -7,7 +7,7 @@ import json
 import re
 from pathlib import Path
 
-from pytest_common import ROOT, run_waterlint, DIR_EXAMPLES
+from pytest_common import ROOT, run_waterlint, DIR_EXAMPLES, DIR_MODULE
 
 def _parse_info_counts(stderr: str) -> tuple[dict[str, tuple[int, int]], dict[str, int]]:
 	patts = {
@@ -194,6 +194,39 @@ def test_render_json_counts_core_C() -> None:
 	assert rendered["modules"] == 0
 	assert rendered["classes"] == 1
 	assert rendered["callables"] == 1
+
+
+def test_render_json_includes_annotations_for_public_variables(tmp_path: Path) -> None:
+	out_file = tmp_path / "docitem_helper.wtrl.core.rfc-2119.json"
+	res = run_waterlint(
+		"render-json",
+		"--basedir",
+		DIR_MODULE,
+		"--obj",
+		"docitem_helper",
+		"--scope",
+		"core",
+		"--flavour",
+		"rfc-2119",
+		"--no-allow-local-paths",
+		"--out",
+		str(out_file),
+	)
+	assert res.returncode == 0, res.stderr
+	doc = _load_json_doc(out_file)
+	objects = doc["__WTRL_OBJECTS__"]
+	qid = next(key for key in objects if key.endswith("SOURCE_DOCSTRING_CACHE"))
+	node = objects[qid]
+	assert node["doc_lines_kind"] == "variable"
+	assert node["annotation"] == "Dict[int, str]"
+
+	alias_qid = next(key for key in objects if key.endswith("AnnotatableObject"))
+	alias_node = objects[alias_qid]
+	assert alias_node["annotation"] == "type | module | function"
+
+	const_qid = next(key for key in objects if key.endswith("FLAVOUR_TAG_MAP"))
+	const_node = objects[const_qid]
+	assert "annotation" not in const_node or const_node["annotation"] in (None, "")
 
 
 def test_render_json_out_dir_single_obj_generates_good_practice_name(tmp_path: Path) -> None:

@@ -31,6 +31,38 @@ def _is_type_alias(value: object, ann: object | None) -> bool:
 
 # DocitemDocstring_t = docitem_docstring_module | docitem_docstring_class | docitem_docstring_method
 
+
+class ValidationSession:
+	"""
+Preamble:
+	profile:
+		function
+	normative_sections:
+		Contract, Parameters, Returns, Raises
+Contract:
+	general:
+		|Must| provide per-validation run state for recursive docstring validation.
+		|Must| remember already validated objects in order to avoid recursion divergence.
+		|Must| offer a stable place for future validation cache and statistics data.
+Parameters:
+Returns:
+Raises:
+	"""
+	def __init__(self) -> None:
+		self._seen: Dict[object, docitem_docstring_base] = {}
+
+	def has_seen(self, obj: object) -> bool:
+		return obj in self._seen
+
+	def get_seen(self, obj: object) -> docitem_docstring_base:
+		return self._seen[obj]
+
+	def remember(self, obj: object, top: docitem_docstring_base) -> None:
+		self._seen[obj] = top
+
+	#def is_cached_as_success(self, obj: object) -> bool:
+	#	return self.has_seen(obj)
+
 #===== Get properties from docitem tree =======================#
 
 def get_status(tr: tracer, obj: object, top: docitem_docstring_base) -> str:
@@ -252,7 +284,7 @@ Raises:
 		f"Could not resolve reference '{ref}' from context '{_qualified_object_name(current_obj)}'.{import_hint}"
 	)
 
-def validate_docstring_module(tr : tracer, obj: object, top : docitem_docstring_module,node_contract : docitem_map_base,node_normative_sections : docitem_list_base, _seen: Dict[object,docitem_docstring_base] | None = None) -> None:
+def validate_docstring_module(tr : tracer, obj: object, top : docitem_docstring_module,node_contract : docitem_map_base,node_normative_sections : docitem_list_base, session: ValidationSession | None = None) -> None:
 	"""
 Preamble:
 	profile:
@@ -279,8 +311,8 @@ Parameters:
 		The node for section |label|`Contract` already parsed by the caller.
 	node_normative_sections:
 		The node for section |label|`Preamble.normative_sections` already parsed by the caller.
-	_seen:
-		Recording objects already validated in order to avoid recursion divergence and to share parsed trees across references.
+	session:
+		The validation session shared across recursive validations.
 Returns:
 	|Must| return |None|
 Raises:
@@ -539,7 +571,7 @@ Notes:
 				details = render_scope_relation_details("module", top_scopes, top_scope_explicit, "function", scopes, ref_scope_explicit, "Public_functions", ref_name, "<reconsider the scopes of the module and the referenced function>", "module")
 				raise_validation_error(tr, obj, "SCP-005", f"Reconsider the scopes of the module and the referenced function '{ref_name}'.", details)
 
-def validate_docstring_class(tr : tracer, obj: object, top : docitem_docstring_class,node_contract : docitem_map_base,node_normative_sections : docitem_list_base, _seen: Dict[object,docitem_docstring_base] | None = None) -> None:
+def validate_docstring_class(tr : tracer, obj: object, top : docitem_docstring_class,node_contract : docitem_map_base,node_normative_sections : docitem_list_base, session: ValidationSession | None = None) -> None:
 	"""
 Preamble:
 	profile:
@@ -569,8 +601,8 @@ Parameters:
 		The node for section |label|`Contract` already parsed by the caller.
 	node_normative_sections:
 		The node for section |label|`Preamble.normative_sections` already parsed by the caller.
-	_seen:
-		Recording objects already validated in order to avoid recursion divergence and to share parsed trees across references.
+	session:
+		The validation session shared across recursive validations.
 Returns:
 	|Must| return |None|
 Raises:
@@ -970,7 +1002,7 @@ Notes:
 				details = render_normative_section_details("Factory", node_normative_sections.items(), profile, action="add")
 				raise_validation_error(tr,obj,"FAC-009",f"Section 'Factory' is not listed as normative.", details)
 
-def validate_docstring_method(tr : tracer, obj: Callable[..., Any], top : docitem_docstring_method,node_contract : docitem_map_base,node_normative_sections : docitem_list_base, _seen: Dict[object,docitem_docstring_base] | None = None) -> None:
+def validate_docstring_method(tr : tracer, obj: Callable[..., Any], top : docitem_docstring_method,node_contract : docitem_map_base,node_normative_sections : docitem_list_base, session: ValidationSession | None = None) -> None:
 	"""
 Preamble:
 	profile:
@@ -1004,8 +1036,8 @@ Parameters:
 		The node for section |label|`Contract` already parsed by the caller.
 	node_normative_sections:
 		The node for section |label|`Preamble.normative_sections` already parsed by the caller.
-	_seen:
-		Recording objects already validated in order to avoid recursion divergence and to share parsed trees across references.
+	session:
+		The validation session shared across recursive validations.
 Returns:
 	|Must| return |None|
 Raises:
@@ -1167,7 +1199,7 @@ Notes:
 					details = render_exception_reference_details(exc_name, profile, expected_kind="subclass of BaseException")
 					raise_validation_error(tr,obj,"RAI-007", f"Exception '{exc_name}' is not a subclass of BaseException.", details)
 
-def validate_docstring_inherited_method(tr : tracer, obj: object, top : docitem_docstring_inherited_method,node_contract : docitem_map_base,node_normative_sections : docitem_list_base, _seen: Dict[object,docitem_docstring_base] | None = None) -> None:
+def validate_docstring_inherited_method(tr : tracer, obj: object, top : docitem_docstring_inherited_method,node_contract : docitem_map_base,node_normative_sections : docitem_list_base, session: ValidationSession | None = None) -> None:
 	"""
 Preamble:
 	profile:
@@ -1198,8 +1230,8 @@ Parameters:
 		The node for section |label|`Contract` already parsed by the caller.
 	node_normative_sections:
 		The node for section |label|`Preamble.normative_sections` already parsed by the caller.
-	_seen:
-		Recording objects already validated in order to avoid recursion divergence and to share parsed trees across references.
+	session:
+		The validation session shared across recursive validations.
 Returns:
 	|Must| return |None|
 Raises:
@@ -1325,7 +1357,7 @@ Notes:
 					raise_validation_error(tr,obj,"CON-045",f"Base method name '{base_name}' does not have a docstring.", details)
 				try:
 					top_base_obj = make_docitem_tree_from_object(tr,base_obj)
-					validate_docstring(tr,base_obj,top_base_obj)
+					validate_docstring(tr,base_obj,top_base_obj,session=session)
 				except ParseError:
 					details = {
 						"found": render_identifier_lines("Contract.base", [base_name]),
@@ -1440,7 +1472,7 @@ def _collect_term_refs(node: docitem_base) -> set[str]:
 	return refs
 
 
-def validate_docstring(tr : tracer,obj: object, top : docitem_docstring_base | None = None, _seen: Dict[object,docitem_docstring_base] | None = None) -> docitem_docstring_base:
+def validate_docstring(tr : tracer,obj: object, top : docitem_docstring_base | None = None, session: ValidationSession | None = None) -> docitem_docstring_base:
 	"""
 Preamble:
 	profile:
@@ -1482,8 +1514,8 @@ Parameters:
 		The object to validate against (module, class or callable).
 	top:
 		The docitem tree to validate.
-	_seen:
-		Recording objects already validated in order to avoid recursion divergence and to share parsed trees across references.
+	session:
+		The validation session shared across recursive validations.
 Returns:
 	|Must| return |None|
 Raises:
@@ -1501,10 +1533,10 @@ See_also:
 	"""
 # validate_docstring is called recursively in coverage validations,
 # therefore we must make sure not to run into infinite recusrsion.
-	if _seen is None:
-		_seen = {}
-	if obj in _seen:
-		return _seen[obj]
+	if session is None:
+		session = ValidationSession()
+	if session.has_seen(obj):
+		return session.get_seen(obj)
 	if top == None:
 		if not get_obj_docstring(obj):
 			raise_has_no_docstring(tr,"DOC-001",obj)
@@ -1512,7 +1544,7 @@ See_also:
 			top = make_docitem_tree_from_object(tr,obj)
 		except Exception as e:
 			raise
-	_seen[obj] = top
+	session.remember(obj, top)
 # Log some debug info
 	tr.add_info(f"validating '{get_obj_name(obj)}'")
 	profile = get_profile(top)
@@ -1658,7 +1690,7 @@ See_also:
 					with traced_section(tr, "_inherited"):
 						tr_tmp = tracer()
 						try:
-							mod_doc_top = validate_docstring(tr_tmp, direct_module, _seen=_seen)
+							mod_doc_top = validate_docstring(tr_tmp, direct_module, session=session)
 						except Exception as e:
 							details = render_inherited_definition_details(current_object_inherited_terms, profile, expected_text="<implement a Waterloo docstring in the direct module>")
 							raise_validation_error(tr,obj,"DEF-014",f"Direct module '{get_obj_name(direct_module)}' has no valid docstring: {e}",details)
@@ -1742,7 +1774,7 @@ See_also:
 					if target_obj is obj:
 						details = render_see_also_reference_details(item_see_also, "<do not refer to the documented object itself>", profile)
 						raise_validation_error(tr,obj,"SEE-005", f"See_also reference '{item_see_also}' must not refer to the object itself.", details)
-					if target_obj in _seen:
+					if session.has_seen(target_obj):
 						continue
 					doc = get_obj_docstring(target_obj)
 					if not doc:
@@ -1806,16 +1838,16 @@ See_also:
 		profile = get_profile(top)
 		if profile == "module":
 			assert isinstance(top,docitem_docstring_module)
-			validate_docstring_module(tr,obj,top,node_contract,node_normative_sections)
+			validate_docstring_module(tr,obj,top,node_contract,node_normative_sections,session=session)
 		elif profile == "class":
 			assert isinstance(top,docitem_docstring_class)
-			validate_docstring_class(tr,obj,top,node_contract,node_normative_sections)
+			validate_docstring_class(tr,obj,top,node_contract,node_normative_sections,session=session)
 		elif profile in ("method","function"):
 			assert isinstance(top,docitem_docstring_method)
-			validate_docstring_method(tr,cast(Callable[..., Any],obj),top,node_contract,node_normative_sections)
+			validate_docstring_method(tr,cast(Callable[..., Any],obj),top,node_contract,node_normative_sections,session=session)
 		elif profile == "inherited_method":
 			assert isinstance(top,docitem_docstring_inherited_method)
-			validate_docstring_inherited_method(tr,obj,top,node_contract,node_normative_sections)
+			validate_docstring_inherited_method(tr,obj,top,node_contract,node_normative_sections,session=session)
 		else:
 			details = {
 				"found": render_identifier_lines("Preamble.profile", [profile]),
@@ -1832,7 +1864,7 @@ See_also:
 
 	return top
 
-def validate_class_class_coverage(tr : tracer,obj: type[object], doc_class: docitem_docstring_class) -> None:
+def validate_class_class_coverage(tr : tracer,obj: type[object], doc_class: docitem_docstring_class, session: ValidationSession | None = None) -> None:
 	"""
 Preamble:
 	profile:
@@ -1851,6 +1883,8 @@ Parameters:
 		The class object to be validated.
 	doc_class:
 		Already parsed class docstring tree for |var|`obj`.
+	session:
+		The validation session shared across recursive validations.
 Returns:
 	|Must| return |None|.
 Raises:
@@ -1867,6 +1901,8 @@ Notes:
 			raise TypeError("validate_class_class_coverage expects a class object.")
 		if not isinstance(doc_class, docitem_docstring_class):
 			raise TypeError("doc_class must be a docitem_docstring_class instance")
+		if session is None:
+			session = ValidationSession()
 # Collect declared public nested classes from class docstring
 		public_classes: set[str] = _get_public_section_entries2(doc_class,"Public_classes",docitem_public_classes)
 # Validate nested class docstrings (defined directly on the class)
@@ -1884,13 +1920,18 @@ Notes:
 			doc = get_obj_docstring(member)
 			if not doc:
 				continue
-# Determine validity for warning purposes
+# Determine validity for warning purposes.
+			tmp_tr = tracer()
+			tr.add_debug_note(f"Validating docstring of member '{name_of_member}' for coverage purposes.")
 			try:
-				tmp_tr = tracer()
-				validate_docstring(tmp_tr, member)
-				classes_with_valid_docstring.add(name_of_member)
+				with traced_section(tmp_tr, get_obj_name(obj)):
+					with traced_section(tmp_tr, name_of_member):
+						validate_docstring(tmp_tr, member, session=session)
 			except Exception:
 				pass
+			tr.append_and_defuse(tmp_tr)
+			if not tmp_tr.has_errors():
+				classes_with_valid_docstring.add(name_of_member)
 # Validate only if class is listed
 			if name_of_member in public_classes:
 # Push member name_of_member to tracer.
@@ -1922,7 +1963,7 @@ Notes:
 # Important: Coverage means to descend recursively.
 				validate_class_coverage(tr,cls_obj)
 
-def validate_class_method_coverage(tr : tracer,obj: type[object], doc_class: docitem_docstring_class) -> None:
+def validate_class_method_coverage(tr : tracer,obj: type[object], doc_class: docitem_docstring_class, session: ValidationSession | None = None) -> None:
 	"""
 Preamble:
 	profile:
@@ -1941,6 +1982,8 @@ Parameters:
 		The class object to be validated.
 	doc_class:
 		Already parsed class docstring tree for |var|`obj`.
+	session:
+		The validation session shared across recursive validations.
 Returns:
 	|Must| return |None|.
 Raises:
@@ -1958,6 +2001,8 @@ Notes:
 			raise TypeError("validate_class_method_coverage expects a class object.")
 		if not isinstance(doc_class, docitem_docstring_class):
 			raise TypeError("doc_class must be a docitem_docstring_class instance")
+		if session is None:
+			session = ValidationSession()
 # Collect declared public methods from class docstring
 		public_methods: set[str] = _get_public_section_entries2(doc_class,"Public_methods",docitem_public_methods)
 # Collect methods defined on the class (not inherited) and validate their docstrings
@@ -1976,20 +2021,24 @@ Notes:
 			doc = get_obj_docstring(func_obj)
 			if not doc:
 				continue
-# Determine validity for warning purposes
+# Determine validity for warning purposes.
+			tmp_tr = tracer()
 			try:
-				tmp_tr = tracer()
-				validate_docstring(tmp_tr, func_obj)
-				methods_with_valid_docstring.add(name_of_member)
+				with traced_section(tmp_tr, get_obj_name(obj)):
+					with traced_section(tmp_tr, name_of_member):
+						validate_docstring(tmp_tr, func_obj, session=session)
 			except Exception:
 				pass
+			tr.append_and_defuse(tmp_tr)
+			if not tmp_tr.has_errors():
+				methods_with_valid_docstring.add(name_of_member)
 # Validate only if method is listed
 			if name_of_member in public_methods:
 # Push member name to tracer.
 				with traced_section(tr, func_obj.__name__):
 					try:
 # Validate and collect messages from lower levels
-						validate_docstring(tr,func_obj, None, None)
+						validate_docstring(tr,func_obj, None, session=session)
 						valid_methods.add(name_of_member)
 					except Exception:
 # Add message from higher level for clarity (should-level rule).
@@ -2018,9 +2067,9 @@ Notes:
 				if not docm2.strip():
 					warn_validation(tr,obj,"CPMT-007",f"Class {get_obj_name(obj)}: method '{name_of_member}' is listed in Public_methods but has no valid docstring.")
 					continue
-				validate_docstring(tr,func_obj2, None, None)
+				validate_docstring(tr,func_obj2, None, session=session)
 
-def validate_class_type_coverage(tr : tracer,obj: type[object], doc_class: docitem_docstring_class) -> None:
+def validate_class_type_coverage(tr : tracer,obj: type[object], doc_class: docitem_docstring_class, session: ValidationSession | None = None) -> None:
 	"""
 Preamble:
 	profile:
@@ -2038,6 +2087,8 @@ Parameters:
 		The class object to be validated.
 	doc_class:
 		Already parsed class docstring tree for |var|`obj`.
+	session:
+		Validation session for tracking state across validations.
 Returns:
 	|Must| return |None|.
 Raises:
@@ -2056,7 +2107,7 @@ Raises:
 #				if not hasattr(obj, type_name):
 #					raise_validation_error(tr,obj,"CPTYP-005",f"Class {obj.__name__}: type '{type_name}' listed in Public_types but does not exist.")
 
-def validate_class_constant_coverage(tr : tracer,obj: type[object], doc_class: docitem_docstring_class) -> None:
+def validate_class_constant_coverage(tr : tracer,obj: type[object], doc_class: docitem_docstring_class, session: ValidationSession | None = None) -> None:
 	"""
 Preamble:
 	profile:
@@ -2075,6 +2126,8 @@ Parameters:
 		The class object to be validated.
 	doc_class:
 		Already parsed class docstring tree for |var|`obj`.
+	session:
+		Validation session for tracking state across validations.
 Returns:
 	|Must| return |None|.
 Raises:
@@ -2088,8 +2141,10 @@ Raises:
 			raise TypeError("validate_class_method_coverage expects a class object.")
 		if not isinstance(doc_class, docitem_docstring_class):
 			raise TypeError("doc_class must be a docitem_docstring_class instance")
+		if session is None:
+			session = ValidationSession()
 
-def validate_class_variable_coverage(tr : tracer,obj: type[object], doc_class: docitem_docstring_class) -> None:
+def validate_class_variable_coverage(tr : tracer,obj: type[object], doc_class: docitem_docstring_class, session: ValidationSession | None = None) -> None:
 	"""
 Preamble:
 	profile:
@@ -2107,6 +2162,8 @@ Parameters:
 		The class object to be validated.
 	doc_class:
 		Already parsed class docstring tree for |var|`obj`.
+	session:
+		Validation session for tracking state across validations.
 Returns:
 	|Must| return |None|.
 Raises:
@@ -2128,7 +2185,7 @@ Raises:
 			assert isinstance(pv_node, docitem_public_variables)
 			public_variables = set(pv_node.items().keys())
 
-def validate_module_class_coverage(tr : tracer,obj: ModuleType, doc_module: docitem_docstring_module) -> None:
+def validate_module_class_coverage(tr : tracer,obj: ModuleType, doc_module: docitem_docstring_module, session: ValidationSession | None = None) -> None:
 	"""
 Preamble:
 	profile:
@@ -2147,6 +2204,8 @@ Parameters:
 		The module object to be validated.
 	doc_module:
 		Already parsed module docstring tree for |var|`obj`.
+	session:
+		Validation session for tracking state across validations.
 Returns:
 	|Must| return |None|.
 Raises:
@@ -2161,6 +2220,8 @@ Notes:
 			raise TypeError("validate_module_class_coverage expects a module object.")
 		if not isinstance(doc_module, docitem_docstring_module):
 			raise TypeError("doc_module must be a docitem_docstring_module instance")
+		if session is None:
+			session = ValidationSession()
 # Collect declared public classes from module docstring
 		public_classes: set[str] = _get_public_section_entries2(doc_module,"Public_classes",docitem_public_classes)
 # Collect classes defined in the module (not imported) and validate their docstrings
@@ -2177,14 +2238,17 @@ Notes:
 			doc = get_obj_docstring(member)
 			if not doc:
 				continue
-			# Determine validity for warning purposes
+			# Determine validity for warning purposes.
+			tmp_tr = tracer()
 			try:
-				tmp_tr = tracer()
-				validate_docstring(tmp_tr,member)
-				if not tmp_tr.has_errors():
-					classes_with_valid_docstring.add(name_of_member)
+				with traced_section(tmp_tr, get_obj_name(obj)):
+					with traced_section(tmp_tr, name_of_member):
+						validate_docstring(tmp_tr,member, session=session)
 			except Exception:
 				pass
+			tr.append_and_defuse(tmp_tr)
+			if not tmp_tr.has_errors():
+				classes_with_valid_docstring.add(name_of_member)
 # Validate only if class is listed
 			if name_of_member in public_classes:
 # Push member name_of_member to tracer.
@@ -2218,7 +2282,7 @@ Notes:
 # Important: Coverage means to descend recursively.
 				validate_class_coverage(tr,cls_obj)
 
-def validate_module_function_coverage(tr : tracer,obj: ModuleType, doc_module: docitem_docstring_module) -> None:
+def validate_module_function_coverage(tr : tracer,obj: ModuleType, doc_module: docitem_docstring_module, session: ValidationSession | None = None) -> None:
 	"""
 Preamble:
 	profile:
@@ -2237,6 +2301,8 @@ Parameters:
 		The module object to be validated.
 	doc_module:
 		Already parsed module docstring tree for |var|`obj`.
+	session:
+		Validation session for tracking state across validations.
 Returns:
 	|Must| return |None|.
 Raises:
@@ -2254,6 +2320,8 @@ Notes:
 			raise TypeError("validate_module_function_coverage expects a module object.")
 		if not isinstance(doc_module, docitem_docstring_module):
 			raise TypeError("doc_module must be a docitem_docstring_module instance")
+		if session is None:
+			session = ValidationSession()
 # Collect declared public functions from module docstring
 		public_functions: set[str] = _get_public_section_entries2(doc_module,"Public_functions",docitem_public_functions)
 # Collect functions defined in the module (not imported) and validate their docstrings
@@ -2270,20 +2338,24 @@ Notes:
 			doc = get_obj_docstring(member)
 			if not doc:
 				continue
-# Determine validity for warning purposes
+# Determine validity for warning purposes.
+			tmp_tr = tracer()
 			try:
-				tmp_tr = tracer()
-				validate_docstring(tmp_tr,member)
-				functions_with_valid_docstring.add(name_of_member)
+				with traced_section(tmp_tr, get_obj_name(obj)):
+					with traced_section(tmp_tr, name_of_member):
+						validate_docstring(tmp_tr,member, session=session)
 			except Exception:
 				pass
+			tr.append_and_defuse(tmp_tr)
+			if not tmp_tr.has_errors():
+				functions_with_valid_docstring.add(name_of_member)
 # Validate only if function is listed
 			if name_of_member in public_functions:
 # Push member name to tracer.
 				with traced_section(tr, name_of_member):
 					try:
 # Validate and collect messages from lower levels
-						validate_docstring(tr,member, None, None)
+						validate_docstring(tr,member, None, session=session)
 						valid_functions.add(name_of_member)
 					except Exception:
 # Add message from higher level for clarity (should-level rule).
@@ -2309,9 +2381,9 @@ Notes:
 				if not doc_f2.strip():
 					warn_validation(tr,obj,"MPFN-007",f"Module {obj.__name__}: function '{name_of_member}' is listed in Public_functions but has no valid docstring.")
 					continue
-				validate_docstring(tr,func_obj, None, None)
+				validate_docstring(tr,func_obj, None, session=session)
 
-def validate_module_type_coverage(tr : tracer,obj: ModuleType, doc_module: docitem_docstring_module) -> None:
+def validate_module_type_coverage(tr : tracer,obj: ModuleType, doc_module: docitem_docstring_module, session: ValidationSession | None = None) -> None:
 	"""
 Preamble:
 	profile:
@@ -2329,6 +2401,8 @@ Parameters:
 		The module object to be validated.
 	doc_module:
 		Already parsed module docstring tree for |var|`obj`.
+	session:
+		Validation session for tracking state across validations.
 Returns:
 	|Must| return |None|.
 Raises:
@@ -2338,6 +2412,8 @@ Raises:
 	with traced_section(tr, get_obj_name(obj)):
 		if not isinstance(doc_module, docitem_docstring_module):
 			raise TypeError("doc_module must be a docitem_docstring_module instance")
+		if session is None:
+			session = ValidationSession()
 # Collect declared public types from module docstring
 # checked elseqhere
 #		public_types: set[str] = _get_public_section_entries(doc_module,"Public_types",docitem_public_types)
@@ -2347,7 +2423,7 @@ Raises:
 #				if not hasattr(obj, type_name):
 #					raise_validation_error(tr,obj,"MPTYP-005",f"Module {obj.__name__}: type '{type_name}' listed in Public_types but does not exist.")
 
-def validate_module_constant_coverage(tr : tracer,obj: ModuleType, doc_module: docitem_docstring_module) -> None:
+def validate_module_constant_coverage(tr : tracer,obj: ModuleType, doc_module: docitem_docstring_module, session: ValidationSession | None = None) -> None:
 	"""
 Preamble:
 	profile:
@@ -2366,6 +2442,8 @@ Parameters:
 		The module object to be validated.
 	doc_module:
 		Already parsed module docstring tree for |var|`obj`.
+	session:
+		Validation session for tracking state across validations.
 Returns:
 	|Must| return |None|.
 Raises:
@@ -2375,6 +2453,8 @@ Raises:
 	with traced_section(tr, get_obj_name(obj)):
 		if not isinstance(doc_module, docitem_docstring_module):
 			raise TypeError("doc_module must be a docitem_docstring_module instance")
+		if session is None:
+			session = ValidationSession()
 # Collect declared public constants from module docstring
 # checked elsewhere
 #		public_constants: set[str] = _get_public_section_entries(doc_module,"Public_constants",docitem_public_constants)
@@ -2388,7 +2468,7 @@ Raises:
 #					if not is_attr_final(obj,const_name):
 #						raise_validation_error(tr,obj,"MPCON-006",f"Module {obj.__name__}: constant '{const_name}' listed in Public_constants but is not annotated as 'Final'.")
 
-def validate_module_variable_coverage(tr : tracer,obj: ModuleType, doc_module: docitem_docstring_module) -> None:
+def validate_module_variable_coverage(tr : tracer,obj: ModuleType, doc_module: docitem_docstring_module, session: ValidationSession | None = None) -> None:
 	"""
 Preamble:
 	profile:
@@ -2406,6 +2486,8 @@ Parameters:
 		The module object to be validated.
 	doc_module:
 		Already parsed module docstring tree for |var|`obj`.
+	session:
+		Validation session for tracking state across validations.
 Returns:
 	|Must| return |None|.
 Raises:
@@ -2457,13 +2539,14 @@ Notes:
 	with traced_section(tr, get_obj_name(obj)):
 		if not is_obj_class(obj):
 			raise TypeError(f"{obj.__class__.__name__} is not a class object")
-		top = validate_docstring(tr,obj)
+		session = ValidationSession()
+		top = validate_docstring(tr,obj, session=session)
 		assert isinstance(top, docitem_docstring_class)
-		validate_class_class_coverage(tr,obj, top)
-		validate_class_method_coverage(tr,obj, top)
-		validate_class_type_coverage(tr,obj, top)
-		validate_class_constant_coverage(tr,obj, top)
-		validate_class_variable_coverage(tr,obj, top)
+		validate_class_class_coverage(tr,obj, top, session=session)
+		validate_class_method_coverage(tr,obj, top, session=session)
+		validate_class_type_coverage(tr,obj, top, session=session)
+		validate_class_constant_coverage(tr,obj, top, session=session)
+		validate_class_variable_coverage(tr,obj, top, session=session)
 
 def validate_module_coverage(tr : tracer,obj: ModuleType) -> None:
 	"""
@@ -2489,10 +2572,11 @@ Raises:
 	with traced_section(tr, get_obj_name(obj)):
 		if not is_obj_module(obj):
 			raise TypeError(f"{obj.__class__.__name__} is not a module object")
-		top = validate_docstring(tr,obj)
+		session = ValidationSession()
+		top = validate_docstring(tr,obj, session=session)
 		assert isinstance(top, docitem_docstring_module)
-		validate_module_class_coverage(tr,obj, top)
-		validate_module_function_coverage(tr,obj, top)
-		validate_module_type_coverage(tr,obj, top)
-		validate_module_constant_coverage(tr,obj, top)
-		validate_module_variable_coverage(tr,obj, top)
+		validate_module_class_coverage(tr,obj, top, session=session)
+		validate_module_function_coverage(tr,obj, top, session=session)
+		validate_module_type_coverage(tr,obj, top, session=session)
+		validate_module_constant_coverage(tr,obj, top, session=session)
+		validate_module_variable_coverage(tr,obj, top, session=session)

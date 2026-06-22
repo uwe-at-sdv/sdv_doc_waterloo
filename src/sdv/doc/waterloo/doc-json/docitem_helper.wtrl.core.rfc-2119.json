@@ -1,12 +1,12 @@
 {
     "$schema": "https://sci-d-vis.com/schema/wtrl-json-0.1.0.schema.json",
-    "$id": "urn:waterlint:wtrl-json:0.16.3:core:rfc-2119:d047d2174a94bc07d5426b4270fc457c6e60ac38b7b9e8356d0553e607817268",
+    "$id": "urn:waterlint:wtrl-json:0.16.3:core:rfc-2119:b4d2111b010ea03e2291249952df368ace2de622b9bc0d2c51185cf165c1acaf",
     "__WTRL_VERSION__": {
         "waterloo": "0.9.0",
         "schema": "0.1.0"
     },
     "__WTRL_META__": {
-        "generated_at": "2026-06-21T20:38:12+02:00",
+        "generated_at": "2026-06-22T12:03:07+02:00",
         "generator": "waterlint",
         "scope": "core",
         "flavour": "rfc-2119"
@@ -48,7 +48,7 @@
         "sdv.doc.waterloo.docitem_helper": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper"
     },
     "__WTRL_TOC_CLASSES__": {
-        "sdv.doc.waterloo.docitem_helper.WHITELIST_REASON": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.WHITELIST_REASON",
+        "sdv.doc.waterloo.docitem_helper.WhitelistReason": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.WhitelistReason",
         "sdv.doc.waterloo.docitem_helper.Trait": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.Trait",
         "sdv.doc.waterloo.docitem_helper.Scope": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.Scope",
         "sdv.doc.waterloo.docitem_helper.Flavour": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.Flavour",
@@ -83,6 +83,7 @@
         "sdv.doc.waterloo.docitem_helper.render_base_method_reference_details": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.render_base_method_reference_details",
         "sdv.doc.waterloo.docitem_helper.render_exactly_one_identifier_details": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.render_exactly_one_identifier_details",
         "sdv.doc.waterloo.docitem_helper.render_parameter_signature_details": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.render_parameter_signature_details",
+        "sdv.doc.waterloo.docitem_helper.render_see_also_reference_details": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.render_see_also_reference_details",
         "sdv.doc.waterloo.docitem_helper.render_scope_relation_details": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.render_scope_relation_details",
         "sdv.doc.waterloo.docitem_helper.render_base_method_docstring_details": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.render_base_method_docstring_details",
         "sdv.doc.waterloo.docitem_helper.render_definition_reference_details": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.render_definition_reference_details",
@@ -111,6 +112,7 @@
         "sdv.doc.waterloo.docitem_helper.get_obj_annotations": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.get_obj_annotations",
         "sdv.doc.waterloo.docitem_helper.get_obj_decorators": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.get_obj_decorators",
         "sdv.doc.waterloo.docitem_helper.gen_documentable_objects": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.gen_documentable_objects",
+        "sdv.doc.waterloo.docitem_helper.tracer.str_by_severity": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.tracer.str_by_severity",
         "sdv.doc.waterloo.docitem_helper.tracer.build_json": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.tracer.build_json",
         "sdv.doc.waterloo.docitem_helper.traced_section": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.traced_section",
         "sdv.doc.waterloo.docitem_helper.rule_on_fail": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.rule_on_fail",
@@ -136,7 +138,9 @@
         "sdv.doc.waterloo.docitem_helper.AstDocNode": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.AstDocNode",
         "sdv.doc.waterloo.docitem_helper.tracer.Context": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.tracer.Context"
     },
-    "__WTRL_TOC_VARIABLES__": {},
+    "__WTRL_TOC_VARIABLES__": {
+        "sdv.doc.waterloo.docitem_helper.SOURCE_DOCSTRING_CACHE": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.SOURCE_DOCSTRING_CACHE"
+    },
     "__WTRL_TOC_CONSTANTS__": {
         "sdv.doc.waterloo.docitem_helper.RE_RULE_ID": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.RE_RULE_ID",
         "sdv.doc.waterloo.docitem_helper.RE_IDENTIFIER": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.RE_IDENTIFIER",
@@ -155,16 +159,16 @@
         "sdv.doc.waterloo.docitem_helper.FORMAT_TAG_MAP": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.FORMAT_TAG_MAP",
         "sdv.doc.waterloo.docitem_helper.STATUS_TAG_MAP": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.STATUS_TAG_MAP",
         "sdv.doc.waterloo.docitem_helper.SECTION_PROPERTIES": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.SECTION_PROPERTIES",
-        "sdv.doc.waterloo.docitem_helper.WHITELIST_REASON.UNSPECIFIED_RULE": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.WHITELIST_REASON.UNSPECIFIED_RULE",
-        "sdv.doc.waterloo.docitem_helper.WHITELIST_REASON.MAY_EXIST_RULE": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.WHITELIST_REASON.MAY_EXIST_RULE",
-        "sdv.doc.waterloo.docitem_helper.WHITELIST_REASON.STRUCTURE_RULE": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.WHITELIST_REASON.STRUCTURE_RULE",
-        "sdv.doc.waterloo.docitem_helper.WHITELIST_REASON.SEMANTIC_RULE": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.WHITELIST_REASON.SEMANTIC_RULE",
-        "sdv.doc.waterloo.docitem_helper.WHITELIST_REASON.UNRELATED_RULE": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.WHITELIST_REASON.UNRELATED_RULE",
-        "sdv.doc.waterloo.docitem_helper.WHITELIST_REASON.ANTICIPATED_RULE": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.WHITELIST_REASON.ANTICIPATED_RULE",
-        "sdv.doc.waterloo.docitem_helper.WHITELIST_REASON.FALLBACK_RULE": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.WHITELIST_REASON.FALLBACK_RULE",
-        "sdv.doc.waterloo.docitem_helper.WHITELIST_REASON.RELAY_RULE": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.WHITELIST_REASON.RELAY_RULE",
-        "sdv.doc.waterloo.docitem_helper.WHITELIST_REASON.BAD_IMPLEMENTATION_RULE": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.WHITELIST_REASON.BAD_IMPLEMENTATION_RULE",
-        "sdv.doc.waterloo.docitem_helper.WHITELIST_REASON.EXISTS_AS_COMMENT_RULE": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.WHITELIST_REASON.EXISTS_AS_COMMENT_RULE",
+        "sdv.doc.waterloo.docitem_helper.WhitelistReason.UNSPECIFIED_RULE": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.WhitelistReason.UNSPECIFIED_RULE",
+        "sdv.doc.waterloo.docitem_helper.WhitelistReason.MAY_EXIST_RULE": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.WhitelistReason.MAY_EXIST_RULE",
+        "sdv.doc.waterloo.docitem_helper.WhitelistReason.STRUCTURE_RULE": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.WhitelistReason.STRUCTURE_RULE",
+        "sdv.doc.waterloo.docitem_helper.WhitelistReason.SEMANTIC_RULE": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.WhitelistReason.SEMANTIC_RULE",
+        "sdv.doc.waterloo.docitem_helper.WhitelistReason.UNRELATED_RULE": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.WhitelistReason.UNRELATED_RULE",
+        "sdv.doc.waterloo.docitem_helper.WhitelistReason.ANTICIPATED_RULE": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.WhitelistReason.ANTICIPATED_RULE",
+        "sdv.doc.waterloo.docitem_helper.WhitelistReason.FALLBACK_RULE": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.WhitelistReason.FALLBACK_RULE",
+        "sdv.doc.waterloo.docitem_helper.WhitelistReason.RELAY_RULE": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.WhitelistReason.RELAY_RULE",
+        "sdv.doc.waterloo.docitem_helper.WhitelistReason.BAD_IMPLEMENTATION_RULE": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.WhitelistReason.BAD_IMPLEMENTATION_RULE",
+        "sdv.doc.waterloo.docitem_helper.WhitelistReason.EXISTS_AS_COMMENT_RULE": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.WhitelistReason.EXISTS_AS_COMMENT_RULE",
         "sdv.doc.waterloo.docitem_helper.Trait.ABSTRACT": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.Trait.ABSTRACT",
         "sdv.doc.waterloo.docitem_helper.Trait.FINAL": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.Trait.FINAL",
         "sdv.doc.waterloo.docitem_helper.Scope.PUBLIC": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.Scope.PUBLIC",
@@ -188,6 +192,7 @@
             "doc_lines": [
                 "Supported profile labels for the helper layer."
             ],
+            "annotation": "Literal['module', 'class', 'function', 'method', 'inherited_method']",
             "doc_lines_kind": "type"
         },
         "sdv.doc.waterloo.docitem_helper.DocstringSubtree": {
@@ -195,6 +200,7 @@
             "doc_lines": [
                 "Recursive docstring tree node type."
             ],
+            "annotation": "str | List[ForwardRef('DocstringSubtree')]",
             "doc_lines_kind": "type"
         },
         "sdv.doc.waterloo.docitem_helper.DocstringTree": {
@@ -202,6 +208,7 @@
             "doc_lines": [
                 "A full docstring tree represented as a list of subtree values."
             ],
+            "annotation": "List[str | List[ForwardRef('DocstringSubtree')]]",
             "doc_lines_kind": "type"
         },
         "sdv.doc.waterloo.docitem_helper.AnnotatableObject": {
@@ -209,6 +216,7 @@
             "doc_lines": [
                 "Objects that can be annotated by the helper layer."
             ],
+            "annotation": "type | module | function",
             "doc_lines_kind": "type"
         },
         "sdv.doc.waterloo.docitem_helper.RuleId": {
@@ -216,6 +224,7 @@
             "doc_lines": [
                 "Rule identifier type alias."
             ],
+            "annotation": "str",
             "doc_lines_kind": "type"
         },
         "sdv.doc.waterloo.docitem_helper.Origin": {
@@ -223,6 +232,7 @@
             "doc_lines": [
                 "Tracer origin labels."
             ],
+            "annotation": "Literal['parsing', 'validation', 'tool', 'extension']",
             "doc_lines_kind": "type"
         },
         "sdv.doc.waterloo.docitem_helper.Details": {
@@ -230,6 +240,7 @@
             "doc_lines": [
                 "Tracer details payload."
             ],
+            "annotation": "Dict[str, Any]",
             "doc_lines_kind": "type"
         },
         "sdv.doc.waterloo.docitem_helper.Scopes": {
@@ -237,6 +248,7 @@
             "doc_lines": [
                 "A set of scope values."
             ],
+            "annotation": "Set[sdv.doc.waterloo.docitem_helper.Scope]",
             "doc_lines_kind": "type"
         },
         "sdv.doc.waterloo.docitem_helper.Documentable": {
@@ -244,6 +256,7 @@
             "doc_lines": [
                 "Objects that can be traversed by the helper functions."
             ],
+            "annotation": "module | type[object] | Callable[..., Any]",
             "doc_lines_kind": "type"
         },
         "sdv.doc.waterloo.docitem_helper.AstDocNode": {
@@ -251,13 +264,23 @@
             "doc_lines": [
                 "An AST node type relevant for docstring extraction."
             ],
+            "annotation": "ast.ClassDef | ast.FunctionDef | ast.AsyncFunctionDef",
             "doc_lines_kind": "type"
+        },
+        "sdv.doc.waterloo.docitem_helper.SOURCE_DOCSTRING_CACHE": {
+            "doc": {},
+            "doc_lines": [
+                "A cache for storing source docstrings of objects to avoid redundant retrievals."
+            ],
+            "annotation": "Dict[int, str]",
+            "doc_lines_kind": "variable"
         },
         "sdv.doc.waterloo.docitem_helper.RE_RULE_ID": {
             "doc": {},
             "doc_lines": [
                 "Regular expression for rule IDs. Undocumented: RE_RULE_ID_COMPILED, the precompiled version for performance."
             ],
+            "annotation": "Final[str]",
             "doc_lines_kind": "constant"
         },
         "sdv.doc.waterloo.docitem_helper.RE_IDENTIFIER": {
@@ -265,6 +288,7 @@
             "doc_lines": [
                 "Regular expression for identifiers. Undocumented: RE_IDENTIFIER_COMPILED, the precompiled version for performance."
             ],
+            "annotation": "Final[str]",
             "doc_lines_kind": "constant"
         },
         "sdv.doc.waterloo.docitem_helper.RE_QUALIFIED_IDENTIFIER": {
@@ -272,6 +296,7 @@
             "doc_lines": [
                 "Regular expression for qualified identifiers. Undocumented: RE_QUALIFIED_IDENTIFIER_COMPILED, the precompiled version for performance."
             ],
+            "annotation": "Final[str]",
             "doc_lines_kind": "constant"
         },
         "sdv.doc.waterloo.docitem_helper.RE_CSV_IDENTIFIERS": {
@@ -286,6 +311,7 @@
             "doc_lines": [
                 "Regular expression for Waterloo markup roles in backtick markup."
             ],
+            "annotation": "Final[str]",
             "doc_lines_kind": "constant"
         },
         "sdv.doc.waterloo.docitem_helper.RE_WTRL_MARKUP_BACKTICK": {
@@ -293,6 +319,7 @@
             "doc_lines": [
                 "Regular expression for matching Waterloo backtick markup with roles. Undocumented: RE_WTRL_MARKUP_BACKTICK_COMPILED, the precompiled version for performance."
             ],
+            "annotation": "Final[str]",
             "doc_lines_kind": "constant"
         },
         "sdv.doc.waterloo.docitem_helper.RE_WTRL_ANGLE_HTTPS_REF": {
@@ -301,6 +328,7 @@
                 "Regular expression for matching Waterloo angle bracket HTTPS references. Undocumented: RE_WTRL_ANGLE_HTTPS_REF_COMPILED, the precompiled version for performance.",
                 "References consist of two parts: clear text and <link>, optionally separated by whitespace."
             ],
+            "annotation": "Final[str]",
             "doc_lines_kind": "constant"
         },
         "sdv.doc.waterloo.docitem_helper.RE_WTRL_ANGLE_WTRL_REF": {
@@ -309,6 +337,7 @@
                 "Regular expression for matching Waterloo angle bracket wtrl references. Undocumented: RE_WTRL_ANGLE_WTRL_REF_COMPILED, the precompiled version for performance.",
                 "References consist of two parts: clear text and <link>, optionally separated by whitespace."
             ],
+            "annotation": "Final[str]",
             "doc_lines_kind": "constant"
         },
         "sdv.doc.waterloo.docitem_helper.RULE_ID_WHITELIST": {
@@ -316,6 +345,7 @@
             "doc_lines": [
                 "Whitelist reasons for legacy rule identifiers used by the helper layer."
             ],
+            "annotation": "Final[Dict[str, WhitelistReason]]",
             "doc_lines_kind": "constant"
         },
         "sdv.doc.waterloo.docitem_helper.CANONICAL_ORDER_OF_SECTIONS": {
@@ -323,6 +353,7 @@
             "doc_lines": [
                 "Canonical subsection ordering for section snippets and expected snippets."
             ],
+            "annotation": "Final[Dict[str, None | Sequence[str]]]",
             "doc_lines_kind": "constant"
         },
         "sdv.doc.waterloo.docitem_helper.CANONICAL_ORDER_OF_PROFILES": {
@@ -330,6 +361,7 @@
             "doc_lines": [
                 "Canonical profile ordering for CLI help and documentation."
             ],
+            "annotation": "Final[list[Profile_t]]",
             "doc_lines_kind": "constant"
         },
         "sdv.doc.waterloo.docitem_helper.TRAIT_TAG_MAP": {
@@ -351,6 +383,7 @@
             "doc_lines": [
                 "Flavour tag mapping for normativity keyword rendering."
             ],
+            "annotation": "Mapping[str, Flavour]",
             "doc_lines_kind": "constant"
         },
         "sdv.doc.waterloo.docitem_helper.FORMAT_TAG_MAP": {
@@ -358,6 +391,7 @@
             "doc_lines": [
                 "Output format tag mapping for string-related output."
             ],
+            "annotation": "Mapping[str, Format]",
             "doc_lines_kind": "constant"
         },
         "sdv.doc.waterloo.docitem_helper.STATUS_TAG_MAP": {
@@ -375,6 +409,7 @@
                 "Informative: This is a carefully distilled machine-readable representation of the relevant rules",
                 "from the documentation standard, but the documentation remains the Single Source of Truth for the standard."
             ],
+            "annotation": "Final[dict[str, SectionProperty_t]]",
             "doc_lines_kind": "constant"
         },
         "sdv.doc.waterloo.docitem_helper": {
@@ -383,10 +418,11 @@
                     "profile": "module",
                     "normative_sections": [
                         "Contract",
-                        "Public_constants",
                         "Public_classes",
                         "Public_functions",
-                        "Public_types"
+                        "Public_types",
+                        "Public_constants",
+                        "Public_variables"
                     ]
                 },
                 "Contract": {
@@ -402,7 +438,8 @@
                     "Status",
                     "ConfigTraversal",
                     "tracer",
-                    "ResolveObjectError"
+                    "ResolveObjectError",
+                    "WhitelistReason"
                 ],
                 "Public_functions": [
                     "explain_try_self_for_section",
@@ -435,6 +472,7 @@
                     "render_constant_reference_details",
                     "render_named_value_reference_details",
                     "render_overview_missing_member_details",
+                    "render_see_also_reference_details",
                     "get_source_docstring",
                     "is_annotatable",
                     "is_attr_annotated",
@@ -557,6 +595,11 @@
                         "from the documentation standard, but the documentation remains the Single Source of Truth for the standard."
                     ]
                 },
+                "Public_variables": {
+                    "SOURCE_DOCSTRING_CACHE": [
+                        "A cache for storing source docstrings of objects to avoid redundant retrievals."
+                    ]
+                },
                 "Notes": {
                     "Render functions": [
                         "The render functions in this module are intended for building",
@@ -566,77 +609,77 @@
                 }
             }
         },
-        "sdv.doc.waterloo.docitem_helper.WHITELIST_REASON.UNSPECIFIED_RULE": {
+        "sdv.doc.waterloo.docitem_helper.WhitelistReason.UNSPECIFIED_RULE": {
             "doc": {},
             "doc_lines": [
                 "No explicit reason was recorded."
             ],
             "doc_lines_kind": "constant"
         },
-        "sdv.doc.waterloo.docitem_helper.WHITELIST_REASON.MAY_EXIST_RULE": {
+        "sdv.doc.waterloo.docitem_helper.WhitelistReason.MAY_EXIST_RULE": {
             "doc": {},
             "doc_lines": [
                 "The rule may exist in the corpus."
             ],
             "doc_lines_kind": "constant"
         },
-        "sdv.doc.waterloo.docitem_helper.WHITELIST_REASON.STRUCTURE_RULE": {
+        "sdv.doc.waterloo.docitem_helper.WhitelistReason.STRUCTURE_RULE": {
             "doc": {},
             "doc_lines": [
                 "The rule is a structural rule."
             ],
             "doc_lines_kind": "constant"
         },
-        "sdv.doc.waterloo.docitem_helper.WHITELIST_REASON.SEMANTIC_RULE": {
+        "sdv.doc.waterloo.docitem_helper.WhitelistReason.SEMANTIC_RULE": {
             "doc": {},
             "doc_lines": [
                 "The rule is a semantic rule."
             ],
             "doc_lines_kind": "constant"
         },
-        "sdv.doc.waterloo.docitem_helper.WHITELIST_REASON.UNRELATED_RULE": {
+        "sdv.doc.waterloo.docitem_helper.WhitelistReason.UNRELATED_RULE": {
             "doc": {},
             "doc_lines": [
                 "The rule is unrelated to the current module."
             ],
             "doc_lines_kind": "constant"
         },
-        "sdv.doc.waterloo.docitem_helper.WHITELIST_REASON.ANTICIPATED_RULE": {
+        "sdv.doc.waterloo.docitem_helper.WhitelistReason.ANTICIPATED_RULE": {
             "doc": {},
             "doc_lines": [
                 "The rule is expected to appear later."
             ],
             "doc_lines_kind": "constant"
         },
-        "sdv.doc.waterloo.docitem_helper.WHITELIST_REASON.FALLBACK_RULE": {
+        "sdv.doc.waterloo.docitem_helper.WhitelistReason.FALLBACK_RULE": {
             "doc": {},
             "doc_lines": [
                 "The rule acts as a fallback."
             ],
             "doc_lines_kind": "constant"
         },
-        "sdv.doc.waterloo.docitem_helper.WHITELIST_REASON.RELAY_RULE": {
+        "sdv.doc.waterloo.docitem_helper.WhitelistReason.RELAY_RULE": {
             "doc": {},
             "doc_lines": [
                 "The rule is relayed to another rule."
             ],
             "doc_lines_kind": "constant"
         },
-        "sdv.doc.waterloo.docitem_helper.WHITELIST_REASON.BAD_IMPLEMENTATION_RULE": {
+        "sdv.doc.waterloo.docitem_helper.WhitelistReason.BAD_IMPLEMENTATION_RULE": {
             "doc": {},
             "doc_lines": [
                 "The rule is a placeholder for a bad implementation case."
             ],
             "doc_lines_kind": "constant"
         },
-        "sdv.doc.waterloo.docitem_helper.WHITELIST_REASON.EXISTS_AS_COMMENT_RULE": {
+        "sdv.doc.waterloo.docitem_helper.WhitelistReason.EXISTS_AS_COMMENT_RULE": {
             "doc": {},
             "doc_lines": [
                 "The rule exists only as a comment-level trace."
             ],
             "doc_lines_kind": "constant"
         },
-        "sdv.doc.waterloo.docitem_helper.WHITELIST_REASON": {
+        "sdv.doc.waterloo.docitem_helper.WhitelistReason": {
             "signature": {
                 "text": "object.__init__(self, /, *args, **kwargs)",
                 "parameters": [
@@ -660,14 +703,21 @@
                     "profile": "class",
                     "normative_sections": [
                         "Contract",
-                        "Public_constants"
+                        "Public_constants",
+                        "Derived_from"
                     ]
                 },
                 "Contract": {
                     "general": [
                         "MUST enumerate the legacy rule-whitelist reasons used by this helper layer."
+                    ],
+                    "constructor": [
+                        "Inherit from |type|`IntEnum`."
                     ]
                 },
+                "Derived_from": [
+                    "IntEnum"
+                ],
                 "Public_constants": {
                     "UNSPECIFIED_RULE": [
                         "No explicit reason was recorded."
@@ -740,7 +790,8 @@
                     "profile": "class",
                     "normative_sections": [
                         "Contract",
-                        "Public_constants"
+                        "Public_constants",
+                        "Derived_from"
                     ],
                     "scope": [
                         "public"
@@ -751,9 +802,12 @@
                         "MUST provide constants representing the traits of a class."
                     ],
                     "constructor": [
-                        "Inherit from |type|`str` and |type|`Enum`."
+                        "Inherit from |type|`StrEnum`."
                     ]
                 },
+                "Derived_from": [
+                    "StrEnum"
+                ],
                 "Public_constants": {
                     "ABSTRACT": [
                         "The class is abstract, i.e. it cannot be instantiated directly and is not a complete specification of the concept."
@@ -809,7 +863,8 @@
                     "profile": "class",
                     "normative_sections": [
                         "Contract",
-                        "Public_constants"
+                        "Public_constants",
+                        "Derived_from"
                     ],
                     "scope": [
                         "public"
@@ -824,6 +879,9 @@
                         "Inherit from |type|`int`."
                     ]
                 },
+                "Derived_from": [
+                    "IntEnum"
+                ],
                 "Public_constants": {
                     "PUBLIC": [
                         "Selects the public API."
@@ -890,7 +948,8 @@
                     "profile": "class",
                     "normative_sections": [
                         "Contract",
-                        "Public_constants"
+                        "Public_constants",
+                        "Derived_from"
                     ],
                     "scope": [
                         "public"
@@ -904,6 +963,9 @@
                         "Inherit from |type|`int`."
                     ]
                 },
+                "Derived_from": [
+                    "IntEnum"
+                ],
                 "Public_constants": {
                     "RAW": [
                         "Example: | + Must + |"
@@ -962,7 +1024,8 @@
                     "profile": "class",
                     "normative_sections": [
                         "Contract",
-                        "Public_constants"
+                        "Public_constants",
+                        "Derived_from"
                     ],
                     "scope": [
                         "public"
@@ -976,6 +1039,9 @@
                         "Inherit from |type|`int`."
                     ]
                 },
+                "Derived_from": [
+                    "IntEnum"
+                ],
                 "Public_constants": {
                     "JSON": [
                         "Javascript Object Notation"
@@ -1048,7 +1114,8 @@
                     "profile": "class",
                     "normative_sections": [
                         "Contract",
-                        "Public_constants"
+                        "Public_constants",
+                        "Derived_from"
                     ],
                     "scope": [
                         "public"
@@ -1059,9 +1126,12 @@
                         "MUST provide constants representing the values of subsection |label|`Preamble.status`."
                     ],
                     "constructor": [
-                        "Inherit from |type|`Enum`."
+                        "Inherit from |type|`StrEnum`."
                     ]
                 },
+                "Derived_from": [
+                    "StrEnum"
+                ],
                 "Public_constants": {
                     "EXPERIMENTAL": [
                         "See rule |ref|`STA-004 <section_function_pramble>`."
@@ -2357,6 +2427,61 @@
                     ],
                     "expected_entries": [
                         "The corrected parameter entries to show in the expected snippet."
+                    ],
+                    "profile": "The docstring profile used for the |cmd|`explain-section` hint."
+                },
+                "Returns": [
+                    "A details dictionary with |attr|`found`, |attr|`expected`, and |attr|`hint`."
+                ],
+                "Raises": {}
+            }
+        },
+        "sdv.doc.waterloo.docitem_helper.render_see_also_reference_details": {
+            "signature": {
+                "text": "render_see_also_reference_details(reference: 'str', expected_text: 'str', profile: 'str') -> 'dict[str, Any]'",
+                "parameters": [
+                    {
+                        "name": "reference",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    },
+                    {
+                        "name": "expected_text",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    },
+                    {
+                        "name": "profile",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    }
+                ],
+                "returns": "dict[str, Any]"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST build standardized validation details for a See_also reference mismatch."
+                    ]
+                },
+                "Parameters": {
+                    "reference": [
+                        "The raw reference text as found in the See_also section."
+                    ],
+                    "expected_text": [
+                        "The minimal correction or instruction to show in the expected snippet."
                     ],
                     "profile": "The docstring profile used for the |cmd|`explain-section` hint."
                 },
@@ -3691,9 +3816,9 @@
                     "general": [
                         "MUST build a deterministic anchor string from an object.",
                         "MUST use the fully qualified name as source.",
-                        "MUST encode each qualified-name segment as ``<len>:<segment>``.",
+                        "MUST encode each qualified-name segment as |lit|`<len>:<segment>`.",
                         "MUST prefix the anchor by |lit|`wtrl-<kind>-`.",
-                        "MUST infer kind as one of ``mod``, ``cls``, ``func``, ``obj`` if not passed explicitly."
+                        "MUST infer kind as one of |lit|`mod`, |lit|`cls`, |lit|`func`, |lit|`obj` if not passed explicitly."
                     ]
                 },
                 "Parameters": {
@@ -3707,7 +3832,12 @@
                 "Returns": [
                     "Deterministic anchor string suitable for doc-internal links."
                 ],
-                "Raises": {}
+                "Raises": {},
+                "Notes": {
+                    "Last review": [
+                        "2026-06-22"
+                    ]
+                }
             }
         },
         "sdv.doc.waterloo.docitem_helper.get_func_obj_from_callable": {
@@ -3967,6 +4097,7 @@
             "doc_lines": [
                 "A list of strings built per context manager during parsing and validation. Entries can be module, class or function names, or labels."
             ],
+            "annotation": "List[str]",
             "doc_lines_kind": "type"
         },
         "sdv.doc.waterloo.docitem_helper.tracer": {
@@ -4039,7 +4170,8 @@
                     ]
                 },
                 "Public_methods": [
-                    "build_json"
+                    "build_json",
+                    "str_by_severity"
                 ],
                 "Method_overview": {
                     "build_json": [
@@ -4051,8 +4183,8 @@
                     "Last review": [
                         "2026-06-21"
                     ],
-                    "Parameter details": [
-                        "This details payload is important for the MCP server, because it gives the LLM enough debugging context to interpret tracer output and decide how to react to it.",
+                    "Parameter 'details'": [
+                        "The details payload is important for the MCP server, because it gives the LLM enough debugging context to interpret tracer output and decide how to react to it.",
                         "It usually is a dict with keys \"found\", \"expected\", and \"hint\"; \"hint\" typically contains a waterlint call for retrieving more information about the affected section or subsection."
                     ]
                 }
@@ -4081,7 +4213,8 @@
                 "Preamble": {
                     "profile": "class",
                     "normative_sections": [
-                        "Contract"
+                        "Contract",
+                        "Derived_from"
                     ]
                 },
                 "Contract": {
@@ -4095,6 +4228,59 @@
                     ],
                     "constructor": [
                         "MUST inherit from |type|`IntEnum`."
+                    ]
+                },
+                "Derived_from": [
+                    "IntEnum"
+                ]
+            }
+        },
+        "sdv.doc.waterloo.docitem_helper.tracer.str_by_severity": {
+            "signature": {
+                "text": "tracer.str_by_severity(self, severity: 'Severity') -> 'str'",
+                "parameters": [
+                    {
+                        "name": "severity",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "Severity",
+                        "default": null
+                    }
+                ],
+                "returns": "str"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "method",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST render the tracer's content as a human-readable string, filtered by severity level.",
+                        "MUST include entries with severity level equal to or higher than the specified level.",
+                        "MUST format entries with clear labels and context for easy understanding."
+                    ]
+                },
+                "Parameters": {
+                    "severity": [
+                        "Only include entries with this severity level or higher.",
+                        "Levels are ordered as DEBUG < INFO < WARNING < ERROR."
+                    ]
+                },
+                "Returns": [
+                    "A string representation of the tracer's content, including entries",
+                    "up to the specified severity level, formatted for human readability."
+                ],
+                "Raises": {},
+                "Notes": {
+                    "Called by": [
+                        "This method is invoked by the __str__ method, which defaults to showing all entries (DEBUG level),",
+                        "so generally you simply call |func|`str`(tracer_instance) to get the full content",
+                        "or |func|`print`(tracer_instance) to display it."
                     ]
                 }
             }

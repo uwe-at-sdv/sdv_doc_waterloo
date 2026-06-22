@@ -126,7 +126,7 @@ from docutils.parsers.rst import roles
 from docutils.parsers.rst import languages
 from docutils.parsers.rst import Directive
 from docutils.parsers.rst.directives.admonitions import BaseAdmonition
-from docutils.parsers.rst.states import Struct as RstStruct  # type: ignore[attr-defined]
+from docutils.parsers.rst.states import Struct as RstStruct
 from typing import Sequence, TypeAlias, cast, no_type_check
 from sphinx.util.nodes import make_refnode
 
@@ -140,7 +140,7 @@ __version__ = "0.2.1"
 
 #===== Typechecking ===========================================#
 
-Struct = RstStruct
+Struct: TypeAlias = RstStruct
 
 
 class InlinerDocumentSettings(Protocol):

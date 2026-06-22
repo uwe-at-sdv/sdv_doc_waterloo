@@ -338,16 +338,6 @@ def _build_ui_index(merged: Dict[str, Any]) -> List[Dict[str, str]]:
 		kind = _infer_kind_for_qid(qid, toc_modules, toc_classes, toc_callables, toc_types, toc_vars, toc_consts)
 		anchor = _build_anchor_for_qid(qid, kind)
 		index.append({"label": qid, "target": qid, "kind": kind, "anchor": anchor})
-
-	def _append_aliases(toc: Dict[str, Any], alias_kind: str) -> None:
-		for qid in sorted(toc.keys()):
-			parent = qid.rsplit(".", 1)[0] if "." in qid else qid
-			target = parent if parent in objects else qid
-			index.append({"label": qid, "target": target, "kind": alias_kind, "anchor": ""})
-
-	_append_aliases(toc_types, "type")
-	_append_aliases(toc_vars, "var")
-	_append_aliases(toc_consts, "const")
 	return index
 
 

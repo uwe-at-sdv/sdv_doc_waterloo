@@ -1029,7 +1029,10 @@ function renderValue(value, container, depth, path, currentQid) {
         if (
           pth[0] === "Public_classes" ||
           pth[0] === "Public_functions" ||
-          pth[0] === "Public_methods"
+          pth[0] === "Public_methods" ||
+          pth[0] === "Public_types" ||
+          pth[0] === "Public_variables" ||
+          pth[0] === "Public_constants"
         ) {
           appendLinkedOrStyledText(elemGenericItem, item, leafRoleCls, currentQid);
         } else {
@@ -1189,6 +1192,25 @@ function renderHitList(entries) {
   }
 }
 
+function getHitSearchText(entry) {
+  const e = entry && typeof entry === "object" ? entry : {};
+  const kind = String(e.kind || "");
+  const kindText = ({
+    mod: "module",
+    cls: "class",
+    func: "function",
+    meth: "method",
+    type: "type",
+    var: "variable",
+    const: "constant",
+    obj: "object",
+  })[kind] || kind;
+  const target = String(e.target || "");
+  const label = String(e.label || "");
+  const leaf = target ? target.split(".").filter(Boolean).slice(-1)[0] || "" : "";
+  return [label, target, leaf, kindText].filter(Boolean).join(" ").toLowerCase();
+}
+
 function kindMatchesFilter(kind, filterValue) {
   const k = String(kind || "");
   const f = String(filterValue || "*").toLowerCase();
@@ -1211,7 +1233,7 @@ function filterHitEntries(entries, kindFilter, queryText) {
   return entries.filter((e) => {
     if (!kindMatchesFilter(e.kind, kindFilter)) return false;
     if (!q) return true;
-    return String(e.label || "").toLowerCase().includes(q);
+    return getHitSearchText(e).includes(q);
   });
 }
 
@@ -1270,20 +1292,36 @@ function renderDocLines(node, targetQid, elemHost) {
   if (lines.length === 0) return false;
 
   const kind = String((node && node.doc_lines_kind) || inferDocLinesKind(targetQid) || "");
+  const annotation = (node && typeof node.annotation === "string" && node.annotation.trim())
+    ? node.annotation.trim()
+    : "";
   const elemSection = document.createElement("div");
   elemSection.className = "wtrl-section";
 
   const elemSectionHead = document.createElement("div");
   elemSectionHead.className = "wtrl-section-head";
+  const appendKindLabel = (label, kindClass) => {
+    const elemLabel = document.createElement("span");
+    elemLabel.textContent = label;
+    elemSectionHead.appendChild(elemLabel);
+    if (annotation) {
+      const elemSep = document.createTextNode(" : ");
+      elemSectionHead.appendChild(elemSep);
+      const elemAnn = document.createElement("span");
+      elemAnn.className = kindClass || "wtrl-type wtrl_type";
+      elemAnn.textContent = annotation;
+      elemSectionHead.appendChild(elemAnn);
+    }
+  };
   if (kind === "type") {
-    elemSectionHead.textContent = "Type";
     elemSectionHead.className += " wtrl-type wtrl_type";
+    appendKindLabel("Type", "wtrl-type wtrl_type");
   } else if (kind === "variable") {
-    elemSectionHead.textContent = "Variable";
     elemSectionHead.className += " wtrl-var wtrl_var";
+    appendKindLabel("Variable", "wtrl-type wtrl_type");
   } else if (kind === "constant") {
-    elemSectionHead.textContent = "Constant";
     elemSectionHead.className += " wtrl-var wtrl_var";
+    appendKindLabel("Constant", "wtrl-type wtrl_type");
   } else {
     elemSectionHead.textContent = "Entry";
   }

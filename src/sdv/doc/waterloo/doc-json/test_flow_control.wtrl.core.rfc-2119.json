@@ -6,7 +6,7 @@
         "schema": "0.1.0"
     },
     "__WTRL_META__": {
-        "generated_at": "2026-06-21T20:38:15+02:00",
+        "generated_at": "2026-06-22T12:03:09+02:00",
         "generator": "waterlint",
         "scope": "core",
         "flavour": "rfc-2119"
@@ -78,6 +78,7 @@
                 "* An item",
                 "# Numbered item"
             ],
+            "annotation": "Tuple[int, float]",
             "doc_lines_kind": "type"
         },
         "test_flow_control.my_variable": {
@@ -94,6 +95,7 @@
                 "* An item",
                 "# Numbered item"
             ],
+            "annotation": "str",
             "doc_lines_kind": "variable"
         },
         "test_flow_control.my_constant": {
@@ -112,6 +114,7 @@
                 "+ A subitem",
                 "* An item"
             ],
+            "annotation": "Final[str]",
             "doc_lines_kind": "constant"
         },
         "test_flow_control": {

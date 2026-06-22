@@ -199,7 +199,8 @@ class GroupingFormatter(_RequestIdFormatterMixin, _UvicornDefaultFormatter):
 	) -> None:
 		if timestamp_window <= 0:
 			raise ValueError("timestamp_window must be greater than zero")
-		super().__init__(fmt=fmt, datefmt=datefmt, use_colors=use_colors)
+		# Uvicorn's runtime formatter accepts use_colors, but some type stubs expose logging.Formatter.
+		super().__init__(fmt=fmt, datefmt=datefmt, use_colors=use_colors)  # type: ignore[call-arg]
 		self.timestamp_window = timestamp_window
 		self._last_timestamp_emission_by_group: dict[str, float] = {}
 

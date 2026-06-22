@@ -6,7 +6,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from pytest_common import ROOT, run_waterlint, DIR_DOC, DIR_EXAMPLES, DIR_EXAMPLES_JSON, PATH_EXAMPLES_JSON
+from pytest_common import ROOT, run_waterlint, DIR_DOC, DIR_EXAMPLES, DIR_EXAMPLES_JSON, DIR_MODULE, PATH_EXAMPLES_JSON
 
 
 def test_render_html5_lists_in_freeform_smoketest(tmp_path: Path) -> None:
@@ -39,6 +39,43 @@ def test_render_html5_lists_in_freeform_smoketest(tmp_path: Path) -> None:
 	html = out_html.read_text(encoding="utf-8")
 	assert "pytest_lists_in_freeform" in html
 	assert "Item b.a.1" in html
+
+
+def test_render_html5_shows_public_variable_annotation(tmp_path: Path) -> None:
+	"""Public variables should show their annotation in the document head."""
+	out_json = tmp_path / "docitem_helper.wtrl.core.rfc-2119.json"
+	out_html = tmp_path / "docitem_helper.html"
+
+	render_json = run_waterlint(
+		"render-json",
+		"--basedir",
+		DIR_MODULE,
+		"--obj",
+		"docitem_helper",
+		"--scope",
+		"core",
+		"--flavour",
+		"rfc-2119",
+		"--no-allow-local-paths",
+		"--out",
+		str(out_json),
+	)
+	assert render_json.returncode == 0, f"render-json failed: {render_json.stderr}"
+	assert out_json.exists(), "render-json did not produce output file"
+
+	render_html = run_waterlint(
+		"render-html5",
+		"--in",
+		str(out_json),
+		"--out",
+		str(out_html),
+	)
+	assert render_html.returncode == 0, f"render-html5 failed: {render_html.stderr}"
+	assert out_html.exists(), "render-html5 did not produce output file"
+
+	html = out_html.read_text(encoding="utf-8")
+	assert "SOURCE_DOCSTRING_CACHE" in html
+	assert "Dict[int, str]" in html
 
 
 def test_render_html5_single_in_to_out(tmp_path: Path) -> None:

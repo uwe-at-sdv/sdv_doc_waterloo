@@ -20,6 +20,7 @@ export MYPYPATH="${SCRIPT_DIR}/src"
 mypy --config-file "${PATH_MYPY_INI}" \
 	--namespace-packages \
 	--explicit-package-bases \
+	--no-site-packages \
 	"${PATH_SRC_DIR}" \
 	> "${PATH_CHK_OUT}"
 rc=$?

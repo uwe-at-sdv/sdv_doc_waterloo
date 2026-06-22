@@ -3,12 +3,12 @@ Preamble:
 	profile:
 		module
 	normative_sections:
-		Contract, Public_constants, Public_classes, Public_functions, Public_types
+		Contract, Public_classes, Public_functions, Public_types, Public_constants, Public_variables
 Contract:
 	general:
 		|Must| provide shared helper functions, constants, and type aliases for Waterloo docstring validation and explanation.
 Public_classes:
-	Trait, Scope, Flavour, Format, Status, ConfigTraversal, tracer, ResolveObjectError
+	Trait, Scope, Flavour, Format, Status, ConfigTraversal, tracer, ResolveObjectError, WhitelistReason
 Public_functions:
 	explain_try_self_for_section, explain_try_self_for_subsection,
 	render_source_snippet, render_expected_snippet, render_allowed_identifier, render_expected_identifier, render_suggestion,
@@ -20,6 +20,7 @@ Public_functions:
 	render_normative_section_details, render_missing_entry_details, render_exactly_one_identifier_details,
 	render_definition_reference_details, render_inherited_definition_details, render_type_reference_details,
 	render_constant_reference_details, render_named_value_reference_details, render_overview_missing_member_details,
+	render_see_also_reference_details,
 	get_source_docstring, is_annotatable, is_attr_annotated, is_attr_final, is_list_of_str,
 	is_obj_module, is_obj_class, is_obj_function, is_obj_method_like, is_obj_named_value,
 	is_obj_documentable, get_obj_direct_module, get_obj_name, get_obj_fully_qualified_name,
@@ -88,6 +89,9 @@ Public_constants:
 		for example body category, normativity, and profile applicability.
 		Informative: This is a carefully distilled machine-readable representation of the relevant rules
 		from the documentation standard, but the documentation remains the Single Source of Truth for the standard.
+Public_variables:
+	SOURCE_DOCSTRING_CACHE:
+		A cache for storing source docstrings of objects to avoid redundant retrievals.
 Notes:
 	Render functions:
 		The render functions in this module are intended for building
@@ -98,7 +102,7 @@ from __future__ import annotations
 from enum import Enum,IntEnum
 from types import FunctionType, MappingProxyType, ModuleType
 from typing_extensions import Self, TypeIs
-from typing import Any, Callable, Dict, Final, get_type_hints, get_origin, get_args, Generator, Iterable, Iterator, List, Literal, NewType, NoReturn, Sequence, Set, Tuple, Type, TypeAlias, TypedDict, TypeGuard, Union, cast
+from typing import Any, Callable, Dict, Final, Mapping, get_type_hints, get_origin, get_args, Generator, Iterable, Iterator, List, Literal, NewType, NoReturn, Sequence, Set, Tuple, Type, TypeAlias, TypedDict, TypeGuard, Union, cast
 
 import sys,re,os,copy
 import pkgutil,inspect,importlib
@@ -117,16 +121,20 @@ except:
 
 #===== Rule-ID Whitelist ======================================#
 # Valid whitelist reasons in tokenized form:
-class WHITELIST_REASON(IntEnum):
+class WhitelistReason(IntEnum):
 	"""
 	Preamble:
 		profile:
 			class
 		normative_sections:
-			Contract, Public_constants
+			Contract, Public_constants, Derived_from
 	Contract:
 		general:
 			|Must| enumerate the legacy rule-whitelist reasons used by this helper layer.
+		constructor:
+			Inherit from |type|`IntEnum`.
+	Derived_from:
+		IntEnum
 	Public_constants:
 		UNSPECIFIED_RULE:
 			No explicit reason was recorded.
@@ -163,122 +171,122 @@ class WHITELIST_REASON(IntEnum):
 	EXISTS_AS_COMMENT_RULE	= 9
 # - structure-rule
 # Rules:
-RULE_ID_WHITELIST: Final[Dict[str, WHITELIST_REASON]] = {
-	"DOC-002":	WHITELIST_REASON.STRUCTURE_RULE,
-	"META-000":	WHITELIST_REASON.UNRELATED_RULE,
-	"META-001":	WHITELIST_REASON.UNRELATED_RULE,
-	"META-002":	WHITELIST_REASON.UNRELATED_RULE,
-	"META-003":	WHITELIST_REASON.UNRELATED_RULE,
-	"META-004":	WHITELIST_REASON.UNRELATED_RULE,
-	"CCLO-001":	WHITELIST_REASON.MAY_EXIST_RULE,
-	"CCLO-004":	WHITELIST_REASON.STRUCTURE_RULE,
-	"CCLO-010":	WHITELIST_REASON.MAY_EXIST_RULE,
-	"CMTO-001":	WHITELIST_REASON.MAY_EXIST_RULE,
-	"CMTO-004":	WHITELIST_REASON.STRUCTURE_RULE,
-	"CMTO-010":	WHITELIST_REASON.MAY_EXIST_RULE,
-	"CON-003":	WHITELIST_REASON.SEMANTIC_RULE,
-	"CON-012":	WHITELIST_REASON.MAY_EXIST_RULE,
-	"CON-021":	WHITELIST_REASON.SEMANTIC_RULE,
-	"CON-025":	WHITELIST_REASON.MAY_EXIST_RULE,
-	"CON-037":	WHITELIST_REASON.SEMANTIC_RULE,
-	"CON-038":	WHITELIST_REASON.SEMANTIC_RULE,
-	"CON-047":	WHITELIST_REASON.MAY_EXIST_RULE,
-	"CON-049":	WHITELIST_REASON.MAY_EXIST_RULE,
-	"CON-051":	WHITELIST_REASON.UNRELATED_RULE,
-	"CON-052":	WHITELIST_REASON.UNRELATED_RULE,
-	"CON-053":	WHITELIST_REASON.STRUCTURE_RULE,
-	"CPCL-001":	WHITELIST_REASON.MAY_EXIST_RULE,
-	"CPCL-003":	WHITELIST_REASON.STRUCTURE_RULE,
-	"CPCL-008":	WHITELIST_REASON.MAY_EXIST_RULE,
-	"CPCON-001":	WHITELIST_REASON.MAY_EXIST_RULE,
-	"CPCON-003":	WHITELIST_REASON.STRUCTURE_RULE,
-	"CPMT-001":	WHITELIST_REASON.MAY_EXIST_RULE,
-	"CPMT-003":	WHITELIST_REASON.STRUCTURE_RULE,
-	"CPMT-008":	WHITELIST_REASON.MAY_EXIST_RULE,
-	"CPTYP-001":	WHITELIST_REASON.MAY_EXIST_RULE,
-	"CPTYP-003":	WHITELIST_REASON.STRUCTURE_RULE,
-	"CPVAR-001":	WHITELIST_REASON.MAY_EXIST_RULE,
-	"CPVAR-003":	WHITELIST_REASON.STRUCTURE_RULE,
-	"DEF-001":	WHITELIST_REASON.MAY_EXIST_RULE,
-	"DEF-003":	WHITELIST_REASON.STRUCTURE_RULE,
-	"DEF-005":	WHITELIST_REASON.SEMANTIC_RULE,
-	"DEF-012":	WHITELIST_REASON.MAY_EXIST_RULE,
-	"DEF-016":	WHITELIST_REASON.STRUCTURE_RULE,
-	"DEF-019":	WHITELIST_REASON.RELAY_RULE,		# relay to VLII-001
-	"DEF-020":	WHITELIST_REASON.MAY_EXIST_RULE,
-	"DER-001":	WHITELIST_REASON.MAY_EXIST_RULE,
-	"DER-002":	WHITELIST_REASON.SEMANTIC_RULE,
-	"DER-009":	WHITELIST_REASON.STRUCTURE_RULE,
-	"DESC-001":	WHITELIST_REASON.MAY_EXIST_RULE,
-	"DESC-002":	WHITELIST_REASON.MAY_EXIST_RULE,
-	"FAC-001":	WHITELIST_REASON.MAY_EXIST_RULE,
-	"FAC-004":	WHITELIST_REASON.STRUCTURE_RULE,
-	"MCLO-001":	WHITELIST_REASON.MAY_EXIST_RULE,
-	"MCLO-004":	WHITELIST_REASON.STRUCTURE_RULE,
-	"MCLO-010":	WHITELIST_REASON.MAY_EXIST_RULE,
-	"MFNO-001":	WHITELIST_REASON.MAY_EXIST_RULE,
-	"MFNO-004":	WHITELIST_REASON.STRUCTURE_RULE,
-	"MFNO-010":	WHITELIST_REASON.MAY_EXIST_RULE,
-	"MPCL-001":	WHITELIST_REASON.MAY_EXIST_RULE,
-	"MPCL-003":	WHITELIST_REASON.STRUCTURE_RULE,
-	"MPCL-008":	WHITELIST_REASON.MAY_EXIST_RULE,
-	"MPCON-001":	WHITELIST_REASON.MAY_EXIST_RULE,
-	"MPCON-003":	WHITELIST_REASON.STRUCTURE_RULE,
-	"MPFN-001":	WHITELIST_REASON.MAY_EXIST_RULE,
-	"MPFN-003":	WHITELIST_REASON.STRUCTURE_RULE,
-	"MPFN-008":	WHITELIST_REASON.MAY_EXIST_RULE,
-	"MPTYP-001":	WHITELIST_REASON.MAY_EXIST_RULE,
-	"MPTYP-003":	WHITELIST_REASON.STRUCTURE_RULE,
-	"MPVAR-001":	WHITELIST_REASON.MAY_EXIST_RULE,
-	"MPVAR-003":	WHITELIST_REASON.STRUCTURE_RULE,
-	"NOTE-001":	WHITELIST_REASON.MAY_EXIST_RULE,
-	"NOTE-004":	WHITELIST_REASON.SEMANTIC_RULE,
-	"NOTE-005":	WHITELIST_REASON.STRUCTURE_RULE,
-	"NOTE-008":	WHITELIST_REASON.MAY_EXIST_RULE,
-	"PAR-003":	WHITELIST_REASON.SEMANTIC_RULE,
-	"PAR-008":	WHITELIST_REASON.STRUCTURE_RULE,
-	"PNB-001":	WHITELIST_REASON.SEMANTIC_RULE,
-	"PRE-021":	WHITELIST_REASON.STRUCTURE_RULE,
-	"RAI-003":	WHITELIST_REASON.SEMANTIC_RULE,
-	"RAI-006":	WHITELIST_REASON.SEMANTIC_RULE,
-	"RAI-011":	WHITELIST_REASON.STRUCTURE_RULE,
-	"PRSR-001":	WHITELIST_REASON.SEMANTIC_RULE,
-	"RET-003":	WHITELIST_REASON.SEMANTIC_RULE,
-	"SCP-001":	WHITELIST_REASON.MAY_EXIST_RULE,
-	"SCP-002":	WHITELIST_REASON.STRUCTURE_RULE,
-	"SCP-004":	WHITELIST_REASON.STRUCTURE_RULE,
-	"SCP-010":	WHITELIST_REASON.FALLBACK_RULE,
-	"SEE-001":	WHITELIST_REASON.MAY_EXIST_RULE,
-	"SEE-010":	WHITELIST_REASON.EXISTS_AS_COMMENT_RULE,
-	"SEE-011":	WHITELIST_REASON.MAY_EXIST_RULE,
-	"STA-001":	WHITELIST_REASON.MAY_EXIST_RULE,
-	"STA-005":	WHITELIST_REASON.EXISTS_AS_COMMENT_RULE,
-	"TERM-001":	WHITELIST_REASON.MAY_EXIST_RULE,
-	"TERM-004":	WHITELIST_REASON.STRUCTURE_RULE,
-	"TERM-006":	WHITELIST_REASON.SEMANTIC_RULE,
-	"TERM-009":	WHITELIST_REASON.MAY_EXIST_RULE,
-	"CPVAR-009":	WHITELIST_REASON.SEMANTIC_RULE,
-	"DEF-010":	WHITELIST_REASON.STRUCTURE_RULE,
-	"LQID-003":	WHITELIST_REASON.STRUCTURE_RULE,
-	"LQID-006":	WHITELIST_REASON.STRUCTURE_RULE,
-	"LQID-005":	WHITELIST_REASON.STRUCTURE_RULE,
-	"MPVAR-009":	WHITELIST_REASON.SEMANTIC_RULE,
-	"RET-008":	WHITELIST_REASON.SEMANTIC_RULE,
-	"RET-009":	WHITELIST_REASON.SEMANTIC_RULE,
-	"RET-010":	WHITELIST_REASON.SEMANTIC_RULE,
-	"TKN-007":	WHITELIST_REASON.STRUCTURE_RULE,
-	"JSCH-000":	WHITELIST_REASON.UNRELATED_RULE,
-	"JSCH-002":	WHITELIST_REASON.UNRELATED_RULE,
-	"JSCH-003":	WHITELIST_REASON.UNRELATED_RULE,
-	"JSCH-004":	WHITELIST_REASON.UNRELATED_RULE,
-	"JSCH-005":	WHITELIST_REASON.UNRELATED_RULE,
-	"JSCH-700":	WHITELIST_REASON.UNRELATED_RULE,
-	"JSCH-800":	WHITELIST_REASON.UNRELATED_RULE,
-	"TKN-005":	WHITELIST_REASON.UNRELATED_RULE,
-	"TKN-006":	WHITELIST_REASON.UNRELATED_RULE,
-	"TKN-008":	WHITELIST_REASON.UNRELATED_RULE,
-	"TOOL-001":	WHITELIST_REASON.UNRELATED_RULE,
-	"TOOL-800":	WHITELIST_REASON.UNRELATED_RULE,
+RULE_ID_WHITELIST: Final[Dict[str, WhitelistReason]] = {
+	"DOC-002":	WhitelistReason.STRUCTURE_RULE,
+	"META-000":	WhitelistReason.UNRELATED_RULE,
+	"META-001":	WhitelistReason.UNRELATED_RULE,
+	"META-002":	WhitelistReason.UNRELATED_RULE,
+	"META-003":	WhitelistReason.UNRELATED_RULE,
+	"META-004":	WhitelistReason.UNRELATED_RULE,
+	"CCLO-001":	WhitelistReason.MAY_EXIST_RULE,
+	"CCLO-004":	WhitelistReason.STRUCTURE_RULE,
+	"CCLO-010":	WhitelistReason.MAY_EXIST_RULE,
+	"CMTO-001":	WhitelistReason.MAY_EXIST_RULE,
+	"CMTO-004":	WhitelistReason.STRUCTURE_RULE,
+	"CMTO-010":	WhitelistReason.MAY_EXIST_RULE,
+	"CON-003":	WhitelistReason.SEMANTIC_RULE,
+	"CON-012":	WhitelistReason.MAY_EXIST_RULE,
+	"CON-021":	WhitelistReason.SEMANTIC_RULE,
+	"CON-025":	WhitelistReason.MAY_EXIST_RULE,
+	"CON-037":	WhitelistReason.SEMANTIC_RULE,
+	"CON-038":	WhitelistReason.SEMANTIC_RULE,
+	"CON-047":	WhitelistReason.MAY_EXIST_RULE,
+	"CON-049":	WhitelistReason.MAY_EXIST_RULE,
+	"CON-051":	WhitelistReason.UNRELATED_RULE,
+	"CON-052":	WhitelistReason.UNRELATED_RULE,
+	"CON-053":	WhitelistReason.STRUCTURE_RULE,
+	"CPCL-001":	WhitelistReason.MAY_EXIST_RULE,
+	"CPCL-003":	WhitelistReason.STRUCTURE_RULE,
+	"CPCL-008":	WhitelistReason.MAY_EXIST_RULE,
+	"CPCON-001":	WhitelistReason.MAY_EXIST_RULE,
+	"CPCON-003":	WhitelistReason.STRUCTURE_RULE,
+	"CPMT-001":	WhitelistReason.MAY_EXIST_RULE,
+	"CPMT-003":	WhitelistReason.STRUCTURE_RULE,
+	"CPMT-008":	WhitelistReason.MAY_EXIST_RULE,
+	"CPTYP-001":	WhitelistReason.MAY_EXIST_RULE,
+	"CPTYP-003":	WhitelistReason.STRUCTURE_RULE,
+	"CPVAR-001":	WhitelistReason.MAY_EXIST_RULE,
+	"CPVAR-003":	WhitelistReason.STRUCTURE_RULE,
+	"DEF-001":	WhitelistReason.MAY_EXIST_RULE,
+	"DEF-003":	WhitelistReason.STRUCTURE_RULE,
+	"DEF-005":	WhitelistReason.SEMANTIC_RULE,
+	"DEF-012":	WhitelistReason.MAY_EXIST_RULE,
+	"DEF-016":	WhitelistReason.STRUCTURE_RULE,
+	"DEF-019":	WhitelistReason.RELAY_RULE,		# relay to VLII-001
+	"DEF-020":	WhitelistReason.MAY_EXIST_RULE,
+	"DER-001":	WhitelistReason.MAY_EXIST_RULE,
+	"DER-002":	WhitelistReason.SEMANTIC_RULE,
+	"DER-009":	WhitelistReason.STRUCTURE_RULE,
+	"DESC-001":	WhitelistReason.MAY_EXIST_RULE,
+	"DESC-002":	WhitelistReason.MAY_EXIST_RULE,
+	"FAC-001":	WhitelistReason.MAY_EXIST_RULE,
+	"FAC-004":	WhitelistReason.STRUCTURE_RULE,
+	"MCLO-001":	WhitelistReason.MAY_EXIST_RULE,
+	"MCLO-004":	WhitelistReason.STRUCTURE_RULE,
+	"MCLO-010":	WhitelistReason.MAY_EXIST_RULE,
+	"MFNO-001":	WhitelistReason.MAY_EXIST_RULE,
+	"MFNO-004":	WhitelistReason.STRUCTURE_RULE,
+	"MFNO-010":	WhitelistReason.MAY_EXIST_RULE,
+	"MPCL-001":	WhitelistReason.MAY_EXIST_RULE,
+	"MPCL-003":	WhitelistReason.STRUCTURE_RULE,
+	"MPCL-008":	WhitelistReason.MAY_EXIST_RULE,
+	"MPCON-001":	WhitelistReason.MAY_EXIST_RULE,
+	"MPCON-003":	WhitelistReason.STRUCTURE_RULE,
+	"MPFN-001":	WhitelistReason.MAY_EXIST_RULE,
+	"MPFN-003":	WhitelistReason.STRUCTURE_RULE,
+	"MPFN-008":	WhitelistReason.MAY_EXIST_RULE,
+	"MPTYP-001":	WhitelistReason.MAY_EXIST_RULE,
+	"MPTYP-003":	WhitelistReason.STRUCTURE_RULE,
+	"MPVAR-001":	WhitelistReason.MAY_EXIST_RULE,
+	"MPVAR-003":	WhitelistReason.STRUCTURE_RULE,
+	"NOTE-001":	WhitelistReason.MAY_EXIST_RULE,
+	"NOTE-004":	WhitelistReason.SEMANTIC_RULE,
+	"NOTE-005":	WhitelistReason.STRUCTURE_RULE,
+	"NOTE-008":	WhitelistReason.MAY_EXIST_RULE,
+	"PAR-003":	WhitelistReason.SEMANTIC_RULE,
+	"PAR-008":	WhitelistReason.STRUCTURE_RULE,
+	"PNB-001":	WhitelistReason.SEMANTIC_RULE,
+	"PRE-021":	WhitelistReason.STRUCTURE_RULE,
+	"RAI-003":	WhitelistReason.SEMANTIC_RULE,
+	"RAI-006":	WhitelistReason.SEMANTIC_RULE,
+	"RAI-011":	WhitelistReason.STRUCTURE_RULE,
+	"PRSR-001":	WhitelistReason.SEMANTIC_RULE,
+	"RET-003":	WhitelistReason.SEMANTIC_RULE,
+	"SCP-001":	WhitelistReason.MAY_EXIST_RULE,
+	"SCP-002":	WhitelistReason.STRUCTURE_RULE,
+	"SCP-004":	WhitelistReason.STRUCTURE_RULE,
+	"SCP-010":	WhitelistReason.FALLBACK_RULE,
+	"SEE-001":	WhitelistReason.MAY_EXIST_RULE,
+	"SEE-010":	WhitelistReason.EXISTS_AS_COMMENT_RULE,
+	"SEE-011":	WhitelistReason.MAY_EXIST_RULE,
+	"STA-001":	WhitelistReason.MAY_EXIST_RULE,
+	"STA-005":	WhitelistReason.EXISTS_AS_COMMENT_RULE,
+	"TERM-001":	WhitelistReason.MAY_EXIST_RULE,
+	"TERM-004":	WhitelistReason.STRUCTURE_RULE,
+	"TERM-006":	WhitelistReason.SEMANTIC_RULE,
+	"TERM-009":	WhitelistReason.MAY_EXIST_RULE,
+	"CPVAR-009":	WhitelistReason.SEMANTIC_RULE,
+	"DEF-010":	WhitelistReason.STRUCTURE_RULE,
+	"LQID-003":	WhitelistReason.STRUCTURE_RULE,
+	"LQID-006":	WhitelistReason.STRUCTURE_RULE,
+	"LQID-005":	WhitelistReason.STRUCTURE_RULE,
+	"MPVAR-009":	WhitelistReason.SEMANTIC_RULE,
+	"RET-008":	WhitelistReason.SEMANTIC_RULE,
+	"RET-009":	WhitelistReason.SEMANTIC_RULE,
+	"RET-010":	WhitelistReason.SEMANTIC_RULE,
+	"TKN-007":	WhitelistReason.STRUCTURE_RULE,
+	"JSCH-000":	WhitelistReason.UNRELATED_RULE,
+	"JSCH-002":	WhitelistReason.UNRELATED_RULE,
+	"JSCH-003":	WhitelistReason.UNRELATED_RULE,
+	"JSCH-004":	WhitelistReason.UNRELATED_RULE,
+	"JSCH-005":	WhitelistReason.UNRELATED_RULE,
+	"JSCH-700":	WhitelistReason.UNRELATED_RULE,
+	"JSCH-800":	WhitelistReason.UNRELATED_RULE,
+	"TKN-005":	WhitelistReason.UNRELATED_RULE,
+	"TKN-006":	WhitelistReason.UNRELATED_RULE,
+	"TKN-008":	WhitelistReason.UNRELATED_RULE,
+	"TOOL-001":	WhitelistReason.UNRELATED_RULE,
+	"TOOL-800":	WhitelistReason.UNRELATED_RULE,
 	}
 
 #===== Constants ==============================================#
@@ -327,14 +335,16 @@ class Trait(StrEnum):
 		profile:
 			class
 		normative_sections:
-			Contract, Public_constants
+			Contract, Public_constants, Derived_from
 		scope:
 			public
 	Contract:
 		general:
 			|Must| provide constants representing the traits of a class.
 		constructor:
-			Inherit from |type|`str` and |type|`Enum`.
+			Inherit from |type|`StrEnum`.
+	Derived_from:
+		StrEnum
 	Public_constants:
 		ABSTRACT:
 			The class is abstract, i.e. it cannot be instantiated directly and is not a complete specification of the concept.
@@ -351,7 +361,7 @@ trait_tag_map = {
 TRAIT_TAG_MAP = MappingProxyType(trait_tag_map)
 
 # Valid profiles
-Profile = Literal["module", "class", "function", "method", "inherited_method"]
+Profile: TypeAlias = Literal["module", "class", "function", "method", "inherited_method"]
 
 # Scope values
 class Scope(IntEnum):
@@ -360,7 +370,7 @@ class Scope(IntEnum):
 		profile:
 			class
 		normative_sections:
-			Contract, Public_constants
+			Contract, Public_constants, Derived_from
 		scope:
 			public
 	Contract:
@@ -369,6 +379,8 @@ class Scope(IntEnum):
 			|Must| provide a time-stable partial order for the constants.
 		constructor:
 			Inherit from |type|`int`.
+	Derived_from:
+		IntEnum
 	Public_constants:
 		PUBLIC:
 			Selects the public API.
@@ -410,7 +422,7 @@ class Flavour(IntEnum):
 		profile:
 			class
 		normative_sections:
-			Contract, Public_constants
+			Contract, Public_constants, Derived_from
 		scope:
 			public
 	Contract:
@@ -418,6 +430,8 @@ class Flavour(IntEnum):
 			|Must| provide constants representing available flavours for rendering Normativity Keywords.
 		constructor:
 			Inherit from |type|`int`.
+	Derived_from:
+		IntEnum
 	Public_constants:
 		RAW:
 			Example: | + Must + |
@@ -435,7 +449,7 @@ flavour_tag_map = {
 	"rfc-2119":	Flavour.RFC_2119,
 	"markdown":	Flavour.MARKDOWN,
 	}
-FLAVOUR_TAG_MAP = MappingProxyType(flavour_tag_map)	
+FLAVOUR_TAG_MAP: Mapping[str, Flavour] = MappingProxyType(flavour_tag_map)	
 
 # Format for string-related output
 class Format(IntEnum):
@@ -444,7 +458,7 @@ class Format(IntEnum):
 		profile:
 			class
 		normative_sections:
-			Contract, Public_constants
+			Contract, Public_constants, Derived_from
 		scope:
 			public
 	Contract:
@@ -452,6 +466,8 @@ class Format(IntEnum):
 			|Must| provide constants representing available output formats for string rendering.
 		constructor:
 			Inherit from |type|`int`.
+	Derived_from:
+		IntEnum
 	Public_constants:
 		JSON:
 			Javascript Object Notation
@@ -469,7 +485,7 @@ format_tag_map = {
 	"yaml":		Format.YAML,
 	"md":		Format.MD
 	}
-FORMAT_TAG_MAP = MappingProxyType(format_tag_map)	
+FORMAT_TAG_MAP: Mapping[str, Format] = MappingProxyType(format_tag_map)	
 
 class Status(StrEnum):
 	"""
@@ -477,14 +493,16 @@ class Status(StrEnum):
 		profile:
 			class
 		normative_sections:
-			Contract, Public_constants
+			Contract, Public_constants, Derived_from
 		scope:
 			public
 	Contract:
 		general:
 			|Must| provide constants representing the values of subsection |label|`Preamble.status`.
 		constructor:
-			Inherit from |type|`Enum`.
+			Inherit from |type|`StrEnum`.
+	Derived_from:
+		StrEnum
 	Public_constants:
 		EXPERIMENTAL:
 			See rule |ref|`STA-004 <section_function_pramble>`.
@@ -797,7 +815,7 @@ SECTION_PROPERTIES: Final[dict[str, SectionProperty_t]] = {
 
 #===== end section and subsection properties =================#
 
-_SOURCE_DOCSTRING_CACHE: Dict[int, str] = {}
+SOURCE_DOCSTRING_CACHE: Dict[int, str] = {}
 AstDocNode: TypeAlias = Union[ast.ClassDef, ast.FunctionDef, ast.AsyncFunctionDef]
 # Per-module AST cache used to preserve raw docstring indentation and tabs.
 _MODULE_AST_CACHE: WeakKeyDictionary[ModuleType, Tuple[str, ast.Module, Dict[str, list[AstDocNode]]]] = WeakKeyDictionary()
@@ -839,8 +857,8 @@ def get_source_docstring(o: object) -> str:
 			Further performance improvements can be added later by caching validation results for repeated objects.
 	"""
 	key = id(o)
-	if key in _SOURCE_DOCSTRING_CACHE:
-		return _SOURCE_DOCSTRING_CACHE[key]
+	if key in SOURCE_DOCSTRING_CACHE:
+		return SOURCE_DOCSTRING_CACHE[key]
 	doc = ""
 	if isinstance(o, property):
 		# Properties inherit their documentation from accessor methods.
@@ -937,7 +955,7 @@ def get_source_docstring(o: object) -> str:
 			# Any source/AST failure means we cannot recover the raw docstring reliably.
 			# Let the caller fall back to the runtime __doc__ or descriptor chain.
 			doc = ""
-	_SOURCE_DOCSTRING_CACHE[key] = doc
+	SOURCE_DOCSTRING_CACHE[key] = doc
 	return doc
 
 #===== begin render functions for verbose diagnostics ========#
@@ -1662,9 +1680,9 @@ def render_see_also_reference_details(reference: str, expected_text: str, profil
 	"""
 	Preamble:
 		profile:
-			module
+			function
 		normative_sections:
-			See_also
+			Contract, Parameters, Returns, Raises
 	Contract:
 		general:
 			|Must| build standardized validation details for a See_also reference mismatch.
@@ -2508,9 +2526,9 @@ def build_anchor(obj: object, kind: str | None = None) -> str:
 		general:
 			|Must| build a deterministic anchor string from an object.
 			|Must| use the fully qualified name as source.
-			|Must| encode each qualified-name segment as ``<len>:<segment>``.
+			|Must| encode each qualified-name segment as |lit|`<len>:<segment>`.
 			|Must| prefix the anchor by |lit|`wtrl-<kind>-`.
-			|Must| infer kind as one of ``mod``, ``cls``, ``func``, ``obj`` if not passed explicitly.
+			|Must| infer kind as one of |lit|`mod`, |lit|`cls`, |lit|`func`, |lit|`obj` if not passed explicitly.
 	Parameters:
 		obj:
 			Object for which the anchor shall be generated.
@@ -2519,6 +2537,9 @@ def build_anchor(obj: object, kind: str | None = None) -> str:
 	Returns:
 		Deterministic anchor string suitable for doc-internal links.
 	Raises:
+	Notes:
+		Last review:
+			2026-06-22
 	"""
 	if kind is None:
 		if is_obj_module(obj):
@@ -2864,7 +2885,7 @@ class tracer:
 		Severity:
 			An enum with values DEBUG, INFO, WARNING, ERROR for filtering the output of the tracer.
 	Public_methods:
-		build_json
+		build_json, str_by_severity
 	Method_overview:
 		build_json:
 			Build a JSON-serializable |type|`dict` containing the
@@ -2872,8 +2893,8 @@ class tracer:
 	Notes:
 		Last review:
 			2026-06-21
-		Parameter details:
-			This details payload is important for the MCP server, because it gives the LLM enough debugging context to interpret tracer output and decide how to react to it.
+		Parameter 'details':
+			The details payload is important for the MCP server, because it gives the LLM enough debugging context to interpret tracer output and decide how to react to it.
 			It usually is a dict with keys "found", "expected", and "hint"; "hint" typically contains a waterlint call for retrieving more information about the affected section or subsection.
 	"""
 	Context: TypeAlias = List[str]
@@ -2883,7 +2904,7 @@ class tracer:
 			profile:
 				class
 			normative_sections:
-				Contract
+				Contract, Derived_from
 		Contract:
 			general:
 				|Must| define the following severity levels for filtering the tracer's output:
@@ -2894,6 +2915,8 @@ class tracer:
 				|Must| assign integer values to these levels in increasing order of severity, starting with 0 for DEBUG.
 			constructor:
 				|Must| inherit from |type|`IntEnum`.
+		Derived_from:
+			IntEnum
 		"""
 		DEBUG		= 0,
 		INFO		= 1,
@@ -2971,6 +2994,31 @@ class tracer:
 			self._warnings.append(msg_err)
 # For humans
 	def str_by_severity(self,severity: Severity) -> str:
+		r"""
+		Preamble:
+			profile:
+				method
+			normative_sections:
+				Contract, Parameters, Returns, Raises
+		Contract:
+			general:
+				|Must| render the tracer's content as a human-readable string, filtered by severity level.
+				|Must| include entries with severity level equal to or higher than the specified level.
+				|Must| format entries with clear labels and context for easy understanding.
+		Parameters:
+			severity:
+				Only include entries with this severity level or higher.
+				Levels are ordered as DEBUG < INFO < WARNING < ERROR.
+		Returns:
+			A string representation of the tracer's content, including entries
+			up to the specified severity level, formatted for human readability.
+		Raises:
+		Notes:
+			Called by:
+				This method is invoked by the __str__ method, which defaults to showing all entries (DEBUG level),
+				so generally you simply call |func|`str`(tracer_instance) to get the full content
+				or |func|`print`(tracer_instance) to display it. 
+		"""
 		t = ""
 		t += "----- Tracer-----8<---------------------------------------------\n"
 		if severity <= self.Severity.DEBUG:

@@ -399,7 +399,7 @@ def _runtime_allowed_hosts(
 			effective.append(f"{host_text}:{port}")
 		return effective
 	hosts = override_hosts or ["localhost", "127.0.0.1"]
-	effective: list[str] = []
+	effective = []
 	for host in hosts:
 		host_text = host.strip()
 		if not host_text:
@@ -848,6 +848,7 @@ def load_prompts() -> list[Prompt]:
 				description=description,
 				arguments=arguments,
 				fn=_make_prompt_renderer(raw_messages, str(prompt_path)),
+				context_kwarg=None,
 			)
 		)
 	return prompts
