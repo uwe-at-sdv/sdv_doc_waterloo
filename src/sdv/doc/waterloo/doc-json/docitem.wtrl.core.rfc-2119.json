@@ -1,12 +1,12 @@
 {
     "$schema": "https://sci-d-vis.com/schema/wtrl-json-0.1.0.schema.json",
-    "$id": "urn:waterlint:wtrl-json:0.16.3:core:rfc-2119:abd356601572d8c9bb96852e0333f59de20968992dacf9c46dc2879753a7e363",
+    "$id": "urn:waterlint:wtrl-json:0.17.0:core:rfc-2119:abd356601572d8c9bb96852e0333f59de20968992dacf9c46dc2879753a7e363",
     "__WTRL_VERSION__": {
         "waterloo": "0.9.0",
         "schema": "0.1.0"
     },
     "__WTRL_META__": {
-        "generated_at": "2026-06-22T12:03:03+02:00",
+        "generated_at": "2026-06-22T17:30:42+02:00",
         "generator": "waterlint",
         "scope": "core",
         "flavour": "rfc-2119"
@@ -4133,7 +4133,12 @@
                 "Raises": {},
                 "Notes": {
                     "Last review": [
-                        "2026-02-04"
+                        "2026-06-22"
+                    ],
+                    "Limitations": [
+                        "This helper is best-effort and object-local.",
+                        "It does not reconstruct containment context for nested instances.",
+                        "For such cases it may return only the local class name instead of a fully qualified nested name."
                     ]
                 }
             }
@@ -4181,7 +4186,14 @@
                 "Returns": [
                     "Best-effort fully qualified object name."
                 ],
-                "Raises": {}
+                "Raises": {},
+                "Notes": {
+                    "Limitations": [
+                        "This helper is best-effort and object-local.",
+                        "It does not reconstruct containment context for nested instances.",
+                        "For such cases it may return only the local class name prefixed by the module name."
+                    ]
+                }
             }
         },
         "sdv.doc.waterloo.docitem_helper.get_obj_path": {
@@ -4424,7 +4436,7 @@
                         "MUST build a |type|`dict` (the |dfn|`result`) as follows:",
                         "MUST analyse the object's annotations by means of |mod|`inspect`.",
                         "On success, MUST add the annotations to the result.",
-                        "MUST check for an attribute |value|`__type_params__` in the object.",
+                        "MUST check for an attribute |attr|`__type_params__` in the object.",
                         "If it exists (as of Python 3.12), MUST iterate over the |type|`tuple` |var|`obj.__type_params__` and add pairs consisting of |var|`param.__name__` and |value|`type(param)` to the result."
                     ]
                 },
@@ -4439,6 +4451,12 @@
                 "Raises": {
                     "BaseException": [
                         "MAY propagate exceptions other than |type|`TypeError` and |type|`ValueError` from module |mod|`inspect`."
+                    ]
+                },
+                "Notes": {
+                    "Result": [
+                        "The returned object mostly results from |func|`inspect.get_annotations`,",
+                        "but may be extended with type parameters for Python 3.12+."
                     ]
                 }
             }
@@ -4482,7 +4500,18 @@
                 "Returns": [
                     "A list of source lines that start with |token|`@`."
                 ],
-                "Raises": {}
+                "Raises": {
+                    "BaseException": [
+                        "MAY propagate exceptions from |func|`inspect.getsource` or source retrieval."
+                    ]
+                },
+                "Notes": {
+                    "Implementation": [
+                        "This is a best-effort implementation that may fail for built-ins, C-extensions,",
+                        "or dynamically generated callables, in which case it returns an empty list.",
+                        "It is based on |func|`inspect.getsource` and reading the source lines."
+                    ]
+                }
             }
         },
         "sdv.doc.waterloo.docitem_helper.gen_documentable_objects": {
@@ -12798,13 +12827,13 @@
         },
         "sdv.doc.waterloo.docitem_convert.to_string_legend_yaml": {
             "signature": {
-                "text": "to_string_legend_yaml(config: 'YamlConfig' = <sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f728e346f90>) -> 'str'",
+                "text": "to_string_legend_yaml(config: 'YamlConfig' = <sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f2f24696f90>) -> 'str'",
                 "parameters": [
                     {
                         "name": "config",
                         "kind": "POSITIONAL_OR_KEYWORD",
                         "annotation": "YamlConfig",
-                        "default": "<sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f728e346f90>"
+                        "default": "<sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f2f24696f90>"
                     }
                 ],
                 "returns": "str"
@@ -12841,7 +12870,7 @@
         },
         "sdv.doc.waterloo.docitem_convert.to_string_signature_yaml": {
             "signature": {
-                "text": "to_string_signature_yaml(obj: 'object', config: 'YamlConfig' = <sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f728e048190>) -> 'str'",
+                "text": "to_string_signature_yaml(obj: 'object', config: 'YamlConfig' = <sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f2f2439c190>) -> 'str'",
                 "parameters": [
                     {
                         "name": "obj",
@@ -12853,7 +12882,7 @@
                         "name": "config",
                         "kind": "POSITIONAL_OR_KEYWORD",
                         "annotation": "YamlConfig",
-                        "default": "<sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f728e048190>"
+                        "default": "<sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f2f2439c190>"
                     }
                 ],
                 "returns": "str"
@@ -12923,7 +12952,7 @@
         },
         "sdv.doc.waterloo.docitem_convert.to_string_yaml": {
             "signature": {
-                "text": "to_string_yaml(tree: 'DocstringTree', flavour: 'Flavour', config: 'YamlConfig' = <sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f728e0482d0>) -> 'str'",
+                "text": "to_string_yaml(tree: 'DocstringTree', flavour: 'Flavour', config: 'YamlConfig' = <sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f2f2439c2d0>) -> 'str'",
                 "parameters": [
                     {
                         "name": "tree",
@@ -12941,7 +12970,7 @@
                         "name": "config",
                         "kind": "POSITIONAL_OR_KEYWORD",
                         "annotation": "YamlConfig",
-                        "default": "<sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f728e0482d0>"
+                        "default": "<sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f2f2439c2d0>"
                     }
                 ],
                 "returns": "str"

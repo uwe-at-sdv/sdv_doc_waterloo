@@ -379,10 +379,34 @@ html, body {
 	font-weight:700;
 	}
 
+/*----- Code segements --------------------------------------*/
+.wtrl-example-code .wtrl-code {
+	border:1px solid #ddd;
+	border-radius:0.3em;
+	background:#f7fff0;
+	margin-top: 0.25em;
+	margin-bottom:0em;
+	padding-left: 0.5em;
+	padding-right: 0.5em;
+	padding-top: 0.5em;
+	padding-bottom: 0.5em;
+	box-sizing:border-box;
+	white-space:pre-wrap;
+	overflow-wrap:anywhere;
+	}
+.wtrl-example-code .wtrl-code pre {
+/* control margins and padding by .wtrl-example-code .wtrl-code, not here. */
+	margin: 0em;
+	padding: 0em;
+}
+
 /*----- Links -----------------------------------------------*/
 a {
 	text-decoration: none;
 	}
+/*----- Kind filter -----------------------------------------*/
+/* Currently not possible because of the use of <option> elements
+   in the filter dropdown, which do not allow for styling individual options. */
 
 /*----- Hit list kinds --------------------------------------*/
 .wtrl-hit-kind-module-label {

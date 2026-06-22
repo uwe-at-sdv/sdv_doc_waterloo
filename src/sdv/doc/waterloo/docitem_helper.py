@@ -2330,6 +2330,17 @@ def is_obj_documentable(obj: object) -> TypeIs[Documentable]:
 	Returns:
 		|True| if |var|`obj` is a module, class or function, else |False|.
 	Raises:
+	Notes:
+		Last review:
+			2026-06-22
+		Documentable vs. non-documentable objects:
+			Only modules, classes, and functions are considered documentable
+			for Waterloo docstring generation and validation.
+			Accordingly, sections like |label|`Public_types`,
+			|label|`Public_constants`, and |label|`Public_variables`
+			in module and class docstrings document named values
+			that are not documentable objects themselves.
+
 	"""
 	return is_obj_module(obj) or is_obj_class(obj) or is_obj_function(obj)
 
@@ -2434,7 +2445,11 @@ def get_obj_name(obj: object) -> str:
 	Raises:
 	Notes:
 		Last review:
-			2026-02-04
+			2026-06-22
+		Limitations:
+			This helper is best-effort and object-local.
+			It does not reconstruct containment context for nested instances.
+			For such cases it may return only the local class name instead of a fully qualified nested name.
 	"""
 	if isinstance(obj, str):
 		return obj
@@ -2468,6 +2483,11 @@ def get_obj_fully_qualified_name(obj: object) -> str:
 	Returns:
 		Best-effort fully qualified object name.
 	Raises:
+	Notes:
+		Limitations:
+			This helper is best-effort and object-local.
+			It does not reconstruct containment context for nested instances.
+			For such cases it may return only the local class name prefixed by the module name.
 	"""
 	if isinstance(obj, str):
 		return obj
@@ -2699,7 +2719,7 @@ def get_obj_annotations(obj: object) -> dict[str, Any]:
 			|Must| build a |type|`dict` (the |dfn|`result`) as follows:
 			|Must| analyse the object's annotations by means of |mod|`inspect`.
 			On success, |must| add the annotations to the result.
-			|Must| check for an attribute |value|`__type_params__` in the object.
+			|Must| check for an attribute |attr|`__type_params__` in the object.
 			If it exists (as of Python 3.12), |must| iterate over the\
 			|type|`tuple` |var|`obj.__type_params__` and add pairs\
 			consisting of |var|`param.__name__` and |value|`type(param)` to the result.
@@ -2711,6 +2731,10 @@ def get_obj_annotations(obj: object) -> dict[str, Any]:
 	Raises:
 		BaseException:
 			|May| propagate exceptions other than |type|`TypeError` and |type|`ValueError` from module |mod|`inspect`.
+	Notes:
+		Result:
+			The returned object mostly results from |func|`inspect.get_annotations`,
+			but may be extended with type parameters for Python 3.12+.
 	"""
 # 1. Classic annotations (variables, methods, etc.)
 	try:
@@ -2742,6 +2766,13 @@ def get_obj_decorators(obj: object) -> List[str]:
 	Returns:
 		A list of source lines that start with |token|`@`.
 	Raises:
+		BaseException:
+			|May| propagate exceptions from |func|`inspect.getsource` or source retrieval.
+	Notes:
+		Implementation:
+			This is a best-effort implementation that may fail for built-ins, C-extensions,
+			or dynamically generated callables, in which case it returns an empty list.
+			It is based on |func|`inspect.getsource` and reading the source lines.
 	"""
 	try:
 		code = inspect.getsource(cast(Callable[...,Any],obj))
