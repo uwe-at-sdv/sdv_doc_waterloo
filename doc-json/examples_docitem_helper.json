@@ -45,6 +45,46 @@
         ],
         "sdv.doc.waterloo.docitem_helper.build_anchor": [
             "package_gh-pages/doc-examples-python/api_demo_helper_build_anchor_01.py"
+        ],
+        "sdv.doc.waterloo.docitem_helper.get_obj_annotations": [
+            "package_gh-pages/doc-examples-python/api_demo_helper_get_obj_annotations_01.py"
+        ],
+        "sdv.doc.waterloo.docitem_helper.get_obj_fully_qualified_name": [
+            "package_gh-pages/doc-examples-python/api_demo_helper_get_obj_fully_qualified_name_01.py",
+            "package_gh-pages/doc-examples-python/api_demo_helper_get_obj_name_01.py"
+        ],
+        "sdv.doc.waterloo.docitem_helper.get_obj_name": [
+            "package_gh-pages/doc-examples-python/api_demo_helper_get_obj_name_01.py"
+        ],
+        "sdv.doc.waterloo.docitem_helper.get_obj_path": [
+            "package_gh-pages/doc-examples-python/api_demo_helper_get_obj_path_01.py"
+        ],
+        "sdv.doc.waterloo.docitem_helper.get_obj_docstring": [
+            "package_gh-pages/doc-examples-python/api_demo_helper_get_obj_docstring_01.py"
+        ],
+        "sdv.doc.waterloo.docitem_helper.get_obj_direct_module": [
+            "package_gh-pages/doc-examples-python/api_demo_helper_get_obj_direct_module_01.py"
+        ],
+        "sdv.doc.waterloo.docitem_helper.get_obj_decorators": [
+            "package_gh-pages/doc-examples-python/api_demo_helper_get_obj_decorators_01.py"
+        ],
+        "sdv.doc.waterloo.docitem_helper.is_obj_module": [
+            "package_gh-pages/doc-examples-python/api_demo_helper_is_obj_something_01.py"
+        ],
+        "sdv.doc.waterloo.docitem_helper.is_obj_class": [
+            "package_gh-pages/doc-examples-python/api_demo_helper_is_obj_something_01.py"
+        ],
+        "sdv.doc.waterloo.docitem_helper.is_obj_function": [
+            "package_gh-pages/doc-examples-python/api_demo_helper_is_obj_something_01.py"
+        ],
+        "sdv.doc.waterloo.docitem_helper.is_obj_method_like": [
+            "package_gh-pages/doc-examples-python/api_demo_helper_is_obj_something_01.py"
+        ],
+        "sdv.doc.waterloo.docitem_helper.is_obj_named_value": [
+            "package_gh-pages/doc-examples-python/api_demo_helper_is_obj_something_01.py"
+        ],
+        "sdv.doc.waterloo.docitem_helper.is_obj_documentable": [
+            "package_gh-pages/doc-examples-python/api_demo_helper_is_obj_something_01.py"
         ]
     }
 }

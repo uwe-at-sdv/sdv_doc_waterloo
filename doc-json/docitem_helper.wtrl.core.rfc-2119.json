@@ -1,12 +1,12 @@
 {
     "$schema": "https://sci-d-vis.com/schema/wtrl-json-0.1.0.schema.json",
-    "$id": "urn:waterlint:wtrl-json:0.16.3:core:rfc-2119:14707e9a1d96b90158692b4650ee4c5c317ede6cc8734387d02a7ec7328884fd",
+    "$id": "urn:waterlint:wtrl-json:0.17.0:core:rfc-2119:9cf6d1aa3b48968a1ad5b35e3be7ae29f77681d9f0ae97a0a6dce27d5a2b9994",
     "__WTRL_VERSION__": {
         "waterloo": "0.9.0",
         "schema": "0.1.0"
     },
     "__WTRL_META__": {
-        "generated_at": "2026-06-22T12:03:07+02:00",
+        "generated_at": "2026-06-22T17:30:45+02:00",
         "generator": "waterlint",
         "scope": "core",
         "flavour": "rfc-2119"
@@ -3358,7 +3358,10 @@
                         "Uniform wrapper, allows us to add debugging output or hooks in case of trouble."
                     ]
                 }
-            }
+            },
+            "examples": [
+                "/__WTRL_EXAMPLES__/sha256_5d9d9dc53136057cb721a5068bd9ce99ed4b89ae52ad9dde8a6be7d276007ca7"
+            ]
         },
         "sdv.doc.waterloo.docitem_helper.is_obj_class": {
             "signature": {
@@ -3409,7 +3412,10 @@
                         "Uniform wrapper, allows us to add debugging output or hooks in case of trouble."
                     ]
                 }
-            }
+            },
+            "examples": [
+                "/__WTRL_EXAMPLES__/sha256_5d9d9dc53136057cb721a5068bd9ce99ed4b89ae52ad9dde8a6be7d276007ca7"
+            ]
         },
         "sdv.doc.waterloo.docitem_helper.is_obj_function": {
             "signature": {
@@ -3460,7 +3466,10 @@
                         "Uniform wrapper, allows us to add debugging output or hooks in case of trouble."
                     ]
                 }
-            }
+            },
+            "examples": [
+                "/__WTRL_EXAMPLES__/sha256_5d9d9dc53136057cb721a5068bd9ce99ed4b89ae52ad9dde8a6be7d276007ca7"
+            ]
         },
         "sdv.doc.waterloo.docitem_helper.is_obj_method_like": {
             "signature": {
@@ -3505,7 +3514,10 @@
                     "|True| if |var|`obj` is callable and method-like by heuristic."
                 ],
                 "Raises": {}
-            }
+            },
+            "examples": [
+                "/__WTRL_EXAMPLES__/sha256_5d9d9dc53136057cb721a5068bd9ce99ed4b89ae52ad9dde8a6be7d276007ca7"
+            ]
         },
         "sdv.doc.waterloo.docitem_helper.is_obj_named_value": {
             "signature": {
@@ -3559,7 +3571,10 @@
                         "Uniform wrapper, allows us to add debugging output or hooks in case of trouble."
                     ]
                 }
-            }
+            },
+            "examples": [
+                "/__WTRL_EXAMPLES__/sha256_5d9d9dc53136057cb721a5068bd9ce99ed4b89ae52ad9dde8a6be7d276007ca7"
+            ]
         },
         "sdv.doc.waterloo.docitem_helper.is_obj_documentable": {
             "signature": {
@@ -3598,7 +3613,10 @@
                     "|True| if |var|`obj` is a module, class or function, else |False|."
                 ],
                 "Raises": {}
-            }
+            },
+            "examples": [
+                "/__WTRL_EXAMPLES__/sha256_5d9d9dc53136057cb721a5068bd9ce99ed4b89ae52ad9dde8a6be7d276007ca7"
+            ]
         },
         "sdv.doc.waterloo.docitem_helper.get_obj_direct_module": {
             "signature": {
@@ -3660,7 +3678,10 @@
                         "Nested ownership (class-inside-class, closures, descriptors) is out of scope."
                     ]
                 }
-            }
+            },
+            "examples": [
+                "/__WTRL_EXAMPLES__/sha256_87e8cdcb3fffafe52ca37fa2dfbb433798d78940a78f981d2207a37e968e63df"
+            ]
         },
         "sdv.doc.waterloo.docitem_helper.get_obj_name": {
             "signature": {
@@ -3708,10 +3729,18 @@
                 "Raises": {},
                 "Notes": {
                     "Last review": [
-                        "2026-02-04"
+                        "2026-06-22"
+                    ],
+                    "Limitations": [
+                        "This helper is best-effort and object-local.",
+                        "It does not reconstruct containment context for nested instances.",
+                        "For such cases it may return only the local class name instead of a fully qualified nested name."
                     ]
                 }
-            }
+            },
+            "examples": [
+                "/__WTRL_EXAMPLES__/sha256_e9f7e9ad49caef4ae9f18f75a2f1353ebcd55d79d205522dcbd2744c2817059b"
+            ]
         },
         "sdv.doc.waterloo.docitem_helper.get_obj_fully_qualified_name": {
             "signature": {
@@ -3756,8 +3785,19 @@
                 "Returns": [
                     "Best-effort fully qualified object name."
                 ],
-                "Raises": {}
-            }
+                "Raises": {},
+                "Notes": {
+                    "Limitations": [
+                        "This helper is best-effort and object-local.",
+                        "It does not reconstruct containment context for nested instances.",
+                        "For such cases it may return only the local class name prefixed by the module name."
+                    ]
+                }
+            },
+            "examples": [
+                "/__WTRL_EXAMPLES__/sha256_31e9caba8325e396d689aa0a0cc062bb8f61bc96e9db86f530732efaa043988c",
+                "/__WTRL_EXAMPLES__/sha256_e9f7e9ad49caef4ae9f18f75a2f1353ebcd55d79d205522dcbd2744c2817059b"
+            ]
         },
         "sdv.doc.waterloo.docitem_helper.get_obj_path": {
             "signature": {
@@ -3802,7 +3842,10 @@
                         "2026-02-05"
                     ]
                 }
-            }
+            },
+            "examples": [
+                "/__WTRL_EXAMPLES__/sha256_925492340c1e6ad2a4f3578c9063f5b945fbe76c0d7c455664b4ab6cbb15cb9e"
+            ]
         },
         "sdv.doc.waterloo.docitem_helper.build_anchor": {
             "signature": {
@@ -3972,7 +4015,10 @@
                         "The object-level cache avoids repeating the wrapper walk for the same object."
                     ]
                 }
-            }
+            },
+            "examples": [
+                "/__WTRL_EXAMPLES__/sha256_f70390d308dc5a4bc9cead20d038fc673a1926224c6e0a7115b98a7c9f96cded"
+            ]
         },
         "sdv.doc.waterloo.docitem_helper.get_obj_annotations": {
             "signature": {
@@ -4002,7 +4048,7 @@
                         "MUST build a |type|`dict` (the |dfn|`result`) as follows:",
                         "MUST analyse the object's annotations by means of |mod|`inspect`.",
                         "On success, MUST add the annotations to the result.",
-                        "MUST check for an attribute |value|`__type_params__` in the object.",
+                        "MUST check for an attribute |attr|`__type_params__` in the object.",
                         "If it exists (as of Python 3.12), MUST iterate over the |type|`tuple` |var|`obj.__type_params__` and add pairs consisting of |var|`param.__name__` and |value|`type(param)` to the result."
                     ]
                 },
@@ -4018,8 +4064,17 @@
                     "BaseException": [
                         "MAY propagate exceptions other than |type|`TypeError` and |type|`ValueError` from module |mod|`inspect`."
                     ]
+                },
+                "Notes": {
+                    "Result": [
+                        "The returned object mostly results from |func|`inspect.get_annotations`,",
+                        "but may be extended with type parameters for Python 3.12+."
+                    ]
                 }
-            }
+            },
+            "examples": [
+                "/__WTRL_EXAMPLES__/sha256_dba49c14f637ac236409fefe1e2e80eae26a7ecb8bde2df60de3dccb572a375f"
+            ]
         },
         "sdv.doc.waterloo.docitem_helper.get_obj_decorators": {
             "signature": {
@@ -4060,8 +4115,22 @@
                 "Returns": [
                     "A list of source lines that start with |token|`@`."
                 ],
-                "Raises": {}
-            }
+                "Raises": {
+                    "BaseException": [
+                        "MAY propagate exceptions from |func|`inspect.getsource` or source retrieval."
+                    ]
+                },
+                "Notes": {
+                    "Implementation": [
+                        "This is a best-effort implementation that may fail for built-ins, C-extensions,",
+                        "or dynamically generated callables, in which case it returns an empty list.",
+                        "It is based on |func|`inspect.getsource` and reading the source lines."
+                    ]
+                }
+            },
+            "examples": [
+                "/__WTRL_EXAMPLES__/sha256_92c3b23f1bf4bc50121ae98acf3aa4070dbbc2155d69b8c30178cf2472c1acf8"
+            ]
         },
         "sdv.doc.waterloo.docitem_helper.gen_documentable_objects": {
             "signature": {
@@ -5266,6 +5335,76 @@
             "code": "#!/usr/bin/env python3\n\nimport sdv.doc.waterloo.docitem_helper as h\n\n# A selfreferential test...\n# Should produce \"wtrl-func-3:sdv-3:doc-8:waterloo-14:docitem_helper-12:build_anchor\"\ndef test_build_anchor() -> None:\n\tprint(h.build_anchor(h.build_anchor))\n\ntest_build_anchor()\n",
             "referenced_by": [
                 "sdv.doc.waterloo.docitem_helper.build_anchor"
+            ]
+        },
+        "sha256_dba49c14f637ac236409fefe1e2e80eae26a7ecb8bde2df60de3dccb572a375f": {
+            "lang": "python",
+            "hash": "dba49c14f637ac236409fefe1e2e80eae26a7ecb8bde2df60de3dccb572a375f",
+            "code": "#!/usr/bin/env python3\n\nimport sdv.doc.waterloo.docitem_helper as h\nimport sys,json\n\ndef test_get_obj_annotations() -> None:\n\tjson.dump(h.get_obj_annotations(h.get_obj_annotations),sys.stdout,indent = 4)\n\tprint()\n\ntest_get_obj_annotations()\n",
+            "referenced_by": [
+                "sdv.doc.waterloo.docitem_helper.get_obj_annotations"
+            ]
+        },
+        "sha256_31e9caba8325e396d689aa0a0cc062bb8f61bc96e9db86f530732efaa043988c": {
+            "lang": "python",
+            "hash": "31e9caba8325e396d689aa0a0cc062bb8f61bc96e9db86f530732efaa043988c",
+            "code": "#!/usr/bin/env python3\n\nimport sdv.doc.waterloo.docitem_helper as h\n\nclass X:\n\tclass Y:\n\t\tclass Z:\n\t\t\t@classmethod\n\t\t\tdef test(cls) -> None:\n\t\t\t\tprint(h.get_obj_fully_qualified_name(cls.test))\n\nX.Y.Z.test()\n# Result: __main__.X.Y.Z.test\n",
+            "referenced_by": [
+                "sdv.doc.waterloo.docitem_helper.get_obj_fully_qualified_name"
+            ]
+        },
+        "sha256_e9f7e9ad49caef4ae9f18f75a2f1353ebcd55d79d205522dcbd2744c2817059b": {
+            "lang": "python",
+            "hash": "e9f7e9ad49caef4ae9f18f75a2f1353ebcd55d79d205522dcbd2744c2817059b",
+            "code": "#!/usr/bin/env python3\n\nimport sdv.doc.waterloo.docitem_helper as h\n\nclass X:\n\t@classmethod\n\tdef m_cls(cls) -> None:\n\t\tpass\n\t@staticmethod\n\tdef m_stat(cls) -> None:\n\t\tpass\n\tdef m(self) -> None:\n\t\tpass\n\tclass Y:\n\t\tpass\n\ty = Y()\n\ndef f() -> None:\n\tpass\n\nx = X()\nprint(h.get_obj_name(X))\nprint(h.get_obj_name(x))\nprint(h.get_obj_name(X.m_cls))\nprint(h.get_obj_name(X.m_stat))\nprint(h.get_obj_name(x.m))\nprint(h.get_obj_name(f))\nprint(h.get_obj_name(X.Y))\nprint(h.get_obj_name(x.Y))\n\n# These two are a bit surprising, but seem to be\n# irrelevant for the project.\nprint(h.get_obj_name(x.y))\nprint(h.get_obj_name(X.y))\n\n# Same here. See section Notes.Limitations.\nprint(h.get_obj_fully_qualified_name(x.y))\nprint(h.get_obj_fully_qualified_name(X.y))\n\n",
+            "referenced_by": [
+                "sdv.doc.waterloo.docitem_helper.get_obj_fully_qualified_name",
+                "sdv.doc.waterloo.docitem_helper.get_obj_name"
+            ]
+        },
+        "sha256_925492340c1e6ad2a4f3578c9063f5b945fbe76c0d7c455664b4ab6cbb15cb9e": {
+            "lang": "python",
+            "hash": "925492340c1e6ad2a4f3578c9063f5b945fbe76c0d7c455664b4ab6cbb15cb9e",
+            "code": "#!/usr/bin/env python3\n\nimport sdv.doc.waterloo.docitem_helper as h\n\nclass X:\n\t@classmethod\n\tdef m_cls(cls) -> None:\n\t\tpass\n\t@staticmethod\n\tdef m_stat(cls) -> None:\n\t\tpass\n\tdef m(self) -> None:\n\t\tpass\n\tclass Y:\n\t\tpass\n\ty = Y()\n\ndef f() -> None:\n\tpass\n\n# All ten results are the same, as it should be.\nx = X()\nprint(h.get_obj_path(X))\nprint(h.get_obj_path(x))\nprint(h.get_obj_path(X.m_cls))\nprint(h.get_obj_path(X.m_stat))\nprint(h.get_obj_path(x.m))\nprint(h.get_obj_path(f))\nprint(h.get_obj_path(X.Y))\nprint(h.get_obj_path(x.Y))\n\nprint(h.get_obj_path(x.y))\nprint(h.get_obj_path(X.y))\n\n",
+            "referenced_by": [
+                "sdv.doc.waterloo.docitem_helper.get_obj_path"
+            ]
+        },
+        "sha256_f70390d308dc5a4bc9cead20d038fc673a1926224c6e0a7115b98a7c9f96cded": {
+            "lang": "python",
+            "hash": "f70390d308dc5a4bc9cead20d038fc673a1926224c6e0a7115b98a7c9f96cded",
+            "code": "#!/usr/bin/env python3\n\nimport sdv.doc.waterloo.docitem_helper as h\n\nclass X:\n\t\"\"\"\n\tPreamble:\n\t\tprofile:\n\t\t\tclass\n\t\tnormative_sections:\n\t\t\tContract\n\tContract:\n\t\tgeneral:\n\t\tconstructor:\n\t\"\"\"\n\nif __name__ == \"__main__\":\n\tprint(h.get_obj_docstring(X))\n",
+            "referenced_by": [
+                "sdv.doc.waterloo.docitem_helper.get_obj_docstring"
+            ]
+        },
+        "sha256_87e8cdcb3fffafe52ca37fa2dfbb433798d78940a78f981d2207a37e968e63df": {
+            "lang": "python",
+            "hash": "87e8cdcb3fffafe52ca37fa2dfbb433798d78940a78f981d2207a37e968e63df",
+            "code": "#!/usr/bin/env python3\n\nimport sdv.doc.waterloo.docitem_helper as h\n\ndef f() -> None:\n\tpass\n\nif __name__ == \"__main__\":\n# Both deliver the same result, module 'sdv.doc.waterloo.docitem_helper'.\n\tprint(h.get_obj_direct_module(h))\n\tprint(h.get_obj_direct_module(h.get_obj_direct_module))\n# Module __main__ seems to cause trouble, but that is\n# a special case not relevant in practice.\n\tprint(f)\n",
+            "referenced_by": [
+                "sdv.doc.waterloo.docitem_helper.get_obj_direct_module"
+            ]
+        },
+        "sha256_92c3b23f1bf4bc50121ae98acf3aa4070dbbc2155d69b8c30178cf2472c1acf8": {
+            "lang": "python",
+            "hash": "92c3b23f1bf4bc50121ae98acf3aa4070dbbc2155d69b8c30178cf2472c1acf8",
+            "code": "#!/usr/bin/env python3\n\nimport sdv.doc.waterloo.docitem_helper as h\n\nclass X:\n\t@classmethod\n\tdef m_cls(cls) -> None:\n\t\tpass\n\t@staticmethod\n\tdef m_stat(cls) -> None:\n\t\tpass\n\nprint(h.get_obj_decorators(X.m_cls))\nprint(h.get_obj_decorators(X.m_stat))\n",
+            "referenced_by": [
+                "sdv.doc.waterloo.docitem_helper.get_obj_decorators"
+            ]
+        },
+        "sha256_5d9d9dc53136057cb721a5068bd9ce99ed4b89ae52ad9dde8a6be7d276007ca7": {
+            "lang": "python",
+            "hash": "5d9d9dc53136057cb721a5068bd9ce99ed4b89ae52ad9dde8a6be7d276007ca7",
+            "code": "#!/usr/bin/env python3\n\nfrom __future__ import annotations\nfrom typing import TypeAlias\nimport sdv.doc.waterloo.docitem_helper as h\n\nclass X:\n\t@classmethod\n\tdef m_cls(cls) -> None:\n\t\tpass\n\t@staticmethod\n\tdef m_stat(cls) -> None:\n\t\tpass\n\tdef m(self) -> None:\n\t\tpass\n\tv: int = 42\n\tt: TypeAlias = int | float\n\ndef f() -> None:\n\tpass\n\nfunctions_to_test = [\n\th.is_obj_module,\n\th.is_obj_class,\n\th.is_obj_function,\n\th.is_obj_method_like,\n\th.is_obj_named_value,\n\th.is_obj_documentable\n\t]\n\nobjects_to_test = [ h,X,f,X.m,X.m_cls,X.m_stat,X.v,X.t ]\n\nif __name__ == \"__main__\":\n\tprint(\"                     h        X        f        X.m      X.m_cls  X.m_stat X.v      X.t\")\n\tfor func in functions_to_test:\n\t\tprint(func.__name__ + \":\" + \" \" * (20 - len(func.__name__)),end='')\n\t\tfor obj in objects_to_test:\n\t\t\tprint(\"True \" if func(obj) else \"False\",end='    ')\n\t\tprint()\n\n#                      h        X        f        X.m      X.m_cls  X.m_stat X.v      X.t\n# is_obj_module:       True     False    False    False    False    False    False    False    \n# is_obj_class:        False    True     False    False    False    False    False    False    \n# is_obj_function:     False    False    True     True     True     True     False    False    \n# is_obj_method_like:  False    False    False    True     True     True     False    False    \n# is_obj_named_value:  False    False    False    False    False    False    True     True     \n# is_obj_documentable: True     True     True     True     True     True     False    False    \n",
+            "referenced_by": [
+                "sdv.doc.waterloo.docitem_helper.is_obj_class",
+                "sdv.doc.waterloo.docitem_helper.is_obj_documentable",
+                "sdv.doc.waterloo.docitem_helper.is_obj_function",
+                "sdv.doc.waterloo.docitem_helper.is_obj_method_like",
+                "sdv.doc.waterloo.docitem_helper.is_obj_module",
+                "sdv.doc.waterloo.docitem_helper.is_obj_named_value"
             ]
         }
     }
