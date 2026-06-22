@@ -1684,7 +1684,7 @@
 <div class="wtrl-signature-param line"><span class="wtrl_var">top</span><span class="wtrl_op">: </span><span class="wtrl_type">docitem_docstring_method</span></div>
 <div class="wtrl-signature-param line"><span class="wtrl_var">node_contract</span><span class="wtrl_op">: </span><span class="wtrl_type">docitem_map_base</span></div>
 <div class="wtrl-signature-param line"><span class="wtrl_var">node_normative_sections</span><span class="wtrl_op">: </span><span class="wtrl_type">docitem_list_base</span></div>
-<div class="wtrl-signature-param line"><span class="wtrl_var">_seen</span><span class="wtrl_op">: </span><span class="wtrl_type">Dict[object, docitem_docstring_base] | None</span><span class="wtrl_op"> = </span><span class="wtrl_lit">None</span></div>
+<div class="wtrl-signature-param line"><span class="wtrl_var">session</span><span class="wtrl_op">: </span><span class="wtrl_type">ValidationSession | None</span><span class="wtrl_op"> = </span><span class="wtrl_lit">None</span></div>
 <div class="wtrl-signature-ret line"><span class="wtrl_op">)</span><span class="wtrl_op"> -&gt; </span><span class="wtrl_type">None</span></div>
 </td>
 </tr>
@@ -1741,8 +1741,8 @@
 <li><p><code class="wtrl_var docutils literal notranslate"><span class="pre">node_normative_sections</span></code></p>
 <p class="wtrl-freeform-paragraph-content">The node for section <code class="wtrl_label docutils literal notranslate"><span class="pre">Preamble.normative_sections</span></code> already parsed by the caller.</p>
 </li>
-<li><p><code class="wtrl_var docutils literal notranslate"><span class="pre">_seen</span></code></p>
-<p class="wtrl-freeform-paragraph-content">Recording objects already validated in order to avoid recursion divergence and to share parsed trees across references.</p>
+<li><p><code class="wtrl_var docutils literal notranslate"><span class="pre">session</span></code></p>
+<p class="wtrl-freeform-paragraph-content">The validation session shared across recursive validations.</p>
 </li>
 </ul>
 </td>
@@ -1783,7 +1783,7 @@
 <div class="wtrl-signature-param line"><span class="wtrl_var">top</span><span class="wtrl_op">: </span><span class="wtrl_type">docitem_docstring_class</span></div>
 <div class="wtrl-signature-param line"><span class="wtrl_var">node_contract</span><span class="wtrl_op">: </span><span class="wtrl_type">docitem_map_base</span></div>
 <div class="wtrl-signature-param line"><span class="wtrl_var">node_normative_sections</span><span class="wtrl_op">: </span><span class="wtrl_type">docitem_list_base</span></div>
-<div class="wtrl-signature-param line"><span class="wtrl_var">_seen</span><span class="wtrl_op">: </span><span class="wtrl_type">Dict[object, docitem_docstring_base] | None</span><span class="wtrl_op"> = </span><span class="wtrl_lit">None</span></div>
+<div class="wtrl-signature-param line"><span class="wtrl_var">session</span><span class="wtrl_op">: </span><span class="wtrl_type">ValidationSession | None</span><span class="wtrl_op"> = </span><span class="wtrl_lit">None</span></div>
 <div class="wtrl-signature-ret line"><span class="wtrl_op">)</span><span class="wtrl_op"> -&gt; </span><span class="wtrl_type">None</span></div>
 </td>
 </tr>
@@ -1836,8 +1836,8 @@
 <li><p><code class="wtrl_var docutils literal notranslate"><span class="pre">node_normative_sections</span></code></p>
 <p class="wtrl-freeform-paragraph-content">The node for section <code class="wtrl_label docutils literal notranslate"><span class="pre">Preamble.normative_sections</span></code> already parsed by the caller.</p>
 </li>
-<li><p><code class="wtrl_var docutils literal notranslate"><span class="pre">_seen</span></code></p>
-<p class="wtrl-freeform-paragraph-content">Recording objects already validated in order to avoid recursion divergence and to share parsed trees across references.</p>
+<li><p><code class="wtrl_var docutils literal notranslate"><span class="pre">session</span></code></p>
+<p class="wtrl-freeform-paragraph-content">The validation session shared across recursive validations.</p>
 </li>
 </ul>
 </td>
@@ -1882,7 +1882,7 @@
 <div class="wtrl-signature-param line"><span class="wtrl_var">top</span><span class="wtrl_op">: </span><span class="wtrl_type">docitem_docstring_module</span></div>
 <div class="wtrl-signature-param line"><span class="wtrl_var">node_contract</span><span class="wtrl_op">: </span><span class="wtrl_type">docitem_map_base</span></div>
 <div class="wtrl-signature-param line"><span class="wtrl_var">node_normative_sections</span><span class="wtrl_op">: </span><span class="wtrl_type">docitem_list_base</span></div>
-<div class="wtrl-signature-param line"><span class="wtrl_var">_seen</span><span class="wtrl_op">: </span><span class="wtrl_type">Dict[object, docitem_docstring_base] | None</span><span class="wtrl_op"> = </span><span class="wtrl_lit">None</span></div>
+<div class="wtrl-signature-param line"><span class="wtrl_var">session</span><span class="wtrl_op">: </span><span class="wtrl_type">ValidationSession | None</span><span class="wtrl_op"> = </span><span class="wtrl_lit">None</span></div>
 <div class="wtrl-signature-ret line"><span class="wtrl_op">)</span><span class="wtrl_op"> -&gt; </span><span class="wtrl_type">None</span></div>
 </td>
 </tr>
@@ -1932,8 +1932,8 @@
 <li><p><code class="wtrl_var docutils literal notranslate"><span class="pre">node_normative_sections</span></code></p>
 <p class="wtrl-freeform-paragraph-content">The node for section <code class="wtrl_label docutils literal notranslate"><span class="pre">Preamble.normative_sections</span></code> already parsed by the caller.</p>
 </li>
-<li><p><code class="wtrl_var docutils literal notranslate"><span class="pre">_seen</span></code></p>
-<p class="wtrl-freeform-paragraph-content">Recording objects already validated in order to avoid recursion divergence and to share parsed trees across references.</p>
+<li><p><code class="wtrl_var docutils literal notranslate"><span class="pre">session</span></code></p>
+<p class="wtrl-freeform-paragraph-content">The validation session shared across recursive validations.</p>
 </li>
 </ul>
 </td>
@@ -1976,7 +1976,7 @@
 <div class="wtrl-signature-param line"><span class="wtrl_var">tr</span><span class="wtrl_op">: </span><span class="wtrl_type">tracer</span></div>
 <div class="wtrl-signature-param line"><span class="wtrl_var">obj</span><span class="wtrl_op">: </span><span class="wtrl_type">object</span></div>
 <div class="wtrl-signature-param line"><span class="wtrl_var">top</span><span class="wtrl_op">: </span><span class="wtrl_type">docitem_docstring_base | None</span><span class="wtrl_op"> = </span><span class="wtrl_lit">None</span></div>
-<div class="wtrl-signature-param line"><span class="wtrl_var">_seen</span><span class="wtrl_op">: </span><span class="wtrl_type">Dict[object, docitem_docstring_base] | None</span><span class="wtrl_op"> = </span><span class="wtrl_lit">None</span></div>
+<div class="wtrl-signature-param line"><span class="wtrl_var">session</span><span class="wtrl_op">: </span><span class="wtrl_type">ValidationSession | None</span><span class="wtrl_op"> = </span><span class="wtrl_lit">None</span></div>
 <div class="wtrl-signature-ret line"><span class="wtrl_op">)</span><span class="wtrl_op"> -&gt; </span><span class="wtrl_type">docitem_docstring_base</span></div>
 </td>
 </tr>
@@ -2036,8 +2036,8 @@
 <li><p><code class="wtrl_var docutils literal notranslate"><span class="pre">top</span></code></p>
 <p class="wtrl-freeform-paragraph-content">The docitem tree to validate.</p>
 </li>
-<li><p><code class="wtrl_var docutils literal notranslate"><span class="pre">_seen</span></code></p>
-<p class="wtrl-freeform-paragraph-content">Recording objects already validated in order to avoid recursion divergence and to share parsed trees across references.</p>
+<li><p><code class="wtrl_var docutils literal notranslate"><span class="pre">session</span></code></p>
+<p class="wtrl-freeform-paragraph-content">The validation session shared across recursive validations.</p>
 </li>
 </ul>
 </td>
@@ -2082,6 +2082,7 @@
 <div class="wtrl-signature-param line"><span class="wtrl_var">tr</span><span class="wtrl_op">: </span><span class="wtrl_type">tracer</span></div>
 <div class="wtrl-signature-param line"><span class="wtrl_var">obj</span><span class="wtrl_op">: </span><span class="wtrl_type">type[object]</span></div>
 <div class="wtrl-signature-param line"><span class="wtrl_var">doc_class</span><span class="wtrl_op">: </span><span class="wtrl_type">docitem_docstring_class</span></div>
+<div class="wtrl-signature-param line"><span class="wtrl_var">session</span><span class="wtrl_op">: </span><span class="wtrl_type">ValidationSession | None</span><span class="wtrl_op"> = </span><span class="wtrl_lit">None</span></div>
 <div class="wtrl-signature-ret line"><span class="wtrl_op">)</span><span class="wtrl_op"> -&gt; </span><span class="wtrl_type">None</span></div>
 </td>
 </tr>
@@ -2117,6 +2118,9 @@
 </li>
 <li><p><code class="wtrl_var docutils literal notranslate"><span class="pre">doc_class</span></code></p>
 <p class="wtrl-freeform-paragraph-content">Already parsed class docstring tree for <code class="wtrl_var docutils literal notranslate"><span class="pre">obj</span></code>.</p>
+</li>
+<li><p><code class="wtrl_var docutils literal notranslate"><span class="pre">session</span></code></p>
+<p class="wtrl-freeform-paragraph-content">The validation session shared across recursive validations.</p>
 </li>
 </ul>
 </td>
@@ -2159,6 +2163,7 @@
 <div class="wtrl-signature-param line"><span class="wtrl_var">tr</span><span class="wtrl_op">: </span><span class="wtrl_type">tracer</span></div>
 <div class="wtrl-signature-param line"><span class="wtrl_var">obj</span><span class="wtrl_op">: </span><span class="wtrl_type">type[object]</span></div>
 <div class="wtrl-signature-param line"><span class="wtrl_var">doc_class</span><span class="wtrl_op">: </span><span class="wtrl_type">docitem_docstring_class</span></div>
+<div class="wtrl-signature-param line"><span class="wtrl_var">session</span><span class="wtrl_op">: </span><span class="wtrl_type">ValidationSession | None</span><span class="wtrl_op"> = </span><span class="wtrl_lit">None</span></div>
 <div class="wtrl-signature-ret line"><span class="wtrl_op">)</span><span class="wtrl_op"> -&gt; </span><span class="wtrl_type">None</span></div>
 </td>
 </tr>
@@ -2194,6 +2199,9 @@
 </li>
 <li><p><code class="wtrl_var docutils literal notranslate"><span class="pre">doc_class</span></code></p>
 <p class="wtrl-freeform-paragraph-content">Already parsed class docstring tree for <code class="wtrl_var docutils literal notranslate"><span class="pre">obj</span></code>.</p>
+</li>
+<li><p><code class="wtrl_var docutils literal notranslate"><span class="pre">session</span></code></p>
+<p class="wtrl-freeform-paragraph-content">The validation session shared across recursive validations.</p>
 </li>
 </ul>
 </td>
@@ -2237,6 +2245,7 @@
 <div class="wtrl-signature-param line"><span class="wtrl_var">tr</span><span class="wtrl_op">: </span><span class="wtrl_type">tracer</span></div>
 <div class="wtrl-signature-param line"><span class="wtrl_var">obj</span><span class="wtrl_op">: </span><span class="wtrl_type">type[object]</span></div>
 <div class="wtrl-signature-param line"><span class="wtrl_var">doc_class</span><span class="wtrl_op">: </span><span class="wtrl_type">docitem_docstring_class</span></div>
+<div class="wtrl-signature-param line"><span class="wtrl_var">session</span><span class="wtrl_op">: </span><span class="wtrl_type">ValidationSession | None</span><span class="wtrl_op"> = </span><span class="wtrl_lit">None</span></div>
 <div class="wtrl-signature-ret line"><span class="wtrl_op">)</span><span class="wtrl_op"> -&gt; </span><span class="wtrl_type">None</span></div>
 </td>
 </tr>
@@ -2272,6 +2281,9 @@
 </li>
 <li><p><code class="wtrl_var docutils literal notranslate"><span class="pre">doc_class</span></code></p>
 <p class="wtrl-freeform-paragraph-content">Already parsed class docstring tree for <code class="wtrl_var docutils literal notranslate"><span class="pre">obj</span></code>.</p>
+</li>
+<li><p><code class="wtrl_var docutils literal notranslate"><span class="pre">session</span></code></p>
+<p class="wtrl-freeform-paragraph-content">Validation session for tracking state across validations.</p>
 </li>
 </ul>
 </td>
@@ -2376,6 +2388,7 @@
 <div class="wtrl-signature-param line"><span class="wtrl_var">tr</span><span class="wtrl_op">: </span><span class="wtrl_type">tracer</span></div>
 <div class="wtrl-signature-param line"><span class="wtrl_var">obj</span><span class="wtrl_op">: </span><span class="wtrl_type">ModuleType</span></div>
 <div class="wtrl-signature-param line"><span class="wtrl_var">doc_module</span><span class="wtrl_op">: </span><span class="wtrl_type">docitem_docstring_module</span></div>
+<div class="wtrl-signature-param line"><span class="wtrl_var">session</span><span class="wtrl_op">: </span><span class="wtrl_type">ValidationSession | None</span><span class="wtrl_op"> = </span><span class="wtrl_lit">None</span></div>
 <div class="wtrl-signature-ret line"><span class="wtrl_op">)</span><span class="wtrl_op"> -&gt; </span><span class="wtrl_type">None</span></div>
 </td>
 </tr>
@@ -2411,6 +2424,9 @@
 </li>
 <li><p><code class="wtrl_var docutils literal notranslate"><span class="pre">doc_module</span></code></p>
 <p class="wtrl-freeform-paragraph-content">Already parsed module docstring tree for <code class="wtrl_var docutils literal notranslate"><span class="pre">obj</span></code>.</p>
+</li>
+<li><p><code class="wtrl_var docutils literal notranslate"><span class="pre">session</span></code></p>
+<p class="wtrl-freeform-paragraph-content">Validation session for tracking state across validations.</p>
 </li>
 </ul>
 </td>
@@ -2449,6 +2465,7 @@
 <div class="wtrl-signature-param line"><span class="wtrl_var">tr</span><span class="wtrl_op">: </span><span class="wtrl_type">tracer</span></div>
 <div class="wtrl-signature-param line"><span class="wtrl_var">obj</span><span class="wtrl_op">: </span><span class="wtrl_type">ModuleType</span></div>
 <div class="wtrl-signature-param line"><span class="wtrl_var">doc_module</span><span class="wtrl_op">: </span><span class="wtrl_type">docitem_docstring_module</span></div>
+<div class="wtrl-signature-param line"><span class="wtrl_var">session</span><span class="wtrl_op">: </span><span class="wtrl_type">ValidationSession | None</span><span class="wtrl_op"> = </span><span class="wtrl_lit">None</span></div>
 <div class="wtrl-signature-ret line"><span class="wtrl_op">)</span><span class="wtrl_op"> -&gt; </span><span class="wtrl_type">None</span></div>
 </td>
 </tr>
@@ -2484,6 +2501,9 @@
 </li>
 <li><p><code class="wtrl_var docutils literal notranslate"><span class="pre">doc_module</span></code></p>
 <p class="wtrl-freeform-paragraph-content">Already parsed module docstring tree for <code class="wtrl_var docutils literal notranslate"><span class="pre">obj</span></code>.</p>
+</li>
+<li><p><code class="wtrl_var docutils literal notranslate"><span class="pre">session</span></code></p>
+<p class="wtrl-freeform-paragraph-content">Validation session for tracking state across validations.</p>
 </li>
 </ul>
 </td>
@@ -2527,6 +2547,7 @@
 <div class="wtrl-signature-param line"><span class="wtrl_var">tr</span><span class="wtrl_op">: </span><span class="wtrl_type">tracer</span></div>
 <div class="wtrl-signature-param line"><span class="wtrl_var">obj</span><span class="wtrl_op">: </span><span class="wtrl_type">ModuleType</span></div>
 <div class="wtrl-signature-param line"><span class="wtrl_var">doc_module</span><span class="wtrl_op">: </span><span class="wtrl_type">docitem_docstring_module</span></div>
+<div class="wtrl-signature-param line"><span class="wtrl_var">session</span><span class="wtrl_op">: </span><span class="wtrl_type">ValidationSession | None</span><span class="wtrl_op"> = </span><span class="wtrl_lit">None</span></div>
 <div class="wtrl-signature-ret line"><span class="wtrl_op">)</span><span class="wtrl_op"> -&gt; </span><span class="wtrl_type">None</span></div>
 </td>
 </tr>
@@ -2562,6 +2583,9 @@
 <li><p><code class="wtrl_var docutils literal notranslate"><span class="pre">doc_module</span></code></p>
 <p class="wtrl-freeform-paragraph-content">Already parsed module docstring tree for <code class="wtrl_var docutils literal notranslate"><span class="pre">obj</span></code>.</p>
 </li>
+<li><p><code class="wtrl_var docutils literal notranslate"><span class="pre">session</span></code></p>
+<p class="wtrl-freeform-paragraph-content">Validation session for tracking state across validations.</p>
+</li>
 </ul>
 </td>
 </tr>
@@ -2594,6 +2618,7 @@
 <div class="wtrl-signature-param line"><span class="wtrl_var">tr</span><span class="wtrl_op">: </span><span class="wtrl_type">tracer</span></div>
 <div class="wtrl-signature-param line"><span class="wtrl_var">obj</span><span class="wtrl_op">: </span><span class="wtrl_type">ModuleType</span></div>
 <div class="wtrl-signature-param line"><span class="wtrl_var">doc_module</span><span class="wtrl_op">: </span><span class="wtrl_type">docitem_docstring_module</span></div>
+<div class="wtrl-signature-param line"><span class="wtrl_var">session</span><span class="wtrl_op">: </span><span class="wtrl_type">ValidationSession | None</span><span class="wtrl_op"> = </span><span class="wtrl_lit">None</span></div>
 <div class="wtrl-signature-ret line"><span class="wtrl_op">)</span><span class="wtrl_op"> -&gt; </span><span class="wtrl_type">None</span></div>
 </td>
 </tr>
@@ -2630,6 +2655,9 @@
 <li><p><code class="wtrl_var docutils literal notranslate"><span class="pre">doc_module</span></code></p>
 <p class="wtrl-freeform-paragraph-content">Already parsed module docstring tree for <code class="wtrl_var docutils literal notranslate"><span class="pre">obj</span></code>.</p>
 </li>
+<li><p><code class="wtrl_var docutils literal notranslate"><span class="pre">session</span></code></p>
+<p class="wtrl-freeform-paragraph-content">Validation session for tracking state across validations.</p>
+</li>
 </ul>
 </td>
 </tr>
@@ -2662,6 +2690,7 @@
 <div class="wtrl-signature-param line"><span class="wtrl_var">tr</span><span class="wtrl_op">: </span><span class="wtrl_type">tracer</span></div>
 <div class="wtrl-signature-param line"><span class="wtrl_var">obj</span><span class="wtrl_op">: </span><span class="wtrl_type">ModuleType</span></div>
 <div class="wtrl-signature-param line"><span class="wtrl_var">doc_module</span><span class="wtrl_op">: </span><span class="wtrl_type">docitem_docstring_module</span></div>
+<div class="wtrl-signature-param line"><span class="wtrl_var">session</span><span class="wtrl_op">: </span><span class="wtrl_type">ValidationSession | None</span><span class="wtrl_op"> = </span><span class="wtrl_lit">None</span></div>
 <div class="wtrl-signature-ret line"><span class="wtrl_op">)</span><span class="wtrl_op"> -&gt; </span><span class="wtrl_type">None</span></div>
 </td>
 </tr>
@@ -2696,6 +2725,9 @@
 </li>
 <li><p><code class="wtrl_var docutils literal notranslate"><span class="pre">doc_module</span></code></p>
 <p class="wtrl-freeform-paragraph-content">Already parsed module docstring tree for <code class="wtrl_var docutils literal notranslate"><span class="pre">obj</span></code>.</p>
+</li>
+<li><p><code class="wtrl_var docutils literal notranslate"><span class="pre">session</span></code></p>
+<p class="wtrl-freeform-paragraph-content">Validation session for tracking state across validations.</p>
 </li>
 </ul>
 </td>
@@ -3185,9 +3217,9 @@
 <ul>
 <li><p><code class="wtrl_norm docutils literal notranslate"><span class="pre">Must</span></code> build a deterministic anchor string from an object.</p></li>
 <li><p><code class="wtrl_norm docutils literal notranslate"><span class="pre">Must</span></code> use the fully qualified name as source.</p></li>
-<li><p><code class="wtrl_norm docutils literal notranslate"><span class="pre">Must</span></code> encode each qualified-name segment as <code class="docutils literal notranslate"><span class="pre">&lt;len&gt;:&lt;segment&gt;</span></code>.</p></li>
+<li><p><code class="wtrl_norm docutils literal notranslate"><span class="pre">Must</span></code> encode each qualified-name segment as <code class="wtrl_lit docutils literal notranslate"><span class="pre">&lt;len&gt;:&lt;segment&gt;</span></code>.</p></li>
 <li><p><code class="wtrl_norm docutils literal notranslate"><span class="pre">Must</span></code> prefix the anchor by <code class="wtrl_lit docutils literal notranslate"><span class="pre">wtrl-&lt;kind&gt;-</span></code>.</p></li>
-<li><p><code class="wtrl_norm docutils literal notranslate"><span class="pre">Must</span></code> infer kind as one of <code class="docutils literal notranslate"><span class="pre">mod</span></code>, <code class="docutils literal notranslate"><span class="pre">cls</span></code>, <code class="docutils literal notranslate"><span class="pre">func</span></code>, <code class="docutils literal notranslate"><span class="pre">obj</span></code> if not passed explicitly.</p></li>
+<li><p><code class="wtrl_norm docutils literal notranslate"><span class="pre">Must</span></code> infer kind as one of <code class="wtrl_lit docutils literal notranslate"><span class="pre">mod</span></code>, <code class="wtrl_lit docutils literal notranslate"><span class="pre">cls</span></code>, <code class="wtrl_lit docutils literal notranslate"><span class="pre">func</span></code>, <code class="wtrl_lit docutils literal notranslate"><span class="pre">obj</span></code> if not passed explicitly.</p></li>
 </ul>
 </li>
 </ul>
@@ -3210,9 +3242,14 @@
 <tr class="wtrl-section row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Raises</span></code></p></td>
 <td><code class="wtrl_value docutils literal notranslate"><span class="pre">&lt;empty&gt;</span></code></td>
 </tr>
+<tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Notes</span></code></p></td>
+<td><p class="wtrl-note-title rubric">Last review</p>
+<p class="wtrl-freeform-paragraph-content">2026-06-22</p>
+</td>
+</tr>
 </tbody>
 <thead class="wtrl-box-head-function">
-<tr class="row-odd"><th class="head"><code class="wtrl_label docutils literal notranslate"><span class="pre">Function</span></code></th>
+<tr class="row-even"><th class="head"><code class="wtrl_label docutils literal notranslate"><span class="pre">Function</span></code></th>
 <th class="head"><p>build_anchor</p></th>
 </tr>
 </thead>
@@ -3231,7 +3268,7 @@
 <td><ul class="simple">
 <li><p><code class="wtrl_label docutils literal notranslate"><span class="pre">normative</span> <span class="pre">sections</span></code></p>
 <ul>
-<li><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Contract</span></code>, <code class="wtrl_label docutils literal notranslate"><span class="pre">Public</span> <span class="pre">constants</span></code></p></li>
+<li><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Contract</span></code>, <code class="wtrl_label docutils literal notranslate"><span class="pre">Public</span> <span class="pre">constants</span></code>, <code class="wtrl_label docutils literal notranslate"><span class="pre">Derived</span> <span class="pre">from</span></code></p></li>
 </ul>
 </li>
 <li><p><code class="wtrl_label docutils literal notranslate"><span class="pre">scope</span></code></p>
@@ -3258,7 +3295,10 @@
 </ul>
 </td>
 </tr>
-<tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Public</span> <span class="pre">constants</span></code></p></td>
+<tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Derived</span> <span class="pre">from</span></code></p></td>
+<td><p><a class="wtrl_type reference internal" href="#wtrl-cls-4:enum-7:IntEnum" title="enum.IntEnum"><span>IntEnum</span></a></p></td>
+</tr>
+<tr class="wtrl-section row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Public</span> <span class="pre">constants</span></code></p></td>
 <td><ul>
 <li><p><a class="wtrl_var reference internal" href="#wtrl-cls-3:sdv-3:doc-8:waterloo-14:docitem_helper-5:Scope" title="sdv.doc.waterloo.docitem_helper.Scope"><span>PUBLIC</span></a></p>
 <p class="wtrl-freeform-paragraph-content">Selects the public API.</p>
@@ -3272,7 +3312,7 @@
 </ul>
 </td>
 </tr>
-<tr class="wtrl-section row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Notes</span></code></p></td>
+<tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Notes</span></code></p></td>
 <td><p class="wtrl-note-title rubric">Purpose</p>
 <p class="wtrl-freeform-paragraph-content">The scope is an optional parameter for rendering functions. It allows to restrict the set of rendered objects to a well-defined audience.</p>
 <p class="wtrl-note-title rubric">Values</p>
@@ -3281,7 +3321,7 @@
 </tr>
 </tbody>
 <thead class="wtrl-box-head-class">
-<tr class="row-odd"><th class="head"><code class="wtrl_label docutils literal notranslate"><span class="pre">Class</span></code></th>
+<tr class="row-even"><th class="head"><code class="wtrl_label docutils literal notranslate"><span class="pre">Class</span></code></th>
 <th class="head"><p>Scope</p></th>
 </tr>
 </thead>
@@ -3295,7 +3335,7 @@
 <td><ul class="simple">
 <li><p><code class="wtrl_label docutils literal notranslate"><span class="pre">normative</span> <span class="pre">sections</span></code></p>
 <ul>
-<li><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Contract</span></code>, <code class="wtrl_label docutils literal notranslate"><span class="pre">Public</span> <span class="pre">constants</span></code></p></li>
+<li><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Contract</span></code>, <code class="wtrl_label docutils literal notranslate"><span class="pre">Public</span> <span class="pre">constants</span></code>, <code class="wtrl_label docutils literal notranslate"><span class="pre">Derived</span> <span class="pre">from</span></code></p></li>
 </ul>
 </li>
 <li><p><code class="wtrl_label docutils literal notranslate"><span class="pre">scope</span></code></p>
@@ -3321,7 +3361,10 @@
 </ul>
 </td>
 </tr>
-<tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Public</span> <span class="pre">constants</span></code></p></td>
+<tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Derived</span> <span class="pre">from</span></code></p></td>
+<td><p><a class="wtrl_type reference internal" href="#wtrl-cls-4:enum-7:IntEnum" title="enum.IntEnum"><span>IntEnum</span></a></p></td>
+</tr>
+<tr class="wtrl-section row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Public</span> <span class="pre">constants</span></code></p></td>
 <td><ul>
 <li><p><a class="wtrl_var reference internal" href="#wtrl-cls-3:sdv-3:doc-8:waterloo-14:docitem_helper-7:Flavour" title="sdv.doc.waterloo.docitem_helper.Flavour"><span>RAW</span></a></p>
 <p class="wtrl-freeform-paragraph-content">Example: | + Must + |</p>
@@ -3337,7 +3380,7 @@
 </tr>
 </tbody>
 <thead class="wtrl-box-head-class">
-<tr class="row-even"><th class="head"><code class="wtrl_label docutils literal notranslate"><span class="pre">Class</span></code></th>
+<tr class="row-odd"><th class="head"><code class="wtrl_label docutils literal notranslate"><span class="pre">Class</span></code></th>
 <th class="head"><p>Flavour</p></th>
 </tr>
 </thead>
@@ -3351,7 +3394,7 @@
 <td><ul class="simple">
 <li><p><code class="wtrl_label docutils literal notranslate"><span class="pre">normative</span> <span class="pre">sections</span></code></p>
 <ul>
-<li><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Contract</span></code>, <code class="wtrl_label docutils literal notranslate"><span class="pre">Public</span> <span class="pre">constants</span></code></p></li>
+<li><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Contract</span></code>, <code class="wtrl_label docutils literal notranslate"><span class="pre">Public</span> <span class="pre">constants</span></code>, <code class="wtrl_label docutils literal notranslate"><span class="pre">Derived</span> <span class="pre">from</span></code></p></li>
 </ul>
 </li>
 <li><p><code class="wtrl_label docutils literal notranslate"><span class="pre">scope</span></code></p>
@@ -3377,7 +3420,10 @@
 </ul>
 </td>
 </tr>
-<tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Public</span> <span class="pre">constants</span></code></p></td>
+<tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Derived</span> <span class="pre">from</span></code></p></td>
+<td><p><a class="wtrl_type reference internal" href="#wtrl-cls-4:enum-7:IntEnum" title="enum.IntEnum"><span>IntEnum</span></a></p></td>
+</tr>
+<tr class="wtrl-section row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Public</span> <span class="pre">constants</span></code></p></td>
 <td><ul>
 <li><p><a class="wtrl_var reference internal" href="#wtrl-cls-3:sdv-3:doc-8:waterloo-14:docitem_helper-6:Format" title="sdv.doc.waterloo.docitem_helper.Format"><span>JSON</span></a></p>
 <p class="wtrl-freeform-paragraph-content">Javascript Object Notation</p>
@@ -3393,7 +3439,7 @@
 </tr>
 </tbody>
 <thead class="wtrl-box-head-class">
-<tr class="row-even"><th class="head"><code class="wtrl_label docutils literal notranslate"><span class="pre">Class</span></code></th>
+<tr class="row-odd"><th class="head"><code class="wtrl_label docutils literal notranslate"><span class="pre">Class</span></code></th>
 <th class="head"><p>Format</p></th>
 </tr>
 </thead>
@@ -3407,7 +3453,7 @@
 <td><ul class="simple">
 <li><p><code class="wtrl_label docutils literal notranslate"><span class="pre">normative</span> <span class="pre">sections</span></code></p>
 <ul>
-<li><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Contract</span></code>, <code class="wtrl_label docutils literal notranslate"><span class="pre">Public</span> <span class="pre">constants</span></code></p></li>
+<li><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Contract</span></code>, <code class="wtrl_label docutils literal notranslate"><span class="pre">Public</span> <span class="pre">constants</span></code>, <code class="wtrl_label docutils literal notranslate"><span class="pre">Derived</span> <span class="pre">from</span></code></p></li>
 </ul>
 </li>
 <li><p><code class="wtrl_label docutils literal notranslate"><span class="pre">scope</span></code></p>
@@ -3427,13 +3473,16 @@
 </li>
 <li><p><code class="wtrl_label docutils literal notranslate"><span class="pre">constructor</span></code></p>
 <ul>
-<li><p>Inherit from <code class="wtrl_type docutils literal notranslate"><span class="pre">Enum</span></code>.</p></li>
+<li><p>Inherit from <code class="wtrl_type docutils literal notranslate"><span class="pre">StrEnum</span></code>.</p></li>
 </ul>
 </li>
 </ul>
 </td>
 </tr>
-<tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Public</span> <span class="pre">constants</span></code></p></td>
+<tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Derived</span> <span class="pre">from</span></code></p></td>
+<td><p><a class="wtrl_type reference internal" href="#wtrl-cls-4:enum-7:StrEnum" title="enum.StrEnum"><span>StrEnum</span></a></p></td>
+</tr>
+<tr class="wtrl-section row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Public</span> <span class="pre">constants</span></code></p></td>
 <td><ul>
 <li><p><a class="wtrl_var reference internal" href="#wtrl-obj-12:experimental" title="experimental"><span>EXPERIMENTAL</span></a></p>
 <p class="wtrl-freeform-paragraph-content">See rule <a class="reference internal" href="format.html#section-function-pramble"><span class="std std-ref">STA-004</span></a>.</p>
@@ -3453,14 +3502,14 @@
 </ul>
 </td>
 </tr>
-<tr class="wtrl-section row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Notes</span></code></p></td>
+<tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Notes</span></code></p></td>
 <td><p class="wtrl-note-title rubric">LoII</p>
 <p class="wtrl-freeform-paragraph-content">This docstring violates LoII in order to preserve SSoT, see <code class="wtrl_label docutils literal notranslate"><span class="pre">Public_constants</span></code>.</p>
 </td>
 </tr>
 </tbody>
 <thead class="wtrl-box-head-class">
-<tr class="row-odd"><th class="head"><code class="wtrl_label docutils literal notranslate"><span class="pre">Class</span></code></th>
+<tr class="row-even"><th class="head"><code class="wtrl_label docutils literal notranslate"><span class="pre">Class</span></code></th>
 <th class="head"><p>Status</p></th>
 </tr>
 </thead>
@@ -3550,7 +3599,7 @@
 </td>
 </tr>
 <tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Public</span> <span class="pre">methods</span></code></p></td>
-<td><p><a class="wtrl_func reference internal" href="#wtrl-func-3:sdv-3:doc-8:waterloo-14:docitem_helper-6:tracer-10:build_json" title="sdv.doc.waterloo.docitem_helper.tracer.build_json"><span>build_json</span></a></p></td>
+<td><p><a class="wtrl_func reference internal" href="#wtrl-func-3:sdv-3:doc-8:waterloo-14:docitem_helper-6:tracer-10:build_json" title="sdv.doc.waterloo.docitem_helper.tracer.build_json"><span>build_json</span></a>, <a class="wtrl_func reference internal" href="#wtrl-func-3:sdv-3:doc-8:waterloo-14:docitem_helper-6:tracer-15:str_by_severity" title="sdv.doc.waterloo.docitem_helper.tracer.str_by_severity"><span>str_by_severity</span></a></p></td>
 </tr>
 <tr class="wtrl-section row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Method</span> <span class="pre">overview</span></code></p></td>
 <td><ul>
@@ -3563,8 +3612,8 @@
 <tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Notes</span></code></p></td>
 <td><p class="wtrl-note-title rubric">Last review</p>
 <p class="wtrl-freeform-paragraph-content">2026-06-21</p>
-<p class="wtrl-note-title rubric">Parameter details</p>
-<p class="wtrl-freeform-paragraph-content">This details payload is important for the MCP server, because it gives the LLM enough debugging context to interpret tracer output and decide how to react to it. It usually is a dict with keys “found”, “expected”, and “hint”; “hint” typically contains a waterlint call for retrieving more information about the affected section or subsection.</p>
+<p class="wtrl-note-title rubric">Parameter ‘details’</p>
+<p class="wtrl-freeform-paragraph-content">The details payload is important for the MCP server, because it gives the LLM enough debugging context to interpret tracer output and decide how to react to it. It usually is a dict with keys “found”, “expected”, and “hint”; “hint” typically contains a waterlint call for retrieving more information about the affected section or subsection.</p>
 </td>
 </tr>
 </tbody>
@@ -3581,7 +3630,7 @@
 <td><ul class="simple">
 <li><p><code class="wtrl_label docutils literal notranslate"><span class="pre">normative</span> <span class="pre">sections</span></code></p>
 <ul>
-<li><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Contract</span></code></p></li>
+<li><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Contract</span></code>, <code class="wtrl_label docutils literal notranslate"><span class="pre">Derived</span> <span class="pre">from</span></code></p></li>
 </ul>
 </li>
 </ul>
@@ -3607,9 +3656,12 @@
 </ul>
 </td>
 </tr>
+<tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Derived</span> <span class="pre">from</span></code></p></td>
+<td><p><a class="wtrl_type reference internal" href="#wtrl-cls-4:enum-7:IntEnum" title="enum.IntEnum"><span>IntEnum</span></a></p></td>
+</tr>
 </tbody>
 <thead class="wtrl-box-head-class">
-<tr class="row-odd"><th class="head"><code class="wtrl_label docutils literal notranslate"><span class="pre">Class</span></code></th>
+<tr class="row-even"><th class="head"><code class="wtrl_label docutils literal notranslate"><span class="pre">Class</span></code></th>
 <th class="head"><p>tracer.Severity</p></th>
 </tr>
 </thead>
@@ -3693,6 +3745,62 @@
 <thead class="wtrl-box-head-method">
 <tr class="row-odd"><th class="head"><code class="wtrl_label docutils literal notranslate"><span class="pre">Method</span></code></th>
 <th class="head"><p>tracer.build_json</p></th>
+</tr>
+</thead>
+</table>
+<table class="wtrl-box docutils align-default" id="wtrl-func-3:sdv-3:doc-8:waterloo-14:docitem_helper-6:tracer-15:str_by_severity">
+<tbody>
+<tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Signature</span></code></p></td>
+<td><div class="wtrl-signature-head line"><span class="wtrl_mod">sdv.doc.waterloo.docitem_helper</span><span class="wtrl_op">.</span><span class="wtrl_type">tracer</span><span class="wtrl_op">.</span><span class="wtrl_func">str_by_severity</span><span class="wtrl_op">(</span></div>
+<div class="wtrl-signature-param line"><span class="wtrl_var">severity</span><span class="wtrl_op">: </span><span class="wtrl_type">Severity</span></div>
+<div class="wtrl-signature-ret line"><span class="wtrl_op">)</span><span class="wtrl_op"> -&gt; </span><span class="wtrl_type">str</span></div>
+</td>
+</tr>
+<tr class="wtrl-section row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Preamble</span></code></p></td>
+<td><ul class="simple">
+<li><p><code class="wtrl_label docutils literal notranslate"><span class="pre">normative</span> <span class="pre">sections</span></code></p>
+<ul>
+<li><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Contract</span></code>, <code class="wtrl_label docutils literal notranslate"><span class="pre">Parameters</span></code>, <code class="wtrl_label docutils literal notranslate"><span class="pre">Returns</span></code>, <code class="wtrl_label docutils literal notranslate"><span class="pre">Raises</span></code></p></li>
+</ul>
+</li>
+</ul>
+</td>
+</tr>
+<tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Contract</span></code></p></td>
+<td><ul class="simple">
+<li><p><code class="wtrl_label docutils literal notranslate"><span class="pre">general</span></code></p>
+<ul>
+<li><p><code class="wtrl_norm docutils literal notranslate"><span class="pre">Must</span></code> render the tracer’s content as a human-readable string, filtered by severity level.</p></li>
+<li><p><code class="wtrl_norm docutils literal notranslate"><span class="pre">Must</span></code> include entries with severity level equal to or higher than the specified level.</p></li>
+<li><p><code class="wtrl_norm docutils literal notranslate"><span class="pre">Must</span></code> format entries with clear labels and context for easy understanding.</p></li>
+</ul>
+</li>
+</ul>
+</td>
+</tr>
+<tr class="wtrl-section row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Parameters</span></code></p></td>
+<td><ul>
+<li><p><code class="wtrl_var docutils literal notranslate"><span class="pre">severity</span></code></p>
+<p class="wtrl-freeform-paragraph-content">Only include entries with this severity level or higher. Levels are ordered as DEBUG &lt; INFO &lt; WARNING &lt; ERROR.</p>
+</li>
+</ul>
+</td>
+</tr>
+<tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Returns</span></code></p></td>
+<td><p>A string representation of the tracer’s content, including entries up to the specified severity level, formatted for human readability.</p></td>
+</tr>
+<tr class="wtrl-section row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Raises</span></code></p></td>
+<td><code class="wtrl_value docutils literal notranslate"><span class="pre">&lt;empty&gt;</span></code></td>
+</tr>
+<tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Notes</span></code></p></td>
+<td><p class="wtrl-note-title rubric">Called by</p>
+<p class="wtrl-freeform-paragraph-content">This method is invoked by the __str__ method, which defaults to showing all entries (DEBUG level), so generally you simply call :wtrl_func:<a href="#id1"><span class="problematic" id="id2">`</span></a>str`(tracer_instance) to get the full content or :wtrl_func:<a href="#id3"><span class="problematic" id="id4">`</span></a>print`(tracer_instance) to display it.</p>
+</td>
+</tr>
+</tbody>
+<thead class="wtrl-box-head-method">
+<tr class="row-even"><th class="head"><code class="wtrl_label docutils literal notranslate"><span class="pre">Method</span></code></th>
+<th class="head"><p>tracer.str_by_severity</p></th>
 </tr>
 </thead>
 </table>
@@ -12088,7 +12196,7 @@
 <tbody>
 <tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Signature</span></code></p></td>
 <td><div class="wtrl-signature-head line"><span class="wtrl_mod">sdv.doc.waterloo.docitem_convert</span><span class="wtrl_op">.</span><span class="wtrl_func">to_string_legend_yaml</span><span class="wtrl_op">(</span></div>
-<div class="wtrl-signature-param line"><span class="wtrl_var">config</span><span class="wtrl_op">: </span><span class="wtrl_type">YamlConfig</span><span class="wtrl_op"> = </span><span class="wtrl_lit">&lt;sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7fe1efc45400&gt;</span></div>
+<div class="wtrl-signature-param line"><span class="wtrl_var">config</span><span class="wtrl_op">: </span><span class="wtrl_type">YamlConfig</span><span class="wtrl_op"> = </span><span class="wtrl_lit">&lt;sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f5c2ac79d30&gt;</span></div>
 <div class="wtrl-signature-ret line"><span class="wtrl_op">)</span><span class="wtrl_op"> -&gt; </span><span class="wtrl_type">str</span></div>
 </td>
 </tr>
@@ -12152,7 +12260,7 @@
 <td><div class="wtrl-signature-head line"><span class="wtrl_mod">sdv.doc.waterloo.docitem_convert</span><span class="wtrl_op">.</span><span class="wtrl_func">to_string_yaml</span><span class="wtrl_op">(</span></div>
 <div class="wtrl-signature-param line"><span class="wtrl_var">tree</span><span class="wtrl_op">: </span><span class="wtrl_type">DocstringTree</span></div>
 <div class="wtrl-signature-param line"><span class="wtrl_var">flavour</span><span class="wtrl_op">: </span><span class="wtrl_type">Flavour</span></div>
-<div class="wtrl-signature-param line"><span class="wtrl_var">config</span><span class="wtrl_op">: </span><span class="wtrl_type">YamlConfig</span><span class="wtrl_op"> = </span><span class="wtrl_lit">&lt;sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7fe1eee7df90&gt;</span></div>
+<div class="wtrl-signature-param line"><span class="wtrl_var">config</span><span class="wtrl_op">: </span><span class="wtrl_type">YamlConfig</span><span class="wtrl_op"> = </span><span class="wtrl_lit">&lt;sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f5c29e8df90&gt;</span></div>
 <div class="wtrl-signature-ret line"><span class="wtrl_op">)</span><span class="wtrl_op"> -&gt; </span><span class="wtrl_type">str</span></div>
 </td>
 </tr>
@@ -12248,7 +12356,7 @@
 <tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Signature</span></code></p></td>
 <td><div class="wtrl-signature-head line"><span class="wtrl_mod">sdv.doc.waterloo.docitem_convert</span><span class="wtrl_op">.</span><span class="wtrl_func">to_string_signature_yaml</span><span class="wtrl_op">(</span></div>
 <div class="wtrl-signature-param line"><span class="wtrl_var">obj</span><span class="wtrl_op">: </span><span class="wtrl_type">object</span></div>
-<div class="wtrl-signature-param line"><span class="wtrl_var">config</span><span class="wtrl_op">: </span><span class="wtrl_type">YamlConfig</span><span class="wtrl_op"> = </span><span class="wtrl_lit">&lt;sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7fe1eee7d950&gt;</span></div>
+<div class="wtrl-signature-param line"><span class="wtrl_var">config</span><span class="wtrl_op">: </span><span class="wtrl_type">YamlConfig</span><span class="wtrl_op"> = </span><span class="wtrl_lit">&lt;sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f5c29e8e990&gt;</span></div>
 <div class="wtrl-signature-ret line"><span class="wtrl_op">)</span><span class="wtrl_op"> -&gt; </span><span class="wtrl_type">str</span></div>
 </td>
 </tr>
@@ -12471,7 +12579,7 @@
 </tr>
 <tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Notes</span></code></p></td>
 <td><p class="wtrl-note-title rubric">Important</p>
-<p class="wtrl-freeform-paragraph-content">JSON templates for minimal and full docstring templates can be generated by means of <code class="wtrl_file docutils literal notranslate"><span class="pre">$MAIN/tools/make_docstring_templates_json.sh</span></code>. This script should be used in order to avoid drift. It represents the canonical generation process for these templates, and the resulting JSON files are the Single Source of Truth for their structure and content. Any future JSON snippets produced from signature fragments should stay aligned with the same canonical structure in <a href="#id1"><span class="problematic" id="id2">|</span></a>path|`package_main/templates-json/out`.</p>
+<p class="wtrl-freeform-paragraph-content">JSON templates for minimal and full docstring templates can be generated by means of <code class="wtrl_file docutils literal notranslate"><span class="pre">$MAIN/tools/make_docstring_templates_json.sh</span></code>. This script should be used in order to avoid drift. It represents the canonical generation process for these templates, and the resulting JSON files are the Single Source of Truth for their structure and content. Any future JSON snippets produced from signature fragments should stay aligned with the same canonical structure in <a href="#id5"><span class="problematic" id="id6">|</span></a>path|`package_main/templates-json/out`.</p>
 </td>
 </tr>
 </tbody>

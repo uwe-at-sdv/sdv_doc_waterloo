@@ -377,7 +377,7 @@ complete verification in all contexts.</p>
 <li><p><code class="wtrl_file docutils literal notranslate"><span class="pre">sdv.doc.waterloo.waterlint_render_html5</span></code></p></li>
 </ul>
 <p>are validated on a regular basis. The current status is</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Success: no issues found in 32 source files
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Success: no issues found in 33 source files
 </pre></div>
 </div>
 <p>Our <code class="wtrl_lit docutils literal notranslate"><span class="pre">mypy</span></code>-configuration is:</p>
@@ -401,19 +401,18 @@ complete verification in all contexts.</p>
 </div>
 <p>Exceptions from typechecking are:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>docitem_convert.py:649 # pragma: no cover - defensive
-docitem_helper.py:101 # type: ignore[attr-defined]
-docitem_helper.py:103 # type: ignore[no-redef]
-docitem_sphinx.py:129 # type: ignore[attr-defined]
+docitem_helper.py:117 # type: ignore[attr-defined]
+docitem_helper.py:119 # type: ignore[no-redef]
 docitem_validator.py:10 # type: ignore
 docitem_validator.py:11 # pragma: no cover - older Python
 waterlint_carve.py:313 # pragma: no cover - defensive
-waterlint.py:711 # pragma: no cover - defensive
-waterlint.py:802 # pragma: no cover - defensive
-waterlint.py:906 # pragma: no cover - defensive
-waterlint.py:1025 # pragma: no cover - defensive
-waterlint.py:1029 # pragma: no cover - defensive
-waterlint.py:1033 # pragma: no cover - defensive
-waterlint.py:1604 # pragma: no cover - defensive
+waterlint.py:713 # pragma: no cover - defensive
+waterlint.py:804 # pragma: no cover - defensive
+waterlint.py:908 # pragma: no cover - defensive
+waterlint.py:1027 # pragma: no cover - defensive
+waterlint.py:1031 # pragma: no cover - defensive
+waterlint.py:1035 # pragma: no cover - defensive
+waterlint.py:1646 # pragma: no cover - defensive
 waterlint_render_docker.py:28 # pragma: no cover - Python 3.10 fallback
 </pre></div>
 </div>

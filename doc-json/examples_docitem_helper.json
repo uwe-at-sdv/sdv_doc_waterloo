@@ -33,6 +33,18 @@
         ],
         "sdv.doc.waterloo.docitem_helper.tracer": [
             "package_gh-pages/doc-examples-python/api_demo_helper_tracer_01.py"
+        ],
+        "sdv.doc.waterloo.docitem_helper.tracer.str_by_severity": [
+            "package_gh-pages/doc-examples-python/api_demo_helper_tracer_01.py"
+        ],
+        "sdv.doc.waterloo.docitem_helper.tracer": [
+            "package_gh-pages/doc-examples-python/api_demo_helper_tracer_02.py"
+        ],
+        "sdv.doc.waterloo.docitem_helper.tracer.build_json": [
+            "package_gh-pages/doc-examples-python/api_demo_helper_tracer_02.py"
+        ],
+        "sdv.doc.waterloo.docitem_helper.build_anchor": [
+            "package_gh-pages/doc-examples-python/api_demo_helper_build_anchor_01.py"
         ]
     }
 }
