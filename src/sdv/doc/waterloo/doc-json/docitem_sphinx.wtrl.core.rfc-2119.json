@@ -6,7 +6,7 @@
         "schema": "0.1.0"
     },
     "__WTRL_META__": {
-        "generated_at": "2026-06-23T14:57:25+02:00",
+        "generated_at": "2026-06-23T18:11:39+02:00",
         "generator": "waterlint",
         "scope": "core",
         "flavour": "rfc-2119"
@@ -3768,15 +3768,17 @@
                 },
                 "Contract": {
                     "general": [
-                        "MUST find out whether the attribute passed is annotated."
+                        "MUST find out whether the requested name is annotated on the object."
                     ]
                 },
                 "Parameters": {
                     "obj": [
-                        "The class or module containing the attribute."
+                        "The annotatable object to inspect, for example a module, class,",
+                        "function, or method."
                     ],
                     "attr": [
-                        "The name of the attribute to be tested."
+                        "The attribute or annotation name to be tested. For functions and",
+                        "methods this includes parameter names and the return annotation."
                     ]
                 },
                 "Returns": [

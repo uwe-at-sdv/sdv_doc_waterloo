@@ -2103,12 +2103,14 @@ def is_attr_annotated(obj : AnnotatableObject, attr: str) -> bool:
 			extension
 	Contract:
 		general:
-			|Must| find out whether the attribute passed is annotated.
+			|Must| find out whether the requested name is annotated on the object.
 	Parameters:
 		obj:
-			The class or module containing the attribute.
+			The annotatable object to inspect, for example a module, class,
+			function, or method.
 		attr:
-			The name of the attribute to be tested.
+			The attribute or annotation name to be tested. For functions and
+			methods this includes parameter names and the return annotation.
 	Returns:
 		|Must| return |True| if the attribute is annotated, else |False|.
 	Raises:
