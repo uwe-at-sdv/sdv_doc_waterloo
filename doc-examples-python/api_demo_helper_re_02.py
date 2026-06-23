@@ -4,7 +4,7 @@ import sdv.doc.waterloo.docitem_helper as h
 
 def test_regex() -> None:
 #----- CSV Identifiers ---------------------------------------#
-	print("Regex RE_CSV_IDENTIFIERS:",h.RE_CSV_IDENTIFIERS)
+	print("Regex RE_CSV_IDENTIFIERS:", h.RE_CSV_IDENTIFIERS)
 	csv_identifiers_bad = [
 		"abc,,def", "abc, ,def", "abc,def,", ",abc,def",
 		"abc,def,123", "abc,def,ghi!", "abc,def,ghi jkl"

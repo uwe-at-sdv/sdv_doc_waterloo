@@ -4,7 +4,7 @@ import sdv.doc.waterloo.docitem_helper as h
 
 def test_regex() -> None:
 #----- References --------------------------------------------#
-	print("Regex RE_WTRL_ANGLE_HTTPS_REF:",h.RE_WTRL_ANGLE_HTTPS_REF)
+	print("Regex RE_WTRL_ANGLE_HTTPS_REF:", h.RE_WTRL_ANGLE_HTTPS_REF)
 	wtrl_angle_https_refs_bad = [
 		"<http://example.com>", "<https//example.com>", "<https:/example.com>",
 		"<https:example.com>", "<https://>", "<https://example.com space>",

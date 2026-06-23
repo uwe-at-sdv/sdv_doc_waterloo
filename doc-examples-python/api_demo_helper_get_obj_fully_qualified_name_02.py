@@ -26,30 +26,29 @@ class X:
 	def p(self):
 		return self._p
 	@p.setter
-	def p(self,val):
+	def p(self, val):
 		self._p = val
-	
+
 
 def f() -> None:
 	pass
 
 x = X()
-print(h.get_obj_fully_qualified_name(X))
-print(h.get_obj_fully_qualified_name(x))
-print(h.get_obj_fully_qualified_name(X.m_cls))
-print(h.get_obj_fully_qualified_name(X.m_stat))
-print(h.get_obj_fully_qualified_name(x.m))
-print(h.get_obj_fully_qualified_name(f))
-print(h.get_obj_fully_qualified_name(X.Y))
-print(h.get_obj_fully_qualified_name(x.Y))
+print("class:", h.get_obj_fully_qualified_name(X))
+print("instance:", h.get_obj_fully_qualified_name(x))
+print("classmethod:", h.get_obj_fully_qualified_name(X.m_cls))
+print("staticmethod:", h.get_obj_fully_qualified_name(X.m_stat))
+print("bound method:", h.get_obj_fully_qualified_name(x.m))
+print("module function:", h.get_obj_fully_qualified_name(f))
+print("nested class:", h.get_obj_fully_qualified_name(X.Y))
+print("nested class via instance:", h.get_obj_fully_qualified_name(x.Y))
 
-print(h.get_obj_fully_qualified_name(x.y))
-print(h.get_obj_fully_qualified_name(X.y))
+print("nested instance via instance:", h.get_obj_fully_qualified_name(x.y))
+print("nested instance via class:", h.get_obj_fully_qualified_name(X.y))
 
-# See limitations. Nested instances should not be passed.
-print(h.get_obj_fully_qualified_name(X.z))
-print(h.get_obj_fully_qualified_name(x.z))
+# See limitations: nested instances should not be passed.
+print("nested class attr via class:", h.get_obj_fully_qualified_name(X.z))
+print("nested class attr via instance:", h.get_obj_fully_qualified_name(x.z))
 
-print(h.get_obj_fully_qualified_name(x.p))
-print(h.get_obj_fully_qualified_name(X.p.setter))
-
+print("property instance:", h.get_obj_fully_qualified_name(x.p))
+print("property setter:", h.get_obj_fully_qualified_name(X.p.setter))

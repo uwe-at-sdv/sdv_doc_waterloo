@@ -20,15 +20,14 @@ def f() -> None:
 
 # All ten results are the same, as it should be.
 x = X()
-print(h.get_obj_path(X))
-print(h.get_obj_path(x))
-print(h.get_obj_path(X.m_cls))
-print(h.get_obj_path(X.m_stat))
-print(h.get_obj_path(x.m))
-print(h.get_obj_path(f))
-print(h.get_obj_path(X.Y))
-print(h.get_obj_path(x.Y))
+print("class:", h.get_obj_path(X))
+print("instance:", h.get_obj_path(x))
+print("classmethod:", h.get_obj_path(X.m_cls))
+print("staticmethod:", h.get_obj_path(X.m_stat))
+print("bound method:", h.get_obj_path(x.m))
+print("module function:", h.get_obj_path(f))
+print("nested class:", h.get_obj_path(X.Y))
+print("nested class via instance:", h.get_obj_path(x.Y))
 
-print(h.get_obj_path(x.y))
-print(h.get_obj_path(X.y))
-
+print("nested instance via instance:", h.get_obj_path(x.y))
+print("nested instance via class:", h.get_obj_path(X.y))

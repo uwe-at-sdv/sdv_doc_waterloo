@@ -20,11 +20,11 @@ class X:
 	# Must handle functions in classes without decorators.
 	def m() -> None:
 		pass
-	# Must handle functions in classes with decorator `@staticmethod`.
+	# Must handle functions in classes with decorator `@classmethod`.
 	@classmethod
 	def m_cls(cls) -> None:
 		pass
-	# Must andle functions in classes with decorator `@classmethod`.
+	# Must handle functions in classes with decorator `@staticmethod`.
 	@staticmethod
 	def m_stat(cls) -> None:
 		pass
@@ -32,19 +32,22 @@ class X:
 	def g() -> Generator[int,None,None]:
 		yield 42
 
+def show(label: str, obj: object) -> None:
+	print(f"{label}: {h.get_obj_fully_qualified_name(h.get_func_obj_from_callable(obj))}")
+
 def test_get_func_obj_from_callable() -> None:
 	x = X()
-	print(h.get_obj_fully_qualified_name(h.get_func_obj_from_callable(X)))
-	print(h.get_obj_fully_qualified_name(h.get_func_obj_from_callable(f)))
-	print(h.get_obj_fully_qualified_name(h.get_func_obj_from_callable(g)))
-	print(h.get_obj_fully_qualified_name(h.get_func_obj_from_callable(x)))
-	print(h.get_obj_fully_qualified_name(h.get_func_obj_from_callable(X.m)))
-	print(h.get_obj_fully_qualified_name(h.get_func_obj_from_callable(X.m_cls)))
-	print(h.get_obj_fully_qualified_name(h.get_func_obj_from_callable(X.m_stat)))
-	print(h.get_obj_fully_qualified_name(h.get_func_obj_from_callable(X.g)))
-	print(h.get_obj_fully_qualified_name(h.get_func_obj_from_callable(h.get_func_obj_from_callable)))
-	print(h.get_obj_fully_qualified_name(h.get_func_obj_from_callable(math.sin)))
-	print(h.get_obj_fully_qualified_name(h.get_func_obj_from_callable(print)))
+	show("class", X)
+	show("module function", f)
+	show("generator function", g)
+	show("callable instance", x)
+	show("instance method", X.m)
+	show("classmethod", X.m_cls)
+	show("staticmethod", X.m_stat)
+	show("generator method", X.g)
+	show("function helper", h.get_func_obj_from_callable)
+	show("builtin math.sin", math.sin)
+	show("builtin print", print)
 
 if __name__ == "__main__":
 	test_get_func_obj_from_callable()

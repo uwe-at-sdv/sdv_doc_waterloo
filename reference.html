@@ -1224,7 +1224,7 @@
 <td><ul class="simple">
 <li><p><code class="wtrl_label docutils literal notranslate"><span class="pre">general</span></code></p>
 <ul>
-<li><p><code class="wtrl_norm docutils literal notranslate"><span class="pre">Must</span></code> find out whether the attribute passed is annotated.</p></li>
+<li><p><code class="wtrl_norm docutils literal notranslate"><span class="pre">Must</span></code> find out whether the requested name is annotated on the object.</p></li>
 </ul>
 </li>
 </ul>
@@ -1233,10 +1233,10 @@
 <tr class="wtrl-section row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Parameters</span></code></p></td>
 <td><ul>
 <li><p><code class="wtrl_var docutils literal notranslate"><span class="pre">obj</span></code></p>
-<p class="wtrl-freeform-paragraph-content">The class or module containing the attribute.</p>
+<p class="wtrl-freeform-paragraph-content">The annotatable object to inspect, for example a module, class, function, or method.</p>
 </li>
 <li><p><code class="wtrl_var docutils literal notranslate"><span class="pre">attr</span></code></p>
-<p class="wtrl-freeform-paragraph-content">The name of the attribute to be tested.</p>
+<p class="wtrl-freeform-paragraph-content">The attribute or annotation name to be tested. For functions and methods this includes parameter names and the return annotation.</p>
 </li>
 </ul>
 </td>
@@ -12221,7 +12221,7 @@
 <tbody>
 <tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Signature</span></code></p></td>
 <td><div class="wtrl-signature-head line"><span class="wtrl_mod">sdv.doc.waterloo.docitem_convert</span><span class="wtrl_op">.</span><span class="wtrl_func">to_string_legend_yaml</span><span class="wtrl_op">(</span></div>
-<div class="wtrl-signature-param line"><span class="wtrl_var">config</span><span class="wtrl_op">: </span><span class="wtrl_type">YamlConfig</span><span class="wtrl_op"> = </span><span class="wtrl_lit">&lt;sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f48b38b2660&gt;</span></div>
+<div class="wtrl-signature-param line"><span class="wtrl_var">config</span><span class="wtrl_op">: </span><span class="wtrl_type">YamlConfig</span><span class="wtrl_op"> = </span><span class="wtrl_lit">&lt;sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f8c6bbfa660&gt;</span></div>
 <div class="wtrl-signature-ret line"><span class="wtrl_op">)</span><span class="wtrl_op"> -&gt; </span><span class="wtrl_type">str</span></div>
 </td>
 </tr>
@@ -12285,7 +12285,7 @@
 <td><div class="wtrl-signature-head line"><span class="wtrl_mod">sdv.doc.waterloo.docitem_convert</span><span class="wtrl_op">.</span><span class="wtrl_func">to_string_yaml</span><span class="wtrl_op">(</span></div>
 <div class="wtrl-signature-param line"><span class="wtrl_var">tree</span><span class="wtrl_op">: </span><span class="wtrl_type">DocstringTree</span></div>
 <div class="wtrl-signature-param line"><span class="wtrl_var">flavour</span><span class="wtrl_op">: </span><span class="wtrl_type">Flavour</span></div>
-<div class="wtrl-signature-param line"><span class="wtrl_var">config</span><span class="wtrl_op">: </span><span class="wtrl_type">YamlConfig</span><span class="wtrl_op"> = </span><span class="wtrl_lit">&lt;sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f48b2bad450&gt;</span></div>
+<div class="wtrl-signature-param line"><span class="wtrl_var">config</span><span class="wtrl_op">: </span><span class="wtrl_type">YamlConfig</span><span class="wtrl_op"> = </span><span class="wtrl_lit">&lt;sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f8c6ae29450&gt;</span></div>
 <div class="wtrl-signature-ret line"><span class="wtrl_op">)</span><span class="wtrl_op"> -&gt; </span><span class="wtrl_type">str</span></div>
 </td>
 </tr>
@@ -12381,7 +12381,7 @@
 <tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Signature</span></code></p></td>
 <td><div class="wtrl-signature-head line"><span class="wtrl_mod">sdv.doc.waterloo.docitem_convert</span><span class="wtrl_op">.</span><span class="wtrl_func">to_string_signature_yaml</span><span class="wtrl_op">(</span></div>
 <div class="wtrl-signature-param line"><span class="wtrl_var">obj</span><span class="wtrl_op">: </span><span class="wtrl_type">object</span></div>
-<div class="wtrl-signature-param line"><span class="wtrl_var">config</span><span class="wtrl_op">: </span><span class="wtrl_type">YamlConfig</span><span class="wtrl_op"> = </span><span class="wtrl_lit">&lt;sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f48b2bad310&gt;</span></div>
+<div class="wtrl-signature-param line"><span class="wtrl_var">config</span><span class="wtrl_op">: </span><span class="wtrl_type">YamlConfig</span><span class="wtrl_op"> = </span><span class="wtrl_lit">&lt;sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f8c6ae29310&gt;</span></div>
 <div class="wtrl-signature-ret line"><span class="wtrl_op">)</span><span class="wtrl_op"> -&gt; </span><span class="wtrl_type">str</span></div>
 </td>
 </tr>

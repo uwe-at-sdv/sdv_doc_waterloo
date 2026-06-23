@@ -15,4 +15,4 @@ class X:
 	"""
 
 if __name__ == "__main__":
-	print(h.get_obj_docstring(X))
+	print("docstring:", h.get_obj_docstring(X))

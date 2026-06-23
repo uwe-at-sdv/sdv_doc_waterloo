@@ -11,7 +11,7 @@ def test_tracer() -> None:
 # Make sure to provide a meaningful tag at each scope.
 	with h.traced_section(tr,"Path"):
 		with h.traced_section(tr,"To"):
-# Demomstrate the context stack
+# Demonstrate the context stack.
 			with h.traced_section(tr,"Context1"):
 				tr.add_debug_note("A debug entry","test")
 

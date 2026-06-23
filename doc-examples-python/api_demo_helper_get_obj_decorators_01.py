@@ -10,5 +10,5 @@ class X:
 	def m_stat(cls) -> None:
 		pass
 
-print(h.get_obj_decorators(X.m_cls))
-print(h.get_obj_decorators(X.m_stat))
+print("classmethod decorators:", h.get_obj_decorators(X.m_cls))
+print("staticmethod decorators:", h.get_obj_decorators(X.m_stat))

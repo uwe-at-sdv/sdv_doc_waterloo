@@ -1,12 +1,12 @@
 {
     "$schema": "https://sci-d-vis.com/schema/wtrl-json-0.1.0.schema.json",
-    "$id": "urn:waterlint:wtrl-json:0.17.0:core:rfc-2119:fbcefb3b7f520220aadadae7215be0ef474b2f3b019d1fe941b751b0d8075503",
+    "$id": "urn:waterlint:wtrl-json:0.17.0:core:rfc-2119:ddc326570b3af5d406294ad1e3f3a3ddf48dd4be960a0cc490ac69af29cc9292",
     "__WTRL_VERSION__": {
         "waterloo": "0.9.0",
         "schema": "0.1.0"
     },
     "__WTRL_META__": {
-        "generated_at": "2026-06-23T14:57:27+02:00",
+        "generated_at": "2026-06-23T18:11:41+02:00",
         "generator": "waterlint",
         "scope": "core",
         "flavour": "rfc-2119"
@@ -3117,7 +3117,10 @@
                         "|ref|`gen_documentable_objects <example_gen_documentable_objects>`"
                     ]
                 }
-            }
+            },
+            "examples": [
+                "/__WTRL_EXAMPLES__/sha256_9ab015e054cd66b87d40f2110e501819c1d62d40be953425c32eee26a5c4f8df"
+            ]
         },
         "sdv.doc.waterloo.docitem_helper.is_obj_annotatable": {
             "signature": {
@@ -3207,15 +3210,17 @@
                 },
                 "Contract": {
                     "general": [
-                        "MUST find out whether the attribute passed is annotated."
+                        "MUST find out whether the requested name is annotated on the object."
                     ]
                 },
                 "Parameters": {
                     "obj": [
-                        "The class or module containing the attribute."
+                        "The annotatable object to inspect, for example a module, class,",
+                        "function, or method."
                     ],
                     "attr": [
-                        "The name of the attribute to be tested."
+                        "The attribute or annotation name to be tested. For functions and",
+                        "methods this includes parameter names and the return annotation."
                     ]
                 },
                 "Returns": [
@@ -3231,7 +3236,10 @@
                         "2026-02-04"
                     ]
                 }
-            }
+            },
+            "examples": [
+                "/__WTRL_EXAMPLES__/sha256_f0db6db783b4619ee93b094ca95fb4e936ac1f38ddab71a8e79c243ebfd21063"
+            ]
         },
         "sdv.doc.waterloo.docitem_helper.is_attr_final": {
             "signature": {
@@ -3291,7 +3299,10 @@
                         "2026-02-04"
                     ]
                 }
-            }
+            },
+            "examples": [
+                "/__WTRL_EXAMPLES__/sha256_f0db6db783b4619ee93b094ca95fb4e936ac1f38ddab71a8e79c243ebfd21063"
+            ]
         },
         "sdv.doc.waterloo.docitem_helper.is_list_of_str": {
             "signature": {
@@ -3333,7 +3344,10 @@
                     "|True| if |var|`val` is a list of strings, else |False|."
                 ],
                 "Raises": {}
-            }
+            },
+            "examples": [
+                "/__WTRL_EXAMPLES__/sha256_7c28b6182c139a657bab51b3d9e573953cd4603d8aff3d13d0e2ab23d4d0624f"
+            ]
         },
         "sdv.doc.waterloo.docitem_helper.is_obj_module": {
             "signature": {
@@ -4642,7 +4656,10 @@
                     "A context manager yielding nothing."
                 ],
                 "Raises": {}
-            }
+            },
+            "examples": [
+                "/__WTRL_EXAMPLES__/sha256_ad8a226b5a950d61d8710d284f9807fd16c402dcf34900baf5d88b02bd4d1687"
+            ]
         },
         "sdv.doc.waterloo.docitem_helper.ResolveObjectError": {
             "signature": {
@@ -5544,7 +5561,33 @@
             "hash": "9ab015e054cd66b87d40f2110e501819c1d62d40be953425c32eee26a5c4f8df",
             "code": "#!/usr/bin/env python3\n\nfrom __future__ import annotations\nimport sdv.doc.waterloo.docitem_helper as h\n\nconfig = h.ConfigTraversal()\nconfig.enable_include_imported()\nn = 0\nfor obj in h.gen_documentable_objects(h,config):\n\tprint(h.get_obj_fully_qualified_name(obj))\n\tn += 1\nprint(f\"Grand total with include_imported   : {n} objects\")\n\nconfig = h.ConfigTraversal()\nn = 0\nfor obj in h.gen_documentable_objects(h,config):\n\tn += 1\nprint(f\"Grand total without include_imported: {n} objects\")\n",
             "referenced_by": [
+                "sdv.doc.waterloo.docitem_helper.ConfigTraversal",
                 "sdv.doc.waterloo.docitem_helper.gen_documentable_objects"
+            ]
+        },
+        "sha256_7c28b6182c139a657bab51b3d9e573953cd4603d8aff3d13d0e2ab23d4d0624f": {
+            "lang": "python",
+            "hash": "7c28b6182c139a657bab51b3d9e573953cd4603d8aff3d13d0e2ab23d4d0624f",
+            "code": "#!/usr/bin/env python3\n\nfrom __future__ import annotations\nfrom typing import Any, TYPE_CHECKING\nimport sdv.doc.waterloo.docitem_helper as h\n\ndef join_strings(values: list[Any]) -> str:\n\tif h.is_list_of_str(values):\n\t\t# mypy narrows `values` to `list[str]` in this branch.\n\t\tif TYPE_CHECKING:\n\t\t\t# h.is_list_of_str returns TypeGuard by annotation.\n\t\t\t# So, here we know at type checking that values is\n\t\t\t# a list of strings. mypy output is:\n\t\t\t# `note: Revealed type is \"list[str]\"`\n\t\t\treveal_type(values)\n\t\treturn \", \".join(values)\n\treturn \"<not a list[str]>\"\n\nassert join_strings([\"a\", \"b\"]) == \"a, b\"\nassert join_strings([1, 2]) == \"<not a list[str]>\"\n",
+            "referenced_by": [
+                "sdv.doc.waterloo.docitem_helper.is_list_of_str"
+            ]
+        },
+        "sha256_f0db6db783b4619ee93b094ca95fb4e936ac1f38ddab71a8e79c243ebfd21063": {
+            "lang": "python",
+            "hash": "f0db6db783b4619ee93b094ca95fb4e936ac1f38ddab71a8e79c243ebfd21063",
+            "code": "#!/usr/bin/env python3\n\nfrom __future__ import annotations\nfrom typing import Final\nimport sdv.doc.waterloo.docitem_helper as h\n\ndef f(a: int,b: float) -> None:\n\tpass\n\nclass X:\n\tv: int = 42\n\tc: Final[float] = 1.23\n\n\t@staticmethod\n\tdef sm(a: int, b: float) -> None:\n\t\tpass\n\t@classmethod\n\tdef cm(cls, a: int, b: float) -> None:\n\t\tpass\n\tdef m1(self):\n\t\tpass\n\tdef m2(self,a: int,b: Final[float]) -> None:\n\t\tpass\n\nassert not h.is_attr_annotated(X.m1,\"return\")\n\nassert h.is_attr_annotated(f,\"a\")\nassert h.is_attr_annotated(f,\"b\")\nassert h.is_attr_annotated(f,\"return\")\n\nassert h.is_attr_annotated(X.sm,\"a\")\nassert h.is_attr_annotated(X.sm,\"b\")\nassert h.is_attr_annotated(X.sm,\"return\")\n\nassert h.is_attr_annotated(X.cm,\"a\")\nassert h.is_attr_annotated(X.cm,\"b\")\nassert h.is_attr_annotated(X.cm,\"return\")\n\nassert h.is_attr_annotated(X.m2,\"a\")\nassert h.is_attr_annotated(X.m2,\"b\")\nassert h.is_attr_annotated(X.m2,\"return\")\n\nassert h.is_attr_annotated(X,\"v\")\n\nassert h.is_attr_final(h,\"CANONICAL_ORDER_OF_PROFILES\")\nassert h.is_attr_final(X,\"c\")\nassert h.is_attr_final(X.m2,\"b\")\n\nassert not h.is_attr_final(X.m2,\"a\")\n",
+            "referenced_by": [
+                "sdv.doc.waterloo.docitem_helper.is_attr_annotated",
+                "sdv.doc.waterloo.docitem_helper.is_attr_final"
+            ]
+        },
+        "sha256_ad8a226b5a950d61d8710d284f9807fd16c402dcf34900baf5d88b02bd4d1687": {
+            "lang": "python",
+            "hash": "ad8a226b5a950d61d8710d284f9807fd16c402dcf34900baf5d88b02bd4d1687",
+            "code": "#!/usr/bin/env python3\n\nfrom __future__ import annotations\nfrom typing import Generator,NoReturn\nimport sdv.doc.waterloo.docitem_helper as h\n\n# The function does not know which rule is violated,\n# but the caller has pushed it to the tracer's stack.\ndef some_deeper_function(tr) -> NoReturn:\n\ttr.add_error(tr.get_rule_on_fail(),\"test\",\"An error from a deeper function has occurred\")\n\ndef test_tracer() -> None:\n\ttr = h.tracer()\n# The tracer collects messages from deep inside\n# the docitem parsing or validation process.\n# Make sure to provide a meaningful tag at each scope.\n\ttr.push(\"Path\")\n\ttr.push(\"To\")\n\ttr.push(\"Context\")\n\n\twith h.rule_on_fail(tr,\"XYZ-123\"):\n\t\tsome_deeper_function(tr)\n\n\tprint(tr)\n\ntest_tracer()\n",
+            "referenced_by": [
+                "sdv.doc.waterloo.docitem_helper.rule_on_fail"
             ]
         }
     }

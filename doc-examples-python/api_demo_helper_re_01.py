@@ -4,7 +4,7 @@ import sdv.doc.waterloo.docitem_helper as h
 
 def test_regex() -> None:
 #----- Rule IDs -----------------------------------------------#
-	print("Regex RE_RULE_ID:",h.RE_RULE_ID)
+	print("Regex RE_RULE_ID:", h.RE_RULE_ID)
 	rule_ids_bad = [
 		"AB-12", "AB-123", "AB-1234",
 		"ABC-12", "ABCD-12",
@@ -17,7 +17,7 @@ def test_regex() -> None:
 	try:
 		for rule_id in rule_ids_bad:
 			assert not h.RE_RULE_ID_COMPILED.match(rule_id), f"Rule ID {rule_id} should not match the regex"
-			# print(f"Match {rule_id}:",h.RE_RULE_ID_COMPILED.match(rule_id))
+			# print(f"Match {rule_id}:", h.RE_RULE_ID_COMPILED.match(rule_id))
 		for rule_id in rule_ids_good:
 			assert h.RE_RULE_ID_COMPILED.match(rule_id), f"Rule ID {rule_id} did not match the regex"
 	except AssertionError as e:

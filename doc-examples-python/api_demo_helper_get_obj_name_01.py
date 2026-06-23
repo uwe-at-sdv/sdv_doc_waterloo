@@ -19,23 +19,22 @@ def f() -> None:
 	pass
 
 x = X()
-print(h.get_obj_name(X))
-print(h.get_obj_name(x))
-print(h.get_obj_name(X.m_cls))
-print(h.get_obj_name(X.m_stat))
-print(h.get_obj_name(x.m))
-print(h.get_obj_name(f))
-print(h.get_obj_name(X.Y))
-print(h.get_obj_name(x.Y))
+print("class:", h.get_obj_name(X))
+print("instance:", h.get_obj_name(x))
+print("classmethod:", h.get_obj_name(X.m_cls))
+print("staticmethod:", h.get_obj_name(X.m_stat))
+print("bound method:", h.get_obj_name(x.m))
+print("module function:", h.get_obj_name(f))
+print("nested class:", h.get_obj_name(X.Y))
+print("nested class via instance:", h.get_obj_name(x.Y))
 
-# These two are a bit surprising, but seem to be
-# irrelevant for the project.
-print(h.get_obj_name(x.y))
-print(h.get_obj_name(X.y))
+# These two are a bit surprising, but seem to be irrelevant for the project.
+print("nested instance via instance:", h.get_obj_name(x.y))
+print("nested instance via class:", h.get_obj_name(X.y))
 
 # Same here. See section Notes.Limitations.
-print(h.get_obj_fully_qualified_name(x.y))
-print(h.get_obj_fully_qualified_name(X.y))
+print("fq name for nested instance via instance:", h.get_obj_fully_qualified_name(x.y))
+print("fq name for nested instance via class:", h.get_obj_fully_qualified_name(X.y))
 
-print(x.y.__class__.__name__)
-print(X.Y.__name__)
+print("runtime class name:", x.y.__class__.__name__)
+print("declared class name:", X.Y.__name__)

@@ -32,7 +32,8 @@
             "package_gh-pages/doc-examples-python/api_demo_helper_inspect_01.py"
         ],
         "sdv.doc.waterloo.docitem_helper.tracer": [
-            "package_gh-pages/doc-examples-python/api_demo_helper_tracer_01.py"
+            "package_gh-pages/doc-examples-python/api_demo_helper_tracer_01.py",
+            "package_gh-pages/doc-examples-python/api_demo_helper_rule_on_fail_01.py"
         ],
         "sdv.doc.waterloo.docitem_helper.tracer.str_by_severity": [
             "package_gh-pages/doc-examples-python/api_demo_helper_tracer_01.py"
@@ -128,9 +129,21 @@
         ],
         "sdv.doc.waterloo.docitem_helper.ConfigTraversal": [
             "package_gh-pages/doc-examples-python/api_demo_helper_gen_documentable_objects_01.py"
-        ]
+        ],
         "sdv.doc.waterloo.docitem_helper.gen_documentable_objects": [
             "package_gh-pages/doc-examples-python/api_demo_helper_gen_documentable_objects_01.py"
+        ],
+        "sdv.doc.waterloo.docitem_helper.is_list_of_str": [
+            "package_gh-pages/doc-examples-python/api_demo_helper_is_list_of_str_01.py"
+        ],
+        "sdv.doc.waterloo.docitem_helper.is_attr_annotated": [
+            "package_gh-pages/doc-examples-python/api_demo_helper_is_attr_annotated_01.py"
+        ],
+        "sdv.doc.waterloo.docitem_helper.is_attr_final": [
+            "package_gh-pages/doc-examples-python/api_demo_helper_is_attr_annotated_01.py"
+        ],
+        "sdv.doc.waterloo.docitem_helper.rule_on_fail": [
+            "package_gh-pages/doc-examples-python/api_demo_helper_rule_on_fail_01.py"
         ]
     }
 }

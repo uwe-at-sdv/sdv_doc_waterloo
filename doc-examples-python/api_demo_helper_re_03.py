@@ -20,7 +20,7 @@ def test_regex() -> None:
 	qualified_identifiers_good = [
 		"uvw_xyz",
 		"sdv.doc.item",
-		"a_b.c_d"
+		"a_b.c_d",
 		"_._._"
 	]
 	try:

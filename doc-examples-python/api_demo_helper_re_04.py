@@ -4,7 +4,7 @@ import sdv.doc.waterloo.docitem_helper as h
 
 def test_regex() -> None:
 #----- Markup with backticks ---------------------------------#
-	print("Regex RE_WTRL_MARKUP_BACKTICK:",h.RE_WTRL_MARKUP_BACKTICK)
+	print("Regex RE_WTRL_MARKUP_BACKTICK:", h.RE_WTRL_MARKUP_BACKTICK)
 	markup_bad = [
 		"|unknown|`text`", "|type|text", "type|`text`",
 		"|type|`text", "|type|text`", "type|text`",
@@ -27,6 +27,6 @@ def test_regex() -> None:
 			assert h.RE_WTRL_MARKUP_BACKTICK_COMPILED.fullmatch(i), f"Markup {i} did not match the regex"
 	except AssertionError as e:
 		print("Failed test:", i)
-		raise e  
+		raise e
 
 test_regex()

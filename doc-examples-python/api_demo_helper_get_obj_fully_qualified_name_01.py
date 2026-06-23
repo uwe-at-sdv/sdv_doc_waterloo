@@ -7,7 +7,7 @@ class X:
 		class Z:
 			@classmethod
 			def test(cls) -> None:
-				print(h.get_obj_fully_qualified_name(cls.test))
+				print("classmethod:", h.get_obj_fully_qualified_name(cls.test))
 
 X.Y.Z.test()
-# Result: __main__.X.Y.Z.test
+# Result: classmethod: __main__.X.Y.Z.test

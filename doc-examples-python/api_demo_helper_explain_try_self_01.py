@@ -2,5 +2,5 @@
 
 import sdv.doc.waterloo.docitem_helper as h
 
-print(h.explain_try_self_for_section("Contract","class"))
-print(h.explain_try_self_for_subsection("Contract.requires","class"))
+print("section:", h.explain_try_self_for_section("Contract", "class"))
+print("subsection:", h.explain_try_self_for_subsection("Contract.requires", "class"))
