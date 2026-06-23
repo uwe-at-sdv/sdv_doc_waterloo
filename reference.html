@@ -3453,9 +3453,6 @@
 <li><p><a class="wtrl_var reference internal" href="#wtrl-cls-3:sdv-3:doc-8:waterloo-14:docitem_helper-6:Format" title="sdv.doc.waterloo.docitem_helper.Format"><span>JSON</span></a></p>
 <p class="wtrl-freeform-paragraph-content">Javascript Object Notation</p>
 </li>
-<li><p><a class="wtrl_var reference internal" href="#wtrl-cls-3:sdv-3:doc-8:waterloo-14:docitem_helper-6:Format" title="sdv.doc.waterloo.docitem_helper.Format"><span>YAML</span></a></p>
-<p class="wtrl-freeform-paragraph-content">YAML Ain’t Markup Language</p>
-</li>
 <li><p><a class="wtrl_var reference internal" href="#wtrl-cls-3:sdv-3:doc-8:waterloo-14:docitem_helper-6:Format" title="sdv.doc.waterloo.docitem_helper.Format"><span>MD</span></a></p>
 <p class="wtrl-freeform-paragraph-content">Markdown.</p>
 </li>
@@ -11869,7 +11866,7 @@
 </td>
 </tr>
 <tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Public</span> <span class="pre">functions</span></code></p></td>
-<td><p><a class="wtrl_func reference internal" href="#wtrl-func-3:sdv-3:doc-8:waterloo-15:docitem_convert-19:to_node_legend_json" title="sdv.doc.waterloo.docitem_convert.to_node_legend_json"><span>to_node_legend_json</span></a>, <a class="wtrl_func reference internal" href="#wtrl-func-3:sdv-3:doc-8:waterloo-15:docitem_convert-27:to_node_docstring_tree_json" title="sdv.doc.waterloo.docitem_convert.to_node_docstring_tree_json"><span>to_node_docstring_tree_json</span></a>, <a class="wtrl_func reference internal" href="#wtrl-func-3:sdv-3:doc-8:waterloo-15:docitem_convert-22:to_node_signature_json" title="sdv.doc.waterloo.docitem_convert.to_node_signature_json"><span>to_node_signature_json</span></a>, <a class="wtrl_func reference internal" href="#wtrl-func-3:sdv-3:doc-8:waterloo-15:docitem_convert-21:to_string_legend_yaml" title="sdv.doc.waterloo.docitem_convert.to_string_legend_yaml"><span>to_string_legend_yaml</span></a>, <a class="wtrl_func reference internal" href="#wtrl-func-3:sdv-3:doc-8:waterloo-15:docitem_convert-14:to_string_yaml" title="sdv.doc.waterloo.docitem_convert.to_string_yaml"><span>to_string_yaml</span></a>, <a class="wtrl_func reference internal" href="#wtrl-func-3:sdv-3:doc-8:waterloo-15:docitem_convert-24:to_string_signature_yaml" title="sdv.doc.waterloo.docitem_convert.to_string_signature_yaml"><span>to_string_signature_yaml</span></a>, <a class="wtrl_func reference internal" href="#wtrl-func-3:sdv-3:doc-8:waterloo-15:docitem_convert-12:to_string_md" title="sdv.doc.waterloo.docitem_convert.to_string_md"><span>to_string_md</span></a>, <a class="wtrl_func reference internal" href="#wtrl-func-3:sdv-3:doc-8:waterloo-15:docitem_convert-15:build_node_json" title="sdv.doc.waterloo.docitem_convert.build_node_json"><span>build_node_json</span></a></p></td>
+<td><p><a class="wtrl_func reference internal" href="#wtrl-func-3:sdv-3:doc-8:waterloo-15:docitem_convert-19:to_node_legend_json" title="sdv.doc.waterloo.docitem_convert.to_node_legend_json"><span>to_node_legend_json</span></a>, <a class="wtrl_func reference internal" href="#wtrl-func-3:sdv-3:doc-8:waterloo-15:docitem_convert-27:to_node_docstring_tree_json" title="sdv.doc.waterloo.docitem_convert.to_node_docstring_tree_json"><span>to_node_docstring_tree_json</span></a>, <a class="wtrl_func reference internal" href="#wtrl-func-3:sdv-3:doc-8:waterloo-15:docitem_convert-22:to_node_signature_json" title="sdv.doc.waterloo.docitem_convert.to_node_signature_json"><span>to_node_signature_json</span></a>, <a class="wtrl_func reference internal" href="#wtrl-func-3:sdv-3:doc-8:waterloo-15:docitem_convert-12:to_string_md" title="sdv.doc.waterloo.docitem_convert.to_string_md"><span>to_string_md</span></a>, <a class="wtrl_func reference internal" href="#wtrl-func-3:sdv-3:doc-8:waterloo-15:docitem_convert-15:build_node_json" title="sdv.doc.waterloo.docitem_convert.build_node_json"><span>build_node_json</span></a></p></td>
 </tr>
 <tr class="wtrl-section row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Public</span> <span class="pre">types</span></code></p></td>
 <td><ul>
@@ -12215,266 +12212,8 @@
 </thead>
 </table>
 </section>
-<section id="to-string-legend-yaml">
-<h4><span class="section-number">11.3.1.5. </span><code class="wtrl_func docutils literal notranslate"><span class="pre">to_string_legend_yaml</span></code><a class="headerlink" href="#to-string-legend-yaml" title="Link to this heading">¶</a></h4>
-<table class="wtrl-box docutils align-default" id="wtrl-func-3:sdv-3:doc-8:waterloo-15:docitem_convert-21:to_string_legend_yaml">
-<tbody>
-<tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Signature</span></code></p></td>
-<td><div class="wtrl-signature-head line"><span class="wtrl_mod">sdv.doc.waterloo.docitem_convert</span><span class="wtrl_op">.</span><span class="wtrl_func">to_string_legend_yaml</span><span class="wtrl_op">(</span></div>
-<div class="wtrl-signature-param line"><span class="wtrl_var">config</span><span class="wtrl_op">: </span><span class="wtrl_type">YamlConfig</span><span class="wtrl_op"> = </span><span class="wtrl_lit">&lt;sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7fcafa0d2660&gt;</span></div>
-<div class="wtrl-signature-ret line"><span class="wtrl_op">)</span><span class="wtrl_op"> -&gt; </span><span class="wtrl_type">str</span></div>
-</td>
-</tr>
-<tr class="wtrl-section row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Preamble</span></code></p></td>
-<td><ul class="simple">
-<li><p><code class="wtrl_label docutils literal notranslate"><span class="pre">normative</span> <span class="pre">sections</span></code></p>
-<ul>
-<li><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Contract</span></code>, <code class="wtrl_label docutils literal notranslate"><span class="pre">Parameters</span></code>, <code class="wtrl_label docutils literal notranslate"><span class="pre">Returns</span></code>, <code class="wtrl_label docutils literal notranslate"><span class="pre">Raises</span></code></p></li>
-</ul>
-</li>
-<li><p><code class="wtrl_label docutils literal notranslate"><span class="pre">scope</span></code></p>
-<ul>
-<li><p><code class="wtrl_value docutils literal notranslate"><span class="pre">public</span></code></p></li>
-</ul>
-</li>
-<li><p><code class="wtrl_label docutils literal notranslate"><span class="pre">status</span></code></p>
-<ul>
-<li><p><code class="wtrl_value docutils literal notranslate"><span class="pre">stable</span></code></p></li>
-</ul>
-</li>
-</ul>
-</td>
-</tr>
-<tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Contract</span></code></p></td>
-<td><ul class="simple">
-<li><p><code class="wtrl_label docutils literal notranslate"><span class="pre">general</span></code></p>
-<ul>
-<li><p><code class="wtrl_norm docutils literal notranslate"><span class="pre">Must</span></code> render the Waterloo roles legend as YAML using the existing emitter.</p></li>
-</ul>
-</li>
-</ul>
-</td>
-</tr>
-<tr class="wtrl-section row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Parameters</span></code></p></td>
-<td><ul>
-<li><p><code class="wtrl_var docutils literal notranslate"><span class="pre">config</span></code></p>
-<p class="wtrl-freeform-paragraph-content">How to render the YAML code.</p>
-</li>
-</ul>
-</td>
-</tr>
-<tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Returns</span></code></p></td>
-<td><p>The YAML string containing the legend.</p></td>
-</tr>
-<tr class="wtrl-section row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Raises</span></code></p></td>
-<td><code class="wtrl_value docutils literal notranslate"><span class="pre">&lt;empty&gt;</span></code></td>
-</tr>
-</tbody>
-<thead class="wtrl-box-head-function">
-<tr class="row-odd"><th class="head"><code class="wtrl_label docutils literal notranslate"><span class="pre">Function</span></code></th>
-<th class="head"><p>to_string_legend_yaml</p></th>
-</tr>
-</thead>
-</table>
-</section>
-<section id="to-string-yaml">
-<h4><span class="section-number">11.3.1.6. </span><code class="wtrl_func docutils literal notranslate"><span class="pre">to_string_yaml</span></code><a class="headerlink" href="#to-string-yaml" title="Link to this heading">¶</a></h4>
-<table class="wtrl-box docutils align-default" id="wtrl-func-3:sdv-3:doc-8:waterloo-15:docitem_convert-14:to_string_yaml">
-<tbody>
-<tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Signature</span></code></p></td>
-<td><div class="wtrl-signature-head line"><span class="wtrl_mod">sdv.doc.waterloo.docitem_convert</span><span class="wtrl_op">.</span><span class="wtrl_func">to_string_yaml</span><span class="wtrl_op">(</span></div>
-<div class="wtrl-signature-param line"><span class="wtrl_var">tree</span><span class="wtrl_op">: </span><span class="wtrl_type">DocstringTree</span></div>
-<div class="wtrl-signature-param line"><span class="wtrl_var">flavour</span><span class="wtrl_op">: </span><span class="wtrl_type">Flavour</span></div>
-<div class="wtrl-signature-param line"><span class="wtrl_var">config</span><span class="wtrl_op">: </span><span class="wtrl_type">YamlConfig</span><span class="wtrl_op"> = </span><span class="wtrl_lit">&lt;sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7fcaf9301450&gt;</span></div>
-<div class="wtrl-signature-ret line"><span class="wtrl_op">)</span><span class="wtrl_op"> -&gt; </span><span class="wtrl_type">str</span></div>
-</td>
-</tr>
-<tr class="wtrl-section row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Preamble</span></code></p></td>
-<td><ul class="simple">
-<li><p><code class="wtrl_label docutils literal notranslate"><span class="pre">normative</span> <span class="pre">sections</span></code></p>
-<ul>
-<li><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Contract</span></code>, <code class="wtrl_label docutils literal notranslate"><span class="pre">Parameters</span></code>, <code class="wtrl_label docutils literal notranslate"><span class="pre">Returns</span></code>, <code class="wtrl_label docutils literal notranslate"><span class="pre">Raises</span></code>, <code class="wtrl_label docutils literal notranslate"><span class="pre">See</span> <span class="pre">also</span></code></p></li>
-</ul>
-</li>
-<li><p><code class="wtrl_label docutils literal notranslate"><span class="pre">scope</span></code></p>
-<ul>
-<li><p><code class="wtrl_value docutils literal notranslate"><span class="pre">public</span></code></p></li>
-</ul>
-</li>
-<li><p><code class="wtrl_label docutils literal notranslate"><span class="pre">status</span></code></p>
-<ul>
-<li><p><code class="wtrl_value docutils literal notranslate"><span class="pre">draft</span></code></p></li>
-</ul>
-</li>
-</ul>
-</td>
-</tr>
-<tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Contract</span></code></p></td>
-<td><ul class="simple">
-<li><p><code class="wtrl_label docutils literal notranslate"><span class="pre">general</span></code></p>
-<ul>
-<li><p><code class="wtrl_norm docutils literal notranslate"><span class="pre">Must</span></code> render the tree as YAML-string using the given flavour.</p></li>
-<li><p><code class="wtrl_norm docutils literal notranslate"><span class="pre">Must</span></code> reproduce the tree structure by indentation in YAML.</p></li>
-<li><p>In RFC_2199 flavour, Normativity Keywords <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span></code> be capitalized and the pipe delimiters <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span></code> be dropped.</p></li>
-<li><p>In RAW flavour, Normativity Keywords <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span></code> be rendered without modification, i.e. including pipe delimiters.</p></li>
-<li><p>In MARKUP flavour, Normativity Keywords <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span></code> be rendered with double asterisk <code class="wtrl_lit docutils literal notranslate"><span class="pre">**...**</span></code> instead of pipe delimiters.</p></li>
-</ul>
-</li>
-<li><p><code class="wtrl_label docutils literal notranslate"><span class="pre">requires</span></code></p>
-<ul>
-<li><p><code class="wtrl_var docutils literal notranslate"><span class="pre">tree</span></code> <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span></code> be a formally correct docstring tree.</p></li>
-</ul>
-</li>
-</ul>
-</td>
-</tr>
-<tr class="wtrl-section row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Notes</span></code></p></td>
-<td><p class="wtrl-note-title rubric">Details</p>
-<p class="wtrl-freeform-paragraph-content">Each list element becomes a YAML sequence item (&quot;-&quot;), preserving the original nesting of the docstring tree. Long scalars are emitted as folded blocks (&gt;-) to keep line lengths reasonable for linters.</p>
-</td>
-</tr>
-<tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Parameters</span></code></p></td>
-<td><ul>
-<li><p><code class="wtrl_var docutils literal notranslate"><span class="pre">tree</span></code></p>
-<p class="wtrl-freeform-paragraph-content">The tree to render as string.</p>
-</li>
-<li><p><code class="wtrl_var docutils literal notranslate"><span class="pre">flavour</span></code></p>
-<p class="wtrl-freeform-paragraph-content">The style to render Normativity Keywords in.</p>
-</li>
-<li><p><code class="wtrl_var docutils literal notranslate"><span class="pre">config</span></code></p>
-<p class="wtrl-freeform-paragraph-content">How to render the YAML code.</p>
-</li>
-</ul>
-</td>
-</tr>
-<tr class="wtrl-section row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Returns</span></code></p></td>
-<td><p>The YAML string</p></td>
-</tr>
-<tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Raises</span></code></p></td>
-<td><ul class="simple">
-<li><p><a class="wtrl_type reference internal" href="#wtrl-cls-3:sdv-3:doc-8:waterloo-14:docitem_helper-10:ParseError" title="sdv.doc.waterloo.docitem_helper.ParseError"><span>ParseError</span></a><ul>
-<li><p><code class="wtrl_norm docutils literal notranslate"><span class="pre">Must</span></code> propagate if the docstring tree cannot be turned into a docitem AST.</p></li>
-</ul>
-</p></li>
-<li><p><code class="wtrl_type docutils literal notranslate"><span class="pre">TypeError</span></code><ul>
-<li><p><code class="wtrl_norm docutils literal notranslate"><span class="pre">Must</span></code> raise if <code class="wtrl_var docutils literal notranslate"><span class="pre">flavour</span></code> is not a <code class="wtrl_type docutils literal notranslate"><span class="pre">Flavour</span></code>.</p></li>
-</ul>
-</p></li>
-</ul>
-</td>
-</tr>
-<tr class="wtrl-section row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">See</span> <span class="pre">also</span></code></p></td>
-<td><p><a class="wtrl_var reference internal" href="#wtrl-cls-3:sdv-3:doc-8:waterloo-14:docitem_helper-7:Flavour" title="sdv.doc.waterloo.docitem_helper.Flavour"><span>sdv.doc.waterloo.docitem.Flavour</span></a>, <a class="wtrl_var reference internal" href="#wtrl-cls-3:sdv-3:doc-8:waterloo-14:docitem_helper-6:Format" title="sdv.doc.waterloo.docitem_helper.Format"><span>sdv.doc.waterloo.docitem.Format</span></a></p></td>
-</tr>
-</tbody>
-<thead class="wtrl-box-head-function">
-<tr class="row-odd"><th class="head"><code class="wtrl_label docutils literal notranslate"><span class="pre">Function</span></code></th>
-<th class="head"><p>to_string_yaml</p></th>
-</tr>
-</thead>
-</table>
-</section>
-<section id="to-string-signature-yaml">
-<h4><span class="section-number">11.3.1.7. </span><code class="wtrl_func docutils literal notranslate"><span class="pre">to_string_signature_yaml</span></code><a class="headerlink" href="#to-string-signature-yaml" title="Link to this heading">¶</a></h4>
-<table class="wtrl-box docutils align-default" id="wtrl-func-3:sdv-3:doc-8:waterloo-15:docitem_convert-24:to_string_signature_yaml">
-<tbody>
-<tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Signature</span></code></p></td>
-<td><div class="wtrl-signature-head line"><span class="wtrl_mod">sdv.doc.waterloo.docitem_convert</span><span class="wtrl_op">.</span><span class="wtrl_func">to_string_signature_yaml</span><span class="wtrl_op">(</span></div>
-<div class="wtrl-signature-param line"><span class="wtrl_var">obj</span><span class="wtrl_op">: </span><span class="wtrl_type">object</span></div>
-<div class="wtrl-signature-param line"><span class="wtrl_var">config</span><span class="wtrl_op">: </span><span class="wtrl_type">YamlConfig</span><span class="wtrl_op"> = </span><span class="wtrl_lit">&lt;sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7fcaf9301310&gt;</span></div>
-<div class="wtrl-signature-ret line"><span class="wtrl_op">)</span><span class="wtrl_op"> -&gt; </span><span class="wtrl_type">str</span></div>
-</td>
-</tr>
-<tr class="wtrl-section row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Preamble</span></code></p></td>
-<td><ul class="simple">
-<li><p><code class="wtrl_label docutils literal notranslate"><span class="pre">normative</span> <span class="pre">sections</span></code></p>
-<ul>
-<li><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Contract</span></code>, <code class="wtrl_label docutils literal notranslate"><span class="pre">Parameters</span></code>, <code class="wtrl_label docutils literal notranslate"><span class="pre">Returns</span></code>, <code class="wtrl_label docutils literal notranslate"><span class="pre">Raises</span></code></p></li>
-</ul>
-</li>
-<li><p><code class="wtrl_label docutils literal notranslate"><span class="pre">scope</span></code></p>
-<ul>
-<li><p><code class="wtrl_value docutils literal notranslate"><span class="pre">public</span></code></p></li>
-</ul>
-</li>
-<li><p><code class="wtrl_label docutils literal notranslate"><span class="pre">status</span></code></p>
-<ul>
-<li><p><code class="wtrl_value docutils literal notranslate"><span class="pre">draft</span></code></p></li>
-</ul>
-</li>
-</ul>
-</td>
-</tr>
-<tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Contract</span></code></p></td>
-<td><ul class="simple">
-<li><p><code class="wtrl_label docutils literal notranslate"><span class="pre">general</span></code></p>
-<ul>
-<li><p><code class="wtrl_norm docutils literal notranslate"><span class="pre">Must</span></code> render a YAML snippet as defined by <code class="wtrl_var docutils literal notranslate"><span class="pre">config</span></code>, representing the</p></li>
-<li><p>signature of the callable <code class="wtrl_var docutils literal notranslate"><span class="pre">obj</span></code>.</p></li>
-<li><p>The root key <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span></code> be <code class="wtrl_attr docutils literal notranslate"><span class="pre">signature</span></code>, containing the subkeys</p></li>
-<li><p><code class="wtrl_attr docutils literal notranslate"><span class="pre">text</span></code>, <code class="wtrl_attr docutils literal notranslate"><span class="pre">parameters</span></code>, and <code class="wtrl_attr docutils literal notranslate"><span class="pre">returns</span></code>.</p></li>
-<li><p><code class="wtrl_attr docutils literal notranslate"><span class="pre">text</span></code> <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span></code> provide an inline-style representation of the signature.</p></li>
-<li><p><code class="wtrl_attr docutils literal notranslate"><span class="pre">parameters</span></code> <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span></code> contain a sequence of elements, each providing:</p></li>
-<li><p><code class="wtrl_attr docutils literal notranslate"><span class="pre">name</span></code>: The parameter identifier.</p></li>
-<li><p><code class="wtrl_attr docutils literal notranslate"><span class="pre">kind</span></code>: The slot-filling strategy (e.g., positional-only, keyword-only,</p></li>
-<li><p>or variadic) as defined by the Python <code class="wtrl_func docutils literal notranslate"><span class="pre">inspect</span></code> semantics.</p></li>
-<li><p><code class="wtrl_attr docutils literal notranslate"><span class="pre">annotation</span></code>: The parameter’s type hint or annotation.</p></li>
-<li><p><code class="wtrl_attr docutils literal notranslate"><span class="pre">default</span></code>: <code class="wtrl_value docutils literal notranslate"><span class="pre">null</span></code> if no default value is defined; otherwise,</p></li>
-<li><p>a string representation of the default value.</p></li>
-<li><p>The subkey <code class="wtrl_attr docutils literal notranslate"><span class="pre">returns</span></code> <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span></code> represent the return type of the callable.</p></li>
-</ul>
-</li>
-</ul>
-</td>
-</tr>
-<tr class="wtrl-section row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Parameters</span></code></p></td>
-<td><ul>
-<li><p><code class="wtrl_var docutils literal notranslate"><span class="pre">obj</span></code></p>
-<p class="wtrl-freeform-paragraph-content">The callable whose signature is to be inspected and rendered.</p>
-</li>
-<li><p><code class="wtrl_var docutils literal notranslate"><span class="pre">config</span></code></p>
-<p class="wtrl-freeform-paragraph-content">Configuration object controlling indentation, line folding, and the embedding of the emitted YAML.</p>
-</li>
-</ul>
-</td>
-</tr>
-<tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Returns</span></code></p></td>
-<td><p>The generated YAML string.</p></td>
-</tr>
-<tr class="wtrl-section row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Raises</span></code></p></td>
-<td><ul class="simple">
-<li><p><code class="wtrl_type docutils literal notranslate"><span class="pre">TypeError</span></code><ul>
-<li><p><code class="wtrl_norm docutils literal notranslate"><span class="pre">Must</span></code> be raised if <code class="wtrl_var docutils literal notranslate"><span class="pre">obj</span></code> is not callable or if the signature</p></li>
-<li><p>cannot be inspected.</p></li>
-</ul>
-</p></li>
-<li><p><code class="wtrl_type docutils literal notranslate"><span class="pre">ValueError</span></code><ul>
-<li><p><code class="wtrl_norm docutils literal notranslate"><span class="pre">May</span></code> be raised if the signature includes parameter kinds that</p></li>
-<li><p>cannot be serialized.</p></li>
-</ul>
-</p></li>
-<li><p><code class="wtrl_type docutils literal notranslate"><span class="pre">Exception</span></code><ul>
-<li><p><code class="wtrl_norm docutils literal notranslate"><span class="pre">May</span></code> propagate exceptions from <code class="wtrl_func docutils literal notranslate"><span class="pre">inspect.signature</span></code> or <code class="wtrl_func docutils literal notranslate"><span class="pre">repr</span></code> during default value rendering; callers should treat these as unexpected errors.</p></li>
-</ul>
-</p></li>
-</ul>
-</td>
-</tr>
-<tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Notes</span></code></p></td>
-<td><p class="wtrl-note-title rubric">Standard values for “kind”</p>
-<p class="wtrl-freeform-paragraph-content">Derived from <code class="wtrl_type docutils literal notranslate"><span class="pre">inspect.Parameter</span></code>: <code class="wtrl_value docutils literal notranslate"><span class="pre">POSITIONAL_ONLY</span></code>, <code class="wtrl_value docutils literal notranslate"><span class="pre">POSITIONAL_OR_KEYWORD</span></code>, <code class="wtrl_value docutils literal notranslate"><span class="pre">VAR_POSITIONAL</span></code>, <code class="wtrl_value docutils literal notranslate"><span class="pre">KEYWORD_ONLY</span></code>, <code class="wtrl_value docutils literal notranslate"><span class="pre">VAR_KEYWORD</span></code></p>
-</td>
-</tr>
-</tbody>
-<thead class="wtrl-box-head-function">
-<tr class="row-even"><th class="head"><code class="wtrl_label docutils literal notranslate"><span class="pre">Function</span></code></th>
-<th class="head"><p>to_string_signature_yaml</p></th>
-</tr>
-</thead>
-</table>
-</section>
 <section id="to-string-md">
-<h4><span class="section-number">11.3.1.8. </span><code class="wtrl_func docutils literal notranslate"><span class="pre">to_string_md</span></code><a class="headerlink" href="#to-string-md" title="Link to this heading">¶</a></h4>
+<h4><span class="section-number">11.3.1.5. </span><code class="wtrl_func docutils literal notranslate"><span class="pre">to_string_md</span></code><a class="headerlink" href="#to-string-md" title="Link to this heading">¶</a></h4>
 <table class="wtrl-box docutils align-default" id="wtrl-func-3:sdv-3:doc-8:waterloo-15:docitem_convert-12:to_string_md">
 <tbody>
 <tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Signature</span></code></p></td>
@@ -13933,10 +13672,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#to-node-docstring-tree-json">11.3.1.2. <code class="wtrl_func docutils literal notranslate"><span class="pre">to_node_docstring_tree_json</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#to-node-signature-json">11.3.1.3. <code class="wtrl_func docutils literal notranslate"><span class="pre">to_node_signature_json</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#build-node-json">11.3.1.4. <code class="wtrl_func docutils literal notranslate"><span class="pre">build_node_json</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#to-string-legend-yaml">11.3.1.5. <code class="wtrl_func docutils literal notranslate"><span class="pre">to_string_legend_yaml</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#to-string-yaml">11.3.1.6. <code class="wtrl_func docutils literal notranslate"><span class="pre">to_string_yaml</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#to-string-signature-yaml">11.3.1.7. <code class="wtrl_func docutils literal notranslate"><span class="pre">to_string_signature_yaml</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#to-string-md">11.3.1.8. <code class="wtrl_func docutils literal notranslate"><span class="pre">to_string_md</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#to-string-md">11.3.1.5. <code class="wtrl_func docutils literal notranslate"><span class="pre">to_string_md</span></code></a></li>
 </ul>
 </li>
 </ul>
