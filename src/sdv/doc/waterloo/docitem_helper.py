@@ -21,7 +21,7 @@ Public_functions:
 	render_definition_reference_details, render_inherited_definition_details, render_type_reference_details,
 	render_constant_reference_details, render_named_value_reference_details, render_overview_missing_member_details,
 	render_see_also_reference_details,
-	get_source_docstring, is_annotatable, is_attr_annotated, is_attr_final, is_list_of_str,
+	get_source_docstring, is_obj_annotatable, is_attr_annotated, is_attr_final, is_list_of_str,
 	is_obj_module, is_obj_class, is_obj_function, is_obj_method_like, is_obj_named_value,
 	is_obj_documentable, get_obj_direct_module, get_obj_name, get_obj_fully_qualified_name,
 	get_obj_path, build_anchor, get_func_obj_from_callable, get_obj_docstring, get_obj_annotations,
@@ -100,7 +100,7 @@ Notes:
 """
 from __future__ import annotations
 from enum import Enum,IntEnum
-from types import FunctionType, MappingProxyType, ModuleType
+from types import FunctionType, MappingProxyType, MethodType, ModuleType
 from typing_extensions import Self, TypeIs
 from typing import Any, Callable, Dict, Final, Mapping, get_type_hints, get_origin, get_args, Generator, Iterable, Iterator, List, Literal, NewType, NoReturn, Sequence, Set, Tuple, Type, TypeAlias, TypedDict, TypeGuard, Union, cast
 
@@ -449,7 +449,7 @@ flavour_tag_map = {
 	"rfc-2119":	Flavour.RFC_2119,
 	"markdown":	Flavour.MARKDOWN,
 	}
-FLAVOUR_TAG_MAP: Mapping[str, Flavour] = MappingProxyType(flavour_tag_map)	
+FLAVOUR_TAG_MAP: Final[Mapping[str, Flavour]] = MappingProxyType(flavour_tag_map)	
 
 # Format for string-related output
 class Format(IntEnum):
@@ -485,7 +485,7 @@ format_tag_map = {
 	"yaml":		Format.YAML,
 	"md":		Format.MD
 	}
-FORMAT_TAG_MAP: Mapping[str, Format] = MappingProxyType(format_tag_map)	
+FORMAT_TAG_MAP: Final[Mapping[str, Format]] = MappingProxyType(format_tag_map)	
 
 class Status(StrEnum):
 	"""
@@ -968,7 +968,7 @@ def explain_try_self_for_section(label: str, profile: str) -> str:
 		profile:
 			function
 		normative_sections:
-			Contract, Parameters, Returns, Raises
+			Contract, Parameters, Returns, Raises, See_also
 	Contract:
 		general:
 			|Must| build the canonical self-explanation command for a section label and profile.
@@ -980,6 +980,8 @@ def explain_try_self_for_section(label: str, profile: str) -> str:
 	Returns:
 		The canonical |cmd|`explain-section` command for the given label and profile.
 	Raises:
+	See_also:
+		explain_try_self_for_subsection
 	"""
 	return f"waterlint explain-section --label {label} --profile {profile}"
 
@@ -989,7 +991,7 @@ def explain_try_self_for_subsection(label: str, profile: str) -> str:
 		profile:
 			function
 		normative_sections:
-			Contract, Parameters, Returns, Raises
+			Contract, Parameters, Returns, Raises, See_also
 	Contract:
 		general:
 			|Must| build the canonical self-explanation command for a fully qualified subsection label and profile.
@@ -1001,6 +1003,8 @@ def explain_try_self_for_subsection(label: str, profile: str) -> str:
 	Returns:
 		The canonical |cmd|`explain-subsection` command for the given label and profile.
 	Raises:
+	See_also:
+		explain_try_self_for_section
 	"""
 	return f"waterlint explain-subsection --label {label} --profile {profile}"
 
@@ -2052,17 +2056,17 @@ DocstringSubtree: TypeAlias = Union[str, List["DocstringSubtree"]]
 # A docstring tree is always a list.
 DocstringTree: TypeAlias = List[DocstringSubtree]
 
-AnnotatableObject: TypeAlias = Union[type, ModuleType, FunctionType]
+AnnotatableObject: TypeAlias = Union[type, ModuleType, FunctionType, MethodType]
 
 RuleId: TypeAlias = str
 Origin: TypeAlias = Literal["parsing", "validation", "tool", "extension"]
-Details: TypeAlias = Dict[str,Any]
+Details: TypeAlias = Dict[str,str | list[str]]
 
 Scopes: TypeAlias = Set[Scope]
 
 Documentable: TypeAlias = ModuleType | type[object] | Callable[..., Any]
 
-def is_annotatable(obj: Any) -> TypeGuard[AnnotatableObject]:
+def is_obj_annotatable(obj: Any) -> TypeGuard[AnnotatableObject]:
 	"""
 	Preamble:
 		profile:
@@ -2073,15 +2077,20 @@ def is_annotatable(obj: Any) -> TypeGuard[AnnotatableObject]:
 			public
 	Contract:
 		general:
-			|Must| decide whether |var|`obj` is one of the annotatable runtime object kinds supported by the helper layer.
+			|Must| relay to |mod|`inspect.get_annotations`-compatible object kinds.
 	Parameters:
 		obj:
-			The object to test.
+			The object to inspect.
 	Returns:
 		|True| if |var|`obj` is annotatable, else |False|.
 	Raises:
+		BaseException:
+			|May| propagate exceptions from |mod|`inspect`.
+	Notes:
+		Purpose:
+			Uniform wrapper, allows us to add debugging output or hooks in case of trouble.
 	"""
-	return isinstance(obj, (type, ModuleType, FunctionType))
+	return isinstance(obj, (type, ModuleType, FunctionType, MethodType))
 
 def is_attr_annotated(obj : AnnotatableObject, attr: str) -> bool:
 	"""
@@ -2427,7 +2436,7 @@ def get_obj_name(obj: object) -> str:
 		profile:
 			function
 		normative_sections:
-			Contract, Parameters, Returns, Raises
+			Contract, Parameters, Returns, Raises, See_also
 		scope:
 			public
 	Contract:
@@ -2449,7 +2458,10 @@ def get_obj_name(obj: object) -> str:
 		Limitations:
 			This helper is best-effort and object-local.
 			It does not reconstruct containment context for nested instances.
-			For such cases it may return only the local class name instead of a fully qualified nested name.
+			Behavior for property-like descriptors such as |type|`property` and |type|`cached_property` is undefined.
+			If you need a more precise identifier, prefer |func|`get_obj_fully_qualified_name`.
+	See_also:
+		get_obj_fully_qualified_name
 	"""
 	if isinstance(obj, str):
 		return obj
@@ -2477,6 +2489,7 @@ def get_obj_fully_qualified_name(obj: object) -> str:
 			|Must| return callable/class/object names as |mod|`<module>` . |lit|`<qualname>` when both parts are available.
 			|Must| fall back to |func|`get_obj_name` if no module prefix can be determined.
 			|Must| return input strings unchanged.
+			|Must| resolve class instances to their class name, prefixed by the module name when available.
 	Parameters:
 		obj:
 			The object to inspect.
@@ -2484,22 +2497,35 @@ def get_obj_fully_qualified_name(obj: object) -> str:
 		Best-effort fully qualified object name.
 	Raises:
 	Notes:
+		Last review:
+			2026-06-23
 		Limitations:
-			This helper is best-effort and object-local.
-			It does not reconstruct containment context for nested instances.
-			For such cases it may return only the local class name prefixed by the module name.
+			Behavior for property-like descriptors such as |type|`property` and |type|`cached_property` is undefined.
 	"""
+	# "must return input strings unchanged"
 	if isinstance(obj, str):
 		return obj
+	# "must return module objects as their module name"
 	if is_obj_module(obj):
 		mod_name = getattr(obj, "__name__", None)
 		if isinstance(mod_name, str) and mod_name:
 			return mod_name
-	name = get_obj_name(obj)
-	mod_name = getattr(obj, "__module__", None)
-	if isinstance(mod_name, str) and mod_name:
-		return f"{mod_name}.{name}"
-	return name
+	if hasattr(obj, "__module__") and isinstance(getattr(obj, "__module__"), str):
+		mod_name = obj.__module__
+		# "must return callable/class/object names as <module>.<qualname> when both parts are available"
+		if hasattr(obj, "__qualname__"):
+			return f"{mod_name}.{obj.__qualname__}"
+		# We're trying to work around the limitation that some objects
+		# (like instances of callable classes) don't have a __qualname__ attribute.
+		# In that case, we can try to get the class name instead.
+		# "must resolve class instances to their class name"
+		elif hasattr(obj, "__class__"):
+			cls = getattr(obj, "__class__")
+			cls_name = getattr(cls, "__qualname__", None)
+			if isinstance(mod_name, str) and mod_name and isinstance(cls_name, str) and cls_name:
+				return f"{mod_name}.{cls_name}"
+	# "must fall back to get_obj_name if no module prefix can be determined"
+	return get_obj_name(obj)
 
 def get_obj_path(obj: object) -> str | None:
 	"""
@@ -2738,7 +2764,7 @@ def get_obj_annotations(obj: object) -> dict[str, Any]:
 	"""
 # 1. Classic annotations (variables, methods, etc.)
 	try:
-		results = dict(inspect.get_annotations(obj, eval_str=False)) if is_annotatable(obj) else {}
+		results = dict(inspect.get_annotations(obj, eval_str=False)) if is_obj_annotatable(obj) else {}
 	except (TypeError, ValueError):
 		results = {}
 # 2. Python 3.12+ Type Aliases (PEP 695)
@@ -2939,10 +2965,10 @@ class tracer:
 		Contract:
 			general:
 				|Must| define the following severity levels for filtering the tracer's output:
-				- |value|`DEBUG`: for debugging notes, not relevant for end-users.
-				- |value|`INFO`: for informational messages that are relevant for end-users but do not indicate any problems.
-				- |value|`WARNING`: for potential issues that should be looked at but do not necessarily indicate a failure.
-				- |value|`ERROR`: for definite problems that indicate a failure to meet a requirement or rule.
+				|value|`DEBUG`: for debugging notes, not relevant for end-users.
+				|value|`INFO`: for informational messages that are relevant for end-users but do not indicate any problems.
+				|value|`WARNING`: for potential issues that should be looked at but do not necessarily indicate a failure.
+				|value|`ERROR`: for definite problems that indicate a failure to meet a requirement or rule.
 				|Must| assign integer values to these levels in increasing order of severity, starting with 0 for DEBUG.
 			constructor:
 				|Must| inherit from |type|`IntEnum`.
@@ -2985,6 +3011,9 @@ class tracer:
 				for line in value:
 					if isinstance(line, str):
 						lines.append(f"\t\t{line}")
+			elif isinstance(value, str) and value:
+				lines.append(f"\t{label_color}{key}:{label_reset}")
+				lines.append(f"\t\t{value}")
 		hint = details.get("hint")
 		if isinstance(hint, str) and hint:
 			lines.append(f"\t{label_color}hint:{label_reset}")
@@ -3388,7 +3417,7 @@ class ResolveObjectError(RuntimeError):
 				last_error_txt = last_error_txt.split("Last import failure while trying ", 1)[1]
 				last_error_txt = last_error_txt.split("': ", 1)[-1]
 			found.append(f"\tlast_error: {last_error_txt}")
-		details: dict[str, Any] = {
+		details: Details = {
 			"found": found,
 			"expected": ["<check spelling, installation, or qualification>"],
 			"hint": [
@@ -3419,7 +3448,7 @@ def raise_has_no_docstring(tr : tracer, rule_id: RuleId, obj : object) -> NoRetu
 		obj:
 			The object whose missing docstring should be reported.
 	Returns:
-		No return value.
+		Never returns.
 	Raises:
 		ParseError:
 			Always raised.
@@ -3440,7 +3469,7 @@ def raise_has_no_docstring(tr : tracer, rule_id: RuleId, obj : object) -> NoRetu
 	tr.add_error(rule_id, "parsing", msg)
 	raise ParseError(msg)
 
-def raise_parsing_error(tr : tracer, rule_id: RuleId, msg : str, details: dict[str, Any] | None = None) -> NoReturn:
+def raise_parsing_error(tr : tracer, rule_id: RuleId, msg : str, details: Details | None = None) -> NoReturn:
 	"""
 	Preamble:
 		profile:
@@ -3462,7 +3491,7 @@ def raise_parsing_error(tr : tracer, rule_id: RuleId, msg : str, details: dict[s
 		details:
 			Additional diagnostic details.
 	Returns:
-		No return value.
+		Never returns.
 	Raises:
 		ParseError:
 			Always raised.
@@ -3495,11 +3524,12 @@ def raise_parsing_error_expected_but_got(tr : tracer, rule_id: RuleId, expected 
 		details:
 			Optional diagnostic details to attach to the tracer error.
 	Returns:
-		No return value.
+		Never returns.
 	Raises:
 		ParseError:
 			Always raised.
 	"""
+	# Don't add quoted to {expected} because it may contain non-literals in practice.
 	out = f"expected {expected}, but got '{got}'"
 	tr.add_error(rule_id, "parsing", out, details)
 	raise ParseError(out)
@@ -3526,7 +3556,7 @@ def raise_parsing_error_invalid_label(tr : tracer, rule_id: RuleId,found : str,a
 		allowed:
 			The allowed label values.
 	Returns:
-		No return value.
+		Never returns.
 	Raises:
 		ParseError:
 			Always raised.
@@ -3538,7 +3568,7 @@ def raise_parsing_error_invalid_label(tr : tracer, rule_id: RuleId,found : str,a
 	tr.add_error(rule_id, "parsing", out)
 	raise ParseError(out)
 
-def raise_validation_error(tr : tracer,obj: object, rule_id: RuleId, msg : str, details: dict[str, Any] | None = None) -> NoReturn:
+def raise_validation_error(tr : tracer,obj: object, rule_id: RuleId, msg : str, details: Details | None = None) -> NoReturn:
 	"""
 	Preamble:
 		profile:
@@ -3562,7 +3592,7 @@ def raise_validation_error(tr : tracer,obj: object, rule_id: RuleId, msg : str, 
 		details:
 			Additional diagnostic details.
 	Returns:
-		No return value.
+		Never returns.
 	Raises:
 		ValidationError:
 			Always raised.
@@ -3595,7 +3625,7 @@ def raise_validation_error_expected_but_got(tr : tracer,obj: object, rule_id: Ru
 		got:
 			The actual textual value.
 	Returns:
-		No return value.
+		Never returns.
 	Raises:
 		ValidationError:
 			Always raised.
@@ -3625,14 +3655,18 @@ def warn_parsing(tr : tracer, rule_id: RuleId, msg : str) -> None:
 		msg:
 			The warning message.
 	Returns:
-		No return value.
+		|None|
 	Raises:
+	Notes:
+		Implementation:
+			This is a thin wrapper around |func|`tracer.add_warning` with origin set to |value|`"parsing"` and
+			that checks if the rule is ignored before adding the warning.
 	"""
 	if tr.should_ignore_rule(rule_id):
 		return
 	tr.add_warning(rule_id,"parsing",msg)
 
-def warn_validation(tr: tracer, obj: object, rule_id: RuleId, msg: str, details: dict[str, Any] | None = None) -> None:
+def warn_validation(tr: tracer, rule_id: RuleId, msg: str, details: Details | None = None) -> None:
 	"""
 	Preamble:
 		profile:
@@ -3647,8 +3681,6 @@ def warn_validation(tr: tracer, obj: object, rule_id: RuleId, msg: str, details:
 	Parameters:
 		tr:
 			The tracer that should receive the warning.
-		obj:
-			The object being validated.
 		rule_id:
 			The rule identifier to report.
 		msg:
@@ -3656,8 +3688,12 @@ def warn_validation(tr: tracer, obj: object, rule_id: RuleId, msg: str, details:
 		details:
 			Optional structured diagnostics payload for the warning.
 	Returns:
-		No return value.
+		|None|
 	Raises:
+	Notes:
+		Implementation:
+			This is a thin wrapper around |func|`tracer.add_warning` with origin set to |value|`"validation"` and
+			that checks if the rule is ignored before adding the warning.
 	"""
 	if tr.should_ignore_rule(rule_id):
 		return

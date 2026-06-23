@@ -637,21 +637,25 @@ def resolve_markup(text : str, ctx: context) -> str:
 # Fallback: Intra-page link.
 		return "#" + target_id
 
+	def _parse_ref_body(body: str) -> tuple[str, str]:
+		"""Return the visible label and target from a Waterloo ref body."""
+		m_ext = mod_docitem.RE_WTRL_ANGLE_HTTPS_REF_COMPILED.match(body)
+		if m_ext:
+			return m_ext.group(1).strip(), m_ext.group(2).strip()
+		m_wtrl = mod_docitem.RE_WTRL_ANGLE_WTRL_REF_COMPILED.match(body)
+		if m_wtrl:
+			return m_wtrl.group(1).strip(), m_wtrl.group(2).strip()
+		return body, ""
+
 	def _repl(m: re.Match[str]) -> str:
 		role = m.group(1)
 		body = m.group(2)
 		if role == "ref":
-# Check for http- and https-links.
-			m_ext = mod_docitem.RE_WTRL_ANGLE_HTTPS_REF_COMPILED.match(body)
-			if m_ext:
-				label = m_ext.group(1).strip()
-				url = m_ext.group(2).strip()
-				return f"`{label} <{url}>`_"
-# Check for wtrl://qualified.name links.
-			m_wtrl = mod_docitem.RE_WTRL_ANGLE_WTRL_REF_COMPILED.match(body)
-			if m_wtrl:
-				label = m_wtrl.group(1).strip()
-				qname = m_wtrl.group(2).strip()
+			label, target = _parse_ref_body(body)
+			if target.startswith(("http://", "https://")):
+				return f"`{label} <{target}>`_"
+			if target.startswith("wtrl://"):
+				qname = target[len("wtrl://"):]
 # Resolve qualified name and build URI in Sphinx/reST style.
 				uri = _resolve_wtrl_ref_uri(qname)
 				if uri:

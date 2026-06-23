@@ -248,7 +248,7 @@ Method_overview:
 				if label == "Preamble":
 					found_preamble = True
 				elif not found_preamble:
-					details = {
+					details: Details = {
 						"found": render_suggestion("Preamble", "No Preamble"),
 						"expected": ["Preamble:","\tprofile:","\t\t...","\tnormative_sections:","\t\t...","\t..."],
 						"hint": explain_try_self_for_section("Preamble", "PROFILE"),
@@ -516,6 +516,7 @@ Raises:
 
 def make_docitem_tree_from_docstring_tree(tr : tracer, tree : DocstringTree) -> docitem_docstring_base:
 # Extract profile
+	details: Details
 	if tree == []:
 		raise_parsing_error(tr,"DOC-007","Empty docstring.")
 	try:

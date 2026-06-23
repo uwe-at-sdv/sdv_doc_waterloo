@@ -1521,9 +1521,10 @@ function appendInlineTokens(parent, txt) {
         parent.appendChild(document.createTextNode(m[3]));
       } else if (role === "ref") {
         const rb = parseRefBody(body);
+        const refText = rb.label || body;
         const elemRefLink = document.createElement("a");
         elemRefLink.className = cls;
-        elemRefLink.textContent = rb.label || body;
+        elemRefLink.textContent = refText;
         if (rb.target.startsWith("http://") || rb.target.startsWith("https://")) {
           elemRefLink.href = rb.target;
           elemRefLink.target = "_blank";
@@ -1536,7 +1537,7 @@ function appendInlineTokens(parent, txt) {
         if (!elemRefLink.getAttribute("href")) {
           const elemFallback = document.createElement("span");
           elemFallback.className = cls;
-          elemFallback.textContent = m[3];
+          elemFallback.textContent = refText;
           parent.appendChild(elemFallback);
         } else {
           parent.appendChild(elemRefLink);

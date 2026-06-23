@@ -426,6 +426,7 @@ class docitem_list_of_symbols_base(docitem_list_base):
 		refs_split : List[str] = []
 		seen = set()
 		logical_refs: List[str] = []
+		details: Details
 		pending = ""
 		for idx, ref in enumerate(refs):
 # Only strings are allowed (not list of something)

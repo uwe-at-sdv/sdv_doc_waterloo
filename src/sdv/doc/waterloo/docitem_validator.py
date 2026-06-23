@@ -937,7 +937,7 @@ Notes:
 		node_methods = top.item("Public_methods")
 		for ref_name in node_methods.items():
 			try:
-				tr.add_info(f"resolving {ref_name} in {get_obj_name(obj)}.")
+				tr.add_info(f"resolving {ref_name} in {get_obj_fully_qualified_name(obj)}.")
 				ref_obj, _ = resolve_object(ref_name, obj)
 				tr.add_info(f"done.")
 			except Exception as e:
@@ -1158,16 +1158,16 @@ Notes:
 # Simple test please! Do not dig for bool in complex annonation types.
 				if ret_ann == bool:
 					if "|True|" not in joined and "|False|" not in joined:
-						warn_validation(tr, obj, "RET-004", "Returns content should indicate a truthy/falsy outcome using the tokens |True| or |False|..")
+						warn_validation(tr, "RET-004", "Returns content should indicate a truthy/falsy outcome using the tokens |True| or |False|..")
 #----- Use tokens for self and None if applicable ------------#
 # Rule RET-008 says: test RET-006 only if annotated and seems to contain non-tokens.
 				if get_obj_name(ret_ann) in ("None", "NoneType"):
 					if "None" in joined and "|None|" not in joined:
-						warn_validation(tr, obj, "RET-006", "Return value 'None' should be written in tokenized form as |None|.")
+						warn_validation(tr, "RET-006", "Return value 'None' should be written in tokenized form as |None|.")
 # Rule RET-009 says: test RET-007 only if annotated and seems to contain non-tokens.
 				if get_obj_name(ret_ann) in ("Self",):
 					if ("self" in joined or "Self" in joined) and "|Self|" not in joined:
-						warn_validation(tr, obj, "RET-007", "Return value 'self' should be written in tokenized form as |Self|.")
+						warn_validation(tr, "RET-007", "Return value 'self' should be written in tokenized form as |Self|.")
 
 #===== Raises must exist ======================================#
 		with traced_section(tr, "Raises"):
@@ -1394,11 +1394,11 @@ Notes:
 						if base_ann is inspect._empty or obj_ann is inspect._empty:
 							continue
 						if base_hints.get(name) != obj_hints.get(name):
-							warn_validation(tr,obj,"CON-046",f"Parameter '{name}' type differs between base method and override.")
+							warn_validation(tr,"CON-046",f"Parameter '{name}' type differs between base method and override.")
 # COmpare return types
 					if sig_base.return_annotation is not inspect._empty and sig_obj.return_annotation is not inspect._empty:
 						if base_hints.get("return") != obj_hints.get("return"):
-							warn_validation(tr,obj,"CON-046","Return type differs between base method and override.")
+							warn_validation(tr,"CON-046","Return type differs between base method and override.")
 #===== Scope Monotonicity Rules ===============================#
 	top_scopes = top.scopes()
 #----- Contract.base ------------------------------------------#
@@ -1545,8 +1545,8 @@ See_also:
 		except Exception as e:
 			raise
 	session.remember(obj, top)
-# Log some debug info
-	tr.add_info(f"validating '{get_obj_name(obj)}'")
+	# Log some debug info
+	tr.add_info(f"validating '{get_obj_fully_qualified_name(obj)}'")
 	profile = get_profile(top)
 	try:
 		top_scopes = top.scopes()
@@ -1554,7 +1554,7 @@ See_also:
 		top_scopes = set()
 	top_scope_explicit = top.has_item("Preamble") and top.item("Preamble").has_item("scope")
   
-	with traced_section(tr, f"{get_obj_name(obj)}"):
+	with traced_section(tr, f"{get_obj_fully_qualified_name(obj)}"):
 #===== Preamble must exist ====================================#
 # Preamble must exist. We do not allow purely informative docstrings.
 		if "Preamble" not in top.items():
@@ -1681,7 +1681,7 @@ See_also:
 					if profile == "module":
 						details = render_inherited_definition_details(current_object_inherited_terms, profile, expected_text="<remove subsection '_inherit' from a module docstring>", use_section_hint=True)
 						raise_validation_error(tr,obj,"DEF-011","Subsection '_inherited' is not allowed in a module docstring.",details)
-					warn_validation(tr,obj,"VLII-001","Use of subsection '_inherited' violates the LoII principle.")
+					warn_validation(tr,"VLII-001","Use of subsection '_inherited' violates the LoII principle.")
 # DEF-014/015/018: inherited definitions must come from the direct module.
 					direct_module = get_obj_direct_module(obj)
 					if direct_module is None:
@@ -1693,12 +1693,12 @@ See_also:
 							mod_doc_top = validate_docstring(tr_tmp, direct_module, session=session)
 						except Exception as e:
 							details = render_inherited_definition_details(current_object_inherited_terms, profile, expected_text="<implement a Waterloo docstring in the direct module>")
-							raise_validation_error(tr,obj,"DEF-014",f"Direct module '{get_obj_name(direct_module)}' has no valid docstring: {e}",details)
+							raise_validation_error(tr,obj,"DEF-014",f"Direct module '{get_obj_fully_qualified_name(direct_module)}' has no valid docstring: {e}",details)
 # Chill mypy.
 						assert isinstance(mod_doc_top, docitem_docstring_base)
 						if "Definitions" not in mod_doc_top.items():
 							details = render_inherited_definition_details(current_object_inherited_terms, profile, expected_text="<add a Definitions section to the direct module>")
-							raise_validation_error(tr,obj,"DEF-015",f"Direct module '{get_obj_name(direct_module)}' has no section 'Definitions'.",details)
+							raise_validation_error(tr,obj,"DEF-015",f"Direct module '{get_obj_fully_qualified_name(direct_module)}' has no section 'Definitions'.",details)
 						mod_definitions = cast(docitem_definitions, mod_doc_top.item("Definitions"))
 # Chill mypy.
 						assert isinstance(mod_definitions, docitem_definitions)
@@ -1718,7 +1718,7 @@ See_also:
 				for name in current_object_terms_and_variations:
 					node_defitem = node_definitions.item(name)
 					if node_defitem.empty():
-						warn_validation(tr,obj,"DEF-009","Definition item content should not be empty.")
+						warn_validation(tr,"DEF-009","Definition item content should not be empty.")
 			else:
 				node_definitions = None
 # Regular and inherited terms and variations.
@@ -1747,7 +1747,7 @@ See_also:
 				for name in node_terminology.items():
 					node_term = node_terminology.item(name)
 					if node_term.empty():
-						warn_validation(tr,obj,"TERM-008","Term content should not be empty.")
+						warn_validation(tr,"TERM-008","Term content should not be empty.")
 					if node_term.has_norm_keywords():
 						details = render_normativity_keyword_details("Terminology", name, node_term.items(), "don't use normativity keyword, describe terms informatively", profile)
 						raise_validation_error(tr, obj, "TERM-003",f"Term content has normativity keywords; content is informational only.", details)
@@ -1769,7 +1769,7 @@ See_also:
 							details = render_see_also_reference_details(item_see_also, "<refer to an existing public object>", profile)
 							raise_validation_error(tr,obj,"SEE-004", f"See_also reference '{item_see_also}' cannot be resolved: {e} ('See_also' is normative).", details)
 						else:
-							warn_validation(tr,obj,"SEE-003", f"See_also reference '{item_see_also}' cannot be resolved: {e} (informative section).")
+							warn_validation(tr,"SEE-003", f"See_also reference '{item_see_also}' cannot be resolved: {e} (informative section).")
 							continue
 					if target_obj is obj:
 						details = render_see_also_reference_details(item_see_also, "<do not refer to the documented object itself>", profile)
@@ -1787,7 +1787,7 @@ See_also:
 						if is_documentable:
 # No docstring at all: warn unless normative handling above escalated already.
 							details = render_see_also_reference_details(item_see_also, "<refer to a documented object>", profile)
-							warn_validation(tr,obj,"SEE-006", f"See_also reference '{item_see_also}' has no docstring.", details)
+							warn_validation(tr,"SEE-006", f"See_also reference '{item_see_also}' has no docstring.", details)
 					else:
 # Note that we do not validate built-ins! SEE-010
 						if (is_obj_module(target_obj) or is_obj_class(target_obj) or is_obj_function(target_obj)):
@@ -1807,7 +1807,7 @@ See_also:
 									raise_validation_error(tr,obj,"SEE-008", f"See_also reference '{item_see_also}' has no valid docstring ('See_also' is normative).", details)
 								else:
 									details = render_see_also_reference_details(item_see_also, "<refer to a documented object with a valid Waterloo docstring>", profile)
-									warn_validation(tr,obj,"SEE-007", f"See_also reference '{item_see_also}' has no valid docstring (informative section).", details)
+									warn_validation(tr,"SEE-007", f"See_also reference '{item_see_also}' has no valid docstring (informative section).", details)
 								continue
 # Scope monotonicity for See_also references (SCP-006 / SCP-007)
 							if "See_also" in node_normative_sections.items():
@@ -1817,7 +1817,7 @@ See_also:
 							else:
 								if not top.can_see(target_scopes):
 									details = render_scope_relation_details(profile, top_scopes, top_scope_explicit, "referenced object", target_scopes, target_scope_explicit, "See_also", item_see_also, "<reconsider the scopes of the referenced object and the referencing object>", profile)
-									warn_validation(tr,obj,"SCP-007", f"Reconsider the scopes of the referenced object and the referencing object '{item_see_also}'.", details)
+									warn_validation(tr,"SCP-007", f"Reconsider the scopes of the referenced object and the referencing object '{item_see_also}'.", details)
 #===== Notes ==================================================#
 		with traced_section(tr, "Notes"):
 			if "Notes" in top.items():
@@ -1830,7 +1830,7 @@ See_also:
 					with traced_section(tr, name):
 						node_note = node_notes.item(name)
 						if node_note.empty():
-							warn_validation(tr,obj,"NOTE-009","Note content should not be empty.")
+							warn_validation(tr,"NOTE-009","Note content should not be empty.")
 						if node_note.has_norm_keywords():
 							details = render_normativity_keyword_details("Notes", name, node_note.items(), "don't use normativity keyword; consider moving relevant content to the Contract section", profile)
 							raise_validation_error(tr, obj, "NOTE-003",f"Note content must not contain normativity keywords; content is informational only.", details)
@@ -1942,13 +1942,13 @@ Notes:
 						valid_classes.add(name_of_member)
 					except Exception:
 # Add message from higher level for clarity (should-level rule).
-						warn_validation(tr,obj,"CPCL-007",f"class '{name_of_member}' listed in Public_classes but has no valid docstring.")
+						warn_validation(tr,"CPCL-007",f"class '{name_of_member}' listed in Public_classes but has no valid docstring.")
 # Validate entries listed in Public_classes
 		with traced_section(tr, "Public_classes"):
 # Rule: every class with a valid docstring should be listed
 			missing_in_public = classes_with_valid_docstring - public_classes
 			for name in missing_in_public:
-				warn_validation(tr,obj,"CPCL-006",f"Class '{name}' has a docstring but is not listed in Public_classes: {sorted(missing_in_public)}")
+				warn_validation(tr,"CPCL-006",f"Class '{name}' has a docstring but is not listed in Public_classes: {sorted(missing_in_public)}")
 			for name in public_classes:
 				if not hasattr(obj, name):
 					details = render_name_object_consistency_details("Public_classes", public_classes, "class")
@@ -1959,7 +1959,7 @@ Notes:
 					raise_validation_error(tr,obj,"CPCL-005",f"Member '{name}' listed in Public_classes is not a class.", details)
 				doc_c2 = get_obj_docstring(cls_obj)
 				if not doc_c2.strip():
-					warn_validation(tr,obj,"CPCL-007",f"Class '{name}' is listed in Public_classes but has no valid docstring.")
+					warn_validation(tr,"CPCL-007",f"Class '{name}' is listed in Public_classes but has no valid docstring.")
 # Important: Coverage means to descend recursively.
 				validate_class_coverage(tr,cls_obj)
 
@@ -2042,14 +2042,14 @@ Notes:
 						valid_methods.add(name_of_member)
 					except Exception:
 # Add message from higher level for clarity (should-level rule).
-						warn_validation(tr,obj,"CPMT-007",f"class {get_obj_name(obj)}: method '{name_of_member}' listed in Public_methods but has no valid docstring.")
+						warn_validation(tr,"CPMT-007",f"class {get_obj_name(obj)}: method '{name_of_member}' listed in Public_methods but has no valid docstring.")
 
 # Rule: if the class exposes methods with valid docstrings, it should declare Public_methods
 		with traced_section(tr, "Public_methods"):
 # Rule: every method with a valid docstring should be listed
 			missing_in_public = methods_with_valid_docstring - public_methods
 			for name_of_member in missing_in_public:
-				warn_validation(tr,obj,"CPMT-006",f"Class {obj.__name__}: method '{name_of_member}' has a docstring but is not listed in Public_methods.")
+				warn_validation(tr,"CPMT-006",f"Class {obj.__name__}: method '{name_of_member}' has a docstring but is not listed in Public_methods.")
 # Rule: every method listed should have a valid docstring (warn)
 			for name_of_member in public_methods:
 				if name_of_member in valid_methods:
@@ -2065,7 +2065,7 @@ Notes:
 					raise_validation_error(tr,obj,"CPMT-005",f"Member '{name_of_member}' listed in Public_methods is not a method.", details)
 				docm2 = get_obj_docstring(func_obj2)
 				if not docm2.strip():
-					warn_validation(tr,obj,"CPMT-007",f"Class {get_obj_name(obj)}: method '{name_of_member}' is listed in Public_methods but has no valid docstring.")
+					warn_validation(tr,"CPMT-007",f"Class {get_obj_name(obj)}: method '{name_of_member}' is listed in Public_methods but has no valid docstring.")
 					continue
 				validate_docstring(tr,func_obj2, None, session=session)
 
@@ -2259,13 +2259,13 @@ Notes:
 						valid_classes.add(name_of_member)
 					except Exception:
 # Add message from higher level for clarity (should-level rule).
-						warn_validation(tr,obj,"MPCL-007",f"class '{name_of_member}' listed in Public_classes but has no valid docstring.")
+						warn_validation(tr,"MPCL-007",f"class '{name_of_member}' listed in Public_classes but has no valid docstring.")
 
 # Rule: classes with docstrings should be listed in Public_classes
 		with traced_section(tr, "Public_classes"):
 			missing_in_public = classes_with_valid_docstring - public_classes
 			for name_of_member in missing_in_public:
-				warn_validation(tr,obj,"MPCL-006",f"Class '{name_of_member}' has a docstring but is not listed in Public_classes.")
+				warn_validation(tr,"MPCL-006",f"Class '{name_of_member}' has a docstring but is not listed in Public_classes.")
 # Validate entries listed in Public_classes
 			for name_of_member in public_classes:
 				if not hasattr(obj, name_of_member):
@@ -2277,7 +2277,7 @@ Notes:
 					raise_validation_error(tr,obj,"MPCL-005",f"Member '{name_of_member}' listed in Public_classes is not a class.", details)
 				doc_c2 = get_obj_docstring(cls_obj)
 				if not doc_c2.strip():
-					warn_validation(tr,obj,"MPCL-007",f"Class '{name_of_member}' listed in Public_classes but has no valid docstring.")
+					warn_validation(tr,"MPCL-007",f"Class '{name_of_member}' listed in Public_classes but has no valid docstring.")
 					continue
 # Important: Coverage means to descend recursively.
 				validate_class_coverage(tr,cls_obj)
@@ -2359,13 +2359,13 @@ Notes:
 						valid_functions.add(name_of_member)
 					except Exception:
 # Add message from higher level for clarity (should-level rule).
-						warn_validation(tr,obj,"MPFN-007",f"Module {obj.__name__}: function '{name_of_member}' is listed in Public_functions but has no valid docstring.")
+						warn_validation(tr,"MPFN-007",f"Module {obj.__name__}: function '{name_of_member}' is listed in Public_functions but has no valid docstring.")
 
 		with traced_section(tr, "Public_functions"):
 # Rule: every function with a valid docstring should be listed
 			missing_in_public = functions_with_valid_docstring - public_functions
 			for name_of_member in missing_in_public:
-				warn_validation(tr,obj,"MPFN-006",f"Module {obj.__name__}: function '{name_of_member}' has a docstring but is not listed in Public_functions.")
+				warn_validation(tr,"MPFN-006",f"Module {obj.__name__}: function '{name_of_member}' has a docstring but is not listed in Public_functions.")
 # Rule: every function listed should have a valid docstring (warn)
 			for name_of_member in public_functions:
 				if name_of_member in valid_functions:
@@ -2379,7 +2379,7 @@ Notes:
 					raise_validation_error(tr,obj,"MPFN-005",f"Member '{name_of_member}' listed in Public_functions is not a function.", details)
 				doc_f2 = get_obj_docstring(func_obj)
 				if not doc_f2.strip():
-					warn_validation(tr,obj,"MPFN-007",f"Module {obj.__name__}: function '{name_of_member}' is listed in Public_functions but has no valid docstring.")
+					warn_validation(tr,"MPFN-007",f"Module {obj.__name__}: function '{name_of_member}' is listed in Public_functions but has no valid docstring.")
 					continue
 				validate_docstring(tr,func_obj, None, session=session)
 

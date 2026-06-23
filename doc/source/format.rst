@@ -605,6 +605,11 @@ The following forms are supported:
 	  Partial qualification is permitted if the reference can be resolved
 	  unambiguously in the current resolution context.
 
+In HTML rendering, the visible label is preserved even when the target
+cannot be turned into a link. The target part is still parsed so that
+it can be resolved when possible, but the displayed text remains the
+label.
+
 Current implementation limitation:
 
 	An object defined in a different document is reachable via

@@ -1,12 +1,12 @@
 {
     "$schema": "https://sci-d-vis.com/schema/wtrl-json-0.1.0.schema.json",
-    "$id": "urn:waterlint:wtrl-json:0.17.0:core:rfc-2119:fa4563af0f24c5a76d7878c1f5935c748c70728c7ab8cdc240d185a739fdc511",
+    "$id": "urn:waterlint:wtrl-json:0.17.0:core:rfc-2119:9c518d97c3198af5a2726c9ccce5d55ce100b0a6f89ccf1683b736efad797210",
     "__WTRL_VERSION__": {
         "waterloo": "0.9.0",
         "schema": "0.1.0"
     },
     "__WTRL_META__": {
-        "generated_at": "2026-06-22T17:30:43+02:00",
+        "generated_at": "2026-06-23T11:44:31+02:00",
         "generator": "waterlint",
         "scope": "core",
         "flavour": "rfc-2119"
@@ -160,7 +160,7 @@
         "sdv.doc.waterloo.docitem_helper.render_constant_reference_details": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.render_constant_reference_details",
         "sdv.doc.waterloo.docitem_helper.render_named_value_reference_details": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.render_named_value_reference_details",
         "sdv.doc.waterloo.docitem_helper.render_overview_missing_member_details": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.render_overview_missing_member_details",
-        "sdv.doc.waterloo.docitem_helper.is_annotatable": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.is_annotatable",
+        "sdv.doc.waterloo.docitem_helper.is_obj_annotatable": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.is_obj_annotatable",
         "sdv.doc.waterloo.docitem_helper.is_attr_annotated": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.is_attr_annotated",
         "sdv.doc.waterloo.docitem_helper.is_attr_final": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.is_attr_final",
         "sdv.doc.waterloo.docitem_helper.is_list_of_str": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.is_list_of_str",
@@ -1211,7 +1211,7 @@
                     "render_overview_missing_member_details",
                     "render_see_also_reference_details",
                     "get_source_docstring",
-                    "is_annotatable",
+                    "is_obj_annotatable",
                     "is_attr_annotated",
                     "is_attr_final",
                     "is_list_of_str",
@@ -1831,7 +1831,8 @@
                         "Contract",
                         "Parameters",
                         "Returns",
-                        "Raises"
+                        "Raises",
+                        "See_also"
                     ]
                 },
                 "Contract": {
@@ -1848,7 +1849,10 @@
                 "Returns": [
                     "The canonical |cmd|`explain-section` command for the given label and profile."
                 ],
-                "Raises": {}
+                "Raises": {},
+                "See_also": [
+                    "explain_try_self_for_subsection"
+                ]
             }
         },
         "sdv.doc.waterloo.docitem_helper.explain_try_self_for_subsection": {
@@ -1877,7 +1881,8 @@
                         "Contract",
                         "Parameters",
                         "Returns",
-                        "Raises"
+                        "Raises",
+                        "See_also"
                     ]
                 },
                 "Contract": {
@@ -1894,7 +1899,10 @@
                 "Returns": [
                     "The canonical |cmd|`explain-subsection` command for the given label and profile."
                 ],
-                "Raises": {}
+                "Raises": {},
+                "See_also": [
+                    "explain_try_self_for_section"
+                ]
             }
         },
         "sdv.doc.waterloo.docitem_helper.render_source_snippet": {
@@ -3675,9 +3683,9 @@
                 }
             }
         },
-        "sdv.doc.waterloo.docitem_helper.is_annotatable": {
+        "sdv.doc.waterloo.docitem_helper.is_obj_annotatable": {
             "signature": {
-                "text": "is_annotatable(obj: 'Any') -> 'TypeGuard[AnnotatableObject]'",
+                "text": "is_obj_annotatable(obj: 'Any') -> 'TypeGuard[AnnotatableObject]'",
                 "parameters": [
                     {
                         "name": "obj",
@@ -3703,18 +3711,27 @@
                 },
                 "Contract": {
                     "general": [
-                        "MUST decide whether |var|`obj` is one of the annotatable runtime object kinds supported by the helper layer."
+                        "MUST relay to |mod|`inspect.get_annotations`-compatible object kinds."
                     ]
                 },
                 "Parameters": {
                     "obj": [
-                        "The object to test."
+                        "The object to inspect."
                     ]
                 },
                 "Returns": [
                     "|True| if |var|`obj` is annotatable, else |False|."
                 ],
-                "Raises": {}
+                "Raises": {
+                    "BaseException": [
+                        "MAY propagate exceptions from |mod|`inspect`."
+                    ]
+                },
+                "Notes": {
+                    "Purpose": [
+                        "Uniform wrapper, allows us to add debugging output or hooks in case of trouble."
+                    ]
+                }
             }
         },
         "sdv.doc.waterloo.docitem_helper.is_attr_annotated": {
@@ -4167,7 +4184,20 @@
                 "Returns": [
                     "|True| if |var|`obj` is a module, class or function, else |False|."
                 ],
-                "Raises": {}
+                "Raises": {},
+                "Notes": {
+                    "Last review": [
+                        "2026-06-22"
+                    ],
+                    "Documentable vs. non-documentable objects": [
+                        "Only modules, classes, and functions are considered documentable",
+                        "for Waterloo docstring generation and validation.",
+                        "Accordingly, sections like |label|`Public_types`,",
+                        "|label|`Public_constants`, and |label|`Public_variables`",
+                        "in module and class docstrings document named values",
+                        "that are not documentable objects themselves."
+                    ]
+                }
             }
         },
         "sdv.doc.waterloo.docitem_helper.get_obj_direct_module": {
@@ -4252,7 +4282,8 @@
                         "Contract",
                         "Parameters",
                         "Returns",
-                        "Raises"
+                        "Raises",
+                        "See_also"
                     ],
                     "scope": [
                         "public"
@@ -4283,9 +4314,13 @@
                     "Limitations": [
                         "This helper is best-effort and object-local.",
                         "It does not reconstruct containment context for nested instances.",
-                        "For such cases it may return only the local class name instead of a fully qualified nested name."
+                        "Behavior for property-like descriptors such as |type|`property` and |type|`cached_property` is undefined.",
+                        "If you need a more precise identifier, prefer |func|`get_obj_fully_qualified_name`."
                     ]
-                }
+                },
+                "See_also": [
+                    "get_obj_fully_qualified_name"
+                ]
             }
         },
         "sdv.doc.waterloo.docitem_helper.get_obj_fully_qualified_name": {
@@ -4320,7 +4355,8 @@
                         "MUST return module objects as their module name.",
                         "MUST return callable/class/object names as |mod|`<module>` . |lit|`<qualname>` when both parts are available.",
                         "MUST fall back to |func|`get_obj_name` if no module prefix can be determined.",
-                        "MUST return input strings unchanged."
+                        "MUST return input strings unchanged.",
+                        "MUST resolve class instances to their class name, prefixed by the module name when available."
                     ]
                 },
                 "Parameters": {
@@ -4333,10 +4369,11 @@
                 ],
                 "Raises": {},
                 "Notes": {
+                    "Last review": [
+                        "2026-06-23"
+                    ],
                     "Limitations": [
-                        "This helper is best-effort and object-local.",
-                        "It does not reconstruct containment context for nested instances.",
-                        "For such cases it may return only the local class name prefixed by the module name."
+                        "Behavior for property-like descriptors such as |type|`property` and |type|`cached_property` is undefined."
                     ]
                 }
             }
@@ -4843,10 +4880,10 @@
                 "Contract": {
                     "general": [
                         "MUST define the following severity levels for filtering the tracer's output:",
-                        "- |value|`DEBUG`: for debugging notes, not relevant for end-users.",
-                        "- |value|`INFO`: for informational messages that are relevant for end-users but do not indicate any problems.",
-                        "- |value|`WARNING`: for potential issues that should be looked at but do not necessarily indicate a failure.",
-                        "- |value|`ERROR`: for definite problems that indicate a failure to meet a requirement or rule.",
+                        "|value|`DEBUG`: for debugging notes, not relevant for end-users.",
+                        "|value|`INFO`: for informational messages that are relevant for end-users but do not indicate any problems.",
+                        "|value|`WARNING`: for potential issues that should be looked at but do not necessarily indicate a failure.",
+                        "|value|`ERROR`: for definite problems that indicate a failure to meet a requirement or rule.",
                         "MUST assign integer values to these levels in increasing order of severity, starting with 0 for DEBUG."
                     ],
                     "constructor": [
@@ -5232,7 +5269,7 @@
                     ]
                 },
                 "Returns": [
-                    "No return value."
+                    "Never returns."
                 ],
                 "Raises": {
                     "ParseError": [
@@ -5243,7 +5280,7 @@
         },
         "sdv.doc.waterloo.docitem_helper.raise_parsing_error": {
             "signature": {
-                "text": "raise_parsing_error(tr: 'tracer', rule_id: 'RuleId', msg: 'str', details: 'dict[str, Any] | None' = None) -> 'NoReturn'",
+                "text": "raise_parsing_error(tr: 'tracer', rule_id: 'RuleId', msg: 'str', details: 'Details | None' = None) -> 'NoReturn'",
                 "parameters": [
                     {
                         "name": "tr",
@@ -5266,7 +5303,7 @@
                     {
                         "name": "details",
                         "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "dict[str, Any] | None",
+                        "annotation": "Details | None",
                         "default": "None"
                     }
                 ],
@@ -5305,7 +5342,7 @@
                     ]
                 },
                 "Returns": [
-                    "No return value."
+                    "Never returns."
                 ],
                 "Raises": {
                     "ParseError": [
@@ -5387,7 +5424,7 @@
                     ]
                 },
                 "Returns": [
-                    "No return value."
+                    "Never returns."
                 ],
                 "Raises": {
                     "ParseError": [
@@ -5460,7 +5497,7 @@
                     ]
                 },
                 "Returns": [
-                    "No return value."
+                    "Never returns."
                 ],
                 "Raises": {
                     "ParseError": [
@@ -5471,7 +5508,7 @@
         },
         "sdv.doc.waterloo.docitem_helper.raise_validation_error": {
             "signature": {
-                "text": "raise_validation_error(tr: 'tracer', obj: 'object', rule_id: 'RuleId', msg: 'str', details: 'dict[str, Any] | None' = None) -> 'NoReturn'",
+                "text": "raise_validation_error(tr: 'tracer', obj: 'object', rule_id: 'RuleId', msg: 'str', details: 'Details | None' = None) -> 'NoReturn'",
                 "parameters": [
                     {
                         "name": "tr",
@@ -5500,7 +5537,7 @@
                     {
                         "name": "details",
                         "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "dict[str, Any] | None",
+                        "annotation": "Details | None",
                         "default": "None"
                     }
                 ],
@@ -5542,7 +5579,7 @@
                     ]
                 },
                 "Returns": [
-                    "No return value."
+                    "Never returns."
                 ],
                 "Raises": {
                     "ValidationError": [
@@ -5624,7 +5661,7 @@
                     ]
                 },
                 "Returns": [
-                    "No return value."
+                    "Never returns."
                 ],
                 "Raises": {
                     "ValidationError": [
@@ -5688,25 +5725,25 @@
                     ]
                 },
                 "Returns": [
-                    "No return value."
+                    "|None|"
                 ],
-                "Raises": {}
+                "Raises": {},
+                "Notes": {
+                    "Implementation": [
+                        "This is a thin wrapper around |func|`tracer.add_warning` with origin set to |value|`\"parsing\"` and",
+                        "that checks if the rule is ignored before adding the warning."
+                    ]
+                }
             }
         },
         "sdv.doc.waterloo.docitem_helper.warn_validation": {
             "signature": {
-                "text": "warn_validation(tr: 'tracer', obj: 'object', rule_id: 'RuleId', msg: 'str', details: 'dict[str, Any] | None' = None) -> 'None'",
+                "text": "warn_validation(tr: 'tracer', rule_id: 'RuleId', msg: 'str', details: 'Details | None' = None) -> 'None'",
                 "parameters": [
                     {
                         "name": "tr",
                         "kind": "POSITIONAL_OR_KEYWORD",
                         "annotation": "tracer",
-                        "default": null
-                    },
-                    {
-                        "name": "obj",
-                        "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "object",
                         "default": null
                     },
                     {
@@ -5724,7 +5761,7 @@
                     {
                         "name": "details",
                         "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "dict[str, Any] | None",
+                        "annotation": "Details | None",
                         "default": "None"
                     }
                 ],
@@ -5752,9 +5789,6 @@
                     "tr": [
                         "The tracer that should receive the warning."
                     ],
-                    "obj": [
-                        "The object being validated."
-                    ],
                     "rule_id": [
                         "The rule identifier to report."
                     ],
@@ -5766,9 +5800,15 @@
                     ]
                 },
                 "Returns": [
-                    "No return value."
+                    "|None|"
                 ],
-                "Raises": {}
+                "Raises": {},
+                "Notes": {
+                    "Implementation": [
+                        "This is a thin wrapper around |func|`tracer.add_warning` with origin set to |value|`\"validation\"` and",
+                        "that checks if the rule is ignored before adding the warning."
+                    ]
+                }
             }
         },
         "sdv.doc.waterloo.docitem_tokenizer.get_num_indent": {
@@ -14031,7 +14071,7 @@
             "doc_lines": [
                 "Objects that can be annotated by the helper layer."
             ],
-            "annotation": "type | module | function",
+            "annotation": "type | module | function | method",
             "doc_lines_kind": "type"
         },
         "sdv.doc.waterloo.docitem_helper.RuleId": {
@@ -14055,7 +14095,7 @@
             "doc_lines": [
                 "Tracer details payload."
             ],
-            "annotation": "Dict[str, Any]",
+            "annotation": "Dict[str, str | list[str]]",
             "doc_lines_kind": "type"
         },
         "sdv.doc.waterloo.docitem_helper.Scopes": {
@@ -14198,7 +14238,7 @@
             "doc_lines": [
                 "Flavour tag mapping for normativity keyword rendering."
             ],
-            "annotation": "Mapping[str, Flavour]",
+            "annotation": "Final[Mapping[str, Flavour]]",
             "doc_lines_kind": "constant"
         },
         "sdv.doc.waterloo.docitem_helper.FORMAT_TAG_MAP": {
@@ -14206,7 +14246,7 @@
             "doc_lines": [
                 "Output format tag mapping for string-related output."
             ],
-            "annotation": "Mapping[str, Format]",
+            "annotation": "Final[Mapping[str, Format]]",
             "doc_lines_kind": "constant"
         },
         "sdv.doc.waterloo.docitem_helper.STATUS_TAG_MAP": {
