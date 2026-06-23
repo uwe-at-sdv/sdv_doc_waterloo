@@ -1,12 +1,12 @@
 {
     "$schema": "https://sci-d-vis.com/schema/wtrl-json-0.1.0.schema.json",
-    "$id": "urn:waterlint:wtrl-json:0.17.0:core:rfc-2119:efaff72dcfa46f30547926881b010bdccbdcaa48093d711981dbcc57e67621fc",
+    "$id": "urn:waterlint:wtrl-json:0.17.0:core:rfc-2119:ff9bd9c9d647922d5879c13270d245150fd2a2cdc47143c02e91c07b690aab28",
     "__WTRL_VERSION__": {
         "waterloo": "0.9.0",
         "schema": "0.1.0"
     },
     "__WTRL_META__": {
-        "generated_at": "2026-06-23T18:31:45+02:00",
+        "generated_at": "2026-06-23T18:49:57+02:00",
         "generator": "waterlint",
         "scope": "core",
         "flavour": "rfc-2119"
@@ -273,10 +273,7 @@
         "sdv.doc.waterloo.docitem_convert.build_node_json": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_convert.build_node_json",
         "sdv.doc.waterloo.docitem_convert.to_node_docstring_tree_json": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_convert.to_node_docstring_tree_json",
         "sdv.doc.waterloo.docitem_convert.to_node_legend_json": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_convert.to_node_legend_json",
-        "sdv.doc.waterloo.docitem_convert.to_string_md": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_convert.to_string_md",
-        "sdv.doc.waterloo.docitem_convert.to_string_legend_yaml": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_convert.to_string_legend_yaml",
-        "sdv.doc.waterloo.docitem_convert.to_string_signature_yaml": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_convert.to_string_signature_yaml",
-        "sdv.doc.waterloo.docitem_convert.to_string_yaml": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_convert.to_string_yaml"
+        "sdv.doc.waterloo.docitem_convert.to_string_md": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_convert.to_string_md"
     },
     "__WTRL_TOC_TYPES__": {
         "sdv.doc.waterloo.docitem.DocstringTree": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem.DocstringTree",
@@ -327,7 +324,6 @@
         "sdv.doc.waterloo.docitem_helper.Flavour.RFC_2119": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.Flavour.RFC_2119",
         "sdv.doc.waterloo.docitem_helper.Flavour.MARKDOWN": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.Flavour.MARKDOWN",
         "sdv.doc.waterloo.docitem_helper.Format.JSON": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.Format.JSON",
-        "sdv.doc.waterloo.docitem_helper.Format.YAML": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.Format.YAML",
         "sdv.doc.waterloo.docitem_helper.Format.MD": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.Format.MD",
         "sdv.doc.waterloo.docitem_helper.Status.EXPERIMENTAL": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.Status.EXPERIMENTAL",
         "sdv.doc.waterloo.docitem_helper.Status.STABLE": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.Status.STABLE",
@@ -1435,13 +1431,6 @@
             ],
             "doc_lines_kind": "constant"
         },
-        "sdv.doc.waterloo.docitem_helper.Format.YAML": {
-            "doc": {},
-            "doc_lines": [
-                "YAML Ain't Markup Language"
-            ],
-            "doc_lines_kind": "constant"
-        },
         "sdv.doc.waterloo.docitem_helper.Format.MD": {
             "doc": {},
             "doc_lines": [
@@ -1494,9 +1483,6 @@
                 "Public_constants": {
                     "JSON": [
                         "Javascript Object Notation"
-                    ],
-                    "YAML": [
-                        "YAML Ain't Markup Language"
                     ],
                     "MD": [
                         "Markdown."
@@ -12537,9 +12523,6 @@
                     "to_node_legend_json",
                     "to_node_docstring_tree_json",
                     "to_node_signature_json",
-                    "to_string_legend_yaml",
-                    "to_string_yaml",
-                    "to_string_signature_yaml",
                     "to_string_md",
                     "build_node_json"
                 ],
@@ -12859,216 +12842,6 @@
                 "Raises": {
                     "TypeError": [
                         "MUST raise if |var|`tree` is not a sequence made only of strings and lists, or if |var|`flavour` is not a |type|`Flavour`."
-                    ]
-                },
-                "See_also": [
-                    "sdv.doc.waterloo.docitem.Flavour",
-                    "sdv.doc.waterloo.docitem.Format"
-                ]
-            }
-        },
-        "sdv.doc.waterloo.docitem_convert.to_string_legend_yaml": {
-            "signature": {
-                "text": "to_string_legend_yaml(config: 'YamlConfig' = <sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7fcef81faf90>) -> 'str'",
-                "parameters": [
-                    {
-                        "name": "config",
-                        "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "YamlConfig",
-                        "default": "<sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7fcef81faf90>"
-                    }
-                ],
-                "returns": "str"
-            },
-            "doc": {
-                "Preamble": {
-                    "profile": "function",
-                    "normative_sections": [
-                        "Contract",
-                        "Parameters",
-                        "Returns",
-                        "Raises"
-                    ],
-                    "scope": [
-                        "public"
-                    ],
-                    "status": "stable"
-                },
-                "Contract": {
-                    "general": [
-                        "MUST render the Waterloo roles legend as YAML using the existing emitter."
-                    ]
-                },
-                "Parameters": {
-                    "config": [
-                        "How to render the YAML code."
-                    ]
-                },
-                "Returns": [
-                    "The YAML string containing the legend."
-                ],
-                "Raises": {}
-            }
-        },
-        "sdv.doc.waterloo.docitem_convert.to_string_signature_yaml": {
-            "signature": {
-                "text": "to_string_signature_yaml(obj: 'object', config: 'YamlConfig' = <sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7fcef7efc190>) -> 'str'",
-                "parameters": [
-                    {
-                        "name": "obj",
-                        "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "object",
-                        "default": null
-                    },
-                    {
-                        "name": "config",
-                        "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "YamlConfig",
-                        "default": "<sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7fcef7efc190>"
-                    }
-                ],
-                "returns": "str"
-            },
-            "doc": {
-                "Preamble": {
-                    "profile": "function",
-                    "normative_sections": [
-                        "Contract",
-                        "Parameters",
-                        "Returns",
-                        "Raises"
-                    ],
-                    "scope": [
-                        "public"
-                    ],
-                    "status": "draft"
-                },
-                "Contract": {
-                    "general": [
-                        "MUST render a YAML snippet as defined by |var|`config`, representing the",
-                        "signature of the callable |var|`obj`.",
-                        "The root key MUST be |attr|`signature`, containing the subkeys",
-                        "|attr|`text`, |attr|`parameters`, and |attr|`returns`.",
-                        "|attr|`text` MUST provide an inline-style representation of the signature.",
-                        "|attr|`parameters` MUST contain a sequence of elements, each providing:",
-                        "|attr|`name`: The parameter identifier.",
-                        "|attr|`kind`: The slot-filling strategy (e.g., positional-only, keyword-only,",
-                        "or variadic) as defined by the Python |func|`inspect` semantics.",
-                        "|attr|`annotation`: The parameter's type hint or annotation.",
-                        "|attr|`default`: |value|`null` if no default value is defined; otherwise,",
-                        "a string representation of the default value.",
-                        "The subkey |attr|`returns` MUST represent the return type of the callable."
-                    ]
-                },
-                "Parameters": {
-                    "obj": [
-                        "The callable whose signature is to be inspected and rendered."
-                    ],
-                    "config": [
-                        "Configuration object controlling indentation, line folding, and",
-                        "the embedding of the emitted YAML."
-                    ]
-                },
-                "Returns": [
-                    "The generated YAML string."
-                ],
-                "Raises": {
-                    "TypeError": [
-                        "MUST be raised if |var|`obj` is not callable or if the signature",
-                        "cannot be inspected."
-                    ],
-                    "ValueError": [
-                        "MAY be raised if the signature includes parameter kinds that",
-                        "cannot be serialized."
-                    ],
-                    "Exception": [
-                        "MAY propagate exceptions from |func|`inspect.signature` or |func|`repr` during default value rendering; callers should treat these as unexpected errors."
-                    ]
-                },
-                "Notes": {
-                    "Standard values for \"kind\"": [
-                        "Derived from |type|`inspect.Parameter`: |value|`POSITIONAL_ONLY`, |value|`POSITIONAL_OR_KEYWORD`, |value|`VAR_POSITIONAL`, |value|`KEYWORD_ONLY`, |value|`VAR_KEYWORD`"
-                    ]
-                }
-            }
-        },
-        "sdv.doc.waterloo.docitem_convert.to_string_yaml": {
-            "signature": {
-                "text": "to_string_yaml(tree: 'DocstringTree', flavour: 'Flavour', config: 'YamlConfig' = <sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7fcef7efc2d0>) -> 'str'",
-                "parameters": [
-                    {
-                        "name": "tree",
-                        "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "DocstringTree",
-                        "default": null
-                    },
-                    {
-                        "name": "flavour",
-                        "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "Flavour",
-                        "default": null
-                    },
-                    {
-                        "name": "config",
-                        "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "YamlConfig",
-                        "default": "<sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7fcef7efc2d0>"
-                    }
-                ],
-                "returns": "str"
-            },
-            "doc": {
-                "Preamble": {
-                    "profile": "function",
-                    "normative_sections": [
-                        "Contract",
-                        "Parameters",
-                        "Returns",
-                        "Raises",
-                        "See_also"
-                    ],
-                    "scope": [
-                        "public"
-                    ],
-                    "status": "draft"
-                },
-                "Contract": {
-                    "general": [
-                        "MUST render the tree as YAML-string using the given flavour.",
-                        "MUST reproduce the tree structure by indentation in YAML.",
-                        "In RFC_2199 flavour, Normativity Keywords MUST be capitalized and the pipe delimiters MUST be dropped.",
-                        "In RAW flavour, Normativity Keywords MUST be rendered without modification, i.e. including pipe delimiters.",
-                        "In MARKUP flavour, Normativity Keywords MUST be rendered with double asterisk |lit|`**...**` instead of pipe delimiters."
-                    ],
-                    "requires": [
-                        "|var|`tree` MUST be a formally correct docstring tree."
-                    ]
-                },
-                "Notes": {
-                    "Details": [
-                        "Each list element becomes a YAML sequence item (\\\"-\\\"), preserving the original nesting of the docstring tree. Long scalars are emitted as folded blocks (>-) to keep line lengths reasonable for linters."
-                    ]
-                },
-                "Parameters": {
-                    "tree": [
-                        "The tree to render as string."
-                    ],
-                    "flavour": [
-                        "The style to render Normativity Keywords in."
-                    ],
-                    "config": [
-                        "How to render the YAML code."
-                    ]
-                },
-                "Returns": [
-                    "The YAML string"
-                ],
-                "Raises": {
-                    "ParseError": [
-                        "MUST propagate if the docstring tree cannot be turned into a docitem AST."
-                    ],
-                    "TypeError": [
-                        "MUST raise if |var|`flavour` is not a |type|`Flavour`."
                     ]
                 },
                 "See_also": [

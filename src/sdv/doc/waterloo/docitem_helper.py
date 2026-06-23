@@ -471,18 +471,14 @@ class Format(IntEnum):
 	Public_constants:
 		JSON:
 			Javascript Object Notation
-		YAML:
-			YAML Ain't Markup Language
 		MD:
 			Markdown.
 	"""
 	JSON		= 0
-	YAML		= 1
-	MD		= 2
+	MD		= 1
 
 format_tag_map = {
 	"json":		Format.JSON,
-	"yaml":		Format.YAML,
 	"md":		Format.MD
 	}
 FORMAT_TAG_MAP: Final[Mapping[str, Format]] = MappingProxyType(format_tag_map)	

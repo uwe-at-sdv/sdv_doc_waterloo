@@ -1,12 +1,12 @@
 {
     "$schema": "https://sci-d-vis.com/schema/wtrl-json-0.1.0.schema.json",
-    "$id": "urn:waterlint:wtrl-json:0.17.0:core:rfc-2119:9c518d97c3198af5a2726c9ccce5d55ce100b0a6f89ccf1683b736efad797210",
+    "$id": "urn:waterlint:wtrl-json:0.17.0:core:rfc-2119:d28f05288fd916251dd6389a664f6c22d64dc89445e70e1f3b2199bae237c5a2",
     "__WTRL_VERSION__": {
         "waterloo": "0.9.0",
         "schema": "0.1.0"
     },
     "__WTRL_META__": {
-        "generated_at": "2026-06-23T18:31:46+02:00",
+        "generated_at": "2026-06-23T18:49:58+02:00",
         "generator": "waterlint",
         "scope": "core",
         "flavour": "rfc-2119"
@@ -336,7 +336,6 @@
         "sdv.doc.waterloo.docitem_helper.Flavour.RFC_2119": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.Flavour.RFC_2119",
         "sdv.doc.waterloo.docitem_helper.Flavour.MARKDOWN": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.Flavour.MARKDOWN",
         "sdv.doc.waterloo.docitem_helper.Format.JSON": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.Format.JSON",
-        "sdv.doc.waterloo.docitem_helper.Format.YAML": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.Format.YAML",
         "sdv.doc.waterloo.docitem_helper.Format.MD": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.Format.MD",
         "sdv.doc.waterloo.docitem_helper.Status.EXPERIMENTAL": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.Status.EXPERIMENTAL",
         "sdv.doc.waterloo.docitem_helper.Status.STABLE": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.Status.STABLE",
@@ -1580,13 +1579,6 @@
             ],
             "doc_lines_kind": "constant"
         },
-        "sdv.doc.waterloo.docitem_helper.Format.YAML": {
-            "doc": {},
-            "doc_lines": [
-                "YAML Ain't Markup Language"
-            ],
-            "doc_lines_kind": "constant"
-        },
         "sdv.doc.waterloo.docitem_helper.Format.MD": {
             "doc": {},
             "doc_lines": [
@@ -1639,9 +1631,6 @@
                 "Public_constants": {
                     "JSON": [
                         "Javascript Object Notation"
-                    ],
-                    "YAML": [
-                        "YAML Ain't Markup Language"
                     ],
                     "MD": [
                         "Markdown."

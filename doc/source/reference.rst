@@ -708,21 +708,6 @@ Converter functions
 
 .. wtrl_autodoc_function:: build_node_json
 
-:wtrl_func:`to_string_legend_yaml`
-......................................
-
-.. wtrl_autodoc_function:: to_string_legend_yaml
-
-:wtrl_func:`to_string_yaml`
-...........................
-
-.. wtrl_autodoc_function:: to_string_yaml
-
-:wtrl_func:`to_string_signature_yaml`
-......................................
-
-.. wtrl_autodoc_function:: to_string_signature_yaml
-
 :wtrl_func:`to_string_md`
 ...........................
 
@@ -798,4 +783,3 @@ Output layer HTML5
 
 
 .. wtrl_pop_current_scope:: core
-
