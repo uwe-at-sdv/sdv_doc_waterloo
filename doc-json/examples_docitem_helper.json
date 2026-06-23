@@ -125,6 +125,12 @@
         ],
         "sdv.doc.waterloo.docitem_helper.raise_validation_error_expected_but_got": [
             "package_gh-pages/doc-examples-python/api_demo_helper_tracer_04.py"
+        ],
+        "sdv.doc.waterloo.docitem_helper.ConfigTraversal": [
+            "package_gh-pages/doc-examples-python/api_demo_helper_gen_documentable_objects_01.py"
+        ]
+        "sdv.doc.waterloo.docitem_helper.gen_documentable_objects": [
+            "package_gh-pages/doc-examples-python/api_demo_helper_gen_documentable_objects_01.py"
         ]
     }
 }

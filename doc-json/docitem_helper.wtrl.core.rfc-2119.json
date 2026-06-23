@@ -1,12 +1,12 @@
 {
     "$schema": "https://sci-d-vis.com/schema/wtrl-json-0.1.0.schema.json",
-    "$id": "urn:waterlint:wtrl-json:0.17.0:core:rfc-2119:8b2f86129def66eda53d6c23ff875e71d57bad4af706f70117f56a71b1b00531",
+    "$id": "urn:waterlint:wtrl-json:0.17.0:core:rfc-2119:fbcefb3b7f520220aadadae7215be0ef474b2f3b019d1fe941b751b0d8075503",
     "__WTRL_VERSION__": {
         "waterloo": "0.9.0",
         "schema": "0.1.0"
     },
     "__WTRL_META__": {
-        "generated_at": "2026-06-23T11:44:33+02:00",
+        "generated_at": "2026-06-23T14:57:27+02:00",
         "generator": "waterlint",
         "scope": "core",
         "flavour": "rfc-2119"
@@ -4236,7 +4236,10 @@
                     "MUST return a Generator which yields objects from tree traversal of |var|`obj`"
                 ],
                 "Raises": {}
-            }
+            },
+            "examples": [
+                "/__WTRL_EXAMPLES__/sha256_9ab015e054cd66b87d40f2110e501819c1d62d40be953425c32eee26a5c4f8df"
+            ]
         },
         "sdv.doc.waterloo.docitem_helper.tracer.Context": {
             "doc": {},
@@ -5534,6 +5537,14 @@
                 "sdv.doc.waterloo.docitem_helper.raise_parsing_error_invalid_label",
                 "sdv.doc.waterloo.docitem_helper.raise_validation_error",
                 "sdv.doc.waterloo.docitem_helper.raise_validation_error_expected_but_got"
+            ]
+        },
+        "sha256_9ab015e054cd66b87d40f2110e501819c1d62d40be953425c32eee26a5c4f8df": {
+            "lang": "python",
+            "hash": "9ab015e054cd66b87d40f2110e501819c1d62d40be953425c32eee26a5c4f8df",
+            "code": "#!/usr/bin/env python3\n\nfrom __future__ import annotations\nimport sdv.doc.waterloo.docitem_helper as h\n\nconfig = h.ConfigTraversal()\nconfig.enable_include_imported()\nn = 0\nfor obj in h.gen_documentable_objects(h,config):\n\tprint(h.get_obj_fully_qualified_name(obj))\n\tn += 1\nprint(f\"Grand total with include_imported   : {n} objects\")\n\nconfig = h.ConfigTraversal()\nn = 0\nfor obj in h.gen_documentable_objects(h,config):\n\tn += 1\nprint(f\"Grand total without include_imported: {n} objects\")\n",
+            "referenced_by": [
+                "sdv.doc.waterloo.docitem_helper.gen_documentable_objects"
             ]
         }
     }
