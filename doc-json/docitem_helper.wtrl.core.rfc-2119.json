@@ -1,12 +1,12 @@
 {
     "$schema": "https://sci-d-vis.com/schema/wtrl-json-0.1.0.schema.json",
-    "$id": "urn:waterlint:wtrl-json:0.17.0:core:rfc-2119:9cf6d1aa3b48968a1ad5b35e3be7ae29f77681d9f0ae97a0a6dce27d5a2b9994",
+    "$id": "urn:waterlint:wtrl-json:0.17.0:core:rfc-2119:8b2f86129def66eda53d6c23ff875e71d57bad4af706f70117f56a71b1b00531",
     "__WTRL_VERSION__": {
         "waterloo": "0.9.0",
         "schema": "0.1.0"
     },
     "__WTRL_META__": {
-        "generated_at": "2026-06-22T17:30:45+02:00",
+        "generated_at": "2026-06-23T11:44:33+02:00",
         "generator": "waterlint",
         "scope": "core",
         "flavour": "rfc-2119"
@@ -92,7 +92,7 @@
         "sdv.doc.waterloo.docitem_helper.render_constant_reference_details": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.render_constant_reference_details",
         "sdv.doc.waterloo.docitem_helper.render_named_value_reference_details": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.render_named_value_reference_details",
         "sdv.doc.waterloo.docitem_helper.render_overview_missing_member_details": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.render_overview_missing_member_details",
-        "sdv.doc.waterloo.docitem_helper.is_annotatable": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.is_annotatable",
+        "sdv.doc.waterloo.docitem_helper.is_obj_annotatable": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.is_obj_annotatable",
         "sdv.doc.waterloo.docitem_helper.is_attr_annotated": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.is_attr_annotated",
         "sdv.doc.waterloo.docitem_helper.is_attr_final": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.is_attr_final",
         "sdv.doc.waterloo.docitem_helper.is_list_of_str": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.is_list_of_str",
@@ -216,7 +216,7 @@
             "doc_lines": [
                 "Objects that can be annotated by the helper layer."
             ],
-            "annotation": "type | module | function",
+            "annotation": "type | module | function | method",
             "doc_lines_kind": "type"
         },
         "sdv.doc.waterloo.docitem_helper.RuleId": {
@@ -240,7 +240,7 @@
             "doc_lines": [
                 "Tracer details payload."
             ],
-            "annotation": "Dict[str, Any]",
+            "annotation": "Dict[str, str | list[str]]",
             "doc_lines_kind": "type"
         },
         "sdv.doc.waterloo.docitem_helper.Scopes": {
@@ -401,7 +401,7 @@
             "doc_lines": [
                 "Flavour tag mapping for normativity keyword rendering."
             ],
-            "annotation": "Mapping[str, Flavour]",
+            "annotation": "Final[Mapping[str, Flavour]]",
             "doc_lines_kind": "constant"
         },
         "sdv.doc.waterloo.docitem_helper.FORMAT_TAG_MAP": {
@@ -409,7 +409,7 @@
             "doc_lines": [
                 "Output format tag mapping for string-related output."
             ],
-            "annotation": "Mapping[str, Format]",
+            "annotation": "Final[Mapping[str, Format]]",
             "doc_lines_kind": "constant"
         },
         "sdv.doc.waterloo.docitem_helper.STATUS_TAG_MAP": {
@@ -495,7 +495,7 @@
                     "render_overview_missing_member_details",
                     "render_see_also_reference_details",
                     "get_source_docstring",
-                    "is_annotatable",
+                    "is_obj_annotatable",
                     "is_attr_annotated",
                     "is_attr_final",
                     "is_list_of_str",
@@ -1261,7 +1261,8 @@
                         "Contract",
                         "Parameters",
                         "Returns",
-                        "Raises"
+                        "Raises",
+                        "See_also"
                     ]
                 },
                 "Contract": {
@@ -1278,8 +1279,14 @@
                 "Returns": [
                     "The canonical |cmd|`explain-section` command for the given label and profile."
                 ],
-                "Raises": {}
-            }
+                "Raises": {},
+                "See_also": [
+                    "explain_try_self_for_subsection"
+                ]
+            },
+            "examples": [
+                "/__WTRL_EXAMPLES__/sha256_f3ad6f26b021e5e0b409a4c979212909a96412adc87ede779d0191cc030268d3"
+            ]
         },
         "sdv.doc.waterloo.docitem_helper.explain_try_self_for_subsection": {
             "signature": {
@@ -1307,7 +1314,8 @@
                         "Contract",
                         "Parameters",
                         "Returns",
-                        "Raises"
+                        "Raises",
+                        "See_also"
                     ]
                 },
                 "Contract": {
@@ -1324,8 +1332,14 @@
                 "Returns": [
                     "The canonical |cmd|`explain-subsection` command for the given label and profile."
                 ],
-                "Raises": {}
-            }
+                "Raises": {},
+                "See_also": [
+                    "explain_try_self_for_section"
+                ]
+            },
+            "examples": [
+                "/__WTRL_EXAMPLES__/sha256_f3ad6f26b021e5e0b409a4c979212909a96412adc87ede779d0191cc030268d3"
+            ]
         },
         "sdv.doc.waterloo.docitem_helper.render_source_snippet": {
             "signature": {
@@ -3105,9 +3119,9 @@
                 }
             }
         },
-        "sdv.doc.waterloo.docitem_helper.is_annotatable": {
+        "sdv.doc.waterloo.docitem_helper.is_obj_annotatable": {
             "signature": {
-                "text": "is_annotatable(obj: 'Any') -> 'TypeGuard[AnnotatableObject]'",
+                "text": "is_obj_annotatable(obj: 'Any') -> 'TypeGuard[AnnotatableObject]'",
                 "parameters": [
                     {
                         "name": "obj",
@@ -3133,19 +3147,31 @@
                 },
                 "Contract": {
                     "general": [
-                        "MUST decide whether |var|`obj` is one of the annotatable runtime object kinds supported by the helper layer."
+                        "MUST relay to |mod|`inspect.get_annotations`-compatible object kinds."
                     ]
                 },
                 "Parameters": {
                     "obj": [
-                        "The object to test."
+                        "The object to inspect."
                     ]
                 },
                 "Returns": [
                     "|True| if |var|`obj` is annotatable, else |False|."
                 ],
-                "Raises": {}
-            }
+                "Raises": {
+                    "BaseException": [
+                        "MAY propagate exceptions from |mod|`inspect`."
+                    ]
+                },
+                "Notes": {
+                    "Purpose": [
+                        "Uniform wrapper, allows us to add debugging output or hooks in case of trouble."
+                    ]
+                }
+            },
+            "examples": [
+                "/__WTRL_EXAMPLES__/sha256_28945dd0612fba8d6891610a15b49001b2eaa18be8a8de4dfff6e9416b3defe5"
+            ]
         },
         "sdv.doc.waterloo.docitem_helper.is_attr_annotated": {
             "signature": {
@@ -3360,7 +3386,7 @@
                 }
             },
             "examples": [
-                "/__WTRL_EXAMPLES__/sha256_5d9d9dc53136057cb721a5068bd9ce99ed4b89ae52ad9dde8a6be7d276007ca7"
+                "/__WTRL_EXAMPLES__/sha256_28945dd0612fba8d6891610a15b49001b2eaa18be8a8de4dfff6e9416b3defe5"
             ]
         },
         "sdv.doc.waterloo.docitem_helper.is_obj_class": {
@@ -3414,7 +3440,7 @@
                 }
             },
             "examples": [
-                "/__WTRL_EXAMPLES__/sha256_5d9d9dc53136057cb721a5068bd9ce99ed4b89ae52ad9dde8a6be7d276007ca7"
+                "/__WTRL_EXAMPLES__/sha256_28945dd0612fba8d6891610a15b49001b2eaa18be8a8de4dfff6e9416b3defe5"
             ]
         },
         "sdv.doc.waterloo.docitem_helper.is_obj_function": {
@@ -3468,7 +3494,7 @@
                 }
             },
             "examples": [
-                "/__WTRL_EXAMPLES__/sha256_5d9d9dc53136057cb721a5068bd9ce99ed4b89ae52ad9dde8a6be7d276007ca7"
+                "/__WTRL_EXAMPLES__/sha256_28945dd0612fba8d6891610a15b49001b2eaa18be8a8de4dfff6e9416b3defe5"
             ]
         },
         "sdv.doc.waterloo.docitem_helper.is_obj_method_like": {
@@ -3516,7 +3542,7 @@
                 "Raises": {}
             },
             "examples": [
-                "/__WTRL_EXAMPLES__/sha256_5d9d9dc53136057cb721a5068bd9ce99ed4b89ae52ad9dde8a6be7d276007ca7"
+                "/__WTRL_EXAMPLES__/sha256_28945dd0612fba8d6891610a15b49001b2eaa18be8a8de4dfff6e9416b3defe5"
             ]
         },
         "sdv.doc.waterloo.docitem_helper.is_obj_named_value": {
@@ -3573,7 +3599,7 @@
                 }
             },
             "examples": [
-                "/__WTRL_EXAMPLES__/sha256_5d9d9dc53136057cb721a5068bd9ce99ed4b89ae52ad9dde8a6be7d276007ca7"
+                "/__WTRL_EXAMPLES__/sha256_28945dd0612fba8d6891610a15b49001b2eaa18be8a8de4dfff6e9416b3defe5"
             ]
         },
         "sdv.doc.waterloo.docitem_helper.is_obj_documentable": {
@@ -3612,10 +3638,23 @@
                 "Returns": [
                     "|True| if |var|`obj` is a module, class or function, else |False|."
                 ],
-                "Raises": {}
+                "Raises": {},
+                "Notes": {
+                    "Last review": [
+                        "2026-06-22"
+                    ],
+                    "Documentable vs. non-documentable objects": [
+                        "Only modules, classes, and functions are considered documentable",
+                        "for Waterloo docstring generation and validation.",
+                        "Accordingly, sections like |label|`Public_types`,",
+                        "|label|`Public_constants`, and |label|`Public_variables`",
+                        "in module and class docstrings document named values",
+                        "that are not documentable objects themselves."
+                    ]
+                }
             },
             "examples": [
-                "/__WTRL_EXAMPLES__/sha256_5d9d9dc53136057cb721a5068bd9ce99ed4b89ae52ad9dde8a6be7d276007ca7"
+                "/__WTRL_EXAMPLES__/sha256_28945dd0612fba8d6891610a15b49001b2eaa18be8a8de4dfff6e9416b3defe5"
             ]
         },
         "sdv.doc.waterloo.docitem_helper.get_obj_direct_module": {
@@ -3703,7 +3742,8 @@
                         "Contract",
                         "Parameters",
                         "Returns",
-                        "Raises"
+                        "Raises",
+                        "See_also"
                     ],
                     "scope": [
                         "public"
@@ -3734,12 +3774,16 @@
                     "Limitations": [
                         "This helper is best-effort and object-local.",
                         "It does not reconstruct containment context for nested instances.",
-                        "For such cases it may return only the local class name instead of a fully qualified nested name."
+                        "Behavior for property-like descriptors such as |type|`property` and |type|`cached_property` is undefined.",
+                        "If you need a more precise identifier, prefer |func|`get_obj_fully_qualified_name`."
                     ]
-                }
+                },
+                "See_also": [
+                    "get_obj_fully_qualified_name"
+                ]
             },
             "examples": [
-                "/__WTRL_EXAMPLES__/sha256_e9f7e9ad49caef4ae9f18f75a2f1353ebcd55d79d205522dcbd2744c2817059b"
+                "/__WTRL_EXAMPLES__/sha256_edb523db53410acfd196688e293393ea71a6b5fc3d83bea8250d014b7072e8cc"
             ]
         },
         "sdv.doc.waterloo.docitem_helper.get_obj_fully_qualified_name": {
@@ -3774,7 +3818,8 @@
                         "MUST return module objects as their module name.",
                         "MUST return callable/class/object names as |mod|`<module>` . |lit|`<qualname>` when both parts are available.",
                         "MUST fall back to |func|`get_obj_name` if no module prefix can be determined.",
-                        "MUST return input strings unchanged."
+                        "MUST return input strings unchanged.",
+                        "MUST resolve class instances to their class name, prefixed by the module name when available."
                     ]
                 },
                 "Parameters": {
@@ -3787,16 +3832,18 @@
                 ],
                 "Raises": {},
                 "Notes": {
+                    "Last review": [
+                        "2026-06-23"
+                    ],
                     "Limitations": [
-                        "This helper is best-effort and object-local.",
-                        "It does not reconstruct containment context for nested instances.",
-                        "For such cases it may return only the local class name prefixed by the module name."
+                        "Behavior for property-like descriptors such as |type|`property` and |type|`cached_property` is undefined."
                     ]
                 }
             },
             "examples": [
-                "/__WTRL_EXAMPLES__/sha256_31e9caba8325e396d689aa0a0cc062bb8f61bc96e9db86f530732efaa043988c",
-                "/__WTRL_EXAMPLES__/sha256_e9f7e9ad49caef4ae9f18f75a2f1353ebcd55d79d205522dcbd2744c2817059b"
+                "/__WTRL_EXAMPLES__/sha256_0755f05dbabc8847acbdb162963cea429f2b382bfaa9f2730f0e0cf2d6c6b966",
+                "/__WTRL_EXAMPLES__/sha256_1f43918632b8c3a6dc4596d00d5665b0dd8dad6295111e2e4e85363e10bd9b4e",
+                "/__WTRL_EXAMPLES__/sha256_31e9caba8325e396d689aa0a0cc062bb8f61bc96e9db86f530732efaa043988c"
             ]
         },
         "sdv.doc.waterloo.docitem_helper.get_obj_path": {
@@ -3964,7 +4011,10 @@
                         "The signature is stable, but we might add cases to the implementation."
                     ]
                 }
-            }
+            },
+            "examples": [
+                "/__WTRL_EXAMPLES__/sha256_0755f05dbabc8847acbdb162963cea429f2b382bfaa9f2730f0e0cf2d6c6b966"
+            ]
         },
         "sdv.doc.waterloo.docitem_helper.get_obj_docstring": {
             "signature": {
@@ -4286,7 +4336,7 @@
                 }
             },
             "examples": [
-                "/__WTRL_EXAMPLES__/sha256_10cca6146b8e2e9533d242a5fa4c39af4d966a569ca6fc3077ce247131ad25e0"
+                "/__WTRL_EXAMPLES__/sha256_a5f9f46084ab69bb226f530614c6eb81f55f323e3601bd5e56e08ea1a287fe98"
             ]
         },
         "sdv.doc.waterloo.docitem_helper.tracer.Severity": {
@@ -4319,10 +4369,10 @@
                 "Contract": {
                     "general": [
                         "MUST define the following severity levels for filtering the tracer's output:",
-                        "- |value|`DEBUG`: for debugging notes, not relevant for end-users.",
-                        "- |value|`INFO`: for informational messages that are relevant for end-users but do not indicate any problems.",
-                        "- |value|`WARNING`: for potential issues that should be looked at but do not necessarily indicate a failure.",
-                        "- |value|`ERROR`: for definite problems that indicate a failure to meet a requirement or rule.",
+                        "|value|`DEBUG`: for debugging notes, not relevant for end-users.",
+                        "|value|`INFO`: for informational messages that are relevant for end-users but do not indicate any problems.",
+                        "|value|`WARNING`: for potential issues that should be looked at but do not necessarily indicate a failure.",
+                        "|value|`ERROR`: for definite problems that indicate a failure to meet a requirement or rule.",
                         "MUST assign integer values to these levels in increasing order of severity, starting with 0 for DEBUG."
                     ],
                     "constructor": [
@@ -4477,7 +4527,7 @@
                 "Raises": {}
             },
             "examples": [
-                "/__WTRL_EXAMPLES__/sha256_10cca6146b8e2e9533d242a5fa4c39af4d966a569ca6fc3077ce247131ad25e0"
+                "/__WTRL_EXAMPLES__/sha256_a5f9f46084ab69bb226f530614c6eb81f55f323e3601bd5e56e08ea1a287fe98"
             ]
         },
         "sdv.doc.waterloo.docitem_helper.traced_section": {
@@ -4532,7 +4582,10 @@
                     "A context manager yielding nothing."
                 ],
                 "Raises": {}
-            }
+            },
+            "examples": [
+                "/__WTRL_EXAMPLES__/sha256_aa643e1640a08f85ae01382beec60157428cf4d313fe53f350dab6b17f897da0"
+            ]
         },
         "sdv.doc.waterloo.docitem_helper.rule_on_fail": {
             "signature": {
@@ -4714,18 +4767,21 @@
                     ]
                 },
                 "Returns": [
-                    "No return value."
+                    "Never returns."
                 ],
                 "Raises": {
                     "ParseError": [
                         "Always raised."
                     ]
                 }
-            }
+            },
+            "examples": [
+                "/__WTRL_EXAMPLES__/sha256_e046e223bac0407f4787934f6f0128d5f64d528ae2d77878b5fd167ea8ab5c8c"
+            ]
         },
         "sdv.doc.waterloo.docitem_helper.raise_parsing_error": {
             "signature": {
-                "text": "raise_parsing_error(tr: 'tracer', rule_id: 'RuleId', msg: 'str', details: 'dict[str, Any] | None' = None) -> 'NoReturn'",
+                "text": "raise_parsing_error(tr: 'tracer', rule_id: 'RuleId', msg: 'str', details: 'Details | None' = None) -> 'NoReturn'",
                 "parameters": [
                     {
                         "name": "tr",
@@ -4748,7 +4804,7 @@
                     {
                         "name": "details",
                         "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "dict[str, Any] | None",
+                        "annotation": "Details | None",
                         "default": "None"
                     }
                 ],
@@ -4787,14 +4843,17 @@
                     ]
                 },
                 "Returns": [
-                    "No return value."
+                    "Never returns."
                 ],
                 "Raises": {
                     "ParseError": [
                         "Always raised."
                     ]
                 }
-            }
+            },
+            "examples": [
+                "/__WTRL_EXAMPLES__/sha256_e046e223bac0407f4787934f6f0128d5f64d528ae2d77878b5fd167ea8ab5c8c"
+            ]
         },
         "sdv.doc.waterloo.docitem_helper.raise_parsing_error_expected_but_got": {
             "signature": {
@@ -4869,14 +4928,17 @@
                     ]
                 },
                 "Returns": [
-                    "No return value."
+                    "Never returns."
                 ],
                 "Raises": {
                     "ParseError": [
                         "Always raised."
                     ]
                 }
-            }
+            },
+            "examples": [
+                "/__WTRL_EXAMPLES__/sha256_e046e223bac0407f4787934f6f0128d5f64d528ae2d77878b5fd167ea8ab5c8c"
+            ]
         },
         "sdv.doc.waterloo.docitem_helper.raise_parsing_error_invalid_label": {
             "signature": {
@@ -4942,18 +5004,21 @@
                     ]
                 },
                 "Returns": [
-                    "No return value."
+                    "Never returns."
                 ],
                 "Raises": {
                     "ParseError": [
                         "Always raised."
                     ]
                 }
-            }
+            },
+            "examples": [
+                "/__WTRL_EXAMPLES__/sha256_e046e223bac0407f4787934f6f0128d5f64d528ae2d77878b5fd167ea8ab5c8c"
+            ]
         },
         "sdv.doc.waterloo.docitem_helper.raise_validation_error": {
             "signature": {
-                "text": "raise_validation_error(tr: 'tracer', obj: 'object', rule_id: 'RuleId', msg: 'str', details: 'dict[str, Any] | None' = None) -> 'NoReturn'",
+                "text": "raise_validation_error(tr: 'tracer', obj: 'object', rule_id: 'RuleId', msg: 'str', details: 'Details | None' = None) -> 'NoReturn'",
                 "parameters": [
                     {
                         "name": "tr",
@@ -4982,7 +5047,7 @@
                     {
                         "name": "details",
                         "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "dict[str, Any] | None",
+                        "annotation": "Details | None",
                         "default": "None"
                     }
                 ],
@@ -5024,14 +5089,17 @@
                     ]
                 },
                 "Returns": [
-                    "No return value."
+                    "Never returns."
                 ],
                 "Raises": {
                     "ValidationError": [
                         "Always raised."
                     ]
                 }
-            }
+            },
+            "examples": [
+                "/__WTRL_EXAMPLES__/sha256_e046e223bac0407f4787934f6f0128d5f64d528ae2d77878b5fd167ea8ab5c8c"
+            ]
         },
         "sdv.doc.waterloo.docitem_helper.raise_validation_error_expected_but_got": {
             "signature": {
@@ -5106,14 +5174,17 @@
                     ]
                 },
                 "Returns": [
-                    "No return value."
+                    "Never returns."
                 ],
                 "Raises": {
                     "ValidationError": [
                         "Always raised."
                     ]
                 }
-            }
+            },
+            "examples": [
+                "/__WTRL_EXAMPLES__/sha256_e046e223bac0407f4787934f6f0128d5f64d528ae2d77878b5fd167ea8ab5c8c"
+            ]
         },
         "sdv.doc.waterloo.docitem_helper.warn_parsing": {
             "signature": {
@@ -5170,25 +5241,28 @@
                     ]
                 },
                 "Returns": [
-                    "No return value."
+                    "|None|"
                 ],
-                "Raises": {}
-            }
+                "Raises": {},
+                "Notes": {
+                    "Implementation": [
+                        "This is a thin wrapper around |func|`tracer.add_warning` with origin set to |value|`\"parsing\"` and",
+                        "that checks if the rule is ignored before adding the warning."
+                    ]
+                }
+            },
+            "examples": [
+                "/__WTRL_EXAMPLES__/sha256_aa643e1640a08f85ae01382beec60157428cf4d313fe53f350dab6b17f897da0"
+            ]
         },
         "sdv.doc.waterloo.docitem_helper.warn_validation": {
             "signature": {
-                "text": "warn_validation(tr: 'tracer', obj: 'object', rule_id: 'RuleId', msg: 'str', details: 'dict[str, Any] | None' = None) -> 'None'",
+                "text": "warn_validation(tr: 'tracer', rule_id: 'RuleId', msg: 'str', details: 'Details | None' = None) -> 'None'",
                 "parameters": [
                     {
                         "name": "tr",
                         "kind": "POSITIONAL_OR_KEYWORD",
                         "annotation": "tracer",
-                        "default": null
-                    },
-                    {
-                        "name": "obj",
-                        "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "object",
                         "default": null
                     },
                     {
@@ -5206,7 +5280,7 @@
                     {
                         "name": "details",
                         "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "dict[str, Any] | None",
+                        "annotation": "Details | None",
                         "default": "None"
                     }
                 ],
@@ -5234,9 +5308,6 @@
                     "tr": [
                         "The tracer that should receive the warning."
                     ],
-                    "obj": [
-                        "The object being validated."
-                    ],
                     "rule_id": [
                         "The rule identifier to report."
                     ],
@@ -5248,10 +5319,19 @@
                     ]
                 },
                 "Returns": [
-                    "No return value."
+                    "|None|"
                 ],
-                "Raises": {}
-            }
+                "Raises": {},
+                "Notes": {
+                    "Implementation": [
+                        "This is a thin wrapper around |func|`tracer.add_warning` with origin set to |value|`\"validation\"` and",
+                        "that checks if the rule is ignored before adding the warning."
+                    ]
+                }
+            },
+            "examples": [
+                "/__WTRL_EXAMPLES__/sha256_aa643e1640a08f85ae01382beec60157428cf4d313fe53f350dab6b17f897da0"
+            ]
         }
     },
     "__WTRL_EXAMPLES__": {
@@ -5312,10 +5392,10 @@
                 "sdv.doc.waterloo.docitem_helper.get_source_docstring"
             ]
         },
-        "sha256_10cca6146b8e2e9533d242a5fa4c39af4d966a569ca6fc3077ce247131ad25e0": {
+        "sha256_a5f9f46084ab69bb226f530614c6eb81f55f323e3601bd5e56e08ea1a287fe98": {
             "lang": "python",
-            "hash": "10cca6146b8e2e9533d242a5fa4c39af4d966a569ca6fc3077ce247131ad25e0",
-            "code": "#!/usr/bin/env python3\n\nimport sdv.doc.waterloo.docitem_helper as h\nimport sys,json\n\n# Dump a tracer as JSON for demonstration purposes.\ndef test_tracer() -> None:\n\ttr = h.tracer()\n# The tracer collects messages from deep inside\n# the docitem parsing or validation process.\n# Make sure to provide a meaningful tag at each scope.\n\ttr.push(\"Path\")\n\ttr.push(\"To\")\n\n# Demomstrate the context stack\n\ttr.push(\"Context1\")\n\ttr.add_debug_note(\"A debug entry\",\"test\")\n\ttr.pop()\n\n\ttr.push(\"Context2\")\n\ttr.add_info(\"An info\",\"test\")\n\ttr.pop()\n\n\ttr.push(\"Context3\")\n\ttr.add_warning(\"ABC-123\",\"test\",\"A warning\")\n\ttr.pop()\n\n\ttr.push(\"Context4\")\n\ttr.add_error(\"DEF-456\",\"test\",\"An error\")\n\ttr.pop()\n\n\tjson.dump(tr.build_json(tr.Severity.DEBUG),sys.stdout, indent=4)\n\tprint()\n\ntest_tracer()\n",
+            "hash": "a5f9f46084ab69bb226f530614c6eb81f55f323e3601bd5e56e08ea1a287fe98",
+            "code": "#!/usr/bin/env python3\n\nimport sdv.doc.waterloo.docitem_helper as h\nimport sys,json\n\n# Dump a tracer as JSON for demonstration purposes.\ndef test_tracer() -> None:\n\ttr = h.tracer()\n# The tracer collects messages from deep inside\n# the docitem parsing or validation process.\n# Make sure to provide a meaningful tag at each scope.\n\twith h.traced_section(tr,\"Path\"):\n\t\twith h.traced_section(tr,\"To\"):\n# Demomstrate the context stack\n\t\t\twith h.traced_section(tr,\"Context1\"):\n\t\t\t\ttr.add_debug_note(\"A debug entry\",\"test\")\n\n\t\t\twith h.traced_section(tr,\"Context2\"):\n\t\t\t\ttr.add_info(\"An info\",\"test\")\n\n\t\t\twith h.traced_section(tr,\"Context3\"):\n\t\t\t\ttr.add_warning(\"ABC-123\",\"test\",\"A warning\")\n\n\t\t\twith h.traced_section(tr,\"Context4\"):\n\t\t\t\ttr.add_error(\"DEF-456\",\"test\",\"An error\")\n\n\t\t\tjson.dump(tr.build_json(tr.Severity.DEBUG),sys.stdout, indent=4)\n\t\t\tprint()\n\ntest_tracer()\n",
             "referenced_by": [
                 "sdv.doc.waterloo.docitem_helper.tracer",
                 "sdv.doc.waterloo.docitem_helper.tracer.build_json"
@@ -5353,12 +5433,28 @@
                 "sdv.doc.waterloo.docitem_helper.get_obj_fully_qualified_name"
             ]
         },
-        "sha256_e9f7e9ad49caef4ae9f18f75a2f1353ebcd55d79d205522dcbd2744c2817059b": {
+        "sha256_1f43918632b8c3a6dc4596d00d5665b0dd8dad6295111e2e4e85363e10bd9b4e": {
             "lang": "python",
-            "hash": "e9f7e9ad49caef4ae9f18f75a2f1353ebcd55d79d205522dcbd2744c2817059b",
-            "code": "#!/usr/bin/env python3\n\nimport sdv.doc.waterloo.docitem_helper as h\n\nclass X:\n\t@classmethod\n\tdef m_cls(cls) -> None:\n\t\tpass\n\t@staticmethod\n\tdef m_stat(cls) -> None:\n\t\tpass\n\tdef m(self) -> None:\n\t\tpass\n\tclass Y:\n\t\tpass\n\ty = Y()\n\ndef f() -> None:\n\tpass\n\nx = X()\nprint(h.get_obj_name(X))\nprint(h.get_obj_name(x))\nprint(h.get_obj_name(X.m_cls))\nprint(h.get_obj_name(X.m_stat))\nprint(h.get_obj_name(x.m))\nprint(h.get_obj_name(f))\nprint(h.get_obj_name(X.Y))\nprint(h.get_obj_name(x.Y))\n\n# These two are a bit surprising, but seem to be\n# irrelevant for the project.\nprint(h.get_obj_name(x.y))\nprint(h.get_obj_name(X.y))\n\n# Same here. See section Notes.Limitations.\nprint(h.get_obj_fully_qualified_name(x.y))\nprint(h.get_obj_fully_qualified_name(X.y))\n\n",
+            "hash": "1f43918632b8c3a6dc4596d00d5665b0dd8dad6295111e2e4e85363e10bd9b4e",
+            "code": "#!/usr/bin/env python3\n\nimport sdv.doc.waterloo.docitem_helper as h\n\nclass Z:\n\tpass\n\nclass X:\n\tdef __init__(self):\n\t\tself._p = 3\n\n\t@classmethod\n\tdef m_cls(cls) -> None:\n\t\tpass\n\t@staticmethod\n\tdef m_stat(cls) -> None:\n\t\tpass\n\tdef m(self) -> None:\n\t\tpass\n\tclass Y:\n\t\tpass\n\ty = Y()\n\tz = Z()\n\n\t@property\n\tdef p(self):\n\t\treturn self._p\n\t@p.setter\n\tdef p(self,val):\n\t\tself._p = val\n\t\n\ndef f() -> None:\n\tpass\n\nx = X()\nprint(h.get_obj_fully_qualified_name(X))\nprint(h.get_obj_fully_qualified_name(x))\nprint(h.get_obj_fully_qualified_name(X.m_cls))\nprint(h.get_obj_fully_qualified_name(X.m_stat))\nprint(h.get_obj_fully_qualified_name(x.m))\nprint(h.get_obj_fully_qualified_name(f))\nprint(h.get_obj_fully_qualified_name(X.Y))\nprint(h.get_obj_fully_qualified_name(x.Y))\n\nprint(h.get_obj_fully_qualified_name(x.y))\nprint(h.get_obj_fully_qualified_name(X.y))\n\n# See limitations. Nested instances should not be passed.\nprint(h.get_obj_fully_qualified_name(X.z))\nprint(h.get_obj_fully_qualified_name(x.z))\n\nprint(h.get_obj_fully_qualified_name(x.p))\nprint(h.get_obj_fully_qualified_name(X.p.setter))\n\n",
             "referenced_by": [
-                "sdv.doc.waterloo.docitem_helper.get_obj_fully_qualified_name",
+                "sdv.doc.waterloo.docitem_helper.get_obj_fully_qualified_name"
+            ]
+        },
+        "sha256_0755f05dbabc8847acbdb162963cea429f2b382bfaa9f2730f0e0cf2d6c6b966": {
+            "lang": "python",
+            "hash": "0755f05dbabc8847acbdb162963cea429f2b382bfaa9f2730f0e0cf2d6c6b966",
+            "code": "#!/usr/bin/env python3\n\nfrom __future__ import annotations\nfrom typing import Generator\nimport math\nimport sdv.doc.waterloo.docitem_helper as h\n\n# Excerpts from the contract:\n# Must handle functions at module level.\ndef f() -> None:\n\tpass\n\n# Must handle generators\ndef g() -> Generator[int,None,None]:\n\tyield 42\n\nclass X:\n\tdef __call__(self) -> None:\n\t\tprint(\"Hello Kitty\")\n\t# Must handle functions in classes without decorators.\n\tdef m() -> None:\n\t\tpass\n\t# Must handle functions in classes with decorator `@staticmethod`.\n\t@classmethod\n\tdef m_cls(cls) -> None:\n\t\tpass\n\t# Must andle functions in classes with decorator `@classmethod`.\n\t@staticmethod\n\tdef m_stat(cls) -> None:\n\t\tpass\n\t# Must handle generators\n\tdef g() -> Generator[int,None,None]:\n\t\tyield 42\n\ndef test_get_func_obj_from_callable() -> None:\n\tx = X()\n\tprint(h.get_obj_fully_qualified_name(h.get_func_obj_from_callable(X)))\n\tprint(h.get_obj_fully_qualified_name(h.get_func_obj_from_callable(f)))\n\tprint(h.get_obj_fully_qualified_name(h.get_func_obj_from_callable(g)))\n\tprint(h.get_obj_fully_qualified_name(h.get_func_obj_from_callable(x)))\n\tprint(h.get_obj_fully_qualified_name(h.get_func_obj_from_callable(X.m)))\n\tprint(h.get_obj_fully_qualified_name(h.get_func_obj_from_callable(X.m_cls)))\n\tprint(h.get_obj_fully_qualified_name(h.get_func_obj_from_callable(X.m_stat)))\n\tprint(h.get_obj_fully_qualified_name(h.get_func_obj_from_callable(X.g)))\n\tprint(h.get_obj_fully_qualified_name(h.get_func_obj_from_callable(h.get_func_obj_from_callable)))\n\tprint(h.get_obj_fully_qualified_name(h.get_func_obj_from_callable(math.sin)))\n\tprint(h.get_obj_fully_qualified_name(h.get_func_obj_from_callable(print)))\n\nif __name__ == \"__main__\":\n\ttest_get_func_obj_from_callable()\n",
+            "referenced_by": [
+                "sdv.doc.waterloo.docitem_helper.get_func_obj_from_callable",
+                "sdv.doc.waterloo.docitem_helper.get_obj_fully_qualified_name"
+            ]
+        },
+        "sha256_edb523db53410acfd196688e293393ea71a6b5fc3d83bea8250d014b7072e8cc": {
+            "lang": "python",
+            "hash": "edb523db53410acfd196688e293393ea71a6b5fc3d83bea8250d014b7072e8cc",
+            "code": "#!/usr/bin/env python3\n\nimport sdv.doc.waterloo.docitem_helper as h\n\nclass X:\n\t@classmethod\n\tdef m_cls(cls) -> None:\n\t\tpass\n\t@staticmethod\n\tdef m_stat(cls) -> None:\n\t\tpass\n\tdef m(self) -> None:\n\t\tpass\n\tclass Y:\n\t\tpass\n\ty = Y()\n\ndef f() -> None:\n\tpass\n\nx = X()\nprint(h.get_obj_name(X))\nprint(h.get_obj_name(x))\nprint(h.get_obj_name(X.m_cls))\nprint(h.get_obj_name(X.m_stat))\nprint(h.get_obj_name(x.m))\nprint(h.get_obj_name(f))\nprint(h.get_obj_name(X.Y))\nprint(h.get_obj_name(x.Y))\n\n# These two are a bit surprising, but seem to be\n# irrelevant for the project.\nprint(h.get_obj_name(x.y))\nprint(h.get_obj_name(X.y))\n\n# Same here. See section Notes.Limitations.\nprint(h.get_obj_fully_qualified_name(x.y))\nprint(h.get_obj_fully_qualified_name(X.y))\n\nprint(x.y.__class__.__name__)\nprint(X.Y.__name__)\n",
+            "referenced_by": [
                 "sdv.doc.waterloo.docitem_helper.get_obj_name"
             ]
         },
@@ -5394,17 +5490,50 @@
                 "sdv.doc.waterloo.docitem_helper.get_obj_decorators"
             ]
         },
-        "sha256_5d9d9dc53136057cb721a5068bd9ce99ed4b89ae52ad9dde8a6be7d276007ca7": {
+        "sha256_28945dd0612fba8d6891610a15b49001b2eaa18be8a8de4dfff6e9416b3defe5": {
             "lang": "python",
-            "hash": "5d9d9dc53136057cb721a5068bd9ce99ed4b89ae52ad9dde8a6be7d276007ca7",
-            "code": "#!/usr/bin/env python3\n\nfrom __future__ import annotations\nfrom typing import TypeAlias\nimport sdv.doc.waterloo.docitem_helper as h\n\nclass X:\n\t@classmethod\n\tdef m_cls(cls) -> None:\n\t\tpass\n\t@staticmethod\n\tdef m_stat(cls) -> None:\n\t\tpass\n\tdef m(self) -> None:\n\t\tpass\n\tv: int = 42\n\tt: TypeAlias = int | float\n\ndef f() -> None:\n\tpass\n\nfunctions_to_test = [\n\th.is_obj_module,\n\th.is_obj_class,\n\th.is_obj_function,\n\th.is_obj_method_like,\n\th.is_obj_named_value,\n\th.is_obj_documentable\n\t]\n\nobjects_to_test = [ h,X,f,X.m,X.m_cls,X.m_stat,X.v,X.t ]\n\nif __name__ == \"__main__\":\n\tprint(\"                     h        X        f        X.m      X.m_cls  X.m_stat X.v      X.t\")\n\tfor func in functions_to_test:\n\t\tprint(func.__name__ + \":\" + \" \" * (20 - len(func.__name__)),end='')\n\t\tfor obj in objects_to_test:\n\t\t\tprint(\"True \" if func(obj) else \"False\",end='    ')\n\t\tprint()\n\n#                      h        X        f        X.m      X.m_cls  X.m_stat X.v      X.t\n# is_obj_module:       True     False    False    False    False    False    False    False    \n# is_obj_class:        False    True     False    False    False    False    False    False    \n# is_obj_function:     False    False    True     True     True     True     False    False    \n# is_obj_method_like:  False    False    False    True     True     True     False    False    \n# is_obj_named_value:  False    False    False    False    False    False    True     True     \n# is_obj_documentable: True     True     True     True     True     True     False    False    \n",
+            "hash": "28945dd0612fba8d6891610a15b49001b2eaa18be8a8de4dfff6e9416b3defe5",
+            "code": "#!/usr/bin/env python3\n\nfrom __future__ import annotations\nfrom typing import TypeAlias\nimport sdv.doc.waterloo.docitem_helper as h\n\n# This file is intentionally a human-facing demo for the HTML documentation.\n# The same matrix is covered by a pytest in package_main/pytest/.\n# Keep the structure simple so the rendered HTML stays easy to read.\n\nclass X:\n\t# Instance/class/staticmethod examples plus a typed class attribute.\n\t@classmethod\n\tdef m_cls(cls) -> None:\n\t\tpass\n\t@staticmethod\n\tdef m_stat(cls) -> None:\n\t\tpass\n\tdef m(self) -> None:\n\t\tpass\n\tv: int = 42\n\tt: TypeAlias = int | float\n\ndef f() -> None:\n\tpass\n\n# The test set mirrors the documentation examples:\n# module, class, function, bound methods, static/class methods, variable, and type alias.\nfunctions_to_test = [\n\th.is_obj_module,\n\th.is_obj_class,\n\th.is_obj_function,\n\th.is_obj_method_like,\n\th.is_obj_named_value,\n\th.is_obj_documentable,\n\th.is_obj_annotatable\n\t]\n\n# The object matrix is printed as rows of booleans.\n# That makes it easy to compare the heuristic behavior across object kinds.\nobjects_to_test = [ h,X,f,X.m,X.m_cls,X.m_stat,X.v,X.t ]\n\nif __name__ == \"__main__\":\n\t# Header row for manual inspection in the terminal.\n\tprint(\"                     h        X        f        X.m      X.m_cls  X.m_stat X.v      X.t\")\n\tfor func in functions_to_test:\n\t\t# Each row is one predicate evaluated against all sample objects.\n\t\tprint(func.__name__ + \":\" + \" \" * (20 - len(func.__name__)),end='')\n\t\tfor obj in objects_to_test:\n\t\t\tprint(\"True \" if func(obj) else \"False\",end='    ')\n\t\tprint()\n\n# Expected results, kept as comments so the file doubles as a readable demo.\n#                      h        X        f        X.m      X.m_cls  X.m_stat X.v      X.t\n# is_obj_module:       True     False    False    False    False    False    False    False    \n# is_obj_class:        False    True     False    False    False    False    False    False    \n# is_obj_function:     False    False    True     True     True     True     False    False    \n# is_obj_method_like:  False    False    False    True     True     True     False    False    \n# is_obj_named_value:  False    False    False    False    False    False    True     True     \n# is_obj_documentable: True     True     True     True     True     True     False    False    \n# is_obj_annotatable:  True     True     True     True     True     True     False    False\n",
             "referenced_by": [
+                "sdv.doc.waterloo.docitem_helper.is_obj_annotatable",
                 "sdv.doc.waterloo.docitem_helper.is_obj_class",
                 "sdv.doc.waterloo.docitem_helper.is_obj_documentable",
                 "sdv.doc.waterloo.docitem_helper.is_obj_function",
                 "sdv.doc.waterloo.docitem_helper.is_obj_method_like",
                 "sdv.doc.waterloo.docitem_helper.is_obj_module",
                 "sdv.doc.waterloo.docitem_helper.is_obj_named_value"
+            ]
+        },
+        "sha256_f3ad6f26b021e5e0b409a4c979212909a96412adc87ede779d0191cc030268d3": {
+            "lang": "python",
+            "hash": "f3ad6f26b021e5e0b409a4c979212909a96412adc87ede779d0191cc030268d3",
+            "code": "#!/usr/bin/env python3\n\nimport sdv.doc.waterloo.docitem_helper as h\n\nprint(h.explain_try_self_for_section(\"Contract\",\"class\"))\nprint(h.explain_try_self_for_subsection(\"Contract.requires\",\"class\"))\n",
+            "referenced_by": [
+                "sdv.doc.waterloo.docitem_helper.explain_try_self_for_section",
+                "sdv.doc.waterloo.docitem_helper.explain_try_self_for_subsection"
+            ]
+        },
+        "sha256_aa643e1640a08f85ae01382beec60157428cf4d313fe53f350dab6b17f897da0": {
+            "lang": "python",
+            "hash": "aa643e1640a08f85ae01382beec60157428cf4d313fe53f350dab6b17f897da0",
+            "code": "#!/usr/bin/env python3\n\nimport sdv.doc.waterloo.docitem_helper as h\n\ndef test_tracer() -> None:\n\ttr = h.tracer()\n\n\twith h.traced_section(tr,\"Path\"):\n\t\twith h.traced_section(tr,\"To\"):\n\t\t\twith h.traced_section(tr,\"Context\"):\n\t\t\t\th.warn_parsing(tr,\"ABC-123\",\"A warning raised during parsing\")\n\twith h.traced_section(tr,\"Other\"):\n\t\twith h.traced_section(tr,\"Path\"):\n\t\t\th.warn_validation(tr,\"ABC-123\",\"A warning raised during validation\")\n\n\tprint(tr)\n\ntest_tracer()\n",
+            "referenced_by": [
+                "sdv.doc.waterloo.docitem_helper.traced_section",
+                "sdv.doc.waterloo.docitem_helper.warn_parsing",
+                "sdv.doc.waterloo.docitem_helper.warn_validation"
+            ]
+        },
+        "sha256_e046e223bac0407f4787934f6f0128d5f64d528ae2d77878b5fd167ea8ab5c8c": {
+            "lang": "python",
+            "hash": "e046e223bac0407f4787934f6f0128d5f64d528ae2d77878b5fd167ea8ab5c8c",
+            "code": "#!/usr/bin/env python3\n\nimport sdv.doc.waterloo.docitem_helper as h\n\ndef test_tracer() -> None:\n\ttr = h.tracer()\n\n\twith h.traced_section(tr,\"Path\"):\n\t\twith h.traced_section(tr,\"To\"):\n\t\t\twith h.traced_section(tr,\"Context\"):\n\t\t\t\ttry:\n\t\t\t\t\th.raise_has_no_docstring(tr,\"ABC-123\",test_tracer)\n\t\t\t\texcept:\n\t\t\t\t\tpass\n\t\t\t\ttry:\n\t\t\t\t\th.raise_parsing_error(tr,\"ABC-123\",\"A message\",{\n\t\t\t\t\t\t\"found\":\"this\",\n\t\t\t\t\t\t\"expected\":\"that\",\n\t\t\t\t\t\t\"hint\":\"consult waterlint\"\n\t\t\t\t\t\t})\n\t\t\t\texcept:\n\t\t\t\t\tpass\n\t\t\t\ttry:\n\t\t\t\t\th.raise_parsing_error_expected_but_got(tr,\"ABC-123\",\"that\",\"this\")\n\t\t\t\texcept:\n\t\t\t\t\tpass\n\t\t\t\ttry:\n\t\t\t\t\th.raise_parsing_error_invalid_label(tr,\"ABC-123\",\"Conforming_to:\",[\"Preamble\",\"Contract\"])\n\t\t\t\texcept:\n\t\t\t\t\tpass\n\t\t\t\ttry:\n\t\t\t\t\th.raise_validation_error(tr,test_tracer,\"ABC-123\",\"A message\",{\n\t\t\t\t\t\t\"found\":\"wrong section\",\n\t\t\t\t\t\t\"expected\":\"right section\",\n\t\t\t\t\t\t\"hint\":\"waterlint explain-section --label <section> --profile <profile>\"\n\t\t\t\t\t\t})\n\t\t\t\texcept:\n\t\t\t\t\tpass\n\t\t\t\ttry:\n\t\t\t\t\th.raise_validation_error_expected_but_got(tr,test_tracer,\"ABC-123\",\"that\",\"this\")\n\t\t\t\texcept:\n\t\t\t\t\tpass\n\tprint(tr)\n\ntest_tracer()\n",
+            "referenced_by": [
+                "sdv.doc.waterloo.docitem_helper.raise_has_no_docstring",
+                "sdv.doc.waterloo.docitem_helper.raise_parsing_error",
+                "sdv.doc.waterloo.docitem_helper.raise_parsing_error_expected_but_got",
+                "sdv.doc.waterloo.docitem_helper.raise_parsing_error_invalid_label",
+                "sdv.doc.waterloo.docitem_helper.raise_validation_error",
+                "sdv.doc.waterloo.docitem_helper.raise_validation_error_expected_but_got"
             ]
         }
     }

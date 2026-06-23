@@ -4,7 +4,12 @@ from __future__ import annotations
 from typing import TypeAlias
 import sdv.doc.waterloo.docitem_helper as h
 
+# This file is intentionally a human-facing demo for the HTML documentation.
+# The same matrix is covered by a pytest in package_main/pytest/.
+# Keep the structure simple so the rendered HTML stays easy to read.
+
 class X:
+	# Instance/class/staticmethod examples plus a typed class attribute.
 	@classmethod
 	def m_cls(cls) -> None:
 		pass
@@ -19,25 +24,33 @@ class X:
 def f() -> None:
 	pass
 
+# The test set mirrors the documentation examples:
+# module, class, function, bound methods, static/class methods, variable, and type alias.
 functions_to_test = [
 	h.is_obj_module,
 	h.is_obj_class,
 	h.is_obj_function,
 	h.is_obj_method_like,
 	h.is_obj_named_value,
-	h.is_obj_documentable
+	h.is_obj_documentable,
+	h.is_obj_annotatable
 	]
 
+# The object matrix is printed as rows of booleans.
+# That makes it easy to compare the heuristic behavior across object kinds.
 objects_to_test = [ h,X,f,X.m,X.m_cls,X.m_stat,X.v,X.t ]
 
 if __name__ == "__main__":
+	# Header row for manual inspection in the terminal.
 	print("                     h        X        f        X.m      X.m_cls  X.m_stat X.v      X.t")
 	for func in functions_to_test:
+		# Each row is one predicate evaluated against all sample objects.
 		print(func.__name__ + ":" + " " * (20 - len(func.__name__)),end='')
 		for obj in objects_to_test:
 			print("True " if func(obj) else "False",end='    ')
 		print()
 
+# Expected results, kept as comments so the file doubles as a readable demo.
 #                      h        X        f        X.m      X.m_cls  X.m_stat X.v      X.t
 # is_obj_module:       True     False    False    False    False    False    False    False    
 # is_obj_class:        False    True     False    False    False    False    False    False    
@@ -45,3 +58,4 @@ if __name__ == "__main__":
 # is_obj_method_like:  False    False    False    True     True     True     False    False    
 # is_obj_named_value:  False    False    False    False    False    False    True     True     
 # is_obj_documentable: True     True     True     True     True     True     False    False    
+# is_obj_annotatable:  True     True     True     True     True     True     False    False

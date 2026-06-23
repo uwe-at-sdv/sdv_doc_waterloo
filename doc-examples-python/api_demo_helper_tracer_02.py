@@ -9,27 +9,22 @@ def test_tracer() -> None:
 # The tracer collects messages from deep inside
 # the docitem parsing or validation process.
 # Make sure to provide a meaningful tag at each scope.
-	tr.push("Path")
-	tr.push("To")
-
+	with h.traced_section(tr,"Path"):
+		with h.traced_section(tr,"To"):
 # Demomstrate the context stack
-	tr.push("Context1")
-	tr.add_debug_note("A debug entry","test")
-	tr.pop()
+			with h.traced_section(tr,"Context1"):
+				tr.add_debug_note("A debug entry","test")
 
-	tr.push("Context2")
-	tr.add_info("An info","test")
-	tr.pop()
+			with h.traced_section(tr,"Context2"):
+				tr.add_info("An info","test")
 
-	tr.push("Context3")
-	tr.add_warning("ABC-123","test","A warning")
-	tr.pop()
+			with h.traced_section(tr,"Context3"):
+				tr.add_warning("ABC-123","test","A warning")
 
-	tr.push("Context4")
-	tr.add_error("DEF-456","test","An error")
-	tr.pop()
+			with h.traced_section(tr,"Context4"):
+				tr.add_error("DEF-456","test","An error")
 
-	json.dump(tr.build_json(tr.Severity.DEBUG),sys.stdout, indent=4)
-	print()
+			json.dump(tr.build_json(tr.Severity.DEBUG),sys.stdout, indent=4)
+			print()
 
 test_tracer()

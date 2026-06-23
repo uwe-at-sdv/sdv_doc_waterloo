@@ -37,3 +37,5 @@ print(h.get_obj_name(X.y))
 print(h.get_obj_fully_qualified_name(x.y))
 print(h.get_obj_fully_qualified_name(X.y))
 
+print(x.y.__class__.__name__)
+print(X.Y.__name__)

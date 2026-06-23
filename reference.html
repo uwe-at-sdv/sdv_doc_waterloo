@@ -406,7 +406,7 @@
 <td><ul class="simple">
 <li><p><code class="wtrl_label docutils literal notranslate"><span class="pre">normative</span> <span class="pre">sections</span></code></p>
 <ul>
-<li><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Contract</span></code>, <code class="wtrl_label docutils literal notranslate"><span class="pre">Parameters</span></code>, <code class="wtrl_label docutils literal notranslate"><span class="pre">Returns</span></code>, <code class="wtrl_label docutils literal notranslate"><span class="pre">Raises</span></code></p></li>
+<li><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Contract</span></code>, <code class="wtrl_label docutils literal notranslate"><span class="pre">Parameters</span></code>, <code class="wtrl_label docutils literal notranslate"><span class="pre">Returns</span></code>, <code class="wtrl_label docutils literal notranslate"><span class="pre">Raises</span></code>, <code class="wtrl_label docutils literal notranslate"><span class="pre">See</span> <span class="pre">also</span></code></p></li>
 </ul>
 </li>
 <li><p><code class="wtrl_label docutils literal notranslate"><span class="pre">scope</span></code></p>
@@ -449,12 +449,15 @@
 <td><p class="wtrl-note-title rubric">Last review</p>
 <p class="wtrl-freeform-paragraph-content">2026-06-22</p>
 <p class="wtrl-note-title rubric">Limitations</p>
-<p class="wtrl-freeform-paragraph-content">This helper is best-effort and object-local. It does not reconstruct containment context for nested instances. For such cases it may return only the local class name instead of a fully qualified nested name.</p>
+<p class="wtrl-freeform-paragraph-content">This helper is best-effort and object-local. It does not reconstruct containment context for nested instances. Behavior for property-like descriptors such as <code class="wtrl_type docutils literal notranslate"><span class="pre">property</span></code> and <code class="wtrl_type docutils literal notranslate"><span class="pre">cached_property</span></code> is undefined. If you need a more precise identifier, prefer <code class="wtrl_func docutils literal notranslate"><span class="pre">get_obj_fully_qualified_name</span></code>.</p>
 </td>
+</tr>
+<tr class="wtrl-section row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">See</span> <span class="pre">also</span></code></p></td>
+<td><p><a class="wtrl_var reference internal" href="#wtrl-func-3:sdv-3:doc-8:waterloo-14:docitem_helper-28:get_obj_fully_qualified_name" title="sdv.doc.waterloo.docitem_helper.get_obj_fully_qualified_name"><span>get_obj_fully_qualified_name</span></a></p></td>
 </tr>
 </tbody>
 <thead class="wtrl-box-head-function">
-<tr class="row-even"><th class="head"><code class="wtrl_label docutils literal notranslate"><span class="pre">Function</span></code></th>
+<tr class="row-odd"><th class="head"><code class="wtrl_label docutils literal notranslate"><span class="pre">Function</span></code></th>
 <th class="head"><p>get_obj_name</p></th>
 </tr>
 </thead>
@@ -494,6 +497,7 @@
 <li><p><code class="wtrl_norm docutils literal notranslate"><span class="pre">Must</span></code> return callable/class/object names as <code class="wtrl_mod docutils literal notranslate"><span class="pre">&lt;module&gt;</span></code> . <code class="wtrl_lit docutils literal notranslate"><span class="pre">&lt;qualname&gt;</span></code> when both parts are available.</p></li>
 <li><p><code class="wtrl_norm docutils literal notranslate"><span class="pre">Must</span></code> fall back to <code class="wtrl_func docutils literal notranslate"><span class="pre">get_obj_name</span></code> if no module prefix can be determined.</p></li>
 <li><p><code class="wtrl_norm docutils literal notranslate"><span class="pre">Must</span></code> return input strings unchanged.</p></li>
+<li><p><code class="wtrl_norm docutils literal notranslate"><span class="pre">Must</span></code> resolve class instances to their class name, prefixed by the module name when available.</p></li>
 </ul>
 </li>
 </ul>
@@ -514,8 +518,10 @@
 <td><code class="wtrl_value docutils literal notranslate"><span class="pre">&lt;empty&gt;</span></code></td>
 </tr>
 <tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Notes</span></code></p></td>
-<td><p class="wtrl-note-title rubric">Limitations</p>
-<p class="wtrl-freeform-paragraph-content">This helper is best-effort and object-local. It does not reconstruct containment context for nested instances. For such cases it may return only the local class name prefixed by the module name.</p>
+<td><p class="wtrl-note-title rubric">Last review</p>
+<p class="wtrl-freeform-paragraph-content">2026-06-23</p>
+<p class="wtrl-note-title rubric">Limitations</p>
+<p class="wtrl-freeform-paragraph-content">Behavior for property-like descriptors such as <code class="wtrl_type docutils literal notranslate"><span class="pre">property</span></code> and <code class="wtrl_type docutils literal notranslate"><span class="pre">cached_property</span></code> is undefined.</p>
 </td>
 </tr>
 </tbody>
@@ -1022,9 +1028,16 @@
 <tr class="wtrl-section row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Raises</span></code></p></td>
 <td><code class="wtrl_value docutils literal notranslate"><span class="pre">&lt;empty&gt;</span></code></td>
 </tr>
+<tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Notes</span></code></p></td>
+<td><p class="wtrl-note-title rubric">Last review</p>
+<p class="wtrl-freeform-paragraph-content">2026-06-22</p>
+<p class="wtrl-note-title rubric">Documentable vs. non-documentable objects</p>
+<p class="wtrl-freeform-paragraph-content">Only modules, classes, and functions are considered documentable for Waterloo docstring generation and validation. Accordingly, sections like <code class="wtrl_label docutils literal notranslate"><span class="pre">Public_types</span></code>, <code class="wtrl_label docutils literal notranslate"><span class="pre">Public_constants</span></code>, and <code class="wtrl_label docutils literal notranslate"><span class="pre">Public_variables</span></code> in module and class docstrings document named values that are not documentable objects themselves.</p>
+</td>
+</tr>
 </tbody>
 <thead class="wtrl-box-head-function">
-<tr class="row-odd"><th class="head"><code class="wtrl_label docutils literal notranslate"><span class="pre">Function</span></code></th>
+<tr class="row-even"><th class="head"><code class="wtrl_label docutils literal notranslate"><span class="pre">Function</span></code></th>
 <th class="head"><p>is_obj_documentable</p></th>
 </tr>
 </thead>
@@ -3653,10 +3666,10 @@
 <li><p><code class="wtrl_label docutils literal notranslate"><span class="pre">general</span></code></p>
 <ul>
 <li><p><code class="wtrl_norm docutils literal notranslate"><span class="pre">Must</span></code> define the following severity levels for filtering the tracer’s output:</p></li>
-<li><p>- <code class="wtrl_value docutils literal notranslate"><span class="pre">DEBUG</span></code>: for debugging notes, not relevant for end-users.</p></li>
-<li><p>- <code class="wtrl_value docutils literal notranslate"><span class="pre">INFO</span></code>: for informational messages that are relevant for end-users but do not indicate any problems.</p></li>
-<li><p>- <code class="wtrl_value docutils literal notranslate"><span class="pre">WARNING</span></code>: for potential issues that should be looked at but do not necessarily indicate a failure.</p></li>
-<li><p>- <code class="wtrl_value docutils literal notranslate"><span class="pre">ERROR</span></code>: for definite problems that indicate a failure to meet a requirement or rule.</p></li>
+<li><p><code class="wtrl_value docutils literal notranslate"><span class="pre">DEBUG</span></code>: for debugging notes, not relevant for end-users.</p></li>
+<li><p><code class="wtrl_value docutils literal notranslate"><span class="pre">INFO</span></code>: for informational messages that are relevant for end-users but do not indicate any problems.</p></li>
+<li><p><code class="wtrl_value docutils literal notranslate"><span class="pre">WARNING</span></code>: for potential issues that should be looked at but do not necessarily indicate a failure.</p></li>
+<li><p><code class="wtrl_value docutils literal notranslate"><span class="pre">ERROR</span></code>: for definite problems that indicate a failure to meet a requirement or rule.</p></li>
 <li><p><code class="wtrl_norm docutils literal notranslate"><span class="pre">Must</span></code> assign integer values to these levels in increasing order of severity, starting with 0 for DEBUG.</p></li>
 </ul>
 </li>
@@ -4883,10 +4896,10 @@
 </tr>
 <tr class="wtrl-section row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Public</span> <span class="pre">constants</span></code></p></td>
 <td><ul>
-<li><p><a class="wtrl_var reference internal" href="#wtrl-obj-3:sdv-3:doc-8:waterloo-12:docitem_base-12:ValuePattern" title="sdv.doc.waterloo.docitem_base.ValuePattern"><span>IDENTIFIER</span></a></p>
+<li><p><a class="wtrl_var reference internal" href="#wtrl-cls-3:sdv-3:doc-8:waterloo-12:docitem_base-28:docitem_list_of_symbols_base-12:ValuePattern" title="sdv.doc.waterloo.docitem_base.docitem_list_of_symbols_base.ValuePattern"><span>IDENTIFIER</span></a></p>
 <p class="wtrl-freeform-paragraph-content"><code class="wtrl_norm docutils literal notranslate"><span class="pre">Must</span></code> represent the pattern of an <code class="wtrl_term docutils literal notranslate"><span class="pre">Identifier</span></code>.</p>
 </li>
-<li><p><a class="wtrl_var reference internal" href="#wtrl-obj-3:sdv-3:doc-8:waterloo-12:docitem_base-12:ValuePattern" title="sdv.doc.waterloo.docitem_base.ValuePattern"><span>QUALIFIED_IDENTIFIER</span></a></p>
+<li><p><a class="wtrl_var reference internal" href="#wtrl-cls-3:sdv-3:doc-8:waterloo-12:docitem_base-28:docitem_list_of_symbols_base-12:ValuePattern" title="sdv.doc.waterloo.docitem_base.docitem_list_of_symbols_base.ValuePattern"><span>QUALIFIED_IDENTIFIER</span></a></p>
 <p class="wtrl-freeform-paragraph-content"><code class="wtrl_norm docutils literal notranslate"><span class="pre">Must</span></code> represent the pattern of a <code class="wtrl_term docutils literal notranslate"><span class="pre">Qualified_Identifier</span></code>.</p>
 </li>
 </ul>
@@ -12208,7 +12221,7 @@
 <tbody>
 <tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Signature</span></code></p></td>
 <td><div class="wtrl-signature-head line"><span class="wtrl_mod">sdv.doc.waterloo.docitem_convert</span><span class="wtrl_op">.</span><span class="wtrl_func">to_string_legend_yaml</span><span class="wtrl_op">(</span></div>
-<div class="wtrl-signature-param line"><span class="wtrl_var">config</span><span class="wtrl_op">: </span><span class="wtrl_type">YamlConfig</span><span class="wtrl_op"> = </span><span class="wtrl_lit">&lt;sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f8f171d6660&gt;</span></div>
+<div class="wtrl-signature-param line"><span class="wtrl_var">config</span><span class="wtrl_op">: </span><span class="wtrl_type">YamlConfig</span><span class="wtrl_op"> = </span><span class="wtrl_lit">&lt;sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f401e672660&gt;</span></div>
 <div class="wtrl-signature-ret line"><span class="wtrl_op">)</span><span class="wtrl_op"> -&gt; </span><span class="wtrl_type">str</span></div>
 </td>
 </tr>
@@ -12272,7 +12285,7 @@
 <td><div class="wtrl-signature-head line"><span class="wtrl_mod">sdv.doc.waterloo.docitem_convert</span><span class="wtrl_op">.</span><span class="wtrl_func">to_string_yaml</span><span class="wtrl_op">(</span></div>
 <div class="wtrl-signature-param line"><span class="wtrl_var">tree</span><span class="wtrl_op">: </span><span class="wtrl_type">DocstringTree</span></div>
 <div class="wtrl-signature-param line"><span class="wtrl_var">flavour</span><span class="wtrl_op">: </span><span class="wtrl_type">Flavour</span></div>
-<div class="wtrl-signature-param line"><span class="wtrl_var">config</span><span class="wtrl_op">: </span><span class="wtrl_type">YamlConfig</span><span class="wtrl_op"> = </span><span class="wtrl_lit">&lt;sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f8f16405590&gt;</span></div>
+<div class="wtrl-signature-param line"><span class="wtrl_var">config</span><span class="wtrl_op">: </span><span class="wtrl_type">YamlConfig</span><span class="wtrl_op"> = </span><span class="wtrl_lit">&lt;sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f401d8a1450&gt;</span></div>
 <div class="wtrl-signature-ret line"><span class="wtrl_op">)</span><span class="wtrl_op"> -&gt; </span><span class="wtrl_type">str</span></div>
 </td>
 </tr>
@@ -12368,7 +12381,7 @@
 <tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Signature</span></code></p></td>
 <td><div class="wtrl-signature-head line"><span class="wtrl_mod">sdv.doc.waterloo.docitem_convert</span><span class="wtrl_op">.</span><span class="wtrl_func">to_string_signature_yaml</span><span class="wtrl_op">(</span></div>
 <div class="wtrl-signature-param line"><span class="wtrl_var">obj</span><span class="wtrl_op">: </span><span class="wtrl_type">object</span></div>
-<div class="wtrl-signature-param line"><span class="wtrl_var">config</span><span class="wtrl_op">: </span><span class="wtrl_type">YamlConfig</span><span class="wtrl_op"> = </span><span class="wtrl_lit">&lt;sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f8f16405450&gt;</span></div>
+<div class="wtrl-signature-param line"><span class="wtrl_var">config</span><span class="wtrl_op">: </span><span class="wtrl_type">YamlConfig</span><span class="wtrl_op"> = </span><span class="wtrl_lit">&lt;sdv.doc.waterloo.docitem_convert.YamlConfig object at 0x7f401d8a1310&gt;</span></div>
 <div class="wtrl-signature-ret line"><span class="wtrl_op">)</span><span class="wtrl_op"> -&gt; </span><span class="wtrl_type">str</span></div>
 </td>
 </tr>

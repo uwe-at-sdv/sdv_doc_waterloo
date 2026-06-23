@@ -51,7 +51,8 @@
         ],
         "sdv.doc.waterloo.docitem_helper.get_obj_fully_qualified_name": [
             "package_gh-pages/doc-examples-python/api_demo_helper_get_obj_fully_qualified_name_01.py",
-            "package_gh-pages/doc-examples-python/api_demo_helper_get_obj_name_01.py"
+            "package_gh-pages/doc-examples-python/api_demo_helper_get_obj_fully_qualified_name_02.py",
+	    "package_gh-pages/doc-examples-python/api_demo_helper_get_func_obj_from_callable_01.py"
         ],
         "sdv.doc.waterloo.docitem_helper.get_obj_name": [
             "package_gh-pages/doc-examples-python/api_demo_helper_get_obj_name_01.py"
@@ -85,6 +86,45 @@
         ],
         "sdv.doc.waterloo.docitem_helper.is_obj_documentable": [
             "package_gh-pages/doc-examples-python/api_demo_helper_is_obj_something_01.py"
+        ],
+        "sdv.doc.waterloo.docitem_helper.is_obj_annotatable": [
+            "package_gh-pages/doc-examples-python/api_demo_helper_is_obj_something_01.py"
+        ],
+        "sdv.doc.waterloo.docitem_helper.get_func_obj_from_callable": [
+            "package_gh-pages/doc-examples-python/api_demo_helper_get_func_obj_from_callable_01.py"
+        ],
+        "sdv.doc.waterloo.docitem_helper.explain_try_self_for_section": [
+            "package_gh-pages/doc-examples-python/api_demo_helper_explain_try_self_01.py"
+        ],
+        "sdv.doc.waterloo.docitem_helper.explain_try_self_for_subsection": [
+            "package_gh-pages/doc-examples-python/api_demo_helper_explain_try_self_01.py"
+        ],
+        "sdv.doc.waterloo.docitem_helper.warn_parsing": [
+            "package_gh-pages/doc-examples-python/api_demo_helper_tracer_03.py"
+        ],
+        "sdv.doc.waterloo.docitem_helper.warn_validation": [
+            "package_gh-pages/doc-examples-python/api_demo_helper_tracer_03.py"
+        ],
+        "sdv.doc.waterloo.docitem_helper.traced_section": [
+            "package_gh-pages/doc-examples-python/api_demo_helper_tracer_03.py"
+        ],
+        "sdv.doc.waterloo.docitem_helper.raise_has_no_docstring": [
+            "package_gh-pages/doc-examples-python/api_demo_helper_tracer_04.py"
+        ],
+        "sdv.doc.waterloo.docitem_helper.raise_parsing_error": [
+            "package_gh-pages/doc-examples-python/api_demo_helper_tracer_04.py"
+        ],
+        "sdv.doc.waterloo.docitem_helper.raise_parsing_error_expected_but_got": [
+            "package_gh-pages/doc-examples-python/api_demo_helper_tracer_04.py"
+        ],
+        "sdv.doc.waterloo.docitem_helper.raise_parsing_error_invalid_label": [
+            "package_gh-pages/doc-examples-python/api_demo_helper_tracer_04.py"
+        ],
+        "sdv.doc.waterloo.docitem_helper.raise_validation_error": [
+            "package_gh-pages/doc-examples-python/api_demo_helper_tracer_04.py"
+        ],
+        "sdv.doc.waterloo.docitem_helper.raise_validation_error_expected_but_got": [
+            "package_gh-pages/doc-examples-python/api_demo_helper_tracer_04.py"
         ]
     }
 }
