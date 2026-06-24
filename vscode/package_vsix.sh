@@ -7,7 +7,7 @@ PATH_README_TEMPLATE="${ROOT}/README_AZURE.md"
 PATH_README_TARGET="${ROOT}/README.md"
 
 #----- begin requirements -------------------------------------#
-command -v jq >/dev/null 2>&1 ||		{ echo "jq not available, install with 'sudo apt-get install jq'."; exit 1; }
+command -v jq >/dev/null 2>&1 || { echo "jq not available, install with 'sudo apt-get install jq'."; exit 1; }
 #----- end requirements ---------------------------------------#
 
 #----- begin ensure vsce --------------------------------------#

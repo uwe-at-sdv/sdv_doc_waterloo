@@ -4,6 +4,8 @@ Format:
 
 - VERSION [YYYY-MM-DD]: Summary.
 
+- 0.5.2 [2026-06-24]:
+  - Nothing has changed
 - 0.5.1 [2026-06-24]:
   - Project metadata modified
 - 0.5.0 [2026-05-15]:
