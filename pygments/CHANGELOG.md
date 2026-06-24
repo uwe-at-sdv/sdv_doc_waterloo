@@ -4,6 +4,10 @@ Format:
 
 - VERSION [YYYY-MM-DD]: Summary.
 
+- 0.5.4 [2026-06-24]:
+  - Version Badge
+- 0.5.3 [2026-06-24]:
+  - Nothing has changed
 - 0.5.2 [2026-06-24]:
   - Nothing has changed
 - 0.5.1 [2026-06-24]:
