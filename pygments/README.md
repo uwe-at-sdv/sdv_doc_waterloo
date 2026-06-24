@@ -1,69 +1,114 @@
-# Python-Waterloo Lexer
+# Python-Waterloo Lexer (Pygments)
 
-![Status](https://img.shields.io/badge/status-pre--release-orange)
-![Version](https://img.shields.io/badge/version-0.5.6-blue)
-![License](https://img.shields.io/badge/license-BSD--2--Clause-blue)
-![Python](https://img.shields.io/badge/python-3.10%2B-blue)
+This folder contains a custom Pygments lexer for Python files with Waterloo docstrings.
 
-`python-waterloo-lexer` is a Pygments lexer for Python files that contain
-Waterloo docstrings.
+> **Branch note (`ide-plugins`)**
+>
+> The Pygments lexer package lives on the `ide-plugins` branch. Installation from Git must
+> reference `@ide-plugins` (see below). General repository documentation is in `@main/README.md`.
 
-It can be used with `pygmentize` and other tools that load Pygments lexers via
-entry points.
+## Prerequisites
 
-## What it provides
+- Python >= 3.10
+- `pip`
+- `pygmentize` (provided by the `Pygments` package)
 
-- a `python-waterloo` Pygments lexer alias
-- syntax highlighting for Python files with Waterloo docstrings
-- installation via PyPI, local checkout, or Git URL
+## Clone the correct branch
 
-## Installation
+The plugin sources live on branch `ide-plugins`. If you want to work from a
+fresh checkout, clone that branch explicitly:
 
+HTTPS:
 ```bash
-pip install python-waterloo-lexer
+git clone --branch ide-plugins --single-branch https://github.com/uwe-at-sdv/sdv_doc_waterloo.git
+cd sdv_doc_waterloo
+```
+SSH:
+```bash
+git clone --branch ide-plugins --single-branch git+ssh://git@github.com/uwe-at-sdv/sdv_doc_waterloo.git
+cd sdv_doc_waterloo
 ```
 
-## Quick test
+## Quick test (no install)
 
-After installation, the lexer is available under the alias
-`python-waterloo`.
+Run `pygmentize` directly against the lexer source file (no packaging/install needed):
 
+Dark terminal theme:
 ```bash
-pygmentize -l python-waterloo -f terminal16m <file.py>
+pygmentize -x \
+  -l pygments/python_waterloo_lexer.py:PythonWaterlooLexer -f terminal16m -O style=monokai \
+  examples-python/example_function_full.py
 ```
-
-You can also check whether Pygments lists the lexer:
-
+Light terminal theme:
 ```bash
-pygmentize -L lexers | grep -i waterloo || true
+pygmentize -x \
+  -l pygments/python_waterloo_lexer.py:PythonWaterlooLexer -f terminal16m -O style=friendly \
+  examples-python/example_function_full.py
 ```
 
 ## Terminal viewer
 
-For a quick terminal preview, a `less` alias can be handy:
+For ad-hoc file viewing in a terminal, a simple `less` alias can be useful:
 
 ```bash
 alias lessh='LESSOPEN="| pygmentize -O style=monokai %s" less -M -R'
 ```
 
-Then open files with:
+Then use:
 
 ```bash
-lessh <file.py>
+lessh examples-python/example_function_full.py
 ```
 
-## Project repository
+If your system already provides `lesspipe`, you can also wire that into your
+shell startup file and have `less` itself perform the preprocessing step.
 
-Development happens in the Waterloo repository:
+## Install from a local checkout
 
-- <https://github.com/uwe-at-sdv/sdv_doc_waterloo>
+If you have cloned the repository, install the lexer package from this folder:
 
-The repository also contains related tooling, documentation, and editor
-integrations for Waterloo docstrings.
+```bash
+pip install ./pygments
+```
 
-## Preview
+For development, an editable install can be convenient:
 
-<picture>
-  <img src="https://minifl.de/sdv_doc_waterloo/img/screenshot_sphinx_pygments_wtrl.png" alt="ExtensionPreview">
-</picture>
+```bash
+pip install -e ./pygments
+```
 
+### Sanity check (after install)
+
+The lexer should be discoverable by its alias:
+
+```bash
+pygmentize -l python-waterloo -f terminal16m examples-python/example_function_full.py
+```
+
+Tip: You can also check whether Pygments lists the lexer:
+
+```bash
+pygmentize -L lexers | grep -i waterloo || true
+```
+
+## Install from PyPI (once available)
+
+```bash
+pip install python-waterloo-lexer
+```
+
+## Install directly from Git
+
+If the repository is reachable by `pip`, the package can also be installed
+directly from a Git URL.
+
+**Important:** The `@ide-plugins` ref is required because this package is maintained on that branch.
+
+HTTPS:
+```bash
+pip install "git+https://github.com/uwe-at-sdv/sdv_doc_waterloo.git@ide-plugins#subdirectory=pygments"
+```
+SSH:
+```bash
+pip install "git+ssh://git@github.com/uwe-at-sdv/sdv_doc_waterloo.git@ide-plugins#subdirectory=pygments"
+```
