@@ -19,6 +19,7 @@ Waterloo Docstrings
 	reference.rst
 	_test_freeform.rst
 	_test_scope.rst
+	test_pygments_lexer.rst
 	legal.rst
 
 Indices and tables
