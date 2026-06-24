@@ -1,7 +1,7 @@
 # Python-Waterloo Lexer
 
 ![Status](https://img.shields.io/badge/status-pre--release-orange)
-![Version](https://img.shields.io/badge/version-0.5.5-blue)
+![Version](https://img.shields.io/badge/version-0.5.6-blue)
 ![License](https://img.shields.io/badge/license-BSD--2--Clause-blue)
 ![Python](https://img.shields.io/badge/python-3.10%2B-blue)
 
@@ -60,3 +60,10 @@ Development happens in the Waterloo repository:
 
 The repository also contains related tooling, documentation, and editor
 integrations for Waterloo docstrings.
+
+## Preview
+
+<picture>
+  <img src="https://minifl.de/sdv_doc_waterloo/img/screenshot_sphinx_pygments_wtrl.png" alt="ExtensionPreview">
+</picture>
+

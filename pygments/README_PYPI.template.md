@@ -60,3 +60,10 @@ Development happens in the Waterloo repository:
 
 The repository also contains related tooling, documentation, and editor
 integrations for Waterloo docstrings.
+
+## Preview
+
+<picture>
+  <img src="https://minifl.de/sdv_doc_waterloo/img/screenshot_sphinx_pygments_wtrl.png" alt="ExtensionPreview">
+</picture>
+
