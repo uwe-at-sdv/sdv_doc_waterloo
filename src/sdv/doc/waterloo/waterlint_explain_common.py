@@ -1133,7 +1133,7 @@ def _section_or_subsection_feature(category: SectionBodyCategory_t) -> tuple[Ite
 		markup_token_lines = [
 			"Waterloo docstrings use inline markup tokens only in free-form content lines.",
 			"Inline markup tokens must not occur in section labels, subsection labels, or list entries in Identifier / Qualified Identifier sections.",
-			"Tokens currently available: |Must|, |must|, |must_not|, |should|, |should_not|, |may|, |may_not|, |None|, |Self|, |True|, |False|.",
+			"Tokens currently available: |Must|, |must|, |must_not|, |should|, |should_not|, |may|, |None|, |Self|, |True|, |False|.",
 			"Semantic roles use the form |role|`content`, where role is one of: "
 			+ ", ".join(WTRL_MARKUP_ROLE_LIST)
 			+ ".",

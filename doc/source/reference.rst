@@ -231,6 +231,163 @@ Additional helpers
 
 .. wtrl_autodoc_function:: build_anchor
 
+Diagnostics helpers
+----------------------
+
+.. wtrl_push_current_module:: sdv.doc.waterloo.docitem_diagnostics
+
+:wtrl_func:`explain_try_self_for_section`
+..........................................
+
+.. wtrl_autodoc_function:: explain_try_self_for_section
+
+:wtrl_func:`explain_try_self_for_subsection`
+.............................................
+
+.. wtrl_autodoc_function:: explain_try_self_for_subsection
+
+:wtrl_func:`render_allowed_identifier`
+......................................
+
+.. wtrl_autodoc_function:: render_allowed_identifier
+
+:wtrl_func:`render_allowed_identifiers`
+.......................................
+
+.. wtrl_autodoc_function:: render_allowed_identifiers
+
+:wtrl_func:`render_base_method_docstring_details`
+..................................................
+
+.. wtrl_autodoc_function:: render_base_method_docstring_details
+
+:wtrl_func:`render_base_method_reference_details`
+.................................................
+
+.. wtrl_autodoc_function:: render_base_method_reference_details
+
+:wtrl_func:`render_constant_reference_details`
+..............................................
+
+.. wtrl_autodoc_function:: render_constant_reference_details
+
+:wtrl_func:`render_deduplicated_identifiers`
+............................................
+
+.. wtrl_autodoc_function:: render_deduplicated_identifiers
+
+:wtrl_func:`render_definition_reference_details`
+.................................................
+
+.. wtrl_autodoc_function:: render_definition_reference_details
+
+:wtrl_func:`render_exactly_one_identifier_details`
+..................................................
+
+.. wtrl_autodoc_function:: render_exactly_one_identifier_details
+
+:wtrl_func:`render_expected_identifier`
+........................................
+
+.. wtrl_autodoc_function:: render_expected_identifier
+
+:wtrl_func:`render_expected_snippet`
+.....................................
+
+.. wtrl_autodoc_function:: render_expected_snippet
+
+:wtrl_func:`render_identifier_lines`
+....................................
+
+.. wtrl_autodoc_function:: render_identifier_lines
+
+:wtrl_func:`render_inherited_definition_details`
+.................................................
+
+.. wtrl_autodoc_function:: render_inherited_definition_details
+
+:wtrl_func:`render_listed_object_missing_details`
+..................................................
+
+.. wtrl_autodoc_function:: render_listed_object_missing_details
+
+:wtrl_func:`render_missing_entry_details`
+.........................................
+
+.. wtrl_autodoc_function:: render_missing_entry_details
+
+:wtrl_func:`render_name_object_consistency_details`
+...................................................
+
+.. wtrl_autodoc_function:: render_name_object_consistency_details
+
+:wtrl_func:`render_named_value_reference_details`
+..................................................
+
+.. wtrl_autodoc_function:: render_named_value_reference_details
+
+:wtrl_func:`render_normative_section_details`
+.............................................
+
+.. wtrl_autodoc_function:: render_normative_section_details
+
+:wtrl_func:`render_normativity_keyword_details`
+...............................................
+
+.. wtrl_autodoc_function:: render_normativity_keyword_details
+
+:wtrl_func:`render_overview_missing_member_details`
+...................................................
+
+.. wtrl_autodoc_function:: render_overview_missing_member_details
+
+:wtrl_func:`render_overview_requires_section_details`
+.....................................................
+
+.. wtrl_autodoc_function:: render_overview_requires_section_details
+
+:wtrl_func:`render_parameter_signature_details`
+...............................................
+
+.. wtrl_autodoc_function:: render_parameter_signature_details
+
+:wtrl_func:`render_profile_mismatch_details`
+............................................
+
+.. wtrl_autodoc_function:: render_profile_mismatch_details
+
+:wtrl_func:`render_scope_relation_details`
+..........................................
+
+.. wtrl_autodoc_function:: render_scope_relation_details
+
+:wtrl_func:`render_see_also_reference_details`
+..............................................
+
+.. wtrl_autodoc_function:: render_see_also_reference_details
+
+:wtrl_func:`render_source_snippet`
+...................................
+
+.. wtrl_autodoc_function:: render_source_snippet
+
+:wtrl_func:`render_suggestion`
+...............................
+
+.. wtrl_autodoc_function:: render_suggestion
+
+:wtrl_func:`render_type_reference_details`
+..........................................
+
+.. wtrl_autodoc_function:: render_type_reference_details
+
+:wtrl_func:`render_unique_identifiers`
+......................................
+
+.. wtrl_autodoc_function:: render_unique_identifiers
+
+.. wtrl_pop_current_module:: sdv.doc.waterloo.docitem_diagnostics
+
 .. wtrl_pop_current_module:: sdv.doc.waterloo.docitem
 
 Enum classes

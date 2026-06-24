@@ -644,21 +644,21 @@ def render_docker(args: argparse.Namespace) -> int:
 			|Must| treat the directory containing the input TOML file as the base directory for resolving relative paths.
 			|Must| render a Dockerfile that can start |cmd|`wtrl_mcp` with the validated configuration.
 			|Must| expose the configured server port in the rendered builder.
-			|Must| support a baking mode that copies the configured roots into a shared image directory such as |path|`/shared/doc`.
+			|Must| support a baking mode that copies the configured roots into a shared image directory such as |file|`/shared/doc`.
 			|Must| use flat file names in that directory so that the copied roots remain easy to recognize in server logs.
 			|Must| apply a deterministic deduplication strategy if two roots would otherwise map to the same file name.
 			|Must| rewrite the |label|`[[roots]]` paths in the rendered configuration to point at the in-image copy locations.
 			|Must| preserve the existing path-based root identity model, even if the resulting root identifiers differ between host and container deployments.
 			|Must| support a non-baking mode that keeps the configured roots external and documents the required runtime mounts.
-			|Must| describe a shared mount directory for non-baking mode such as |path|`/shared/doc`.
+			|Must| describe a shared mount directory for non-baking mode such as |file|`/shared/doc`.
 			|Must| mount each root file individually in non-baking mode, using a deterministic file path layout that keeps the roots easy to read in the server logs.
 			|Must| emit a companion build script next to the rendered Dockerfile in all modes.
-			|Must| derive the build script name from the |opt|`--out` path so that |path|`my_build.docker` produces |path|`build.my_build.docker.sh`.
+			|Must| derive the build script name from the |opt|`--out` path so that |file|`my_build.docker` produces |file|`build.my_build.docker.sh`.
 			|Must| make the build script executable with mode |lit|`0o775`, or the closest equivalent on the target platform.
 			|Must| have the build script invoke |cmd|`docker build` for the rendered Dockerfile.
 			|Must| have the non-baking launch script start the container with the documented runtime mounts and enumerate them explicitly in the generated script.
 			|Must| emit a companion launch script next to the rendered Dockerfile in non-baking mode.
-			|Must| derive the launch script name from the |opt|`--out` path so that |path|`my_build.docker` produces |path|`launch.my_build.docker.sh`.
+			|Must| derive the launch script name from the |opt|`--out` path so that |file|`my_build.docker` produces |file|`launch.my_build.docker.sh`.
 			|Must| make the launch script executable with mode |lit|`0o775`, or the closest equivalent on the target platform.
 			|Must| have the launch script start the container in the foreground and propagate the container exit status.
 			|Must| omit the launch script in baking mode.

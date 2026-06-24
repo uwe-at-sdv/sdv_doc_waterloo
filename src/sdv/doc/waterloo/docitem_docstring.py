@@ -1,19 +1,13 @@
 from __future__ import annotations
-from types import FunctionType, ModuleType
-from typing import Any, Callable, Dict, Final, get_type_hints, get_origin, get_args, Generator, Iterable, Iterator, List, NewType, NoReturn, Sequence, Set, Tuple, Type, TypeAlias, TypeGuard, Union, cast
+from typing import Dict, Type
 
 from sdv.doc.waterloo.docitem_tokenizer import *
-from sdv.doc.waterloo.docitem_helper import (
+from sdv.doc.waterloo.docitem_diagnostics import (
 	explain_try_self_for_section,
-	explain_try_self_for_subsection,
 	render_allowed_identifier,
-	render_deduplicated_identifiers,
 	render_expected_identifier,
-	render_expected_snippet,
 	render_identifier_lines,
-	render_missing_entry_details,
-	render_normative_section_details,
-	render_source_snippet,
+	render_profile_mismatch_details,
 )
 
 # Import section modules
@@ -70,7 +64,7 @@ Method_overview:
 				|Must| fall back to the default value, if there is no subsection |label|`scope` in |label|`Preamble`.
 				|Must| use {|value|`core`} as default value, i.e. a set with a single element.
 			requires:
-				|self| |must| represent a formally correct Abstract Syntax Tree.
+				|Self| |must| represent a formally correct Abstract Syntax Tree.
 		Parameters:
 		Returns:
 			A set of enum values representing the scopes of the documented object.
@@ -127,7 +121,7 @@ Method_overview:
 		Contract:
 			general:
 				|Must| test whether at least one scope in |var|`sc_query` is at least as public as\
-				at least one scope in |self|.
+				at least one scope in |Self|.
 				This is the visibility relation used for upward references: a referenced object\
 				|must| be at least as public as the referencing object.
 			requires:
@@ -136,7 +130,7 @@ Method_overview:
 			sc_query:
 				The set of scope values of the referenced object.
 		Returns:
-			|True| iff there exists s_query in |var|`sc_query` and s_self in |self|.scopes()\
+			|True| iff there exists s_query in |var|`sc_query` and s_self in |func|`self.scopes()`\
 			such that s_query <= s_self.
 		Raises:
 			SectionNotFoundError:
@@ -157,12 +151,12 @@ Method_overview:
 		Contract:
 			general:
 				|Must| test whether at least one scope in the referenced object |var|`obj_trg`\
-				is at least as public as at least one scope in |self|.
+				is at least as public as at least one scope in |Self|.
 				This is the scope-compatibility relation used for reference edges:\
-				the referenced object |must| be at least as public as |self|.
+				the referenced object |must| be at least as public as |Self|.
 			requires:
 				Requirements of method |func|`scopes` apply,\
-				for both |self| and |var|`obj_trg`.
+				for both |Self| and |var|`obj_trg`.
 		Parameters:
 			obj_trg:
 				The embedded, referenced or otherwise dependent object.
@@ -576,41 +570,42 @@ def make_docitem_tree_from_docstring_tree(tr : tracer, tree : DocstringTree) -> 
 
 def make_docitem_tree(tr : tracer, doc_txt : str) -> docitem_docstring_base:
 	"""
-Preamble:
-	profile:
-		function
-	normative_sections:
-		Contract, Parameters, Returns, Raises
-Contract:
-	general:
-		|Must| accept a |type|`tracer` instance and a string as parameters.
-		|Must| try to parse the string as waterloo docstring and create a docstring tree.
-		|Must| determine the profile from the docstring tree and create the appropriate docitem node class.
-		|Must| call the docitem node's method |func|`parse` and create an Abstract Syntax Tree.
-Parameters:
-	tr:
-		The tracer for collecting diagnostics.
-	doc_txt:
-		The docstring to parse
-Returns:
-	|Must| return the docitem node instance containing the AST
-Raises:
-	ParseError:
-		|Must| raise if docstring is empty.
-		|Must| raise if section |label|`Preamble` is not found.
-		|Must| raise if subsection |label|`Preamble.profile` is not found.
-		|Must| raise if subsection |label|`Preamble.profile` does not contain exactly one item.
-		|Must| raise if the content of subsection |label|`Preamble.profile` is not an identifier..
-		|Must| raise if subsection |label|`Preamble.profile` does not contain a valid profile.
-	BaseException:
-		|Must_not| propagate exceptions from |type|`get_profile_of_tree`.
-		|May| propagate exceptions from method |func|`parse_indent_docstring`.
-		|May| propagate exceptions from method |type|`docitem_docstring_base`. |func|`parse`.
-Notes:
-	Last review:
-		2026-01-22
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+	Contract:
+		general:
+			|Must| accept a |type|`tracer` instance and a string as parameters.
+			|Must| try to parse the string as waterloo docstring and create a docstring tree.
+			|Must| determine the profile from the docstring tree and create the appropriate docitem node class.
+			|Must| call the docitem node's method |func|`parse` and create an Abstract Syntax Tree.
+	Parameters:
+		tr:
+			The tracer for collecting diagnostics.
+		doc_txt:
+			The docstring to parse
+	Returns:
+		|Must| return the docitem node instance containing the AST
+	Raises:
+		ParseError:
+			|Must| raise if docstring is empty.
+			|Must| raise if section |label|`Preamble` is not found.
+			|Must| raise if subsection |label|`Preamble.profile` is not found.
+			|Must| raise if subsection |label|`Preamble.profile` does not contain exactly one item.
+			|Must| raise if the content of subsection |label|`Preamble.profile` is not an identifier..
+			|Must| raise if subsection |label|`Preamble.profile` does not contain a valid profile.
+		BaseException:
+			|Must_not| propagate exceptions from |type|`get_profile_of_tree`.
+			|May| propagate exceptions from method |func|`parse_indent_docstring`.
+			|May| propagate exceptions from method |type|`docitem_docstring_base`. |func|`parse`.
+	Notes:
+		Last review:
+			2026-01-22
 	"""
-	tree = parse_indent_docstring(tr, doc_txt)
+	session = DocSession()
+	tree = parse_indent_docstring(tr, doc_txt, session)
 	return make_docitem_tree_from_docstring_tree(tr, tree)
 
 def check_profile_matches_object(tr: tracer, profile: str, obj: object) -> None:
@@ -637,7 +632,8 @@ def check_profile_matches_object(tr: tracer, profile: str, obj: object) -> None:
 				raise_validation_error(tr, obj, "PRE-019", f"profile is '{profile}' but '{get_obj_name(obj)}' is a function.", details)
 
 def make_docitem_tree_from_object(tr: tracer, obj: object) -> docitem_docstring_base:
-	tree = parse_indent_docstring(tr, get_obj_docstring(obj))
+	session = DocSession()
+	tree = parse_indent_docstring(tr, get_obj_docstring(obj), session)
 	return make_docitem_tree_from_docstring_tree(tr, tree)
 
 #===== end Docstring ==========================================#

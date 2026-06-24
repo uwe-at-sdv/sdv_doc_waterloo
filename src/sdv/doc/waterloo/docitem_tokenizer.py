@@ -8,7 +8,6 @@ from sdv.doc.waterloo.docitem_helper import *
 
 INDENT_SCHEME_TAB : Final[int] = 0
 INDENT_SCHEME_SPC4 : Final[int] = 1
-_PARSED_DOCSTRING_CACHE: Dict[str, DocstringTree] = {}
 
 def make_got_tag(subtree : DocstringSubtree,pos : int) -> str:
 	if pos < 0:
@@ -78,55 +77,57 @@ def get_num_indent(tr : tracer,line : str,indent_scheme: int) -> int:
 	else:
 		raise_parsing_error(tr,"TKN-003",f"Unknown indentation scheme: {indent_scheme}")
 
-def parse_indent_docstring(tr : tracer,text : str) -> DocstringTree:
+def parse_indent_docstring(tr : tracer,text : str, session: DocSession) -> DocstringTree:
 	r"""
-Preamble:
-	profile:
-		function
-	normative_sections:
-		Definitions, Contract, Description, Parameters, Returns, Raises
-Definitions:
-	DocstringTree:
-		A value matching the following type: |type|`DocstringTree` = |type|`List`\[ |type|`Union`\[ |type|`str`, |value|`"DocstringTree"`]]
-Contract:
-	general:
-		|Must| generate a |term|`DocstringTree` from a docstring. In order to achieve this:
-		|Must| accept a multiline string.
-		|Must| remove empty lines at beginning and end of the input.
-		|Must| insist on a uniform indentation scheme as definined normatively in |func|`get_num_indent`.
-		|Must| strip the indentation common to all lines if there is any, where ``common`` means: common to all only non-empty lines.
-		|Must| iterate over the docstring's lines and skip empty lines.
-		|Must| return an empty list (= empty docstring tree) on empty input.
-		|Must| maintain a state engine and update it on each incoming line.
-Description:
-	This section is normative.
-	The state engine consists of the following components:
-	|
-	1. A |term|`DocstringTree` (initial state: |value|`[]`), given by a variable |var|`target`.
-	|
-	2. A stack the elements of which point to |var|`target` or any subtree thereof (see recursive definition of |term|`DocstringTree`; initial state is ``[target]``), represented by a variable |var|`stack`.
-	|
-	3. An integer variable |var|`cur_indent` which represents the current level of indendation during line parsing.
-	|
-	For each incoming line, processed sequentially, the following happens:
-	If the indentation level remains unchanged, the line is appended to the substree represented by the top element of |var|`stack`.
-	If the indentation level increases, an empty |term|`DocstringTree` is appended to the subtree referenced by the top element of |var|`stack` and a reference to this |term|`DocstringTree` is pushed to |var|`stack`.
-	If the indentation level decreases by |var|`n` indentation units, an element is popped from |var|`stack` for each of the |var|`n` indentation levels.
-Parameters:
-	tr:
-		Tracer for better error messages
-	text:
-		A multiline docstring with possibly indented lines.
-Returns:
-	|Must| return the |term|`DocstringTree` described as |var|`target` in section |label|`Description` in the state reached after parsing the entire input.
-Raises:
-	RuntimeError:
-		|Must| raise if indentation grows by more than 1 unit from one line to the next.
-		|Must| raise if inconsistent indentation (tab vs space) is detected.
-		|May| propagate exceptions from |func|`get_num_indent`.
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Definitions, Contract, Description, Parameters, Returns, Raises
+	Definitions:
+		DocstringTree:
+			A value matching the following type: |type|`DocstringTree` = |type|`List`\[ |type|`Union`\[ |type|`str`, |value|`"DocstringTree"`]]
+	Contract:
+		general:
+			|Must| generate a |term|`DocstringTree` from a docstring. In order to achieve this:
+			|Must| accept a multiline string.
+			|Must| remove empty lines at beginning and end of the input.
+			|Must| insist on a uniform indentation scheme as definined normatively in |func|`get_num_indent`.
+			|Must| strip the indentation common to all lines if there is any, where ``common`` means: common to all only non-empty lines.
+			|Must| iterate over the docstring's lines and skip empty lines.
+			|Must| return an empty list (= empty docstring tree) on empty input.
+			|Must| maintain a state engine and update it on each incoming line.
+	Description:
+		This section is normative.
+		The state engine consists of the following components:
+		|
+		1. A |term|`DocstringTree` (initial state: |value|`[]`), given by a variable |var|`target`.
+		|
+		2. A stack the elements of which point to |var|`target` or any subtree thereof (see recursive definition of |term|`DocstringTree`; initial state is ``[target]``), represented by a variable |var|`stack`.
+		|
+		3. An integer variable |var|`cur_indent` which represents the current level of indendation during line parsing.
+		|
+		For each incoming line, processed sequentially, the following happens:
+		If the indentation level remains unchanged, the line is appended to the substree represented by the top element of |var|`stack`.
+		If the indentation level increases, an empty |term|`DocstringTree` is appended to the subtree referenced by the top element of |var|`stack` and a reference to this |term|`DocstringTree` is pushed to |var|`stack`.
+		If the indentation level decreases by |var|`n` indentation units, an element is popped from |var|`stack` for each of the |var|`n` indentation levels.
+	Parameters:
+		tr:
+			Tracer for better error messages
+		text:
+			A multiline docstring with possibly indented lines.
+		session:
+			A |type|`DocSession` object for various caching tasks.
+	Returns:
+		|Must| return the |term|`DocstringTree` described as |var|`target` in section |label|`Description` in the state reached after parsing the entire input.
+	Raises:
+		RuntimeError:
+			|Must| raise if indentation grows by more than 1 unit from one line to the next.
+			|Must| raise if inconsistent indentation (tab vs space) is detected.
+			|May| propagate exceptions from |func|`get_num_indent`.
 	"""
-	if text in _PARSED_DOCSTRING_CACHE:
-		return _PARSED_DOCSTRING_CACHE[text]
+	if session.has_parsed(text):
+		return session.get_parsed(text)
 	lines = text.split("\n")
 
 # Detect indentation scheme from first indented line
@@ -214,7 +215,7 @@ Raises:
 # To be revised. Most likely ok.
 		if "\t" in content:
 			warn_parsing(tr,"TKN-009",'Line contains inner TABs. Please connect lines with escaped \\ or use a raw string notation like r"""..."""')
-	_PARSED_DOCSTRING_CACHE[text] = target
+	session.remember_parsed(text, target)
 	return target
 
 def expect_list(tr : tracer,subtree : DocstringSubtree,pos : int) -> Tuple[DocstringSubtree,int]:
@@ -418,7 +419,7 @@ def get_scopes_of_tree_var(tr : tracer,tree : DocstringTree) -> tuple[Scopes, bo
 		tree:
 			The docitem tree to be examined
 	Returns:
-		|Must| return a tuple |code|`(scopes, explicit)` where |var|`scopes` is the set of scopes found,
+		|Must| return a tuple |var|`(scopes, explicit)` where |var|`scopes` is the set of scopes found,
 		and |var|`explicit` is |True| iff subsection |label|`Preamble.scope` is present.
 	Raises:
 		SectionNotFoundError:

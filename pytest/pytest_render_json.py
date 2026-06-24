@@ -9,6 +9,9 @@ from pathlib import Path
 
 from pytest_common import ROOT, run_waterlint, DIR_EXAMPLES, DIR_MODULE
 
+DOC_JSON_DIR = ROOT / "src" / "sdv" / "doc" / "waterloo" / "doc-json"
+NORMATIVE_TOKEN_RE = re.compile(r"\|(Must_not|Must|Should_not|Should|May|must_not|must|should_not|should|may)\|")
+
 def _parse_info_counts(stderr: str) -> tuple[dict[str, tuple[int, int]], dict[str, int]]:
 	patts = {
 		"modules": r"Num modules skipped \(no docstring / invalid\)\s*:\s*(\d+) / (\d+)",
@@ -64,6 +67,34 @@ def _run_waterlint_validate_json(path: str, schema: str | None = None):
 def _load_json_doc(path: Path) -> dict[str, object]:
 	with path.open("r", encoding="utf-8") as fh:
 		return json.load(fh)
+
+
+def _iter_doc_lines_with_paths(node: object, path: str = "$"):
+	if isinstance(node, dict):
+		for key, value in node.items():
+			next_path = f"{path}.{key}"
+			if key == "doc_lines" and isinstance(value, list):
+				yield next_path, value
+			else:
+				yield from _iter_doc_lines_with_paths(value, next_path)
+	elif isinstance(node, list):
+		for index, item in enumerate(node):
+			yield from _iter_doc_lines_with_paths(item, f"{path}[{index}]")
+
+
+def test_render_json_doc_lines_do_not_keep_raw_normativity_tokens() -> None:
+	files = sorted(DOC_JSON_DIR.glob("*.json"))
+	assert files, f"no doc-json files found in {DOC_JSON_DIR}"
+	failures: list[str] = []
+	for path in files:
+		doc = _load_json_doc(path)
+		for doc_path, lines in _iter_doc_lines_with_paths(doc):
+			if not isinstance(lines, list):
+				continue
+			for line in lines:
+				if isinstance(line, str) and NORMATIVE_TOKEN_RE.search(line):
+					failures.append(f"{path.name}:{doc_path}: {line}")
+	assert not failures, "raw normativity tokens found in doc_lines:\n" + "\n".join(failures)
 
 
 def test_render_json_counts_public_A() -> None:

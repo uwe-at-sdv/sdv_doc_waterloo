@@ -4,6 +4,11 @@ from typing import Any, Callable, Dict, Final, get_type_hints, get_origin, get_a
 
 from sdv.doc.waterloo.docitem_tokenizer import *
 from sdv.doc.waterloo.docitem_base import *
+from sdv.doc.waterloo.docitem_diagnostics import (
+	render_identifier_lines,
+	render_suggestion,
+	explain_try_self_for_subsection,
+)
 
 #===== begin section Contract =================================#
 

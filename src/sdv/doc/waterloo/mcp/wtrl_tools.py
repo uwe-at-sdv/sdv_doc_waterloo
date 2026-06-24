@@ -1230,6 +1230,8 @@ def search_related(
 	anchor_refs = _doc_see_also_refs(object_record)
 	anchor_is_normative = "See_also" in _doc_normative_sections(object_record)
 
+	# Cache one loaded root document per root id for the duration of the process.
+	# This is intentionally process-local; restart the MCP server after root changes.
 	root_context_cache: dict[str, tuple[int, Mapping[str, WtrlJsonNode_t], Path, dict[str, WtrlJsonNode_t]]] = {
 		root_id: (0, {}, Path(), document),
 	}

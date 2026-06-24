@@ -32,7 +32,7 @@ Notes:
 		This script should be used in order to avoid drift. It represents the canonical generation process
 		for these templates, and the resulting JSON files are the Single Source of Truth for their structure and content.
 		Any future JSON snippets produced from signature fragments should stay aligned with
-		the same canonical structure in |path|`package_main/templates-json/out`.
+		the same canonical structure in |file|`package_main/templates-json/out`.
 """
 
 from __future__ import annotations

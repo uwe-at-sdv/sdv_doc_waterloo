@@ -221,6 +221,11 @@ def _load_walk_input(tr: tracer, path: str) -> dict[str, Any] | None:
 	return doc
 
 
+def _render_json_doc_lines(lines: list[str], flavour: cvrt.Flavour) -> list[str]:
+	"""Render logical docstring lines for JSON output in the requested flavour."""
+	return [cvrt._render_token(line, flavour) for line in lines]
+
+
 def _safe_module_docstring(modname: str) -> str | None:
 	try:
 		spec = importlib.util.find_spec(modname)
@@ -644,6 +649,7 @@ def validate_command(args: argparse.Namespace) -> int:
 	Raises:
 	"""
 	tr = tracer()
+	session = docitem.DocSession()
 #----- output spec --------------------------------------------#
 	out_diag	=  getattr(args, "out_diag", None)
 	out_diag_json	=  getattr(args, "out_diag_json", None)
@@ -664,7 +670,7 @@ def validate_command(args: argparse.Namespace) -> int:
 			obj = _resolve_object(args.obj)
 # We have an object, so let's use the tracer!
 			with docitem.traced_section(tr, get_obj_fully_qualified_name(obj)):
-				docitem.validate_docstring(tr, obj, None, None)
+				docitem.validate_docstring(tr, obj, None, session)
 		else:
 # Read from file or stdin.
 			if args.input_file:
@@ -748,6 +754,7 @@ def coverage_command(args: argparse.Namespace) -> int:
 	Raises:
 	"""
 	tr = tracer()
+	session = docitem.DocSession()
 #----- output spec --------------------------------------------#
 	out_diag	=  getattr(args, "out_diag", None)
 	out_diag_json	=  getattr(args, "out_diag_json", None)
@@ -840,6 +847,7 @@ def extract_command(args: argparse.Namespace) -> int:
 	Raises:
 	"""
 	tr = tracer()
+	session = docitem.DocSession()
 #----- output spec --------------------------------------------#
 	out_diag	=  getattr(args, "out_diag", None)
 	out_diag_json	=  getattr(args, "out_diag_json", None)
@@ -862,7 +870,7 @@ def extract_command(args: argparse.Namespace) -> int:
 		else:
 			doc_txt = _read_docstring_from_stdin()
 
-		tree = tokenizer.parse_indent_docstring(tr, doc_txt)
+		tree = tokenizer.parse_indent_docstring(tr, doc_txt, session)
 # Extract section or subsection if requested, otherwise use the whole tree.
 		if args.section:
 			if args.subsection:
@@ -993,6 +1001,7 @@ def validate_json_command(args: argparse.Namespace) -> int:
 	Raises:
 	"""
 	tr = tracer()
+	session = docitem.DocSession()
 #----- output spec --------------------------------------------#
 	out_diag	=  getattr(args, "out_diag", None)
 	out_diag_json	=  getattr(args, "out_diag_json", None)
@@ -1149,6 +1158,7 @@ def render_json_command(args: argparse.Namespace) -> int:
 			inh["source"] = f"/__WTRL_OBJECTS__/{modname}"
 
 	tr = tracer()
+	session = docitem.DocSession()
 #----- output spec --------------------------------------------#
 	out_diag	=  getattr(args, "out_diag", None)
 	out_diag_json	=  getattr(args, "out_diag_json", None)
@@ -1334,7 +1344,7 @@ def render_json_command(args: argparse.Namespace) -> int:
 			with docitem.traced_section(tr_obj,name_key):
 				try:
 # Build docstring tree from docstring.
-					tree_parsed = docitem.parse_indent_docstring(tr_obj, doc_txt)
+					tree_parsed = docitem.parse_indent_docstring(tr_obj, doc_txt, session)
 					tree = docitem.make_docitem_tree_from_docstring_tree(tr_obj, tree_parsed)
 # It is the caller's responsability to provide clean docstrings,
 # but we can at least log problems as warnings. This helps a lot
@@ -1371,7 +1381,7 @@ def render_json_command(args: argparse.Namespace) -> int:
 							num_nonaggregate_rendered[toc_label] += 1
 							objects_counted.add(mem_qname)
 # The docstring subsection of a type is an array of logical lines. We render them as a list in JSON.
-						mem_doc = tree.item(sec_label).item(mem_name).items()
+							mem_doc = _render_json_doc_lines(list(tree.item(sec_label).item(mem_name).items()), flavour)
 						mem_entry = cast(dict[str, Any], tree_full["__WTRL_OBJECTS__"].setdefault(mem_qname, {"doc": {}}))
 						mem_entry["doc"] = {}
 						mem_entry["doc_lines"] = mem_doc
@@ -1407,8 +1417,8 @@ def render_json_command(args: argparse.Namespace) -> int:
 								tr_prop_meth_obj = tracer()
 								try:
 # Build docstring tree from docstring.
-									tree_prop_meth = docitem.parse_indent_docstring(tr_prop_meth_obj, doc_prop_meth)
-									node_prop_meth = docitem.make_docitem_tree_from_docstring_tree(tr_prop_meth_obj, tree_parsed)
+									tree_prop_meth = docitem.parse_indent_docstring(tr_prop_meth_obj, doc_prop_meth, session)
+									node_prop_meth = docitem.make_docitem_tree_from_docstring_tree(tr_prop_meth_obj, tree_prop_meth)
 								except docitem.ParseError:
 # Invalid docstring -> skip. Count safely.
 									if qname_prop_meth not in objects_counted:
@@ -1545,7 +1555,7 @@ def render_json_command(args: argparse.Namespace) -> int:
 						continue
 					try:
 						tr_tmp = tracer()
-						mod_tree_parsed = docitem.parse_indent_docstring(tr_tmp, mod_doc)
+						mod_tree_parsed = docitem.parse_indent_docstring(tr_tmp, mod_doc, session)
 						mod_tree = docitem.make_docitem_tree_from_docstring_tree(tr_tmp, mod_tree_parsed)
 						# Render module docstring if it is included in walk; otherwise render stub.
 						if input_walk_doc is None and cast(Any, mod_tree).is_visible(scopes_filter):
@@ -1573,7 +1583,7 @@ def render_json_command(args: argparse.Namespace) -> int:
 										num_nonaggregate_rendered[toc_label] += 1
 										objects_counted.add(mem_qname)
 # The docstring subsection of a type is an array of logical lines. We render them as a list in JSON.
-									mem_doc = mod_tree.item(sec_label).item(mem_name).items()
+										mem_doc = _render_json_doc_lines(list(mod_tree.item(sec_label).item(mem_name).items()), flavour)
 									mem_entry = cast(dict[str, Any], tree_full["__WTRL_OBJECTS__"].setdefault(mem_qname, {"doc": {}}))
 									mem_entry["doc"] = {}
 									mem_entry["doc_lines"] = mem_doc

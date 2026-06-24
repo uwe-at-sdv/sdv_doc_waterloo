@@ -3,12 +3,14 @@
 
 from __future__ import annotations
 
+import importlib.util
 import os
 import subprocess
 import sys
 from pathlib import Path
 
 from pytest_common import ROOT, WATERLINT, DIR_EXAMPLES
+from sdv.doc.waterloo import docitem_helper, docitem_validator
 
 # We can run this reliably only after preparing the package,
 # using the module in sdv/doc/waterloo, because docitem contains
@@ -107,6 +109,49 @@ def test_validate_reports_invalid_basedir() -> None:
 		cwd=ROOT.parent,
 	)
 	_assert_error(result, "TOOL-001", "basedir is not a directory")
+
+
+def _load_example_module(module_name: str):
+	"""Load one example module directly from ``package_main/examples-python``."""
+	path = Path(DIR_EXAMPLES) / f"{module_name}.py"
+	spec = importlib.util.spec_from_file_location(module_name, path)
+	assert spec is not None
+	assert spec.loader is not None
+	module = importlib.util.module_from_spec(spec)
+	spec.loader.exec_module(module)
+	return module
+
+
+def test_validate_docstring_reuses_success_cache(monkeypatch) -> None:
+	"""A second validation of the same object should reuse the cached success."""
+	obj = _load_example_module("pytest_good_overview")
+	session = docitem_helper.DocSession()
+	tr = docitem_helper.tracer()
+	parse_calls = 0
+	validate_module_calls = 0
+
+	real_make_tree = docitem_validator.make_docitem_tree_from_object
+
+	def wrapped_make_tree(tr_, obj_):
+		nonlocal parse_calls
+		parse_calls += 1
+		return real_make_tree(tr_, obj_)
+
+	def wrapped_validate_module(*args, **kwargs):
+		nonlocal validate_module_calls
+		validate_module_calls += 1
+		return None
+
+	monkeypatch.setattr(docitem_validator, "make_docitem_tree_from_object", wrapped_make_tree)
+	monkeypatch.setattr(docitem_validator, "validate_docstring_module", wrapped_validate_module)
+
+	top1 = docitem_validator.validate_docstring(tr, obj, top=None, session=session)
+	top2 = docitem_validator.validate_docstring(tr, obj, top=None, session=session)
+
+	assert top1 is top2
+	assert parse_calls == 1
+	assert validate_module_calls == 1
+	assert session.has_validated(obj)
 
 
 def test_bad_method_overview_missing_public_section() -> None:

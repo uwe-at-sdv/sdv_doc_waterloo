@@ -1,8 +1,37 @@
+
+
 from __future__ import annotations
 from types import FunctionType, ModuleType
 from typing import Any, Callable, Dict, Final, get_type_hints, get_origin, get_args, Generator, Iterable, Iterator, List, NewType, NoReturn, Sequence, Set, Tuple, Type, TypeAlias, TypeGuard, Union, cast
 
-from sdv.doc.waterloo.docitem_helper import explain_try_self_for_section, explain_try_self_for_subsection, render_allowed_identifiers, render_expected_identifier, render_expected_snippet, render_identifier_lines, render_source_snippet, render_deduplicated_identifiers, render_normative_section_details, render_exactly_one_identifier_details, render_normativity_keyword_details, render_overview_requires_section_details, render_name_object_consistency_details, render_listed_object_missing_details, render_exception_reference_details, render_see_also_reference_details, render_scope_relation_details, render_base_method_reference_details, render_suggestion
+from sdv.doc.waterloo.docitem_diagnostics import (
+	explain_try_self_for_section,
+	explain_try_self_for_subsection,
+	render_allowed_identifiers,
+	render_constant_reference_details,
+	render_deduplicated_identifiers,
+	render_definition_reference_details,
+	render_exactly_one_identifier_details,
+	render_exception_reference_details,
+	render_expected_identifier,
+	render_expected_snippet,
+	render_identifier_lines,
+	render_inherited_definition_details,
+	render_listed_object_missing_details,
+	render_missing_entry_details,
+	render_name_object_consistency_details,
+	render_named_value_reference_details,
+	render_normative_section_details,
+	render_normativity_keyword_details,
+	render_overview_missing_member_details,
+	render_overview_requires_section_details,
+	render_parameter_signature_details,
+	render_see_also_reference_details,
+	render_scope_relation_details,
+	render_source_snippet,
+	render_suggestion,
+	render_type_reference_details
+)	
 from sdv.doc.waterloo.docitem_docstring import *
 
 #===== Typechecking ===========================================#
@@ -28,40 +57,6 @@ def _is_type_alias(value: object, ann: object | None) -> bool:
 		return True
 	return False
 
-
-# DocitemDocstring_t = docitem_docstring_module | docitem_docstring_class | docitem_docstring_method
-
-
-class ValidationSession:
-	"""
-Preamble:
-	profile:
-		function
-	normative_sections:
-		Contract, Parameters, Returns, Raises
-Contract:
-	general:
-		|Must| provide per-validation run state for recursive docstring validation.
-		|Must| remember already validated objects in order to avoid recursion divergence.
-		|Must| offer a stable place for future validation cache and statistics data.
-Parameters:
-Returns:
-Raises:
-	"""
-	def __init__(self) -> None:
-		self._seen: Dict[object, docitem_docstring_base] = {}
-
-	def has_seen(self, obj: object) -> bool:
-		return obj in self._seen
-
-	def get_seen(self, obj: object) -> docitem_docstring_base:
-		return self._seen[obj]
-
-	def remember(self, obj: object, top: docitem_docstring_base) -> None:
-		self._seen[obj] = top
-
-	#def is_cached_as_success(self, obj: object) -> bool:
-	#	return self.has_seen(obj)
 
 #===== Get properties from docitem tree =======================#
 
@@ -284,7 +279,7 @@ Raises:
 		f"Could not resolve reference '{ref}' from context '{_qualified_object_name(current_obj)}'.{import_hint}"
 	)
 
-def validate_docstring_module(tr : tracer, obj: object, top : docitem_docstring_module,node_contract : docitem_map_base,node_normative_sections : docitem_list_base, session: ValidationSession | None = None) -> None:
+def validate_docstring_module(tr : tracer, obj: object, top : docitem_docstring_module,node_contract : docitem_map_base,node_normative_sections : docitem_list_base, session: DocSession) -> None:
 	"""
 Preamble:
 	profile:
@@ -539,7 +534,7 @@ Notes:
 # Class has no docstring? Do not test scope rule.
 				continue
 			try:
-				tree = parse_indent_docstring(tr_tmp, doc)
+				tree = parse_indent_docstring(tr_tmp, doc, session=session)
 				scopes, ref_scope_explicit = get_scopes_of_tree_var(tr_tmp, tree)
 			except (ParseError, SectionNotFoundError):
 # Cannot extract scope from docstring? Do not test scope rule.
@@ -562,7 +557,7 @@ Notes:
 # Function has no docstring? Do not test scope rule.
 				continue
 			try:
-				tree = parse_indent_docstring(tr_tmp, doc)
+				tree = parse_indent_docstring(tr_tmp, doc, session=session)
 				scopes, ref_scope_explicit = get_scopes_of_tree_var(tr_tmp, tree)
 			except (ParseError, SectionNotFoundError):
 # Cannot extract scope from docstring? Do not test scope rule.
@@ -571,7 +566,7 @@ Notes:
 				details = render_scope_relation_details("module", top_scopes, top_scope_explicit, "function", scopes, ref_scope_explicit, "Public_functions", ref_name, "<reconsider the scopes of the module and the referenced function>", "module")
 				raise_validation_error(tr, obj, "SCP-005", f"Reconsider the scopes of the module and the referenced function '{ref_name}'.", details)
 
-def validate_docstring_class(tr : tracer, obj: object, top : docitem_docstring_class,node_contract : docitem_map_base,node_normative_sections : docitem_list_base, session: ValidationSession | None = None) -> None:
+def validate_docstring_class(tr : tracer, obj: object, top : docitem_docstring_class,node_contract : docitem_map_base,node_normative_sections : docitem_list_base, session: DocSession) -> None:
 	"""
 Preamble:
 	profile:
@@ -924,7 +919,7 @@ Notes:
 # Class has no docstring? Do not test scope rule.
 				continue
 			try:
-				tree = parse_indent_docstring(tr_tmp, doc)
+				tree = parse_indent_docstring(tr_tmp, doc, session=session)
 				scopes, ref_scope_explicit = get_scopes_of_tree_var(tr_tmp, tree)
 			except (ParseError, SectionNotFoundError):
 # Cannot extract scope from docstring? Do not test scope rule.
@@ -951,7 +946,7 @@ Notes:
 # Class has no docstring? Do not test scope rule.
 				continue
 			try:
-				tree = parse_indent_docstring(tr_tmp, doc)
+				tree = parse_indent_docstring(tr_tmp, doc, session=session)
 				scopes, ref_scope_explicit = get_scopes_of_tree_var(tr_tmp, tree)
 			except (ParseError, SectionNotFoundError):
 # Cannot extract scope from docstring? Do not test scope rule.
@@ -975,7 +970,7 @@ Notes:
 # Class has no docstring? Do not test scope rule.
 				continue
 			try:
-				tree = parse_indent_docstring(tr_tmp, doc)
+				tree = parse_indent_docstring(tr_tmp, doc, session=session)
 				base_scopes, base_scope_explicit = get_scopes_of_tree_var(tr_tmp, tree)
 			except (ParseError, SectionNotFoundError):
 # Cannot extract scope from docstring? Do not test scope rule.
@@ -1002,7 +997,7 @@ Notes:
 				details = render_normative_section_details("Factory", node_normative_sections.items(), profile, action="add")
 				raise_validation_error(tr,obj,"FAC-009",f"Section 'Factory' is not listed as normative.", details)
 
-def validate_docstring_method(tr : tracer, obj: Callable[..., Any], top : docitem_docstring_method,node_contract : docitem_map_base,node_normative_sections : docitem_list_base, session: ValidationSession | None = None) -> None:
+def validate_docstring_method(tr : tracer, obj: Callable[..., Any], top : docitem_docstring_method,node_contract : docitem_map_base,node_normative_sections : docitem_list_base, session: DocSession) -> None:
 	"""
 Preamble:
 	profile:
@@ -1199,7 +1194,7 @@ Notes:
 					details = render_exception_reference_details(exc_name, profile, expected_kind="subclass of BaseException")
 					raise_validation_error(tr,obj,"RAI-007", f"Exception '{exc_name}' is not a subclass of BaseException.", details)
 
-def validate_docstring_inherited_method(tr : tracer, obj: object, top : docitem_docstring_inherited_method,node_contract : docitem_map_base,node_normative_sections : docitem_list_base, session: ValidationSession | None = None) -> None:
+def validate_docstring_inherited_method(tr : tracer, obj: object, top : docitem_docstring_inherited_method,node_contract : docitem_map_base,node_normative_sections : docitem_list_base, session: DocSession) -> None:
 	"""
 Preamble:
 	profile:
@@ -1417,7 +1412,7 @@ Notes:
 # Class has no docstring? Do not test scope rule.
 				continue
 			try:
-				tree = parse_indent_docstring(tr_tmp, doc)
+				tree = parse_indent_docstring(tr_tmp, doc, session=session)
 				base_scopes, base_scope_explicit = get_scopes_of_tree_var(tr_tmp, tree)
 			except (ParseError, SectionNotFoundError):
 # Cannot extract scope from docstring? Do not test scope rule.
@@ -1472,7 +1467,7 @@ def _collect_term_refs(node: docitem_base) -> set[str]:
 	return refs
 
 
-def validate_docstring(tr : tracer,obj: object, top : docitem_docstring_base | None = None, session: ValidationSession | None = None) -> docitem_docstring_base:
+def validate_docstring(tr : tracer,obj: object, top : docitem_docstring_base | None, session: DocSession) -> docitem_docstring_base:
 	"""
 Preamble:
 	profile:
@@ -1531,10 +1526,10 @@ Notes:
 See_also:
 	validate_class_coverage, validate_module_coverage
 	"""
-# validate_docstring is called recursively in coverage validations,
-# therefore we must make sure not to run into infinite recusrsion.
-	if session is None:
-		session = ValidationSession()
+	# validate_docstring is called recursively in coverage validations,
+	# therefore we must make sure not to run into infinite recusrsion.
+	if session.has_validated(obj):
+		return session.get_validated(obj)
 	if session.has_seen(obj):
 		return session.get_seen(obj)
 	if top == None:
@@ -1545,280 +1540,281 @@ See_also:
 		except Exception as e:
 			raise
 	session.remember(obj, top)
-	# Log some debug info
-	tr.add_info(f"validating '{get_obj_fully_qualified_name(obj)}'")
-	profile = get_profile(top)
 	try:
-		top_scopes = top.scopes()
-	except Exception:
-		top_scopes = set()
-	top_scope_explicit = top.has_item("Preamble") and top.item("Preamble").has_item("scope")
+		# Log some debug info
+		tr.add_info(f"validating '{get_obj_fully_qualified_name(obj)}'")
+		profile = get_profile(top)
+		try:
+			top_scopes = top.scopes()
+		except Exception:
+			top_scopes = set()
+		top_scope_explicit = top.has_item("Preamble") and top.item("Preamble").has_item("scope")
   
-	with traced_section(tr, f"{get_obj_fully_qualified_name(obj)}"):
+		with traced_section(tr, f"{get_obj_fully_qualified_name(obj)}"):
 #===== Preamble must exist ====================================#
 # Preamble must exist. We do not allow purely informative docstrings.
-		if "Preamble" not in top.items():
-			details = {
-				"found": render_missing_entry_details("Preamble", top.items(), "Preamble", profile, top_level=True)["found"],
-				"expected": render_missing_entry_details("Preamble", top.items(), "Preamble", profile, top_level=True)["expected"],
-				"hint": render_missing_entry_details("Preamble", top.items(), "Preamble", profile, top_level=True)["hint"],
-			}
-			raise_validation_error(tr,obj,"PRE-001","Section 'Preamble' does not exist.", details)
-		node_preamble = top.item("Preamble")
-		with traced_section(tr, f"Preamble"):
+			if "Preamble" not in top.items():
+				details = {
+					"found": render_missing_entry_details("Preamble", top.items(), "Preamble", profile, top_level=True)["found"],
+					"expected": render_missing_entry_details("Preamble", top.items(), "Preamble", profile, top_level=True)["expected"],
+					"hint": render_missing_entry_details("Preamble", top.items(), "Preamble", profile, top_level=True)["hint"],
+				}
+				raise_validation_error(tr,obj,"PRE-001","Section 'Preamble' does not exist.", details)
+			node_preamble = top.item("Preamble")
+			with traced_section(tr, f"Preamble"):
 #..... profile must exist .....................................#
 # Profile must exist.
-			if not "profile" in node_preamble.items():
-				details = render_missing_entry_details("Preamble", node_preamble.items(), "profile", profile)
-				raise_validation_error(tr,obj,"PRE-003","Section 'profile' does not exist.", details)
+				if not "profile" in node_preamble.items():
+					details = render_missing_entry_details("Preamble", node_preamble.items(), "profile", profile)
+					raise_validation_error(tr,obj,"PRE-003","Section 'profile' does not exist.", details)
 # Here we know it exists.
-			node_profile = node_preamble.item("profile")
-			with traced_section(tr, "profile"):
-				assert isinstance(node_profile,docitem_list_base)
-				if len(node_profile.items()) == 0:
-					details = render_exactly_one_identifier_details("Preamble.profile", node_profile.items(), profile)
-					raise_validation_error(tr,obj,"PRE-004","Section 'profile' must have exactly one item.", details)
-				if len(node_profile.items()) > 1:
-					details = render_exactly_one_identifier_details("Preamble.profile", node_profile.items(), profile)
-					raise_validation_error(tr,obj,"PRE-004","Section 'profile' must have exactly one item.", details)
-			if not RE_IDENTIFIER_COMPILED.fullmatch(profile):
-				details = {
-					"found": render_identifier_lines("Preamble.profile", [profile]),
-					"expected": render_expected_identifier("Preamble.profile", "identifier"),
-					"hint": explain_try_self_for_subsection("Preamble.profile", profile),
-				}
-				raise_validation_error(tr,obj,"PRE-014",f"Expected identifier, got '{profile}'.", details)
+				node_profile = node_preamble.item("profile")
+				with traced_section(tr, "profile"):
+					assert isinstance(node_profile,docitem_list_base)
+					if len(node_profile.items()) == 0:
+						details = render_exactly_one_identifier_details("Preamble.profile", node_profile.items(), profile)
+						raise_validation_error(tr,obj,"PRE-004","Section 'profile' must have exactly one item.", details)
+					if len(node_profile.items()) > 1:
+						details = render_exactly_one_identifier_details("Preamble.profile", node_profile.items(), profile)
+						raise_validation_error(tr,obj,"PRE-004","Section 'profile' must have exactly one item.", details)
+				if not RE_IDENTIFIER_COMPILED.fullmatch(profile):
+					details = {
+						"found": render_identifier_lines("Preamble.profile", [profile]),
+						"expected": render_expected_identifier("Preamble.profile", "identifier"),
+						"hint": explain_try_self_for_subsection("Preamble.profile", profile),
+					}
+					raise_validation_error(tr,obj,"PRE-014",f"Expected identifier, got '{profile}'.", details)
 # For the current version we tighten this rule
-			if not profile in ("module","class","function","method","inherited_method"):
-				details = {
-					"found": render_identifier_lines("Preamble.profile", [profile]),
-					"expected": render_allowed_identifier("Preamble.profile", ("module","class","function","method","inherited_method")),
-					"hint": explain_try_self_for_subsection("Preamble.profile", profile),
-				}
-				raise_validation_error(tr,obj,"PRE-005",f"Expected one of {{'module','class','function','method','inherited_method'}}, got '{profile}'.", details)
+				if not profile in ("module","class","function","method","inherited_method"):
+					details = {
+						"found": render_identifier_lines("Preamble.profile", [profile]),
+						"expected": render_allowed_identifier("Preamble.profile", ("module","class","function","method","inherited_method")),
+						"hint": explain_try_self_for_subsection("Preamble.profile", profile),
+					}
+					raise_validation_error(tr,obj,"PRE-005",f"Expected one of {{'module','class','function','method','inherited_method'}}, got '{profile}'.", details)
 # The profile must match the object type. At this point it has already been
 # tested most likely, but we leave the code here for saftey.
-			check_profile_matches_object(tr, profile, obj)
+				check_profile_matches_object(tr, profile, obj)
 
 # Normative_sections must exist and be non-empty. Non-emptyness is implied by existence and normativity of Contract.
-		with traced_section(tr, "normative_sections"):
-			if "normative_sections" not in node_preamble.items():
-				details = {
-					"found": ["Preamble:", "\t<no normative_sections>"],
-					"expected": ["Preamble:", "\tnormative_sections:", "\t\tContract <more section labels, comma separated>"],
-					"hint": explain_try_self_for_subsection("Preamble.normative_sections", profile),
-				}
-				raise_validation_error(tr,obj,"PRE-006","Section 'normative_sections' does not exist.", details)
+			with traced_section(tr, "normative_sections"):
+				if "normative_sections" not in node_preamble.items():
+					details = {
+						"found": ["Preamble:", "\t<no normative_sections>"],
+						"expected": ["Preamble:", "\tnormative_sections:", "\t\tContract <more section labels, comma separated>"],
+						"hint": explain_try_self_for_subsection("Preamble.normative_sections", profile),
+					}
+					raise_validation_error(tr,obj,"PRE-006","Section 'normative_sections' does not exist.", details)
 # Here we know it exists.
-			node_normative_sections: docitem_list_base = cast(docitem_list_base, node_preamble.item("normative_sections"))
+				node_normative_sections: docitem_list_base = cast(docitem_list_base, node_preamble.item("normative_sections"))
 # Chill mypy. We know it's a docitem_list_base.
-			assert isinstance(node_normative_sections,docitem_list_base)
-			normative_sections = list(node_normative_sections.items())
+				assert isinstance(node_normative_sections,docitem_list_base)
+				normative_sections = list(node_normative_sections.items())
 		seen = set()
 		for sec in node_normative_sections.items():
-# Each entry must point to an existing section.
+			# Each entry must point to an existing section.
 			if not sec in top.items():
 				details = render_normative_section_details(sec, normative_sections, profile, action="remove")
 				raise_validation_error(tr,obj,"PRE-012",f"Entry '{sec}' does not refer to an existing section.", details)
-#					if sec in seen:
-#						raise_validation_error(tr,obj,"LQID-004","Entry '{sec}' is duplicate.")
+			#					if sec in seen:
+			#						raise_validation_error(tr,obj,"LQID-004","Entry '{sec}' is duplicate.")
 			seen.add(sec)
 # Handle the meta case here:
-		if "Preamble" in node_normative_sections.items():
-			details = render_normative_section_details("Preamble", node_normative_sections.items(), profile, action="remove")
-			raise_validation_error(tr,obj,"PRE-002","Section 'Preamble' must not list itself as normative.", details)
-		with traced_section(tr, "scope"):
-			if "scope" in node_preamble.items():
-				node_scope = node_preamble.item("scope")
-				for s in node_scope.items():
-					if s not in SCOPE_TAG_MAP:
-						details = {
-							"found": render_identifier_lines("Preamble.scope", [s]),
-							"expected": render_allowed_identifiers("Preamble.scope", SCOPE_TAG_MAP.keys()),
-							"hint": explain_try_self_for_subsection("Preamble.scope", profile),
-						}
-						raise_validation_error(tr, obj, "SCP-003", f"Scope tag '{s}' is not allowed.", details)
+			if "Preamble" in node_normative_sections.items():
+				details = render_normative_section_details("Preamble", node_normative_sections.items(), profile, action="remove")
+				raise_validation_error(tr,obj,"PRE-002","Section 'Preamble' must not list itself as normative.", details)
+			with traced_section(tr, "scope"):
+				if "scope" in node_preamble.items():
+					node_scope = node_preamble.item("scope")
+					for s in node_scope.items():
+						if s not in SCOPE_TAG_MAP:
+							details = {
+								"found": render_identifier_lines("Preamble.scope", [s]),
+								"expected": render_allowed_identifiers("Preamble.scope", SCOPE_TAG_MAP.keys()),
+								"hint": explain_try_self_for_subsection("Preamble.scope", profile),
+							}
+							raise_validation_error(tr, obj, "SCP-003", f"Scope tag '{s}' is not allowed.", details)
 
 # Rule: Any section containing one of the keywords of normativity
 # must be listed under normative_sections.
-		for label,item in top.items().items():
-# We explicitly exclude section which must not appear,
-# so that specific section rules below trigger.
-			if label in ("Notes","Class_overview","Function_overview","Method_overview","Terminology"):
-				continue
-			if item.has_norm_keywords():
-				if label not in node_normative_sections.items():
-					details = render_normative_section_details(label, node_normative_sections.items(), profile, action="add")
-					raise_validation_error(tr,obj,"PRE-013",f"Section '{label}' contains a keyword of normativity but is not listed in normative_sections.", details)
-#===== Contract must exist ====================================#
-		with traced_section(tr, "Contract"):
-			if "Contract" not in top.items():
-				details = render_missing_entry_details("Preamble", top.items().keys(), "Contract", profile, top_level=True)
-				raise_validation_error(tr,obj,"CON-001","Section 'Contract' does not exist.", details)
-# Rule pre-04: the contract must be listed as normative
-			if not "Contract" in node_normative_sections.items():
-				details = render_normative_section_details("Contract", node_normative_sections.items(), profile, action="add")
-				raise_validation_error(tr,obj,"CON-002","Section 'Contract' must be listed under 'normative_sections'.", details)
-			node_contract = top._items["Contract"]
-# Chill mypy. We know it's a docitem_map_base.
-			assert isinstance(node_contract,docitem_map_base)
- 
-#===== If Definitions exists it must be normative =============#
-		with traced_section(tr, "Definitions"):
-			if "Definitions" in top.items():
-				node_definitions: docitem_definitions | None = cast(docitem_definitions,top._items["Definitions"])
-# Chill mypy
-				assert isinstance(node_definitions, docitem_map_base)
-				if not "Definitions" in node_normative_sections.items():
-					details = render_normative_section_details("Definitions", node_normative_sections.items(), profile, action="add")
-					raise_validation_error(tr,obj,"DEF-002","Section 'Definitions' exists but is not normative.",details)
-# Regular and inherited defitems.
-				current_object_terms_and_variations = set(node_definitions.items().keys())
-				current_object_inherited_terms = set(node_definitions.inherited())
-# Required for DEF-022
-				inherited_terms_and_variations = set()
-				if current_object_inherited_terms:
-					if profile == "module":
-						details = render_inherited_definition_details(current_object_inherited_terms, profile, expected_text="<remove subsection '_inherit' from a module docstring>", use_section_hint=True)
-						raise_validation_error(tr,obj,"DEF-011","Subsection '_inherited' is not allowed in a module docstring.",details)
-					warn_validation(tr,"VLII-001","Use of subsection '_inherited' violates the LoII principle.")
-# DEF-014/015/018: inherited definitions must come from the direct module.
-					direct_module = get_obj_direct_module(obj)
-					if direct_module is None:
-						details = render_inherited_definition_details(current_object_inherited_terms, profile, expected_text="<refer to a resolvable direct module with a valid Waterloo docstring>")
-						raise_validation_error(tr,obj,"DEF-014","Subsection '_inherited' requires a resolvable direct module with valid docstring.",details)
-					with traced_section(tr, "_inherited"):
-						tr_tmp = tracer()
-						try:
-							mod_doc_top = validate_docstring(tr_tmp, direct_module, session=session)
-						except Exception as e:
-							details = render_inherited_definition_details(current_object_inherited_terms, profile, expected_text="<implement a Waterloo docstring in the direct module>")
-							raise_validation_error(tr,obj,"DEF-014",f"Direct module '{get_obj_fully_qualified_name(direct_module)}' has no valid docstring: {e}",details)
-# Chill mypy.
-						assert isinstance(mod_doc_top, docitem_docstring_base)
-						if "Definitions" not in mod_doc_top.items():
-							details = render_inherited_definition_details(current_object_inherited_terms, profile, expected_text="<add a Definitions section to the direct module>")
-							raise_validation_error(tr,obj,"DEF-015",f"Direct module '{get_obj_fully_qualified_name(direct_module)}' has no section 'Definitions'.",details)
-						mod_definitions = cast(docitem_definitions, mod_doc_top.item("Definitions"))
-# Chill mypy.
-						assert isinstance(mod_definitions, docitem_definitions)
-						module_terms = mod_definitions.terms()
-						missing = current_object_inherited_terms - module_terms
-						if missing:
-							details = render_inherited_definition_details(sorted(missing), profile, expected_text="<inherit only terms that exist in the direct module>")
-							raise_validation_error(tr,obj,"DEF-018",f"Inherited defitems not found in direct module terms: {missing}.",details)
-# Extract terms and variations of module for the given set of inherited terms.
-						inherited_terms_and_variations = mod_definitions.terms_and_variations(current_object_inherited_terms)
-# Regular and inherited must be disjoint.
-				names_in_both = set.intersection(current_object_terms_and_variations,current_object_inherited_terms)
-				if len(names_in_both ) > 0:
-					details = render_inherited_definition_details(sorted(names_in_both), profile, expected_text="<remove duplicated terms from Definitions or _inherit>")
-					raise_validation_error(tr,obj,"DEF-017",f"Inherited defitems are redefined in section 'Definitions': {names_in_both}.",details)
-# Defitem content should not be empty.
-				for name in current_object_terms_and_variations:
-					node_defitem = node_definitions.item(name)
-					if node_defitem.empty():
-						warn_validation(tr,"DEF-009","Definition item content should not be empty.")
-			else:
-				node_definitions = None
-# Regular and inherited terms and variations.
-				current_object_terms_and_variations = set()
-				current_object_inherited_terms = set()
-# Ensure each referenced term appears in section `Definitions` either directly or by inheritance.
-			term_refs = _collect_term_refs(top)
-			if term_refs:
-				if node_definitions is None:
-					details = render_definition_reference_details(sorted(term_refs), profile, missing_definitions=True)
-					raise_validation_error(tr,obj,"DEF-007", "Token |term| is used but section 'Definitions' is missing.",details)
-				for term in term_refs:
-# Test term reference against 1. terms directly defined in the object and 2. (DEF-022) terms and variations inherited from the module.
-					if term not in (current_object_terms_and_variations | inherited_terms_and_variations):
-						details = render_definition_reference_details(term, profile, missing_definitions=False)
-						raise_validation_error(tr,obj,"DEF-008", f"Token |term|`{term}` references an undefined term.",details)
-
-#===== Terminology must NOT be normative ======================#
-		with traced_section(tr, "Terminology"):
-			if "Terminology" in top.items():
-				if "Terminology" in node_normative_sections.items():
-					details = render_normative_section_details("Terminology", node_normative_sections.items(), profile, action="remove")
-					raise_validation_error(tr,obj,"TERM-002","Section 'Terminology ' marked as normative in Preamble.", details)
-				node_terminology = top.item("Terminology")
-# Defitem content should not be empty.
-				for name in node_terminology.items():
-					node_term = node_terminology.item(name)
-					if node_term.empty():
-						warn_validation(tr,"TERM-008","Term content should not be empty.")
-					if node_term.has_norm_keywords():
-						details = render_normativity_keyword_details("Terminology", name, node_term.items(), "don't use normativity keyword, describe terms informatively", profile)
-						raise_validation_error(tr, obj, "TERM-003",f"Term content has normativity keywords; content is informational only.", details)
-
-#===== If See_also exists, more tests apply ===================#
-		with traced_section(tr, "See_also"):
-# Section may exist, SEE-001.
-			if "See_also" in top.items():
-				node_see_also = top._items["See_also"]
-				for item_see_also in node_see_also.items():
-# Entries must be Qualified Identifiers
-					if not RE_QUALIFIED_IDENTIFIER_COMPILED.fullmatch(item_see_also):
-						details = render_see_also_reference_details(item_see_also, "<identifier or qualified identifier>", profile)
-						raise_validation_error(tr,obj,"SEE-002", f"See_also reference '{item_see_also}' is not a (Qualified) Identifier.", details)
-					try:
-						target_obj, target_name = resolve_object(item_see_also, obj)
-					except Exception as e:
-						if "See_also" in node_normative_sections.items():
-							details = render_see_also_reference_details(item_see_also, "<refer to an existing public object>", profile)
-							raise_validation_error(tr,obj,"SEE-004", f"See_also reference '{item_see_also}' cannot be resolved: {e} ('See_also' is normative).", details)
-						else:
-							warn_validation(tr,"SEE-003", f"See_also reference '{item_see_also}' cannot be resolved: {e} (informative section).")
-							continue
-					if target_obj is obj:
-						details = render_see_also_reference_details(item_see_also, "<do not refer to the documented object itself>", profile)
-						raise_validation_error(tr,obj,"SEE-005", f"See_also reference '{item_see_also}' must not refer to the object itself.", details)
-					if session.has_seen(target_obj):
+				for label,item in top.items().items():
+	# We explicitly exclude section which must not appear,
+	# so that specific section rules below trigger.
+					if label in ("Notes","Class_overview","Function_overview","Method_overview","Terminology"):
 						continue
-					doc = get_obj_docstring(target_obj)
-					if not doc:
-						is_builtin = inspect.isbuiltin(target_obj) or getattr(target_obj, "__module__", "") == "builtins"
-						is_documentable = is_obj_documentable(target_obj)
-						is_normative_target = "See_also" in node_normative_sections.items() and (is_obj_module(target_obj) or is_obj_class(target_obj) or is_obj_function(target_obj)) and not is_builtin
-						if is_normative_target:
-							details = render_see_also_reference_details(item_see_also, "<refer to a documented object with a valid Waterloo docstring>", profile)
-							raise_validation_error(tr,obj,"SEE-008", f"See_also reference '{item_see_also}' has no valid docstring ('See_also' is normative).", details)
-						if is_documentable:
-# No docstring at all: warn unless normative handling above escalated already.
-							details = render_see_also_reference_details(item_see_also, "<refer to a documented object>", profile)
-							warn_validation(tr,"SEE-006", f"See_also reference '{item_see_also}' has no docstring.", details)
+					if item.has_norm_keywords():
+						if label not in node_normative_sections.items():
+							details = render_normative_section_details(label, node_normative_sections.items(), profile, action="add")
+							raise_validation_error(tr,obj,"PRE-013",f"Section '{label}' contains a keyword of normativity but is not listed in normative_sections.", details)
+		#===== Contract must exist ====================================#
+		with traced_section(tr, "Contract"):
+					if "Contract" not in top.items():
+						details = render_missing_entry_details("Preamble", top.items().keys(), "Contract", profile, top_level=True)
+						raise_validation_error(tr,obj,"CON-001","Section 'Contract' does not exist.", details)
+		# Rule pre-04: the contract must be listed as normative
+					if not "Contract" in node_normative_sections.items():
+						details = render_normative_section_details("Contract", node_normative_sections.items(), profile, action="add")
+						raise_validation_error(tr,obj,"CON-002","Section 'Contract' must be listed under 'normative_sections'.", details)
+					node_contract = top._items["Contract"]
+		# Chill mypy. We know it's a docitem_map_base.
+					assert isinstance(node_contract,docitem_map_base)
+ 
+		#===== If Definitions exists it must be normative =============#
+		with traced_section(tr, "Definitions"):
+					if "Definitions" in top.items():
+						node_definitions: docitem_definitions | None = cast(docitem_definitions,top._items["Definitions"])
+		# Chill mypy
+						assert isinstance(node_definitions, docitem_map_base)
+						if not "Definitions" in node_normative_sections.items():
+							details = render_normative_section_details("Definitions", node_normative_sections.items(), profile, action="add")
+							raise_validation_error(tr,obj,"DEF-002","Section 'Definitions' exists but is not normative.",details)
+		# Regular and inherited defitems.
+						current_object_terms_and_variations = set(node_definitions.items().keys())
+						current_object_inherited_terms = set(node_definitions.inherited())
+		# Required for DEF-022
+						inherited_terms_and_variations = set()
+						if current_object_inherited_terms:
+							if profile == "module":
+								details = render_inherited_definition_details(current_object_inherited_terms, profile, expected_text="<remove subsection '_inherit' from a module docstring>", use_section_hint=True)
+								raise_validation_error(tr,obj,"DEF-011","Subsection '_inherited' is not allowed in a module docstring.",details)
+							warn_validation(tr,"VLII-001","Use of subsection '_inherited' violates the LoII principle.")
+		# DEF-014/015/018: inherited definitions must come from the direct module.
+							direct_module = get_obj_direct_module(obj)
+							if direct_module is None:
+								details = render_inherited_definition_details(current_object_inherited_terms, profile, expected_text="<refer to a resolvable direct module with a valid Waterloo docstring>")
+								raise_validation_error(tr,obj,"DEF-014","Subsection '_inherited' requires a resolvable direct module with valid docstring.",details)
+							with traced_section(tr, "_inherited"):
+								tr_tmp = tracer()
+								try:
+									mod_doc_top = validate_docstring(tr_tmp, direct_module, top=None, session=session)
+								except Exception as e:
+									details = render_inherited_definition_details(current_object_inherited_terms, profile, expected_text="<implement a Waterloo docstring in the direct module>")
+									raise_validation_error(tr,obj,"DEF-014",f"Direct module '{get_obj_fully_qualified_name(direct_module)}' has no valid docstring: {e}",details)
+		# Chill mypy.
+								assert isinstance(mod_doc_top, docitem_docstring_base)
+								if "Definitions" not in mod_doc_top.items():
+									details = render_inherited_definition_details(current_object_inherited_terms, profile, expected_text="<add a Definitions section to the direct module>")
+									raise_validation_error(tr,obj,"DEF-015",f"Direct module '{get_obj_fully_qualified_name(direct_module)}' has no section 'Definitions'.",details)
+								mod_definitions = cast(docitem_definitions, mod_doc_top.item("Definitions"))
+		# Chill mypy.
+								assert isinstance(mod_definitions, docitem_definitions)
+								module_terms = mod_definitions.terms()
+								missing = current_object_inherited_terms - module_terms
+								if missing:
+									details = render_inherited_definition_details(sorted(missing), profile, expected_text="<inherit only terms that exist in the direct module>")
+									raise_validation_error(tr,obj,"DEF-018",f"Inherited defitems not found in direct module terms: {missing}.",details)
+		# Extract terms and variations of module for the given set of inherited terms.
+								inherited_terms_and_variations = mod_definitions.terms_and_variations(current_object_inherited_terms)
+		# Regular and inherited must be disjoint.
+						names_in_both = set.intersection(current_object_terms_and_variations,current_object_inherited_terms)
+						if len(names_in_both ) > 0:
+							details = render_inherited_definition_details(sorted(names_in_both), profile, expected_text="<remove duplicated terms from Definitions or _inherit>")
+							raise_validation_error(tr,obj,"DEF-017",f"Inherited defitems are redefined in section 'Definitions': {names_in_both}.",details)
+		# Defitem content should not be empty.
+						for name in current_object_terms_and_variations:
+							node_defitem = node_definitions.item(name)
+							if node_defitem.empty():
+								warn_validation(tr,"DEF-009","Definition item content should not be empty.")
 					else:
-# Note that we do not validate built-ins! SEE-010
-						if (is_obj_module(target_obj) or is_obj_class(target_obj) or is_obj_function(target_obj)):
-							is_builtin = inspect.isbuiltin(target_obj) or getattr(target_obj, "__module__", "") == "builtins"
-							if is_builtin:
-								continue
-#===== Scope Monotonicity Rules ===============================#
-# Try to parse the target docstring to obtain its scopes; treat parse failures as "no valid docstring".
-							tr_tmp = tracer()
+						node_definitions = None
+		# Regular and inherited terms and variations.
+						current_object_terms_and_variations = set()
+						current_object_inherited_terms = set()
+		# Ensure each referenced term appears in section `Definitions` either directly or by inheritance.
+					term_refs = _collect_term_refs(top)
+					if term_refs:
+						if node_definitions is None:
+							details = render_definition_reference_details(sorted(term_refs), profile, missing_definitions=True)
+							raise_validation_error(tr,obj,"DEF-007", "Token |term| is used but section 'Definitions' is missing.",details)
+						for term in term_refs:
+		# Test term reference against 1. terms directly defined in the object and 2. (DEF-022) terms and variations inherited from the module.
+							if term not in (current_object_terms_and_variations | inherited_terms_and_variations):
+								details = render_definition_reference_details(term, profile, missing_definitions=False)
+								raise_validation_error(tr,obj,"DEF-008", f"Token |term|`{term}` references an undefined term.",details)
+
+		#===== Terminology must NOT be normative ======================#
+		with traced_section(tr, "Terminology"):
+					if "Terminology" in top.items():
+						if "Terminology" in node_normative_sections.items():
+							details = render_normative_section_details("Terminology", node_normative_sections.items(), profile, action="remove")
+							raise_validation_error(tr,obj,"TERM-002","Section 'Terminology ' marked as normative in Preamble.", details)
+						node_terminology = top.item("Terminology")
+		# Defitem content should not be empty.
+						for name in node_terminology.items():
+							node_term = node_terminology.item(name)
+							if node_term.empty():
+								warn_validation(tr,"TERM-008","Term content should not be empty.")
+							if node_term.has_norm_keywords():
+								details = render_normativity_keyword_details("Terminology", name, node_term.items(), "don't use normativity keyword, describe terms informatively", profile)
+								raise_validation_error(tr, obj, "TERM-003",f"Term content has normativity keywords; content is informational only.", details)
+
+		#===== If See_also exists, more tests apply ===================#
+		with traced_section(tr, "See_also"):
+		# Section may exist, SEE-001.
+					if "See_also" in top.items():
+						node_see_also = top._items["See_also"]
+						for item_see_also in node_see_also.items():
+		# Entries must be Qualified Identifiers
+							if not RE_QUALIFIED_IDENTIFIER_COMPILED.fullmatch(item_see_also):
+								details = render_see_also_reference_details(item_see_also, "<identifier or qualified identifier>", profile)
+								raise_validation_error(tr,obj,"SEE-002", f"See_also reference '{item_see_also}' is not a (Qualified) Identifier.", details)
 							try:
-								tree = parse_indent_docstring(tr_tmp, doc)
-								target_scopes, target_scope_explicit = get_scopes_of_tree_var(tr_tmp, tree)
-							except (ParseError, SectionNotFoundError):
-								if  "See_also" in node_normative_sections.items():
-									tr.add_info("Rule SEE-009 applies","validation")
+								target_obj, target_name = resolve_object(item_see_also, obj)
+							except Exception as e:
+								if "See_also" in node_normative_sections.items():
+									details = render_see_also_reference_details(item_see_also, "<refer to an existing public object>", profile)
+									raise_validation_error(tr,obj,"SEE-004", f"See_also reference '{item_see_also}' cannot be resolved: {e} ('See_also' is normative).", details)
+								else:
+									warn_validation(tr,"SEE-003", f"See_also reference '{item_see_also}' cannot be resolved: {e} (informative section).")
+									continue
+							if target_obj is obj:
+								details = render_see_also_reference_details(item_see_also, "<do not refer to the documented object itself>", profile)
+								raise_validation_error(tr,obj,"SEE-005", f"See_also reference '{item_see_also}' must not refer to the object itself.", details)
+							if session.has_seen(target_obj):
+								continue
+							doc = get_obj_docstring(target_obj)
+							if not doc:
+								is_builtin = inspect.isbuiltin(target_obj) or getattr(target_obj, "__module__", "") == "builtins"
+								is_documentable = is_obj_documentable(target_obj)
+								is_normative_target = "See_also" in node_normative_sections.items() and (is_obj_module(target_obj) or is_obj_class(target_obj) or is_obj_function(target_obj)) and not is_builtin
+								if is_normative_target:
 									details = render_see_also_reference_details(item_see_also, "<refer to a documented object with a valid Waterloo docstring>", profile)
 									raise_validation_error(tr,obj,"SEE-008", f"See_also reference '{item_see_also}' has no valid docstring ('See_also' is normative).", details)
-								else:
-									details = render_see_also_reference_details(item_see_also, "<refer to a documented object with a valid Waterloo docstring>", profile)
-									warn_validation(tr,"SEE-007", f"See_also reference '{item_see_also}' has no valid docstring (informative section).", details)
-								continue
-# Scope monotonicity for See_also references (SCP-006 / SCP-007)
-							if "See_also" in node_normative_sections.items():
-								if not top.can_see(target_scopes):
-									details = render_scope_relation_details(profile, top_scopes, top_scope_explicit, "referenced object", target_scopes, target_scope_explicit, "See_also", item_see_also, "<reconsider the scopes of the referenced object and the referencing object>", profile)
-									raise_validation_error(tr,obj,"SCP-006", f"Reconsider the scopes of the referenced object and the referencing object '{item_see_also}'.", details)
+								if is_documentable:
+		# No docstring at all: warn unless normative handling above escalated already.
+									details = render_see_also_reference_details(item_see_also, "<refer to a documented object>", profile)
+									warn_validation(tr,"SEE-006", f"See_also reference '{item_see_also}' has no docstring.", details)
 							else:
-								if not top.can_see(target_scopes):
-									details = render_scope_relation_details(profile, top_scopes, top_scope_explicit, "referenced object", target_scopes, target_scope_explicit, "See_also", item_see_also, "<reconsider the scopes of the referenced object and the referencing object>", profile)
-									warn_validation(tr,"SCP-007", f"Reconsider the scopes of the referenced object and the referencing object '{item_see_also}'.", details)
-#===== Notes ==================================================#
+		# Note that we do not validate built-ins! SEE-010
+								if (is_obj_module(target_obj) or is_obj_class(target_obj) or is_obj_function(target_obj)):
+									is_builtin = inspect.isbuiltin(target_obj) or getattr(target_obj, "__module__", "") == "builtins"
+									if is_builtin:
+										continue
+		#===== Scope Monotonicity Rules ===============================#
+		# Try to parse the target docstring to obtain its scopes; treat parse failures as "no valid docstring".
+									tr_tmp = tracer()
+									try:
+										tree = parse_indent_docstring(tr_tmp, doc, session=session)
+										target_scopes, target_scope_explicit = get_scopes_of_tree_var(tr_tmp, tree)
+									except (ParseError, SectionNotFoundError):
+										if  "See_also" in node_normative_sections.items():
+											tr.add_info("Rule SEE-009 applies","validation")
+											details = render_see_also_reference_details(item_see_also, "<refer to a documented object with a valid Waterloo docstring>", profile)
+											raise_validation_error(tr,obj,"SEE-008", f"See_also reference '{item_see_also}' has no valid docstring ('See_also' is normative).", details)
+										else:
+											details = render_see_also_reference_details(item_see_also, "<refer to a documented object with a valid Waterloo docstring>", profile)
+											warn_validation(tr,"SEE-007", f"See_also reference '{item_see_also}' has no valid docstring (informative section).", details)
+										continue
+		# Scope monotonicity for See_also references (SCP-006 / SCP-007)
+									if "See_also" in node_normative_sections.items():
+										if not top.can_see(target_scopes):
+											details = render_scope_relation_details(profile, top_scopes, top_scope_explicit, "referenced object", target_scopes, target_scope_explicit, "See_also", item_see_also, "<reconsider the scopes of the referenced object and the referencing object>", profile)
+											raise_validation_error(tr,obj,"SCP-006", f"Reconsider the scopes of the referenced object and the referencing object '{item_see_also}'.", details)
+									else:
+										if not top.can_see(target_scopes):
+											details = render_scope_relation_details(profile, top_scopes, top_scope_explicit, "referenced object", target_scopes, target_scope_explicit, "See_also", item_see_also, "<reconsider the scopes of the referenced object and the referencing object>", profile)
+											warn_validation(tr,"SCP-007", f"Reconsider the scopes of the referenced object and the referencing object '{item_see_also}'.", details)
+		#===== Notes ==================================================#
 		with traced_section(tr, "Notes"):
 			if "Notes" in top.items():
 				if "Notes" in node_normative_sections.items():
@@ -1834,7 +1830,7 @@ See_also:
 						if node_note.has_norm_keywords():
 							details = render_normativity_keyword_details("Notes", name, node_note.items(), "don't use normativity keyword; consider moving relevant content to the Contract section", profile)
 							raise_validation_error(tr, obj, "NOTE-003",f"Note content must not contain normativity keywords; content is informational only.", details)
-# Cases
+	# Cases
 		profile = get_profile(top)
 		if profile == "module":
 			assert isinstance(top,docitem_docstring_module)
@@ -1855,16 +1851,19 @@ See_also:
 				"hint": explain_try_self_for_subsection("Preamble.profile", profile),
 			}
 			raise_validation_error(tr,obj,"PRE-005",f"Unknown profile: {profile}", details)
-#===== Scope Monotonicity Rules ===============================#
-# internal references introduced by Classes, Methods, Functions, Public_* and Derived_from / inherited_method
-# are validated in their respective validators; see markers in those functions.
-#===== Partial Normativity Detection ==========================#
-# May add warnings for breach of PNB-rules.
-	top.detect_partial_normativity(tr)
+		#===== Scope Monotonicity Rules ===============================#
+		# internal references introduced by Classes, Methods, Functions, Public_* and Derived_from / inherited_method
+		# are validated in their respective validators; see markers in those functions.
+		#===== Partial Normativity Detection ==========================#
+		# May add warnings for breach of PNB-rules.
+		top.detect_partial_normativity(tr)
+		session.remember_validated(obj, top)
+	finally:
+		session.forget(obj)
 
 	return top
 
-def validate_class_class_coverage(tr : tracer,obj: type[object], doc_class: docitem_docstring_class, session: ValidationSession | None = None) -> None:
+def validate_class_class_coverage(tr : tracer,obj: type[object], doc_class: docitem_docstring_class, session: DocSession) -> None:
 	"""
 Preamble:
 	profile:
@@ -1901,8 +1900,6 @@ Notes:
 			raise TypeError("validate_class_class_coverage expects a class object.")
 		if not isinstance(doc_class, docitem_docstring_class):
 			raise TypeError("doc_class must be a docitem_docstring_class instance")
-		if session is None:
-			session = ValidationSession()
 # Collect declared public nested classes from class docstring
 		public_classes: set[str] = _get_public_section_entries2(doc_class,"Public_classes",docitem_public_classes)
 # Validate nested class docstrings (defined directly on the class)
@@ -1926,7 +1923,7 @@ Notes:
 			try:
 				with traced_section(tmp_tr, get_obj_name(obj)):
 					with traced_section(tmp_tr, name_of_member):
-						validate_docstring(tmp_tr, member, session=session)
+						validate_docstring(tmp_tr, member, top=None,session=session)
 			except Exception:
 				pass
 			tr.append_and_defuse(tmp_tr)
@@ -1963,7 +1960,7 @@ Notes:
 # Important: Coverage means to descend recursively.
 				validate_class_coverage(tr,cls_obj)
 
-def validate_class_method_coverage(tr : tracer,obj: type[object], doc_class: docitem_docstring_class, session: ValidationSession | None = None) -> None:
+def validate_class_method_coverage(tr : tracer,obj: type[object], doc_class: docitem_docstring_class, session: DocSession) -> None:
 	"""
 Preamble:
 	profile:
@@ -2001,8 +1998,6 @@ Notes:
 			raise TypeError("validate_class_method_coverage expects a class object.")
 		if not isinstance(doc_class, docitem_docstring_class):
 			raise TypeError("doc_class must be a docitem_docstring_class instance")
-		if session is None:
-			session = ValidationSession()
 # Collect declared public methods from class docstring
 		public_methods: set[str] = _get_public_section_entries2(doc_class,"Public_methods",docitem_public_methods)
 # Collect methods defined on the class (not inherited) and validate their docstrings
@@ -2026,7 +2021,7 @@ Notes:
 			try:
 				with traced_section(tmp_tr, get_obj_name(obj)):
 					with traced_section(tmp_tr, name_of_member):
-						validate_docstring(tmp_tr, func_obj, session=session)
+						validate_docstring(tmp_tr, func_obj, top=None, session=session)
 			except Exception:
 				pass
 			tr.append_and_defuse(tmp_tr)
@@ -2069,7 +2064,7 @@ Notes:
 					continue
 				validate_docstring(tr,func_obj2, None, session=session)
 
-def validate_class_type_coverage(tr : tracer,obj: type[object], doc_class: docitem_docstring_class, session: ValidationSession | None = None) -> None:
+def validate_class_type_coverage(tr : tracer,obj: type[object], doc_class: docitem_docstring_class, session: DocSession) -> None:
 	"""
 Preamble:
 	profile:
@@ -2107,7 +2102,7 @@ Raises:
 #				if not hasattr(obj, type_name):
 #					raise_validation_error(tr,obj,"CPTYP-005",f"Class {obj.__name__}: type '{type_name}' listed in Public_types but does not exist.")
 
-def validate_class_constant_coverage(tr : tracer,obj: type[object], doc_class: docitem_docstring_class, session: ValidationSession | None = None) -> None:
+def validate_class_constant_coverage(tr : tracer,obj: type[object], doc_class: docitem_docstring_class, session: DocSession) -> None:
 	"""
 Preamble:
 	profile:
@@ -2141,10 +2136,8 @@ Raises:
 			raise TypeError("validate_class_method_coverage expects a class object.")
 		if not isinstance(doc_class, docitem_docstring_class):
 			raise TypeError("doc_class must be a docitem_docstring_class instance")
-		if session is None:
-			session = ValidationSession()
 
-def validate_class_variable_coverage(tr : tracer,obj: type[object], doc_class: docitem_docstring_class, session: ValidationSession | None = None) -> None:
+def validate_class_variable_coverage(tr : tracer,obj: type[object], doc_class: docitem_docstring_class, session: DocSession) -> None:
 	"""
 Preamble:
 	profile:
@@ -2185,7 +2178,7 @@ Raises:
 			assert isinstance(pv_node, docitem_public_variables)
 			public_variables = set(pv_node.items().keys())
 
-def validate_module_class_coverage(tr : tracer,obj: ModuleType, doc_module: docitem_docstring_module, session: ValidationSession | None = None) -> None:
+def validate_module_class_coverage(tr : tracer,obj: ModuleType, doc_module: docitem_docstring_module, session: DocSession) -> None:
 	"""
 Preamble:
 	profile:
@@ -2220,8 +2213,6 @@ Notes:
 			raise TypeError("validate_module_class_coverage expects a module object.")
 		if not isinstance(doc_module, docitem_docstring_module):
 			raise TypeError("doc_module must be a docitem_docstring_module instance")
-		if session is None:
-			session = ValidationSession()
 # Collect declared public classes from module docstring
 		public_classes: set[str] = _get_public_section_entries2(doc_module,"Public_classes",docitem_public_classes)
 # Collect classes defined in the module (not imported) and validate their docstrings
@@ -2243,7 +2234,7 @@ Notes:
 			try:
 				with traced_section(tmp_tr, get_obj_name(obj)):
 					with traced_section(tmp_tr, name_of_member):
-						validate_docstring(tmp_tr,member, session=session)
+						validate_docstring(tmp_tr,member, top=None, session=session)
 			except Exception:
 				pass
 			tr.append_and_defuse(tmp_tr)
@@ -2282,7 +2273,7 @@ Notes:
 # Important: Coverage means to descend recursively.
 				validate_class_coverage(tr,cls_obj)
 
-def validate_module_function_coverage(tr : tracer,obj: ModuleType, doc_module: docitem_docstring_module, session: ValidationSession | None = None) -> None:
+def validate_module_function_coverage(tr : tracer,obj: ModuleType, doc_module: docitem_docstring_module, session: DocSession) -> None:
 	"""
 Preamble:
 	profile:
@@ -2320,8 +2311,6 @@ Notes:
 			raise TypeError("validate_module_function_coverage expects a module object.")
 		if not isinstance(doc_module, docitem_docstring_module):
 			raise TypeError("doc_module must be a docitem_docstring_module instance")
-		if session is None:
-			session = ValidationSession()
 # Collect declared public functions from module docstring
 		public_functions: set[str] = _get_public_section_entries2(doc_module,"Public_functions",docitem_public_functions)
 # Collect functions defined in the module (not imported) and validate their docstrings
@@ -2343,7 +2332,7 @@ Notes:
 			try:
 				with traced_section(tmp_tr, get_obj_name(obj)):
 					with traced_section(tmp_tr, name_of_member):
-						validate_docstring(tmp_tr,member, session=session)
+						validate_docstring(tmp_tr,member, top=None, session=session)
 			except Exception:
 				pass
 			tr.append_and_defuse(tmp_tr)
@@ -2355,7 +2344,7 @@ Notes:
 				with traced_section(tr, name_of_member):
 					try:
 # Validate and collect messages from lower levels
-						validate_docstring(tr,member, None, session=session)
+						validate_docstring(tr,member, top=None, session=session)
 						valid_functions.add(name_of_member)
 					except Exception:
 # Add message from higher level for clarity (should-level rule).
@@ -2381,9 +2370,9 @@ Notes:
 				if not doc_f2.strip():
 					warn_validation(tr,"MPFN-007",f"Module {obj.__name__}: function '{name_of_member}' is listed in Public_functions but has no valid docstring.")
 					continue
-				validate_docstring(tr,func_obj, None, session=session)
+				validate_docstring(tr,func_obj, top=None, session=session)
 
-def validate_module_type_coverage(tr : tracer,obj: ModuleType, doc_module: docitem_docstring_module, session: ValidationSession | None = None) -> None:
+def validate_module_type_coverage(tr : tracer,obj: ModuleType, doc_module: docitem_docstring_module, session: DocSession) -> None:
 	"""
 Preamble:
 	profile:
@@ -2412,8 +2401,6 @@ Raises:
 	with traced_section(tr, get_obj_name(obj)):
 		if not isinstance(doc_module, docitem_docstring_module):
 			raise TypeError("doc_module must be a docitem_docstring_module instance")
-		if session is None:
-			session = ValidationSession()
 # Collect declared public types from module docstring
 # checked elseqhere
 #		public_types: set[str] = _get_public_section_entries(doc_module,"Public_types",docitem_public_types)
@@ -2423,7 +2410,7 @@ Raises:
 #				if not hasattr(obj, type_name):
 #					raise_validation_error(tr,obj,"MPTYP-005",f"Module {obj.__name__}: type '{type_name}' listed in Public_types but does not exist.")
 
-def validate_module_constant_coverage(tr : tracer,obj: ModuleType, doc_module: docitem_docstring_module, session: ValidationSession | None = None) -> None:
+def validate_module_constant_coverage(tr : tracer,obj: ModuleType, doc_module: docitem_docstring_module, session: DocSession) -> None:
 	"""
 Preamble:
 	profile:
@@ -2453,8 +2440,6 @@ Raises:
 	with traced_section(tr, get_obj_name(obj)):
 		if not isinstance(doc_module, docitem_docstring_module):
 			raise TypeError("doc_module must be a docitem_docstring_module instance")
-		if session is None:
-			session = ValidationSession()
 # Collect declared public constants from module docstring
 # checked elsewhere
 #		public_constants: set[str] = _get_public_section_entries(doc_module,"Public_constants",docitem_public_constants)
@@ -2468,7 +2453,7 @@ Raises:
 #					if not is_attr_final(obj,const_name):
 #						raise_validation_error(tr,obj,"MPCON-006",f"Module {obj.__name__}: constant '{const_name}' listed in Public_constants but is not annotated as 'Final'.")
 
-def validate_module_variable_coverage(tr : tracer,obj: ModuleType, doc_module: docitem_docstring_module, session: ValidationSession | None = None) -> None:
+def validate_module_variable_coverage(tr : tracer,obj: ModuleType, doc_module: docitem_docstring_module, session: DocSession) -> None:
 	"""
 Preamble:
 	profile:
@@ -2539,8 +2524,8 @@ Notes:
 	with traced_section(tr, get_obj_name(obj)):
 		if not is_obj_class(obj):
 			raise TypeError(f"{obj.__class__.__name__} is not a class object")
-		session = ValidationSession()
-		top = validate_docstring(tr,obj, session=session)
+		session = DocSession()
+		top = validate_docstring(tr,obj, top=None, session=session)
 		assert isinstance(top, docitem_docstring_class)
 		validate_class_class_coverage(tr,obj, top, session=session)
 		validate_class_method_coverage(tr,obj, top, session=session)
@@ -2572,8 +2557,8 @@ Raises:
 	with traced_section(tr, get_obj_name(obj)):
 		if not is_obj_module(obj):
 			raise TypeError(f"{obj.__class__.__name__} is not a module object")
-		session = ValidationSession()
-		top = validate_docstring(tr,obj, session=session)
+		session = DocSession()
+		top = validate_docstring(tr,obj, top=None, session=session)
 		assert isinstance(top, docitem_docstring_module)
 		validate_module_class_coverage(tr,obj, top, session=session)
 		validate_module_function_coverage(tr,obj, top, session=session)

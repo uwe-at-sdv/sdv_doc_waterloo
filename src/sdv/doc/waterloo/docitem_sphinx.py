@@ -551,7 +551,7 @@ def _get_validated_doc_for_object(
 		cache[key] = None
 		return None
 	try:
-		doc = mod_docitem.validate_docstring(ctx.tr, obj)
+		doc = mod_docitem.validate_docstring(ctx.tr, obj,top=None, session=mod_docitem.DocSession())
 	except Exception:
 		cache[key] = None
 		return None
@@ -1344,34 +1344,36 @@ def build_sphinx_nodes(ctx : context,obj: object,doc: mod_docitem.docitem_docstr
 
 	return [node_table]
 
-def build_sphinx_nodes_full(ctx : context, class_obj: Any) -> List[nodes.Node]:
+def build_sphinx_nodes_full(ctx : context, class_obj: Any, session: mod_docitem.DocSession) -> List[nodes.Node]:
 	"""
-Preamble:
-	profile:
-		function
-	normative_sections:
-		Contract, Parameters, Returns, Raises
-Contract:
-	general:
-		|Must| analyze the docstring and methods of the class object.
-		|Must| create a list of sphinx nodes, with elements as specified in the following and have the order as indicated:
-		The list |must| contain nodes representing the class' docstring.
-		The list |must| contain nodes produced by |func|`ctx.build_prolog_method_overview`.
-		For each public method as indicated by the class' normative docstring:
-		1. The list |must| contain nodes produced by |func|`ctx.build_prolog_method_block`.
-		2. The list |must| contain nodes representing the class' public method's docstring.
-Parameters:
-	ctx:
-		The context
-	class_obj:
-		The class object to generate a sphinx documentation node list from.
-Returns:
-	A list of sphinx nodes representing the class and public member documentation.
-Raises:
-	RuntimeError:
-		|Must| raise if something goes wrong parsing a docstring.
-	BaseException:
-		|Must| forward exceptions from Sphinx
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+	Contract:
+		general:
+			|Must| analyze the docstring and methods of the class object.
+			|Must| create a list of sphinx nodes, with elements as specified in the following and have the order as indicated:
+			The list |must| contain nodes representing the class' docstring.
+			The list |must| contain nodes produced by |func|`ctx.build_prolog_method_overview`.
+			For each public method as indicated by the class' normative docstring:
+			1. The list |must| contain nodes produced by |func|`ctx.build_prolog_method_block`.
+			2. The list |must| contain nodes representing the class' public method's docstring.
+	Parameters:
+		ctx:
+			The context
+		class_obj:
+			The class object to generate a sphinx documentation node list from.
+		session:
+			An object to store state and cache information across multiple calls to this function.
+	Returns:
+		A list of sphinx nodes representing the class and public member documentation.
+	Raises:
+		RuntimeError:
+			|Must| raise if something goes wrong parsing a docstring.
+		BaseException:
+			|Must| forward exceptions from Sphinx
 	"""
 # Tracer
 	tr = ctx.tr
@@ -1382,14 +1384,14 @@ Raises:
 		class_doc_txt = mod_docitem.get_obj_docstring(class_obj)
 		if not class_doc_txt:
 			raise RuntimeError(f"class {class_obj} has no docstring.")
-		top = cast(mod_docitem.docitem_docstring_class,mod_docitem.validate_docstring(tr,class_obj))
-		mod_docitem.validate_class_method_coverage(tr,class_obj,top)
+		top = cast(mod_docitem.docitem_docstring_class,mod_docitem.validate_docstring(tr,class_obj, top=None, session=session))
+		mod_docitem.validate_class_method_coverage(tr,class_obj,top,session=session)
 		assert isinstance(class_doc_txt, str)
 
-		tree_cls = mod_docitem.parse_indent_docstring(tr,class_doc_txt)
+		tree_cls = mod_docitem.parse_indent_docstring(tr,class_doc_txt, session)
 		di_cls = mod_docitem.docitem_docstring_class()
 		di_cls.parse(tr,tree_cls)
-		mod_docitem.validate_docstring(tr,class_obj,di_cls)
+		mod_docitem.validate_docstring(tr,class_obj,di_cls, session=session)
 		if not _is_doc_visible_in_current_scope(ctx, di_cls):
 # Scope-aware rendering omits invisible objects entirely. If later
 # we need author-facing placeholders, this is the class-level exit to adapt.
@@ -1412,7 +1414,7 @@ Raises:
 					continue
 				cls_obj = getattr(class_obj, cls_name)
 # Recusrive call
-				nodes_out.extend(build_sphinx_nodes_full(ctx,cls_obj))
+				nodes_out.extend(build_sphinx_nodes_full(ctx,cls_obj, session=session))
 
 
 # Render public methods
@@ -1434,7 +1436,7 @@ Raises:
 					func_doc_txt = mod_docitem.get_obj_docstring(func_obj)
 					if not func_doc_txt:
 						continue
-					tree_m = mod_docitem.parse_indent_docstring(tr,func_doc_txt)
+					tree_m = mod_docitem.parse_indent_docstring(tr,func_doc_txt, session)
 
 					profile = mod_docitem.get_profile_of_tree(tr,tree_m)
 					di_m :  mod_docitem.docitem_base
@@ -1444,7 +1446,7 @@ Raises:
 						di_m = mod_docitem.docitem_docstring_method()
 
 					di_m.parse(tr,tree_m)
-					mod_docitem.validate_docstring(tr,func_obj,di_m)
+					mod_docitem.validate_docstring(tr,func_obj,di_m, session=session)
 					if not _is_doc_visible_in_current_scope(ctx, di_m):
 						continue
 					nodes_out.extend(ctx.build_prolog_method_block(ctx, None, class_obj, func_obj))
@@ -1474,7 +1476,7 @@ Raises:
 					func_doc_txt = mod_docitem.get_obj_docstring(func_obj)
 					if not func_doc_txt:
 						continue
-					tree_m = mod_docitem.parse_indent_docstring(tr,func_doc_txt)
+					tree_m = mod_docitem.parse_indent_docstring(tr,func_doc_txt, session)
 
 					profile = mod_docitem.get_profile_of_tree(tr,tree_m)
 					di_prop_meth :  mod_docitem.docitem_base
@@ -1484,7 +1486,7 @@ Raises:
 						di_prop_meth = mod_docitem.docitem_docstring_method()
 
 					di_prop_meth.parse(tr,tree_m)
-					mod_docitem.validate_docstring(tr,func_obj,di_prop_meth)
+					mod_docitem.validate_docstring(tr,func_obj,di_prop_meth, session=session)
 					if not _is_doc_visible_in_current_scope(ctx, di_prop_meth):
 						continue
 #					nodes_out.extend(ctx.build_prolog_method_block(ctx, None, prop_obj, func_obj))
@@ -1908,6 +1910,7 @@ Raises:
 	"""
 	ctx = make_context(app, lambda parent, ln, txt: parse_inline(inliner,parent,ln,txt), lineno)
 	tr = ctx.tr
+	session = mod_docitem.DocSession()
 	with mod_docitem.traced_section(tr, qname):
 		module_obj, _, _, _ = resolve_qualified_name(ctx, qname)
 		if not mod_docitem.is_obj_module(module_obj):
@@ -1916,10 +1919,10 @@ Raises:
 		if not mod_doc_txt:
 			raise RuntimeError(f"{qname} has no docstring.")
 
-		tree_mod = mod_docitem.parse_indent_docstring(tr,mod_doc_txt)
+		tree_mod = mod_docitem.parse_indent_docstring(tr,mod_doc_txt, session)
 		di_mod = mod_docitem.docitem_docstring_module()
 		di_mod.parse(tr,tree_mod)
-		mod_docitem.validate_docstring(tr,module_obj, di_mod)
+		mod_docitem.validate_docstring(tr,module_obj, di_mod, session=session)
 		return build_sphinx_nodes(ctx, module_obj, di_mod)
 
 def wtrl_build_autodoc_function_nodes(app: SphinxAppProtocol | Any, inliner: InlinerProtocol, lineno: int, qname: str) -> list[nodes.Node]:
@@ -1957,6 +1960,7 @@ Raises:
 	"""
 	ctx = make_context(app, lambda parent, ln, txt: parse_inline(inliner, parent, ln, txt), lineno)
 	tr = ctx.tr
+	session = mod_docitem.DocSession()
 	with mod_docitem.traced_section(tr, qname):
 		function_obj, _, _, _ = resolve_qualified_name(ctx, qname)
 		if not callable(function_obj):
@@ -1965,16 +1969,16 @@ Raises:
 		if not func_doc_txt:
 			raise RuntimeError(f"{qname} has no docstring.")
 
-		tree_meth = mod_docitem.parse_indent_docstring(tr,func_doc_txt)
+		tree_meth = mod_docitem.parse_indent_docstring(tr,func_doc_txt, session)
 		if mod_docitem.get_profile_of_tree(mod_docitem.tracer(),tree_meth) in ("function","method"):
 			di_meth = mod_docitem.docitem_docstring_method()
 			di_meth.parse(tr,tree_meth)
-			mod_docitem.validate_docstring(tr,function_obj, di_meth)
+			mod_docitem.validate_docstring(tr,function_obj, di_meth, session=session)
 			return build_sphinx_nodes(ctx, function_obj, di_meth)
 		else:
 			di_inhmeth = mod_docitem.docitem_docstring_inherited_method()
 			di_inhmeth.parse(tr,tree_meth)
-			mod_docitem.validate_docstring(tr,function_obj, di_inhmeth)
+			mod_docitem.validate_docstring(tr,function_obj, di_inhmeth, session=session)
 			return build_sphinx_nodes(ctx, function_obj, di_inhmeth)
 
 def wtrl_build_autodoc_class_nodes(app: SphinxAppProtocol | Any, inliner: InlinerProtocol, lineno: int, qname: str) -> list[nodes.Node]:
@@ -2012,6 +2016,7 @@ Raises:
 	"""
 	ctx = make_context(app, lambda parent, ln, txt: parse_inline(inliner, parent, ln, txt), lineno)
 	tr = ctx.tr
+	session = mod_docitem.DocSession()
 	with mod_docitem.traced_section(tr, qname):
 		obj, _, _, _ = resolve_qualified_name(ctx, qname)
 		if not mod_docitem.is_obj_class(obj):
@@ -2020,10 +2025,10 @@ Raises:
 		if not class_doc_txt:
 			raise RuntimeError(f"{qname} has no docstring.")
 
-		tree_mod = mod_docitem.parse_indent_docstring(tr,class_doc_txt)
+		tree_mod = mod_docitem.parse_indent_docstring(tr,class_doc_txt, session)
 		di_node = mod_docitem.docitem_docstring_class()
 		di_node.parse(tr,tree_mod)
-		mod_docitem.validate_docstring(tr,obj, di_node)
+		mod_docitem.validate_docstring(tr,obj, di_node, session=session)
 		return build_sphinx_nodes(ctx, obj,di_node)
 
 def wtrl_build_autodoc_class_full_nodes(app: SphinxAppProtocol | Any, inliner: InlinerProtocol, lineno: int, qname: str) -> list[nodes.Node]:
@@ -2062,6 +2067,7 @@ Raises:
 	"""
 	ctx = make_context(app, lambda parent, ln, txt: parse_inline(inliner, parent, ln, txt), lineno)
 	tr = ctx.tr
+	session = mod_docitem.DocSession()
 	with mod_docitem.traced_section(tr, qname):
 		obj, _, _, _ = resolve_qualified_name(ctx, qname)
 		if not mod_docitem.is_obj_class(obj):
@@ -2070,7 +2076,7 @@ Raises:
 		if not class_doc_txt:
 			raise RuntimeError(f"{qname} has no docstring.")
 		try:
-			return build_sphinx_nodes_full(ctx, obj)
+			return build_sphinx_nodes_full(ctx, obj, session=session)
 		except Exception as e:
 			print(tr.str_by_severity(mod_docitem.tracer.Severity.DEBUG),file=sys.stderr)
 			raise
@@ -2535,8 +2541,6 @@ WTRL_PROLOG = r"""
 .. |should_not| replace:: :wtrl_norm:`should not`
 .. |May| replace:: :wtrl_norm:`May`
 .. |may| replace:: :wtrl_norm:`may`
-.. |May_not| replace:: :wtrl_norm:`May not`
-.. |may_not| replace:: :wtrl_norm:`may not`
 .. |Self| replace:: :wtrl_value:`Self`
 .. |None| replace:: :wtrl_value:`None`
 .. |True| replace:: :wtrl_value:`True`
@@ -2754,6 +2758,6 @@ def setup(app: Any) -> dict[str, Any]:
 if __name__ == "__main__":
 	tr = mod_docitem.tracer()
 	with mod_docitem.traced_section(tr, "__main__"):
-		mod_docitem.validate_docstring(tr,context)
+		mod_docitem.validate_docstring(tr,context,top=None, session=mod_docitem.DocSession())
 		mod_docitem.validate_class_coverage(tr,context)
 		mod_docitem.validate_module_coverage(tr,sys.modules[__name__])

@@ -21,6 +21,12 @@ from typing import Any, Callable, Dict, Final, get_type_hints, get_origin, get_a
 from enum import IntEnum
 
 from sdv.doc.waterloo.docitem_helper import *
+from sdv.doc.waterloo.docitem_diagnostics import (
+	render_identifier_lines,
+	render_suggestion,
+	render_deduplicated_identifiers,
+	explain_try_self_for_subsection,
+)
 
 #===== Keywords ===============================================#
 # By Sequence we make sure that nothing can be appended
@@ -37,10 +43,6 @@ KEYWORDS_OF_NORMATIVITY: Final[Sequence[str]] = (
 	"|Should_not|",
 	"|may|",
 	"|May|",
-# Some documentation guidelines allow these and we should not
-# deliberately restrict their use, even if we don't use them ourselves.
-	"|may_not|",
-	"|May_not|",
 	)
 
 RE_PARTIAL_NORMATIVITY_PATTERN_A_COMPILED: Final[Sequence[re.Pattern[str]]] = (
