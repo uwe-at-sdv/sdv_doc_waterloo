@@ -41,7 +41,7 @@ from pygments.token import Error, Generic, Keyword, Name, String, Literal, Numbe
 
 #----- Changelog ----------------------------------------------#
 
-__version__ = "0.5.0"
+__version__ = "0.5.1"
 
 #----- Constants ----------------------------------------------#
 RE_SECTION = re.compile(

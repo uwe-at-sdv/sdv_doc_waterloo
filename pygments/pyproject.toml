@@ -25,3 +25,8 @@ version = { attr = "python_waterloo_lexer.__version__" }
 
 [tool.setuptools]
 py-modules = ["python_waterloo_lexer"]
+
+[project.urls]
+"Homepage" = "https://github.com/uwe-at-sdv/sdv_doc_waterloo"
+"Bug Tracker" = "https://github.com/uwe-at-sdv/sdv_doc_waterloo/issues"
+"Source Code" = "https://github.com/uwe-at-sdv/sdv_doc_waterloo/tree/ide-plugins/pygments/"

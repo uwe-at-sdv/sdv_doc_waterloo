@@ -215,7 +215,7 @@ def _handle_validate(
 	if tr.has_errors():
 		raise RuntimeError()
 # Validate
-	wtrl.validate_docstring(tr,obj)
+	wtrl.validate_docstring(tr,obj,top=None, session=wtrl.DocSession())
 	if tr.has_errors():
 		raise RuntimeError()
 	return {"kind": kind, "qualified_identifier": qi}
