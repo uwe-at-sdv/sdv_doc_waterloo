@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "python-waterloo-lexer"
 description = "A pygments lexer derived from the Python lexer, for Waterloo docstrings"
-readme = "README_PYPI.md"
+readme = "README.md"
 dependencies = ["pygments"]
 requires-python = ">=3.10"
 authors = [{ name = "Uwe" }]
