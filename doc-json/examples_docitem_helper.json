@@ -94,12 +94,6 @@
         "sdv.doc.waterloo.docitem_helper.get_func_obj_from_callable": [
             "package_gh-pages/doc-examples-python/api_demo_helper_get_func_obj_from_callable_01.py"
         ],
-        "sdv.doc.waterloo.docitem_helper.explain_try_self_for_section": [
-            "package_gh-pages/doc-examples-python/api_demo_helper_explain_try_self_01.py"
-        ],
-        "sdv.doc.waterloo.docitem_helper.explain_try_self_for_subsection": [
-            "package_gh-pages/doc-examples-python/api_demo_helper_explain_try_self_01.py"
-        ],
         "sdv.doc.waterloo.docitem_helper.warn_parsing": [
             "package_gh-pages/doc-examples-python/api_demo_helper_tracer_03.py"
         ],
