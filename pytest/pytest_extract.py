@@ -169,3 +169,48 @@ def test_extract_reports_unresolvable_object() -> None:
 	)
 	assert res.returncode == 1, res.stderr
 	assert "TOOL-001" in res.stderr, res.stderr
+
+
+def test_extract_syntax_highlighting_is_off_by_default() -> None:
+	"""By default extract emits plain text without ANSI escape codes."""
+	res = run_waterlint(
+		"extract",
+		"--basedir",
+		DIR_EXAMPLES,
+		"--obj",
+		"test_docitem_module_full",
+	)
+	assert res.returncode == 0, res.stderr
+	assert "\x1b[" not in res.stdout
+
+
+def test_extract_syntax_highlighting_can_be_forced() -> None:
+	"""--syntax-hl with --color emits ANSI escape codes for terminal rendering."""
+	res = run_waterlint(
+		"extract",
+		"--basedir",
+		DIR_EXAMPLES,
+		"--obj",
+		"test_docitem_module_full",
+		"--syntax-hl",
+		"--color",
+	)
+	assert res.returncode == 0, res.stderr
+	assert "\x1b[" in res.stdout
+	assert "Preamble:" in res.stdout
+
+
+def test_extract_rejects_unknown_syntax_style() -> None:
+	"""An unknown syntax style fails with TOOL-001."""
+	res = run_waterlint(
+		"extract",
+		"--basedir",
+		DIR_EXAMPLES,
+		"--obj",
+		"test_docitem_module_full",
+		"--syntax-hl",
+		"--syntax-hl-style",
+		"zephir",
+	)
+	assert res.returncode == 1, res.stderr
+	assert "TOOL-001" in res.stderr, res.stderr

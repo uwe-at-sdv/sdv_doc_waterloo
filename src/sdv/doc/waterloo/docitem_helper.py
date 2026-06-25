@@ -57,6 +57,8 @@ Public_constants:
 	RE_WTRL_ANGLE_WTRL_REF:
 		Regular expression for matching Waterloo angle bracket wtrl references. Undocumented: RE_WTRL_ANGLE_WTRL_REF_COMPILED, the precompiled version for performance.
 		References consist of two parts: clear text and <link>, optionally separated by whitespace.
+	RE_WTRL_JSON_SCHEMA_NAME:
+		Regular expression for matching Waterloo JSON Schema filenames. Undocumented: RE_WTRL_JSON_SCHEMA_NAME_COMPILED, the precompiled version for performance.
 	RULE_ID_WHITELIST:
 		Whitelist reasons for legacy rule identifiers used by the helper layer.
 	CANONICAL_ORDER_OF_SECTIONS:
@@ -320,6 +322,9 @@ RE_WTRL_ANGLE_WTRL_REF_COMPILED: Final[re.Pattern[str]] = re.compile(RE_WTRL_ANG
 
 #RE_SUSPICIOUS_MARKUP_BACKTICK: Final[str] = rf"\|[a-zA-Z0-9_]+\|`"
 #RE_SUSPICIOUS_MARKUP_BACKTICK_COMPILED: Final[re.Pattern[str]] = re.compile(RE_SUSPICIOUS_MARKUP_BACKTICK)
+
+RE_WTRL_JSON_SCHEMA_NAME: Final[str] = r"^wtrl-[a-zA-Z\-_]*-[0-9+]\.[0-9+]\.[0-9+]\.schema\.json$"
+RE_WTRL_JSON_SCHEMA_NAME_COMPILED: Final[re.Pattern[str]] = re.compile(RE_WTRL_JSON_SCHEMA_NAME)
 
 #CSV_SECTIONS = frozenset(["normative_sections", "scopes", "Public_classes", "Public_methods", "Public_functions", "See_also"])
 SINGLE_STRING_SECTIONS = frozenset(["profile","status"])

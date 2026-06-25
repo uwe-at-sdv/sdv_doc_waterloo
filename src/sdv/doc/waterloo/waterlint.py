@@ -35,7 +35,7 @@ import sys, inspect, os, re,shutil, traceback
 from datetime import datetime
 from pathlib import Path
 from types import ModuleType
-from typing import Any, Callable, Dict, List, Optional, Tuple, cast
+from typing import Any, Callable, Dict, Iterable, List, Optional, Tuple, cast
 from sdv.doc.waterloo.waterlint_common import (
 	WTRL_DOCITEM_VERSION,
 	WTRL_JSON_SCHEMA_VERSION,
@@ -54,7 +54,17 @@ from jsonschema import Draft202012Validator
 #from jsonschema import JSONDecodeError
 import jsonschema.exceptions
 
-__version__ = "0.18.0"
+try:
+	from pygments import format as pygments_format
+	from pygments.formatters import Terminal256Formatter
+	from pygments.styles import get_all_styles
+	from python_waterloo_lexer import PythonWaterlooLexer
+	_HAS_PYGMENTS = True
+except Exception:
+	_HAS_PYGMENTS = False
+
+__version__ = "0.19.0"
+# - 0.19.0 [2026-06-25] Subcommand 'extract' now with syntaax highlighting in terminal output; option --syntax-hl-style to select a Pygments style.
 # - 0.18.0 [2026-06-25] Subcommand 'render-json': Validation and propagation of errors as standardized warning;
 #			Option --ignore (as in validate and coverage) to ignore certain warning codes.
 # - 0.17.0 [2026-06-22] Enhanced JSON output for types, constants, variables;
@@ -136,6 +146,7 @@ with contextlib.redirect_stdout(sys.stderr):
 		get_obj_fully_qualified_name,
 		get_obj_path,
 		RE_ANSI_SGR_COMPILED,
+		RE_WTRL_JSON_SCHEMA_NAME_COMPILED,
 		ResolveObjectError,
 		ValidationError,
 		ParseError,
@@ -623,6 +634,35 @@ def _read_docstring_from_file(path: str) -> str:
 def _read_docstring_from_stdin() -> str:
 	return sys.stdin.read()
 
+
+def _is_valid_pygments_style(style_name: str) -> bool:
+	return style_name in set(get_all_styles())
+
+def _render_terminal_highlighted_text(text: str, style_name: str | None, force_ansi: bool, enabled: bool) -> str:
+	if not enabled:
+		return text
+	if not _HAS_PYGMENTS:
+		return text
+	if not force_ansi and not sys.stdout.isatty():
+		return text
+	try:
+		lexer = PythonWaterlooLexer()
+	except Exception:
+		return text
+	try:
+		if style_name:
+			formatter = Terminal256Formatter(style=style_name)
+		else:
+			formatter = Terminal256Formatter()
+	except Exception:
+		formatter = Terminal256Formatter()
+
+	def token_stream() -> Iterable[tuple[object, str]]:
+		for _, token_type, value in lexer.highlight_docstring(0, text):
+			yield token_type, value
+
+	return pygments_format(token_stream(), formatter)
+
 #===== Validate ===============================================#
 
 def validate_command(args: argparse.Namespace) -> int:
@@ -831,9 +871,9 @@ def extract_command(args: argparse.Namespace) -> int:
 			Contract, Parameters, Returns, Raises
 		scope:
 			extension
-	Contract:
-		general:
-			|Must| extract a Waterloo docstring or a docstring subsection.
+		Contract:
+			general:
+				|Must| extract a Waterloo docstring or a docstring subsection.
 	Parameters:
 		args:
 			Parsed extract command line options.
@@ -842,6 +882,7 @@ def extract_command(args: argparse.Namespace) -> int:
 			* |attr|`basedir` |may| be present to resolve |opt|`--obj` relative to a base directory.
 			* |attr|`section` and |attr|`subsection` |may| be present to extract only part of the docstring, and |attr|`subsection` |must| only be used together with |attr|`section`.
 			* |attr|`out_file` |may| be present to write the extracted text to a file instead of stdout.
+			* |attr|`syntax_hl`, |attr|`syntax_hl_style`, and |attr|`force_color` |may| be present to control Waterloo-aware terminal highlighting.
 			* |attr|`out_diag`, |attr|`out_diag_json`, and |attr|`debug` |may| be present as global diagnostics controls.
 			* |attr|`fail_on_warning` |must| be present because the exit code depends on it.
 	Returns:
@@ -853,6 +894,13 @@ def extract_command(args: argparse.Namespace) -> int:
 #----- output spec --------------------------------------------#
 	out_diag	=  getattr(args, "out_diag", None)
 	out_diag_json	=  getattr(args, "out_diag_json", None)
+	syntax_hl = bool(getattr(args, "syntax_hl", False))
+	syntax_hl_style = getattr(args, "syntax_hl_style", None)
+	force_color = bool(getattr(args, "force_color", False))
+	if syntax_hl and syntax_hl_style and not _is_valid_pygments_style(syntax_hl_style):
+		tr.add_error("TOOL-001", "tool", f"Unknown Pygments style: {syntax_hl_style!r}.")
+		_emit_tracer(tr, out_diag, out_diag_json)
+		return 1
 #--------------------------------------------------------------#
 	try:
 		if args.subsection and not args.section:
@@ -883,6 +931,7 @@ def extract_command(args: argparse.Namespace) -> int:
 				out = tokenizer.to_string_tree(subtree)
 		else:
 			out = tokenizer.to_string_tree(tree)
+		out = _render_terminal_highlighted_text(out, syntax_hl_style, force_color, syntax_hl)
 
 		if getattr(args, "out_file", None):
 			with open(args.out_file, "w", encoding="utf-8") as fh:
@@ -1816,8 +1865,14 @@ def _help_topic_command(args: argparse.Namespace) -> int:
 
 #===== List schemas ==========================================#
 
-def _list_schemas_command(args: argparse.Namespace) -> int:
-	"""List available Waterloo JSON Schemas."""
+def _schema_version_key(fname: str) -> tuple[str, tuple[int, ...], str]:
+	m = re.match(r"^(wtrl-[A-Za-z0-9_-]+)-([0-9]+(?:\.[0-9]+)*)\.schema\.json$", fname)
+	if m is None:
+		return (fname, (), fname)
+	version = tuple(int(part) for part in m.group(2).split("."))
+	return (m.group(1), version, fname)
+
+def _iter_schema_dirs() -> List[Path]:
 	schema_dirs: list[Path] = []
 	# 1) schema directory next to this script
 	schema_dirs.append(Path(__file__).resolve().parent / "schema")
@@ -1827,18 +1882,31 @@ def _list_schemas_command(args: argparse.Namespace) -> int:
 		schema_dirs.append(Path(str(pkg_schema)))
 	except Exception:
 		pass
+	return schema_dirs
 
+def _schema_inventory(args: argparse.Namespace) -> List[tuple[Path, list[str]]]:
+	"""Return schema directories together with semantically sorted Waterloo JSON Schema filenames."""
+	schema_infos: list[tuple[Path, list[str]]] = []
 	seen: set[Path] = set()
-	for sdir in schema_dirs:
+	for sdir in _iter_schema_dirs():
 		sdir = sdir.resolve()
 		if sdir in seen:
 			continue
 		seen.add(sdir)
+		if not sdir.exists():
+			schema_infos.append((sdir, []))
+			continue
+		files = sorted((p.name for p in sdir.glob("wtrl*.json") if p.is_file()), key=_schema_version_key)
+		schema_infos.append((sdir, files))
+	return schema_infos
+
+def _list_schemas_command(args: argparse.Namespace) -> int:
+	"""List available Waterloo JSON Schemas."""
+	for sdir, files in _schema_inventory(args):
 		print(f"Schemas in {sdir}:")
 		if not sdir.exists():
 			print("  (directory not found)")
 			continue
-		files = sorted(p.name for p in sdir.glob("wtrl*.json") if p.is_file())
 		if not files:
 			print("  (none matching wtrl*.json)")
 		else:
@@ -1853,12 +1921,25 @@ def _version_command(args: argparse.Namespace) -> int:
 
 def _version_json_command(args: argparse.Namespace) -> int:
 	"""Print JSON with waterlint and Waterloo JSON Schema versions."""
+
+	WTRL_MCP_ABOUT_JSON_SCHEMA_VERSION="TBD"
+	WTRL_MCP_ABOUT_TOPIC_JSON_SCHEMA_VERSION="TBD"
+
+	for _, files in _schema_inventory(args):
+		for f in files:
+			if f.startswith("wtrl-mcp-about-json-") and f.endswith(".schema.json"):
+				WTRL_MCP_ABOUT_JSON_SCHEMA_VERSION = f[len("wtrl-mcp-about-json-"):-len(".schema.json")]
+			elif f.startswith("wtrl-mcp-about-topic-json-") and f.endswith(".schema.json"):
+				WTRL_MCP_ABOUT_TOPIC_JSON_SCHEMA_VERSION = f[len("wtrl-mcp-about-topic-json-"):-len(".schema.json")]
+
 	doc = {
 		"waterlint": __version__,
 		"wtrl-json": WTRL_JSON_SCHEMA_VERSION,
 		"wtrl-tracer-json": docitem.WTRL_TRACER_JSON_SCHEMA_VERSION,
 		"wtrl-example-refs-json": WTRL_EXAMPLE_REFS_JSON_SCHEMA_VERSION,
 		"wtrl-walk-json": WTRL_WALK_JSON_SCHEMA_VERSION,
+		"wtrl-mcp-about-json": WTRL_MCP_ABOUT_JSON_SCHEMA_VERSION,
+		"wtrl-mcp-about-topic-json": WTRL_MCP_ABOUT_TOPIC_JSON_SCHEMA_VERSION,
 	}
 	json.dump(doc, sys.stdout, indent=2)
 	sys.stdout.write("\n")
@@ -2029,6 +2110,14 @@ def _build_parser() -> argparse.ArgumentParser:
 	extract.add_argument("--out", dest="out_file", metavar="FILE", help="Write extracted text to FILE instead of stdout.")
 	extract.add_argument("--section", metavar="SECTION", help="Section label to extract")
 	extract.add_argument("--subsection", metavar="SUBSECTION", help="Subsection label to extract (requires --section)")
+	extract.add_argument("--syntax-hl", dest="syntax_hl", action="store_true", help="Enable Waterloo-aware syntax highlighting in terminal output.")
+	extract.add_argument("--no-syntax-hl", dest="syntax_hl", action="store_false", help="Disable Waterloo-aware syntax highlighting in terminal output.")
+	extract.set_defaults(syntax_hl=False)
+	extract.add_argument("--syntax-hl-style", metavar="STYLE", help="Pygments style for terminal highlighting; uses the formatter default if omitted. Call `pygmentize -L` for a list of available styles.")
+	color_group = extract.add_mutually_exclusive_group()
+	color_group.add_argument("--color", dest="force_color", action="store_true", help="Force ANSI color output even when stdout is not a terminal.")
+	color_group.add_argument("--no-color", dest="force_color", action="store_false", help="Disable ANSI color output.")
+	extract.set_defaults(force_color=False)
 	extract.add_argument("--debug", action="store_true", help="Emit debugging data to stderr (reserved)")
 
 #----- validate-json ------------------------------------------#

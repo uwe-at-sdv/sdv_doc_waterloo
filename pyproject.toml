@@ -23,6 +23,8 @@ dynamic = ["version"]
 dependencies = [
 	"jsonschema",
 	"jsonpointer",
+	"pygments",
+	"python-waterloo-lexer",
 	"docutils",
 	"mcp",
 	"tomli; python_version < '3.11'"
