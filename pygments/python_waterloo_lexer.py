@@ -43,6 +43,7 @@ from pygments.token import Error, Generic, Keyword, Name, String, Literal, Numbe
 
 __version__ = "0.5.8"
 
+
 #----- Constants ----------------------------------------------#
 RE_SECTION = re.compile(
 	r"^\s*(?:"
