@@ -103,7 +103,7 @@ def test_render_json_counts_public_A() -> None:
 	skipped, rendered = _parse_info_counts(res.stderr)
 	assert skipped["modules"] == (1, 1)
 	assert skipped["classes"] == (1, 3)
-	assert skipped["callables"] == (1, 3)
+	assert skipped["callables"] == (1, 4)
 	assert skipped["unknown"] == (0, 0)
 	assert rendered["modules"] == 0
 	assert rendered["classes"] == 1
@@ -129,7 +129,7 @@ def test_render_json_counts_public_C() -> None:
 	skipped, rendered = _parse_info_counts(res.stderr)
 	assert skipped["modules"] == (0, 1)
 	assert skipped["classes"] == (0, 1)
-	assert skipped["callables"] == (1, 2)
+	assert skipped["callables"] == (1, 3)
 	assert skipped["unknown"] == (0, 0)
 	assert rendered["modules"] == 0
 	assert rendered["classes"] == 0
@@ -142,7 +142,7 @@ def test_render_json_counts_extension_A() -> None:
 	skipped, rendered = _parse_info_counts(res.stderr)
 	assert skipped["modules"] == (1, 1)
 	assert skipped["classes"] == (1, 3)
-	assert skipped["callables"] == (1, 3)
+	assert skipped["callables"] == (1, 4)
 	assert skipped["unknown"] == (0, 0)
 	assert rendered["modules"] == 1
 	assert rendered["classes"] == 2
@@ -168,7 +168,7 @@ def test_render_json_counts_extension_C() -> None:
 	skipped, rendered = _parse_info_counts(res.stderr)
 	assert skipped["modules"] == (0, 1)
 	assert skipped["classes"] == (0, 1)
-	assert skipped["callables"] == (1, 2)
+	assert skipped["callables"] == (1, 3)
 	assert skipped["unknown"] == (0, 0)
 	assert rendered["modules"] == 0
 	assert rendered["classes"] == 0
@@ -194,11 +194,11 @@ def test_render_json_counts_core_A() -> None:
 	skipped, rendered = _parse_info_counts(res.stderr)
 	assert skipped["modules"] == (1, 1)
 	assert skipped["classes"] == (1, 3)
-	assert skipped["callables"] == (1, 3)
+	assert skipped["callables"] == (1, 4)
 	assert skipped["unknown"] == (0, 0)
 	assert rendered["modules"] == 1
 	assert rendered["classes"] == 3
-	assert rendered["callables"] == 3
+	assert rendered["callables"] == 2
 
 
 def test_render_json_counts_core_B() -> None:
@@ -220,11 +220,51 @@ def test_render_json_counts_core_C() -> None:
 	skipped, rendered = _parse_info_counts(res.stderr)
 	assert skipped["modules"] == (0, 1)
 	assert skipped["classes"] == (0, 1)
-	assert skipped["callables"] == (1, 2)
+	assert skipped["callables"] == (1, 3)
 	assert skipped["unknown"] == (0, 0)
 	assert rendered["modules"] == 0
 	assert rendered["classes"] == 1
-	assert rendered["callables"] == 1
+	assert rendered["callables"] == 0
+
+
+def test_render_json_skips_invalid_docstrings_as_invalid(tmp_path: Path) -> None:
+	res = _run_render_json("pytest_syntaxhl_showcase", include_imported=True)
+	assert res.returncode == 0, res.stderr
+	skipped, rendered = _parse_info_counts(res.stderr)
+	assert skipped["modules"] == (1, 3)
+	assert skipped["classes"] == (1, 2)
+	assert skipped["callables"] == (2, 14)
+	assert rendered["modules"] == 0
+	assert rendered["classes"] == 0
+	assert rendered["callables"] == 2
+	assert "TOOL-009" in res.stderr
+	assert "TOOL-800" not in res.stderr
+	doc = json.loads(res.stdout)
+	assert "pytest_syntaxhl_showcase.MyClassA" not in doc["__WTRL_TOC_CLASSES__"]
+	assert "pytest_syntaxhl_showcase.MyClassA" not in doc["__WTRL_OBJECTS__"]
+
+
+def test_render_json_can_ignore_invalid_object_summary_warning() -> None:
+	res = _run_render_json_cli(
+		[
+			"--basedir",
+			DIR_EXAMPLES,
+			"--obj",
+			"pytest_syntaxhl_showcase",
+			"--ignore",
+			"TOOL-009",
+			"--no-allow-local-paths",
+		]
+	)
+	assert res.returncode == 0, res.stderr
+	assert "TOOL-009" not in res.stderr
+	skipped, rendered = _parse_info_counts(res.stderr)
+	assert skipped["modules"] == (1, 3)
+	assert skipped["classes"] == (1, 2)
+	assert skipped["callables"] == (2, 14)
+	assert rendered["modules"] == 0
+	assert rendered["classes"] == 0
+	assert rendered["callables"] == 2
 
 
 def test_render_json_includes_annotations_for_public_variables(tmp_path: Path) -> None:

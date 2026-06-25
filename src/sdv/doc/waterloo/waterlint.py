@@ -54,7 +54,9 @@ from jsonschema import Draft202012Validator
 #from jsonschema import JSONDecodeError
 import jsonschema.exceptions
 
-__version__ = "0.17.0"
+__version__ = "0.18.0"
+# - 0.18.0 [2026-06-25] Subcommand 'render-json': Validation and propagation of errors as standardized warning;
+#			Option --ignore (as in validate and coverage) to ignore certain warning codes.
 # - 0.17.0 [2026-06-22] Enhanced JSON output for types, constants, variables;
 #			Improved html5-rendering for these categories.
 # - 0.16.3 [2026-06-18] Bugfix which caused a missing error message in case of non-existing path for --basedir.
@@ -1074,6 +1076,7 @@ def render_json_command(args: argparse.Namespace) -> int:
 			* Exactly one of |attr|`out_file` or |attr|`out_dir` |must| be present.
 			* If |attr|`out_dir` is used with multiple root objects, |attr|`out_prefix` |must| be present.
 			* |attr|`flavour`, |attr|`scope`, |attr|`include_imported`, and |attr|`allow_local_paths` |may| be present as rendering controls.
+			* |attr|`ignore` |may| be present as a whitespace-separated list of ignored warning rule IDs.
 			* |attr|`out_diag`, |attr|`out_diag_json`, and |attr|`debug` |may| be present as global diagnostics controls.
 	Returns:
 		|Must| return 0 on success, non-zero on validation or processing errors.
@@ -1157,6 +1160,24 @@ def render_json_command(args: argparse.Namespace) -> int:
 		if isinstance(modname, str) and modname:
 			inh["source"] = f"/__WTRL_OBJECTS__/{modname}"
 
+	def _warn_invalid_render_json_object(name_key: str, o: object, phase: str) -> None:
+		if tr.should_ignore_rule("TOOL-009"):
+			return
+		kind = "unknown"
+		if cvrt.is_obj_module(o):
+			kind = "module"
+		elif cvrt.is_obj_class(o):
+			kind = "class"
+		elif cvrt.is_obj_function(o):
+			kind = "callable"
+		phase_text = "parse" if phase == "parse" else "validation" if phase == "validation" else phase
+		tr.add_warning(
+			"TOOL-009",
+			"tool",
+			f"render-json skipped invalid object '{name_key}' during {phase_text}.",
+			{"object": name_key, "kind": kind, "phase": phase},
+		)
+
 	tr = tracer()
 	session = docitem.DocSession()
 #----- output spec --------------------------------------------#
@@ -1167,6 +1188,16 @@ def render_json_command(args: argparse.Namespace) -> int:
 #----- Security note: local paths -----------------------------#
 	if getattr(args, "allow_local_paths", True):
 		tr.add_info("Result JSON contains local filesystem paths; disable with --no-allow-local-paths.")
+	if getattr(args, "ignore", None):
+		if "," in args.ignore:
+			print('Commas are not allowed in --ignore; expect a single rule or a space-separated list of rules, e.g "VLII-001 SEE-006"')
+			return 2
+		for rule in args.ignore.split():
+			try:
+				tr.add_ignore_rule(rule)
+			except RuntimeError as exc:
+				print(f"Error: {exc}", file=sys.stderr)
+				return 2
 	try:
 		flavour_str = args.flavour
 		flavour = cvrt.flavour_tag_map.get(flavour_str)
@@ -1313,8 +1344,9 @@ def render_json_command(args: argparse.Namespace) -> int:
 			"__WTRL_TOC_VARIABLES__":0,
 			"__WTRL_TOC_CONSTANTS__":0
 			}
-#----- Seen, counted, visited ---------------------------------#
+	#----- Seen, counted, visited ---------------------------------#
 		objects_counted: set[str] = set()
+		invalid_objects_reported: set[str] = set()
 		modules_used: set[str] = set()
 		modules_rendered: set[str] = set()
 		public_members_rendered: set[str] = set()
@@ -1346,10 +1378,8 @@ def render_json_command(args: argparse.Namespace) -> int:
 # Build docstring tree from docstring.
 					tree_parsed = docitem.parse_indent_docstring(tr_obj, doc_txt, session)
 					tree = docitem.make_docitem_tree_from_docstring_tree(tr_obj, tree_parsed)
-# It is the caller's responsability to provide clean docstrings,
-# but we can at least log problems as warnings. This helps a lot
-# detecting missing a literal qualifier like r"""
-					tr.append_and_defuse(tr_obj)
+# Validate structurally parseable docstrings before rendering them.
+					docitem.validate_docstring(tr_obj, o, tree, session)
 				except docitem.ParseError:
 # Invalid docstring -> skip. Count safely.
 					if name_key not in objects_counted:
@@ -1362,6 +1392,25 @@ def render_json_command(args: argparse.Namespace) -> int:
 						else:
 							num_unknown_skipped_invalid += 1
 						objects_counted.add(name_key)
+					if name_key not in invalid_objects_reported:
+						invalid_objects_reported.add(name_key)
+						_warn_invalid_render_json_object(name_key, o, "parse")
+					continue
+				except docitem.ValidationError:
+# Invalid Waterloo docstring -> skip. Count safely.
+					if name_key not in objects_counted:
+						if cvrt.is_obj_module(o):
+							num_modules_skipped_invalid += 1
+						elif cvrt.is_obj_class(o):
+							num_classes_skipped_invalid += 1
+						elif cvrt.is_obj_function(o):
+							num_callables_skipped_invalid += 1
+						else:
+							num_unknown_skipped_invalid += 1
+						objects_counted.add(name_key)
+					if name_key not in invalid_objects_reported:
+						invalid_objects_reported.add(name_key)
+						_warn_invalid_render_json_object(name_key, o, "validation")
 					continue
 # Filter by scope.
 			if not cast(Any, tree).is_visible(scopes_filter):
@@ -1419,8 +1468,15 @@ def render_json_command(args: argparse.Namespace) -> int:
 # Build docstring tree from docstring.
 									tree_prop_meth = docitem.parse_indent_docstring(tr_prop_meth_obj, doc_prop_meth, session)
 									node_prop_meth = docitem.make_docitem_tree_from_docstring_tree(tr_prop_meth_obj, tree_prop_meth)
+									docitem.validate_docstring(tr_prop_meth_obj, obj_prop_meth, node_prop_meth, session)
 								except docitem.ParseError:
 # Invalid docstring -> skip. Count safely.
+									if qname_prop_meth not in objects_counted:
+										num_callables_skipped_invalid += 1
+										objects_counted.add(qname_prop_meth)
+									continue
+								except docitem.ValidationError:
+# Invalid Waterloo docstring -> skip. Count safely.
 									if qname_prop_meth not in objects_counted:
 										num_callables_skipped_invalid += 1
 										objects_counted.add(qname_prop_meth)
@@ -2026,6 +2082,11 @@ def _build_parser() -> argparse.ArgumentParser:
 		help="One or more qualified module names to render in direct mode (merged). Option may be repeated.",
 	)
 	render_json.add_argument("--basedir", metavar="DIR", help="Base directory for resolving --obj in direct mode.")
+	render_json.add_argument(
+		"--ignore",
+		metavar="RULES",
+		help="Whitespace-separated list of Rule-IDs to ignore for warnings.",
+	)
 	rg_out = render_json.add_mutually_exclusive_group()
 	rg_out.add_argument("--out", dest="out_file", metavar="FILE", help="Write JSON to FILE instead of stdout.")
 	rg_out.add_argument("--out-dir", dest="out_dir", metavar="DIR", help="Write JSON into DIR using a generated filename.")

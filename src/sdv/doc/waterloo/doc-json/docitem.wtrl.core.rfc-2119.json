@@ -1,12 +1,12 @@
 {
     "$schema": "https://sci-d-vis.com/schema/wtrl-json-0.1.0.schema.json",
-    "$id": "urn:waterlint:wtrl-json:0.17.0:core:rfc-2119:f08088295ab932757722e7e4e5c58403cd745fc26a71d7a6a39600d0c30118ab",
+    "$id": "urn:waterlint:wtrl-json:0.17.0:core:rfc-2119:32c59294196231fe0bbdb3b7c9d4360a7621345484392250fd63887376072af8",
     "__WTRL_VERSION__": {
         "waterloo": "0.10.0",
         "schema": "0.1.0"
     },
     "__WTRL_META__": {
-        "generated_at": "2026-06-24T14:21:56+02:00",
+        "generated_at": "2026-06-25T10:48:15+02:00",
         "generator": "waterlint",
         "scope": "core",
         "flavour": "rfc-2119"
@@ -67,7 +67,6 @@
         "sdv.doc.waterloo.docitem_helper.ConfigTraversal": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.ConfigTraversal",
         "sdv.doc.waterloo.docitem_helper.tracer": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.tracer",
         "sdv.doc.waterloo.docitem_helper.tracer.Severity": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.tracer.Severity",
-        "sdv.doc.waterloo.docitem_helper.DocSession": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.DocSession",
         "sdv.doc.waterloo.docitem_helper.ResolveObjectError": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.ResolveObjectError",
         "sdv.doc.waterloo.docitem_base.docitem_base": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_base.docitem_base",
         "sdv.doc.waterloo.docitem_base.docitem_list_base": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_base.docitem_list_base",
@@ -279,8 +278,6 @@
         "sdv.doc.waterloo.docitem.Profile": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem.Profile",
         "sdv.doc.waterloo.docitem.Scopes": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem.Scopes",
         "sdv.doc.waterloo.docitem_helper.tracer.Context": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.tracer.Context",
-        "sdv.doc.waterloo.docitem_helper.DocSession.Seen": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.DocSession.Seen",
-        "sdv.doc.waterloo.docitem_helper.DocSession.Validated": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.DocSession.Validated",
         "sdv.doc.waterloo.docitem_convert.WtrlJsonNode_t": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_convert.WtrlJsonNode_t",
         "sdv.doc.waterloo.docitem_helper.Profile": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.Profile",
         "sdv.doc.waterloo.docitem_helper.DocstringSubtree": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.DocstringSubtree",
@@ -3122,53 +3119,6 @@
                     "A context manager yielding nothing."
                 ],
                 "Raises": {}
-            }
-        },
-        "sdv.doc.waterloo.docitem_helper.DocSession.Seen": {
-            "doc": {},
-            "doc_lines": [
-                "Objects already processed in the current run."
-            ],
-            "annotation": "dict[object, Any]",
-            "doc_lines_kind": "type"
-        },
-        "sdv.doc.waterloo.docitem_helper.DocSession.Validated": {
-            "doc": {},
-            "doc_lines": [
-                "Objects successfully validated in the current run."
-            ],
-            "annotation": "dict[object, Any]",
-            "doc_lines_kind": "type"
-        },
-        "sdv.doc.waterloo.docitem_helper.DocSession": {
-            "signature": {
-                "text": "DocSession.__init__(self) -> 'None'",
-                "parameters": [],
-                "returns": "None"
-            },
-            "doc": {
-                "Preamble": {
-                    "profile": "class",
-                    "normative_sections": [
-                        "Contract",
-                        "Public_types"
-                    ]
-                },
-                "Contract": {
-                    "general": [
-                        "MUST provide per-run state for validation and parsing operations.",
-                        "MUST remember already validated objects in order to avoid recursion divergence.",
-                        "MUST offer a stable place for future per-run caches and statistics data."
-                    ]
-                },
-                "Public_types": {
-                    "Seen": [
-                        "Objects already processed in the current run."
-                    ],
-                    "Validated": [
-                        "Objects successfully validated in the current run."
-                    ]
-                }
             }
         },
         "sdv.doc.waterloo.docitem_helper.ResolveObjectError": {

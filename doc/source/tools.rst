@@ -38,6 +38,7 @@ This section is normative.
 * [TOOL-006] -- The input docstring cannot be parsed for extraction.
 * [TOOL-007] -- The input docstring is not valid for the requested extraction operation.
 * [TOOL-008] -- Invalid option combination or target selection for a generation command, for example raw output requested for more than one target object.
+* [TOOL-009] -- :wtrl_cmd:`render-json` found an object that would otherwise be rendered, but skipped it because the object's docstring was invalid.
 * [TOOL-800] -- Unspecified runtime error during analysis.
   This code is used when an unexpected exception escapes the validation process.
   The tracer diagnostic output should provide sufficient detail to identify

@@ -30,7 +30,8 @@ Contract:
 		|ref|`label <wtrl://qi.of.documented.object>`
 		|ref|`label <https://link.com>`
 	constructor:
-		default - this is freeform text describing the constructor contract. Test roles: |func|`__init__`
+		default - this is freeform text describing the constructor contract.
+		Test roles: |func|`__init__`
 	requires:
 		|var|`x` > 0. Test roles: |var|`x`
 	ensures:
@@ -42,7 +43,8 @@ Contract:
 	base:
 		MyBaseClassA, MyBaseClassB
 	bad_subsection:
-		Contract only contains predefined subsections, and "bad_subsection" is not one of them.
+		Contract only contains predefined subsections,\
+		and "bad_subsection" is not one of them.
 Description:
 	This is a logical line consisting of two\
 	physical lines.
@@ -116,13 +118,18 @@ Notes:
 		|label|`ABC`
 		|lit|`ABC`
 		|mod|`ABC`
+		|norm|`should`
 		|op|`>>`
 		|opt|`--abc`
+		|pkg|`sdv.tty`
 		|tag|`ABC`
 		|term|`ABC`
-		|type|`ABC`
+		|type|`float`
 		|value|`12345`
-		|var|`ABC`
+		|var|`xyz`
+		|var_type|`xyz:float`
+	Todo at 2026-06-25:
+		Implement 'pkg' for 'package' as opposed to importable module.
 See_also:
 	other.class, other.function
 """

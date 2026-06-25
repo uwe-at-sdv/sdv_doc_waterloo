@@ -1,0 +1,111 @@
+{
+    "$schema": "https://sci-d-vis.com/schema/wtrl-json-0.1.0.schema.json",
+    "$id": "urn:waterlint:wtrl-json:0.17.0:core:rfc-2119:c664a7926f117a67e68ca64971c8062b2c104f89ac95ef3816b29d8ce75ccc63",
+    "__WTRL_VERSION__": {
+        "waterloo": "0.10.0",
+        "schema": "0.1.0"
+    },
+    "__WTRL_META__": {
+        "generated_at": "2026-06-25T10:48:21+02:00",
+        "generator": "waterlint",
+        "scope": "core",
+        "flavour": "rfc-2119"
+    },
+    "__WTRL_ROLES__": {
+        "attr": "Attribute name",
+        "cmd": "Shell or CLI command",
+        "dfn": "Definition of a term",
+        "file": "File or path",
+        "func": "Function or callable",
+        "key": "Key on the keyboard",
+        "label": "Section/Subsection label",
+        "lit": "Literal text or code",
+        "mod": "Module name",
+        "op": "Operator symbol",
+        "opt": "Command-line option or flag",
+        "tag": "Tag or marker",
+        "term": "Domain-specific term",
+        "type": "Type name or annotation",
+        "value": "Concrete value",
+        "var": "Variable name",
+        "var_type": "Variable and type, like 'var:type'"
+    },
+    "__WTRL_SCOPES__": {
+        "public": {
+            "value": 10,
+            "description": ""
+        },
+        "extension": {
+            "value": 20,
+            "description": ""
+        },
+        "core": {
+            "value": 30,
+            "description": ""
+        }
+    },
+    "__WTRL_TOC_MODULES__": {
+        "showcase_roles": "/__WTRL_OBJECTS__/showcase_roles"
+    },
+    "__WTRL_TOC_CLASSES__": {},
+    "__WTRL_TOC_CALLABLES__": {},
+    "__WTRL_TOC_TYPES__": {},
+    "__WTRL_TOC_VARIABLES__": {},
+    "__WTRL_TOC_CONSTANTS__": {},
+    "__WTRL_OBJECTS__": {
+        "showcase_roles": {
+            "doc": {
+                "Preamble": {
+                    "profile": "module",
+                    "scope": [
+                        "core"
+                    ],
+                    "normative_sections": [
+                        "Contract",
+                        "Definitions"
+                    ]
+                },
+                "Definitions": {
+                    "ABC": {
+                        "variations": [],
+                        "text": [
+                            "A term we reference by role |lit|`|term|`."
+                        ]
+                    }
+                },
+                "Contract": {
+                    "general": [
+                        "MUST do this and that. Test roles: |term|`ABC`",
+                        "SHOULD NOT do other things. Test roles: |term|`ABC`"
+                    ]
+                },
+                "Notes": {
+                    "Roles": [
+                        "* |attr|`ABC` \u2014 |lit|`|attr|`, for attributes in XML, keys in JSON...",
+                        "* |cmd|`ABC` \u2014 |lit|`|cmd|`, commands and subcommand with CLI",
+                        "* |dfn|`ABC` \u2014 |lit|`|dfn|`, a term being defined",
+                        "* |file|`/path/to/ABC` \u2014 |lit|`|file|`, files but also URLs",
+                        "* |func|`ABC` \u2014 |lit|`|func|`, functions",
+                        "* |label|`ABC` \u2014 |lit|`|label|`, titles, labels",
+                        "* |lit|`ABC` \u2014 |lit|`|lit|`, catch-all for literal text",
+                        "* |mod|`ABC` \u2014 |lit|`|mod|`, modules",
+                        "* |norm|`should` \u2014 |lit|`|norm|`, normativity keywords",
+                        "* |op|`>>` \u2014 |lit|`|op|`, operators",
+                        "* |opt|`--abc` \u2014 |lit|`|opt|`, options for CLI commands",
+                        "* |pkg|`sdv.tty` \u2014 |lit|`|pkg|`, packages",
+                        "* |tag|`ABC` \u2014 |lit|`|tag|`, enum values, symbolic values",
+                        "* |term|`ABC` \u2014 |lit|`|term|`, referencing a term defined in |label|`Definitions`",
+                        "* |type|`float` \u2014 |lit|`|type|`, types in programming or markup languages",
+                        "* |value|`12345` \u2014 |lit|`|value|`, R-values, unnamed values",
+                        "* |var|`xyz` \u2014 |lit|`|var|`, variables, but also named constants",
+                        "* |var_type|`xyz:float` \u2014 |lit|`|var_type|`, variable and type with colon."
+                    ],
+                    "Todo at 2026-06-25": [
+                        "* Implement 'pkg' for 'package' as opposed to importable module.",
+                        "* Implement 'var_type'"
+                    ]
+                }
+            }
+        }
+    }
+}

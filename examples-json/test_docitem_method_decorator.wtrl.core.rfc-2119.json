@@ -1,12 +1,12 @@
 {
     "$schema": "https://sci-d-vis.com/schema/wtrl-json-0.1.0.schema.json",
-    "$id": "urn:waterlint:wtrl-json:0.17.0:core:rfc-2119:4d8ea677620f5e909871f694074fc97826cb0b081544ba7cf08a76d24e4e9e63",
+    "$id": "urn:waterlint:wtrl-json:0.17.0:core:rfc-2119:7ae8e1dd1fdd4801edfd21f37e076485c67d267e8f763803df66ebfdb86fc3e9",
     "__WTRL_VERSION__": {
         "waterloo": "0.10.0",
         "schema": "0.1.0"
     },
     "__WTRL_META__": {
-        "generated_at": "2026-06-24T14:22:01+02:00",
+        "generated_at": "2026-06-25T10:48:19+02:00",
         "generator": "waterlint",
         "scope": "core",
         "flavour": "rfc-2119"
@@ -49,100 +49,12 @@
     },
     "__WTRL_TOC_CLASSES__": {},
     "__WTRL_TOC_CALLABLES__": {
-        "test_docitem_method_decorator.B.f_abstractmethod": "/__WTRL_OBJECTS__/test_docitem_method_decorator.B.f_abstractmethod",
-        "test_docitem_method_decorator.X.f_staticmethod": "/__WTRL_OBJECTS__/test_docitem_method_decorator.X.f_staticmethod",
         "test_docitem_method_decorator.fib": "/__WTRL_OBJECTS__/test_docitem_method_decorator.fib"
     },
     "__WTRL_TOC_TYPES__": {},
     "__WTRL_TOC_VARIABLES__": {},
     "__WTRL_TOC_CONSTANTS__": {},
     "__WTRL_OBJECTS__": {
-        "test_docitem_method_decorator.B.f_abstractmethod": {
-            "signature": {
-                "text": "B.f_abstractmethod(self) -> 'NoReturn'",
-                "parameters": [],
-                "returns": "NoReturn"
-            },
-            "traits": [
-                "abstractmethod"
-            ],
-            "decorators": [
-                "@abstractmethod"
-            ],
-            "doc": {
-                "Preamble": {
-                    "profile": "function",
-                    "normative_sections": [
-                        "Contract",
-                        "Parameters",
-                        "Returns",
-                        "Raises"
-                    ]
-                },
-                "Contract": {
-                    "general": [
-                        "MUST always raise an exception because it is an abstract method."
-                    ]
-                },
-                "Parameters": {},
-                "Returns": [
-                    "Does not return."
-                ],
-                "Raises": {
-                    "NotImplementedError": [
-                        "MUST always raise. Method MUST be implemented by derived class."
-                    ]
-                }
-            }
-        },
-        "test_docitem_method_decorator": {
-            "doc": {}
-        },
-        "test_docitem_method_decorator.X.f_staticmethod": {
-            "signature": {
-                "text": "X.f_staticmethod(q: 'bool') -> 'None'",
-                "parameters": [
-                    {
-                        "name": "q",
-                        "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "bool",
-                        "default": null
-                    }
-                ],
-                "returns": "None"
-            },
-            "traits": [
-                "staticmethod"
-            ],
-            "decorators": [
-                "@staticmethod"
-            ],
-            "doc": {
-                "Preamble": {
-                    "profile": "function",
-                    "normative_sections": [
-                        "Contract",
-                        "Parameters",
-                        "Returns",
-                        "Raises"
-                    ]
-                },
-                "Contract": {
-                    "general": [
-                        "MUST print its name"
-                    ]
-                },
-                "Parameters": {
-                    "q": [
-                        "A dummy parameter."
-                    ]
-                },
-                "Returns": [
-                    "|None|"
-                ],
-                "Raises": {}
-            }
-        },
         "test_docitem_method_decorator.fib": {
             "signature": {
                 "text": "fib(n: 'int') -> 'int'",
@@ -190,6 +102,9 @@
                     ]
                 }
             }
+        },
+        "test_docitem_method_decorator": {
+            "doc": {}
         }
     }
 }
