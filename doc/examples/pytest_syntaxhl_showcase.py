@@ -126,7 +126,7 @@ Notes:
 		|term|`ABC`
 		|type|`float`
 		|value|`12345`
-		|var|`xyz`
+		|var|`xyz` 
 		|var_type|`xyz:float`
 	Todo at 2026-06-25:
 		Implement 'pkg' for 'package' as opposed to importable module.
