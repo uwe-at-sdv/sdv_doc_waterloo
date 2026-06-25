@@ -76,7 +76,8 @@ where the parser should continue to fail cleanly.</p>
 <span class="sd">		</span><span class="k">|ref|</span><span class="s">`</span><span class="nn">label</span><span class="s"> &lt;</span><span class="nt">wtrl://qi.of.documented.object</span><span class="s">&gt;`</span>
 <span class="sd">		</span><span class="k">|ref|</span><span class="s">`</span><span class="nn">label</span><span class="s"> &lt;</span><span class="nt">https://link.com</span><span class="s">&gt;`</span>
 <span class="sd">	</span><span class="gu">constructor:</span>
-<span class="sd">		default - this is freeform text describing the constructor contract. Test roles: </span><span class="k">|func|</span><span class="nf">`__init__`</span>
+<span class="sd">		default - this is freeform text describing the constructor contract.</span>
+<span class="sd">		Test roles: </span><span class="k">|func|</span><span class="nf">`__init__`</span>
 <span class="sd">	</span><span class="gu">requires:</span>
 <span class="sd">		</span><span class="k">|var|</span><span class="nv">`x`</span><span class="sd"> &gt; 0. Test roles: </span><span class="k">|var|</span><span class="nv">`x`</span>
 <span class="sd">	</span><span class="gu">ensures:</span>
@@ -88,7 +89,8 @@ where the parser should continue to fail cleanly.</p>
 <span class="sd">	</span><span class="gu">base:</span>
 <span class="sd">		</span><span class="nc">MyBaseClassA</span><span class="sd">, </span><span class="nc">MyBaseClassB</span>
 <span class="sd">	</span><span class="err">bad_subsection:</span>
-<span class="sd">		Contract only contains predefined subsections, and &quot;bad_subsection&quot; is not one of them.</span>
+<span class="sd">		Contract only contains predefined subsections,</span><span class="k">\</span>
+<span class="sd">		and &quot;bad_subsection&quot; is not one of them.</span>
 <span class="gh">Description:</span>
 <span class="sd">	This is a logical line consisting of two</span><span class="k">\</span>
 <span class="sd">	physical lines.</span>
@@ -162,13 +164,18 @@ where the parser should continue to fail cleanly.</p>
 <span class="sd">		</span><span class="k">|label|</span><span class="gu">`ABC`</span>
 <span class="sd">		</span><span class="k">|lit|</span><span class="l">`ABC`</span>
 <span class="sd">		</span><span class="k">|mod|</span><span class="nn">`ABC`</span>
+<span class="sd">		</span><span class="k">|norm|`should`</span>
 <span class="sd">		</span><span class="k">|op|</span><span class="o">`&gt;&gt;`</span>
 <span class="sd">		</span><span class="k">|opt|</span><span class="nv">`--abc`</span>
+<span class="sd">		|pkg|`sdv.tty`</span>
 <span class="sd">		</span><span class="k">|tag|</span><span class="nt">`ABC`</span>
 <span class="sd">		</span><span class="k">|term|</span><span class="ge">`ABC`</span>
-<span class="sd">		</span><span class="k">|type|</span><span class="nc">`ABC`</span>
+<span class="sd">		</span><span class="k">|type|</span><span class="nc">`float`</span>
 <span class="sd">		</span><span class="k">|value|</span><span class="no">`12345`</span>
-<span class="sd">		</span><span class="k">|var|</span><span class="nv">`ABC`</span>
+<span class="sd">		</span><span class="k">|var|</span><span class="nv">`xyz`</span>
+<span class="sd">		</span><span class="k">|var_type|</span><span class="nc">`xyz:float`</span>
+<span class="sd">	</span><span class="gh">Todo at 2026-06-25:</span>
+<span class="sd">		Implement &#39;pkg&#39; for &#39;package&#39; as opposed to importable module.</span>
 <span class="gh">See_also:</span>
 <span class="sd">	</span><span class="nv">other.class</span><span class="sd">, </span><span class="nv">other.function</span>
 <span class="nv">&quot;&quot;&quot;</span>
