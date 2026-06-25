@@ -3,7 +3,7 @@ set -euo pipefail
 
 MODE="${1:-public}"
 ROOT="$(cd "$(dirname "$0")" && pwd)"
-PATH_README_TEMPLATE="${ROOT}/README_AZURE.md"
+PATH_README_TEMPLATE="${ROOT}/templates/README_AZURE.template.md"
 PATH_README_TARGET="${ROOT}/README.md"
 
 #----- begin requirements -------------------------------------#
@@ -35,10 +35,10 @@ echo "   MODE: ${MODE}"
 # Select badge file for local or public presentation.
 case "${MODE}" in
     local)
-        BADGES="${ROOT}/README_BADGES_LOCAL.md"
+        BADGES="${ROOT}/templates/README_BADGES_LOCAL.template.md"
         ;;
     public)
-        BADGES="${ROOT}/README_BADGES_PUBLIC.md"
+        BADGES="${ROOT}/templates/README_BADGES_PUBLIC.template.md"
         ;;
     *)
         echo "Usage: $0 [local|public]" >&2
