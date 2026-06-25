@@ -2,6 +2,7 @@
 
 ![Status](https://img.shields.io/badge/status-pre--release-orange)
 ![Version](https://img.shields.io/badge/version-_VERSION_-orange)
+
 ![License](https://img.shields.io/badge/license-BSD--2--Clause-blue)
 ![Python](https://img.shields.io/badge/python-3.10%2B-blue)
 
