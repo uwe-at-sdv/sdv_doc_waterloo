@@ -4,6 +4,11 @@
 ![Version](https://img.shields.io/badge/version-0.2.6-blue)
 ![Marketplace](https://img.shields.io/badge/VS%20Code-Marketplace-brightgreen)
 
+> **Preliminary project status**
+>
+> This repository is public, but the Waterloo project is still in a preliminary phase.
+> Please treat it as work in progress; the main project README contains the official start note.
+
 VS Code extension for Waterloo docstrings in Python.
 
 This package provides:
