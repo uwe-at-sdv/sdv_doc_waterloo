@@ -63,7 +63,8 @@ try:
 except Exception:
 	_HAS_PYGMENTS = False
 
-__version__ = "0.19.0"
+__version__ = "0.19.1"
+# - 0.19.1 [2026-06-26] Add docstrings for version-commands; added wtrl_mcp-Version to version-json output.
 # - 0.19.0 [2026-06-25] Subcommand 'extract' now with syntaax highlighting in terminal output; option --syntax-hl-style to select a Pygments style.
 # - 0.18.0 [2026-06-25] Subcommand 'render-json': Validation and propagation of errors as standardized warning;
 #			Option --ignore (as in validate and coverage) to ignore certain warning codes.
