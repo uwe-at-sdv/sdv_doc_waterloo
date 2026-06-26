@@ -1,7 +1,7 @@
 # Waterloo Docstrings for VS Code
 
 ![Status](https://img.shields.io/badge/status-pre--release-orange)
-![Version](https://img.shields.io/badge/version-0.2.7-blue)
+![Version](https://img.shields.io/badge/version-0.2.8-blue)
 ![Source](https://img.shields.io/badge/source-GitHub-181717?logo=github)
 
 > **Preliminary project status**
