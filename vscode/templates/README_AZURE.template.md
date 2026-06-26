@@ -1,7 +1,6 @@
 # Waterloo Docstrings for VS Code
 
 _BADGES_
-![Source](https://img.shields.io/badge/source-GitHub-181717?logo=github)
 
 > [!NOTE]
 > This extension is currently in a test phase.

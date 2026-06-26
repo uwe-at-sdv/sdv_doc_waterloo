@@ -1,8 +1,8 @@
 # Waterloo Docstrings for VS Code
 
 ![Status](https://img.shields.io/badge/status-pre--release-orange)
-![Version](https://img.shields.io/badge/version-0.2.6-blue)
-![Marketplace](https://img.shields.io/badge/VS%20Code-Marketplace-brightgreen)
+![Version](https://img.shields.io/badge/version-0.2.7-blue)
+![Source](https://img.shields.io/badge/source-GitHub-181717?logo=github)
 
 > **Preliminary project status**
 >
