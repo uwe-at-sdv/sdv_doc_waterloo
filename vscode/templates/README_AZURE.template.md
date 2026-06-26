@@ -19,7 +19,15 @@ _BADGES_
   <img src="https://minifl.de/sdv_doc_waterloo/img/screencast_final_fallback.png" alt="ExtensionPreview">
 </picture>
 
-VS Code extension for Waterloo docstrings in Python.
+The Waterloo Docstrings project defines a structured docstring format with
+explicit section semantics, normativity rules, and multiple render targets.
+The same source docstring can be consumed by humans, LLM-assisted tooling, and
+renderers without losing structural meaning.
+
+This extension adds VS Code support for Waterloo docstrings in Python. It
+provides syntax highlighting, docstring generation and validation commands, and
+an MCP server that can help Copilot and other MCP clients inspect Waterloo
+docstrings more effectively.
 
 ## Source and release
 
@@ -37,14 +45,27 @@ backend and shared schema data:
 
 - `sdv.doc.waterloo`
 
-The package is currently installed from the GitHub repository.
-A future public release on PyPI is planned.
+Install it from PyPI:
+
+```bash
+pip install sdv-doc-waterloo
+```
+
+If you want the Sphinx extension and related extras, install:
+
+```bash
+pip install "sdv-doc-waterloo[sphinx]"
+```
+
+The package can also be installed from the GitHub repository during active
+development, but PyPI is the default release channel now.
 
 This extension provides:
 
 - Waterloo syntax highlighting for Python docstrings
 - context menu support for docstring generation
 - context menu support for docstring validation
+- an MCP server for Copilot and other MCP clients
 
 ## Features
 
