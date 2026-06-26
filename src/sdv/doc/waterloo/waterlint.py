@@ -18,7 +18,9 @@ Public_functions:
 	coverage_command,
 	extract_command,
 	validate_json_command,
-	render_json_command
+	render_json_command,
+	version_command,
+	version_json_command
 """
 
 from __future__ import annotations
@@ -46,6 +48,7 @@ from sdv.doc.waterloo.waterlint_common import (
 	_resolve_object,
 	add_traceback
 	)
+import sdv.doc.waterloo.mcp
 
 import json
 
@@ -1915,16 +1918,64 @@ def _list_schemas_command(args: argparse.Namespace) -> int:
 				print(f"  {fname}")
 	return 0
 
-def _version_command(args: argparse.Namespace) -> int:
-	"""Print only the waterlint version string."""
+def version_command(args: argparse.Namespace) -> int:
+	r"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+		scope:
+			extension
+	Contract:
+		general:
+			|Must| print the waterlint version string to stdout.
+			|Must_not| print any other text to stdout.
+	Parameters:
+		args:
+			An |var|`argparse.Namespace` object containing the command-line arguments.
+			Not used in this function.
+	Returns:
+		Exit code |value|`0`.
+	Raises:
+	"""
 	print(__version__)
 	return 0
 
-def _version_json_command(args: argparse.Namespace) -> int:
-	"""Print JSON with waterlint and Waterloo JSON Schema versions."""
+def version_json_command(args: argparse.Namespace) -> int:
+	r"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+		scope:
+			extension
+	Contract:
+		general:
+			|Must| print a JSON document to stdout where each key represents\
+			a versioned component of the Waterloo toolchain,\
+			and each value is the corresponding current version string.
+			|Must| infer the version of the Waterloo JSON Schema from the\
+			file system in case the version is not hard-coded in this source file.
+	Parameters:
+		args:
+			An |var|`argparse.Namespace` object containing the command-line arguments.
+			Not used in this function.
+	Returns:
+	Raises:
+	Notes:
+		Antidrift:
+			Keep this function in sync with the Waterloo JSON Schema versioning and the\
+			Waterloo toolchain versioning. Add a new key whenever a new component is added\
+			to the versioned set.
+	"""
 
 	WTRL_MCP_ABOUT_JSON_SCHEMA_VERSION="TBD"
 	WTRL_MCP_ABOUT_TOPIC_JSON_SCHEMA_VERSION="TBD"
+	WTRL_EXPLAIN_SECTION_JSON_SCHEMA_VERSION="TBD"
+	WTRL_EXPLAIN_SUBSECTION_JSON_SCHEMA_VERSION="TBD"
+	WTRL_MCP_VERSION = sdv.doc.waterloo.mcp.__version__
 
 	for _, files in _schema_inventory(args):
 		for f in files:
@@ -1932,15 +1983,22 @@ def _version_json_command(args: argparse.Namespace) -> int:
 				WTRL_MCP_ABOUT_JSON_SCHEMA_VERSION = f[len("wtrl-mcp-about-json-"):-len(".schema.json")]
 			elif f.startswith("wtrl-mcp-about-topic-json-") and f.endswith(".schema.json"):
 				WTRL_MCP_ABOUT_TOPIC_JSON_SCHEMA_VERSION = f[len("wtrl-mcp-about-topic-json-"):-len(".schema.json")]
+			elif f.startswith("wtrl-explain-section-json-") and f.endswith(".schema.json"):
+				WTRL_EXPLAIN_SECTION_JSON_SCHEMA_VERSION = f[len("wtrl-explain-section-json-"):-len(".schema.json")]
+			elif f.startswith("wtrl-explain-subsection-json-") and f.endswith(".schema.json"):
+				WTRL_EXPLAIN_SUBSECTION_JSON_SCHEMA_VERSION = f[len("wtrl-explain-subsection-json-"):-len(".schema.json")]
 
 	doc = {
-		"waterlint": __version__,
-		"wtrl-json": WTRL_JSON_SCHEMA_VERSION,
-		"wtrl-tracer-json": docitem.WTRL_TRACER_JSON_SCHEMA_VERSION,
-		"wtrl-example-refs-json": WTRL_EXAMPLE_REFS_JSON_SCHEMA_VERSION,
-		"wtrl-walk-json": WTRL_WALK_JSON_SCHEMA_VERSION,
-		"wtrl-mcp-about-json": WTRL_MCP_ABOUT_JSON_SCHEMA_VERSION,
-		"wtrl-mcp-about-topic-json": WTRL_MCP_ABOUT_TOPIC_JSON_SCHEMA_VERSION,
+		"waterlint": {"kind": "executable", "version": __version__},
+		"wtrl-json": {"kind": "schema", "version": WTRL_JSON_SCHEMA_VERSION},
+		"wtrl-tracer-json": {"kind": "schema", "version": docitem.WTRL_TRACER_JSON_SCHEMA_VERSION},
+		"wtrl-example-refs-json": {"kind": "schema", "version": WTRL_EXAMPLE_REFS_JSON_SCHEMA_VERSION},
+		"wtrl-explain-section-json": {"kind": "schema", "version": WTRL_EXPLAIN_SECTION_JSON_SCHEMA_VERSION},
+		"wtrl-explain-subsection-json": {"kind": "schema", "version": WTRL_EXPLAIN_SUBSECTION_JSON_SCHEMA_VERSION},
+		"wtrl-walk-json": {"kind": "schema", "version": WTRL_WALK_JSON_SCHEMA_VERSION},
+		"wtrl-mcp-about-json": {"kind": "schema", "version": WTRL_MCP_ABOUT_JSON_SCHEMA_VERSION},
+		"wtrl-mcp-about-topic-json": {"kind": "schema", "version": WTRL_MCP_ABOUT_TOPIC_JSON_SCHEMA_VERSION},
+		"wtrl_mcp": {"kind": "module", "version": WTRL_MCP_VERSION},
 	}
 	json.dump(doc, sys.stdout, indent=2)
 	sys.stdout.write("\n")
@@ -2301,9 +2359,9 @@ def main(argv: Optional[list[str]] = None) -> int:
 	if args.command == "list-schemas":
 		return _list_schemas_command(args)
 	if args.command == "version":
-		return _version_command(args)
+		return version_command(args)
 	if args.command == "version-json":
-		return _version_json_command(args)
+		return version_json_command(args)
 	if args.command == "help":
 		return _help_topic_command(args)
 	return 1
