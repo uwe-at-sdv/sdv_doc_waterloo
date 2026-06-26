@@ -1,6 +1,7 @@
 # Waterloo Docstrings for VS Code
 
 _BADGES_
+![Marketplace](https://img.shields.io/badge/VS%20Code-Marketplace-brightgreen)
 
 VS Code extension for Waterloo docstrings in Python.
 
