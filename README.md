@@ -10,7 +10,7 @@
 ![License](https://img.shields.io/badge/license-BSD--2--Clause-blue)
 ![Python](https://img.shields.io/badge/python-3.10%2B-blue)
 
-### Install
+### Install from source
 
 `package_main` contains the Waterloo Python package and the Sphinx extension.
 The package can be installed from a local checkout of this repository:
@@ -35,7 +35,7 @@ cd package_main
 pip install ".[sphinx]"
 ```
 
-The package can also be installed directly from Git:
+The package can also be installed directly from GitHub:
 
 ```bash
 pip install "git+https://github.com/uwe-at-sdv/sdv_doc_waterloo.git@main#subdirectory=package_main"

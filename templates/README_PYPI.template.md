@@ -8,29 +8,38 @@
 
 _BADGES_
 
-### Install
+### On PyPI
 
-`package_main` contains the Waterloo Python package and the Sphinx extension.
-The package can be installed from a local checkout of this repository:
+`sdv-doc-waterloo` is the published PyPI package that contains the Waterloo
+Python package and the Sphinx extension.
 
-```bash
-cd package_main
-pip install .
-```
-
-For development, an editable install is often more convenient:
+Install it from PyPI:
 
 ```bash
-cd package_main
-pip install -e .
+pip install sdv-doc-waterloo
 ```
 
 If you want to build the documentation with the Sphinx extension, install
 the optional extra that provides the external `sphinx` dependency:
 
 ```bash
+pip install "sdv-doc-waterloo[sphinx]"
+```
+
+### Development installs
+
+If you prefer a local checkout, install from the repository tree:
+
+```bash
 cd package_main
-pip install ".[sphinx]"
+pip install .
+```
+
+For active development, an editable install is often more convenient:
+
+```bash
+cd package_main
+pip install -e .
 ```
 
 The package can also be installed directly from Git:
@@ -45,3 +54,9 @@ SSH works as well for authenticated access:
 pip install "git+ssh://git@github.com/uwe-at-sdv/sdv_doc_waterloo.git@main#subdirectory=package_main"
 ```
 
+### Source
+
+The source repository for `sdv-doc-waterloo` is the Waterloo GitHub
+repository:
+
+- `https://github.com/uwe-at-sdv/sdv_doc_waterloo`
