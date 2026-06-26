@@ -1,3 +1,5 @@
+## PRELIMINARY - OFFICIAL START AT 2026-07-01
+
 <p align="center">
 	<img src="img/wtrl_logo_color.svg" alt="Waterloo Logo" width="240">
 </p>
