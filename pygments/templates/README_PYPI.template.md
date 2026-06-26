@@ -56,7 +56,7 @@ Then open files with:
 lessh <file.py>
 ```
 
-## Project repository
+## Source repository
 
 Development happens in the Waterloo repository:
 

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 	<PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
 		<Metadata>
-			<Identity Language="en-US" Id="waterloo-docstrings" Version="0.1.9" Publisher="uwe-at-sdv" />
+			<Identity Language="en-US" Id="waterloo-docstrings" Version="0.2.6" Publisher="uwe-at-sdv" />
 			<DisplayName>Waterloo Docstrings</DisplayName>
 			<Description xml:space="preserve">Tools for Waterloo docstrings in Python.</Description>
 			<Tags>python</Tags>
@@ -9,7 +9,7 @@
 			<GalleryFlags>Public</GalleryFlags>
 			
 			<Properties>
-				<Property Id="Microsoft.VisualStudio.Code.Engine" Value="^1.80.0" />
+				<Property Id="Microsoft.VisualStudio.Code.Engine" Value="^1.115.0" />
 				<Property Id="Microsoft.VisualStudio.Code.ExtensionDependencies" Value="" />
 				<Property Id="Microsoft.VisualStudio.Code.ExtensionPack" Value="" />
 				<Property Id="Microsoft.VisualStudio.Code.ExtensionKind" Value="workspace" />

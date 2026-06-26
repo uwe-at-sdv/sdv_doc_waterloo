@@ -1,10 +1,10 @@
 #!/bin/bash
 set -euo pipefail
 
-MODE="${1:-public}"
 ROOT="$(cd "$(dirname "$0")" && pwd)"
 PATH_README_TEMPLATE="${ROOT}/templates/README_AZURE.template.md"
 PATH_README_TARGET="${ROOT}/README.md"
+BADGES="${ROOT}/templates/README_BADGES_AZURE.template.md"
 
 #----- begin requirements -------------------------------------#
 command -v jq >/dev/null 2>&1 || { echo "jq not available, install with 'sudo apt-get install jq'."; exit 1; }
@@ -30,21 +30,7 @@ printf '%s\n' "${VERSION}" > "VERSION"
 
 # Update (redundant) version file.
 echo "VERSION: ${VERSION}"
-echo "   MODE: ${MODE}"
-
-# Select badge file for local or public presentation.
-case "${MODE}" in
-    local)
-        BADGES="${ROOT}/templates/README_BADGES_LOCAL.template.md"
-        ;;
-    public)
-        BADGES="${ROOT}/templates/README_BADGES_PUBLIC.template.md"
-        ;;
-    *)
-        echo "Usage: $0 [local|public]" >&2
-        exit 2
-        ;;
-esac
+echo "Badges are shared between local and public packaging."
 
 backup="$(mktemp)"
 saw_target=0

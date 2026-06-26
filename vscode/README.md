@@ -65,7 +65,7 @@ From this directory:
 
 ```bash
 npm install --save-dev @vscode/vsce
-./package_vsix.sh local
+./package_vsix.sh
 ```
 
 This creates a file like:
@@ -77,12 +77,6 @@ waterloo-docstrings-<version>.vsix
 The script updates the generated VSCode package files, but it does not stage,
 commit, or push. Use `publish.sh` for the release workflow, or stage the
 changes manually when building this branch directly.
-
-For the release-style README badges, use:
-
-```bash
-./package_vsix.sh public
-```
 
 The build requires a local `vsce` installation on `PATH` or in
 `node_modules/.bin`.
@@ -167,6 +161,6 @@ The VSIX bundles both major parts of this extension:
 
 ## Notes
 
-- This package is licensed under `BSD-3-Clause`.
-- Tested against VS Code engine constraint from `package.json` (`^1.80.0`).
+- This package is licensed under `BSD-2-Clause`.
+- Tested against VS Code engine constraint from `package.json` (`^1.115.0`).
 - Before publishing to a public registry, update `repository.url` in `package.json`.

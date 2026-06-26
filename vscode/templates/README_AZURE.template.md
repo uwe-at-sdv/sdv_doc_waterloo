@@ -28,7 +28,7 @@ The extension source and release workflow are tied to the GitHub repository:
 
 - `https://github.com/uwe-at-sdv/sdv_doc_waterloo`
 
-This GitHub presence is the public source of truth for the extension and is
+This GitHub repository is the public source of truth for the extension and is
 the repository used for the Trusted Publisher workflow on the Marketplace.
 
 ## Requirements
@@ -38,7 +38,7 @@ backend and shared schema data:
 
 - `sdv.doc.waterloo`
 
-The package can currently be installed from the GitHub repository.
+The package is currently installed from the GitHub repository.
 A future public release on PyPI is planned.
 
 This extension provides:
@@ -104,5 +104,5 @@ The extension bundles both major parts of the Waterloo tooling for VS Code:
 
 ## Compatibility
 
-- License: `BSD-3-Clause`
-- VS Code engine constraint: `^1.80.0`
+- License: `BSD-2-Clause`
+- VS Code engine constraint: `^1.115.0`
