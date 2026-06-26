@@ -6,6 +6,10 @@
 
 ## README
 
+![Status](https://img.shields.io/badge/status-pre--release-orange)
+![License](https://img.shields.io/badge/license-BSD--2--Clause-blue)
+![Python](https://img.shields.io/badge/python-3.10%2B-blue)
+
 ### Install
 
 `package_main` contains the Waterloo Python package and the Sphinx extension.
@@ -68,10 +72,10 @@ pip install "git+ssh://git@github.com/uwe-at-sdv/sdv_doc_waterloo.git@main#subdi
   * ``src/sdv/doc/waterloo/doc-json/docitem_sphinx.wtrl.*.*.json``
 
 * JSON-Schema
-  * ``src/sdv/doc/waterloo/schema/wtrl-json-*.*.*.schema.json``
+  * ``src/sdv/doc/waterloo/schema/wtrl-*-json-*.*.*.schema.json``
 
 * Public modules:
-  * ``src/sdv/doc/waterloo/docitem.py``
+  * ``src/sdv/doc/waterloo/docitem_helper.py``
   * ``src/sdv/doc/waterloo/docitem_convert.py``
   * ``src/sdv/doc/waterloo/docitem_sphinx.py``
 

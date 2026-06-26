@@ -1955,14 +1955,16 @@ def version_json_command(args: argparse.Namespace) -> int:
 		general:
 			|Must| print a JSON document to stdout where each key represents\
 			a versioned component of the Waterloo toolchain,\
-			and each value is the corresponding current version string.
+			and each value is a dictionary containing the keys |value|`kind` and |value|`version`.
 			|Must| infer the version of the Waterloo JSON Schema from the\
 			file system in case the version is not hard-coded in this source file.
+			|Must| classify each versioned component as either |value|`executable`, |value|`schema`, or |value|`module`.
 	Parameters:
 		args:
 			An |var|`argparse.Namespace` object containing the command-line arguments.
 			Not used in this function.
 	Returns:
+		Exit code |value|`0`.
 	Raises:
 	Notes:
 		Antidrift:

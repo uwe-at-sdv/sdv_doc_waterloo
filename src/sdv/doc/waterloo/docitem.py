@@ -253,7 +253,8 @@ from contextlib import contextmanager
 from sdv.doc.waterloo.docitem_docstring import *
 from sdv.doc.waterloo.docitem_validator import *
 
-__version__ = "0.10.0"
+__version__ = "0.10.1"
+# - 0.10.1 [2026-06-26] Upload-PyPI-Test
 # - 0.10.0 [2026-06-24]	Added DocSession for caching and other session data during docstring parsing and validation.
 #			A DocSession object is now required for parse_indent_docstring and validate_docstring.
 # - 0.9.0 [2026-06-21]	Lots of minor changes and improvements, especially in docitem_validator.py, but also in docitem_helper.py. See commit history for details.
