@@ -17,6 +17,8 @@ This package provides:
 - Waterloo syntax highlighting (TextMate injection into `source.python`)
 - context menu commands for docstring generation and validation
 - Python backend bridge used by the extension commands
+- an MCP server under `sdv.doc.waterloo.mcp` in `package_main/src/sdv/doc/waterloo/mcp`
+  that can help Copilot and other MCP clients inspect Waterloo docstrings
 
 ## Preview
 
