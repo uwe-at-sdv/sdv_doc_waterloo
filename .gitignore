@@ -35,3 +35,6 @@ _build/
 Thumbs.db
 *.swp
 *.swo
+
+do_mypy.sh
+do_mypy_simple.sh
