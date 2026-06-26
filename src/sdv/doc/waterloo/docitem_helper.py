@@ -2339,6 +2339,8 @@ class DocSession:
 			|Must| provide per-run state for validation and parsing operations.
 			|Must| remember already validated objects in order to avoid recursion divergence.
 			|Must| offer a stable place for future per-run caches and statistics data.
+		constructor:
+			|Must| be default-constructible.
 	Public_types:
 		Seen:
 			Objects already processed in the current run.
