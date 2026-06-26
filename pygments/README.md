@@ -1,5 +1,10 @@
 # Python-Waterloo Lexer (Pygments)
 
+![Status](https://img.shields.io/badge/status-pre--release-orange)
+![Version](https://img.shields.io/badge/version-0.5.9-orange)
+![License](https://img.shields.io/badge/license-BSD--2--Clause-blue)
+![Python](https://img.shields.io/badge/python-3.10%2B-blue)
+
 This folder contains a custom Pygments lexer for Python files with Waterloo docstrings.
 
 > **Branch note (`ide-plugins`)**

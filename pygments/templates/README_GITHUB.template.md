@@ -1,5 +1,7 @@
 # Python-Waterloo Lexer (Pygments)
 
+_BADGES_
+
 This folder contains a custom Pygments lexer for Python files with Waterloo docstrings.
 
 > **Branch note (`ide-plugins`)**
