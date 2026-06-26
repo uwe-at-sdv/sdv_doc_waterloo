@@ -1,0 +1,5 @@
+![Status](https://img.shields.io/badge/status-pre--release-orange)
+![PyPI](https://img.shields.io/pypi/v/python-waterloo-lexer)
+![Source](https://img.shields.io/badge/source-GitHub-181717?logo=github)
+![License](https://img.shields.io/badge/license-BSD--2--Clause-blue)
+![Python](https://img.shields.io/badge/python-3.10%2B-blue)
