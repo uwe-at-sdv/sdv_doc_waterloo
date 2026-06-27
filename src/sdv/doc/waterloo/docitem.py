@@ -253,7 +253,8 @@ from contextlib import contextmanager
 from sdv.doc.waterloo.docitem_docstring import *
 from sdv.doc.waterloo.docitem_validator import *
 
-__version__ = "0.10.3"
+__version__ = "0.10.4"
+# - 0.10.4 [2026-06-27] Removing Github workflow
 # - 0.10.3 [2026-06-27] Testing Github workflow
 # - 0.10.2 [2026-06-26] Upload-PyPI-Test
 # - 0.10.1 [2026-06-26] Upload-PyPI-Test
