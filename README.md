@@ -10,7 +10,7 @@
 ![License](https://img.shields.io/badge/license-BSD--2--Clause-blue)
 ![Python](https://img.shields.io/badge/python-3.10%2B-blue)
 [![PyPI](https://img.shields.io/badge/PyPI-package-3775A9?logo=pypi&logoColor=white)](https://pypi.org/project/sdv-doc-waterloo/)
-
+[![Upload Python Package](https://github.com/uwe-at-sdv/sdv_doc_waterloo/actions/workflows/python-publish.yml/badge.svg?branch=main)](https://github.com/uwe-at-sdv/sdv_doc_waterloo/actions/workflows/python-publish.yml)
 ### Install from source
 
 `package_main` contains the Waterloo Python package and the Sphinx extension.
