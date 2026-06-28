@@ -165,7 +165,10 @@ def _handle_validate(
 	source_fragment: Any,
 	source_file: str,
 	line: int,
+	context: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
+	if context is None:
+		context = {}
 	if version != 1:
 		tr.add_error("XTNSN-003","extension","Unsupported protocol version",{"version":f"{version!r}"})
 	if kind not in {"module", "class", "function", "method"}:
@@ -180,6 +183,8 @@ def _handle_validate(
 		raise RuntimeError()
 
 	qi = ""
+	context["kind"] = kind
+	context["source_file"] = source_file
 	if kind == "module":
 		qi = Path(source_file).stem
 	else:
@@ -206,6 +211,8 @@ def _handle_validate(
 			raise RuntimeError("Could not qualify documented object.")
 # Make sure the module is found.
 	module_dir = str(Path(source_file).parent)
+	context["qualified_identifier"] = qi
+	context["module_dir"] = module_dir
 	sys.path.insert(0,module_dir)
 # At this point we have a qualified identifier. Resolve the object.
 	try:
@@ -218,7 +225,7 @@ def _handle_validate(
 	wtrl.validate_docstring(tr,obj,top=None, session=wtrl.DocSession())
 	if tr.has_errors():
 		raise RuntimeError()
-	return {"kind": kind, "qualified_identifier": qi}
+	return {"kind": kind, "qualified_identifier": qi, "module_dir": module_dir}
 
 def _build_diagnostics_summary(diag: dict[str, Any]) -> dict[str, int]:
 	debug_entries = diag.get("__WTRL_DEBUG__", [])
@@ -243,7 +250,7 @@ def _build_response(
 	error: str | None = None,
 	include_diagnostics: bool = False,
 ) -> dict[str, Any]:
-	diag_full = tr.build_json(wtrl.tracer.Severity.DEBUG)
+	diag_full = tr.build_json(wtrl.tracer.Severity.WARNING)
 	response: dict[str, Any] = {
 		"ok": ok,
 		"command": command,
@@ -266,6 +273,7 @@ def main() -> int:
 	command: Any = None
 	version: Any = None
 	include_diagnostics = False
+	command_data: dict[str, Any] | None = None
 	try:
 		payload = json.loads(input())
 	except Exception as exc:  # noqa: BLE001
@@ -302,12 +310,14 @@ def main() -> int:
 				payload.get("source_fragment", ""),
 			)
 		elif command == COMMAND_VALIDATE:
+			command_data = {}
 			data = _handle_validate(tr,
 				version,
 				payload.get("kind"),
 				payload.get("source_fragment", ""),
 				payload.get("source_file",""),
 				payload.get("line",-1),
+				command_data,
 			)
 #----- end useful commands ------------------------------------#
 		else:
@@ -339,6 +349,7 @@ def main() -> int:
 			command=command,
 			version=version,
 			tr=tr,
+			data=command_data,
 			error=str(exc),
 			include_diagnostics=include_diagnostics,
 		)))

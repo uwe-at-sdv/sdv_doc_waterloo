@@ -379,13 +379,11 @@ function buildDocstringForInsertion(rawDocstring, kind, editor, lineTextForInden
 // based on the current editor state (what is selected; position of the cursor)
 // In package.json this context variable is used as a condition for rendering
 // the context menu (right mouse button), see field "when".
-function updateFuncClassModuleContext(editor)
-	{
-	if (!editor || editor.document.languageId !== 'python')
-		{
+function updateFuncClassModuleContext(editor) {
+	if (!editor || editor.document.languageId !== 'python') {
 		void vscode.commands.executeCommand('setContext', 'waterloo.isFuncClassOrModuleLine', false);
 		return;
-		}
+	}
 	const position = editor.selection.active;
 	const lineText = editor.document.lineAt(position.line).text;
 	// This context key drives the right-click menu. We recompute it often, so
@@ -395,8 +393,8 @@ function updateFuncClassModuleContext(editor)
 		'setContext',
 		'waterloo.isFuncClassOrModuleLine',
 		isFuncClassOrModuleLine(editor.document, position.line, lineText)
-		);
-	}
+	);
+}
 
 // The function is invoked with await, which is correct because
 // it returns a(n explicitly constructed) promise. All this is done
@@ -660,49 +658,110 @@ function logBackendErrorRules(data) {
 		.map((entry) => entry && entry["rule-id"])
 		.filter((rule) => typeof rule === "string");
 	if (rules.length > 0) {
-		fout.appendLine(`Backend diagnostics (error rules): ${rules.join(", ")}`);
+		fout.appendLine(`Backend error rules: ${rules.join(", ")}`);
 	}
 }
 
-function collectRuleIdsBySeverity(diagRoot, key) {
-	const entries = diagRoot && Array.isArray(diagRoot[key]) ? diagRoot[key] : [];
-	return entries
-		.map((entry) => entry && entry["rule-id"])
-		.filter((rule) => typeof rule === "string");
+function stringifyDiagValue(value) {
+	if (Array.isArray(value)) {
+		return value.map((item) => stringifyDiagValue(item)).join("\n");
+	}
+	if (value && typeof value === "object") {
+		return JSON.stringify(value, null, 2);
+	}
+	return String(value);
 }
 
-function logBackendDiagnostics(data, label) {
-	const diag = data?.diagnostics;
+function formatDiagnosticEntryMessage(entry) {
+	if (!entry || typeof entry !== "object") {
+		return "";
+	}
+	const kind = typeof entry.kind === "string" ? entry.kind : "diagnostic";
+	const origin = typeof entry.origin === "string" ? entry.origin : "tool";
+	const ruleId = typeof entry["rule-id"] === "string" ? ` [Rule ${entry["rule-id"]}]` : "";
+	const msg = typeof entry.msg === "string" ? entry.msg : "";
+	return `- ${kind} [${origin}]${ruleId} ${msg}`.trim();
+}
+
+function formatDiagnosticEntryWithDetails(entry) {
+	if (!entry || typeof entry !== "object") {
+		return "";
+	}
+	const lines = [formatDiagnosticEntryMessage(entry)];
+	for (const key of ["found", "expected", "hint"]) {
+		if (!(key in entry)) {
+			continue;
+		}
+		const raw = entry[key];
+		if (raw === undefined || raw === null || raw === "") {
+			continue;
+		}
+		lines.push(`  ${key}:`);
+		for (const line of stringifyDiagValue(raw).split(/\r?\n/)) {
+			lines.push(`    ${line}`);
+		}
+	}
+	return lines.join("\n");
+}
+
+function logDiagnosticsToChannel(diag, label = "") {
 	if (!diag || typeof diag !== "object") {
 		return;
 	}
-	const errorRules = collectRuleIdsBySeverity(diag, "__WTRL_ERROR__");
-	const warningRules = collectRuleIdsBySeverity(diag, "__WTRL_WARNING__");
-	const infoRules = collectRuleIdsBySeverity(diag, "__WTRL_INFO__");
-	if (errorRules.length > 0) {
-		fout.appendLine(`${label} diagnostics (error rules): ${errorRules.join(", ")}`);
+	const sections = [
+		["__WTRL_ERROR__", "Errors"],
+		["__WTRL_WARNING__", "Warnings"],
+	];
+	const blocks = [];
+	if (label) {
+		blocks.push(`${label} diagnostics:`);
 	}
-	if (warningRules.length > 0) {
-		fout.appendLine(`${label} diagnostics (warning rules): ${warningRules.join(", ")}`);
+	for (const [key, label] of sections) {
+		const entries = Array.isArray(diag[key]) ? diag[key] : [];
+		if (entries.length === 0) {
+			continue;
+		}
+		blocks.push(`${label} (${entries.length}):`);
+		for (const entry of entries) {
+			const formatted = formatDiagnosticEntryWithDetails(entry);
+			if (formatted) {
+				blocks.push(formatted);
+			}
+		}
 	}
-	if (infoRules.length > 0) {
-		fout.appendLine(`${label} diagnostics (info rules): ${infoRules.join(", ")}`);
-	}
+	fout.appendLine(blocks.join("\n"));
 }
 
-function buildRuleSummary(diag) {
-	const errorRules = collectRuleIdsBySeverity(diag, "__WTRL_ERROR__");
-	const warningRules = collectRuleIdsBySeverity(diag, "__WTRL_WARNING__");
-	const infoRules = collectRuleIdsBySeverity(diag, "__WTRL_INFO__");
-	const fmt = (name, arr) => (arr.length > 0 ? `${name}: ${arr.join(", ")}` : "");
-	return {
-		errorRules,
-		warningRules,
-		infoRules,
-		text: [fmt("Errors", errorRules), fmt("Warnings", warningRules), fmt("Infos", infoRules)]
-			.filter((s) => s.length > 0)
-			.join(" | "),
-	};
+function buildValidationTerminalHint(request, data) {
+	const payload = data?.data && typeof data.data === "object" ? data.data : {};
+	const basedir = typeof payload?.module_dir === "string" && payload.module_dir.trim() !== ""
+		? payload.module_dir
+		: "<basedir>";
+	let obj = typeof payload?.qualified_identifier === "string" ? payload.qualified_identifier.trim() : "";
+	if (!obj && request?.kind === "module" && typeof request?.source_file === "string" && request.source_file.trim() !== "") {
+		obj = path.basename(request.source_file, path.extname(request.source_file));
+	}
+	if (!obj) {
+		obj = "<obj>";
+	}
+	return `For a formatted terminal view of these messages, run:\nwaterlint validate --basedir ${basedir} --obj ${obj}`;
+}
+
+function pluralizeCount(count, singular, plural = `${singular}s`) {
+	return `${count} ${count === 1 ? singular : plural}`;
+}
+
+function buildValidationPopupMessage(status, numErr = 0, numWarn = 0) {
+	if (status === "failed") {
+		if (numErr > 0 || numWarn > 0) {
+			return `Waterloo: Validation failed. ${pluralizeCount(numWarn, "warning")}, ${pluralizeCount(numErr, "error")}. See Output Channel.Waterloo.`;
+		}
+		return "Waterloo: Validation failed. See Output Channel.Waterloo.";
+	}
+	if (status === "warnings") {
+		return `Waterloo: Validation resulted in warnings. ${pluralizeCount(numWarn, "warning")}, ${pluralizeCount(numErr, "error")}. See Output Channel.Waterloo.`;
+	}
+	return "Waterloo: Validation passed.";
 }
 
 async function generateDocstringFromBackend(prereq, commandName, successModeLabel) {
@@ -776,46 +835,39 @@ async function validateDocstringInBackend(prereq, commandName) {
 		vscode.window.showErrorMessage("Waterloo: " + err);
 		return;
 	}
-	const position = editor.selection.active;
-// Build request
 	const request = {
 		version: 1,
 		command: commandName,
 		kind: generationContext.kind,
 		source_fragment: generationContext.sourceFragment,
 		include_diagnostics: true,
-// Get path of edited file
 		source_file: editor.document.uri.fsPath,
-// Find current line, zero-based in VSCode as it should be.
-		line: editor.selection.active.line
+		line: editor.selection.active.line,
 	};
 	try {
 		const data = await runPythonJsonCommand(prereq.backendScript, request);
 		const summary = data?.diagnostics_summary || {};
 		const numErr = Number(summary.error || 0);
 		const numWarn = Number(summary.warning || 0);
-		const validatedQid = data?.data?.qualified_identifier || "<unknown>";
 		const diag = data?.diagnostics || {};
-		const ruleSummary = buildRuleSummary(diag);
-		logBackendDiagnostics(data, "Validate");
+		logDiagnosticsToChannel(diag);
+		if (numErr > 0 || numWarn > 0) {
+			fout.appendLine(buildValidationTerminalHint(request, data));
+		}
 		fout.show(true);
 		if (!data || data.ok !== true) {
-			const details = ruleSummary.text ? ` (${ruleSummary.text})` : "";
-			vscode.window.showErrorMessage(`Waterloo: Validation failed: ${data?.error || "unknown backend error"}${details}`);
+			vscode.window.showErrorMessage(buildValidationPopupMessage("failed", numErr, numWarn));
 			return;
 		}
 		if (numErr > 0) {
-			const details = ruleSummary.errorRules.length > 0 ? ` Rules: ${ruleSummary.errorRules.join(", ")}.` : "";
-			vscode.window.showErrorMessage(`Waterloo: Validation failed for ${validatedQid} (${numErr} error(s)).${details}`);
+			vscode.window.showErrorMessage(buildValidationPopupMessage("failed", numErr, numWarn));
 			return;
 		}
 		if (numWarn > 0) {
-			const details = ruleSummary.warningRules.length > 0 ? ` Rules: ${ruleSummary.warningRules.join(", ")}.` : "";
-			vscode.window.showWarningMessage(`Waterloo: Validation finished for ${validatedQid} (${numWarn} warning(s)).${details}`);
+			vscode.window.showWarningMessage(buildValidationPopupMessage("warnings", numErr, numWarn));
 			return;
 		}
-		const infoPart = ruleSummary.infoRules.length > 0 ? ` Infos: ${ruleSummary.infoRules.join(", ")}.` : "";
-		vscode.window.showInformationMessage(`Waterloo: Validation passed for ${validatedQid}.${infoPart}`);
+		vscode.window.showInformationMessage(buildValidationPopupMessage("passed", numErr, numWarn));
 	} catch (err) {
 		vscode.window.showErrorMessage(`Waterloo: Error validating docstring: ${err}`);
 	}
