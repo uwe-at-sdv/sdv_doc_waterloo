@@ -4,6 +4,7 @@ Format:
 
 - VERSION [YYYY-MM-DD]: Summary.
 
+- 0.2.10 [2026-06-10]:	Refactoring for detailed parsing and validation messages complete
 - 0.2.5 [2026-06-24]:   Changed README
 - 0.2.3 [2026-06-16]:   Command about in MCP-Server
 - 0.2.2 [2026-06-01]:	Command gen_docstring in MCP-Server
