@@ -1,0 +1,79 @@
+name: Schema Sync Check
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  check-schemas:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Check out repository
+      uses: actions/checkout@v4
+
+    - name: Compare local schemas with the published copies
+      shell: bash
+      run: |
+        set -euo pipefail
+
+        local_dir="src/sdv/doc/waterloo/schema"
+        remote_base="https://sci-d-vis.com/schema"
+        failed=0
+        # These helper schemas are used locally for validation, but they are not
+        # part of the stable published Waterloo schema family that we want to sync-check here.
+        skip_files=(
+          "json-schema.org.draft.2020-12.json"
+          "wtrl-schema-json-incl-draft.2020-12.schema.json"
+        )
+
+        mapfile -t schema_files < <(find "$local_dir" -maxdepth 1 -type f -name 'wtrl-*.schema.json' | sort)
+
+        if [ "${#schema_files[@]}" -eq 0 ]; then
+          echo "No Waterloo schema files found in $local_dir."
+          exit 1
+        fi
+
+        for local_file in "${schema_files[@]}"; do
+          schema_name="$(basename "$local_file")"
+          skip=0
+          for skipped in "${skip_files[@]}"; do
+            if [ "$schema_name" = "$skipped" ]; then
+              skip=1
+              break
+            fi
+          done
+          if [ "$skip" -ne 0 ]; then
+            echo "Skipping helper schema ${schema_name}"
+            continue
+          fi
+          remote_url="${remote_base}/${schema_name}"
+          echo "Checking ${schema_name}"
+
+          tmp_remote="$(mktemp)"
+          if ! curl -fsSL "$remote_url" -o "$tmp_remote"; then
+            echo "ERROR: Could not download ${remote_url}"
+            failed=1
+            rm -f "$tmp_remote"
+            continue
+          fi
+
+          if ! diff -u "$local_file" "$tmp_remote"; then
+            echo "ERROR: ${schema_name} differs from the published copy"
+            failed=1
+          else
+            echo "OK: ${schema_name} is up to date"
+          fi
+
+          rm -f "$tmp_remote"
+          echo "--------------------------------------------------"
+        done
+
+        if [ "$failed" -ne 0 ]; then
+          echo "Schema sync check failed."
+          exit 1
+        fi
+
+        echo "All Waterloo schemas are synchronized."
