@@ -3,7 +3,7 @@
   "displayName": "Waterloo Docstrings",
   "icon": "img/wtrl_logo_128x128.png",
   "description": "Tools for Waterloo docstrings in Python.",
-  "version": "0.2.11",
+  "version": "0.2.12",
   "publisher": "uwe-at-sdv",
   "engines": {
     "vscode": "^1.115.0"

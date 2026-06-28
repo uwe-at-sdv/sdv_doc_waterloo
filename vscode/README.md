@@ -2,7 +2,7 @@
 
 ![Status](https://img.shields.io/badge/status-pre--release-orange)
 ![License](https://img.shields.io/badge/license-BSD--2--Clause-blue)
-![Version](https://img.shields.io/badge/version-0.2.11-blue)
+![Version](https://img.shields.io/badge/version-0.2.12-blue)
 ![Source](https://img.shields.io/badge/source-GitHub-181717?logo=github)
 
 > **Preliminary project status**
