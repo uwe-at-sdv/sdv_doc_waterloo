@@ -273,7 +273,7 @@ def build_parser() -> argparse.ArgumentParser:
 	prsr.add_argument(
 		"--version",
 		action="version",
-		version=f"wtrl_mcp {__version__}",
+		version=f"{__version__}",
 	)
 	return prsr
 

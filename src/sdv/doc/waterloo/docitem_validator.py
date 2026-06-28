@@ -8,6 +8,7 @@ from sdv.doc.waterloo.docitem_diagnostics import (
 	explain_try_self_for_section,
 	explain_try_self_for_subsection,
 	render_allowed_identifiers,
+	render_allowed_labels,
 	render_constant_reference_details,
 	render_deduplicated_identifiers,
 	render_definition_reference_details,
@@ -32,6 +33,7 @@ from sdv.doc.waterloo.docitem_diagnostics import (
 	render_suggestion,
 	render_type_reference_details
 )	
+from sdv.doc.waterloo.docitem_helper import get_allowed_sections_for_profile, raise_validation_error_invalid_normative_section
 from sdv.doc.waterloo.docitem_docstring import *
 
 #===== Typechecking ===========================================#
@@ -39,6 +41,7 @@ try:
 	from typing import TypeAliasType  # type: ignore
 except Exception:  # pragma: no cover - older Python
 	TypeAliasType = None
+
 
 def _is_type_alias(value: object, ann: object | None) -> bool:
 	if TypeAliasType is not None and isinstance(value, TypeAliasType):
@@ -352,7 +355,9 @@ Notes:
 #----- normative_sections entries -----------------------------#
 	with traced_section(tr, "normative_sections"):
 		for sec_name in node_normative_sections.items():
-			if sec_name not in top.items():
+			if sec_name not in get_allowed_sections_for_profile(profile):
+				raise_validation_error_invalid_normative_section(tr, obj, None, sec_name, node_normative_sections.items(), profile)
+			elif sec_name not in top.items():
 				details = render_normative_section_details(sec_name, node_normative_sections.items(), profile, action="remove")
 				raise_validation_error(tr,obj,"PRE-012",f"Section '{sec_name}' is marked normative but does not exist.", details)
 #----- general must exist -------------------------------------#
@@ -391,6 +396,8 @@ Notes:
 				details = render_normative_section_details(sec_name, node_normative_sections.items(), profile, action="add")
 				raise_validation_error(tr,obj,rule_id, f"Section '{sec_name}' exists but is not listed as normative.", details)
 			if sec_name in node_normative_sections.items() and sec_name not in top.items():
+				if sec_name not in get_allowed_sections_for_profile(profile):
+					raise_validation_error_invalid_normative_section(tr, obj, None, sec_name, node_normative_sections.items(), profile)
 				details = render_normative_section_details(sec_name, node_normative_sections.items(), profile, action="remove")
 				raise_validation_error(tr,obj,"PRE-012",f"Section '{sec_name}' is marked normative but does not exist.", details)
 #----- Public classes -----------------------------------------#
@@ -642,7 +649,9 @@ Notes:
 #----- normative_sections entries -----------------------------#
 	with traced_section(tr, "normative_sections"):
 		for sec_name in node_normative_sections.items():
-			if sec_name not in top.items():
+			if sec_name not in get_allowed_sections_for_profile(profile):
+				raise_validation_error_invalid_normative_section(tr, obj, None, sec_name, node_normative_sections.items(), profile)
+			elif sec_name not in top.items():
 				details = render_normative_section_details(sec_name, node_normative_sections.items(), profile, action="remove")
 				raise_validation_error(tr,obj,"PRE-012",f"Section '{sec_name}' is marked normative but does not exist.", details)
 
@@ -769,8 +778,11 @@ Notes:
 				details = render_normative_section_details(sec_name, node_normative_sections.items(), profile, action="add")
 				raise_validation_error(tr,obj,rule_id, f"Section '{sec_name}' exists but is not listed as normative.", details)
 			if sec_name in node_normative_sections.items() and sec_name not in top.items():
-				details = render_normative_section_details(sec_name, node_normative_sections.items(), profile, action="remove")
-				raise_validation_error(tr,obj,"PRE-012",f"Section '{sec_name}' is marked normative but does not exist.", details)
+				if sec_name not in get_allowed_sections_for_profile(profile):
+					raise_validation_error_invalid_normative_section(tr, obj, None, sec_name, node_normative_sections.items(), profile)
+				else:
+					details = render_normative_section_details(sec_name, node_normative_sections.items(), profile, action="remove")
+					raise_validation_error(tr,obj,"PRE-012",f"Section '{sec_name}' is marked normative but does not exist.", details)
 # Overviews must never be normative
 	with traced_section(tr, "Preamble"):
 		if "Class_overview" in node_normative_sections.items():
@@ -1084,7 +1096,9 @@ Notes:
 		for sec in node_normative_sections.items():
 			if sec == "Contract":
 				continue
-			if sec not in top.items():
+			if sec not in get_allowed_sections_for_profile(profile):
+				raise_validation_error_invalid_normative_section(tr, obj, None, sec, node_normative_sections.items(), profile)
+			elif sec not in top.items():
 				details = render_normative_section_details(sec, node_normative_sections.items(), profile, action="remove")
 				raise_validation_error(tr,obj,"PRE-012",f"Section '{sec}' is listed as normative but does not exist.", details)
 #===== Parameters must exist ==================================#
@@ -1251,7 +1265,9 @@ Notes:
 			for sec in node_normative_sections.items():
 				if sec == "Contract":
 					continue
-				if sec not in top.items():
+				if sec not in get_allowed_sections_for_profile(profile):
+					raise_validation_error_invalid_normative_section(tr, obj, None, sec, node_normative_sections.items(), profile)
+				elif sec not in top.items():
 					details = render_normative_section_details(sec, node_normative_sections.items(), profile, action="remove")
 					raise_validation_error(tr,obj,"PRE-012",f"Section '{sec}' is listed as normative but does not exist.", details)
 # Special for inherited methods.
@@ -1613,9 +1629,12 @@ See_also:
 		seen = set()
 		for sec in node_normative_sections.items():
 			# Each entry must point to an existing section.
-			if not sec in top.items():
-				details = render_normative_section_details(sec, normative_sections, profile, action="remove")
-				raise_validation_error(tr,obj,"PRE-012",f"Entry '{sec}' does not refer to an existing section.", details)
+			if sec not in top.items():
+				if sec not in get_allowed_sections_for_profile(profile):
+					raise_validation_error_invalid_normative_section(tr, obj, None, sec, normative_sections, profile)
+				else:
+					details = render_normative_section_details(sec, normative_sections, profile, action="remove")
+					raise_validation_error(tr,obj,"PRE-012",f"Entry '{sec}' does not refer to an existing section.", details)
 			seen.add(sec)
 # Handle the meta case here:
 			if "Preamble" in node_normative_sections.items():

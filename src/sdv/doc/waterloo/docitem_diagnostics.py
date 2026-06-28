@@ -336,8 +336,8 @@ def render_allowed_labels(section_label: str | None, allowed: Iterable[str]) -> 
 	items = list(dict.fromkeys(allowed))
 	if not items:
 		items = ["..."]
-	allowed_text = '", "'.join(items)
-	return _render_section_block(section_label, None, [f"<some of: {{ {allowed_text} }}>"])
+	allowed_text = ", ".join(items)
+	return _render_section_block(section_label, None, [f"<one of: {{ {allowed_text} }}>"])
 
 
 def render_identifier_lines(label: str, identifiers: Iterable[str]) -> list[str]:

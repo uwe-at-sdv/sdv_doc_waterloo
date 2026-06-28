@@ -32,9 +32,11 @@ def test_version_json_reports_all_schema_categories() -> None:
 		"wtrl-mcp-about-json",
 		"wtrl-mcp-about-topic-json",
 		"wtrl_mcp",
+		"python-waterloo-lexer",
 	}
 	assert doc["waterlint"] == {"kind": "executable", "version": doc["waterlint"]["version"]}
-	assert doc["wtrl_mcp"] == {"kind": "module", "version": doc["wtrl_mcp"]["version"]}
+	assert doc["wtrl_mcp"] == {"kind": "package", "version": doc["wtrl_mcp"]["version"]}
+	assert doc["python-waterloo-lexer"] == {"kind": "package", "version": doc["python-waterloo-lexer"]["version"]}
 	for key in (
 		"wtrl-json",
 		"wtrl-tracer-json",

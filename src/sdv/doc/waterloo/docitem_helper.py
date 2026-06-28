@@ -16,7 +16,9 @@ Public_functions:
 	get_obj_path, build_anchor, get_func_obj_from_callable, get_obj_docstring, get_obj_annotations,
 	get_obj_decorators, gen_documentable_objects, traced_section, rule_on_fail, raise_has_no_docstring,
 	raise_parsing_error, raise_parsing_error_expected_but_got,
-	raise_validation_error, raise_validation_error_expected_but_got, warn_parsing, warn_validation
+	raise_validation_error, raise_validation_error_expected_but_got,
+	raise_validation_error_invalid_normative_section,
+	get_allowed_sections_for_profile, warn_parsing, warn_validation
 Public_types:
 	Profile:
 		Supported profile labels for the helper layer.
@@ -2622,6 +2624,83 @@ def raise_validation_error_expected_but_got(tr : tracer,obj: object, rule_id: Ru
 	out = f"expected {expected}, but got {got}"
 	tr.add_error(rule_id, "validation", out)
 	raise ParseError(out)
+
+def _doc_rule_for_profile(profile: str) -> RuleId:
+	if profile == "module":
+		return "DOC-003"
+	if profile == "class":
+		return "DOC-004"
+	if profile in ("function", "method"):
+		return "DOC-005"
+	if profile == "inherited_method":
+		return "DOC-006"
+	return "DOC-003"
+
+
+def get_allowed_sections_for_profile(profile: str) -> list[str]:
+	"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+	Contract:
+		general:
+			|Must| return the list of section labels that are allowed for the given profile.
+	Parameters:
+		profile:
+			The docstring profile label.
+	Returns:
+		The allowed top-level section labels for the profile.
+	Raises:
+	"""
+	allowed: list[str] = []
+	for section_label in CANONICAL_ORDER_OF_SECTIONS:
+		section_info = SECTION_PROPERTIES.get(section_label)
+		if section_info is None:
+			continue
+		if profile in section_info["profile"] and section_label != "Preamble":
+			allowed.append(section_label)
+	return allowed
+
+
+def raise_validation_error_invalid_normative_section(tr : tracer,obj: object, rule_id: RuleId | None, sec: str, normative_sections: Iterable[str], profile: str) -> NoReturn:
+	"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+	Contract:
+		general:
+			|Must| raise a validation error for a normative section that is not allowed in the current profile.
+	Parameters:
+		tr:
+			The tracer that should receive the error.
+		obj:
+			The object whose docstring should be validated.
+		rule_id:
+			An optional explicit rule identifier. If omitted, a profile-specific DOC rule is used.
+		sec:
+			The section label that is not allowed for the profile.
+		normative_sections:
+			The current normative section labels.
+		profile:
+			The docstring profile used to determine the allowed sections and hint.
+	Returns:
+		Never returns.
+	Raises:
+		ValidationError:
+			Always raised.
+	"""
+	from sdv.doc.waterloo.docitem_diagnostics import explain_try_self_for_section, render_allowed_labels, render_identifier_lines
+	used_rule = rule_id if rule_id is not None else _doc_rule_for_profile(profile)
+	details: Details = {
+		"found": render_identifier_lines("Preamble.normative_sections", normative_sections),
+		"expected": render_allowed_labels("Preamble", get_allowed_sections_for_profile(profile)),
+		"hint": explain_try_self_for_section("Preamble", profile),
+	}
+	raise_validation_error(tr, obj, used_rule, f"Section '{sec}' is not allowed for profile '{profile}'.", details)
 
 
 def warn_parsing(tr : tracer, rule_id: RuleId, msg : str) -> None:

@@ -449,7 +449,7 @@ def test_bad_preamble_missing_contract_in_normative() -> None:
 
 def test_bad_preamble_nonexistent_normative_section() -> None:
 	result = _run_waterlint_validate("pytest_bad_preamble.A_06")
-	_assert_error(result, "PRE-012", "Nonsense")
+	_assert_error(result, "DOC-004", "not allowed for profile 'class'")
 
 
 def test_bad_preamble_duplicate_normative_entry() -> None:

@@ -49,6 +49,8 @@ from sdv.doc.waterloo.waterlint_common import (
 	add_traceback
 	)
 import sdv.doc.waterloo.mcp
+from python_waterloo_lexer import __version__ as WTRL_PYTHON_WATERLOO_LEXER_VERSION
+
 
 import json
 
@@ -1953,13 +1955,13 @@ def version_json_command(args: argparse.Namespace) -> int:
 		scope:
 			extension
 	Contract:
-		general:
+		g eneral:
 			|Must| print a JSON document to stdout where each key represents\
 			a versioned component of the Waterloo toolchain,\
 			and each value is a dictionary containing the keys |value|`kind` and |value|`version`.
 			|Must| infer the version of the Waterloo JSON Schema from the\
 			file system in case the version is not hard-coded in this source file.
-			|Must| classify each versioned component as either |value|`executable`, |value|`schema`, or |value|`module`.
+			|Must| classify each versioned component as either |value|`executable`, |value|`schema`, |value|`module`, or |value|`package`.
 	Parameters:
 		args:
 			An |var|`argparse.Namespace` object containing the command-line arguments.
@@ -2001,7 +2003,8 @@ def version_json_command(args: argparse.Namespace) -> int:
 		"wtrl-walk-json": {"kind": "schema", "version": WTRL_WALK_JSON_SCHEMA_VERSION},
 		"wtrl-mcp-about-json": {"kind": "schema", "version": WTRL_MCP_ABOUT_JSON_SCHEMA_VERSION},
 		"wtrl-mcp-about-topic-json": {"kind": "schema", "version": WTRL_MCP_ABOUT_TOPIC_JSON_SCHEMA_VERSION},
-		"wtrl_mcp": {"kind": "module", "version": WTRL_MCP_VERSION},
+		"wtrl_mcp": {"kind": "package", "version": WTRL_MCP_VERSION},
+		"python-waterloo-lexer": {"kind": "package", "version": WTRL_PYTHON_WATERLOO_LEXER_VERSION},
 	}
 	json.dump(doc, sys.stdout, indent=2)
 	sys.stdout.write("\n")
