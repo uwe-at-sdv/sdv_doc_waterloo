@@ -283,8 +283,8 @@ and the docstring reads:
 		RuntimeError:
 			|Must| raise if prefix contains a mix not representable\
 			as |var|`n` repetitions of |var|`INDENT_UNIT`.
-			|Must| raise if the white space characters (greedy match of\
-			tab or space) at the beginning of the line\
+			|Must| raise if the leading white space characters (tabs or four spaces)\
+			at the beginning of the line\
 			cannot be described by the indentation scheme passed.
 	"""
 
@@ -354,5 +354,4 @@ Formatting tests
 A simple test for demonstrating the pipe operator convention in the output layer.
 
 .. wtrl_autodoc_function:: test_docitem_function_pipe.f
-
 

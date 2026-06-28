@@ -112,9 +112,6 @@
         "sdv.doc.waterloo.docitem_helper.raise_parsing_error_expected_but_got": [
             "package_gh-pages/doc-examples-python/api_demo_helper_tracer_04.py"
         ],
-        "sdv.doc.waterloo.docitem_helper.raise_parsing_error_invalid_label": [
-            "package_gh-pages/doc-examples-python/api_demo_helper_tracer_04.py"
-        ],
         "sdv.doc.waterloo.docitem_helper.raise_validation_error": [
             "package_gh-pages/doc-examples-python/api_demo_helper_tracer_04.py"
         ],

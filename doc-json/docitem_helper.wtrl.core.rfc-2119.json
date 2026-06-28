@@ -1,12 +1,12 @@
 {
     "$schema": "https://sci-d-vis.com/schema/wtrl-json-0.1.0.schema.json",
-    "$id": "urn:waterlint:wtrl-json:0.17.0:core:rfc-2119:9b1cca0cab4b1cb28a6a1b05025b2094c9a59922381ced2918a7ba4480980726",
+    "$id": "urn:waterlint:wtrl-json:0.19.1:core:rfc-2119:3f045f7b81c3e501b3166c519f3b598eb22eaab6b789018e15ccda369915512a",
     "__WTRL_VERSION__": {
-        "waterloo": "0.10.0",
+        "waterloo": "0.10.4",
         "schema": "0.1.0"
     },
     "__WTRL_META__": {
-        "generated_at": "2026-06-25T10:48:18+02:00",
+        "generated_at": "2026-06-28T12:23:00+02:00",
         "generator": "waterlint",
         "scope": "core",
         "flavour": "rfc-2119"
@@ -57,6 +57,7 @@
         "sdv.doc.waterloo.docitem_helper.ConfigTraversal": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.ConfigTraversal",
         "sdv.doc.waterloo.docitem_helper.tracer": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.tracer",
         "sdv.doc.waterloo.docitem_helper.tracer.Severity": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.tracer.Severity",
+        "sdv.doc.waterloo.docitem_helper.DocSession": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.DocSession",
         "sdv.doc.waterloo.docitem_helper.ResolveObjectError": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.ResolveObjectError"
     },
     "__WTRL_TOC_CALLABLES__": {
@@ -88,7 +89,6 @@
         "sdv.doc.waterloo.docitem_helper.raise_has_no_docstring": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.raise_has_no_docstring",
         "sdv.doc.waterloo.docitem_helper.raise_parsing_error": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.raise_parsing_error",
         "sdv.doc.waterloo.docitem_helper.raise_parsing_error_expected_but_got": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.raise_parsing_error_expected_but_got",
-        "sdv.doc.waterloo.docitem_helper.raise_parsing_error_invalid_label": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.raise_parsing_error_invalid_label",
         "sdv.doc.waterloo.docitem_helper.raise_validation_error": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.raise_validation_error",
         "sdv.doc.waterloo.docitem_helper.raise_validation_error_expected_but_got": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.raise_validation_error_expected_but_got",
         "sdv.doc.waterloo.docitem_helper.warn_parsing": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.warn_parsing",
@@ -105,7 +105,9 @@
         "sdv.doc.waterloo.docitem_helper.Scopes": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.Scopes",
         "sdv.doc.waterloo.docitem_helper.Documentable": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.Documentable",
         "sdv.doc.waterloo.docitem_helper.AstDocNode": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.AstDocNode",
-        "sdv.doc.waterloo.docitem_helper.tracer.Context": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.tracer.Context"
+        "sdv.doc.waterloo.docitem_helper.tracer.Context": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.tracer.Context",
+        "sdv.doc.waterloo.docitem_helper.DocSession.Seen": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.DocSession.Seen",
+        "sdv.doc.waterloo.docitem_helper.DocSession.Validated": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.DocSession.Validated"
     },
     "__WTRL_TOC_VARIABLES__": {
         "sdv.doc.waterloo.docitem_helper.SOURCE_DOCSTRING_CACHE": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.SOURCE_DOCSTRING_CACHE",
@@ -120,6 +122,7 @@
         "sdv.doc.waterloo.docitem_helper.RE_WTRL_MARKUP_BACKTICK": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.RE_WTRL_MARKUP_BACKTICK",
         "sdv.doc.waterloo.docitem_helper.RE_WTRL_ANGLE_HTTPS_REF": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.RE_WTRL_ANGLE_HTTPS_REF",
         "sdv.doc.waterloo.docitem_helper.RE_WTRL_ANGLE_WTRL_REF": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.RE_WTRL_ANGLE_WTRL_REF",
+        "sdv.doc.waterloo.docitem_helper.RE_WTRL_JSON_SCHEMA_NAME": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.RE_WTRL_JSON_SCHEMA_NAME",
         "sdv.doc.waterloo.docitem_helper.RULE_ID_WHITELIST": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.RULE_ID_WHITELIST",
         "sdv.doc.waterloo.docitem_helper.CANONICAL_ORDER_OF_SECTIONS": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.CANONICAL_ORDER_OF_SECTIONS",
         "sdv.doc.waterloo.docitem_helper.CANONICAL_ORDER_OF_PROFILES": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.CANONICAL_ORDER_OF_PROFILES",
@@ -336,6 +339,14 @@
             "annotation": "Final[str]",
             "doc_lines_kind": "constant"
         },
+        "sdv.doc.waterloo.docitem_helper.RE_WTRL_JSON_SCHEMA_NAME": {
+            "doc": {},
+            "doc_lines": [
+                "Regular expression for matching Waterloo JSON Schema filenames. Undocumented: RE_WTRL_JSON_SCHEMA_NAME_COMPILED, the precompiled version for performance."
+            ],
+            "annotation": "Final[str]",
+            "doc_lines_kind": "constant"
+        },
         "sdv.doc.waterloo.docitem_helper.RULE_ID_WHITELIST": {
             "doc": {},
             "doc_lines": [
@@ -468,7 +479,6 @@
                     "raise_has_no_docstring",
                     "raise_parsing_error",
                     "raise_parsing_error_expected_but_got",
-                    "raise_parsing_error_invalid_label",
                     "raise_validation_error",
                     "raise_validation_error_expected_but_got",
                     "warn_parsing",
@@ -532,6 +542,9 @@
                     "RE_WTRL_ANGLE_WTRL_REF": [
                         "Regular expression for matching Waterloo angle bracket wtrl references. Undocumented: RE_WTRL_ANGLE_WTRL_REF_COMPILED, the precompiled version for performance.",
                         "References consist of two parts: clear text and <link>, optionally separated by whitespace."
+                    ],
+                    "RE_WTRL_JSON_SCHEMA_NAME": [
+                        "Regular expression for matching Waterloo JSON Schema filenames. Undocumented: RE_WTRL_JSON_SCHEMA_NAME_COMPILED, the precompiled version for performance."
                     ],
                     "RULE_ID_WHITELIST": [
                         "Whitelist reasons for legacy rule identifiers used by the helper layer."
@@ -2760,6 +2773,56 @@
                 "/__WTRL_EXAMPLES__/sha256_b55749001e6c78aa3a23329f9c18e39d017399a71fbdb0d129168407025d2e03"
             ]
         },
+        "sdv.doc.waterloo.docitem_helper.DocSession.Seen": {
+            "doc": {},
+            "doc_lines": [
+                "Objects already processed in the current run."
+            ],
+            "annotation": "dict[object, Any]",
+            "doc_lines_kind": "type"
+        },
+        "sdv.doc.waterloo.docitem_helper.DocSession.Validated": {
+            "doc": {},
+            "doc_lines": [
+                "Objects successfully validated in the current run."
+            ],
+            "annotation": "dict[object, Any]",
+            "doc_lines_kind": "type"
+        },
+        "sdv.doc.waterloo.docitem_helper.DocSession": {
+            "signature": {
+                "text": "DocSession.__init__(self) -> 'None'",
+                "parameters": [],
+                "returns": "None"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "class",
+                    "normative_sections": [
+                        "Contract",
+                        "Public_types"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST provide per-run state for validation and parsing operations.",
+                        "MUST remember already validated objects in order to avoid recursion divergence.",
+                        "MUST offer a stable place for future per-run caches and statistics data."
+                    ],
+                    "constructor": [
+                        "MUST be default-constructible."
+                    ]
+                },
+                "Public_types": {
+                    "Seen": [
+                        "Objects already processed in the current run."
+                    ],
+                    "Validated": [
+                        "Objects successfully validated in the current run."
+                    ]
+                }
+            }
+        },
         "sdv.doc.waterloo.docitem_helper.ResolveObjectError": {
             "signature": {
                 "text": "ResolveObjectError.__init__(self, ref: 'str', current_obj: 'object', candidates: 'Sequence[str] | None' = None, last_candidate: 'str | None' = None, last_error: 'Exception | None' = None, msg: 'str | None' = None) -> 'None'",
@@ -3044,82 +3107,6 @@
                     ],
                     "details": [
                         "Optional diagnostic details to attach to the tracer error."
-                    ]
-                },
-                "Returns": [
-                    "Never returns."
-                ],
-                "Raises": {
-                    "ParseError": [
-                        "Always raised."
-                    ]
-                }
-            },
-            "examples": [
-                "/__WTRL_EXAMPLES__/sha256_acf076f743f65d019f80602ae5b7d6e7a150265594e37d57d9dca1ee6dfe92fc"
-            ]
-        },
-        "sdv.doc.waterloo.docitem_helper.raise_parsing_error_invalid_label": {
-            "signature": {
-                "text": "raise_parsing_error_invalid_label(tr: 'tracer', rule_id: 'RuleId', found: 'str', allowed: 'Iterable[str]') -> 'NoReturn'",
-                "parameters": [
-                    {
-                        "name": "tr",
-                        "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "tracer",
-                        "default": null
-                    },
-                    {
-                        "name": "rule_id",
-                        "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "RuleId",
-                        "default": null
-                    },
-                    {
-                        "name": "found",
-                        "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "str",
-                        "default": null
-                    },
-                    {
-                        "name": "allowed",
-                        "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "Iterable[str]",
-                        "default": null
-                    }
-                ],
-                "returns": "NoReturn"
-            },
-            "doc": {
-                "Preamble": {
-                    "profile": "function",
-                    "normative_sections": [
-                        "Contract",
-                        "Parameters",
-                        "Returns",
-                        "Raises"
-                    ],
-                    "scope": [
-                        "public"
-                    ]
-                },
-                "Contract": {
-                    "general": [
-                        "MUST raise a parsing error that reports an invalid label and the allowed labels."
-                    ]
-                },
-                "Parameters": {
-                    "tr": [
-                        "The tracer that should receive the error."
-                    ],
-                    "rule_id": [
-                        "The rule identifier to report."
-                    ],
-                    "found": [
-                        "The invalid label that was found."
-                    ],
-                    "allowed": [
-                        "The allowed label values."
                     ]
                 },
                 "Returns": [
@@ -3641,7 +3628,6 @@
                 "sdv.doc.waterloo.docitem_helper.raise_has_no_docstring",
                 "sdv.doc.waterloo.docitem_helper.raise_parsing_error",
                 "sdv.doc.waterloo.docitem_helper.raise_parsing_error_expected_but_got",
-                "sdv.doc.waterloo.docitem_helper.raise_parsing_error_invalid_label",
                 "sdv.doc.waterloo.docitem_helper.raise_validation_error",
                 "sdv.doc.waterloo.docitem_helper.raise_validation_error_expected_but_got"
             ]

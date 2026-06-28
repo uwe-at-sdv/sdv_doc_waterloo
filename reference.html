@@ -1410,7 +1410,7 @@
 <td><ul class="simple">
 <li><p><code class="wtrl_type docutils literal notranslate"><span class="pre">RuntimeError</span></code><ul>
 <li><p><code class="wtrl_norm docutils literal notranslate"><span class="pre">Must</span></code> raise if prefix contains a mix not representable as <code class="wtrl_var docutils literal notranslate"><span class="pre">n</span></code> repetitions of <code class="wtrl_var docutils literal notranslate"><span class="pre">INDENT_UNIT</span></code>.</p></li>
-<li><p><code class="wtrl_norm docutils literal notranslate"><span class="pre">Must</span></code> raise if the white space characters (greedy match of tab or space) at the beginning of the line cannot be described by the indentation scheme passed.</p></li>
+<li><p><code class="wtrl_norm docutils literal notranslate"><span class="pre">Must</span></code> raise if the leading white space characters (tabs or four spaces) at the beginning of the line cannot be described by the indentation scheme passed.</p></li>
 </ul>
 </p></li>
 </ul>
@@ -3431,7 +3431,7 @@
 <td><ul class="simple">
 <li><p><code class="wtrl_label docutils literal notranslate"><span class="pre">general</span></code></p>
 <ul>
-<li><p><code class="wtrl_norm docutils literal notranslate"><span class="pre">Must</span></code> render a compact snippet for a subsection that expects exactly one identifier.</p></li>
+<li><p><code class="wtrl_norm docutils literal notranslate"><span class="pre">Must</span></code> render a compact snippet for a subsection that expects one identifier.</p></li>
 </ul>
 </li>
 </ul>
@@ -3936,7 +3936,7 @@
 <tbody>
 <tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Signature</span></code></p></td>
 <td><div class="wtrl-signature-head line"><span class="wtrl_mod">sdv.doc.waterloo.docitem_diagnostics</span><span class="wtrl_op">.</span><span class="wtrl_func">render_expected_snippet</span><span class="wtrl_op">(</span></div>
-<div class="wtrl-signature-param line"><span class="wtrl_var">section_label</span><span class="wtrl_op">: </span><span class="wtrl_type">str</span></div>
+<div class="wtrl-signature-param line"><span class="wtrl_var">section_label</span><span class="wtrl_op">: </span><span class="wtrl_type">str | None</span></div>
 <div class="wtrl-signature-param line"><span class="wtrl_var">subsections</span><span class="wtrl_op">: </span><span class="wtrl_type">Iterable[str] | None</span><span class="wtrl_op"> = </span><span class="wtrl_lit">None</span></div>
 <div class="wtrl-signature-ret line"><span class="wtrl_op">)</span><span class="wtrl_op"> -&gt; </span><span class="wtrl_type">list[str]</span></div>
 </td>
@@ -4912,7 +4912,7 @@
 <tbody>
 <tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Signature</span></code></p></td>
 <td><div class="wtrl-signature-head line"><span class="wtrl_mod">sdv.doc.waterloo.docitem_diagnostics</span><span class="wtrl_op">.</span><span class="wtrl_func">render_source_snippet</span><span class="wtrl_op">(</span></div>
-<div class="wtrl-signature-param line"><span class="wtrl_var">section_label</span><span class="wtrl_op">: </span><span class="wtrl_type">str</span></div>
+<div class="wtrl-signature-param line"><span class="wtrl_var">section_label</span><span class="wtrl_op">: </span><span class="wtrl_type">str | None</span></div>
 <div class="wtrl-signature-param line"><span class="wtrl_var">subsections</span><span class="wtrl_op">: </span><span class="wtrl_type">Iterable[str] | None</span><span class="wtrl_op"> = </span><span class="wtrl_lit">None</span></div>
 <div class="wtrl-signature-ret line"><span class="wtrl_op">)</span><span class="wtrl_op"> -&gt; </span><span class="wtrl_type">list[str]</span></div>
 </td>
@@ -4968,7 +4968,7 @@
 <tbody>
 <tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Signature</span></code></p></td>
 <td><div class="wtrl-signature-head line"><span class="wtrl_mod">sdv.doc.waterloo.docitem_diagnostics</span><span class="wtrl_op">.</span><span class="wtrl_func">render_suggestion</span><span class="wtrl_op">(</span></div>
-<div class="wtrl-signature-param line"><span class="wtrl_var">label</span><span class="wtrl_op">: </span><span class="wtrl_type">str</span></div>
+<div class="wtrl-signature-param line"><span class="wtrl_var">label</span><span class="wtrl_op">: </span><span class="wtrl_type">str | None</span></div>
 <div class="wtrl-signature-param line"><span class="wtrl_var">suggestion</span><span class="wtrl_op">: </span><span class="wtrl_type">str</span></div>
 <div class="wtrl-signature-ret line"><span class="wtrl_op">)</span><span class="wtrl_op"> -&gt; </span><span class="wtrl_type">list[str]</span></div>
 </td>
@@ -4987,7 +4987,7 @@
 <td><ul class="simple">
 <li><p><code class="wtrl_label docutils literal notranslate"><span class="pre">general</span></code></p>
 <ul>
-<li><p><code class="wtrl_norm docutils literal notranslate"><span class="pre">Must</span></code> render a suggestion snippet either without or for a section or subsection in order to fix the docstring.</p></li>
+<li><p><code class="wtrl_norm docutils literal notranslate"><span class="pre">Must</span></code> render a suggestion snippet for a section or subsection in order to fix the docstring.</p></li>
 <li><p><code class="wtrl_norm docutils literal notranslate"><span class="pre">Must</span></code> add angle brackets around the suggestion to indicate that it is a placeholder for the actual content.</p></li>
 </ul>
 </li>
