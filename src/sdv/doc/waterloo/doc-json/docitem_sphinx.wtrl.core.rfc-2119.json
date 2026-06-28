@@ -1,12 +1,12 @@
 {
     "$schema": "https://sci-d-vis.com/schema/wtrl-json-0.1.0.schema.json",
-    "$id": "urn:waterlint:wtrl-json:0.17.0:core:rfc-2119:828c513f4a010c2814c85d18df824f454d1797471a09d3990d5f4b2b97eb8ad2",
+    "$id": "urn:waterlint:wtrl-json:0.19.1:core:rfc-2119:e5b134f5a8cfe7de88967683d4399c30120736bfe7b0d5b650e62a8a1810a61c",
     "__WTRL_VERSION__": {
-        "waterloo": "0.10.0",
+        "waterloo": "0.10.4",
         "schema": "0.1.0"
     },
     "__WTRL_META__": {
-        "generated_at": "2026-06-25T10:48:16+02:00",
+        "generated_at": "2026-06-28T12:22:57+02:00",
         "generator": "waterlint",
         "scope": "core",
         "flavour": "rfc-2119"
@@ -48,8 +48,8 @@
         "sdv.doc.waterloo.docitem_sphinx": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_sphinx",
         "sdv.doc.waterloo.docitem": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem",
         "sdv.doc.waterloo.docitem_helper": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper",
-        "sdv.doc.waterloo.docitem_tokenizer": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_tokenizer",
         "sdv.doc.waterloo.docitem_diagnostics": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_diagnostics",
+        "sdv.doc.waterloo.docitem_tokenizer": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_tokenizer",
         "sdv.doc.waterloo.docitem_base": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_base",
         "sdv.doc.waterloo.docitem_sections": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_sections",
         "sdv.doc.waterloo.docitem_preamble": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_preamble",
@@ -67,6 +67,7 @@
         "sdv.doc.waterloo.docitem_helper.ConfigTraversal": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.ConfigTraversal",
         "sdv.doc.waterloo.docitem_helper.tracer": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.tracer",
         "sdv.doc.waterloo.docitem_helper.tracer.Severity": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.tracer.Severity",
+        "sdv.doc.waterloo.docitem_helper.DocSession": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.DocSession",
         "sdv.doc.waterloo.docitem_helper.ResolveObjectError": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.ResolveObjectError",
         "sdv.doc.waterloo.docitem_base.docitem_base": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_base.docitem_base",
         "sdv.doc.waterloo.docitem_base.docitem_list_base": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_base.docitem_list_base",
@@ -156,13 +157,15 @@
         "sdv.doc.waterloo.docitem_helper.raise_has_no_docstring": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.raise_has_no_docstring",
         "sdv.doc.waterloo.docitem_helper.raise_parsing_error": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.raise_parsing_error",
         "sdv.doc.waterloo.docitem_helper.raise_parsing_error_expected_but_got": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.raise_parsing_error_expected_but_got",
-        "sdv.doc.waterloo.docitem_helper.raise_parsing_error_invalid_label": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.raise_parsing_error_invalid_label",
         "sdv.doc.waterloo.docitem_helper.raise_validation_error": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.raise_validation_error",
         "sdv.doc.waterloo.docitem_helper.raise_validation_error_expected_but_got": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.raise_validation_error_expected_but_got",
         "sdv.doc.waterloo.docitem_helper.warn_parsing": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.warn_parsing",
         "sdv.doc.waterloo.docitem_helper.warn_validation": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.warn_validation",
+        "sdv.doc.waterloo.docitem_diagnostics.render_found_label": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_diagnostics.render_found_label",
+        "sdv.doc.waterloo.docitem_diagnostics.render_suggestion": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_diagnostics.render_suggestion",
         "sdv.doc.waterloo.docitem_tokenizer.get_num_indent": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_tokenizer.get_num_indent",
         "sdv.doc.waterloo.docitem_tokenizer.parse_indent_docstring": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_tokenizer.parse_indent_docstring",
+        "sdv.doc.waterloo.docitem_tokenizer.expect_text": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_tokenizer.expect_text",
         "sdv.doc.waterloo.docitem_tokenizer.get_tree_of_section": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_tokenizer.get_tree_of_section",
         "sdv.doc.waterloo.docitem_tokenizer.get_tree_of_subsection": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_tokenizer.get_tree_of_subsection",
         "sdv.doc.waterloo.docitem_tokenizer.get_scopes_of_tree": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_tokenizer.get_scopes_of_tree",
@@ -173,7 +176,6 @@
         "sdv.doc.waterloo.docitem_diagnostics.render_expected_identifier": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_diagnostics.render_expected_identifier",
         "sdv.doc.waterloo.docitem_diagnostics.render_identifier_lines": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_diagnostics.render_identifier_lines",
         "sdv.doc.waterloo.docitem_diagnostics.render_profile_mismatch_details": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_diagnostics.render_profile_mismatch_details",
-        "sdv.doc.waterloo.docitem_diagnostics.render_suggestion": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_diagnostics.render_suggestion",
         "sdv.doc.waterloo.docitem_diagnostics.render_deduplicated_identifiers": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_diagnostics.render_deduplicated_identifiers",
         "sdv.doc.waterloo.docitem_diagnostics.explain_try_self_for_subsection": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_diagnostics.explain_try_self_for_subsection",
         "sdv.doc.waterloo.docitem_base.docitem_base.parse": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_base.docitem_base.parse",
@@ -200,11 +202,14 @@
         "sdv.doc.waterloo.docitem_sections.docitem_definitions.parse": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_sections.docitem_definitions.parse",
         "sdv.doc.waterloo.docitem_sections.docitem_terminology.parse": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_sections.docitem_terminology.parse",
         "sdv.doc.waterloo.docitem_sections.docitem_notes.parse": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_sections.docitem_notes.parse",
+        "sdv.doc.waterloo.docitem_diagnostics.render_allowed_labels": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_diagnostics.render_allowed_labels",
         "sdv.doc.waterloo.docitem_preamble.docitem_profile.parse": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_preamble.docitem_profile.parse",
         "sdv.doc.waterloo.docitem_preamble.docitem_normative_sections.parse": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_preamble.docitem_normative_sections.parse",
         "sdv.doc.waterloo.docitem_preamble.docitem_status.parse": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_preamble.docitem_status.parse",
         "sdv.doc.waterloo.docitem_preamble.docitem_scope.parse": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_preamble.docitem_scope.parse",
         "sdv.doc.waterloo.docitem_preamble.docitem_preamble.parse": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_preamble.docitem_preamble.parse",
+        "sdv.doc.waterloo.docitem_diagnostics.render_source_snippet": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_diagnostics.render_source_snippet",
+        "sdv.doc.waterloo.docitem_diagnostics.render_expected_snippet": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_diagnostics.render_expected_snippet",
         "sdv.doc.waterloo.docitem_contract.docitem_constructor.parse": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_contract.docitem_constructor.parse",
         "sdv.doc.waterloo.docitem_contract.docitem_general.parse": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_contract.docitem_general.parse",
         "sdv.doc.waterloo.docitem_contract.docitem_invariants.parse": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_contract.docitem_invariants.parse",
@@ -232,7 +237,6 @@
         "sdv.doc.waterloo.docitem_diagnostics.render_definition_reference_details": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_diagnostics.render_definition_reference_details",
         "sdv.doc.waterloo.docitem_diagnostics.render_exactly_one_identifier_details": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_diagnostics.render_exactly_one_identifier_details",
         "sdv.doc.waterloo.docitem_diagnostics.render_exception_reference_details": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_diagnostics.render_exception_reference_details",
-        "sdv.doc.waterloo.docitem_diagnostics.render_expected_snippet": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_diagnostics.render_expected_snippet",
         "sdv.doc.waterloo.docitem_diagnostics.render_inherited_definition_details": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_diagnostics.render_inherited_definition_details",
         "sdv.doc.waterloo.docitem_diagnostics.render_listed_object_missing_details": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_diagnostics.render_listed_object_missing_details",
         "sdv.doc.waterloo.docitem_diagnostics.render_missing_entry_details": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_diagnostics.render_missing_entry_details",
@@ -245,7 +249,6 @@
         "sdv.doc.waterloo.docitem_diagnostics.render_parameter_signature_details": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_diagnostics.render_parameter_signature_details",
         "sdv.doc.waterloo.docitem_diagnostics.render_see_also_reference_details": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_diagnostics.render_see_also_reference_details",
         "sdv.doc.waterloo.docitem_diagnostics.render_scope_relation_details": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_diagnostics.render_scope_relation_details",
-        "sdv.doc.waterloo.docitem_diagnostics.render_source_snippet": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_diagnostics.render_source_snippet",
         "sdv.doc.waterloo.docitem_diagnostics.render_type_reference_details": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_diagnostics.render_type_reference_details",
         "sdv.doc.waterloo.docitem_validator.get_status": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_validator.get_status",
         "sdv.doc.waterloo.docitem_validator.get_profile": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_validator.get_profile",
@@ -291,6 +294,8 @@
         "sdv.doc.waterloo.docitem.Profile": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem.Profile",
         "sdv.doc.waterloo.docitem.Scopes": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem.Scopes",
         "sdv.doc.waterloo.docitem_helper.tracer.Context": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.tracer.Context",
+        "sdv.doc.waterloo.docitem_helper.DocSession.Seen": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.DocSession.Seen",
+        "sdv.doc.waterloo.docitem_helper.DocSession.Validated": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.DocSession.Validated",
         "sdv.doc.waterloo.docitem_helper.Profile": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.Profile",
         "sdv.doc.waterloo.docitem_helper.DocstringSubtree": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.DocstringSubtree",
         "sdv.doc.waterloo.docitem_helper.DocstringTree": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.DocstringTree",
@@ -350,6 +355,7 @@
         "sdv.doc.waterloo.docitem_helper.RE_WTRL_MARKUP_BACKTICK": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.RE_WTRL_MARKUP_BACKTICK",
         "sdv.doc.waterloo.docitem_helper.RE_WTRL_ANGLE_HTTPS_REF": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.RE_WTRL_ANGLE_HTTPS_REF",
         "sdv.doc.waterloo.docitem_helper.RE_WTRL_ANGLE_WTRL_REF": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.RE_WTRL_ANGLE_WTRL_REF",
+        "sdv.doc.waterloo.docitem_helper.RE_WTRL_JSON_SCHEMA_NAME": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.RE_WTRL_JSON_SCHEMA_NAME",
         "sdv.doc.waterloo.docitem_helper.RULE_ID_WHITELIST": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.RULE_ID_WHITELIST",
         "sdv.doc.waterloo.docitem_helper.CANONICAL_ORDER_OF_SECTIONS": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.CANONICAL_ORDER_OF_SECTIONS",
         "sdv.doc.waterloo.docitem_helper.CANONICAL_ORDER_OF_PROFILES": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.CANONICAL_ORDER_OF_PROFILES",
@@ -1203,7 +1209,6 @@
                     "raise_has_no_docstring",
                     "raise_parsing_error",
                     "raise_parsing_error_expected_but_got",
-                    "raise_parsing_error_invalid_label",
                     "raise_validation_error",
                     "raise_validation_error_expected_but_got",
                     "warn_parsing",
@@ -1267,6 +1272,9 @@
                     "RE_WTRL_ANGLE_WTRL_REF": [
                         "Regular expression for matching Waterloo angle bracket wtrl references. Undocumented: RE_WTRL_ANGLE_WTRL_REF_COMPILED, the precompiled version for performance.",
                         "References consist of two parts: clear text and <link>, optionally separated by whitespace."
+                    ],
+                    "RE_WTRL_JSON_SCHEMA_NAME": [
+                        "Regular expression for matching Waterloo JSON Schema filenames. Undocumented: RE_WTRL_JSON_SCHEMA_NAME_COMPILED, the precompiled version for performance."
                     ],
                     "RULE_ID_WHITELIST": [
                         "Whitelist reasons for legacy rule identifiers used by the helper layer."
@@ -3269,6 +3277,56 @@
                 "Raises": {}
             }
         },
+        "sdv.doc.waterloo.docitem_helper.DocSession.Seen": {
+            "doc": {},
+            "doc_lines": [
+                "Objects already processed in the current run."
+            ],
+            "annotation": "dict[object, Any]",
+            "doc_lines_kind": "type"
+        },
+        "sdv.doc.waterloo.docitem_helper.DocSession.Validated": {
+            "doc": {},
+            "doc_lines": [
+                "Objects successfully validated in the current run."
+            ],
+            "annotation": "dict[object, Any]",
+            "doc_lines_kind": "type"
+        },
+        "sdv.doc.waterloo.docitem_helper.DocSession": {
+            "signature": {
+                "text": "DocSession.__init__(self) -> 'None'",
+                "parameters": [],
+                "returns": "None"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "class",
+                    "normative_sections": [
+                        "Contract",
+                        "Public_types"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST provide per-run state for validation and parsing operations.",
+                        "MUST remember already validated objects in order to avoid recursion divergence.",
+                        "MUST offer a stable place for future per-run caches and statistics data."
+                    ],
+                    "constructor": [
+                        "MUST be default-constructible."
+                    ]
+                },
+                "Public_types": {
+                    "Seen": [
+                        "Objects already processed in the current run."
+                    ],
+                    "Validated": [
+                        "Objects successfully validated in the current run."
+                    ]
+                }
+            }
+        },
         "sdv.doc.waterloo.docitem_helper.ResolveObjectError": {
             "signature": {
                 "text": "ResolveObjectError.__init__(self, ref: 'str', current_obj: 'object', candidates: 'Sequence[str] | None' = None, last_candidate: 'str | None' = None, last_error: 'Exception | None' = None, msg: 'str | None' = None) -> 'None'",
@@ -3547,79 +3605,6 @@
                     ],
                     "details": [
                         "Optional diagnostic details to attach to the tracer error."
-                    ]
-                },
-                "Returns": [
-                    "Never returns."
-                ],
-                "Raises": {
-                    "ParseError": [
-                        "Always raised."
-                    ]
-                }
-            }
-        },
-        "sdv.doc.waterloo.docitem_helper.raise_parsing_error_invalid_label": {
-            "signature": {
-                "text": "raise_parsing_error_invalid_label(tr: 'tracer', rule_id: 'RuleId', found: 'str', allowed: 'Iterable[str]') -> 'NoReturn'",
-                "parameters": [
-                    {
-                        "name": "tr",
-                        "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "tracer",
-                        "default": null
-                    },
-                    {
-                        "name": "rule_id",
-                        "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "RuleId",
-                        "default": null
-                    },
-                    {
-                        "name": "found",
-                        "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "str",
-                        "default": null
-                    },
-                    {
-                        "name": "allowed",
-                        "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "Iterable[str]",
-                        "default": null
-                    }
-                ],
-                "returns": "NoReturn"
-            },
-            "doc": {
-                "Preamble": {
-                    "profile": "function",
-                    "normative_sections": [
-                        "Contract",
-                        "Parameters",
-                        "Returns",
-                        "Raises"
-                    ],
-                    "scope": [
-                        "public"
-                    ]
-                },
-                "Contract": {
-                    "general": [
-                        "MUST raise a parsing error that reports an invalid label and the allowed labels."
-                    ]
-                },
-                "Parameters": {
-                    "tr": [
-                        "The tracer that should receive the error."
-                    ],
-                    "rule_id": [
-                        "The rule identifier to report."
-                    ],
-                    "found": [
-                        "The invalid label that was found."
-                    ],
-                    "allowed": [
-                        "The allowed label values."
                     ]
                 },
                 "Returns": [
@@ -3937,6 +3922,157 @@
                 }
             }
         },
+        "sdv.doc.waterloo.docitem_diagnostics.render_found_label": {
+            "signature": {
+                "text": "render_found_label(section_label: 'str | None', label: 'str') -> 'list[str]'",
+                "parameters": [
+                    {
+                        "name": "section_label",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str | None",
+                        "default": null
+                    },
+                    {
+                        "name": "label",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    }
+                ],
+                "returns": "list[str]"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST render a compact found snippet for a section label and an optional subsection label."
+                    ]
+                },
+                "Parameters": {
+                    "section_label": [
+                        "The outer section label to render."
+                    ],
+                    "label": [
+                        "The found subsection label to render below the section label."
+                    ]
+                },
+                "Returns": [
+                    "A compact list of lines that states the found section or subsection."
+                ],
+                "Raises": {}
+            }
+        },
+        "sdv.doc.waterloo.docitem_diagnostics": {
+            "doc": {
+                "Preamble": {
+                    "profile": "module",
+                    "normative_sections": [
+                        "Contract",
+                        "Public_functions"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST provide functions for rendering Waterloo diagnostics snippets and hints."
+                    ]
+                },
+                "Public_functions": [
+                    "explain_try_self_for_section",
+                    "explain_try_self_for_subsection",
+                    "render_source_snippet",
+                    "render_expected_snippet",
+                    "render_found_label",
+                    "render_allowed_identifier",
+                    "render_expected_identifier",
+                    "render_suggestion",
+                    "render_allowed_identifiers",
+                    "render_identifier_lines",
+                    "render_deduplicated_identifiers",
+                    "render_unique_identifiers",
+                    "render_normative_section_details",
+                    "render_missing_entry_details",
+                    "render_overview_requires_section_details",
+                    "render_name_object_consistency_details",
+                    "render_listed_object_missing_details",
+                    "render_profile_mismatch_details",
+                    "render_normativity_keyword_details",
+                    "render_exception_reference_details",
+                    "render_base_method_reference_details",
+                    "render_exactly_one_identifier_details",
+                    "render_parameter_signature_details",
+                    "render_see_also_reference_details",
+                    "render_scope_relation_details",
+                    "render_base_method_docstring_details",
+                    "render_definition_reference_details",
+                    "render_inherited_definition_details",
+                    "render_type_reference_details",
+                    "render_constant_reference_details",
+                    "render_named_value_reference_details",
+                    "render_overview_missing_member_details"
+                ]
+            }
+        },
+        "sdv.doc.waterloo.docitem_diagnostics.render_suggestion": {
+            "signature": {
+                "text": "render_suggestion(label: 'str | None', suggestion: 'str') -> 'list[str]'",
+                "parameters": [
+                    {
+                        "name": "label",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str | None",
+                        "default": null
+                    },
+                    {
+                        "name": "suggestion",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    }
+                ],
+                "returns": "list[str]"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST render a suggestion snippet for a section or subsection in order to fix the docstring.",
+                        "MUST add angle brackets around the suggestion to indicate that it is a placeholder for the actual content."
+                    ],
+                    "requires": [
+                        "The suggestion SHOULD be a brief and concise plain single line text."
+                    ]
+                },
+                "Parameters": {
+                    "label": [
+                        "The section or subsection label (as qualified name) to render.",
+                        "An empty label means the suggestion is not bound to a specific section or subsection."
+                    ],
+                    "suggestion": [
+                        "A brief suggestion of what the section or subsection could be or contain."
+                    ]
+                },
+                "Returns": [
+                    "A compact list of lines that states the suggested section or subsection in one line."
+                ],
+                "Raises": {}
+            }
+        },
         "sdv.doc.waterloo.docitem_tokenizer.get_num_indent": {
             "signature": {
                 "text": "get_num_indent(tr: 'tracer', line: 'str', indent_scheme: 'int') -> 'int'",
@@ -4014,7 +4150,7 @@
                 "Raises": {
                     "RuntimeError": [
                         "MUST raise if prefix contains a mix not representable as |var|`n` repetitions of |var|`INDENT_UNIT`.",
-                        "MUST raise if the white space characters (greedy match of tab or space) at the beginning of the line cannot be described by the indentation scheme passed."
+                        "MUST raise if the leading white space characters (tabs or four spaces) at the beginning of the line cannot be described by the indentation scheme passed."
                     ]
                 }
             }
@@ -4113,6 +4249,75 @@
                         "MUST raise if indentation grows by more than 1 unit from one line to the next.",
                         "MUST raise if inconsistent indentation (tab vs space) is detected.",
                         "MAY propagate exceptions from |func|`get_num_indent`."
+                    ]
+                }
+            }
+        },
+        "sdv.doc.waterloo.docitem_tokenizer.expect_text": {
+            "signature": {
+                "text": "expect_text(tr: 'tracer', subtree: 'DocstringSubtree', pos: 'int') -> 'Tuple[str, int]'",
+                "parameters": [
+                    {
+                        "name": "tr",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "tracer",
+                        "default": null
+                    },
+                    {
+                        "name": "subtree",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "DocstringSubtree",
+                        "default": null
+                    },
+                    {
+                        "name": "pos",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "int",
+                        "default": null
+                    }
+                ],
+                "returns": "Tuple[str, int]"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST accept a docstring subtree and a position |var|`pos` in the subtree.",
+                        "MUST check that the subtree has a string at position |var|`pos`."
+                    ]
+                },
+                "Parameters": {
+                    "tr": [
+                        "Tracer for providing context and collecting warnings"
+                    ],
+                    "subtree": [
+                        "The docstring subtree to be examined"
+                    ],
+                    "pos": [
+                        "The position in the subtree to start examining"
+                    ]
+                },
+                "Returns": [
+                    "A tuple containing the string at the current position and the next position"
+                ],
+                "Raises": {
+                    "ParseError": [
+                        "MUST raise if the subtree does not have a string at position |var|`pos`."
+                    ]
+                },
+                "Notes": {
+                    "Call sites": [
+                        "This function is invoked by the subsection parsers for subsections",
+                        "|label|`Contract.general`, |label|`Contract.requires`, |label|`Contract.ensures`,",
+                        "|label|`Contract.invariants`, and |label|`Contract.constructor`."
                     ]
                 }
             }
@@ -4486,55 +4691,6 @@
                 ]
             }
         },
-        "sdv.doc.waterloo.docitem_diagnostics": {
-            "doc": {
-                "Preamble": {
-                    "profile": "module",
-                    "normative_sections": [
-                        "Contract",
-                        "Public_functions"
-                    ]
-                },
-                "Contract": {
-                    "general": [
-                        "MUST provide functions for rendering Waterloo diagnostics snippets and hints."
-                    ]
-                },
-                "Public_functions": [
-                    "explain_try_self_for_section",
-                    "explain_try_self_for_subsection",
-                    "render_source_snippet",
-                    "render_expected_snippet",
-                    "render_allowed_identifier",
-                    "render_expected_identifier",
-                    "render_suggestion",
-                    "render_allowed_identifiers",
-                    "render_identifier_lines",
-                    "render_deduplicated_identifiers",
-                    "render_unique_identifiers",
-                    "render_normative_section_details",
-                    "render_missing_entry_details",
-                    "render_overview_requires_section_details",
-                    "render_name_object_consistency_details",
-                    "render_listed_object_missing_details",
-                    "render_profile_mismatch_details",
-                    "render_normativity_keyword_details",
-                    "render_exception_reference_details",
-                    "render_base_method_reference_details",
-                    "render_exactly_one_identifier_details",
-                    "render_parameter_signature_details",
-                    "render_see_also_reference_details",
-                    "render_scope_relation_details",
-                    "render_base_method_docstring_details",
-                    "render_definition_reference_details",
-                    "render_inherited_definition_details",
-                    "render_type_reference_details",
-                    "render_constant_reference_details",
-                    "render_named_value_reference_details",
-                    "render_overview_missing_member_details"
-                ]
-            }
-        },
         "sdv.doc.waterloo.docitem_diagnostics.render_allowed_identifier": {
             "signature": {
                 "text": "render_allowed_identifier(label: 'str', identifiers: 'Iterable[str]') -> 'list[str]'",
@@ -4566,7 +4722,7 @@
                 },
                 "Contract": {
                     "general": [
-                        "MUST render a compact snippet for a subsection that expects exactly one identifier."
+                        "MUST render a compact snippet for a subsection that expects one identifier."
                     ]
                 },
                 "Parameters": {
@@ -4748,59 +4904,6 @@
                 },
                 "Returns": [
                     "A details dictionary with |attr|`found`, |attr|`expected`, and |attr|`hint`."
-                ],
-                "Raises": {}
-            }
-        },
-        "sdv.doc.waterloo.docitem_diagnostics.render_suggestion": {
-            "signature": {
-                "text": "render_suggestion(label: 'str', suggestion: 'str') -> 'list[str]'",
-                "parameters": [
-                    {
-                        "name": "label",
-                        "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "str",
-                        "default": null
-                    },
-                    {
-                        "name": "suggestion",
-                        "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "str",
-                        "default": null
-                    }
-                ],
-                "returns": "list[str]"
-            },
-            "doc": {
-                "Preamble": {
-                    "profile": "function",
-                    "normative_sections": [
-                        "Contract",
-                        "Parameters",
-                        "Returns",
-                        "Raises"
-                    ]
-                },
-                "Contract": {
-                    "general": [
-                        "MUST render a suggestion snippet either without or for a section or subsection in order to fix the docstring.",
-                        "MUST add angle brackets around the suggestion to indicate that it is a placeholder for the actual content."
-                    ],
-                    "requires": [
-                        "The suggestion SHOULD be a brief and concise plain single line text."
-                    ]
-                },
-                "Parameters": {
-                    "label": [
-                        "The section or subsection label (as qualified name) to render.",
-                        "An empty label means the suggestion is not bound to a specific section or subsection."
-                    ],
-                    "suggestion": [
-                        "A brief suggestion of what the section or subsection could be or contain."
-                    ]
-                },
-                "Returns": [
-                    "A compact list of lines that states the suggested section or subsection in one line."
                 ],
                 "Raises": {}
             }
@@ -7517,6 +7620,54 @@
                 }
             }
         },
+        "sdv.doc.waterloo.docitem_diagnostics.render_allowed_labels": {
+            "signature": {
+                "text": "render_allowed_labels(section_label: 'str | None', allowed: 'Iterable[str]') -> 'list[str]'",
+                "parameters": [
+                    {
+                        "name": "section_label",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str | None",
+                        "default": null
+                    },
+                    {
+                        "name": "allowed",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "Iterable[str]",
+                        "default": null
+                    }
+                ],
+                "returns": "list[str]"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST render a compact snippet for a section that expects one of a fixed set of labels."
+                    ]
+                },
+                "Parameters": {
+                    "section_label": [
+                        "The section label to render."
+                    ],
+                    "allowed": [
+                        "The allowed labels."
+                    ]
+                },
+                "Returns": [
+                    "A compact list of lines that states the allowed labels in one line."
+                ],
+                "Raises": {}
+            }
+        },
         "sdv.doc.waterloo.docitem_preamble.docitem_profile": {
             "signature": {
                 "text": "docitem_profile.__init__(self) -> 'None'",
@@ -7935,6 +8086,103 @@
                         "MUST raise if a subsection is not one of the allowed ones: {profile,normative_sections}."
                     ]
                 }
+            }
+        },
+        "sdv.doc.waterloo.docitem_diagnostics.render_source_snippet": {
+            "signature": {
+                "text": "render_source_snippet(section_label: 'str | None', subsections: 'Iterable[str] | None' = None) -> 'list[str]'",
+                "parameters": [
+                    {
+                        "name": "section_label",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str | None",
+                        "default": null
+                    },
+                    {
+                        "name": "subsections",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "Iterable[str] | None",
+                        "default": "None"
+                    }
+                ],
+                "returns": "list[str]"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST render a compact section snippet with canonical subsection ordering."
+                    ]
+                },
+                "Parameters": {
+                    "section_label": [
+                        "The section label to render."
+                    ],
+                    "subsections": [
+                        "The subsection labels to render under the section label. If omitted, the canonical order for the",
+                        "section is used when available."
+                    ]
+                },
+                "Returns": [
+                    "A compact list of lines that renders the section label followed by subsection placeholders."
+                ],
+                "Raises": {}
+            }
+        },
+        "sdv.doc.waterloo.docitem_diagnostics.render_expected_snippet": {
+            "signature": {
+                "text": "render_expected_snippet(section_label: 'str | None', subsections: 'Iterable[str] | None' = None) -> 'list[str]'",
+                "parameters": [
+                    {
+                        "name": "section_label",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str | None",
+                        "default": null
+                    },
+                    {
+                        "name": "subsections",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "Iterable[str] | None",
+                        "default": "None"
+                    }
+                ],
+                "returns": "list[str]"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST render the canonical expected snippet for a section."
+                    ]
+                },
+                "Parameters": {
+                    "section_label": [
+                        "The section label to render."
+                    ],
+                    "subsections": [
+                        "The subsection labels to render under the section label."
+                    ]
+                },
+                "Returns": [
+                    "The canonical expected section snippet as a list of lines."
+                ],
+                "Raises": {}
             }
         },
         "sdv.doc.waterloo.docitem_contract.docitem_constructor": {
@@ -9876,54 +10124,6 @@
                 "Raises": {}
             }
         },
-        "sdv.doc.waterloo.docitem_diagnostics.render_expected_snippet": {
-            "signature": {
-                "text": "render_expected_snippet(section_label: 'str', subsections: 'Iterable[str] | None' = None) -> 'list[str]'",
-                "parameters": [
-                    {
-                        "name": "section_label",
-                        "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "str",
-                        "default": null
-                    },
-                    {
-                        "name": "subsections",
-                        "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "Iterable[str] | None",
-                        "default": "None"
-                    }
-                ],
-                "returns": "list[str]"
-            },
-            "doc": {
-                "Preamble": {
-                    "profile": "function",
-                    "normative_sections": [
-                        "Contract",
-                        "Parameters",
-                        "Returns",
-                        "Raises"
-                    ]
-                },
-                "Contract": {
-                    "general": [
-                        "MUST render the canonical expected snippet for a section."
-                    ]
-                },
-                "Parameters": {
-                    "section_label": [
-                        "The section label to render."
-                    ],
-                    "subsections": [
-                        "The subsection labels to render under the section label."
-                    ]
-                },
-                "Returns": [
-                    "The canonical expected section snippet as a list of lines."
-                ],
-                "Raises": {}
-            }
-        },
         "sdv.doc.waterloo.docitem_diagnostics.render_inherited_definition_details": {
             "signature": {
                 "text": "render_inherited_definition_details(current_inherited_terms: 'Iterable[str]', profile: 'str', *, expected_text: 'str', use_section_hint: 'bool' = False) -> 'dict[str, Any]'",
@@ -10752,55 +10952,6 @@
                 },
                 "Returns": [
                     "A details dictionary with |attr|`found`, |attr|`expected`, and |attr|`hint`."
-                ],
-                "Raises": {}
-            }
-        },
-        "sdv.doc.waterloo.docitem_diagnostics.render_source_snippet": {
-            "signature": {
-                "text": "render_source_snippet(section_label: 'str', subsections: 'Iterable[str] | None' = None) -> 'list[str]'",
-                "parameters": [
-                    {
-                        "name": "section_label",
-                        "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "str",
-                        "default": null
-                    },
-                    {
-                        "name": "subsections",
-                        "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "Iterable[str] | None",
-                        "default": "None"
-                    }
-                ],
-                "returns": "list[str]"
-            },
-            "doc": {
-                "Preamble": {
-                    "profile": "function",
-                    "normative_sections": [
-                        "Contract",
-                        "Parameters",
-                        "Returns",
-                        "Raises"
-                    ]
-                },
-                "Contract": {
-                    "general": [
-                        "MUST render a compact section snippet with canonical subsection ordering."
-                    ]
-                },
-                "Parameters": {
-                    "section_label": [
-                        "The section label to render."
-                    ],
-                    "subsections": [
-                        "The subsection labels to render under the section label. If omitted, the canonical order for the",
-                        "section is used when available."
-                    ]
-                },
-                "Returns": [
-                    "A compact list of lines that renders the section label followed by subsection placeholders."
                 ],
                 "Raises": {}
             }
@@ -14053,6 +14204,14 @@
             "doc_lines": [
                 "Regular expression for matching Waterloo angle bracket wtrl references. Undocumented: RE_WTRL_ANGLE_WTRL_REF_COMPILED, the precompiled version for performance.",
                 "References consist of two parts: clear text and <link>, optionally separated by whitespace."
+            ],
+            "annotation": "Final[str]",
+            "doc_lines_kind": "constant"
+        },
+        "sdv.doc.waterloo.docitem_helper.RE_WTRL_JSON_SCHEMA_NAME": {
+            "doc": {},
+            "doc_lines": [
+                "Regular expression for matching Waterloo JSON Schema filenames. Undocumented: RE_WTRL_JSON_SCHEMA_NAME_COMPILED, the precompiled version for performance."
             ],
             "annotation": "Final[str]",
             "doc_lines_kind": "constant"

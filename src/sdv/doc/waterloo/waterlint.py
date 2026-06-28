@@ -66,7 +66,8 @@ try:
 except Exception:
 	_HAS_PYGMENTS = False
 
-__version__ = "0.19.1"
+__version__ = "0.19.2"
+# - 0.19.2 [2026-06-28] Refactoring for detailed parsing and validation messages complete
 # - 0.19.1 [2026-06-26] Add docstrings for version-commands; added wtrl_mcp-Version to version-json output.
 # - 0.19.0 [2026-06-25] Subcommand 'extract' now with syntaax highlighting in terminal output; option --syntax-hl-style to select a Pygments style.
 # - 0.18.0 [2026-06-25] Subcommand 'render-json': Validation and propagation of errors as standardized warning;
@@ -665,7 +666,7 @@ def _render_terminal_highlighted_text(text: str, style_name: str | None, force_a
 		for _, token_type, value in lexer.highlight_docstring(0, text):
 			yield token_type, value
 
-	return pygments_format(token_stream(), formatter)
+	return cast(str,pygments_format(token_stream(), formatter))
 
 #===== Validate ===============================================#
 
@@ -1888,7 +1889,7 @@ def _iter_schema_dirs() -> List[Path]:
 		pass
 	return schema_dirs
 
-def _schema_inventory(args: argparse.Namespace) -> List[tuple[Path, list[str]]]:
+def _schema_inventory() -> List[tuple[Path, list[str]]]:
 	"""Return schema directories together with semantically sorted Waterloo JSON Schema filenames."""
 	schema_infos: list[tuple[Path, list[str]]] = []
 	seen: set[Path] = set()
@@ -1906,7 +1907,7 @@ def _schema_inventory(args: argparse.Namespace) -> List[tuple[Path, list[str]]]:
 
 def _list_schemas_command(args: argparse.Namespace) -> int:
 	"""List available Waterloo JSON Schemas."""
-	for sdir, files in _schema_inventory(args):
+	for sdir, files in _schema_inventory():
 		print(f"Schemas in {sdir}:")
 		if not sdir.exists():
 			print("  (directory not found)")
@@ -1979,7 +1980,7 @@ def version_json_command(args: argparse.Namespace) -> int:
 	WTRL_EXPLAIN_SUBSECTION_JSON_SCHEMA_VERSION="TBD"
 	WTRL_MCP_VERSION = sdv.doc.waterloo.mcp.__version__
 
-	for _, files in _schema_inventory(args):
+	for _, files in _schema_inventory():
 		for f in files:
 			if f.startswith("wtrl-mcp-about-json-") and f.endswith(".schema.json"):
 				WTRL_MCP_ABOUT_JSON_SCHEMA_VERSION = f[len("wtrl-mcp-about-json-"):-len(".schema.json")]

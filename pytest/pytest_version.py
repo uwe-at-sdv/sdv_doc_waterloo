@@ -21,10 +21,34 @@ def test_version_json_reports_all_schema_categories() -> None:
 	assert res.returncode == 0, res.stderr
 	doc = json.loads(res.stdout)
 	assert isinstance(doc, dict)
-	assert isinstance(doc.get("waterlint"), str)
-	assert isinstance(doc.get("wtrl-json"), str)
-	assert isinstance(doc.get("wtrl-tracer-json"), str)
-	assert isinstance(doc.get("wtrl-example-refs-json"), str)
+	assert set(doc) == {
+		"waterlint",
+		"wtrl-json",
+		"wtrl-tracer-json",
+		"wtrl-example-refs-json",
+		"wtrl-explain-section-json",
+		"wtrl-explain-subsection-json",
+		"wtrl-walk-json",
+		"wtrl-mcp-about-json",
+		"wtrl-mcp-about-topic-json",
+		"wtrl_mcp",
+	}
+	assert doc["waterlint"] == {"kind": "executable", "version": doc["waterlint"]["version"]}
+	assert doc["wtrl_mcp"] == {"kind": "module", "version": doc["wtrl_mcp"]["version"]}
+	for key in (
+		"wtrl-json",
+		"wtrl-tracer-json",
+		"wtrl-example-refs-json",
+		"wtrl-explain-section-json",
+		"wtrl-explain-subsection-json",
+		"wtrl-walk-json",
+		"wtrl-mcp-about-json",
+		"wtrl-mcp-about-topic-json",
+	):
+		value = doc[key]
+		assert isinstance(value, dict)
+		assert value.get("kind") == "schema"
+		assert isinstance(value.get("version"), str)
 
 
 def test_list_schemas_lists_all_schema_categories() -> None:
@@ -46,6 +70,6 @@ def test_list_schemas_includes_versions_reported_by_version_json() -> None:
 	txt = ls.stdout
 
 	for category in ("wtrl-json", "wtrl-tracer-json", "wtrl-example-refs-json"):
-		version = ver_doc[category]
+		version = ver_doc[category]["version"]
 		needle = f"{category}-{version}.schema.json"
 		assert needle in txt, f"missing schema file {needle!r} in list-schemas output"

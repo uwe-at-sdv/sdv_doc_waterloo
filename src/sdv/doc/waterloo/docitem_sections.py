@@ -4,6 +4,12 @@ from typing import Any, Callable, Dict, Final, get_type_hints, get_origin, get_a
 
 from sdv.doc.waterloo.docitem_tokenizer import *
 from sdv.doc.waterloo.docitem_base import *
+from sdv.doc.waterloo.docitem_diagnostics import (
+	explain_try_self_for_section,
+	explain_try_self_for_subsection,
+	render_found_label,
+	render_suggestion,
+)
 
 #===== begin section Derived_from =============================#
 
@@ -33,6 +39,8 @@ Method_overview:
 	def __init__(self) -> None:
 		super().__init__()
 	def label(self) -> str:
+		return "Derived_from"
+	def diagnostics_label(self) -> str:
 		return "Derived_from"
 	def parse(self,tr : tracer,bases : DocstringSubtree) -> None:
 		"""
@@ -82,6 +90,8 @@ Method_overview:
 		super().__init__()
 	def label(self) -> str:
 		return "See_also"
+	def diagnostics_label(self) -> str:
+		return "See_also"
 	def parse(self, tr: tracer, refs: DocstringSubtree) -> None:
 		"""
 Preamble:
@@ -127,6 +137,8 @@ class docitem_public_classes(docitem_list_of_symbols_base):
 	def __init__(self) -> None:
 		super().__init__()
 	def label(self) -> str:
+		return "Public_classes"
+	def diagnostics_label(self) -> str:
 		return "Public_classes"
 	def parse(self, tr: tracer, refs: DocstringSubtree) -> None:
 		"""
@@ -178,6 +190,8 @@ Method_overview:
 		super().__init__()
 	def label(self) -> str:
 		return "Public_methods"
+	def diagnostics_label(self) -> str:
+		return "Public_methods"
 	def parse(self, tr: tracer, refs: DocstringSubtree) -> None:
 		"""
 		Preamble:
@@ -227,6 +241,8 @@ Method_overview:
 	def __init__(self) -> None:
 		super().__init__()
 	def label(self) -> str:
+		return "Public_functions"
+	def diagnostics_label(self) -> str:
 		return "Public_functions"
 	def parse(self, tr: tracer, refs: DocstringSubtree) -> None:
 		"""
@@ -335,7 +351,12 @@ Raises:
 			with rule_on_fail(tr, "FAC-005"):
 				label,pos = expect_label_qualified_identifier(tr,functions,pos)
 				if label in seen:
-					raise_parsing_error(tr,"FAC-008",f"Duplicate entry '{label}'.")
+					details: Details = {
+						"found": render_found_label("Factory", label),
+						"expected": render_suggestion("Factory", "a unique entry"),
+						"hint": explain_try_self_for_section("Factory", "class"),
+					}
+					raise_parsing_error(tr,"FAC-008",f"Duplicate entry '{label}'.", details)
 				seen.add(label)
 			items,pos = expect_list(tr,functions,pos)
 			with rule_on_fail(tr, "FAC-007"):
@@ -1272,7 +1293,12 @@ Raises:
 			if label == "_inherit":
 				if found_inherited:
 # "_inherit" only once.
-					raise raise_parsing_error(tr,"PRSR-008","Duplicate subsection '_inherit'.")
+					details: Details = {
+						"found": render_found_label("Definitions", "_inherit"),
+						"expected": render_suggestion("Definitions", "one _inherit subsection only"),
+						"hint": explain_try_self_for_subsection("Definitions._inherit", "class"),
+					}
+					raise raise_parsing_error(tr,"PRSR-008","Duplicate subsection '_inherit'.", details)
 				items,pos = expect_list(tr,entries,pos)
 				with traced_section(tr, "_inherit"):
 					self._inherited_defitems.parse(tr,items)
@@ -1468,7 +1494,12 @@ Raises:
 			with rule_on_fail(tr, "PRSR-006"):
 				label,pos = expect_label(tr,entries,pos)
 			if label == "":
-				raise_parsing_error(tr,"NOTE-006","Label must not be empty.")
+				details: Details = {
+					"found": render_suggestion(None, "empty label"),
+					"expected": render_suggestion(None, "a non-empty label"),
+					"hint": ["Use a non-empty label."],
+				}
+				raise_parsing_error(tr,"NOTE-006","Label must not be empty.", details)
 			items,pos = expect_list(tr,entries,pos)
 			with rule_on_fail(tr, "NOTE-007"):
 				self.add_child(tr,label, docitem_notes_entry, items)

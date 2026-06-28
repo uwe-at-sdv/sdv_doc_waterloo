@@ -5,8 +5,14 @@ from typing import Any, Callable, Dict, Final, get_type_hints, get_origin, get_a
 from sdv.doc.waterloo.docitem_tokenizer import *
 from sdv.doc.waterloo.docitem_base import *
 from sdv.doc.waterloo.docitem_diagnostics import (
+	render_allowed_identifier,
+	render_allowed_labels,
+	render_source_snippet,
+	render_expected_snippet,
+	render_found_label,
 	render_identifier_lines,
 	render_suggestion,
+	explain_try_self_for_section,
 	explain_try_self_for_subsection,
 )
 
@@ -477,7 +483,12 @@ Raises:
 				items,pos = expect_list(tr,subtree,pos)
 				self.add_child(tr,label, dispatch_map[lb], items)
 			else:
-				raise_parsing_error_invalid_label(tr,"CON-028",lb,dispatch_map)
+				details: Details = {
+					"found": render_found_label("Contract", lb),
+					"expected": render_allowed_labels("Contract", dispatch_map),
+					"hint": explain_try_self_for_section("Contract", "PROFILE"),
+				}
+				raise_parsing_error(tr,"CON-028",lb,details)
 	def __str__(self) -> str:
 		return self.label() + " {" + ", ".join([key + str(value) for key,value in self._items.items()]) + "}"
 
@@ -543,7 +554,12 @@ Raises:
 				items,pos = expect_list(tr,subtree,pos)
 				self.add_child(tr,label, dispatch_map[lb], items)
 			else:
-				raise_parsing_error_invalid_label(tr,"CON-032",lb,dispatch_map)
+				details: Details = {
+					"found": render_found_label("Contract", lb),
+					"expected": render_allowed_labels("Contract", dispatch_map),
+					"hint": explain_try_self_for_section("Contract", "class"),
+				}
+				raise_parsing_error(tr,"CON-032",lb,details)
 	def __str__(self) -> str:
 		return self.label() + " {" + ", ".join([key + str(value) for key,value in self._items.items()]) + "}"
 
@@ -610,7 +626,12 @@ Raises:
 				items,pos = expect_list(tr,subtree,pos)
 				self.add_child(tr,label, dispatch_map[lb], items)
 			else:
-				raise_parsing_error_invalid_label(tr,"CON-027",lb,dispatch_map)
+				details: Details = {
+					"found":["Contract","\t" + lb],
+					"expected":render_allowed_labels("Contract",dispatch_map),
+					"hint": explain_try_self_for_section("Contract", "method/function"),
+				}
+				raise_parsing_error(tr,"CON-027",lb,details)
 	def __str__(self) -> str:
 		return self.label() + " {" + ", ".join([key + str(value) for key,value in self._items.items()]) + "}"
 
@@ -676,7 +697,12 @@ Raises:
 					items,pos = expect_list(tr,subtree,pos)
 					self.add_child(tr,label, dispatch_map[lb], items)
 				else:
-					raise_parsing_error_invalid_label(tr,"CON-035",lb,dispatch_map)
+					details: Details = {
+						"found": render_found_label("Contract", lb),
+						"expected": render_allowed_labels("Contract", dispatch_map),
+						"hint": explain_try_self_for_section("Contract", "inherited_method"),
+					}
+					raise_parsing_error(tr,"CON-035",lb,details)
 	def __str__(self) -> str:
 		return self.label() + " {" + ", ".join([key + str(value) for key,value in self._items.items()]) + "}"
 

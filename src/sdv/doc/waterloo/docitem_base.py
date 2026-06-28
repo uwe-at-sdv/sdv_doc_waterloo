@@ -23,6 +23,8 @@ from enum import IntEnum
 from sdv.doc.waterloo.docitem_helper import *
 from sdv.doc.waterloo.docitem_diagnostics import (
 	render_identifier_lines,
+	render_expected_identifier,
+	render_found_label,
 	render_suggestion,
 	render_deduplicated_identifiers,
 	explain_try_self_for_subsection,
@@ -85,6 +87,8 @@ Method_overview:
 		self._parent: docitem_base | None = None
 	def label(self) -> str:
 		return "<Unspecified>"
+	def diagnostics_label(self) -> str:
+		return self.label()
 	def set_parent(self,p: docitem_base) -> None:
 		self._parent = p
 	def parent(self) -> docitem_base | None:
@@ -276,7 +280,12 @@ Method_overview:
 # This is the parent label. We need to know.
 		with traced_section(tr, label):
 			if label in self._items:
-				raise_parsing_error(tr,"PRSR-002",f"Label '{label}' appears more than once.")
+				details: Details = {
+					"found": render_found_label(None, label),
+					"expected": render_suggestion(None, "a unique label"),
+					"hint": ["Duplicate labels are not allowed here."],
+				}
+				raise_parsing_error(tr,"PRSR-002",f"Label '{label}' appears more than once.", details)
 # This is the only point where we create a node and add it as a child.
 # All node classes which may have node-like children must be derived
 # from this class. UPDATE: there's another location in add_child_multilabel.
@@ -297,7 +306,12 @@ Method_overview:
 			child.parse(tr,items)
 			for label in labels:
 				if label in self._items:
-					raise_parsing_error(tr,"PRSR-002",f"Label '{label}' appears more than once.")
+					details: Details = {
+						"found": render_found_label(None, label),
+						"expected": render_suggestion(None, "a unique label"),
+						"hint": ["Duplicate labels are not allowed here."],
+					}
+					raise_parsing_error(tr,"PRSR-002",f"Label '{label}' appears more than once.", details)
 				self._items[label] = child
 
 	def items(self) -> Dict[str,docitem_base]:
@@ -433,14 +447,21 @@ class docitem_list_of_symbols_base(docitem_list_base):
 		for idx, ref in enumerate(refs):
 # Only strings are allowed (not list of something)
 			if not isinstance(ref,str):
-				raise_parsing_error_expected_but_got(tr,"LQID-001",'str', f'{ref}')
+				context_label = self.diagnostics_label()
+				details = {
+					"found": render_identifier_lines(context_label, refs_split + [repr(ref)]),
+					"expected": render_expected_identifier(context_label, "identifier"),
+					"hint": explain_try_self_for_subsection(context_label, "PROFILE"),
+				}
+				raise_parsing_error(tr,"LQID-001",f"expected string item, got {type(ref).__name__}",details)
 # Wraps are tolerated: commas at the end of a physical line continue the logical CSV list.
 			part = ref.strip()
 			if idx < len(refs) - 1 and not part.endswith(","):
+				context_label = self.diagnostics_label()
 				details = {
-					"found": render_identifier_lines("Contract.traits", refs_split + [part]),
-					"expected": render_suggestion("Contract.traits", "add a trailing comma to the wrapped line."),
-					"hint": explain_try_self_for_subsection("Contract.traits", "class"),
+					"found": render_identifier_lines(context_label, refs_split + [part]),
+					"expected": render_suggestion(context_label, "add a trailing comma to the wrapped line."),
+					"hint": explain_try_self_for_subsection(context_label, "PROFILE"),
 				}
 				raise_parsing_error(tr,"LQID-006","A non-final CSV line must end with a comma when the list is wrapped across multiple physical lines.",details)
 			if pending:
@@ -454,28 +475,39 @@ class docitem_list_of_symbols_base(docitem_list_base):
 		if pending:
 			logical_refs.append(pending)
 		for ref in logical_refs:
-# We allow a comma separated string of qualified identifiers.
-# Strip due to rule LQID-003
-				segments = map(str.strip,ref.split(","))
-				what = "unspecified"
-				if pattern == self.ValuePattern.QUALIFIED_IDENTIFIER:
-					re_compiled = RE_QUALIFIED_IDENTIFIER_COMPILED
-					what = "qualified identifier"
-				elif pattern == self.ValuePattern.IDENTIFIER:
-					re_compiled = RE_IDENTIFIER_COMPILED
-					what = "identifier"
-				for seg in segments:
-					if seg in seen:
-						details = {
-							"found": render_identifier_lines("Contract.traits", refs_split + [seg]),
-							"expected": render_deduplicated_identifiers("Contract.traits", refs_split + [seg]),
-							"hint": explain_try_self_for_subsection("Contract.traits", "class"),
-						}
-						raise_parsing_error(tr, "LQID-004", f"duplicate identifier '{seg}' occurs more than once.", details)
-					if not re_compiled.fullmatch(seg):
-						raise_parsing_error_expected_but_got(tr,"LQID-002",what,f'{seg}')
-					refs_split.append(seg)
-					seen.add(seg)
+			# We allow a comma separated string of qualified identifiers.
+			# Strip due to rule LQID-003
+			segments = map(str.strip, ref.split(","))
+			what = "unspecified"
+			if pattern == self.ValuePattern.QUALIFIED_IDENTIFIER:
+				re_compiled = RE_QUALIFIED_IDENTIFIER_COMPILED
+				what = "qualified identifier"
+			elif pattern == self.ValuePattern.IDENTIFIER:
+				re_compiled = RE_IDENTIFIER_COMPILED
+				what = "identifier"
+			for seg in segments:
+				if seg in seen:
+					context_label = self.diagnostics_label()
+					details = {
+						"found": render_identifier_lines(context_label, refs_split + [seg]),
+						"expected": render_deduplicated_identifiers(context_label, refs_split + [seg]),
+						"hint": explain_try_self_for_subsection(context_label, "PROFILE"),
+					}
+					raise_parsing_error(tr, "LQID-004", f"duplicate identifier '{seg}' occurs more than once.", details)
+				if not re_compiled.fullmatch(seg):
+					context_label = self.diagnostics_label()
+					if pattern == self.ValuePattern.QUALIFIED_IDENTIFIER:
+						expected = render_expected_identifier(context_label, "qualified identifier")
+					else:
+						expected = render_expected_identifier(context_label, "identifier")
+					details = {
+						"found": render_identifier_lines(context_label, refs_split + [seg]),
+						"expected": expected,
+						"hint": explain_try_self_for_subsection(context_label, "PROFILE"),
+					}
+					raise_parsing_error(tr, "LQID-002", f"expected {what}", details)
+				refs_split.append(seg)
+				seen.add(seg)
 # We have a flat list, rule LQID-005.
 		self.set_items(refs_split)
 	def __str__(self) -> str:
@@ -526,7 +558,13 @@ Raises:
 		"""
 # Expect list of strings
 		if not is_list_of_str(lines):
-			raise_parsing_error_expected_but_got(tr,tr.get_rule_on_fail(),"list of strings",f"{lines}")
+			context_label = self.diagnostics_label()
+			details: Details = {
+				"found": render_found_label(context_label, f"{lines!r}"),
+				"expected": render_suggestion(context_label, "a list of strings"),
+				"hint": explain_try_self_for_subsection(context_label, "PROFILE"),
+			}
+			raise_parsing_error(tr,tr.get_rule_on_fail(),"expected list of strings",details)
 # No restrictions. The content is a list of free-form text lines.
 		self.set_items(lines)
 	def __str__(self) -> str:

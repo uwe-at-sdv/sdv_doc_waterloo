@@ -12,6 +12,7 @@ Public_functions:
 	explain_try_self_for_subsection,
 	render_source_snippet,
 	render_expected_snippet,
+	render_found_label,
 	render_allowed_identifier,
 	render_expected_identifier,
 	render_suggestion,
@@ -102,7 +103,7 @@ def explain_try_self_for_subsection(label: str, profile: str) -> str:
 
 #----- source and expected snippet renderers -----------------#
 
-def render_source_snippet(section_label: str, subsections: Iterable[str] | None = None) -> list[str]:
+def render_source_snippet(section_label: str | None, subsections: Iterable[str] | None = None) -> list[str]:
 	"""
 	Preamble:
 		profile:
@@ -122,7 +123,7 @@ def render_source_snippet(section_label: str, subsections: Iterable[str] | None 
 		A compact list of lines that renders the section label followed by subsection placeholders.
 	Raises:
 	"""
-	canonical = CANONICAL_ORDER_OF_SECTIONS.get(section_label)
+	canonical = CANONICAL_ORDER_OF_SECTIONS.get(section_label) if section_label is not None else None
 	if subsections is None:
 		ordered = list(canonical) if canonical is not None else []
 	else:
@@ -130,14 +131,18 @@ def render_source_snippet(section_label: str, subsections: Iterable[str] | None 
 		if canonical is not None:
 			order = {name: index for index, name in enumerate(canonical)}
 			ordered.sort(key=lambda name: order.get(name, len(order)))
-	lines = [f"{section_label}:"]
+	lines = [f"{section_label}:"] if section_label is not None else []
 	for subsection in ordered:
-		lines.append(f"\t{subsection}:")
-		lines.append("\t\t...")
+		if section_label is not None:
+			lines.append(f"\t{subsection}:")
+			lines.append("\t\t...")
+		else:
+			lines.append(f"{subsection}:")
+			lines.append("\t...")
 	return lines
 
 
-def render_expected_snippet(section_label: str, subsections: Iterable[str] | None = None) -> list[str]:
+def render_expected_snippet(section_label: str | None, subsections: Iterable[str] | None = None) -> list[str]:
 	"""
 	Preamble:
 		profile:
@@ -159,6 +164,55 @@ def render_expected_snippet(section_label: str, subsections: Iterable[str] | Non
 	return render_source_snippet(section_label, subsections)
 
 
+def _render_section_block(section_label: str | None, subsection_label: str | None, body_lines: Iterable[str]) -> list[str]:
+	if section_label is not None:
+		lines = [f"{section_label}:"]
+		indent0 = "\t"
+	else:
+		lines = []
+		indent0 = ""
+	if subsection_label is not None:
+		lines.append(f"\t{subsection_label}:")
+		indent = indent0 + "\t"
+	else:
+		indent = indent0 + ""
+	lines.extend(f"{indent}{line}" for line in body_lines)
+	return lines
+
+
+def _split_qualified_label(label: str) -> tuple[str | None, str | None]:
+	if not label:
+		return None, None
+	if "." in label:
+		section_label, subsection_label = label.split(".", 1)
+		return section_label, subsection_label
+	return label, None
+
+
+def render_found_label(section_label: str | None, label: str) -> list[str]:
+	"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+	Contract:
+		general:
+			|Must| render a compact found snippet for a section label and an optional subsection label.
+	Parameters:
+		section_label:
+			The outer section label to render.
+		label:
+			The found subsection label to render below the section label.
+	Returns:
+		A compact list of lines that states the found section or subsection.
+	Raises:
+	"""
+	if not section_label:
+		return [label]
+	return _render_section_block(section_label, None, [label])
+
+
 def render_allowed_identifier(label: str, identifiers: Iterable[str]) -> list[str]:
 	"""
 	Preamble:
@@ -168,7 +222,7 @@ def render_allowed_identifier(label: str, identifiers: Iterable[str]) -> list[st
 			Contract, Parameters, Returns, Raises
 	Contract:
 		general:
-			|Must| render a compact snippet for a subsection that expects exactly one identifier.
+			|Must| render a compact snippet for a subsection that expects one identifier.
 	Parameters:
 		label:
 			The subsection label to render.
@@ -178,20 +232,11 @@ def render_allowed_identifier(label: str, identifiers: Iterable[str]) -> list[st
 		A compact list of lines that states the allowed identifier values in one line.
 	Raises:
 	"""
-	if "." in label:
-		section_label, subsection_label = label.split(".", 1)
-	else:
-		section_label, subsection_label = label, None
+	section_label, subsection_label = _split_qualified_label(label)
 	items = list(dict.fromkeys(identifiers))
 	if not items:
 		items = ["..."]
-	lines = [f"{section_label}:"]
-	if subsection_label is not None:
-		lines.append(f"\t{subsection_label}:")
-		lines.append(f"\t\t<one of: {{ {', '.join(items)} }}>")
-	else:
-		lines.append(f"\t<one of: {{ {', '.join(items)} }}>")
-	return lines
+	return _render_section_block(section_label, subsection_label, [f"<one of: {{ {', '.join(items)} }}>"])
 
 
 def render_expected_identifier(label: str, expected_kind: Literal["identifier", "qualified identifier"]) -> list[str]:
@@ -213,19 +258,10 @@ def render_expected_identifier(label: str, expected_kind: Literal["identifier", 
 		A compact list of lines that states the expected syntax in the Waterloo snippet format.
 	Raises:
 	"""
-	if "." in label:
-		section_label, subsection_label = label.split(".", 1)
-	else:
-		section_label, subsection_label = label, None
-	lines = [f"{section_label}:"]
-	if subsection_label is not None:
-		lines.append(f"\t{subsection_label}:")
-		lines.append(f"\t\t<{expected_kind}>")
-	else:
-		lines.append(f"\t<{expected_kind}>")
-	return lines
+	section_label, subsection_label = _split_qualified_label(label)
+	return _render_section_block(section_label, subsection_label, [f"<{expected_kind}>"])
 
-def render_suggestion(label: str, suggestion: str) -> list[str]:
+def render_suggestion(label: str | None, suggestion: str) -> list[str]:
 	"""
 	Preamble:
 		profile:
@@ -234,7 +270,7 @@ def render_suggestion(label: str, suggestion: str) -> list[str]:
 			Contract, Parameters, Returns, Raises
 	Contract:
 		general:
-			|Must| render a suggestion snippet either without or for a section or subsection in order to fix the docstring.
+			|Must| render a suggestion snippet for a section or subsection in order to fix the docstring.
 			|Must| add angle brackets around the suggestion to indicate that it is a placeholder for the actual content.
 		requires:
 			The suggestion |should| be a brief and concise plain single line text.
@@ -248,21 +284,10 @@ def render_suggestion(label: str, suggestion: str) -> list[str]:
 		A compact list of lines that states the suggested section or subsection in one line.
 	Raises:
 	"""
-	if "." in label:
-		section_label, subsection_label = label.split(".", 1)
-	else:
-		section_label, subsection_label = label, None
-	lines = []
-	if subsection_label:
-		lines.append(f"{section_label}:")
-		lines.append(f"\t{subsection_label}:")
-		lines.append(f"\t\t<{suggestion}>")
-	elif section_label:
-		lines.append(f"{section_label}:")
-		lines.append(f"\t<{suggestion}>")
-	else:
-		lines.append(f"<{suggestion}>")
-	return lines
+	if not label:
+		return [f"<{suggestion}>"]
+	section_label, subsection_label = _split_qualified_label(label)
+	return _render_section_block(section_label, subsection_label, [f"<{suggestion}>"])
 
 def render_allowed_identifiers(label: str, identifiers: Iterable[str]) -> list[str]:
 	"""
@@ -283,20 +308,36 @@ def render_allowed_identifiers(label: str, identifiers: Iterable[str]) -> list[s
 		A compact list of lines that states the allowed identifier values in one line.
 	Raises:
 	"""
-	if "." in label:
-		section_label, subsection_label = label.split(".", 1)
-	else:
-		section_label, subsection_label = label, None
+	section_label, subsection_label = _split_qualified_label(label)
 	items = list(dict.fromkeys(identifiers))
 	if not items:
 		items = ["..."]
-	lines = [f"{section_label}:"]
-	if subsection_label is not None:
-		lines.append(f"\t{subsection_label}:")
-		lines.append(f"\t\t<some of: {{ {', '.join(items)} }}>")
-	else:
-		lines.append(f"\t<some of: {{ {', '.join(items)} }}>")
-	return lines
+	return _render_section_block(section_label, subsection_label, [f"<some of: {{ {', '.join(items)} }}>"])
+
+def render_allowed_labels(section_label: str | None, allowed: Iterable[str]) -> list[str]:
+	"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+	Contract:
+		general:
+			|Must| render a compact snippet for a section that expects one of a fixed set of labels.
+	Parameters:
+		section_label:
+			The section label to render.
+		allowed:
+			The allowed labels.
+	Returns:
+		A compact list of lines that states the allowed labels in one line.
+	Raises:
+	"""
+	items = list(dict.fromkeys(allowed))
+	if not items:
+		items = ["..."]
+	allowed_text = '", "'.join(items)
+	return _render_section_block(section_label, None, [f"<some of: {{ {allowed_text} }}>"])
 
 
 def render_identifier_lines(label: str, identifiers: Iterable[str]) -> list[str]:
@@ -318,20 +359,11 @@ def render_identifier_lines(label: str, identifiers: Iterable[str]) -> list[str]
 		A compact list of lines that states the identifier values in one line without semantic normalization.
 	Raises:
 	"""
-	if "." in label:
-		section_label, subsection_label = label.split(".", 1)
-	else:
-		section_label, subsection_label = label, None
+	section_label, subsection_label = _split_qualified_label(label)
 	items = list(identifiers)
 	if not items:
 		items = ["..."]
-	lines = [f"{section_label}:"]
-	if subsection_label is not None:
-		lines.append(f"\t{subsection_label}:")
-		lines.append(f"\t\t{', '.join(items)}")
-	else:
-		lines.append(f"\t{', '.join(items)}")
-	return lines
+	return _render_section_block(section_label, subsection_label, [", ".join(items)])
 
 
 def render_deduplicated_identifiers(label: str, identifiers: Iterable[str]) -> list[str]:
@@ -353,10 +385,7 @@ def render_deduplicated_identifiers(label: str, identifiers: Iterable[str]) -> l
 		A compact list of lines that states the deduplicated identifier values in one line.
 	Raises:
 	"""
-	if "." in label:
-		section_label, subsection_label = label.split(".", 1)
-	else:
-		section_label, subsection_label = label, None
+	section_label, subsection_label = _split_qualified_label(label)
 	items = list(dict.fromkeys(identifiers))
 	if not items:
 		items = ["..."]
@@ -389,10 +418,7 @@ def render_unique_identifiers(label: str, identifiers: Iterable[str]) -> list[st
 	Raises:
 	"""
 	lines = render_deduplicated_identifiers(label, identifiers)
-	if "." in label:
-		section_label, subsection_label = label.split(".", 1)
-	else:
-		section_label, subsection_label = label, None
+	section_label, subsection_label = _split_qualified_label(label)
 	if subsection_label is not None:
 		lines.append("\t\t(each identifier may occur at most once)")
 	else:

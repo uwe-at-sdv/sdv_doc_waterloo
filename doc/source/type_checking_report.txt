@@ -1,4 +1,1 @@
-package_main/src/sdv/doc/waterloo/waterlint.py:662: error: Returning Any from function declared to return "str"  [no-any-return]
-package_main/src/sdv/doc/waterloo/waterlint.py:1307: error: Name "Documentable" is not defined  [name-defined]
-package_main/src/sdv/doc/waterloo/waterlint.py:1317: error: Name "Documentable" is not defined  [name-defined]
-Found 3 errors in 1 file (checked 34 source files)
+Success: no issues found in 34 source files

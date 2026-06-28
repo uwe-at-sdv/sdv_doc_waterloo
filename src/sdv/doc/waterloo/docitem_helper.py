@@ -15,7 +15,7 @@ Public_functions:
 	is_obj_documentable, get_obj_direct_module, get_obj_name, get_obj_fully_qualified_name,
 	get_obj_path, build_anchor, get_func_obj_from_callable, get_obj_docstring, get_obj_annotations,
 	get_obj_decorators, gen_documentable_objects, traced_section, rule_on_fail, raise_has_no_docstring,
-	raise_parsing_error, raise_parsing_error_expected_but_got, raise_parsing_error_invalid_label,
+	raise_parsing_error, raise_parsing_error_expected_but_got,
 	raise_validation_error, raise_validation_error_expected_but_got, warn_parsing, warn_validation
 Public_types:
 	Profile:
@@ -2555,40 +2555,6 @@ def raise_parsing_error_expected_but_got(tr : tracer, rule_id: RuleId, expected 
 	# Don't add quoted to {expected} because it may contain non-literals in practice.
 	out = f"expected {expected}, but got '{got}'"
 	tr.add_error(rule_id, "parsing", out, details)
-	raise ParseError(out)
-
-def raise_parsing_error_invalid_label(tr : tracer, rule_id: RuleId,found : str,allowed : Iterable[str]) -> NoReturn:
-	"""
-	Preamble:
-		profile:
-			function
-		normative_sections:
-			Contract, Parameters, Returns, Raises
-		scope:
-			public
-	Contract:
-		general:
-			|Must| raise a parsing error that reports an invalid label and the allowed labels.
-	Parameters:
-		tr:
-			The tracer that should receive the error.
-		rule_id:
-			The rule identifier to report.
-		found:
-			The invalid label that was found.
-		allowed:
-			The allowed label values.
-	Returns:
-		Never returns.
-	Raises:
-		ParseError:
-			Always raised.
-	"""
-	details : str = ""
-	if found[-1] != ":":
-		details = " (the colon seems to be missing)"
-	out = f"'{found}' is not a valid label, allowed: {{{', '.join(allowed)}}}{details}"
-	tr.add_error(rule_id, "parsing", out)
 	raise ParseError(out)
 
 def raise_validation_error(tr : tracer,obj: object, rule_id: RuleId, msg : str, details: Details | None = None) -> NoReturn:

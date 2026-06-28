@@ -4,6 +4,7 @@ from typing import Any, Callable, Dict, Final, get_type_hints, get_origin, get_a
 
 from sdv.doc.waterloo.docitem_tokenizer import *
 from sdv.doc.waterloo.docitem_base import *
+from sdv.doc.waterloo.docitem_diagnostics import explain_try_self_for_section, explain_try_self_for_subsection, render_allowed_labels, render_found_label, render_identifier_lines, render_suggestion
 
 #===== begin section Preamble =================================#
 
@@ -35,6 +36,8 @@ Method_overview:
 		super().__init__()
 	def label(self) -> str:
 		return "profile"
+	def diagnostics_label(self) -> str:
+		return "Preamble.profile"
 	def parse(self,tr : tracer,refs : DocstringSubtree) -> None:
 		"""
 Preamble:
@@ -60,10 +63,20 @@ Raises:
 		"""
 # Validate
 		if not is_list_of_str(refs):
-			raise_parsing_error_expected_but_got(tr,"PRE-014",'str','list')
+			details: Details = {
+				"found": render_found_label(None, f"{refs!r}"),
+				"expected": render_suggestion(None, "a list of strings"),
+				"hint": ["Use one string per entry."],
+			}
+			raise_parsing_error(tr,"PRE-014","expected list of strings", details)
 # Only exactly one item is allowed
 		if len(refs) != 1:
-			raise_parsing_error_expected_but_got(tr,"PRE-004",'exactly one item',f'{refs}')
+			details = {
+				"found": render_identifier_lines("Preamble.profile", refs),
+				"expected": render_suggestion("Preamble.profile", "exactly one item"),
+				"hint": explain_try_self_for_subsection("Preamble.profile", "PROFILE"),
+			}
+			raise_parsing_error(tr,"PRE-004","Section 'Preamble.profile' must have exactly one item.", details)
 # No need to set a default rule. _parse in the base class is
 # a complete implementation of rules LQID-001 to LQID-005.
 		super()._parse(tr, cast(DocstringSubtree,refs), docitem_list_of_symbols_base.ValuePattern.IDENTIFIER)
@@ -97,6 +110,8 @@ Method_overview:
 		super().__init__()
 	def label(self) -> str:
 		return "normative_sections"
+	def diagnostics_label(self) -> str:
+		return "Preamble.normative_sections"
 	def parse(self, tr: tracer, refs: DocstringSubtree) -> None:
 		"""
 Preamble:
@@ -140,6 +155,8 @@ Method_overview:
 		super().__init__()
 	def label(self) -> str:
 		return "status"
+	def diagnostics_label(self) -> str:
+		return "Preamble.status"
 	def parse(self,tr : tracer,refs : DocstringSubtree) -> None:
 		"""
 Preamble:
@@ -165,10 +182,20 @@ Raises:
 		"""
 # Validate
 		if not is_list_of_str(refs):
-			raise_parsing_error_expected_but_got(tr,"STA-002",'str','list')
+			details: Details = {
+				"found": render_found_label(None, f"{refs!r}"),
+				"expected": render_suggestion(None, "a list of strings"),
+				"hint": ["Use one string per entry."],
+			}
+			raise_parsing_error(tr,"STA-002","expected list of strings", details)
 # Only exactly one item is allowed
 		if len(refs) != 1:
-			raise_parsing_error_expected_but_got(tr,"STA-002",'exactly one item',f'{refs}')
+			details = {
+				"found": render_identifier_lines("Preamble.status", refs),
+				"expected": render_suggestion("Preamble.status", "exactly one item"),
+				"hint": explain_try_self_for_subsection("Preamble.status", "PROFILE"),
+			}
+			raise_parsing_error(tr,"STA-002","Subsection 'Preamble.status' must have exactly one item.", details)
 # No need to set a default rule. _parse in the base class is
 # a complete implementation of rules LQID-001 to LQID-005.
 		super()._parse(tr, cast(DocstringSubtree,refs), docitem_list_of_symbols_base.ValuePattern.IDENTIFIER)
@@ -203,6 +230,8 @@ Method_overview:
 		super().__init__()
 	def label(self) -> str:
 		return "scope"
+	def diagnostics_label(self) -> str:
+		return "Preamble.scope"
 	def parse(self, tr: tracer, refs: DocstringSubtree) -> None:
 		"""
 Preamble:
@@ -279,7 +308,12 @@ Raises:
 			with rule_on_fail(tr, "PRE-015"):
 				label,pos = expect_label_identifier(tr,subtree,pos)
 			if label not in dispatch_map:
-				raise_parsing_error_invalid_label(tr,"PRE-015",label,dispatch_map)
+				details: Details = {
+					"found": render_found_label("Preamble", label),
+					"expected": render_allowed_labels("Preamble", dispatch_map),
+					"hint": explain_try_self_for_section("Preamble", "PROFILE"),
+				}
+				raise_parsing_error(tr,"PRE-015",label,details)
 			items,pos = expect_list(tr,subtree,pos)
 			self.add_child(tr,label, dispatch_map[label], items)
 	def __str__(self) -> str:

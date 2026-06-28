@@ -80,7 +80,7 @@
     {
       "kind": "indentation",
       "items": [
-        "Waterloo indentation uses only TAB and SPC4.",
+        "Waterloo indentation uses only TAB and SPC4 (four spaces).",
         "Some waterlint commands name these modes tab and spc4.",
         "Follow the indentation style already used in the surrounding document.",
         "Keep indentation consistent within one docstring.",

@@ -65,7 +65,7 @@ Public_types:
 	DocstringMode_t:
 		The mode of the docstring template, either |value|`minimal` or |value|`full`.
 	DocstringIndentMode_t:
-		The indentation mode for generated docstrings, either |value|`tab` or |value|`spc4`.
+		The indentation mode for generated docstrings, either |value|`tab` or |value|`spc4` (four spaces).
 	DocstringJsonMode_t:
 		The JSON output mode for generated docstrings, either |value|`full` or |value|`doc_only`.
 """
@@ -2197,7 +2197,7 @@ def gen_docstring(
 		mode:
 			Template mode, either ``minimal`` or ``full``.
 		indent_mode:
-			Indentation mode for the returned docstring text, either ``tab`` or ``spc4``.
+			Indentation mode for the returned docstring text, either ``tab`` or ``spc4`` (four spaces).
 		json_mode:
 			JSON output mode, either ``full`` or ``doc_only``.
 	Returns:

@@ -3,6 +3,7 @@ from types import FunctionType, ModuleType
 from typing import Any, Callable, Dict, Final, get_type_hints, get_origin, get_args, Generator, Iterable, Iterator, List, NewType, NoReturn, Sequence, Set, Tuple, Type, TypeAlias, TypeGuard, Union, cast
 
 from sdv.doc.waterloo.docitem_helper import *
+from sdv.doc.waterloo.docitem_diagnostics import render_found_label, render_suggestion
 
 #===== Tokenizer ==============================================#
 
@@ -16,6 +17,13 @@ def make_got_tag(subtree : DocstringSubtree,pos : int) -> str:
 		return str(subtree[pos])
 	else:
 		return "<end-of-data>"
+
+def _indentation_details(found: str, expected: str, hint: str) -> Details:
+	return {
+		"found": [found],
+		"expected": [expected],
+		"hint": [hint],
+	}
 
 def get_num_indent(tr : tracer,line : str,indent_scheme: int) -> int:
 	"""
@@ -50,7 +58,7 @@ def get_num_indent(tr : tracer,line : str,indent_scheme: int) -> int:
 	Raises:
 		RuntimeError:
 			|Must| raise if prefix contains a mix not representable as |var|`n` repetitions of |var|`INDENT_UNIT`.
-			|Must| raise if the white space characters (greedy match of tab or space) at the beginning of the line cannot be described by the indentation scheme passed.
+			|Must| raise if the leading white space characters (tabs or four spaces) at the beginning of the line cannot be described by the indentation scheme passed.
 	"""
 	if indent_scheme == INDENT_SCHEME_TAB:
 		n_tab = 0
@@ -58,7 +66,7 @@ def get_num_indent(tr : tracer,line : str,indent_scheme: int) -> int:
 			if c == "\t":
 				n_tab += 1
 			elif c == " ":
-				raise_parsing_error(tr,"TKN-001","Inconsistent indent in docstring: space found in TAB scheme.")
+				raise_parsing_error(tr,"TKN-001","Inconsistent indent in docstring: space found in TAB scheme.", _indentation_details(repr(line), "TAB indentation only", "Use tabs consistently or switch the whole file to SPC4 (four spaces)."))
 			else:
 				break
 		return n_tab
@@ -68,14 +76,14 @@ def get_num_indent(tr : tracer,line : str,indent_scheme: int) -> int:
 			if c == " ":
 				n_spaces += 1
 			elif c == "\t":
-				raise_parsing_error(tr,"TKN-001","Inconsistent indent in docstring: tab found in SPC4 scheme.")
+				raise_parsing_error(tr,"TKN-001","Inconsistent indent in docstring: tab found in SPC4 scheme.", _indentation_details(repr(line), "SPC4 indentation only", "Use four spaces consistently or switch the whole file to TAB."))
 			else:
 				break
 		if n_spaces % 4 != 0:
-			raise_parsing_error(tr,"TKN-002","Inconsistent indent in docstring: spaces not a multiple of 4.")
+			raise_parsing_error(tr,"TKN-002","Inconsistent indent in docstring: spaces not a multiple of 4.", _indentation_details(repr(line), "indentation in multiples of 4 spaces", "Round indentation to whole four-space steps."))
 		return n_spaces // 4
 	else:
-		raise_parsing_error(tr,"TKN-003",f"Unknown indentation scheme: {indent_scheme}")
+		raise_parsing_error(tr,"TKN-003",f"Unknown indentation scheme: {indent_scheme}", _indentation_details(f"{indent_scheme!r}", "INDENT_SCHEME_TAB or INDENT_SCHEME_SPC4", "Pass a supported indentation scheme."))
 
 def parse_indent_docstring(tr : tracer,text : str, session: DocSession) -> DocstringTree:
 	r"""
@@ -143,7 +151,7 @@ def parse_indent_docstring(tr : tracer,text : str, session: DocSession) -> Docst
 # Extract indent and check for inconcistency.
 		prefix = ln[:prefix_len]
 		if " " in prefix and "\t" in prefix:
-			raise_parsing_error(tr,"TKN-001","Mixed tabs and spaces in indent.")
+			raise_parsing_error(tr,"TKN-001","Mixed tabs and spaces in indent.", _indentation_details(repr(ln), "one indentation style only", "Use tabs only or spaces only in the same docstring."))
 # Determine indentation scheme and leave loop.
 		indent_scheme = INDENT_SCHEME_TAB if "\t" in prefix else INDENT_SCHEME_SPC4
 		break
@@ -172,9 +180,9 @@ def parse_indent_docstring(tr : tracer,text : str, session: DocSession) -> Docst
 		num_indent_abs = get_num_indent(tr,line, indent_scheme)
 		num_indent = num_indent_abs - common_indent
 		if num_indent < 0:
-			raise_parsing_error(tr,"TKN-999","Indentation smaller than common indent.")
+			raise_parsing_error(tr,"TKN-999","Indentation smaller than common indent.", _indentation_details(repr(line), "indentation at least as deep as the common indent", "Remove the extra dedent or align all lines consistently."))
 		elif num_indent > cur_indent + 1:
-			raise_parsing_error(tr,"TKN-004",f"indent jump > 1, not allowed, cur_indent: {cur_indent}, num_indent: {num_indent}, line '{line}'")
+			raise_parsing_error(tr,"TKN-004",f"indent jump > 1, not allowed, cur_indent: {cur_indent}, num_indent: {num_indent}, line '{line}'", _indentation_details(repr(line), "at most one indentation step per line", "Insert intermediate structure or reduce the indent jump."))
 		elif num_indent > cur_indent:
 			subtree : DocstringTree = []
 			stack[cur_indent].append(subtree)
@@ -230,14 +238,34 @@ def expect_list(tr : tracer,subtree : DocstringSubtree,pos : int) -> Tuple[Docst
 def expect_label(tr : tracer,subtree : DocstringSubtree,pos : int) -> Tuple[str,int]:
 	cur = pos
 	if pos >= len(subtree):
-		raise_parsing_error_expected_but_got(tr,tr.get_rule_on_fail(),"label","end of data")
+		details: Details = {
+			"found": render_found_label(None, "<end-of-data>"),
+			"expected": render_suggestion(None, "a section or subsection label ending with ':'"),
+			"hint": ["Add ':' to the label."],
+		}
+		raise_parsing_error_expected_but_got(tr,tr.get_rule_on_fail(),"label","end of data", details)
 	if not isinstance(subtree[pos], str):
-		raise_parsing_error_expected_but_got(tr,tr.get_rule_on_fail(),'str', f'{make_got_tag(subtree,cur)}')
+		details = {
+			"found": render_found_label(None, make_got_tag(subtree,cur)),
+			"expected": render_suggestion(None, "a string label"),
+			"hint": ["Use a string token, not a nested list."],
+		}
+		raise_parsing_error_expected_but_got(tr,tr.get_rule_on_fail(),'str', f'{make_got_tag(subtree,cur)}', details)
 	if subtree[pos] == "":
-		raise_parsing_error(tr,"PRSR-002",f"empty label, not clear how this can happen at all.")
+		details = {
+			"found": render_found_label(None, '""'),
+			"expected": render_suggestion(None, "a non-empty label ending with ':'"),
+			"hint": ["Use a non-empty label."],
+		}
+		raise_parsing_error(tr,"PRSR-002",f"empty label, not clear how this can happen at all.", details)
 # Important! Easy to forget...
 	if subtree[pos][-1] != ":":
-		raise_parsing_error(tr,"PRSR-003",f"missing colon after {make_got_tag(subtree,cur)}.")
+		details = {
+			"found": render_found_label(None, make_got_tag(subtree,cur)),
+			"expected": render_suggestion(None, "a section or subsection label ending with ':'"),
+			"hint": ["Append ':' to the label."],
+		}
+		raise_parsing_error(tr,"PRSR-003",f"missing colon in section or subsection label: expected a label ending with ':', but found '{make_got_tag(subtree,cur)}'.", details)
 	s = subtree[pos][:-1]
 	pos += 1
 	assert isinstance(s,str)
@@ -247,29 +275,82 @@ def expect_label_identifier(tr : tracer,subtree : DocstringSubtree,pos : int) ->
 	cur = pos
 	s,pos = expect_label(tr,subtree,pos)
 	if not RE_IDENTIFIER_COMPILED.fullmatch(s):
-		raise_parsing_error_expected_but_got(tr,tr.get_rule_on_fail(),'identifier', f'{make_got_tag(subtree,cur)}')
+		details = {
+			"found": render_found_label(None, make_got_tag(subtree,cur)),
+			"expected": render_suggestion(None, "an identifier"),
+			"hint": ["Use a plain identifier."],
+		}
+		raise_parsing_error_expected_but_got(tr,tr.get_rule_on_fail(),'identifier', f'{make_got_tag(subtree,cur)}', details)
 	return s,pos
 
 def expect_label_qualified_identifier(tr : tracer,subtree : DocstringSubtree,pos : int) -> Tuple[str,int]:
 	cur = pos
 	s,pos = expect_label(tr,subtree,pos)
 	if not RE_QUALIFIED_IDENTIFIER_COMPILED.fullmatch(s):
-		raise_parsing_error_expected_but_got(tr,tr.get_rule_on_fail(),'qualified identifier', f'{make_got_tag(subtree,cur)}')
+		details = {
+			"found": render_found_label(None, make_got_tag(subtree,cur)),
+			"expected": render_suggestion(None, "a qualified identifier"),
+			"hint": ["Use a dot-separated name."],
+		}
+		raise_parsing_error_expected_but_got(tr,tr.get_rule_on_fail(),'qualified identifier', f'{make_got_tag(subtree,cur)}', details)
 	return s,pos
 
 def expect_label_csv_identifiers(tr : tracer,subtree : DocstringSubtree,pos : int) -> Tuple[str,int]:
 	cur = pos
 	s,pos = expect_label(tr,subtree,pos)
 	if not RE_CSV_IDENTIFIERS_COMPILED.fullmatch(s):
-		raise_parsing_error_expected_but_got(tr,tr.get_rule_on_fail(),'comma-separated list of identifiers', f'{make_got_tag(subtree,cur)}')
+		details = {
+			"found": render_found_label(None, make_got_tag(subtree,cur)),
+			"expected": render_suggestion(None, "a comma-separated list of identifiers"),
+			"hint": ["Separate items with commas."],
+		}
+		raise_parsing_error_expected_but_got(tr,tr.get_rule_on_fail(),'comma-separated list of identifiers', f'{make_got_tag(subtree,cur)}', details)
 	return s,pos
 
 def expect_text(tr : tracer,subtree : DocstringSubtree,pos : int) -> Tuple[str,int]:
+	r"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+	Contract:
+		general:
+			|Must| accept a docstring subtree and a position |var|`pos` in the subtree.
+			|Must| check that the subtree has a string at position |var|`pos`.
+	Parameters:
+		tr:
+			Tracer for providing context and collecting warnings
+		subtree:
+			The docstring subtree to be examined
+		pos:
+			The position in the subtree to start examining
+	Returns:
+		A tuple containing the string at the current position and the next position
+	Raises:
+		ParseError:
+			|Must| raise if the subtree does not have a string at position |var|`pos`.
+	Notes:
+		Call sites:
+			This function is invoked by the subsection parsers for subsections
+			|label|`Contract.general`, |label|`Contract.requires`, |label|`Contract.ensures`,
+			|label|`Contract.invariants`, and |label|`Contract.constructor`.
+	"""
 	cur = pos
 	if pos >= len(subtree):
-		raise_parsing_error(tr,"PRSR-004","missing block after label")
+		details: Details = {
+			"found": render_found_label(None, "<end-of-data>"),
+			"expected": render_suggestion(None, "a text block after the label"),
+			"hint": ["Add an indented block after the label."],
+		}
+		raise_parsing_error(tr,"PRSR-004","missing block after label", details)
 	if not isinstance(subtree[pos],str):
-		raise_parsing_error_expected_but_got(tr,tr.get_rule_on_fail(),'str', f'{make_got_tag(subtree,cur)}')
+		details = {
+			"found": render_found_label(None, make_got_tag(subtree,cur)),
+			"expected": render_suggestion(None, "a text line"),
+			"hint": ["Use a plain string line, not a nested list."],
+		}
+		raise_parsing_error_expected_but_got(tr,tr.get_rule_on_fail(),'str', f'{make_got_tag(subtree,cur)}', details)
 	s = subtree[pos]
 	pos += 1
 	assert isinstance(s,str)
@@ -277,30 +358,30 @@ def expect_text(tr : tracer,subtree : DocstringSubtree,pos : int) -> Tuple[str,i
 
 def get_tree_of_section(tr : tracer,tree : DocstringTree,sec : str) -> DocstringSubtree:
 	"""
-Preamble:
-	profile:
-		function
-	normative_sections:
-		Contract, Parameters, Returns, Raises
-Contract:
-	general:
-		|Must| iterate over the given docitem tree and read the label (|var|`label`) and subtree pairs.
-		|Must| interpret |var|`sec` as section label (without trailing colon), try to match |var|`label` against |var|`sec` and return the subtree on success.
-Parameters:
-	tr:
-		Tracer for providing context and collecting warnings
-	tree:
-		The docitem tree to be examined
-	sec:
-		The section label to search for.
-Returns:
-	|Must| return the subtree of the found section.
-Raises:
-	SectionNotFoundError:
-		|Must| raise if the section is not found.
-	BaseException:
-		|May| propagate exceptions from |func|`expect_label`
-		|May| propagate exceptions from |func|`expect_list`
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+	Contract:
+		general:
+			|Must| iterate over the given docitem tree and read the label (|var|`label`) and subtree pairs.
+			|Must| interpret |var|`sec` as section label (without trailing colon), try to match |var|`label` against |var|`sec` and return the subtree on success.
+	Parameters:
+		tr:
+			Tracer for providing context and collecting warnings
+		tree:
+			The docitem tree to be examined
+		sec:
+			The section label to search for.
+	Returns:
+		|Must| return the subtree of the found section.
+	Raises:
+		SectionNotFoundError:
+			|Must| raise if the section is not found.
+		BaseException:
+			|May| propagate exceptions from |func|`expect_label`
+			|May| propagate exceptions from |func|`expect_list`
 	"""
 	pos = 0
 	while pos < len(tree):
@@ -312,36 +393,36 @@ Raises:
 
 def get_tree_of_subsection(tr : tracer,tree : DocstringTree,sec : str,subsec : str) -> DocstringSubtree:
 	"""
-Preamble:
-	profile:
-		function
-	normative_sections:
-		Contract, Parameters, Returns, Raises
-Contract:
-	general:
-		|Must| iterate over the given docitem tree and read the label (|var|`label`) and subtree pairs.
-		|Must| interpret |var|`sec` as section label (without trailing colon), try to match |var|`label` against |var|`sec`. On successful match:
-		|Must| iterate over the subtree and read the label (|var|`sublabel`) and subtree pairs.
-		|Must| interpret |var|`subsec` as subsection label (without trailing colon), try to match the |var|`sublabel` against |var|`subsec` and return the subtree on success.
-Parameters:
-	tr:
-		Tracer for providing context and collecting warnings
-	tree:
-		The docitem tree to be examined
-	sec:
-		The section label to search for.
-	subsec:
-		The subsection label to search for.
-Returns:
-	|Must| return the subtree of the found subsection.
-Raises:
-	SectionNotFoundError:
-		|Must| raise if the section is not found.
-	SubsectionNotFoundError:
-		|Must| raise if the subsection is not found.
-	BaseException:
-		|May| propagate exceptions from |func|`expect_label`
-		|May| propagate exceptions from |func|`expect_list`
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+	Contract:
+		general:
+			|Must| iterate over the given docitem tree and read the label (|var|`label`) and subtree pairs.
+			|Must| interpret |var|`sec` as section label (without trailing colon), try to match |var|`label` against |var|`sec`. On successful match:
+			|Must| iterate over the subtree and read the label (|var|`sublabel`) and subtree pairs.
+			|Must| interpret |var|`subsec` as subsection label (without trailing colon), try to match the |var|`sublabel` against |var|`subsec` and return the subtree on success.
+	Parameters:
+		tr:
+			Tracer for providing context and collecting warnings
+		tree:
+			The docitem tree to be examined
+		sec:
+			The section label to search for.
+		subsec:
+			The subsection label to search for.
+	Returns:
+		|Must| return the subtree of the found subsection.
+	Raises:
+		SectionNotFoundError:
+			|Must| raise if the section is not found.
+		SubsectionNotFoundError:
+			|Must| raise if the subsection is not found.
+		BaseException:
+			|May| propagate exceptions from |func|`expect_label`
+			|May| propagate exceptions from |func|`expect_list`
 	"""
 	pos = 0
 	while pos < len(tree):

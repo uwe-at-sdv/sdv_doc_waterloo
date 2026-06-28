@@ -1,13 +1,13 @@
-docitem_helper.py:112 # type: ignore[attr-defined]
-docitem_helper.py:114 # type: ignore[no-redef]
+docitem_helper.py:114 # type: ignore[attr-defined]
+docitem_helper.py:116 # type: ignore[no-redef]
 docitem_validator.py:39 # type: ignore
 docitem_validator.py:40 # pragma: no cover - older Python
 waterlint_carve.py:313 # pragma: no cover - defensive
-waterlint.py:721 # pragma: no cover - defensive
-waterlint.py:813 # pragma: no cover - defensive
-waterlint.py:918 # pragma: no cover - defensive
-waterlint.py:1038 # pragma: no cover - defensive
-waterlint.py:1042 # pragma: no cover - defensive
-waterlint.py:1046 # pragma: no cover - defensive
-waterlint.py:1658 # pragma: no cover - defensive
+waterlint.py:768 # pragma: no cover - defensive
+waterlint.py:860 # pragma: no cover - defensive
+waterlint.py:974 # pragma: no cover - defensive
+waterlint.py:1094 # pragma: no cover - defensive
+waterlint.py:1098 # pragma: no cover - defensive
+waterlint.py:1102 # pragma: no cover - defensive
+waterlint.py:1768 # pragma: no cover - defensive
 waterlint_render_docker.py:28 # pragma: no cover - Python 3.10 fallback

@@ -633,7 +633,7 @@ Notes:
 				"expected": render_expected_snippet("Preamble", expected_items),
 				"hint": explain_try_self_for_section("Preamble", profile),
 			}
-			raise_validation_error(tr, obj, "PRE-016", f"Subsection 'status' is not allowed for profile 'class'.", details)
+			raise_validation_error(tr, obj, "PRE-016", f"Subsection 'status' is not allowed for profile '{profile}'.", details)
 #..... profile must exist .....................................#
 # checked by caller
 #..... normative_sections must exist ..........................#
@@ -1616,8 +1616,6 @@ See_also:
 			if not sec in top.items():
 				details = render_normative_section_details(sec, normative_sections, profile, action="remove")
 				raise_validation_error(tr,obj,"PRE-012",f"Entry '{sec}' does not refer to an existing section.", details)
-			#					if sec in seen:
-			#						raise_validation_error(tr,obj,"LQID-004","Entry '{sec}' is duplicate.")
 			seen.add(sec)
 # Handle the meta case here:
 			if "Preamble" in node_normative_sections.items():

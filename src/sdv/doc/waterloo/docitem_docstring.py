@@ -6,6 +6,7 @@ from sdv.doc.waterloo.docitem_diagnostics import (
 	explain_try_self_for_section,
 	render_allowed_identifier,
 	render_expected_identifier,
+	render_found_label,
 	render_identifier_lines,
 	render_profile_mismatch_details,
 )
@@ -242,30 +243,45 @@ Method_overview:
 				if label == "Preamble":
 					found_preamble = True
 				elif not found_preamble:
-					details: Details = {
+					preamble_details: Details = {
 						"found": render_suggestion("Preamble", "No Preamble"),
 						"expected": ["Preamble:","\tprofile:","\t\t...","\tnormative_sections:","\t\t...","\t..."],
 						"hint": explain_try_self_for_section("Preamble", "PROFILE"),
 					}
-					raise_parsing_error(tr,"PRE-001","Preamble is not first.", details)
+					raise_parsing_error(tr,"PRE-001","Preamble is not first.", preamble_details)
 				items,pos = expect_list(tr,tree,pos)
 				if label in seen:
-					raise_parsing_error(tr,"PRSR-007",f"Duplicate label '{label}'.")
+					duplicate_details: Details = {
+						"found": render_found_label("Preamble", label),
+						"expected": render_suggestion("Preamble", "a unique section label"),
+						"hint": explain_try_self_for_section("Preamble", "PROFILE"),
+					}
+					raise_parsing_error(tr,"PRSR-007",f"Duplicate label '{label}'.", duplicate_details)
 				seen.add(label)
 				self.add_child(tr,label, dmap[label], items)
 			else:
 # Choose profile-specific rule for unexpected sections.
 				if isinstance(self, docitem_docstring_module):
 					rule_ids = "DOC-003"
+					profile = "module"
 				elif isinstance(self, docitem_docstring_class):
 					rule_ids = "DOC-004"
+					profile = "class"
 				elif isinstance(self, docitem_docstring_method):
 					rule_ids = "DOC-005"
+					profile = "method"
 				elif isinstance(self, docitem_docstring_inherited_method):
 					rule_ids = "DOC-006"
+					profile = "inherited_method"
 				else:
 					rule_ids = "DOC-999"
-				raise_parsing_error_invalid_label(tr,rule_ids,label,dmap)
+					profile = "module"
+				invalid_section_details: Details = {
+					"found": render_found_label("Preamble", label),
+					"expected": render_allowed_labels("Preamble", dmap),
+					"hint": explain_try_self_for_section("Preamble", profile),
+				}
+				raise_parsing_error(tr,rule_ids,label,invalid_section_details)
 
 class docitem_docstring_module(docitem_docstring_base):
 	"""
@@ -512,7 +528,12 @@ def make_docitem_tree_from_docstring_tree(tr : tracer, tree : DocstringTree) -> 
 # Extract profile
 	details: Details
 	if tree == []:
-		raise_parsing_error(tr,"DOC-007","Empty docstring.")
+		details = {
+			"found": render_suggestion(None, "empty docstring"),
+			"expected": render_suggestion(None, "a docstring with at least a Preamble section"),
+			"hint": explain_try_self_for_section("Preamble", "PROFILE"),
+		}
+		raise_parsing_error(tr,"DOC-007","Empty docstring.", details)
 	try:
 		profile = get_profile_of_tree(tr,tree)
 	except SectionNotFoundError:
