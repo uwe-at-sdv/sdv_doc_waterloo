@@ -18,13 +18,6 @@ cd package_main
 pip install .
 ```
 
-For development, an editable install is often more convenient:
-
-```bash
-cd package_main
-pip install -e .
-```
-
 If you want to build the documentation with the Sphinx extension, install
 the optional extra that provides the external `sphinx` dependency:
 
@@ -45,14 +38,121 @@ SSH works as well for authenticated access:
 pip install "git+ssh://git@github.com/uwe-at-sdv/sdv_doc_waterloo.git@main#subdirectory=package_main"
 ```
 
+### Quick tutorials
+
+#### waterlint
+
+`waterlint` is the main command-line tool for Waterloo Docstrings.
+It validates docstrings, renders Waterloo JSON, generates helper output, and
+supports the MCP-related workflows in this project.
+
+Start with the general help:
+
+```bash
+waterlint -h
+```
+
+For topic-specific help, use for example:
+
+```bash
+waterlint help --topic validate
+waterlint help --topic render-json
+waterlint help --topic render-docker
+```
+
+One important `waterlint` output path is the MCP server setup: the tool can
+validate the server configuration and generate a Docker build script when you
+want to package the server as an image.
+
+#### Running the MCP-server
+
+The MCP server exposes Waterloo documentation data through the Model Context
+Protocol. It is tightly bound to the Waterloo JSON schema and provides tools
+that help generate and inspect Waterloo docstrings. It serves the bundled
+roots, object details, examples, references, and prompt templates so clients
+can inspect the documentation structure without parsing the JSON documents
+directly.
+
+After installation, start the server in a terminal with:
+
+```bash
+wtrl_mcp
+```
+
+This launches the MCP server with the default configuration
+``src/sdv/doc/waterloo/mcp/wtrl_mcp.toml`` for access to ``127.0.0.1`` or
+``localhost`` on port 13316.
+Consult your operating system documentation if you want to run it as a service.
+
+#### Registering the MCP-server in Codex or Claude Code
+
+Once the server is running, register it in your CLI client so it can reach the
+server without manual setup every time. The exact subcommand syntax depends on
+the CLI version, but the pattern is the same:
+
+#### codex
+
+```bash
+codex mcp add wtrl-mcp-myserver --url http://127.0.0.1:13316/mcp
+```
+
+#### claude
+
+```bash
+claude mcp add --transport http wtrl-mcp-myserver http://127.0.0.1:13316/mcp
+```
+
+If you prefer `localhost`, use that host name instead of `127.0.0.1`.
+If the agent itself runs inside a container or on another host, replace the
+address with the one that matches your deployment.
+
+#### Rendering a Docker setup from the MCP configuration
+
+If you want to ship the MCP server as a container, `waterlint` can generate a
+Docker build script from the MCP configuration. For example:
+
+```bash
+waterlint render-docker --in package_main/src/sdv/doc/waterloo/mcp/wtrl_mcp.toml --out /tmp/myserver.docker
+```
+
+The generated script contains the Docker build steps and the runtime command
+line. It also prints a few practical hints, such as which port mapping to use
+and which host names should be allowed for the resulting server. After that,
+you can build the image with the generated script and run it in Docker.
+
+
+
 ### Sitemap
 
-#### Branch gh-pages
+#### Public documentation
 
 * Human-readable documentation
-  * ``https://...``
+  * [https://uwe-at-sdv.github.io/sdv_doc_waterloo/](https://uwe-at-sdv.github.io/sdv_doc_waterloo/)
+* Example for an interactive presentation
+  * [https://uwe-at-sdv.github.io/sdv_doc_waterloo/doc-html5/docitem_helper.wtrl.core.rfc-2119.html](https://uwe-at-sdv.github.io/sdv_doc_waterloo/doc-html5/docitem_helper.wtrl.core.rfc-2119.html)
+* Example for LLM-ready documentation, best consumed either directly by a coding agent or through an MCP server
+  * [https://uwe-at-sdv.github.io/sdv_doc_waterloo/doc-json/docitem_helper.wtrl.core.rfc-2119.json](https://uwe-at-sdv.github.io/sdv_doc_waterloo/doc-json/docitem_helper.wtrl.core.rfc-2119.json)
 
-#### Branch ide-plugins
+#### Core package
+
+* JSON-Schema
+  * ``src/sdv/doc/waterloo/schema/wtrl-*-json-*.*.*.schema.json``
+* Waterloo parser and linter source code
+  * ``src/sdv/doc/waterloo``
+* Documentation source (reST)
+  * ``src/sdv/doc/waterloo/doc``
+* MCP configuration and server code
+  * ``src/sdv/doc/waterloo/mcp``
+* Pytests orchestration and sample code
+  * ``src/sdv/doc/waterloo/pytest``
+  * ``src/sdv/doc/waterloo/examples-python``
+  * ``src/sdv/doc/waterloo/examples-diagnostics-python``
+* Images for public presentation (logos)
+  * ``src/sdv/doc/waterloo/img``
+* Tools (not well-documented)
+  * ``src/sdv/doc/waterloo/tools``
+
+#### IDE extras
 
 * Additional utilities
   * Clone directly:
@@ -62,21 +162,3 @@ pip install "git+ssh://git@github.com/uwe-at-sdv/sdv_doc_waterloo.git@main#subdi
   * Extension for ``vscode``
     * Waterloo syntax highlighting
     * Context menu commands for docstring generation and validation
-
-#### Branch main
-
-* Machine-readable documentation
-  * ``src/sdv/doc/waterloo/doc-json/docitem.wtrl.*.*.json``
-  * ``src/sdv/doc/waterloo/doc-json/docitem_sphinx.wtrl.*.*.json``
-
-* JSON-Schema
-  * ``src/sdv/doc/waterloo/schema/wtrl-*-json-*.*.*.schema.json``
-
-* Public modules:
-  * ``src/sdv/doc/waterloo/docitem_helper.py``
-  * ``src/sdv/doc/waterloo/docitem_convert.py``
-  * ``src/sdv/doc/waterloo/docitem_sphinx.py``
-
-* Change logs:
-  * ``src/sdv/doc/waterloo/docitem.py`` following the definition of ``__version__``
-  * ``src/sdv/doc/waterloo/waterlint.py`` following the definition of ``__version__``

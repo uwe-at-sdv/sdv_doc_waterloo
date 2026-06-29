@@ -18,7 +18,7 @@ Current v1 focus:
 - offer Streamable HTTP for Inspector-based inspection at `/mcp`
 
 The current entry point is `wtrl_mcp`.
-The Inspector-friendly entry point is `sdv.doc.waterloo.mcp.wtrl_server:app`.
+The Inspector-friendly entry point is `sdv.doc.waterloo.mcp.wtrl_server:runner`.
 
 Typical usage:
 - use `--config` to select a TOML file explicitly

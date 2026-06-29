@@ -1,12 +1,12 @@
 {
     "$schema": "https://sci-d-vis.com/schema/wtrl-json-0.1.0.schema.json",
-    "$id": "urn:waterlint:wtrl-json:0.19.1:core:rfc-2119:1f47d262020de389782428bf92fe96ae5ea28e5632f5035f7a36157c20da7cea",
+    "$id": "urn:waterlint:wtrl-json:0.19.2:core:rfc-2119:e4f5bfc5eb7fa93632e5dfc11b75796f15ac7ea49ce1ce3b8182a188ef050c88",
     "__WTRL_VERSION__": {
-        "waterloo": "0.10.4",
+        "waterloo": "0.10.5",
         "schema": "0.1.0"
     },
     "__WTRL_META__": {
-        "generated_at": "2026-06-28T12:22:56+02:00",
+        "generated_at": "2026-06-29T10:14:59+02:00",
         "generator": "waterlint",
         "scope": "core",
         "flavour": "rfc-2119"
@@ -158,6 +158,8 @@
         "sdv.doc.waterloo.docitem_helper.raise_parsing_error_expected_but_got": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.raise_parsing_error_expected_but_got",
         "sdv.doc.waterloo.docitem_helper.raise_validation_error": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.raise_validation_error",
         "sdv.doc.waterloo.docitem_helper.raise_validation_error_expected_but_got": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.raise_validation_error_expected_but_got",
+        "sdv.doc.waterloo.docitem_helper.get_allowed_sections_for_profile": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.get_allowed_sections_for_profile",
+        "sdv.doc.waterloo.docitem_helper.raise_validation_error_invalid_normative_section": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.raise_validation_error_invalid_normative_section",
         "sdv.doc.waterloo.docitem_helper.warn_parsing": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.warn_parsing",
         "sdv.doc.waterloo.docitem_helper.warn_validation": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.warn_validation",
         "sdv.doc.waterloo.docitem_diagnostics.render_found_label": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_diagnostics.render_found_label",
@@ -1063,6 +1065,8 @@
                     "raise_parsing_error_expected_but_got",
                     "raise_validation_error",
                     "raise_validation_error_expected_but_got",
+                    "raise_validation_error_invalid_normative_section",
+                    "get_allowed_sections_for_profile",
                     "warn_parsing",
                     "warn_validation"
                 ],
@@ -3622,6 +3626,129 @@
                     "got": [
                         "The actual textual value."
                     ]
+                },
+                "Returns": [
+                    "Never returns."
+                ],
+                "Raises": {
+                    "ValidationError": [
+                        "Always raised."
+                    ]
+                }
+            }
+        },
+        "sdv.doc.waterloo.docitem_helper.get_allowed_sections_for_profile": {
+            "signature": {
+                "text": "get_allowed_sections_for_profile(profile: 'str') -> 'list[str]'",
+                "parameters": [
+                    {
+                        "name": "profile",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    }
+                ],
+                "returns": "list[str]"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST return the list of section labels that are allowed for the given profile."
+                    ]
+                },
+                "Parameters": {
+                    "profile": "The docstring profile label."
+                },
+                "Returns": [
+                    "The allowed top-level section labels for the profile."
+                ],
+                "Raises": {}
+            }
+        },
+        "sdv.doc.waterloo.docitem_helper.raise_validation_error_invalid_normative_section": {
+            "signature": {
+                "text": "raise_validation_error_invalid_normative_section(tr: 'tracer', obj: 'object', rule_id: 'RuleId | None', sec: 'str', normative_sections: 'Iterable[str]', profile: 'str') -> 'NoReturn'",
+                "parameters": [
+                    {
+                        "name": "tr",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "tracer",
+                        "default": null
+                    },
+                    {
+                        "name": "obj",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "object",
+                        "default": null
+                    },
+                    {
+                        "name": "rule_id",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "RuleId | None",
+                        "default": null
+                    },
+                    {
+                        "name": "sec",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    },
+                    {
+                        "name": "normative_sections",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "Iterable[str]",
+                        "default": null
+                    },
+                    {
+                        "name": "profile",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    }
+                ],
+                "returns": "NoReturn"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST raise a validation error for a normative section that is not allowed in the current profile."
+                    ]
+                },
+                "Parameters": {
+                    "tr": [
+                        "The tracer that should receive the error."
+                    ],
+                    "obj": [
+                        "The object whose docstring should be validated."
+                    ],
+                    "rule_id": [
+                        "An optional explicit rule identifier. If omitted, a profile-specific DOC rule is used."
+                    ],
+                    "sec": [
+                        "The section label that is not allowed for the profile."
+                    ],
+                    "normative_sections": [
+                        "The current normative section labels."
+                    ],
+                    "profile": "The docstring profile used to determine the allowed sections and hint."
                 },
                 "Returns": [
                     "Never returns."

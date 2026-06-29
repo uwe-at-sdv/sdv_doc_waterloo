@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from types import ModuleType
+from typing import Final
 
 
 def _mk_module(name: str, doc: str) -> ModuleType:
@@ -201,6 +202,25 @@ def _my_fancy_var() -> None:
 
 
 setattr(M_MPVAR_008, "my_fancy_var", _my_fancy_var)
+
+
+M_MPVAR_011 = _mk_module(
+	"M_MPVAR_011",
+	"""
+Preamble:
+	profile:
+		module
+	normative_sections:
+		Contract, Public_variables
+Contract:
+	general:
+		|Must| trigger MPVAR-005 (validate).
+Public_variables:
+	my_fancy_const:
+		Annotated Final variable
+""",
+)
+M_MPVAR_011.__annotations__ = {"my_fancy_const": Final[int]}
 
 
 M_MPCON_002 = _mk_module(

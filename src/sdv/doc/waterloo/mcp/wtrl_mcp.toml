@@ -15,7 +15,7 @@ streamable_http_path = "/mcp"
 [security]
 # allowed_hosts = ["127.0.0.1:8000"]
 # Prefer explicit host:port entries, e.g. ["127.0.0.1:13316", "localhost:13316"].
-allowed_hosts = ["127.0.0.1:13316"]
+allowed_hosts = ["127.0.0.1:13316", "localhost:13316"]
 # allowed_origins = ["http://localhost:6274"]
 # Prefer explicit origins, e.g. ["http://localhost:6274", "http://gilgamesh:6274"].
 # Wildcard support is implementation/version dependent; assume exact matches unless verified.
@@ -31,14 +31,22 @@ allowed_origins = ["http://gilgamesh:6274"]
 # allowed_origins = ["https://vscode.example.internal"]
 
 [logging]
-# level = "INFO"
+# Provide either level and access_log, or config_path.
+level = "INFO"
+access_log = true
 # config_path = "package_main/src/sdv/doc/waterloo/mcp/logging.toml"
-# access_log = true
 
 [[roots]]
 # Possible kind at current state of development: wtrl-json.
 path = "doc-json/wtrl_mcp.wtrl.core.rfc-2119.json"
-label = "Waterloo MCP Server and Tool set Reference"
+label = "Waterloo MCP Server and Toolset Reference"
+enabled = true
+kind = "wtrl-json"
+
+[[roots]]
+# Possible kind at current state of development: wtrl-json.
+path = "doc-json/docitem_helper.wtrl.core.rfc-2119.json"
+label = "Example docstrings: Module docitem_helper"
 enabled = true
 kind = "wtrl-json"
 

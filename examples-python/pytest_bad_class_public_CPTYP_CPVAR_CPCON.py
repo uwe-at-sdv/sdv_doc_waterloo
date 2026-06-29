@@ -180,6 +180,23 @@ class X_CPVAR_008:
 	"""
 	def my_fancy_var() -> None:
 		pass
+class X_CPVAR_011:
+	"""
+	Preamble:
+		profile:
+			class
+		normative_sections:
+			Contract, Public_variables
+	Contract:
+		general:
+			|Must| trigger CPVAR-005 (validate).
+		constructor:
+			default
+	Public_variables:
+		my_fancy_const:
+			Annotated Final field
+	"""
+	my_fancy_const: Final[int]
 class X_CPCON_002:
 	"""
 	Preamble:

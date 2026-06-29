@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from types import ModuleType
+from typing import Final
 
 
 def _mk_module(name: str, doc: str) -> ModuleType:

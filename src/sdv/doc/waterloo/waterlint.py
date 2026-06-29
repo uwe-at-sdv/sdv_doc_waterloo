@@ -68,7 +68,8 @@ try:
 except Exception:
 	_HAS_PYGMENTS = False
 
-__version__ = "0.19.2"
+__version__ = "0.19.3"
+# - 0.19.3 [2026-06-29]	Bugfix: CPVAR-005 and MPVAR-005 now allow annotated but uninstantiated variables, e.g. `x: int` without `x = 0`.
 # - 0.19.2 [2026-06-28] Refactoring for detailed parsing and validation messages complete
 # - 0.19.1 [2026-06-26] Add docstrings for version-commands; added wtrl_mcp-Version to version-json output.
 # - 0.19.0 [2026-06-25] Subcommand 'extract' now with syntaax highlighting in terminal output; option --syntax-hl-style to select a Pygments style.
@@ -1501,8 +1502,12 @@ def render_json_command(args: argparse.Namespace) -> int:
 							mem_entry["doc_lines_kind"] = "constant"
 #..... begin properties .......................................#
 # We're still in the nonaggregate case! Properties fall in this category.
-# Extract and check if it is a property
-						prop_obj = inspect.getattr_static(o, mem_name)
+# Extract and check if it is a property, but tolerate annotated fields/variables
+# that exist only in __annotations__ and therefore have no runtime attribute.
+						if hasattr(o, mem_name):
+							prop_obj = inspect.getattr_static(o, mem_name)
+						else:
+							prop_obj = None
 						if isinstance(prop_obj, property):
 # Extract method objects
 							objs_meth_prop: list[Tuple[Callable[...,Any],str]] = []
@@ -2219,7 +2224,7 @@ def _build_parser() -> argparse.ArgumentParser:
 #----- render-json --------------------------------------------#
 	render_json = subparsers.add_parser(
 		"render-json",
-		help="Render Waterloo JSON from source or replay walk JSON",
+		help="Render Waterloo JSON from source or replay walk JSON; often used with --ignore TOOL-009 for invalid objects.",
 		parents=[global_opts],
 		formatter_class=parser.formatter_class)
 	render_json.add_argument(
@@ -2239,7 +2244,7 @@ def _build_parser() -> argparse.ArgumentParser:
 	render_json.add_argument(
 		"--ignore",
 		metavar="RULES",
-		help="Whitespace-separated list of Rule-IDs to ignore for warnings.",
+		help="Whitespace-separated list of Rule-IDs to ignore for warnings; TOOL-009 is commonly ignored when invalid objects are expected.",
 	)
 	rg_out = render_json.add_mutually_exclusive_group()
 	rg_out.add_argument("--out", dest="out_file", metavar="FILE", help="Write JSON to FILE instead of stdout.")

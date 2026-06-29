@@ -974,6 +974,16 @@ def test_bad_class_public_cptyp_cpvar_cpcon_x_cpvar_008() -> None:
 	_assert_error(result, "CPVAR-008", "must refer to a named value")
 
 
+def test_good_class_public_cptyp_cpvar_cpcon_x_cpvar_010() -> None:
+	result = _run_waterlint_validate_with_basedir("pytest_good_class_public_CPTYP_CPVAR_CPCON.X_CPVAR_010")
+	assert result.returncode == 0, result.stderr
+
+
+def test_bad_class_public_cptyp_cpvar_cpcon_x_cpvar_011() -> None:
+	result = _run_waterlint_validate_with_basedir("pytest_bad_class_public_CPTYP_CPVAR_CPCON.X_CPVAR_011")
+	_assert_error(result, "CPVAR-005", "Final")
+
+
 def test_bad_class_public_cptyp_cpvar_cpcon_x_cpcon_002() -> None:
 	result = _run_waterlint_validate_with_basedir("pytest_bad_class_public_CPTYP_CPVAR_CPCON.X_CPCON_002")
 	_assert_error(result, "CPCON-002", "not listed as normative")
@@ -1082,6 +1092,16 @@ def test_bad_module_public_mptyp_mpvar_mpcon_m_mpvar_006() -> None:
 def test_bad_module_public_mptyp_mpvar_mpcon_m_mpvar_008() -> None:
 	result = _run_waterlint_validate_with_basedir("pytest_bad_module_public_MPTYP_MPVAR_MPCON.M_MPVAR_008")
 	_assert_error(result, "MPVAR-008", "must refer to a named value")
+
+
+def test_good_module_public_mptyp_mpvar_mpcon_m_mpvar_010() -> None:
+	result = _run_waterlint_validate_with_basedir("pytest_good_module_public_MPTYP_MPVAR_MPCON.M_MPVAR_010")
+	assert result.returncode == 0, result.stderr
+
+
+def test_bad_module_public_mptyp_mpvar_mpcon_m_mpvar_011() -> None:
+	result = _run_waterlint_validate_with_basedir("pytest_bad_module_public_MPTYP_MPVAR_MPCON.M_MPVAR_011")
+	_assert_error(result, "MPVAR-005", "Final")
 
 
 def test_bad_module_public_mptyp_mpvar_mpcon_m_mpcon_002() -> None:

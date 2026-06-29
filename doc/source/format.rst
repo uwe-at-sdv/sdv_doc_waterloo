@@ -1101,7 +1101,7 @@ a module docstring |must| have the following structure:
 		* [MPTYP-008] -- :wtrl_label:`<Type>` |must| refer to a TypeAlias or NewType.
 	- |ObsoleteRules|
 		* MPTYP-007 -- Obsolete in version 0.5.3; duplicate of MPTYP-005.
-	- |LastReview|: 2026-02-24
+	- |LastReview|: 2026-06-29
 * :wtrl_label:`Public_variables:`
 	- [MPVAR-001] -- The section |may| exist.
 	- [MPVAR-002] -- If it exists, it |must| be listed as normative in :wtrl_label:`Preamble.normative_sections`.
@@ -1109,12 +1109,12 @@ a module docstring |must| have the following structure:
 	- :wtrl_label:`<Assignable>:`
 		* [MPVAR-004] -- :wtrl_label:`<Assignable>` |must| match the pattern of an Identifier.
 		* [MPVAR-006] -- The subsection content |must| be free-form text.
-		* [MPVAR-005] -- :wtrl_label:`<Assignable>` |must| be resolvable relative to the documented module.
+		* [MPVAR-005] -- :wtrl_label:`<Assignable>` |must| be resolvable relative to the documented module, either as a runtime attribute or as an annotated variable.
 		* [MPVAR-008] -- :wtrl_label:`<Assignable>` |must| refer to a Named Value.
 		* [MPVAR-009] -- If the object referenced by :wtrl_label:`<Assignable>` is annotated, the annotation |must_not| be wtrl_type:`Final`.
 	- |ObsoleteRules|
 		* MPVAR-007 -- Obsolete in version 0.5.3; duplicate of MPVAR-005.
-	- |LastReview|: 2026-02-24
+	- |LastReview|: 2026-06-29
 * :wtrl_label:`Public_constants:`
 	- [MPCON-001] -- The section |may| exist.
 	- [MPCON-002] -- If it exists, it |must| be listed as normative in :wtrl_label:`Preamble.normative_sections`.
@@ -1127,7 +1127,7 @@ a module docstring |must| have the following structure:
 		* [MPCON-006] -- If the object referenced by :wtrl_label:`<Assignable>` is annotated, the annotation  |must| be :wtrl_type:`Final`.
 	- |ObsoleteRules|
 		* MPCON-008 -- Obsolete in version 0.5.3; duplicate of MPCON-005.
-	- |LastReview|: 2026-02-24
+	- |LastReview|: 2026-06-29
 
 Sections for class docstrings
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -1237,7 +1237,7 @@ a class docstring |must| have the following structure:
 		* [CPTYP-008] -- :wtrl_label:`<Type>` |must| refer to a TypeAlias or NewType.
 	- |ObsoleteRules|
 		* CPTYP-007 -- Obsolete in version 0.5.3; duplicate of CPTYP-005.
-	- |LastReview|: 2026-02-24
+	- |LastReview|: 2026-06-29
 * :wtrl_label:`Public_variables:`
 	- [CPVAR-001] -- The section |may| exist.
 	- [CPVAR-002] -- If it exists, it |must| be listed as normative in :wtrl_label:`Preamble.normative_sections`.
@@ -1245,12 +1245,12 @@ a class docstring |must| have the following structure:
 	- :wtrl_label:`<Assignable>:`
 		* [CPVAR-004] -- :wtrl_label:`<Assignable>` |must| match the pattern of an Identifier.
 		* [CPVAR-006] -- The subsection content |must| be free-form text.
-		* [CPVAR-005] -- :wtrl_label:`<Assignable>` |must| be resolvable relative to the documented class.
+		* [CPVAR-005] -- :wtrl_label:`<Assignable>` |must| be resolvable relative to the documented class, either as a runtime attribute or as an annotated field.
 		* [CPVAR-008] -- :wtrl_label:`<Assignable>` |must| refer to a Named Value.
 		* [CPVAR-009] -- If the object referenced by :wtrl_label:`<Assignable>` is annotated, the annotation |must_not| be wtrl_type:`Final`.
 	- |ObsoleteRules|
 		* CPVAR-007 -- Obsolete in version 0.5.3; duplicate of CPVAR-005.
-	- |LastReview|: 2026-02-24
+	- |LastReview|: 2026-06-29
 * :wtrl_label:`Public_constants:`
 	- [CPCON-001] -- The section |may| exist.
 	- [CPCON-002] -- If it exists, it |must| be listed as normative in :wtrl_label:`Preamble.normative_sections`.
@@ -1467,7 +1467,7 @@ At module level, the specification expresses the following principles:
 	* The specification requires that each type listed in :wtrl_label:`Public_types` exists in the module
 	  (MPTYP-005).
 
-	* The specification requires that each variable listed in :wtrl_label:`Public_variables` exists in the module
+	* The specification requires that each variable listed in :wtrl_label:`Public_variables` exists in the module, either as a runtime attribute or as an annotated variable
 	  (MPVAR-005).
 
 	* The specification requires that each constant listed in :wtrl_label:`Public_constants` exists in the module
@@ -1490,7 +1490,7 @@ At class level, the specification expresses the following principles:
 	* The specification requires that each method listed in section :wtrl_label:`Public_methods` exists and is a method/function
 	  (CPMT-005).
 
-	* The specification requires that each variable listed in :wtrl_label:`Public_variables` exists on the documented class
+	* The specification requires that each variable listed in :wtrl_label:`Public_variables` exists on the documented class, either as a runtime attribute or as an annotated field
 	  (CPVAR-005).
 
 	* The specification requires that each constant listed in :wtrl_label:`Public_constants` exists on the documented class

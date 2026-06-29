@@ -497,13 +497,23 @@ Notes:
 		if "Public_variables" in top.items():
 			node_pv = top._items["Public_variables"]
 			for var_name in node_pv.items():
-				if not hasattr(obj, var_name):
+				# MPVAR-005 now accepts either a runtime attribute or an annotated variable.
+				# Annotated entries that are marked Final are treated as constants instead
+				# and therefore do not count as Public_variables.
+				has_attr = hasattr(obj, var_name)
+				is_annotated = is_attr_annotated(cast(AnnotatableObject, obj), var_name)
+				is_final = is_annotated and is_attr_final(cast(ModuleType | type, obj), var_name)
+				if not has_attr and not is_annotated:
 					details = render_listed_object_missing_details("Public_variables", var_name, "<remove entry or implement matching named value>", profile)
 					raise_validation_error(tr, obj, "MPVAR-005", f"Named value '{var_name}' listed in Public_variables has no matching object.", details)
-				attr = getattr(obj, var_name)
-				if not is_obj_named_value(attr):
-					details = render_named_value_reference_details("Public_variables", var_name, "<refer to a named value, not callable/class>", "module")
-					raise_validation_error(tr, obj, "MPVAR-008", f"Entry '{var_name}' must refer to a named value, not callable/class.", details)
+				if has_attr:
+					attr = getattr(obj, var_name)
+					if not is_obj_named_value(attr):
+						details = render_named_value_reference_details("Public_variables", var_name, "<refer to a named value, not callable/class>", "module")
+						raise_validation_error(tr, obj, "MPVAR-008", f"Entry '{var_name}' must refer to a named value, not callable/class.", details)
+				elif is_final:
+					details = render_constant_reference_details("Public_variables", var_name, "<annotate as non-Final or move to Public_constants>", profile)
+					raise_validation_error(tr, obj, "MPVAR-005", f"Annotated variable '{var_name}' is Final and therefore does not belong to Public_variables.", details)
 
 #----- Public constants ---------------------------------------#
 	with traced_section(tr, "Public_constants"):
@@ -887,14 +897,25 @@ Notes:
 	with traced_section(tr, "Public_variables"):
 		if "Public_variables" in top.items():
 			node_pv = top._items["Public_variables"]
+			ann = get_obj_annotations(obj)
 			for var_name in node_pv.items():
-				if not hasattr(obj, var_name):
+				# CPVAR-005 now accepts either a runtime attribute or an annotated field.
+				# Annotated entries that are marked Final are treated as constants instead
+				# and therefore do not count as Public_variables.
+				has_attr = hasattr(obj, var_name)
+				is_annotated = is_attr_annotated(cast(AnnotatableObject, obj), var_name)
+				is_final = is_annotated and is_attr_final(cast(ModuleType | type, obj), var_name)
+				if not has_attr and not is_annotated:
 					details = render_listed_object_missing_details("Public_variables", var_name, "<remove entry or implement matching named value>", profile)
 					raise_validation_error(tr, obj, "CPVAR-005", f"Named value '{var_name}' listed in Public_variables has no matching object.", details)
-				attr = getattr(obj, var_name)
-				if not is_obj_named_value(attr):
-					details = render_name_object_consistency_details("Public_variables", node_pv.items(), profile, overview_item=var_name)
-					raise_validation_error(tr, obj, "CPVAR-008", f"Entry '{var_name}' must refer to a named value, not callable/class.", details)
+				if has_attr:
+					attr = getattr(obj, var_name)
+					if not is_obj_named_value(attr):
+						details = render_name_object_consistency_details("Public_variables", node_pv.items(), profile, overview_item=var_name)
+						raise_validation_error(tr, obj, "CPVAR-008", f"Entry '{var_name}' must refer to a named value, not callable/class.", details)
+				elif is_final:
+					details = render_constant_reference_details("Public_variables", var_name, "<annotate as non-Final or move to Public_constants>", profile)
+					raise_validation_error(tr, obj, "CPVAR-005", f"Annotated field '{var_name}' is Final and therefore does not belong to Public_variables.", details)
 
 #----- Public constants ---------------------------------------#
 	with traced_section(tr, "Public_constants"):

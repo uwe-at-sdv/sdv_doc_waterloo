@@ -2015,9 +2015,13 @@ class tracer:
 		for msg_inf in tr._infos:
 			self._infos.append(msg_inf)
 		for msg_wrn in tr._warnings:
+			if self.should_ignore_rule(msg_wrn[1]):
+				continue
 			self._warnings.append(msg_wrn)
 # Defusing: errors in tr become warnings in self.
 		for msg_err in tr._errors:
+			if self.should_ignore_rule(msg_err[1]):
+				continue
 			self._warnings.append(msg_err)
 # For humans
 	def str_by_severity(self,severity: Severity) -> str:

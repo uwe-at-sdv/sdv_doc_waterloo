@@ -199,6 +199,13 @@ A summary of these options is displayed by
 
 	:wtrl_cmd:`waterlint help` :wtrl_opt:`--topic` :wtrl_value:`render-json`
 
+.. note::
+
+   When rendering large module trees, invalid objects may be reported as
+   standardized warnings with rule :wtrl_rule:`TOOL-009`. In that case,
+   passing :wtrl_opt:`--ignore` :wtrl_value:`TOOL-009` is often useful if the
+   invalid objects are expected and should simply be skipped.
+
 .. rubric:: Example
 
 Consider the following minimal module:

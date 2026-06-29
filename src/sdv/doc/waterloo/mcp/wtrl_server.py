@@ -5,22 +5,40 @@ r"""
 		normative_sections:
 			Contract, Public_classes, Public_functions, Public_constants, Public_variables
 		scope:
-			extension
+			public
 	Contract:
 		general:
 			|Must| provide the entry point for the Waterloo MCP server.
 	Public_classes:
-		_RequestLogGroupMiddleware
+		ServerConfig, SecurityConfig, LoggingConfig, RootConfig, _RequestLogGroupMiddleware, RootMTimeRecord, ReferenceIndex, McpConfig, McpAppRunner
 	Class_overview:
+		ServerConfig:
+			Parsed configuration for the MCP transport layer.
+		SecurityConfig:
+			Parsed configuration for browser and host allowlisting.
+		LoggingConfig:
+			Parsed configuration for logging behavior.
+		RootConfig:
+			Parsed configuration for one Waterloo data root.
 		_RequestLogGroupMiddleware:
 			Internal ASGI middleware that assigns a request id and log-group key to each HTTP request so the server logs can be grouped per request.
+		RootMTimeRecord:
+			Per-run snapshot of the root identifier, canonical root path, and cached modification timestamp.
+		ReferenceIndex:
+			Per-run cache for reverse references, qid-to-root membership, and root modification timestamps.
+		McpConfig:
+			Normalized runtime configuration for the MCP server, including transport, security, logging, and configured roots.
+		McpAppRunner:
+			Public launcher object that loads the configuration and starts the MCP server; its `run` method is part of the entry-point API.
 	Public_functions:
-		read_package_readme, load_prompts, build_app, load_config, parse_roots
+		read_package_readme, load_prompts, build_reference_index, build_app, load_config, parse_roots
 	Function_overview:
 		read_package_readme:
 			Provide the content of the package README as a string for use as MCP instructions.
 		load_prompts:
 			Load the bundled MCP prompt templates from the package resources and return them as FastMCP prompt objects.
+		build_reference_index:
+			Build the reverse-reference index for all enabled roots, including qid-to-root membership and cached root mtimes.
 		build_app:
 			Build the MCP app according to the provided configuration, including loading the configured data roots and defining the MCP tools for accessing them.
 		load_config:
@@ -141,7 +159,28 @@ WTRL_TOOL_DOCS: Final[dict[str, Callable[..., object] | None]] = {
 #----- begin helper classes for toml config parsing ----------#
 @dataclass(frozen=True)
 class ServerConfig:
-	"""Parsed configuration for the MCP transport layer."""
+	r"""
+	Preamble:
+		profile:
+			class
+		normative_sections:
+			Contract, Public_variables
+	Contract:
+		general:
+			|Must| hold the parsed configuration for the MCP transport layer.
+			|Must| bundle the transport settings needed to start the server.
+		constructor:
+			|Must| be constructible from parsed transport settings.
+	Public_variables:
+		transport:
+			Stores the configured transport mode.
+		host:
+			Stores the configured host name or address.
+		port:
+			Stores the configured bind port.
+		streamable_http_path:
+			Stores the configured streamable HTTP path.
+	"""
 
 	transport: str
 	host: str
@@ -151,7 +190,24 @@ class ServerConfig:
 
 @dataclass(frozen=True)
 class SecurityConfig:
-	"""Parsed configuration for browser and host allowlisting."""
+	r"""
+	Preamble:
+		profile:
+			class
+		normative_sections:
+			Contract, Public_variables
+	Contract:
+		general:
+			|Must| hold the parsed configuration for browser and host allowlisting.
+			|Must| bundle the effective allowlist values used by the server.
+		constructor:
+			|Must| be constructible from parsed host and origin allowlists.
+	Public_variables:
+		allowed_hosts:
+			Stores the configured host allowlist.
+		allowed_origins:
+			Stores the configured origin allowlist.
+	"""
 
 	allowed_hosts: list[str]
 	allowed_origins: list[str]
@@ -159,7 +215,26 @@ class SecurityConfig:
 
 @dataclass(frozen=True)
 class LoggingConfig:
-	"""Parsed configuration for logging behavior."""
+	r"""
+	Preamble:
+		profile:
+			class
+		normative_sections:
+			Contract, Public_variables
+	Contract:
+		general:
+			|Must| hold the parsed configuration for logging behavior.
+			|Must| bundle the logging settings used by the server startup path.
+		constructor:
+			|Must| be constructible from the selected logging level, config path, and access-log toggle.
+	Public_variables:
+		level:
+			Stores the configured logging level.
+		config_path:
+			Stores the optional path to a logging config file.
+		access_log:
+			Stores the optional access-log toggle.
+	"""
 
 	level: str
 	config_path: Path | None
@@ -168,7 +243,28 @@ class LoggingConfig:
 
 @dataclass(frozen=True)
 class RootConfig:
-	"""Parsed configuration for one Waterloo data root."""
+	r"""
+	Preamble:
+		profile:
+			class
+		normative_sections:
+			Contract, Public_variables
+	Contract:
+		general:
+			|Must| hold the parsed configuration for one Waterloo data root.
+			|Must| keep the fields normalized so the server can resolve roots consistently.
+		constructor:
+			|Must| be constructible from a root path, label, enabled flag, and kind.
+	Public_variables:
+		path:
+			Stores the resolved root path as text.
+		label:
+			Stores the human-readable root label.
+		enabled:
+			Stores whether the root is active.
+		kind:
+			Stores the configured root kind.
+	"""
 
 	path: str
 	label: str
@@ -178,7 +274,26 @@ class RootConfig:
 
 @dataclass(frozen=True)
 class RootMTimeRecord:
-	"""Cached modification timestamp information for one Waterloo root."""
+	r"""
+	Preamble:
+		profile:
+			class
+		normative_sections:
+			Contract, Public_variables
+	Contract:
+		general:
+			|Must| hold the cached modification-time snapshot for one Waterloo root.
+			|Must| remember the root identifier, canonical root path, and modification timestamp.
+		constructor:
+			|Must| be easy to construct from a root id and canonical path.
+	Public_variables:
+		root_id:
+			Stores the stable root identifier.
+		root_path:
+			Stores the canonical root path as text.
+		mtime_ns:
+			Stores the modification timestamp in nanoseconds or |None| if the timestamp could not be read.
+	"""
 
 	root_id: str
 	root_path: str
@@ -187,7 +302,28 @@ class RootMTimeRecord:
 
 @dataclass(frozen=True)
 class ReferenceIndex:
-	"""Cached reverse reference map and root modification timestamps."""
+	r"""
+	Preamble:
+		profile:
+			class
+		normative_sections:
+			Contract, Public_variables
+	Contract:
+		general:
+			|Must| hold the per-run reverse-reference data used by the MCP server.
+			|Must| cache the mapping from target object to incoming reference records.
+			|Must| cache which root IDs contain each qid.
+			|Must| cache modification timestamps for roots that were inspected.
+		constructor:
+			|Must| be easy to construct from freshly built reverse-reference data.
+	Public_variables:
+		reverse_map:
+			Maps (root_id, qid) pairs to incoming reference records.
+		qids_to_roots:
+			Maps qids to the set of root IDs that contain them.
+		root_mtimes:
+			Maps root IDs to their cached modification-time records.
+	"""
 
 	reverse_map: dict[tuple[str, str], list[ReferenceRecord]]
 	qids_to_roots: dict[str, set[str]]
@@ -196,8 +332,30 @@ class ReferenceIndex:
 
 @dataclass(frozen=True)
 class McpConfig:
-	"""Parsed Waterloo MCP configuration."""
-
+	r"""
+	Preamble:
+		profile:
+			class
+		normative_sections:
+			Contract, Public_variables
+	Contract:
+		general:
+			|Must| hold the normalized runtime configuration for the MCP server.
+			|Must| bundle transport, security, logging, configured roots, and the source path of the loaded configuration.
+		constructor:
+			|Must| be constructible from the parsed configuration objects and the resolved source path.
+	Public_variables:
+		server:
+			stores the parsed transport settings.
+		security:
+			stores the parsed host and origin allowlists.
+		logging:
+			stores the parsed logging settings.
+		roots:
+			stores the normalized root entries.
+		source_path:
+			stores the resolved configuration file path.
+	"""
 	server: ServerConfig
 	security: SecurityConfig
 	logging: LoggingConfig
@@ -325,12 +483,13 @@ streamable_http_path = "/mcp"
 
 [security]
 # allowed_hosts = ["127.0.0.1:8000"]
-allowed_hosts = ["127.0.0.1:13316"]
+allowed_hosts = ["127.0.0.1:13316", "localhost:13316"]
 # Enter your allowed origins here. This is important if you want to inspect
 # the MCP server with a browser-based client like the MCP Inspector.
-# allowed_origins = ["http://myhost:6274"]
+allowed_origins = ["http://myhost:6274"]
 
 [logging]
+# Provide either level and access_log, or config_path.
 # level = "INFO"
 # access_log = true
 config_path = \"{logging_toml}\"
@@ -340,7 +499,7 @@ config_path = \"{logging_toml}\"
 # This is a default path in order to get started quickly,
 # but you can change it to point to any valid Waterloo JSON file.
 path = \"{default_root_json}\"
-label = "Waterloo MCP Server and Tool set Reference"
+label = "Waterloo MCP Server and Toolset Reference"
 enabled = true
 kind = "wtrl-json"
 
@@ -351,17 +510,16 @@ kind = "wtrl-json"
 # kind = "directory"
 """
 
-
-def _load_toml(path: Path) -> Mapping[str, object]:
+# Load a TOML file and return it as a mapping. This is used
+# for both the main config and the logging config.
+def load_toml(path: Path) -> dict[str, object]:
 	with path.open("rb") as fh:
-		return cast(Mapping[str, object], tomllib.load(fh))
-
-
-def _load_logging_config(path: Path) -> dict[str, object]:
-	"""Load a logging configuration file for uvicorn."""
+		return cast(dict[str, object], tomllib.load(fh))
+	
+# Load a logging config file for uvicorn. Currently only TOML is supported.
+def load_logging_config(path: Path) -> dict[str, object]:
 	if path.suffix.lower() == ".toml":
-		with path.open("rb") as fh:
-			return cast(dict[str, object], tomllib.load(fh))
+		return load_toml(path)
 	raise ValueError(f"Unsupported logging config format: {path}")
 
 
@@ -369,7 +527,7 @@ def _configure_waterloo_logging(config: McpConfig) -> None:
 	"""Install the configured Waterloo logging dictionary before startup messages."""
 	if config.logging.config_path is None:
 		return
-	logging.config.dictConfig(_load_logging_config(config.logging.config_path))
+	logging.config.dictConfig(load_logging_config(config.logging.config_path))
 
 
 def _runtime_allowed_hosts(
@@ -528,7 +686,30 @@ def _resolve_reference_targets(
 	return resolved
 
 
-def _build_reference_index(roots: list[RootConfig]) -> ReferenceIndex:
+def build_reference_index(roots: list[RootConfig]) -> ReferenceIndex:
+	r"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+		scope:
+			extension
+	Contract:
+		general:
+			|Must| build the reverse-reference index for all enabled roots.
+			|Must| record which qids are available in which roots.
+			|Must| record the root modification timestamps used by the MCP server.
+			|Must| sort the reverse-reference lists into a stable order.
+	Parameters:
+		roots:
+			The configured Waterloo roots to inspect.
+	Returns:
+		A populated |type|`ReferenceIndex` for the current server run.
+	Raises:
+		Exception:
+			|May| raise if a root cannot be read or parsed.
+	"""
 	reverse_map: dict[tuple[str, str], list[ReferenceRecord]] = {}
 	qids_to_roots: dict[str, set[str]] = {}
 	root_mtimes: dict[str, RootMTimeRecord] = {}
@@ -695,17 +876,17 @@ def load_config(config_path: Path | None = None) -> McpConfig:
 	if not path.exists():
 		if config_path is not None and not config_path.is_absolute():
 			raise FileNotFoundError(
-				"Waterloo MCP configuration file not found: "
-				f"{config_path} (searched {Path.cwd() / config_path} and {_package_root() / config_path})"
+				"Waterloo MCP configuration file not found:\n"
+				f"* {config_path}\nSearched:\n* {Path.cwd() / config_path}\n* {_package_root() / config_path}"
 			)
 		raise FileNotFoundError(f"Waterloo MCP configuration file not found: {path}")
-	raw = _load_toml(path)
-	if not isinstance(raw, Mapping):
+	config_map = load_toml(path)
+	if not isinstance(config_map, Mapping):
 		raise ValueError("Waterloo MCP configuration file must contain a TOML table.")
-	server_data = raw.get("server", {})
-	security_data = raw.get("security", {})
-	logging_data = raw.get("logging", {})
-	roots_data = raw.get("roots", [])
+	server_data = config_map.get("server", {})
+	security_data = config_map.get("security", {})
+	logging_data = config_map.get("logging", {})
+	roots_data = config_map.get("roots", [])
 	if not isinstance(server_data, Mapping):
 		raise ValueError("[server] must be a TOML table.")
 	if not isinstance(security_data, Mapping):
@@ -875,13 +1056,17 @@ def build_app(config: McpConfig) -> FastMCP:
 		ValueError:
 			|May| raise if the configuration is invalid in any way.
 	Notes:
-		The app currently registers the bundled prompts from `sdv.doc.waterloo.mcp.prompts`:
+		Prompt_registration:
+			The app currently registers the bundled prompts from `sdv.doc.waterloo.mcp.prompts`:
 			- `draft_docstring`
 			- `inspect_object`
 			- `inspect_root`
+		Reference_index:
+			The app also builds a `ReferenceIndex` once per run and stores it on the MCP app for fast reverse-reference lookups.
+			The reference index is the core per-run cache for reverse references, qid-to-root membership, and root mtimes.
 	"""
 	"""Build the Waterloo MCP app with the configured data roots."""
-	reference_index = _build_reference_index(config.roots)
+	reference_index = build_reference_index(config.roots)
 
 	mcp = FastMCP(
 		name="wtrl_mcp",
@@ -1190,12 +1375,12 @@ def _print_config_error(exc: Exception) -> None:
 def _run_loaded_config(config: McpConfig) -> None:
 	"""Run the server according to a loaded configuration."""
 	_configure_waterloo_logging(config)
-	logger.info("Using configuration file: %s", config.source_path.resolve())
 	mcp = build_app(config)
 	if config.server.transport == "streamable-http":
 		http_app: ASGIApp = mcp.streamable_http_app()
 		if config.security.allowed_origins:
 			http_app = _wrap_browser_cors(http_app, list(config.security.allowed_origins))
+		logger.info("Using configuration file: %s", config.source_path.resolve())
 		http_app = _RequestLogGroupMiddleware(http_app)
 		# Streamable HTTP is exposed directly here so browser clients can
 		# negotiate CORS. SSE stays out of v1.
@@ -1205,17 +1390,29 @@ def _run_loaded_config(config: McpConfig) -> None:
 			port=config.server.port,
 			log_level=config.logging.level.lower(),
 			access_log=bool(config.logging.access_log) if config.logging.access_log is not None else True,
-			log_config=_load_logging_config(config.logging.config_path) if config.logging.config_path else None,
+			log_config=load_logging_config(config.logging.config_path) if config.logging.config_path else None,
 		)
 		return
 
 	# Stdio is the default development transport.
+	logger.info("Using configuration file: %s", config.source_path.resolve())
 	mcp.run(transport="stdio")
 
 
-class _McpAppProxy:
-	"""Lazy server proxy used by the MCP CLI wrappers."""
-
+class McpAppRunner:
+	r"""
+	Preamble:
+		profile:
+			class
+		normative_sections:
+			Contract
+	Contract:
+		general:
+			|Must| provide a public launcher for the MCP app that can be used before the configuration is loaded.
+			|Must| allow the app to be built and run after the configuration is loaded.
+		constructor:
+			|Must| take an optional configuration path to use for loading the configuration.
+	"""
 	dependencies: list[str] = []
 
 	def __init__(self, config_path: Path | None = None) -> None:
@@ -1242,8 +1439,7 @@ class _McpAppProxy:
 			)
 		_run_loaded_config(config)
 
-
-app = _McpAppProxy()
+runner = McpAppRunner()
 
 
 def main(argv: list[str] | None = None) -> int:

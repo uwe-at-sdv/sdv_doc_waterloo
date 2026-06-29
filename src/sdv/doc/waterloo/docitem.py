@@ -253,7 +253,8 @@ from contextlib import contextmanager
 from sdv.doc.waterloo.docitem_docstring import *
 from sdv.doc.waterloo.docitem_validator import *
 
-__version__ = "0.10.5"
+__version__ = "0.10.6"
+# - 0.10.6 [2026-06-29]	Bugfix: CPVAR-005 and MPVAR-005 now allow annotated but uninstantiated variables, e.g. `x: int` without `x = 0`.
 # - 0.10.5 [2026-06-28] Refactoring for detailed parsing and validation messages complete
 # - 0.10.4 [2026-06-27] Removing Github workflow
 # - 0.10.3 [2026-06-27] Testing Github workflow
