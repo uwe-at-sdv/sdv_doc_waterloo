@@ -1251,7 +1251,7 @@ whether the module is applicable to a given use case.</p></li>
 </dd>
 </dl>
 </li>
-<li><p><strong>Last review</strong>: 2026-02-24</p></li>
+<li><p><strong>Last review</strong>: 2026-06-29</p></li>
 </ul>
 </dd>
 </dl>
@@ -1265,7 +1265,7 @@ whether the module is applicable to a given use case.</p></li>
 <dt><code class="wtrl_label docutils literal notranslate"><span class="pre">&lt;Assignable&gt;:</span></code></dt><dd><ul>
 <li><p>[MPVAR-004] – <code class="wtrl_label docutils literal notranslate"><span class="pre">&lt;Assignable&gt;</span></code> <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span></code> match the pattern of an Identifier.</p></li>
 <li><p>[MPVAR-006] – The subsection content <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span></code> be free-form text.</p></li>
-<li><p>[MPVAR-005] – <code class="wtrl_label docutils literal notranslate"><span class="pre">&lt;Assignable&gt;</span></code> <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span></code> be resolvable relative to the documented module.</p></li>
+<li><p>[MPVAR-005] – <code class="wtrl_label docutils literal notranslate"><span class="pre">&lt;Assignable&gt;</span></code> <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span></code> be resolvable relative to the documented module, either as a runtime attribute or as an annotated variable.</p></li>
 <li><p>[MPVAR-008] – <code class="wtrl_label docutils literal notranslate"><span class="pre">&lt;Assignable&gt;</span></code> <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span></code> refer to a Named Value.</p></li>
 <li><p>[MPVAR-009] – If the object referenced by <code class="wtrl_label docutils literal notranslate"><span class="pre">&lt;Assignable&gt;</span></code> is annotated, the annotation <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span> <span class="pre">not</span></code> be wtrl_type:<cite>Final</cite>.</p></li>
 </ul>
@@ -1279,7 +1279,7 @@ whether the module is applicable to a given use case.</p></li>
 </dd>
 </dl>
 </li>
-<li><p><strong>Last review</strong>: 2026-02-24</p></li>
+<li><p><strong>Last review</strong>: 2026-06-29</p></li>
 </ul>
 </dd>
 </dl>
@@ -1307,7 +1307,7 @@ whether the module is applicable to a given use case.</p></li>
 </dd>
 </dl>
 </li>
-<li><p><strong>Last review</strong>: 2026-02-24</p></li>
+<li><p><strong>Last review</strong>: 2026-06-29</p></li>
 </ul>
 </dd>
 </dl>
@@ -1512,7 +1512,7 @@ whether the class is applicable to a given use case.</p></li>
 </dd>
 </dl>
 </li>
-<li><p><strong>Last review</strong>: 2026-02-24</p></li>
+<li><p><strong>Last review</strong>: 2026-06-29</p></li>
 </ul>
 </dd>
 </dl>
@@ -1526,7 +1526,7 @@ whether the class is applicable to a given use case.</p></li>
 <dt><code class="wtrl_label docutils literal notranslate"><span class="pre">&lt;Assignable&gt;:</span></code></dt><dd><ul>
 <li><p>[CPVAR-004] – <code class="wtrl_label docutils literal notranslate"><span class="pre">&lt;Assignable&gt;</span></code> <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span></code> match the pattern of an Identifier.</p></li>
 <li><p>[CPVAR-006] – The subsection content <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span></code> be free-form text.</p></li>
-<li><p>[CPVAR-005] – <code class="wtrl_label docutils literal notranslate"><span class="pre">&lt;Assignable&gt;</span></code> <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span></code> be resolvable relative to the documented class.</p></li>
+<li><p>[CPVAR-005] – <code class="wtrl_label docutils literal notranslate"><span class="pre">&lt;Assignable&gt;</span></code> <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span></code> be resolvable relative to the documented class, either as a runtime attribute or as an annotated field.</p></li>
 <li><p>[CPVAR-008] – <code class="wtrl_label docutils literal notranslate"><span class="pre">&lt;Assignable&gt;</span></code> <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span></code> refer to a Named Value.</p></li>
 <li><p>[CPVAR-009] – If the object referenced by <code class="wtrl_label docutils literal notranslate"><span class="pre">&lt;Assignable&gt;</span></code> is annotated, the annotation <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span> <span class="pre">not</span></code> be wtrl_type:<cite>Final</cite>.</p></li>
 </ul>
@@ -1540,7 +1540,7 @@ whether the class is applicable to a given use case.</p></li>
 </dd>
 </dl>
 </li>
-<li><p><strong>Last review</strong>: 2026-02-24</p></li>
+<li><p><strong>Last review</strong>: 2026-06-29</p></li>
 </ul>
 </dd>
 </dl>
@@ -1886,7 +1886,7 @@ This supports incremental documentation work, experimentation, and internal docu
 (MPFN-007).</p></li>
 <li><p>The specification requires that each type listed in <code class="wtrl_label docutils literal notranslate"><span class="pre">Public_types</span></code> exists in the module
 (MPTYP-005).</p></li>
-<li><p>The specification requires that each variable listed in <code class="wtrl_label docutils literal notranslate"><span class="pre">Public_variables</span></code> exists in the module
+<li><p>The specification requires that each variable listed in <code class="wtrl_label docutils literal notranslate"><span class="pre">Public_variables</span></code> exists in the module, either as a runtime attribute or as an annotated variable
 (MPVAR-005).</p></li>
 <li><p>The specification requires that each constant listed in <code class="wtrl_label docutils literal notranslate"><span class="pre">Public_constants</span></code> exists in the module
 (MPCON-005).</p></li>
@@ -1906,7 +1906,7 @@ This supports incremental documentation work, experimentation, and internal docu
 (CPMT-006).</p></li>
 <li><p>The specification requires that each method listed in section <code class="wtrl_label docutils literal notranslate"><span class="pre">Public_methods</span></code> exists and is a method/function
 (CPMT-005).</p></li>
-<li><p>The specification requires that each variable listed in <code class="wtrl_label docutils literal notranslate"><span class="pre">Public_variables</span></code> exists on the documented class
+<li><p>The specification requires that each variable listed in <code class="wtrl_label docutils literal notranslate"><span class="pre">Public_variables</span></code> exists on the documented class, either as a runtime attribute or as an annotated field
 (CPVAR-005).</p></li>
 <li><p>The specification requires that each constant listed in <code class="wtrl_label docutils literal notranslate"><span class="pre">Public_constants</span></code> exists on the documented class
 (CPCON-005).</p></li>
