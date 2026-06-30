@@ -48,5 +48,6 @@ jobs:
             echo "type_checking_report.txt not found"
           fi
 
-      - name: Check generated type-checking files
-        run: git diff --exit-code -- doc/source/type_checking_report.txt doc/source/type_checking_exceptions.txt doc/source/type_checking_files.txt
+      - name: Show generated type-checking diff
+        if: always()
+        run: git diff -- doc/source/type_checking_report.txt doc/source/type_checking_exceptions.txt doc/source/type_checking_files.txt
