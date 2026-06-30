@@ -37,4 +37,3 @@ Thumbs.db
 *.swo
 
 do_mypy.sh
-do_mypy_simple.sh

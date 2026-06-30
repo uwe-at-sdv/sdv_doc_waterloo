@@ -2438,6 +2438,7 @@ class ResolveObjectError(RuntimeError):
 			f"\tref: {self.ref}",
 			f"\tcontext: {self.current_obj_name}",
 		]
+		is_relative_import_error = False
 		if self.last_candidate is not None:
 			found.append(f"\tlast_candidate: {self.last_candidate}")
 		if self.last_error is not None:
@@ -2445,8 +2446,21 @@ class ResolveObjectError(RuntimeError):
 			if last_error_txt.startswith("Could not resolve reference ") and "Last import failure while trying " in last_error_txt:
 				last_error_txt = last_error_txt.split("Last import failure while trying ", 1)[1]
 				last_error_txt = last_error_txt.split("': ", 1)[-1]
+			if isinstance(self.last_error, TypeError) and self.ref.startswith("."):
+				is_relative_import_error = True
 			found.append(f"\tlast_error: {last_error_txt}")
-		details: Details = {
+		if is_relative_import_error:
+			relative_details: Details = {
+				"found": found,
+				"expected": ["<use an absolute module path or provide a package context>"],
+				"hint": [
+					"Remove the leading dot from the reference.",
+					"Use an absolute module path such as package.module.object.",
+					"Make sure the object is importable from the configured basedir.",
+				],
+			}
+			return relative_details
+		general_details: Details = {
 			"found": found,
 			"expected": ["<check spelling, installation, or qualification>"],
 			"hint": [
@@ -2455,7 +2469,7 @@ class ResolveObjectError(RuntimeError):
 				"Qualify the reference with the correct module path.",
 			],
 		}
-		return details
+		return general_details
 
 def raise_has_no_docstring(tr : tracer, rule_id: RuleId, obj : object) -> NoReturn:
 	"""

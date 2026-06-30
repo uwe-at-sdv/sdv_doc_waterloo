@@ -151,7 +151,7 @@ def _resolve_object(qname: str) -> object:
 	try:
 		obj, _ = docitem.resolve_object(qname, None)
 		return obj
-	except ImportError as exc:
+	except (ImportError, TypeError) as exc:
 		raise ResolveObjectError(
 			ref=qname,
 			current_obj=None,

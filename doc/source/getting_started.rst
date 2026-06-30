@@ -162,8 +162,8 @@ Open the generated documentation in your browser
 Waterloo Docstrings
 -------------------
 
-Install Waterloo
-................
+Install Waterloo Docstrings
+...........................
 
 If you have not done so already, update :wtrl_lit:`pip`:
 
@@ -171,17 +171,23 @@ If you have not done so already, update :wtrl_lit:`pip`:
 
 	python3 -m pip install --upgrade pip
 
-Install Waterloo from :wtrl_file:`github.com`:
+Install Waterloo from PyPI:
 
 .. code-block:: bash
 
-	python3 -m pip install git+ssh://git@github.com:22/uwe-at-sdv/sdv_doc_waterloo.git
+	python3 -m pip install sdv-doc-waterloo
+
+If you want to work from the current source tree, install from GitHub via HTTPS:
+
+.. code-block:: bash
+
+	python3 -m pip install git+https://github.com/uwe-at-sdv/sdv_doc_waterloo.git
 
 Add the extension to :wtrl_file:`${ROOT}/doc/source/conf.py`:
 
 .. code-block:: python
 
-	# -- General configuration ---------------------------------------------------
+	# -- General configuration -------------------------------------
 
 	extensions = [
 		# other extensions
@@ -192,11 +198,11 @@ Configure the path to your project sources:
 
 .. code-block:: python
 
-	# -- Path setup --------------------------------------------------------------
+	# -- Path setup ------------------------------------------------
 
 	# If your modules are located outside the documentation directory,
-	# add their paths here. Use os.path.abspath to convert relative paths
-	# to absolute ones if necessary.
+	# add their paths here. Use os.path.abspath to convert relative
+	# paths to absolute ones if necessary.
 	import sys
 
 	ROOT = "/path/to/my/project"
@@ -287,7 +293,7 @@ Validate the generated JSON file:
 
 .. code-block:: bash
 
-	waterlint validate-json --in doc-json/my_module.core.rfc-2119.json
+	waterlint validate-json --in doc-json/my_module.wtrl.core.rfc-2119.json
 
 If no error message is shown and the exit code is 0,
 the JSON output is valid.

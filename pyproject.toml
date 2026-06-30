@@ -77,5 +77,6 @@ version = { attr = "sdv.doc.waterloo.docitem.__version__" }
 	"etc/*.toml",
 	"mcp/doc-json/*.json",
 	"mcp/tool_about/*.json",
-	"mcp/prompts/*.json"
+	"mcp/prompts/*.json",
+	"mcp/wtrl_mcp.toml"
 	]

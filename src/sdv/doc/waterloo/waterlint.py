@@ -49,6 +49,7 @@ from sdv.doc.waterloo.waterlint_common import (
 	add_traceback
 	)
 import sdv.doc.waterloo.mcp
+from sdv.doc.waterloo.docitem import traced_section
 from python_waterloo_lexer import __version__ as WTRL_PYTHON_WATERLOO_LEXER_VERSION
 
 
@@ -720,6 +721,7 @@ def validate_command(args: argparse.Namespace) -> int:
 			obj = _resolve_object(args.obj)
 # We have an object, so let's use the tracer!
 			with docitem.traced_section(tr, get_obj_fully_qualified_name(obj)):
+				tr.add_info(f"validating '{get_obj_fully_qualified_name(obj)}'")
 				docitem.validate_docstring(tr, obj, None, session)
 		else:
 # Read from file or stdin.
@@ -1066,7 +1068,13 @@ def validate_json_command(args: argparse.Namespace) -> int:
 	out_diag_json	=  getattr(args, "out_diag_json", None)
 #--------------------------------------------------------------#
 	try:
-		doc: Dict[str,cvrt.WtrlJsonNode_t] = cast(Dict[str,cvrt.WtrlJsonNode_t],_load_json(getattr(args, "input_file", None)))
+		input_file = getattr(args, "input_file", None)
+		doc_label = "<stdin>"
+		if isinstance(input_file, str) and input_file.strip():
+			doc_label = Path(input_file).name.split(".")[0] or doc_label
+		with traced_section(tr, doc_label):
+			tr.add_info(f"validating '{input_file if isinstance(input_file, str) and input_file.strip() else '<stdin>'}'")
+			doc: Dict[str,cvrt.WtrlJsonNode_t] = cast(Dict[str,cvrt.WtrlJsonNode_t],_load_json(input_file))
 		doc_category: str | None = None
 # Try schema path from argparse.
 		schema_path = args.schema

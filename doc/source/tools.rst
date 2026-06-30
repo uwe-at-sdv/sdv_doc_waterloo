@@ -217,6 +217,10 @@ For successful calls, the client may request full diagnostics by setting
 Extension command examples
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+The following examples cover the supported extension commands in a
+systematic way. Each command is shown with the request fields that apply
+to it and with a representative response shape.
+
 Common request fields (non-:wtrl_value:`ping`)
 ................................................................
 
@@ -381,6 +385,7 @@ Successful response:
 	  "version": 1,
 	  "data": {
 	    "kind": "function",
+	    "module_dir": "doc/examples",
 	    "qualified_identifier": "test_docitem_function_minimal.spam"
 	  },
 	  "diagnostics_summary": {
@@ -394,6 +399,10 @@ Successful response:
 	    "...": "full tracer document"
 	  }
 	}
+
+The validate response includes :wtrl_attr:`module_dir` and
+:wtrl_attr:`qualified_identifier`, which frontend clients can use to
+reconstruct a terminal hint such as :wtrl_cmd:`waterlint validate --basedir ... --obj ...`.
 
 Error response (shape):
 

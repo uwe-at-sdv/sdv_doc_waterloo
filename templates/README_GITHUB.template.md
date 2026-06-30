@@ -112,13 +112,25 @@ If you want to ship the MCP server as a container, `waterlint` can generate a
 Docker build script from the MCP configuration. For example:
 
 ```bash
-waterlint render-docker --in package_main/src/sdv/doc/waterloo/mcp/wtrl_mcp.toml --out /tmp/myserver.docker
+waterlint render-docker --in src/sdv/doc/waterloo/mcp/wtrl_mcp.toml --out /tmp/myserver.docker
 ```
 
 The generated script contains the Docker build steps and the runtime command
 line. It also prints a few practical hints, such as which port mapping to use
 and which host names should be allowed for the resulting server. After that,
 you can build the image with the generated script and run it in Docker.
+
+### Projects using Waterloo Docstrings
+
+The following projects use Waterloo Docstrings in practice.
+
+**Human-readable HTML**  
+[3DE4 Python Scripting Interface](https://3dequalizer.com/user_daten/sections/tech_docs/py_doc/tde4.wtrl.core.rfc-2119.html)  
+Interactive HTML documentation.
+
+**LLM-ready JSON**  
+[3DE4 Python Scripting Interface](https://3dequalizer.com/user_daten/sections/tech_docs/py_doc/tde4_with_examples.wtrl.core.rfc-2119.json)  
+Waterloo JSON documentation with examples.
 
 
 

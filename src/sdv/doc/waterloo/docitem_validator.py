@@ -1579,7 +1579,6 @@ See_also:
 	session.remember(obj, top)
 	try:
 		# Log some debug info
-		tr.add_info(f"validating '{get_obj_fully_qualified_name(obj)}'")
 		profile = get_profile(top)
 		try:
 			top_scopes = top.scopes()
