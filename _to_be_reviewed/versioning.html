@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Versioning &#8212; Waterloo Docstrings 0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=5f771d8e" />
+    <link rel="stylesheet" type="text/css" href="../_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=27fed22d" />
+    <link rel="stylesheet" type="text/css" href="../_static/common_styles.css?v=cca7a40d" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster_waterloo.css?v=759b19e6" />
+    <script src="../_static/documentation_options.js?v=8dde47fa"></script>
+    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="versioning">
+<h1>Versioning<a class="headerlink" href="#versioning" title="Link to this heading">¶</a></h1>
+<p>This section is informative.</p>
+<p>Waterloo consists of several components that may evolve independently.
+These currently include:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>the Python library implementing the Waterloo docstring model,</p></li>
+<li><p>the command line tool <code class="wtrl_cmd docutils literal notranslate"><span class="pre">waterlint</span></code>,</p></li>
+<li><p>the JSON schema used for interchange and validation,</p></li>
+<li><p>and potentially additional subsystems in the future.</p></li>
+</ul>
+</div></blockquote>
+<p>Each subsystem maintains its own semantic version number of the form
+<code class="wtrl_value docutils literal notranslate"><span class="pre">X.Y.Z</span></code>.</p>
+<p>In addition to these subsystem versions, Waterloo defines a single
+<code class="wtrl_dfn docutils literal notranslate"><span class="pre">main</span> <span class="pre">version</span></code>. The main version serves as the externally
+communicated compatibility version of the Waterloo specification and
+toolchain.</p>
+<p>The main version is intended to remain stable over long periods of time.
+A change of the major component indicates an intentional incompatibility
+with previously valid Waterloo documents or tools.</p>
+<section id="subsystem-versions">
+<h2>Subsystem versions<a class="headerlink" href="#subsystem-versions" title="Link to this heading">¶</a></h2>
+<p>Subsystems may evolve independently and therefore maintain their own
+version numbers. A version change in one subsystem does not directly
+modify the version numbers of other subsystems.</p>
+<p>Subsystem versions exist primarily to track development and internal
+evolution of the individual components.</p>
+</section>
+<section id="main-version-derivation">
+<h2>Main version derivation<a class="headerlink" href="#main-version-derivation" title="Link to this heading">¶</a></h2>
+<p>The main version reflects the highest-order change among the subsystem
+versions that occur within a release. The following interpretation is used:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>If a subsystem performs a patch update (<code class="wtrl_value docutils literal notranslate"><span class="pre">X.Y.Z</span> <span class="pre">-&gt;</span> <span class="pre">X.Y.(Z+1)</span></code>),
+the patch component of the main version is increased.</p></li>
+<li><p>If a subsystem performs a minor update (<code class="wtrl_value docutils literal notranslate"><span class="pre">X.Y.Z</span> <span class="pre">-&gt;</span> <span class="pre">X.(Y+1).0</span></code>),
+the minor component of the main version is increased and the patch
+component is reset to zero.</p></li>
+<li><p>If a subsystem performs a major update (<code class="wtrl_value docutils literal notranslate"><span class="pre">X.Y.Z</span> <span class="pre">-&gt;</span> <span class="pre">(X+1).0.0</span></code>),
+the major component of the main version is increased and the minor and
+patch components are reset to zero.</p></li>
+</ul>
+</div></blockquote>
+<p>If several subsystems change within the same release, the main version
+reflects the highest-order change (major overrides minor, minor overrides
+patch).</p>
+</section>
+<section id="compatibility-interpretation">
+<h2>Compatibility interpretation<a class="headerlink" href="#compatibility-interpretation" title="Link to this heading">¶</a></h2>
+<p>The major component of the main version represents the compatibility
+level of the Waterloo specification.</p>
+<p>As a design goal, the major version is expected to remain stable for as
+long as possible. A major version change would normally correspond to a
+deliberate and incompatible modification of the specification, such as:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>changes that invalidate previously valid Waterloo docstrings,</p></li>
+<li><p>changes that alter the semantic interpretation of existing rules,</p></li>
+<li><p>structural changes requiring modifications to existing documentation.</p></li>
+</ul>
+</div></blockquote>
+<p>Such changes are expected to be rare.</p>
+<p>Minor and patch updates are used for incremental evolution of the
+specification, tooling improvements, clarifications, and additional
+features that remain compatible with existing Waterloo documents.</p>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="../index.html">
+    <img class="logo" src="../_static/wtrl_logo_color_64x64.png" alt="Logo" />
+    
+  </a>
+</p>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../introduction.html">1. Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting_started.html">2. Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples_minimax.html">3. Docstrings - minimal and full examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples.html">4. Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../format.html">5. Docstring format</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tools.html">6. Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../io_layers.html">7. Overview: I/O Layers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../json_io.html">8. The JSON I/O Layer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../html_output_layer.html">9. The HTML Output Layer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mcp.html">10. Model Context Protocol</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reference.html">11. Reference - Rendering Showcase</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../_test_freeform.html">12. Test: Flow control in freeform sections</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../_test_scope.html">13. Test: Scopes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../test_pygments_lexer.html">14. Test: Pygments lexer showcase</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../legal.html">15. Legal Notes</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2026, Uwe.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 9.1.0</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="../_sources/_to_be_reviewed/versioning.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
