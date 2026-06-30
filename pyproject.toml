@@ -66,6 +66,8 @@ version = { attr = "sdv.doc.waterloo.docitem.__version__" }
 # After installation with pip, these go to site-packages/sdv/doc/waterloo/.
 # Include the PEP 561 marker file. The presence of py.typed tells type
 # checkers (e.g. mypy) that this package provides inline type hints.
+#
+# mcp/VERSION is required by wtrl_mcp as SSoT for the version number.
 [tool.setuptools.package-data]
 "sdv.doc.waterloo" = [
 	"py.typed",

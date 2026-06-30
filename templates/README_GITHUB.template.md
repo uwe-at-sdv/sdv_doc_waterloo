@@ -93,18 +93,20 @@ the CLI version, but the pattern is the same:
 #### codex
 
 ```bash
-codex mcp add wtrl-mcp-myserver --url http://127.0.0.1:13316/mcp
+codex mcp add myserver --url http://127.0.0.1:13316/mcp
 ```
 
 #### claude
 
 ```bash
-claude mcp add --transport http wtrl-mcp-myserver http://127.0.0.1:13316/mcp
+claude mcp add --transport http myserver http://127.0.0.1:13316/mcp
 ```
 
 If you prefer `localhost`, use that host name instead of `127.0.0.1`.
 If the agent itself runs inside a container or on another host, replace the
-address with the one that matches your deployment.
+address with the one that matches your deployment. The server name is only an
+identifier for the client, so you can choose any name that is convenient for
+you.
 
 #### Rendering a Docker setup from the MCP configuration
 
