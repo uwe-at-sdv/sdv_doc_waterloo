@@ -18,6 +18,8 @@ PATH_FILES_OUT="${SCRIPT_DIR}/doc/source/type_checking_files.txt"
 
 export MYPYPATH="${SCRIPT_DIR}/src"
 
+echo > ${PATH_CHK_OUT}
+
 mypy --config-file "${PATH_MYPY_INI}" \
 	--namespace-packages \
 	--explicit-package-bases \
