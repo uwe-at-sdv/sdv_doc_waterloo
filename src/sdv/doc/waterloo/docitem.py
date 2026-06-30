@@ -253,7 +253,8 @@ from contextlib import contextmanager
 from sdv.doc.waterloo.docitem_docstring import *
 from sdv.doc.waterloo.docitem_validator import *
 
-__version__ = "0.10.7"
+__version__ = "0.10.8"
+# - 0.10.8 [2026-06-30] Added missing resources for PyPI.
 # - 0.10.7 [2026-06-30] Better handling for importlib errors
 # - 0.10.6 [2026-06-29]	Bugfix: CPVAR-005 and MPVAR-005 now allow annotated but uninstantiated variables, e.g. `x: int` without `x = 0`.
 # - 0.10.5 [2026-06-28] Refactoring for detailed parsing and validation messages complete
