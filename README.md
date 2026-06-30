@@ -48,6 +48,8 @@ pip install "git+ssh://git@github.com/uwe-at-sdv/sdv_doc_waterloo.git@main#subdi
 `waterlint` is the main command-line tool for Waterloo Docstrings.
 It validates docstrings, renders Waterloo JSON, generates helper output, and
 supports the MCP-related workflows in this project.
+Its JSON diagnostics are machine-readable and therefore well suited for CI
+pipelines and GitHub Workflows.
 
 Start with the general help:
 

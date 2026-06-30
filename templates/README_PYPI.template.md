@@ -34,6 +34,8 @@ pip install "sdv-doc-waterloo[sphinx]"
 `waterlint` is the main command-line tool for Waterloo Docstrings.
 It validates docstrings, renders Waterloo JSON, generates helper output, and
 supports the MCP-related workflows in this project.
+Its JSON diagnostics are machine-readable and therefore useful in CI
+pipelines and GitHub Workflows.
 
 Start with the general help:
 
