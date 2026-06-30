@@ -1,5 +1,15 @@
-Reference - Core View
-#####################
+Reference - Rendering Showcase
+##############################
+
+This chapter is primarily a reference showcase for the Sphinx rendering
+layer. The Waterloo project itself is best understood as a toolkit
+consisting of :wtrl_cmd:`waterlint`, the Pygments lexer, the MCP server,
+and the VSCode extension.
+
+Most users will not import the internal :wtrl_file:`docitem*.py` modules
+directly in their own projects. Those modules are implementation details
+of the toolkit and are documented here mainly so the rendered API can be
+inspected in a structured form.
 
 .. wtrl_push_current_scope:: core
 

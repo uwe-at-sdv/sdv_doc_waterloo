@@ -213,6 +213,13 @@ are specified by</p>
 <blockquote>
 <div><p><code class="wtrl_cmd docutils literal notranslate"><span class="pre">waterlint</span> <span class="pre">help</span></code> <code class="wtrl_opt docutils literal notranslate"><span class="pre">--topic</span></code> <code class="wtrl_value docutils literal notranslate"><span class="pre">render-json</span></code></p>
 </div></blockquote>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>When rendering large module trees, invalid objects may be reported as
+standardized warnings with rule TOOL-009. In that case,
+passing <code class="wtrl_opt docutils literal notranslate"><span class="pre">--ignore</span></code> <code class="wtrl_value docutils literal notranslate"><span class="pre">TOOL-009</span></code> is often useful if the
+invalid objects are expected and should simply be skipped.</p>
+</div>
 <p class="rubric">Example</p>
 <p>Consider the following minimal module:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;</span>
@@ -704,7 +711,7 @@ for the documented function <code class="wtrl_func docutils literal notranslate"
 </li>
 <li class="toctree-l1"><a class="reference internal" href="html_output_layer.html">9. The HTML Output Layer</a></li>
 <li class="toctree-l1"><a class="reference internal" href="mcp.html">10. Model Context Protocol</a></li>
-<li class="toctree-l1"><a class="reference internal" href="reference.html">11. Reference - Core View</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reference.html">11. Reference - Rendering Showcase</a></li>
 <li class="toctree-l1"><a class="reference internal" href="_test_freeform.html">12. Test: Flow control in freeform sections</a></li>
 <li class="toctree-l1"><a class="reference internal" href="_test_scope.html">13. Test: Scopes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="test_pygments_lexer.html">14. Test: Pygments lexer showcase</a></li>

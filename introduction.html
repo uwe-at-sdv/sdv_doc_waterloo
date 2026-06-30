@@ -359,23 +359,42 @@ complete verification in all contexts.</p>
 <h2><span class="section-number">1.7. </span>Project status<a class="headerlink" href="#project-status" title="Link to this heading">¶</a></h2>
 <section id="static-typechecking">
 <h3><span class="section-number">1.7.1. </span>Static typechecking<a class="headerlink" href="#static-typechecking" title="Link to this heading">¶</a></h3>
-<p>We use <code class="wtrl_lit docutils literal notranslate"><span class="pre">mypy</span></code> for static typechecking. The modules</p>
-<ul class="simple">
-<li><p><code class="wtrl_file docutils literal notranslate"><span class="pre">sdv.doc.waterloo.docitem</span></code></p></li>
-<li><p><code class="wtrl_file docutils literal notranslate"><span class="pre">sdv.doc.waterloo.docitem_base</span></code></p></li>
-<li><p><code class="wtrl_file docutils literal notranslate"><span class="pre">sdv.doc.waterloo.docitem_contract</span></code></p></li>
-<li><p><code class="wtrl_file docutils literal notranslate"><span class="pre">sdv.doc.waterloo.docitem_convert</span></code></p></li>
-<li><p><code class="wtrl_file docutils literal notranslate"><span class="pre">sdv.doc.waterloo.docitem_docstring</span></code></p></li>
-<li><p><code class="wtrl_file docutils literal notranslate"><span class="pre">sdv.doc.waterloo.docitem_genutil</span></code></p></li>
-<li><p><code class="wtrl_file docutils literal notranslate"><span class="pre">sdv.doc.waterloo.docitem_helper</span></code></p></li>
-<li><p><code class="wtrl_file docutils literal notranslate"><span class="pre">sdv.doc.waterloo.docitem_preamble</span></code></p></li>
-<li><p><code class="wtrl_file docutils literal notranslate"><span class="pre">sdv.doc.waterloo.docitem_sections</span></code></p></li>
-<li><p><code class="wtrl_file docutils literal notranslate"><span class="pre">sdv.doc.waterloo.docitem_sphinx</span></code></p></li>
-<li><p><code class="wtrl_file docutils literal notranslate"><span class="pre">sdv.doc.waterloo.docitem_tokenizer</span></code></p></li>
-<li><p><code class="wtrl_file docutils literal notranslate"><span class="pre">sdv.doc.waterloo.docitem_validator</span></code></p></li>
-<li><p><code class="wtrl_file docutils literal notranslate"><span class="pre">sdv.doc.waterloo.waterlint</span></code></p></li>
-<li><p><code class="wtrl_file docutils literal notranslate"><span class="pre">sdv.doc.waterloo.waterlint_render_html5</span></code></p></li>
-</ul>
+<p>We use <code class="wtrl_lit docutils literal notranslate"><span class="pre">mypy</span></code> for static typechecking. The source files</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>sdv/doc/waterloo/waterlint_explain_common.py
+sdv/doc/waterloo/waterlint_gen_minimal.py
+sdv/doc/waterloo/mcp/wtrl_error.py
+sdv/doc/waterloo/mcp/wtrl_server.py
+sdv/doc/waterloo/mcp/wtrl_tools.py
+sdv/doc/waterloo/mcp/__init__.py
+sdv/doc/waterloo/mcp/jsonrpc_echo.py
+sdv/doc/waterloo/mcp/prompts/__init__.py
+sdv/doc/waterloo/mcp/wtrl_logging.py
+sdv/doc/waterloo/waterlint_explain_section.py
+sdv/doc/waterloo/docitem_preamble.py
+sdv/doc/waterloo/docitem_docstring.py
+sdv/doc/waterloo/waterlint_gen_example_template_json.py
+sdv/doc/waterloo/docitem_validator.py
+sdv/doc/waterloo/waterlint_common.py
+sdv/doc/waterloo/docitem_contract.py
+sdv/doc/waterloo/docitem_tokenizer.py
+sdv/doc/waterloo/waterlint_gen_full.py
+sdv/doc/waterloo/docitem_helper.py
+sdv/doc/waterloo/docitem_sections.py
+sdv/doc/waterloo/docitem.py
+sdv/doc/waterloo/waterlint.py
+sdv/doc/waterloo/waterlint_render_docker.py
+sdv/doc/waterloo/docitem_diagnostics.py
+sdv/doc/waterloo/docitem_base.py
+sdv/doc/waterloo/waterlint_walk.py
+sdv/doc/waterloo/waterlint_generate_common.py
+sdv/doc/waterloo/waterlint_carve.py
+sdv/doc/waterloo/docitem_sphinx.py
+sdv/doc/waterloo/waterlint_explain_subsection.py
+sdv/doc/waterloo/docitem_convert.py
+sdv/doc/waterloo/docitem_genutil.py
+sdv/doc/waterloo/waterlint_render_html5.py
+</pre></div>
+</div>
 <p>are validated on a regular basis. The current status is</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Success: no issues found in 33 source files
 </pre></div>
@@ -405,33 +424,34 @@ docitem_helper.py:118 # type: ignore[no-redef]
 docitem_validator.py:41 # type: ignore
 docitem_validator.py:42 # pragma: no cover - older Python
 waterlint_carve.py:313 # pragma: no cover - defensive
-waterlint.py:770 # pragma: no cover - defensive
-waterlint.py:862 # pragma: no cover - defensive
-waterlint.py:976 # pragma: no cover - defensive
-waterlint.py:1096 # pragma: no cover - defensive
-waterlint.py:1100 # pragma: no cover - defensive
-waterlint.py:1104 # pragma: no cover - defensive
-waterlint.py:1774 # pragma: no cover - defensive
+waterlint.py:773 # pragma: no cover - defensive
+waterlint.py:865 # pragma: no cover - defensive
+waterlint.py:979 # pragma: no cover - defensive
+waterlint.py:1105 # pragma: no cover - defensive
+waterlint.py:1109 # pragma: no cover - defensive
+waterlint.py:1113 # pragma: no cover - defensive
+waterlint.py:1783 # pragma: no cover - defensive
 waterlint_render_docker.py:28 # pragma: no cover - Python 3.10 fallback
 </pre></div>
 </div>
 </section>
 <section id="pytest">
 <h3><span class="section-number">1.7.2. </span>Pytest<a class="headerlink" href="#pytest" title="Link to this heading">¶</a></h3>
-<p>Pytest files are located in <code class="wtrl_file docutils literal notranslate"><span class="pre">pytest</span></code> at repository level.</p>
-<ul class="simple">
-<li><p><code class="wtrl_file docutils literal notranslate"><span class="pre">pytest_lexer_golden.py</span></code></p></li>
-<li><p><code class="wtrl_file docutils literal notranslate"><span class="pre">pytest_validation.py</span></code></p></li>
-<li><p><code class="wtrl_file docutils literal notranslate"><span class="pre">pytest_vscode_docstring_generation.py</span></code></p></li>
-</ul>
+<p>Pytest files are located in <code class="wtrl_file docutils literal notranslate"><span class="pre">pytest</span></code> at repository level.
+Please note that some of the files (<code class="wtrl_file docutils literal notranslate"><span class="pre">pytest/*mcp*.py</span></code>) require a running MCP server.
+Otherwise, they will be skipped by <code class="wtrl_cmd docutils literal notranslate"><span class="pre">pytest</span></code>.</p>
 </section>
 </section>
 <section id="dependencies">
 <h2><span class="section-number">1.8. </span>Dependencies<a class="headerlink" href="#dependencies" title="Link to this heading">¶</a></h2>
-<p class="rubric">Requires packages (will be installed by Pip)</p>
+<p class="rubric">Requires external packages (will be installed as dependencies)</p>
 <ul class="simple">
-<li><p><code class="wtrl_mod docutils literal notranslate"><span class="pre">jsonschema</span></code> – <code class="docutils literal notranslate"><span class="pre">python3</span> <span class="pre">-m</span> <span class="pre">pip</span> <span class="pre">install</span> <span class="pre">jsonschema</span></code></p></li>
-<li><p><code class="wtrl_mod docutils literal notranslate"><span class="pre">jsonpointer</span></code> – <code class="docutils literal notranslate"><span class="pre">python3</span> <span class="pre">-m</span> <span class="pre">pip</span> <span class="pre">install</span> <span class="pre">jsonpointer</span></code></p></li>
+<li><p><code class="wtrl_mod docutils literal notranslate"><span class="pre">jsonschema</span></code></p></li>
+<li><p><code class="wtrl_mod docutils literal notranslate"><span class="pre">jsonpointer</span></code></p></li>
+<li><p><code class="wtrl_mod docutils literal notranslate"><span class="pre">pygments</span></code></p></li>
+<li><p><code class="wtrl_mod docutils literal notranslate"><span class="pre">docutils</span></code></p></li>
+<li><p><code class="wtrl_mod docutils literal notranslate"><span class="pre">mcp</span></code></p></li>
+<li><p><code class="wtrl_mod docutils literal notranslate"><span class="pre">tomli</span></code> (in case the Python environment has version &lt; 3.11)</p></li>
 </ul>
 <p class="rubric">Recommended additional software</p>
 <ul>
@@ -446,86 +466,24 @@ waterlint_render_docker.py:28 # pragma: no cover - Python 3.10 fallback
 <p>Using <code class="wtrl_cmd docutils literal notranslate"><span class="pre">jq</span></code>, you can inspect machine-readable JSON documentation,
 for example to identify documented modules or objects, and to query associated metadata.</p>
 </li>
+<li><p><code class="wtrl_cmd docutils literal notranslate"><span class="pre">MCP</span> <span class="pre">Inspector</span></code> – Interactive developer tool for testing and debugging MCP servers.</p>
+<p>Available via:</p>
+<ul class="simple">
+<li><p><strong>Official Documentation:</strong> <a class="reference external" href="https://modelcontextprotocol.io/docs/tools/inspector">modelcontextprotocol.io/docs/tools/inspector</a></p></li>
+<li><p><strong>Start:</strong> <code class="wtrl_cmd docutils literal notranslate"><span class="pre">npx</span> <span class="pre">&#64;modelcontextprotocol/inspector</span></code></p></li>
 </ul>
-</section>
-<section id="versioning">
-<h2><span class="section-number">1.9. </span>Versioning<a class="headerlink" href="#versioning" title="Link to this heading">¶</a></h2>
-<p>This section is informative.</p>
-<p>Waterloo consists of several components that may evolve independently.
-These currently include:</p>
-<blockquote>
-<div><ul class="simple">
-<li><p>the Python library implementing the Waterloo docstring model,</p></li>
-<li><p>the command line tool <code class="wtrl_cmd docutils literal notranslate"><span class="pre">waterlint</span></code>,</p></li>
-<li><p>the JSON schema used for interchange and validation,</p></li>
-<li><p>and potentially additional subsystems in the future.</p></li>
+<p>It is especially useful for streamable HTTP setups, because it helps verify
+requests, responses, and browser-based CORS behavior in one place.
+Note that the inspector only works if the MCP-server configuration includes a
+suitable <code class="wtrl_attr docutils literal notranslate"><span class="pre">allowed_origins</span></code> entry.</p>
+</li>
 </ul>
-</div></blockquote>
-<p>Each subsystem maintains its own semantic version number of the form
-<code class="wtrl_value docutils literal notranslate"><span class="pre">X.Y.Z</span></code>.</p>
-<p>In addition to these subsystem versions, Waterloo defines a single
-<code class="wtrl_dfn docutils literal notranslate"><span class="pre">main</span> <span class="pre">version</span></code>. The main version serves as the externally
-communicated compatibility version of the Waterloo specification and
-toolchain.</p>
-<p>The main version is intended to remain stable over long periods of time.
-A change of the major component indicates an intentional incompatibility
-with previously valid Waterloo documents or tools.</p>
-<section id="subsystem-versions">
-<h3><span class="section-number">1.9.1. </span>Subsystem versions<a class="headerlink" href="#subsystem-versions" title="Link to this heading">¶</a></h3>
-<p>Subsystems may evolve independently and therefore maintain their own
-version numbers. A version change in one subsystem does not directly
-modify the version numbers of other subsystems.</p>
-<p>Subsystem versions exist primarily to track development and internal
-evolution of the individual components.</p>
-</section>
-<section id="main-version-derivation">
-<h3><span class="section-number">1.9.2. </span>Main version derivation<a class="headerlink" href="#main-version-derivation" title="Link to this heading">¶</a></h3>
-<p>The main version reflects the highest-order change among the subsystem
-versions that occur within a release. The following interpretation is used:</p>
-<blockquote>
-<div><ul class="simple">
-<li><p>If a subsystem performs a patch update (<code class="wtrl_value docutils literal notranslate"><span class="pre">X.Y.Z</span> <span class="pre">-&gt;</span> <span class="pre">X.Y.(Z+1)</span></code>),
-the patch component of the main version is increased.</p></li>
-<li><p>If a subsystem performs a minor update (<code class="wtrl_value docutils literal notranslate"><span class="pre">X.Y.Z</span> <span class="pre">-&gt;</span> <span class="pre">X.(Y+1).0</span></code>),
-the minor component of the main version is increased and the patch
-component is reset to zero.</p></li>
-<li><p>If a subsystem performs a major update (<code class="wtrl_value docutils literal notranslate"><span class="pre">X.Y.Z</span> <span class="pre">-&gt;</span> <span class="pre">(X+1).0.0</span></code>),
-the major component of the main version is increased and the minor and
-patch components are reset to zero.</p></li>
-</ul>
-</div></blockquote>
-<p>If several subsystems change within the same release, the main version
-reflects the highest-order change (major overrides minor, minor overrides
-patch).</p>
-</section>
-<section id="compatibility-interpretation">
-<h3><span class="section-number">1.9.3. </span>Compatibility interpretation<a class="headerlink" href="#compatibility-interpretation" title="Link to this heading">¶</a></h3>
-<p>The major component of the main version represents the compatibility
-level of the Waterloo specification.</p>
-<p>As a design goal, the major version is expected to remain stable for as
-long as possible. A major version change would normally correspond to a
-deliberate and incompatible modification of the specification, such as:</p>
-<blockquote>
-<div><ul class="simple">
-<li><p>changes that invalidate previously valid Waterloo docstrings,</p></li>
-<li><p>changes that alter the semantic interpretation of existing rules,</p></li>
-<li><p>structural changes requiring modifications to existing documentation.</p></li>
-</ul>
-</div></blockquote>
-<p>Such changes are expected to be rare.</p>
-<p>Minor and patch updates are used for incremental evolution of the
-specification, tooling improvements, clarifications, and additional
-features that remain compatible with existing Waterloo documents.</p>
-</section>
-</section>
-<section id="possible-future-enhancements">
-<h2><span class="section-number">1.10. </span>Possible future enhancements<a class="headerlink" href="#possible-future-enhancements" title="Link to this heading">¶</a></h2>
 </section>
 <section id="introductory-examples">
-<h2><span class="section-number">1.11. </span>Introductory examples<a class="headerlink" href="#introductory-examples" title="Link to this heading">¶</a></h2>
+<h2><span class="section-number">1.9. </span>Introductory examples<a class="headerlink" href="#introductory-examples" title="Link to this heading">¶</a></h2>
 <p>This section is informative.</p>
 <section id="module">
-<h3><span class="section-number">1.11.1. </span>Module<a class="headerlink" href="#module" title="Link to this heading">¶</a></h3>
+<h3><span class="section-number">1.9.1. </span>Module<a class="headerlink" href="#module" title="Link to this heading">¶</a></h3>
 <p>Let us do an example: In directory <code class="wtrl_file docutils literal notranslate"><span class="pre">doc/examples</span></code> you see a file <code class="wtrl_file docutils literal notranslate"><span class="pre">test_docitem_module.py</span></code>.
 On module level this is equipped with a basic Waterloo docstring:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;</span>
@@ -605,7 +563,7 @@ and it must be declared normative.</p></li>
 </div></blockquote>
 </section>
 <section id="module-and-class">
-<h3><span class="section-number">1.11.2. </span>Module and class<a class="headerlink" href="#module-and-class" title="Link to this heading">¶</a></h3>
+<h3><span class="section-number">1.9.2. </span>Module and class<a class="headerlink" href="#module-and-class" title="Link to this heading">¶</a></h3>
 <p>In the next example we have a module and a class docstring, and we consider the class as
 part of the public API of the module:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;</span>
@@ -724,7 +682,7 @@ part of the public API of the module:</p>
 </table>
 </section>
 <section id="module-class-and-method">
-<h3><span class="section-number">1.11.3. </span>Module, class and method<a class="headerlink" href="#module-class-and-method" title="Link to this heading">¶</a></h3>
+<h3><span class="section-number">1.9.3. </span>Module, class and method<a class="headerlink" href="#module-class-and-method" title="Link to this heading">¶</a></h3>
 <p>Finally, let us add a method to the class and attach a docstring.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="gh">Preamble:</span>
@@ -919,7 +877,7 @@ part of the public API of the module:</p>
 </section>
 </section>
 <section id="convenience-module-and-class-stack">
-<h2><span class="section-number">1.12. </span>Convenience: module and class stack<a class="headerlink" href="#convenience-module-and-class-stack" title="Link to this heading">¶</a></h2>
+<h2><span class="section-number">1.10. </span>Convenience: module and class stack<a class="headerlink" href="#convenience-module-and-class-stack" title="Link to this heading">¶</a></h2>
 <p>Repeating the module and the class each time a function, method, type or constant
 is addressed by means of qualified identifier (dot notation) can become a little annoying.
 Therefore the extension is equipped with state stacks for modules and classes.</p>
@@ -962,7 +920,7 @@ of methods. The push-command reads:</p>
 <p class="wtrl-current-class-message wtrl-current-class-pop">Default class qualifier <code class="wtrl_var docutils literal notranslate"><span class="pre">test_docitem_module_3.MyClass</span></code> ends here. No default class active. </p>
 </section>
 <section id="project-name">
-<h2><span class="section-number">1.13. </span>Project Name<a class="headerlink" href="#project-name" title="Link to this heading">¶</a></h2>
+<h2><span class="section-number">1.11. </span>Project Name<a class="headerlink" href="#project-name" title="Link to this heading">¶</a></h2>
 <p>This subsection is informative.</p>
 <p>The name of the project is loosely inspired by the song “Waterloo Sunset”
 by The Kinks, which refers to the London Underground station <em>Waterloo</em>.
@@ -1018,21 +976,14 @@ Nevertheless, the historical reference is not entirely inappropriate.</p>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#dependencies">1.8. Dependencies</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#versioning">1.9. Versioning</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#subsystem-versions">1.9.1. Subsystem versions</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#main-version-derivation">1.9.2. Main version derivation</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#compatibility-interpretation">1.9.3. Compatibility interpretation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#introductory-examples">1.9. Introductory examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#module">1.9.1. Module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-and-class">1.9.2. Module and class</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-class-and-method">1.9.3. Module, class and method</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#possible-future-enhancements">1.10. Possible future enhancements</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#introductory-examples">1.11. Introductory examples</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#module">1.11.1. Module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#module-and-class">1.11.2. Module and class</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#module-class-and-method">1.11.3. Module, class and method</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="#convenience-module-and-class-stack">1.12. Convenience: module and class stack</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#project-name">1.13. Project Name</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#convenience-module-and-class-stack">1.10. Convenience: module and class stack</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#project-name">1.11. Project Name</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="getting_started.html">2. Getting Started</a></li>
@@ -1044,7 +995,7 @@ Nevertheless, the historical reference is not entirely inappropriate.</p>
 <li class="toctree-l1"><a class="reference internal" href="json_io.html">8. The JSON I/O Layer</a></li>
 <li class="toctree-l1"><a class="reference internal" href="html_output_layer.html">9. The HTML Output Layer</a></li>
 <li class="toctree-l1"><a class="reference internal" href="mcp.html">10. Model Context Protocol</a></li>
-<li class="toctree-l1"><a class="reference internal" href="reference.html">11. Reference - Core View</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reference.html">11. Reference - Rendering Showcase</a></li>
 <li class="toctree-l1"><a class="reference internal" href="_test_freeform.html">12. Test: Flow control in freeform sections</a></li>
 <li class="toctree-l1"><a class="reference internal" href="_test_scope.html">13. Test: Scopes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="test_pygments_lexer.html">14. Test: Pygments lexer showcase</a></li>

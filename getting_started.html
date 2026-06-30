@@ -177,18 +177,22 @@ Create a directory for the human-readable documentation:</p>
 </section>
 <section id="waterloo-docstrings">
 <span id="section-waterloo-docstrings"></span><h2><span class="section-number">2.4. </span>Waterloo Docstrings<a class="headerlink" href="#waterloo-docstrings" title="Link to this heading">¶</a></h2>
-<section id="install-waterloo">
-<h3><span class="section-number">2.4.1. </span>Install Waterloo<a class="headerlink" href="#install-waterloo" title="Link to this heading">¶</a></h3>
+<section id="install-waterloo-docstrings">
+<h3><span class="section-number">2.4.1. </span>Install Waterloo Docstrings<a class="headerlink" href="#install-waterloo-docstrings" title="Link to this heading">¶</a></h3>
 <p>If you have not done so already, update <code class="wtrl_lit docutils literal notranslate"><span class="pre">pip</span></code>:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>--upgrade<span class="w"> </span>pip
 </pre></div>
 </div>
-<p>Install Waterloo from <code class="wtrl_file docutils literal notranslate"><span class="pre">github.com</span></code>:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>git+ssh://git@github.com:22/uwe-at-sdv/sdv_doc_waterloo.git
+<p>Install Waterloo from PyPI:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>sdv-doc-waterloo
+</pre></div>
+</div>
+<p>If you want to work from the current source tree, install from GitHub via HTTPS:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>git+https://github.com/uwe-at-sdv/sdv_doc_waterloo.git
 </pre></div>
 </div>
 <p>Add the extension to <code class="wtrl_file docutils literal notranslate"><span class="pre">${ROOT}/doc/source/conf.py</span></code>:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># -- General configuration ---------------------------------------------------</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># -- General configuration -------------------------------------</span>
 
 <span class="n">extensions</span> <span class="o">=</span> <span class="p">[</span>
         <span class="c1"># other extensions</span>
@@ -197,11 +201,11 @@ Create a directory for the human-readable documentation:</p>
 </pre></div>
 </div>
 <p>Configure the path to your project sources:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># -- Path setup --------------------------------------------------------------</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># -- Path setup ------------------------------------------------</span>
 
 <span class="c1"># If your modules are located outside the documentation directory,</span>
-<span class="c1"># add their paths here. Use os.path.abspath to convert relative paths</span>
-<span class="c1"># to absolute ones if necessary.</span>
+<span class="c1"># add their paths here. Use os.path.abspath to convert relative</span>
+<span class="c1"># paths to absolute ones if necessary.</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
 
 <span class="n">ROOT</span> <span class="o">=</span> <span class="s2">&quot;/path/to/my/project&quot;</span>
@@ -271,7 +275,7 @@ directory and run:</p>
 </pre></div>
 </div>
 <p>Validate the generated JSON file:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>waterlint<span class="w"> </span>validate-json<span class="w"> </span>--in<span class="w"> </span>doc-json/my_module.core.rfc-2119.json
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>waterlint<span class="w"> </span>validate-json<span class="w"> </span>--in<span class="w"> </span>doc-json/my_module.wtrl.core.rfc-2119.json
 </pre></div>
 </div>
 <p>If no error message is shown and the exit code is 0,
@@ -336,7 +340,7 @@ Waterloo Docstrings into a project.</p>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#install-sphinx">2.3. Install Sphinx</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#waterloo-docstrings">2.4. Waterloo Docstrings</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#install-waterloo">2.4.1. Install Waterloo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#install-waterloo-docstrings">2.4.1. Install Waterloo Docstrings</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#adding-a-waterloo-docstring">2.4.2. Adding a Waterloo Docstring</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#building-a-human-readable-documentation">2.4.3. Building a Human-Readable Documentation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#building-a-machine-readable-documentation">2.4.4. Building a Machine-Readable Documentation</a></li>
@@ -353,7 +357,7 @@ Waterloo Docstrings into a project.</p>
 <li class="toctree-l1"><a class="reference internal" href="json_io.html">8. The JSON I/O Layer</a></li>
 <li class="toctree-l1"><a class="reference internal" href="html_output_layer.html">9. The HTML Output Layer</a></li>
 <li class="toctree-l1"><a class="reference internal" href="mcp.html">10. Model Context Protocol</a></li>
-<li class="toctree-l1"><a class="reference internal" href="reference.html">11. Reference - Core View</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reference.html">11. Reference - Rendering Showcase</a></li>
 <li class="toctree-l1"><a class="reference internal" href="_test_freeform.html">12. Test: Flow control in freeform sections</a></li>
 <li class="toctree-l1"><a class="reference internal" href="_test_scope.html">13. Test: Scopes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="test_pygments_lexer.html">14. Test: Pygments lexer showcase</a></li>
