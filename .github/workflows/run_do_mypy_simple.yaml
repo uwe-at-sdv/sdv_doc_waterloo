@@ -37,5 +37,15 @@ jobs:
       - name: Run do_mypy_simple.sh
         run: ./do_mypy_simple.sh
 
+      - name: Show mypy report on failure
+        if: failure()
+        run: |
+          if [ -f doc/source/type_checking_report.txt ]; then
+            echo "=== type_checking_report.txt ==="
+            cat doc/source/type_checking_report.txt
+          else
+            echo "type_checking_report.txt not found"
+          fi
+
       - name: Check generated type-checking files
         run: git diff --exit-code -- doc/source/type_checking_report.txt doc/source/type_checking_exceptions.txt doc/source/type_checking_files.txt
