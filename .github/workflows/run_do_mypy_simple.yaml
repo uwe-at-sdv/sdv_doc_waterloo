@@ -14,11 +14,17 @@ jobs:
     defaults:
       run:
         shell: bash
-        working-directory: package_main
+        working-directory: .
 
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
+
+      - name: Show workspace layout
+        run: |
+          pwd
+          ls -la
+          ls -la package_main
 
       - name: Set up Python
         uses: actions/setup-python@v5
