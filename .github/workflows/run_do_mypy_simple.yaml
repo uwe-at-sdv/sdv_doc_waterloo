@@ -24,7 +24,8 @@ jobs:
         run: |
           pwd
           ls -la
-          ls -la package_main
+          ls -la src
+          ls -la doc/source
 
       - name: Set up Python
         uses: actions/setup-python@v5
