@@ -49,8 +49,13 @@ release = '0'
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
+	"sphinx_sitemap",
 	"sdv.doc.waterloo.docitem_sphinx",
 	]
+
+# For sitemap:
+html_baseurl = 'https://uwe-at-sdv.github.io/sdv_doc_waterloo/'
+sitemap_url_scheme = "{link}"
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
