@@ -68,5 +68,5 @@ integrations for Waterloo docstrings.
 ## Preview
 
 <picture>
-  <img src="https://raw.githubusercontent.com/uwe-at-sdv/sdv_doc_waterloo/ide-plugins/package_ide-plugins/pygments/img/screenshot_sphinx_pygments_wtrl.png" alt="ExtensionPreview">
+  <img src="https://raw.githubusercontent.com/uwe-at-sdv/sdv_doc_waterloo/ide-plugins/pygments/img/screenshot_sphinx_pygments_wtrl.png" alt="ExtensionPreview">
 </picture>
