@@ -1,22 +1,17 @@
 # Python-Waterloo Lexer (Pygments)
 
-![Status](https://img.shields.io/badge/status-pre--release-orange)
-![Version](https://img.shields.io/badge/version-0.5.11-orange)
 ![License](https://img.shields.io/badge/license-BSD--2--Clause-blue)
+![Version](https://img.shields.io/badge/version-0.5.12-orange)
 ![Python](https://img.shields.io/badge/python-3.10%2B-blue)
 [![PyPI](https://img.shields.io/badge/PyPI-package-3775A9?logo=pypi&logoColor=white)](https://pypi.org/project/python-waterloo-lexer/)
 
-This folder contains a custom Pygments lexer for Python files with Waterloo docstrings.
+The `python-waterloo-lexer` package provides a Pygments lexer for Python
+files that contain Waterloo docstrings.
 
 > **Branch note (`ide-plugins`)**
 >
 > The Pygments lexer package lives on the `ide-plugins` branch. Installation from Git must
 > reference `@ide-plugins` (see below). General repository documentation is in `@main/README.md`.
-
-> **Preliminary project status**
->
-> This repository is public, but the Waterloo project is still in a preliminary phase.
-> Please treat it as work in progress; the main project README contains the official start note.
 
 ## Prerequisites
 
@@ -36,7 +31,7 @@ cd sdv_doc_waterloo
 ```
 SSH:
 ```bash
-git clone --branch ide-plugins --single-branch git+ssh://git@github.com/uwe-at-sdv/sdv_doc_waterloo.git
+git clone --branch ide-plugins --single-branch git@github.com:uwe-at-sdv/sdv_doc_waterloo.git
 cd sdv_doc_waterloo
 ```
 

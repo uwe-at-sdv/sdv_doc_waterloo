@@ -2,8 +2,8 @@
 
 _BADGES_
 
-`python-waterloo-lexer` is a Pygments lexer for Python files that contain
-Waterloo docstrings.
+The `python-waterloo-lexer` package provides a Pygments lexer for Python
+files that contain Waterloo docstrings.
 
 The Waterloo Docstrings project defines a structured docstring format with explicit section semantics,
 normativity rules, and multiple render targets. The project is designed so that
@@ -68,5 +68,5 @@ integrations for Waterloo docstrings.
 ## Preview
 
 <picture>
-  <img src="https://minifl.de/sdv_doc_waterloo/img/screenshot_sphinx_pygments_wtrl.png" alt="ExtensionPreview">
+  <img src="https://raw.githubusercontent.com/uwe-at-sdv/sdv_doc_waterloo/ide-plugins/package_ide-plugins/pygments/img/screenshot_sphinx_pygments_wtrl.png" alt="ExtensionPreview">
 </picture>

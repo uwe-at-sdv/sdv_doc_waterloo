@@ -1,14 +1,8 @@
 # Waterloo Docstrings for VS Code
 
-![Status](https://img.shields.io/badge/status-pre--release-orange)
 ![License](https://img.shields.io/badge/license-BSD--2--Clause-blue)
-![Version](https://img.shields.io/badge/version-0.2.12-blue)
+![Version](https://img.shields.io/badge/version-0.2.13-blue)
 ![Source](https://img.shields.io/badge/source-GitHub-181717?logo=github)
-
-> **Preliminary project status**
->
-> This repository is public, but the Waterloo project is still in a preliminary phase.
-> Please treat it as work in progress; the main project README contains the official start note.
 
 VS Code extension for Waterloo docstrings in Python.
 
@@ -24,8 +18,8 @@ This package provides:
 ## Preview
 
 <picture>
-  <source srcset="https://minifl.de/sdv_doc_waterloo/img/screencast_final.gif" type="image/gif">
-  <img src="https://minifl.de/sdv_doc_waterloo/img/screencast_final_fallback.png" alt="ExtensionPreview">
+  <source srcset="https://raw.githubusercontent.com/uwe-at-sdv/sdv_doc_waterloo/ide-plugins/package_ide-plugins/vscode/img/screencast_final.gif" type="image/gif">
+  <img src="https://raw.githubusercontent.com/uwe-at-sdv/sdv_doc_waterloo/ide-plugins/package_ide-plugins/vscode/img/screencast_final_fallback.png" alt="ExtensionPreview">
 </picture>
 
 ## Source and release
@@ -34,7 +28,7 @@ The extension source and release workflow are tied to the GitHub repository:
 
 - `https://github.com/uwe-at-sdv/sdv_doc_waterloo`
 
-This GitHub presence is the public source of truth for the extension and is
+This GitHub repository is the public source of truth for the extension and is
 the repository used for the Trusted Publisher workflow on the Marketplace.
 
 ## Requirements
@@ -44,8 +38,20 @@ backend and shared schema data:
 
 - `sdv.doc.waterloo`
 
-The package can currently be installed from the GitHub repository.
-A future public release on PyPI is planned.
+Install it from PyPI:
+
+```bash
+pip install sdv-doc-waterloo
+```
+
+If you want the Sphinx extension and related extras, install:
+
+```bash
+pip install "sdv-doc-waterloo[sphinx]"
+```
+
+The package can also be installed from the GitHub repository during active
+development, but PyPI is the default release channel now.
 
 ## Clone the correct branch
 
@@ -59,7 +65,7 @@ cd sdv_doc_waterloo/vscode
 ```
 SSH:
 ```bash
-git clone --branch ide-plugins --single-branch git+ssh://git@github.com/uwe-at-sdv/sdv_doc_waterloo.git
+git clone --branch ide-plugins --single-branch git@github.com:uwe-at-sdv/sdv_doc_waterloo.git
 cd sdv_doc_waterloo/vscode
 ```
 

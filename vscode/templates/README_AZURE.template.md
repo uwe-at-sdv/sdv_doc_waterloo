@@ -2,22 +2,7 @@
 
 _BADGES_
 
-> [!NOTE]
-> This extension is currently in a test phase.
->
-> Functionality, command names, schema integration and generated
-> docstring structures may still change.
->
-> The extension is currently published primarily for development,
-> testing and interoperability experiments with the Waterloo backend.
->
-> Installation is currently recommended mainly for testers and
-> developers already working with Waterloo docstrings.
-
-<picture>
-  <source srcset="https://minifl.de/sdv_doc_waterloo/img/screencast_final.gif" type="image/gif">
-  <img src="https://minifl.de/sdv_doc_waterloo/img/screencast_final_fallback.png" alt="ExtensionPreview">
-</picture>
+![ExtensionPreview](https://raw.githubusercontent.com/uwe-at-sdv/sdv_doc_waterloo/ide-plugins/package_ide-plugins/vscode/img/screencast_final_fallback.png)
 
 The Waterloo Docstrings project defines a structured docstring format with
 explicit section semantics, normativity rules, and multiple render targets.
@@ -59,6 +44,14 @@ pip install "sdv-doc-waterloo[sphinx]"
 
 The package can also be installed from the GitHub repository during active
 development, but PyPI is the default release channel now.
+
+If you prefer to work from a fresh checkout, clone the `ide-plugins` branch
+explicitly:
+
+```bash
+git clone --branch ide-plugins --single-branch https://github.com/uwe-at-sdv/sdv_doc_waterloo.git
+cd sdv_doc_waterloo/vscode
+```
 
 This extension provides:
 

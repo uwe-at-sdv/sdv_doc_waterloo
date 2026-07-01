@@ -4,6 +4,8 @@ Format:
 
 - VERSION [YYYY-MM-DD]: Summary.
 
+- 0.5.12 [2026-07-01]:
+  - Removed prerelease-status
 - 0.5.4 [2026-06-24]:
   - Version Badge
 - 0.5.3 [2026-06-24]:
