@@ -2,7 +2,7 @@
 
 _BADGES_
 
-![ExtensionPreview](https://raw.githubusercontent.com/uwe-at-sdv/sdv_doc_waterloo/ide-plugins/package_ide-plugins/vscode/img/screencast_final_fallback.png)
+![ExtensionPreview](https://raw.githubusercontent.com/uwe-at-sdv/sdv_doc_waterloo/ide-plugins/vscode/img/screencast_final_fallback.png)
 
 The Waterloo Docstrings project defines a structured docstring format with
 explicit section semantics, normativity rules, and multiple render targets.

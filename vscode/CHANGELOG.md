@@ -4,7 +4,7 @@ Format:
 
 - VERSION [YYYY-MM-DD]: Summary.
 
-- 0.2.13 [2026-07-01]:	Removed prerelease-status.
+- 0.2.14 [2026-07-01]:	Removed prerelease-status.
 - 0.2.10 [2026-06-10]:	Refactoring for detailed parsing and validation messages complete
 - 0.2.5 [2026-06-24]:   Changed README
 - 0.2.3 [2026-06-16]:   Command about in MCP-Server

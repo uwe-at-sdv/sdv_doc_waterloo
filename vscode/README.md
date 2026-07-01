@@ -1,7 +1,7 @@
 # Waterloo Docstrings for VS Code
 
 ![License](https://img.shields.io/badge/license-BSD--2--Clause-blue)
-![Version](https://img.shields.io/badge/version-0.2.13-blue)
+![Version](https://img.shields.io/badge/version-0.2.14-blue)
 ![Source](https://img.shields.io/badge/source-GitHub-181717?logo=github)
 
 VS Code extension for Waterloo docstrings in Python.
@@ -18,8 +18,8 @@ This package provides:
 ## Preview
 
 <picture>
-  <source srcset="https://raw.githubusercontent.com/uwe-at-sdv/sdv_doc_waterloo/ide-plugins/package_ide-plugins/vscode/img/screencast_final.gif" type="image/gif">
-  <img src="https://raw.githubusercontent.com/uwe-at-sdv/sdv_doc_waterloo/ide-plugins/package_ide-plugins/vscode/img/screencast_final_fallback.png" alt="ExtensionPreview">
+  <source srcset="https://raw.githubusercontent.com/uwe-at-sdv/sdv_doc_waterloo/ide-plugins/vscode/img/screencast_final.gif" type="image/gif">
+  <img src="https://raw.githubusercontent.com/uwe-at-sdv/sdv_doc_waterloo/ide-plugins/vscode/img/screencast_final_fallback.png" alt="ExtensionPreview">
 </picture>
 
 ## Source and release
