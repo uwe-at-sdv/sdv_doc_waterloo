@@ -88,6 +88,9 @@ html_theme_options = {
     'logo_text_align': 'left',
 }
 
+# Use the dedicated 31x31 watermark-like icon as browser favicon.
+html_favicon = '_static/wtrl_logo_31x31.png'
+
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
