@@ -56,6 +56,7 @@ extensions = [
 # For sitemap:
 html_baseurl = 'https://uwe-at-sdv.github.io/sdv_doc_waterloo/'
 sitemap_url_scheme = "{link}"
+html_extra_path = ['google4eaebafa61e09da2.html']
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
