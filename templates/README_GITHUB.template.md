@@ -1,5 +1,3 @@
-## PRELIMINARY - OFFICIAL START AT 2026-07-01
-
 <p align="center">
 	<img src="img/wtrl_logo_color.svg" alt="Waterloo Logo" width="240">
 </p>
@@ -46,7 +44,7 @@ pip install "git+ssh://git@github.com/uwe-at-sdv/sdv_doc_waterloo.git@main#subdi
 It validates docstrings, renders Waterloo JSON, generates helper output, and
 supports the MCP-related workflows in this project.
 Its JSON diagnostics are machine-readable and therefore well suited for CI
-pipelines and GitHub Workflows.
+pipelines and GitHub workflows.
 
 Start with the general help:
 
@@ -66,7 +64,7 @@ One important `waterlint` output path is the MCP server setup: the tool can
 validate the server configuration and generate a Docker build script when you
 want to package the server as an image.
 
-#### Running the MCP-server
+#### Running the MCP server
 
 The MCP server exposes Waterloo documentation data through the Model Context
 Protocol. It is tightly bound to the Waterloo JSON schema and provides tools
@@ -86,7 +84,7 @@ This launches the MCP server with the default configuration
 ``localhost`` on port 13316.
 Consult your operating system documentation if you want to run it as a service.
 
-#### Registering the MCP-server in Codex or Claude Code
+#### Registering the MCP server in Codex or Claude Code
 
 Once the server is running, register it in your CLI client so it can reach the
 server without manual setup every time. The exact subcommand syntax depends on
