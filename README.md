@@ -29,13 +29,13 @@ pip install ".[sphinx]"
 The package can also be installed directly from GitHub:
 
 ```bash
-pip install "git+https://github.com/uwe-at-sdv/sdv_doc_waterloo.git@main#subdirectory=package_main"
+pip install "git+https://github.com/uwe-at-sdv/sdv_doc_waterloo.git@main"
 ```
 
 SSH works as well for authenticated access:
 
 ```bash
-pip install "git+ssh://git@github.com/uwe-at-sdv/sdv_doc_waterloo.git@main#subdirectory=package_main"
+pip install "git+ssh://git@github.com/uwe-at-sdv/sdv_doc_waterloo.git@main"
 ```
 
 ### Quick tutorials
