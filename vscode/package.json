@@ -10,7 +10,7 @@
     "normativity",
     "docstring-linter"
   ],
-  "version": "0.2.14",
+  "version": "0.2.15",
   "publisher": "uwe-at-sdv",
   "engines": {
     "vscode": "^1.115.0"
@@ -45,6 +45,11 @@
           "type": "string",
           "default": "wtrl_mcp",
           "description": "Command VS Code should run to start the Waterloo MCP server."
+        },
+        "waterloo.pythonExecutable": {
+          "type": "string",
+          "default": "python3",
+          "description": "Python executable used by the extension for the backend and MCP config discovery."
         },
         "waterloo.mcpConfigPath": {
           "type": "string",

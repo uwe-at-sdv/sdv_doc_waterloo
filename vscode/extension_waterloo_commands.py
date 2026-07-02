@@ -14,7 +14,9 @@ try:
 	import sdv.doc.waterloo.docitem_genutil as genutil
 except ImportError as e:
 	print(f"Error importing Waterloo modules(2): {e}", file=sys.stderr)
-	print("Please download and install sdv_doc_waterloo from https://github.com/uwe-at-sdv/sdv_doc_waterloo", file=sys.stderr)
+	print("Please download and install sdv_doc_waterloo from one of the following sites:")
+	print("* Github: https://github.com/uwe-at-sdv/sdv_doc_waterloo", file=sys.stderr)
+	print("* PyPI: python3 -m pip install sdv-doc-waterloo", file=sys.stderr)
 	sys.exit(1)
 
 

@@ -16,6 +16,7 @@ const fout = vscode.window.createOutputChannel('Channel.Waterloo');
 const FATAL_BACKEND_NOT_FOUND = "WTRL_VSCODE_PYTHON_BACKEND_NOT_AVAILABLE";
 const FATAL_BACKEND_NOT_READABLE = "WTRL_VSCODE_PYTHON_BACKEND_NOT_READABLE";
 const FATAL_PYTHON_NOT_AVAILABLE = "WTRL_VSCODE_PYTHON_NOT_AVAILABLE";
+const FATAL_WATERLOO_PACKAGE_NOT_AVAILABLE = "WTRL_VSCODE_WATERLOO_PACKAGE_NOT_AVAILABLE";
 // Phase B: backend ping / protocol checks.
 const FATAL_BACKEND_PING_FAILED = "WTRL_VSCODE_PYTHON_BACKEND_PING_FAILED";
 const FATAL_BACKEND_PROTOCOL_ERROR = "WTRL_VSCODE_PYTHON_BACKEND_PROTOCOL_ERROR";
@@ -28,6 +29,33 @@ const CAP_VALIDATE = "validateDocstring";
 function shouldShowSuccessNotifications() {
 	const cfg = vscode.workspace.getConfiguration("waterloo");
 	return cfg.get("showSuccessNotifications", true);
+}
+
+function getPythonExecutable() {
+	const cfg = vscode.workspace.getConfiguration("waterloo");
+	return String(cfg.get("pythonExecutable", "python3")).trim() || "python3";
+}
+
+function getInstalledWaterlooPackageRoot() {
+	const pythonExecutable = getPythonExecutable();
+	const pythonOutput = execFileSync(pythonExecutable, [
+		'-c',
+		'import pathlib\n' +
+		'try: import sdv.doc.waterloo.docitem_helper as h\n' +
+		'except ModuleNotFoundError as e:\n' +
+		'    if e.name in {"sdv.doc", "sdv.doc.waterloo"}: raise SystemExit(1)\n' +
+		'    raise\n' +
+		'print(pathlib.Path(h.__file__).resolve().parent)'
+	], { encoding: 'utf-8', timeout: 5000, stdio: ['pipe', 'pipe', 'pipe'] }).trim();
+	return pythonOutput.length > 0 ? pythonOutput : null;
+}
+
+function formatMissingWaterlooPackageDetail() {
+	const pythonExecutable = getPythonExecutable();
+	return	`-- sdv.doc.waterloo is not installed for the environment of executable '${pythonExecutable}'.\n\n` +
+		`Install sdv-doc-waterloo in that Python environment from one of\n\n` +
+		`++ Github: https://github.com/uwe-at-sdv/sdv_doc_waterloo\n` +
+		`++ PyPI: sdv-doc-waterloo\n`;
 }
 
 function getDefOrClassKind(text) {
@@ -401,12 +429,13 @@ function updateFuncClassModuleContext(editor) {
 // in order to ensure the extension does not block under any circumstances.
 function runPythonJsonCommand(scriptPath, payload) {
 	return new Promise((resolve, reject) => {
+		const pythonExecutable = getPythonExecutable();
 		// The Python backend is treated as a short-lived helper: we send one JSON
 		// payload on stdin and expect one JSON object on stdout.
 		// This keeps the Node side simple and avoids having to keep a long-lived
 		// Python process in sync with the editor state.
 		const child = execFile(
-			'python3',
+			pythonExecutable,
 			[scriptPath],
 			{
 				timeout: 5000,
@@ -428,7 +457,7 @@ function runPythonJsonCommand(scriptPath, payload) {
 					fout.appendLine("payload:");
 					fout.appendLine(JSON.stringify(payload, null, 2));
 					fout.show(true);
-					reject(new Error(`python3 failed:${details}, ${error}`));
+					reject(new Error(`${pythonExecutable} failed:${details}, ${error}`));
 					return;
 				}
 				try {
@@ -481,12 +510,8 @@ function resolveWaterlooMcpConfigPath() {
 	// This makes the extension work both from the source tree and from an
 	// editable install without forcing the user to enter a long path manually.
 	try {
-		const pythonOutput = execFileSync('python3', [
-			'-c',
-			'import sdv.doc.waterloo; import os; print(os.path.dirname(sdv.doc.waterloo.__file__))'
-		], { encoding: 'utf-8', timeout: 5000, stdio: ['pipe', 'pipe', 'ignore'] }).trim();
-		if (pythonOutput.length > 0) {
-			const pkgRoot = pythonOutput;
+		const pkgRoot = getInstalledWaterlooPackageRoot();
+		if (pkgRoot) {
 			// This is the canonical location for the MCP provider config file for a properly installed package.
 			const candidate = path.join(pkgRoot, 'etc', 'wtrl_mcp.stdio.toml');
 			if (fs.existsSync(candidate)) {
@@ -495,7 +520,7 @@ function resolveWaterlooMcpConfigPath() {
 			}
 		}
 	} catch (_err) {
-		// If Python is unavailable, we still try workspace-relative fallbacks below.
+		// If Python or the package is unavailable, we still try workspace-relative fallbacks below.
 	}
 
 	// If the user supplied a relative path, interpret it against every open
@@ -586,7 +611,7 @@ function registerWaterlooMcpProvider(context) {
 }
 
 function emitFatalActivationError(code, detail) {
-	const msg = `Waterloo fatal activation error: ${code}${detail ? ` - ${detail}` : ""}`;
+	const msg = `Waterloo fatal activation error: ${code}${detail ? `\n\n${detail}\n` : ""}`;
 	fout.appendLine(msg);
 	fout.show(true);
 	vscode.window.showErrorMessage(msg);
@@ -608,11 +633,24 @@ function checkActivationPrerequisites(context) {
 		return { ok: false, code: FATAL_BACKEND_NOT_READABLE, detail: backendScript };
 	}
 	try {
-		execFileSync('python3', ['--version'], { timeout: 3000, stdio: 'ignore' });
+		execFileSync(getPythonExecutable(), ['--version'], { timeout: 3000, stdio: 'ignore' });
 	} catch (_err) {
-		return { ok: false, code: FATAL_PYTHON_NOT_AVAILABLE, detail: "python3" };
+		return { ok: false, code: FATAL_PYTHON_NOT_AVAILABLE, detail: getPythonExecutable() };
 	}
-	return { ok: true, backendScript };
+	try {
+		const pkgRoot = getInstalledWaterlooPackageRoot();
+		if (!pkgRoot) {
+			return { ok: false, code: FATAL_WATERLOO_PACKAGE_NOT_AVAILABLE, detail: formatMissingWaterlooPackageDetail() };
+		}
+		return { ok: true, backendScript, pkgRoot };
+	} catch (err) {
+		return { ok: false, code: FATAL_WATERLOO_PACKAGE_NOT_AVAILABLE, detail: formatMissingWaterlooPackageDetail() };
+	}
+}
+
+async function installWaterlooBackendPackage(skipPrompt = false) {
+	const cfg = vscode.workspace.getConfiguration("waterloo");
+	return cfg.get("showSuccessNotifications", true);
 }
 
 function buildGenerationRequestContext(editor) {
@@ -876,16 +914,16 @@ async function validateDocstringInBackend(prereq, commandName) {
 async function activate(context) {
 	fout.appendLine('Activating Waterloo extension...');
 	fout.show(true);
-	registerWaterlooMcpProvider(context);
 	setBackendReady(false);
 	setCapabilities([]);
 	const prereq = checkActivationPrerequisites(context);
 	// Phase-A: Existence and permissions checks, and Python availability check.
 	if (!prereq.ok) {
 		emitFatalActivationError(prereq.code, prereq.detail);
-		fout.appendLine('Waterloo MCP provider remains active; skipping docstring backend setup.');
+		fout.appendLine('Waterloo MCP provider not started; skipping docstring backend setup.');
 		return;
 	}
+	registerWaterlooMcpProvider(context);
 	// Phase-B: Ping the backend to check if it is working at all, and that the protocol is compatible.
 	try {
 			const pingRequest = { version: 1, command: "ping" };
