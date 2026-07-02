@@ -54,8 +54,11 @@ function formatMissingWaterlooPackageDetail() {
 	const pythonExecutable = getPythonExecutable();
 	return	`-- sdv.doc.waterloo is not installed for the environment of executable '${pythonExecutable}'.\n\n` +
 		`Install sdv-doc-waterloo in that Python environment from one of\n\n` +
-		`++ Github: https://github.com/uwe-at-sdv/sdv_doc_waterloo\n` +
-		`++ PyPI: sdv-doc-waterloo\n`;
+		`++ Github: pip install "git+https://github.com/uwe-at-sdv/sdv_doc_waterloo.git@main"\n` +
+		`++ PyPI:   pip install sdv-doc-waterloo\n` +
+		`\n` +
+		"Depending on your Python environment, you might need to use `pip install`, `uv add`, or `poetry add` in your project terminal."
+		;
 }
 
 function getDefOrClassKind(text) {

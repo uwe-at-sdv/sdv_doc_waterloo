@@ -4,6 +4,7 @@ Format:
 
 - VERSION [YYYY-MM-DD]: Summary.
 
+- 0.2.16 [2026-07-02]:	Improved diagnostics... again.
 - 0.2.15 [2026-07-02]:	Improved diagnostics in case of missing python package.
 - 0.2.14 [2026-07-01]:	Removed prerelease-status.
 - 0.2.10 [2026-06-10]:	Refactoring for detailed parsing and validation messages complete
