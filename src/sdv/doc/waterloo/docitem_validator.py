@@ -1893,7 +1893,9 @@ See_also:
 		# are validated in their respective validators; see markers in those functions.
 		#===== Partial Normativity Detection ==========================#
 		# May add warnings for breach of PNB-rules.
-		top.detect_partial_normativity(tr)
+		for label, item in top.items().items():
+			if label in node_normative_sections.items():
+				item.detect_partial_normativity(tr)
 		session.remember_validated(obj, top)
 	finally:
 		session.forget(obj)

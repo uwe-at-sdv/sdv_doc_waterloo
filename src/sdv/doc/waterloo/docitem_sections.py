@@ -422,6 +422,9 @@ Method_overview:
 		super().__init__()
 	def label(self) -> str:
 		return "Class_overview"
+	def detect_partial_normativity(self,tr: tracer) -> bool:
+		# True because Class_overview is always informative.
+		return True
 	def parse(self,tr : tracer,entries : DocstringSubtree) -> None:
 		"""
 		Preamble:
@@ -748,6 +751,9 @@ Method_overview:
 		super().__init__()
 	def label(self) -> str:
 		return "Method_overview"
+	def detect_partial_normativity(self,tr: tracer) -> bool:
+		# True because Method_overview is always informative.
+		return True
 	def parse(self,tr : tracer,entries : DocstringSubtree) -> None:
 		"""
 Preamble:
@@ -832,6 +838,9 @@ Method_overview:
 		super().__init__()
 	def label(self) -> str:
 		return "Function_overview"
+	def detect_partial_normativity(self,tr: tracer) -> bool:
+		# True because Function_overview is always informative.
+		return True
 	def parse(self,tr : tracer,entries : DocstringSubtree) -> None:
 		"""
 		Preamble:
@@ -1380,6 +1389,9 @@ Method_overview:
 		super().__init__()
 	def label(self) -> str:
 		return "Terminology"
+	def detect_partial_normativity(self,tr: tracer) -> bool:
+		# True because Terminology is always informative.
+		return True
 	def parse(self,tr : tracer,entries : DocstringSubtree) -> None:
 		"""
 Preamble:
@@ -1464,6 +1476,9 @@ Method_overview:
 		super().__init__()
 	def label(self) -> str:
 		return "Notes"
+	def detect_partial_normativity(self,tr: tracer) -> bool:
+		# True because Notes is always informative.
+		return True
 	def parse(self,tr : tracer,entries : DocstringSubtree) -> None:
 		"""
 Preamble:

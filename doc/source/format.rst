@@ -689,6 +689,15 @@ In the following rules "WS" stands for one or more whitespace characters.
   Informative: The phrase "may not" is ambiguous in English
   and |should| be avoided in normative text.
 
+* [PNB-004] -- Tools |should| warn if free-form textual content of normative
+  sections and subsections contains :wtrl_value:`must`, :wtrl_value:`Must`,
+  :wtrl_value:`should`, :wtrl_value:`Should`, :wtrl_value:`may`, or
+  :wtrl_value:`May` outside Normativity Keyword token form.
+  Informative: Use :wtrl_value:`|must|`, :wtrl_value:`|Must|`,
+  :wtrl_value:`|should|`, :wtrl_value:`|Should|`,
+  :wtrl_value:`|may|`, or :wtrl_value:`|May|` when the statement is
+  intended to be normative.
+
 
 
 Sections and subsections

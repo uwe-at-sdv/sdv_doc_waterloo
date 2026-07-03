@@ -69,7 +69,8 @@ try:
 except Exception:
 	_HAS_PYGMENTS = False
 
-__version__ = "0.19.3"
+__version__ = "0.20.0"
+# - 0.20.0 [2026-07-03]	New rule BNP-004
 # - 0.19.3 [2026-06-29]	Bugfix: CPVAR-005 and MPVAR-005 now allow annotated but uninstantiated variables, e.g. `x: int` without `x = 0`.
 # - 0.19.2 [2026-06-28] Refactoring for detailed parsing and validation messages complete
 # - 0.19.1 [2026-06-26] Add docstrings for version-commands; added wtrl_mcp-Version to version-json output.

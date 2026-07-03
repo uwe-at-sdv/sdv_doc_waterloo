@@ -2,11 +2,11 @@
     "$schema": "https://sci-d-vis.com/schema/wtrl-json-0.1.0.schema.json",
     "$id": "urn:waterlint:wtrl-json:0.19.3:core:rfc-2119:dc567221661c59c1b69d5c7aa94df71c0b97cefc358e25853d08be65f7f26bed",
     "__WTRL_VERSION__": {
-        "waterloo": "0.10.8",
+        "waterloo": "0.11.0",
         "schema": "0.1.0"
     },
     "__WTRL_META__": {
-        "generated_at": "2026-07-02T07:34:33+02:00",
+        "generated_at": "2026-07-03T11:44:20+02:00",
         "generator": "waterlint",
         "scope": "core",
         "flavour": "rfc-2119"

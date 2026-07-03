@@ -54,6 +54,7 @@ RE_PARTIAL_NORMATIVITY_PATTERN_A_COMPILED: Final[Sequence[re.Pattern[str]]] = (
 RE_PARTIAL_NORMATIVITY_PATTERN_B_COMPILED: Final[Sequence[re.Pattern[str]]] = (
 	re.compile(r"\|[Mm]ay\|\s+not\b"),
 	)
+RE_UNTOKENIZED_NORMATIVITY_PATTERN_COMPILED: Final[re.Pattern[str]] = re.compile(r"(?<![\w|])(?:[Mm]ust|[Ss]hould|[Mm]ay)(?![\w|])")
 #===== begin base classes =====================================#
 
 class docitem_base:
@@ -229,7 +230,7 @@ Description:
 			if token in item:
 				return True
 		return False
-	def detect_partial_normativity(self,tr: tracer) -> bool:
+	def _detect_tokenized_partial_normativity(self,tr: tracer) -> bool:
 		ok: bool = True
 		with traced_section(tr,self.label()):
 			for p in RE_PARTIAL_NORMATIVITY_PATTERN_A_COMPILED:
@@ -248,6 +249,22 @@ Description:
 							warn_parsing(tr,"PNB-003","Bad normativity pattern detected: |may| not.")
 							ok = False
 					i += 1
+		return ok
+	def _detect_untokenized_normativity(self,tr: tracer) -> bool:
+		ok: bool = True
+		with traced_section(tr,self.label()):
+			i = 0
+			for item in self.items():
+				with traced_section(tr,f"[{i}]"):
+					if RE_UNTOKENIZED_NORMATIVITY_PATTERN_COMPILED.search(item):
+						warn_parsing(tr,"PNB-004","Untokenized normativity keyword detected; use |must|, |should|, or |may| when the statement is intended to be normative.")
+						ok = False
+				i += 1
+		return ok
+	def detect_partial_normativity(self,tr: tracer) -> bool:
+		ok: bool = True
+		ok &= self._detect_tokenized_partial_normativity(tr)
+		ok &= self._detect_untokenized_normativity(tr)
 		return ok
 	def __str__(self) -> str:
 		return " {'" + "','".join(self._items) + "'}"
@@ -406,6 +423,8 @@ class docitem_list_of_symbols_base(docitem_list_base):
 		"""
 		IDENTIFIER = 1
 		QUALIFIED_IDENTIFIER = 2
+	def detect_partial_normativity(self,tr: tracer) -> bool:
+		return self._detect_tokenized_partial_normativity(tr)
 	def _parse(self,tr : tracer,refs : DocstringSubtree,pattern : ValuePattern) -> None:
 		"""
 		Preamble:
