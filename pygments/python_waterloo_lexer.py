@@ -41,7 +41,7 @@ from pygments.token import Error, Generic, Keyword, Name, String, Literal, Numbe
 
 #----- Changelog ----------------------------------------------#
 
-__version__ = "0.5.13"
+__version__ = "0.6.0"
 
 #----- Constants ----------------------------------------------#
 RE_SECTION = re.compile(
@@ -103,10 +103,11 @@ RE_LIST_MARKER = re.compile(
 # 33,34: |tag| and argument
 # 35,36: |norm| and argument
 # 37,38: |var_type| and argument
-# 39,40: Generic role and argument
-# 41: Line connector
-# Todo: Implement 'pkg' for 'package' as opposed to importable module.
-# Todo: Implement 'url' for URLs, e.g. |url|`https://example.com`.
+# 39,40: |class| and argument
+# 41,42: |pkg| and argument
+# 43,44: |url| and argument
+# 45,46: Generic role and argument
+# 47: Line connector
 # Todo: Sort roles alphabetically by role name.
 # A. Normativity keywords
 # B. Special values
@@ -134,6 +135,9 @@ RE_INLINE = re.compile(
 	r"|(\|tag\|)(`[^`]+`)"
 	r"|(\|norm\|)(`[^`]+`)"
 	r"|(\|var_type\|)(`[^`]+`)"
+	r"|(\|class\|)(`[^`]+`)"
+	r"|(\|pkg\|)(`[^`]+`)"
+	r"|(\|url\|)(`[^`]+`)"
 	r"|(\|[A-Za-z_][A-Za-z0-9_]*\|)(`[^`]+`)"
 	r"|(\\)(?=\s*(?:\n)?$)"
 )
@@ -562,11 +566,20 @@ class PythonWaterlooLexer(PythonLexer):
 			elif m.group(37) is not None and m.group(38) is not None: # var_type
 				yield base + m.start(), Keyword, m.group(37)
 				yield base + m.start() + len(m.group(37)), Name.Class, m.group(38)
-			elif m.group(39) is not None and m.group(40) is not None: # generic role
-				yield base + m.start(), String.Doc, m.group(39)
-				yield base + m.start() + len(m.group(39)), String.Doc, m.group(40)
-			elif m.group(41) is not None:
+			elif m.group(39) is not None and m.group(40) is not None: # class
+				yield base + m.start(), Keyword, m.group(39)
+				yield base + m.start() + len(m.group(39)), Name.Class, m.group(40)
+			elif m.group(41) is not None and m.group(42) is not None: # pkg
 				yield base + m.start(), Keyword, m.group(41)
+				yield base + m.start() + len(m.group(41)), Name.Namespace, m.group(42)
+			elif m.group(43) is not None and m.group(44) is not None: # url
+				yield base + m.start(), Keyword, m.group(43)
+				yield base + m.start() + len(m.group(43)), String.Other, m.group(44)
+			elif m.group(45) is not None and m.group(46) is not None: # generic role
+				yield base + m.start(), String.Doc, m.group(45)
+				yield base + m.start() + len(m.group(45)), String.Doc, m.group(46)
+			elif m.group(47) is not None:
+				yield base + m.start(), Keyword, m.group(47)
 			else:
 				yield base + m.start(), Name.Constant, token_txt
 			cur = m.end()

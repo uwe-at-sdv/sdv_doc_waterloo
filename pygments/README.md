@@ -1,7 +1,7 @@
 # Python-Waterloo Lexer (Pygments)
 
 ![License](https://img.shields.io/badge/license-BSD--2--Clause-blue)
-![Version](https://img.shields.io/badge/version-0.5.13-orange)
+![Version](https://img.shields.io/badge/version-0.6.0-orange)
 ![Python](https://img.shields.io/badge/python-3.10%2B-blue)
 [![PyPI](https://img.shields.io/badge/PyPI-package-3775A9?logo=pypi&logoColor=white)](https://pypi.org/project/python-waterloo-lexer/)
 

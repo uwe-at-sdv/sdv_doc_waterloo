@@ -4,6 +4,8 @@ Format:
 
 - VERSION [YYYY-MM-DD]: Summary.
 
+- 0.6.0 [2026-07-04]:
+  - New roles added
 - 0.5.13 [2026-07-01]:
   - Removed prerelease-status
 - 0.5.4 [2026-06-24]:
