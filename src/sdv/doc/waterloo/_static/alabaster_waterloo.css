@@ -499,6 +499,21 @@ a.wtrl_var:visited
 
 	background-color:inherit;
 	}
+.wtrl_key
+	{
+	font-family:monospace;
+
+	color:var(--sdv-key-color);
+	font-weight:var(--sdv-key-font-weight);
+	font-style:var(--sdv-key-font-style);
+	font-size: 90%;
+	border: 1px solid black;
+	border-radius:3px;
+	padding-left:3px;
+	padding-right:3px;
+
+	background-color:inherit;
+	}
 .wtrl_label
 	{
 	font-family:inherit;

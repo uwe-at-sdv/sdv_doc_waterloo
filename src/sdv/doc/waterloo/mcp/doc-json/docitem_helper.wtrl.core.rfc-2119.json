@@ -1,12 +1,12 @@
 {
     "$schema": "https://sci-d-vis.com/schema/wtrl-json-0.1.0.schema.json",
-    "$id": "urn:waterlint:wtrl-json:0.20.3:core:rfc-2119:153a7c9d9865b0946b6586fcb7c469bc3a5d2c4e94d6ed9ab13bbe1fc9920de2",
+    "$id": "urn:waterlint:wtrl-json:0.20.3:core:rfc-2119:820394901a4e6b2576152defe454c3912a75bd76a33a3c6183f12fae32f7d373",
     "__WTRL_VERSION__": {
         "waterloo": "0.11.1",
         "schema": "0.1.0"
     },
     "__WTRL_META__": {
-        "generated_at": "2026-07-04T20:32:59+02:00",
+        "generated_at": "2026-07-04T21:53:13+02:00",
         "generator": "waterlint",
         "scope": "core",
         "flavour": "rfc-2119"
@@ -617,7 +617,7 @@
                         "* |dfn|`ABC` \u2014 |lit|`|dfn|`, a term being defined",
                         "* |file|`/path/to/ABC` \u2014 |lit|`|file|`, files but also URLs",
                         "* |func|`ABC` \u2014 |lit|`|func|`, functions",
-                        "* |key|`CTRL` \u2014 |lit|`|label|`, keys on the keyboard",
+                        "* |key|`CTRL` \u2014 |lit|`|key|`, keys on the keyboard",
                         "* |label|`ABC` \u2014 |lit|`|label|`, titles, labels",
                         "* |lit|`ABC` \u2014 |lit|`|lit|`, catch-all for literal text",
                         "* |mod|`ABC` \u2014 |lit|`|mod|`, modules",

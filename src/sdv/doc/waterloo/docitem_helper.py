@@ -104,7 +104,7 @@ Notes:
 		* |dfn|`ABC` — |lit|`|dfn|`, a term being defined
 		* |file|`/path/to/ABC` — |lit|`|file|`, files but also URLs
 		* |func|`ABC` — |lit|`|func|`, functions
-		* |key|`CTRL` — |lit|`|label|`, keys on the keyboard
+		* |key|`CTRL` — |lit|`|key|`, keys on the keyboard
 		* |label|`ABC` — |lit|`|label|`, titles, labels
 		* |lit|`ABC` — |lit|`|lit|`, catch-all for literal text
 		* |mod|`ABC` — |lit|`|mod|`, modules

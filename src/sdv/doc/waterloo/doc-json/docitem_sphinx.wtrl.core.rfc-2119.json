@@ -6,7 +6,7 @@
         "schema": "0.1.0"
     },
     "__WTRL_META__": {
-        "generated_at": "2026-07-04T20:32:56+02:00",
+        "generated_at": "2026-07-04T21:53:10+02:00",
         "generator": "waterlint",
         "scope": "core",
         "flavour": "rfc-2119"
@@ -1347,7 +1347,7 @@
                         "* |dfn|`ABC` \u2014 |lit|`|dfn|`, a term being defined",
                         "* |file|`/path/to/ABC` \u2014 |lit|`|file|`, files but also URLs",
                         "* |func|`ABC` \u2014 |lit|`|func|`, functions",
-                        "* |key|`CTRL` \u2014 |lit|`|label|`, keys on the keyboard",
+                        "* |key|`CTRL` \u2014 |lit|`|key|`, keys on the keyboard",
                         "* |label|`ABC` \u2014 |lit|`|label|`, titles, labels",
                         "* |lit|`ABC` \u2014 |lit|`|lit|`, catch-all for literal text",
                         "* |mod|`ABC` \u2014 |lit|`|mod|`, modules",
