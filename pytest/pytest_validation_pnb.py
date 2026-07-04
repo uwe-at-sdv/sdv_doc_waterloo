@@ -100,6 +100,37 @@ def test_pnb_004_ignores_tokenized_text() -> None:
 	_assert_no_warning(result, "PNB-004")
 
 
+@pytest.mark.parametrize(
+	"obj",
+	[
+		"pytest_bad_PNB.f_no_pnb_004_double_quoted",
+		"pytest_bad_PNB.f_no_pnb_004_single_quoted",
+		"pytest_bad_PNB.f_no_pnb_004_backtick_quoted",
+	],
+)
+def test_pnb_004_ignores_quoted_text(obj: str) -> None:
+	result = _run_waterlint_validate(obj)
+	_assert_no_warning(result, "PNB-004")
+
+
+def test_pnb_004_warns_for_unquoted_text_next_to_quoted_text() -> None:
+	result = _run_waterlint_validate("pytest_bad_PNB.f_pnb_004_quoted_and_unquoted")
+	_assert_warning(result, "PNB-004", "Untokenized normativity keyword")
+
+
+@pytest.mark.parametrize(
+	"obj",
+	[
+		"pytest_bad_PNB.f_pnb_004_mixed_single_backtick_quote",
+		"pytest_bad_PNB.f_pnb_004_mixed_single_double_quote",
+		"pytest_bad_PNB.f_pnb_004_mixed_double_backtick_quote",
+	],
+)
+def test_pnb_004_warns_for_mixed_quote_spans(obj: str) -> None:
+	result = _run_waterlint_validate(obj)
+	_assert_warning(result, "PNB-004", "Untokenized normativity keyword")
+
+
 def test_pnb_004_warns_in_normative_description() -> None:
 	result = _run_waterlint_validate("pytest_bad_PNB.f_pnb_004_normative_description")
 	_assert_warning(result, "PNB-004", "Untokenized normativity keyword")

@@ -11,9 +11,19 @@ Definitions:
 		A term |dfn|`ABC` we reference by role |lit|`|term|`.
 Contract:
 	general:
-		|Must| do this and that. Test roles: |term|`ABC`
-		|Should_not| do other things. Test roles: |term|`ABC`
+		|Must| do — "|" + |lit|`Must` + "|"
+		|must| do — "|" + |lit|`must` + "|"
+		|Must_not| do — "|" + |lit|`Must_not` + "|"
+		|must_not| do — "|" + |lit|`must_not` + "|"
+		|Should| do — "|" + |lit|`Should` + "|"
+		|should| do — "|" + |lit|`should` + "|"
+		|Should_not| do — "|" + |lit|`Should_not` + "|"
+		|should_not| do — "|" + |lit|`should_not` + "|"
+		|May| do — "|" + |lit|`May` + "|"
+		|may| do — "|" + |lit|`may` + "|"
 Notes:
+	Flavour:
+		Normativity keywords are rendered in flavour |value|`rfc-2119` in this showcase, i.e. capitalized.
 	Roles:
 		* |attr|`ABC` — |lit|`|attr|`, for attributes in XML, keys in JSON...
 		* |cmd|`ABC` — |lit|`|cmd|`, commands and subcommand with CLI
@@ -33,7 +43,32 @@ Notes:
 		* |value|`12345` — |lit|`|value|`, R-values, unnamed values
 		* |var|`xyz` — |lit|`|var|`, variables, but also named constants
 		* |var_type|`xyz:float` — |lit|`|var_type|`, variable and type with colon.
+	Values:
+		* |Self| — |lit|`|Self|`
+		* |None| — |lit|`|None|`
+		* |True| — |lit|`|True|`
+		* |False| — |lit|`|False|`
 	Todo at 2026-06-25:
 		* Implement 'pkg' for 'package' as opposed to importable module.
 		* Implement 'var_type'
 """
+
+class X:
+	r"""
+	Preamble:
+		profile:
+			class
+		normative_sections:
+			Contract, Definitions
+	Contract:
+		general:
+			|Must| demonstrate the use of |lit|`|term|` in a class.
+		constructor:
+	Definitions:
+		_inherit:
+			ABC
+	Notes:
+		Roles:
+			* |term|`ABC` — |lit|`|term|`, referencing a term defined in |label|`Definitions`
+	"""
+	pass

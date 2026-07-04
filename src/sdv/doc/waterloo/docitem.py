@@ -253,7 +253,8 @@ from contextlib import contextmanager
 from sdv.doc.waterloo.docitem_docstring import *
 from sdv.doc.waterloo.docitem_validator import *
 
-__version__ = "0.11.0"
+__version__ = "0.11.1"
+# - 0.11.1 [2026-07-04] Rule PNB-004 exceptions for quotes words: single, double, backtick.
 # - 0.11.0 [2026-07-03] Rule PNB-004 and pytests for PNB.
 # - 0.10.8 [2026-06-30] Added missing resources for PyPI.
 # - 0.10.7 [2026-06-30] Better handling for importlib errors

@@ -1,12 +1,12 @@
 {
     "$schema": "https://sci-d-vis.com/schema/wtrl-json-0.1.0.schema.json",
-    "$id": "urn:waterlint:wtrl-json:0.19.3:core:rfc-2119:c664a7926f117a67e68ca64971c8062b2c104f89ac95ef3816b29d8ce75ccc63",
+    "$id": "urn:waterlint:wtrl-json:0.20.0:core:rfc-2119:e76b3b99b0a9c3c15bb087c344869fa997d284b61d82ec9682dadc13b8874103",
     "__WTRL_VERSION__": {
         "waterloo": "0.11.0",
         "schema": "0.1.0"
     },
     "__WTRL_META__": {
-        "generated_at": "2026-07-03T11:44:20+02:00",
+        "generated_at": "2026-07-04T09:39:15+02:00",
         "generator": "waterlint",
         "scope": "core",
         "flavour": "rfc-2119"
@@ -47,7 +47,9 @@
     "__WTRL_TOC_MODULES__": {
         "showcase_roles": "/__WTRL_OBJECTS__/showcase_roles"
     },
-    "__WTRL_TOC_CLASSES__": {},
+    "__WTRL_TOC_CLASSES__": {
+        "showcase_roles.X": "/__WTRL_OBJECTS__/showcase_roles.X"
+    },
     "__WTRL_TOC_CALLABLES__": {},
     "__WTRL_TOC_TYPES__": {},
     "__WTRL_TOC_VARIABLES__": {},
@@ -75,11 +77,22 @@
                 },
                 "Contract": {
                     "general": [
-                        "MUST do this and that. Test roles: |term|`ABC`",
-                        "SHOULD NOT do other things. Test roles: |term|`ABC`"
+                        "MUST do \u2014 \"|\" + |lit|`Must` + \"|\"",
+                        "MUST do \u2014 \"|\" + |lit|`must` + \"|\"",
+                        "MUST NOT do \u2014 \"|\" + |lit|`Must_not` + \"|\"",
+                        "MUST NOT do \u2014 \"|\" + |lit|`must_not` + \"|\"",
+                        "SHOULD do \u2014 \"|\" + |lit|`Should` + \"|\"",
+                        "SHOULD do \u2014 \"|\" + |lit|`should` + \"|\"",
+                        "SHOULD NOT do \u2014 \"|\" + |lit|`Should_not` + \"|\"",
+                        "SHOULD NOT do \u2014 \"|\" + |lit|`should_not` + \"|\"",
+                        "MAY do \u2014 \"|\" + |lit|`May` + \"|\"",
+                        "MAY do \u2014 \"|\" + |lit|`may` + \"|\""
                     ]
                 },
                 "Notes": {
+                    "Flavour": [
+                        "Normativity keywords are rendered in flavour |value|`rfc-2119` in this showcase, i.e. capitalized."
+                    ],
                     "Roles": [
                         "* |attr|`ABC` \u2014 |lit|`|attr|`, for attributes in XML, keys in JSON...",
                         "* |cmd|`ABC` \u2014 |lit|`|cmd|`, commands and subcommand with CLI",
@@ -100,9 +113,62 @@
                         "* |var|`xyz` \u2014 |lit|`|var|`, variables, but also named constants",
                         "* |var_type|`xyz:float` \u2014 |lit|`|var_type|`, variable and type with colon."
                     ],
+                    "Values": [
+                        "* |Self| \u2014 |lit|`|Self|`",
+                        "* |None| \u2014 |lit|`|None|`",
+                        "* |True| \u2014 |lit|`|True|`",
+                        "* |False| \u2014 |lit|`|False|`"
+                    ],
                     "Todo at 2026-06-25": [
                         "* Implement 'pkg' for 'package' as opposed to importable module.",
                         "* Implement 'var_type'"
+                    ]
+                }
+            }
+        },
+        "showcase_roles.X": {
+            "signature": {
+                "text": "object.__init__(self, /, *args, **kwargs)",
+                "parameters": [
+                    {
+                        "name": "args",
+                        "kind": "VAR_POSITIONAL",
+                        "annotation": null,
+                        "default": null
+                    },
+                    {
+                        "name": "kwargs",
+                        "kind": "VAR_KEYWORD",
+                        "annotation": null,
+                        "default": null
+                    }
+                ],
+                "returns": null
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "class",
+                    "normative_sections": [
+                        "Contract",
+                        "Definitions"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST demonstrate the use of |lit|`|term|` in a class."
+                    ],
+                    "constructor": []
+                },
+                "definitions_inherited_from_module": {
+                    "source": "/__WTRL_OBJECTS__/showcase_roles",
+                    "terms": [
+                        "ABC"
+                    ]
+                },
+                "Definitions": {},
+                "Notes": {
+                    "Roles": [
+                        "* |term|`ABC` \u2014 |lit|`|term|`, referencing a term defined in |label|`Definitions`"
                     ]
                 }
             }

@@ -142,10 +142,13 @@ Waterloo JSON documentation with examples.
 
 * Human-readable documentation
   * [https://uwe-at-sdv.github.io/sdv_doc_waterloo/](https://uwe-at-sdv.github.io/sdv_doc_waterloo/)
-* Example for an interactive presentation
+* Example for an interactive presentation (HTML)
   * [https://uwe-at-sdv.github.io/sdv_doc_waterloo/doc-html5/docitem_helper.wtrl.core.rfc-2119.html](https://uwe-at-sdv.github.io/sdv_doc_waterloo/doc-html5/docitem_helper.wtrl.core.rfc-2119.html)
 * Example for LLM-ready documentation, best consumed either directly by a coding agent or through an MCP server
   * [https://uwe-at-sdv.github.io/sdv_doc_waterloo/doc-json/docitem_helper.wtrl.core.rfc-2119.json](https://uwe-at-sdv.github.io/sdv_doc_waterloo/doc-json/docitem_helper.wtrl.core.rfc-2119.json)
+* Test/showcase for semantic markup (HTML)
+  * [https://uwe-at-sdv.github.io/sdv_doc_waterloo/doc-html5/showcase_roles.wtrl.core.rfc-2119.html](https://uwe-at-sdv.github.io/sdv_doc_waterloo/doc-html5/showcase_roles.wtrl.core.rfc-2119.html)
+
 
 #### Core package
 

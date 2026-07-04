@@ -55,6 +55,53 @@ RE_PARTIAL_NORMATIVITY_PATTERN_B_COMPILED: Final[Sequence[re.Pattern[str]]] = (
 	re.compile(r"\|[Mm]ay\|\s+not\b"),
 	)
 RE_UNTOKENIZED_NORMATIVITY_PATTERN_COMPILED: Final[re.Pattern[str]] = re.compile(r"(?<![\w|])(?:[Mm]ust|[Ss]hould|[Mm]ay)(?![\w|])")
+
+def _is_word_char(c: str) -> bool:
+	return c == "_" or c.isalnum()
+
+def _is_quote_boundary(text: str, pos: int) -> bool:
+	if text[pos] != "'":
+		return True
+	prev_is_word = pos > 0 and _is_word_char(text[pos - 1])
+	next_is_word = pos + 1 < len(text) and _is_word_char(text[pos + 1])
+	return not (prev_is_word and next_is_word)
+
+def _has_mismatched_quote_boundary(text: str, beg: int, end: int, quote: str) -> bool:
+	pos = beg + 1
+	while pos < end:
+		if text[pos] == "\\":
+			pos += 2
+			continue
+		if text[pos] in {"'", '"', "`"} and text[pos] != quote and _is_quote_boundary(text, pos):
+			return True
+		pos += 1
+	return False
+
+def _mask_quoted_text_for_pnb(text: str) -> str:
+	chars = list(text)
+	pos = 0
+	while pos < len(chars):
+		quote = chars[pos]
+		if quote not in {"'", '"', "`"} or not _is_quote_boundary(text, pos):
+			pos += 1
+			continue
+		end = pos + 1
+		while end < len(chars):
+			if chars[end] == "\\":
+				end += 2
+				continue
+			if chars[end] == quote and _is_quote_boundary(text, end):
+				if _has_mismatched_quote_boundary(text, pos, end, quote):
+					pos += 1
+					break
+				for idx in range(pos, end + 1):
+					chars[idx] = " "
+				pos = end + 1
+				break
+			end += 1
+		else:
+			pos += 1
+	return "".join(chars)
 #===== begin base classes =====================================#
 
 class docitem_base:
@@ -256,7 +303,7 @@ Description:
 			i = 0
 			for item in self.items():
 				with traced_section(tr,f"[{i}]"):
-					if RE_UNTOKENIZED_NORMATIVITY_PATTERN_COMPILED.search(item):
+					if RE_UNTOKENIZED_NORMATIVITY_PATTERN_COMPILED.search(_mask_quoted_text_for_pnb(item)):
 						warn_parsing(tr,"PNB-004","Untokenized normativity keyword detected; use |must|, |should|, or |may| when the statement is intended to be normative.")
 						ok = False
 				i += 1

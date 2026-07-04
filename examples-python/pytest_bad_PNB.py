@@ -227,6 +227,125 @@ def f_no_pnb_004_tokenized() -> None:
     """
     pass
 
+def f_no_pnb_004_double_quoted() -> None:
+    r"""
+    Preamble:
+        profile:
+            function
+        normative_sections:
+            Contract, Parameters, Raises, Returns
+    Contract:
+        general:
+            The word "must" is quoted here.
+    Parameters:
+    Raises:
+    Returns:
+        |None|
+    """
+    pass
+
+def f_no_pnb_004_single_quoted() -> None:
+    r"""
+    Preamble:
+        profile:
+            function
+        normative_sections:
+            Contract, Parameters, Raises, Returns
+    Contract:
+        general:
+            The word 'should' is quoted here.
+    Parameters:
+    Raises:
+    Returns:
+        |None|
+    """
+    pass
+
+def f_no_pnb_004_backtick_quoted() -> None:
+    r"""
+    Preamble:
+        profile:
+            function
+        normative_sections:
+            Contract, Parameters, Raises, Returns
+    Contract:
+        general:
+            The word `may` is quoted here.
+    Parameters:
+    Raises:
+    Returns:
+        |None|
+    """
+    pass
+
+def f_pnb_004_quoted_and_unquoted() -> None:
+    r"""
+    Preamble:
+        profile:
+            function
+        normative_sections:
+            Contract, Parameters, Raises, Returns
+    Contract:
+        general:
+            The word "must" is quoted, but should is not.
+    Parameters:
+    Raises:
+    Returns:
+        |None|
+    """
+    pass
+
+def f_pnb_004_mixed_single_backtick_quote() -> None:
+    r"""
+    Preamble:
+        profile:
+            function
+        normative_sections:
+            Contract, Parameters, Raises, Returns
+    Contract:
+        general:
+            The malformed quote 'Must` should warn.'
+    Parameters:
+    Raises:
+    Returns:
+        |None|
+    """
+    pass
+
+def f_pnb_004_mixed_single_double_quote() -> None:
+    r"""
+    Preamble:
+        profile:
+            function
+        normative_sections:
+            Contract, Parameters, Raises, Returns
+    Contract:
+        general:
+            The malformed quote 'Must" should warn.'
+    Parameters:
+    Raises:
+    Returns:
+        |None|
+    """
+    pass
+
+def f_pnb_004_mixed_double_backtick_quote() -> None:
+    r"""
+    Preamble:
+        profile:
+            function
+        normative_sections:
+            Contract, Parameters, Raises, Returns
+    Contract:
+        general:
+            The malformed quote "Must` should warn."
+    Parameters:
+    Raises:
+    Returns:
+        |None|
+    """
+    pass
+
 def f_pnb_004_normative_description() -> None:
     r"""
     Preamble:

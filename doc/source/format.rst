@@ -692,7 +692,8 @@ In the following rules "WS" stands for one or more whitespace characters.
 * [PNB-004] -- Tools |should| warn if free-form textual content of normative
   sections and subsections contains :wtrl_value:`must`, :wtrl_value:`Must`,
   :wtrl_value:`should`, :wtrl_value:`Should`, :wtrl_value:`may`, or
-  :wtrl_value:`May` outside Normativity Keyword token form.
+  :wtrl_value:`May` outside Normativity Keyword token form and outside
+  single-quoted, double-quoted, or backtick-quoted text.
   Informative: Use :wtrl_value:`|must|`, :wtrl_value:`|Must|`,
   :wtrl_value:`|should|`, :wtrl_value:`|Should|`,
   :wtrl_value:`|may|`, or :wtrl_value:`|May|` when the statement is
