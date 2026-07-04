@@ -39,14 +39,18 @@ const ROLE_CLASS = {
   "label": "wtrl-label wtrl_label",
   "lit": "wtrl-lit wtrl_lit",
   "mod": "wtrl-mod wtrl_mod",
+  "norm": "wtrl-norm wtrl_norm",
   "opt": "wtrl-opt wtrl_opt",
   "op": "wtrl-op wtrl_op",
+  "pkg": "wtrl-pkg wtrl_pkg",
   "ref": "wtrl-ref wtrl_ref",
   "tag": "wtrl-tag wtrl_tag",
   "term": "wtrl-term wtrl_term",
   "type": "wtrl-type wtrl_type",
+  "url": "wtrl-special-handling-see-code",
   "value": "wtrl-value wtrl_value",
   "var": "wtrl-var wtrl_var",
+  "var_type": "wtrl-special-handling-see-code"
 };
 
 function buildAnchorMap() {
@@ -894,67 +898,152 @@ function renderReferencedBySection(container, currentQid) {
   container.appendChild(elemSection);
 }
 
-function appendInlineTokens(parent, txt) {
-  let cur = 0;
-  let m;
-  TOK_RE.lastIndex = 0;
-  while ((m = TOK_RE.exec(txt)) !== null) {
-    if (m.index > cur) parent.appendChild(document.createTextNode(txt.slice(cur, m.index)));
-    if (m[1]) {
-      const elemNorm = document.createElement("span");
-      elemNorm.className = "wtrl-norm wtrl_norm";
-      elemNorm.textContent = m[1];
-      parent.appendChild(elemNorm);
-    } else if (m[2]) {
-      const elemLiteralValue = document.createElement("span");
-      elemLiteralValue.className = "wtrl-value wtrl_value";
-      elemLiteralValue.textContent = m[2];
-      parent.appendChild(elemLiteralValue);
-    } else if (m[3]) {
-      const role = m[4];
-      const body = m[5];
-      const cls = ROLE_CLASS[role];
-      if (!cls) {
-        parent.appendChild(document.createTextNode(m[3]));
-      } else if (role === "ref") {
-        const rb = parseRefBody(body);
-        const refText = rb.label || body;
-        const elemRefLink = document.createElement("a");
-        elemRefLink.className = cls;
-        elemRefLink.textContent = refText;
-        if (rb.target.startsWith("http://") || rb.target.startsWith("https://")) {
-          elemRefLink.href = rb.target;
-          elemRefLink.target = "_blank";
-          elemRefLink.rel = "noopener noreferrer";
-        } else if (rb.target.startsWith("wtrl://")) {
-          const qid = rb.target.slice("wtrl://".length);
-          const anchor = TARGET_TO_ANCHOR.get(qid);
-          if (anchor) elemRefLink.href = "#" + anchor;
-        }
-        if (!elemRefLink.getAttribute("href")) {
-          const elemFallback = document.createElement("span");
-          elemFallback.className = cls;
-          elemFallback.textContent = refText;
-          parent.appendChild(elemFallback);
-        } else {
-          parent.appendChild(elemRefLink);
-        }
-      } else if (role === "lit" && (body === "None" || body === "Self" || body === "True" || body === "False")) {
-        const elemSpecialLiteral = document.createElement("span");
-        elemSpecialLiteral.className = "wtrl-value wtrl_value";
-        elemSpecialLiteral.textContent = body;
-        parent.appendChild(elemSpecialLiteral);
-      } else {
-        const elemRoleText = document.createElement("span");
-        elemRoleText.className = cls;
-        elemRoleText.textContent = body;
-        parent.appendChild(elemRoleText);
-      }
-    }
-    cur = TOK_RE.lastIndex;
-  }
-  if (cur < txt.length) parent.appendChild(document.createTextNode(txt.slice(cur)));
-}
+// Agents! Learn my indentation style for this function!
+// I use TABs, and curly brackets get their own line.
+// Comments start a position 0 in each line.
+function appendInlineTokens(parent, txt)
+	{
+	let cur = 0;
+	let m;
+	TOK_RE.lastIndex = 0;
+	while ((m = TOK_RE.exec(txt)) !== null) {
+		if (m.index > cur) parent.appendChild(document.createTextNode(txt.slice(cur, m.index)));
+		if (m[1])
+			{
+			const elemNorm = document.createElement("span");
+			elemNorm.className = "wtrl-norm wtrl_norm";
+			elemNorm.textContent = m[1];
+			parent.appendChild(elemNorm);
+			}
+		else if (m[2])
+			{
+// The comment on TOK_RE says, this one captures |None|, |Self|, |True|, |False|.
+			const elemLiteralValue = document.createElement("span");
+			elemLiteralValue.className = "wtrl-value wtrl_value";
+			elemLiteralValue.textContent = m[2];
+			parent.appendChild(elemLiteralValue);
+			}
+		else if (m[3])
+			{
+// We have m[3], so check for semantic role.
+			const role = m[4];
+			const body = m[5];
+			const cls = ROLE_CLASS[role];
+			if (!cls)
+				{
+// None of the knwon roles, append as is.
+				parent.appendChild(document.createTextNode(m[3]));
+				}
+			else if (role === "ref")
+				{
+// Special handling of references.
+				const rb = parseRefBody(body);
+				const refText = rb.label || body;
+				const elemRefLink = document.createElement("a");
+				elemRefLink.className = cls;
+				elemRefLink.textContent = refText;
+				if (rb.target.startsWith("http://") || rb.target.startsWith("https://"))
+					{
+					elemRefLink.href = rb.target;
+					elemRefLink.target = "_blank";
+					elemRefLink.rel = "noopener noreferrer";
+					}
+				else if (rb.target.startsWith("wtrl://"))
+					{
+					const qid = rb.target.slice("wtrl://".length);
+					const anchor = TARGET_TO_ANCHOR.get(qid);
+					if (anchor) elemRefLink.href = "#" + anchor;
+					}
+				if (!elemRefLink.getAttribute("href"))
+					{
+					const elemFallback = document.createElement("span");
+					elemFallback.className = cls;
+					elemFallback.textContent = refText;
+					parent.appendChild(elemFallback);
+					}
+				else
+					{
+					parent.appendChild(elemRefLink);
+					}
+				}
+			else if (role === "lit" && (body === "None" || body === "Self" || body === "True" || body === "False"))
+				{
+// Mark might have the form |lit|`abc` or for instance |Self|
+// Yet this is not a recommented form in wtrl. Just write |Self|, not |lit|`Self`.
+// A form like |value|`Self` is acceptable, but is already covered below in the default branch.
+				const elemSpecialLiteral = document.createElement("span");
+				elemSpecialLiteral.className = "wtrl-value wtrl_value";
+				elemSpecialLiteral.textContent = body;
+				parent.appendChild(elemSpecialLiteral);
+				}
+// More special cases here.
+			else if (role === "var_type")
+				{
+// We are looking for the form variable-colon-type, e.g. |var_type|`x:int`. The colon is the separator.
+// Would like to render with wtrl-var/wtrl_var for the variable and wtrl-type/wtrl_type for the type.
+				const parts = body.split(":");
+				const elemVarType = document.createElement("span");
+				if (parts.length === 2)
+					{
+// Variable
+					const elemVar = document.createElement("span");
+					elemVar.className = "wtrl-var wtrl_var";
+					elemVar.textContent = parts[0];
+					elemVarType.appendChild(elemVar);
+// Colon
+					elemVarType.appendChild(document.createTextNode(":"));
+// Type
+					const elemType = document.createElement("span");
+					elemType.className = "wtrl-type wtrl_type";
+					elemType.textContent = parts[1];
+					elemVarType.appendChild(elemType);
+					}
+				else
+					{
+// Cannot interpret, append as is.
+					elemVarType.textContent = body;
+					}
+				parent.appendChild(elemVarType);
+				}
+			else if (role === "url")
+				{
+// For URLs we currently have two styles: wtrl-url and wtrl-url-schema.
+// We'd like to render the schema part in wtrl-url-schema and the rest in wtrl-url. The separator is "://".
+				const parts = body.split("://");
+				const elemUrl = document.createElement("span");
+				if (parts.length === 2)
+					{
+// Schema
+					const elemUrlSchema = document.createElement("span");
+					elemUrlSchema.className = "wtrl-url-schema wtrl_url_schema";
+					elemUrlSchema.textContent = parts[0];
+					elemUrl.appendChild(elemUrlSchema);
+// Rest
+					const elemUrlRest = document.createElement("span");
+					elemUrlRest.className = "wtrl-url wtrl_url";
+					elemUrlRest.textContent = "://" + parts[1];
+					elemUrl.appendChild(elemUrlRest);
+					}
+				else
+					{
+// Cannot interpret, append as is.
+					elemUrl.textContent = body;
+					}
+				parent.appendChild(elemUrl);
+				}
+			else
+				{
+// The default branch.
+				const elemRoleText = document.createElement("span");
+				elemRoleText.className = cls;
+				elemRoleText.textContent = body;
+				parent.appendChild(elemRoleText);
+				}
+			}
+		cur = TOK_RE.lastIndex;
+		}
+	if (cur < txt.length) parent.appendChild(document.createTextNode(txt.slice(cur)));
+	}
 
 function renderValue(value, container, depth, path, currentQid) {
   const pth = Array.isArray(path) ? path : [];

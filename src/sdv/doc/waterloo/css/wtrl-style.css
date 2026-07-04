@@ -282,59 +282,61 @@ html, body {
 	}
 
 /*----- Semantic roles ---------------------------------------*/
-.wtrl-func, .wtrl_func {
-	color:#3040ff;
-	font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-	}
-.wtrl-type, .wtrl_type
-	{
-	color:#770000;
-	font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-	}
-.wtrl-var, .wtrl_var {
-	color:#a00;
-	font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-	font-weight: normal;
-	}
-.wtrl-label, .wtrl_label {
-	color:#1f2937;
-	font-style:italic;
-	}
-.wtrl-value, .wtrl_value {
-	color:#040;
-	}
-.wtrl-mod, .wtrl_mod {
-	color:#446622;
-	font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-	}
 .wtrl-attr, .wtrl_attr {
 	color:#7c3aed;
 	}
-.wtrl-key, .wtrl_key {
-	color:#1f2937;
-	font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-	font-weight: bold;
-	}
-.wtrl-lit, .wtrl_lit {
-	color:#1f2937;
+.wtrl-cmd, .wtrl_cmd {
+	color:#996600;
+	font-weight:normal;
+	font-style:normal;
 	font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 	}
 .wtrl-dfn, .wtrl_dfn {
 	font-style:italic;
 	}
-.wtrl-term, .wtrl_term {
-	font-style:italic;
-	color:#000;
-	}
-.wtrl-op, .wtrl_op {
-	color:#b91c1c;
-	}
 .wtrl-file, .wtrl_file {
 	color:#0f766e;
 	font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 	}
-.wtrl-cmd, .wtrl_cmd, .wtrl-opt, .wtrl_opt, .wtrl-tag, .wtrl_tag {
-	color:#4b5563;
+.wtrl-func, .wtrl_func {
+	color:#3040ff;
+	font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+	}
+.wtrl-key, .wtrl_key {
+	color:#1f2937;
+	font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+	font-weight: normal;
+	font-size:90%;
+	border: 1px solid black;
+	border-radius:3px;
+	padding-left:3px;
+	padding-right:3px;
+	}
+.wtrl-label, .wtrl_label {
+	color:#1f2937;
+	font-style:italic;
+	}
+.wtrl-mod, .wtrl_mod {
+	color:#446622;
+	font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+	}
+.wtrl-norm, .wtrl_norm {
+	color:#b42318;
+	font-weight:700;
+	}
+.wtrl-opt, .wtrl_opt {
+	font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+	font-weight:bold;
+	}
+.wtrl-op, .wtrl_op {
+	color:#b91c1c;
+	}
+.wtrl-lit, .wtrl_lit {
+	color:#1f2937;
+	font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+	}
+.wtrl-pkg, .wtrl_pkg {
+	color:#446622;
 	font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 	}
 .wtrl-ref, .wtrl_ref {
@@ -344,12 +346,44 @@ html, body {
 	text-decoration-thickness: 1px;
 	text-underline-offset: 0.12em;
 	}
-.wtrl-ref.wtrl-func, .wtrl_ref.wtrl_func {
+.wtrl-value, .wtrl_value {
+	color:#040;
+	font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+	}
+.wtrl-tag, .wtrl_tag {
+	color:#4b5563;
+	font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+	}
+.wtrl-term, .wtrl_term {
+	font-style:italic;
+	color:#000;
+	}
+.wtrl-type, .wtrl_type
+	{
+	color:#770000;
+	font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+	}
+.wtrl-url, .wtrl_url {
+	color:#0f766e;
+	font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+	}
+.wtrl-url-schema, .wtrl_url_schema {
+	color:#354;
+	font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+	}
+.wtrl-var, .wtrl_var {
+	color:#a00;
+	font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+	font-weight: normal;
+	}
+
+
+
+.wtrl-ref.wtrl-func:visited, .wtrl_ref.wtrl_func:visited {
 	color:#3040ff;
-	text-decoration-line: underline;
-	text-decoration-style: dotted;
-	text-decoration-thickness: 1px;
-	text-underline-offset: 0.12em;
+	}
+.wtrl-ref.wtrl-type:visited, .wtrl_ref.wtrl_type:visited {
+	color:#770000;
 	}
 .wtrl-ref.wtrl-type, .wtrl_ref.wtrl_type {
 	color:#770000;
@@ -365,18 +399,15 @@ html, body {
 	text-decoration-thickness: 1px;
 	text-underline-offset: 0.12em;
 	}
-.wtrl-ref.wtrl-func:visited, .wtrl_ref.wtrl_func:visited {
+.wtrl-ref.wtrl-func, .wtrl_ref.wtrl_func {
 	color:#3040ff;
-	}
-.wtrl-ref.wtrl-type:visited, .wtrl_ref.wtrl_type:visited {
-	color:#770000;
+	text-decoration-line: underline;
+	text-decoration-style: dotted;
+	text-decoration-thickness: 1px;
+	text-underline-offset: 0.12em;
 	}
 .wtrl-ref.wtrl-var:visited, .wtrl_ref.wtrl_var:visited {
 	color:#a00;
-	}
-.wtrl-norm, .wtrl_norm {
-	color:#b42318;
-	font-weight:700;
 	}
 
 /*----- Code segements --------------------------------------*/

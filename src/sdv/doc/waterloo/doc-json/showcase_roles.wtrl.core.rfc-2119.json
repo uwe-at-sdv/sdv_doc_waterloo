@@ -1,12 +1,12 @@
 {
     "$schema": "https://sci-d-vis.com/schema/wtrl-json-0.1.0.schema.json",
-    "$id": "urn:waterlint:wtrl-json:0.20.0:core:rfc-2119:e76b3b99b0a9c3c15bb087c344869fa997d284b61d82ec9682dadc13b8874103",
+    "$id": "urn:waterlint:wtrl-json:0.20.1:core:rfc-2119:e76b3b99b0a9c3c15bb087c344869fa997d284b61d82ec9682dadc13b8874103",
     "__WTRL_VERSION__": {
-        "waterloo": "0.11.0",
+        "waterloo": "0.11.1",
         "schema": "0.1.0"
     },
     "__WTRL_META__": {
-        "generated_at": "2026-07-04T09:39:15+02:00",
+        "generated_at": "2026-07-04T15:09:46+02:00",
         "generator": "waterlint",
         "scope": "core",
         "flavour": "rfc-2119"
@@ -99,16 +99,18 @@
                         "* |dfn|`ABC` \u2014 |lit|`|dfn|`, a term being defined",
                         "* |file|`/path/to/ABC` \u2014 |lit|`|file|`, files but also URLs",
                         "* |func|`ABC` \u2014 |lit|`|func|`, functions",
+                        "* |key|`CTRL` \u2014 |lit|`|label|`, keys on the keyboard",
                         "* |label|`ABC` \u2014 |lit|`|label|`, titles, labels",
                         "* |lit|`ABC` \u2014 |lit|`|lit|`, catch-all for literal text",
                         "* |mod|`ABC` \u2014 |lit|`|mod|`, modules",
-                        "* |norm|`should` \u2014 |lit|`|norm|`, normativity keywords",
+                        "* |norm|`should` \u2014 |lit|`|norm|`, normativity keywords (meta, when talking about keywords)",
                         "* |op|`>>` \u2014 |lit|`|op|`, operators",
                         "* |opt|`--abc` \u2014 |lit|`|opt|`, options for CLI commands",
                         "* |pkg|`sdv.tty` \u2014 |lit|`|pkg|`, packages",
                         "* |tag|`ABC` \u2014 |lit|`|tag|`, enum values, symbolic values",
                         "* |term|`ABC` \u2014 |lit|`|term|`, referencing a term defined in |label|`Definitions`",
                         "* |type|`float` \u2014 |lit|`|type|`, types in programming or markup languages",
+                        "* |url|`https://pypi.org/project/sdv-doc-waterloo/` \u2014 |lit|`|url|`, for URLs (currently pretty simple)",
                         "* |value|`12345` \u2014 |lit|`|value|`, R-values, unnamed values",
                         "* |var|`xyz` \u2014 |lit|`|var|`, variables, but also named constants",
                         "* |var_type|`xyz:float` \u2014 |lit|`|var_type|`, variable and type with colon."
@@ -120,8 +122,7 @@
                         "* |False| \u2014 |lit|`|False|`"
                     ],
                     "Todo at 2026-06-25": [
-                        "* Implement 'pkg' for 'package' as opposed to importable module.",
-                        "* Implement 'var_type'"
+                        "Styles for pkg and url required."
                     ]
                 }
             }
@@ -169,6 +170,9 @@
                 "Notes": {
                     "Roles": [
                         "* |term|`ABC` \u2014 |lit|`|term|`, referencing a term defined in |label|`Definitions`"
+                    ],
+                    "Compound examples": [
+                        "|cmd|`waterlint validate` |opt|`--basedir` |file|`/path/to/dir` |opt|`--obj` |mod|`mymod`"
                     ]
                 }
             }

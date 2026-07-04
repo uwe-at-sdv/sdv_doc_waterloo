@@ -288,59 +288,61 @@ html, body {
 	}
 
 /*----- Semantic roles ---------------------------------------*/
-.wtrl-func, .wtrl_func {
-	color:#3040ff;
-	font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-	}
-.wtrl-type, .wtrl_type
-	{
-	color:#770000;
-	font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-	}
-.wtrl-var, .wtrl_var {
-	color:#a00;
-	font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-	font-weight: normal;
-	}
-.wtrl-label, .wtrl_label {
-	color:#1f2937;
-	font-style:italic;
-	}
-.wtrl-value, .wtrl_value {
-	color:#040;
-	}
-.wtrl-mod, .wtrl_mod {
-	color:#446622;
-	font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-	}
 .wtrl-attr, .wtrl_attr {
 	color:#7c3aed;
 	}
-.wtrl-key, .wtrl_key {
-	color:#1f2937;
-	font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-	font-weight: bold;
-	}
-.wtrl-lit, .wtrl_lit {
-	color:#1f2937;
+.wtrl-cmd, .wtrl_cmd {
+	color:#996600;
+	font-weight:normal;
+	font-style:normal;
 	font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 	}
 .wtrl-dfn, .wtrl_dfn {
 	font-style:italic;
 	}
-.wtrl-term, .wtrl_term {
-	font-style:italic;
-	color:#000;
-	}
-.wtrl-op, .wtrl_op {
-	color:#b91c1c;
-	}
 .wtrl-file, .wtrl_file {
 	color:#0f766e;
 	font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 	}
-.wtrl-cmd, .wtrl_cmd, .wtrl-opt, .wtrl_opt, .wtrl-tag, .wtrl_tag {
-	color:#4b5563;
+.wtrl-func, .wtrl_func {
+	color:#3040ff;
+	font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+	}
+.wtrl-key, .wtrl_key {
+	color:#1f2937;
+	font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+	font-weight: normal;
+	font-size:90%;
+	border: 1px solid black;
+	border-radius:3px;
+	padding-left:3px;
+	padding-right:3px;
+	}
+.wtrl-label, .wtrl_label {
+	color:#1f2937;
+	font-style:italic;
+	}
+.wtrl-mod, .wtrl_mod {
+	color:#446622;
+	font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+	}
+.wtrl-norm, .wtrl_norm {
+	color:#b42318;
+	font-weight:700;
+	}
+.wtrl-opt, .wtrl_opt {
+	font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+	font-weight:bold;
+	}
+.wtrl-op, .wtrl_op {
+	color:#b91c1c;
+	}
+.wtrl-lit, .wtrl_lit {
+	color:#1f2937;
+	font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+	}
+.wtrl-pkg, .wtrl_pkg {
+	color:#446622;
 	font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 	}
 .wtrl-ref, .wtrl_ref {
@@ -350,12 +352,44 @@ html, body {
 	text-decoration-thickness: 1px;
 	text-underline-offset: 0.12em;
 	}
-.wtrl-ref.wtrl-func, .wtrl_ref.wtrl_func {
+.wtrl-value, .wtrl_value {
+	color:#040;
+	font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+	}
+.wtrl-tag, .wtrl_tag {
+	color:#4b5563;
+	font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+	}
+.wtrl-term, .wtrl_term {
+	font-style:italic;
+	color:#000;
+	}
+.wtrl-type, .wtrl_type
+	{
+	color:#770000;
+	font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+	}
+.wtrl-url, .wtrl_url {
+	color:#0f766e;
+	font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+	}
+.wtrl-url-schema, .wtrl_url_schema {
+	color:#354;
+	font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+	}
+.wtrl-var, .wtrl_var {
+	color:#a00;
+	font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+	font-weight: normal;
+	}
+
+
+
+.wtrl-ref.wtrl-func:visited, .wtrl_ref.wtrl_func:visited {
 	color:#3040ff;
-	text-decoration-line: underline;
-	text-decoration-style: dotted;
-	text-decoration-thickness: 1px;
-	text-underline-offset: 0.12em;
+	}
+.wtrl-ref.wtrl-type:visited, .wtrl_ref.wtrl_type:visited {
+	color:#770000;
 	}
 .wtrl-ref.wtrl-type, .wtrl_ref.wtrl_type {
 	color:#770000;
@@ -371,18 +405,15 @@ html, body {
 	text-decoration-thickness: 1px;
 	text-underline-offset: 0.12em;
 	}
-.wtrl-ref.wtrl-func:visited, .wtrl_ref.wtrl_func:visited {
+.wtrl-ref.wtrl-func, .wtrl_ref.wtrl_func {
 	color:#3040ff;
-	}
-.wtrl-ref.wtrl-type:visited, .wtrl_ref.wtrl_type:visited {
-	color:#770000;
+	text-decoration-line: underline;
+	text-decoration-style: dotted;
+	text-decoration-thickness: 1px;
+	text-underline-offset: 0.12em;
 	}
 .wtrl-ref.wtrl-var:visited, .wtrl_ref.wtrl_var:visited {
 	color:#a00;
-	}
-.wtrl-norm, .wtrl_norm {
-	color:#b42318;
-	font-weight:700;
 	}
 
 /*----- Code segements --------------------------------------*/
@@ -601,7 +632,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
     </main>
   </div>
   <script>
-const WTRL_DATA = {"meta": {"scope": "core", "flavour": "rfc-2119", "schema": "0.1.0", "modules": ["test_flow_control"], "css_primary": "/* This style sheet defines the styles for interactive HTML5 output.\n   For waterlint render-html5, additional styles can be provided\n   by the caller via the --additional-css option. */\n/*----- Global styles ---------------------------------------*/\nhtml, body {\n\tmargin:0;\n\tpadding:0;\n\theight:100%;\n\toverflow:hidden;\n\tfont-family: Helvetica, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif; background:#f7f7f4; color:#1f2428;\n\t}\n.wtrl-app {\n\tdisplay:grid;\n\tgrid-template-columns: 420px 1fr;\n\theight:100vh;\n\tpadding:0.5em;\n\tgap:0.5em;\n\tbox-sizing:border-box;\n\t}\n.wtrl-side {\n\tborder:1px solid #ddd;\n\tborder-radius:.3em;\n\tmargin-bottom:1em;\n\tmargin-left:0em;\n\tmargin-right:0em;\n\tbackground:#fff;\n\tpadding-left:0.75em;\n\tpadding-right:0.75em;\n\tpadding-top: 0.5em;\n\tpadding-bottom: 1em;\n\tdisplay:flex;\n\tflex-direction:column;\n\tmin-height:0;\n\t}\n#wtrl-debug-refs {\n\tmargin-top:0.5em;\n\tmargin-bottom:0.0em;\n\tbackground-color:#efd;\n\tborder-radius:8px;\n\t}\n.wtrl-main {\n\tpadding-left:0.5em;\n\tpadding-right:0em;\n\tpadding-top: 0em;\n\tpadding-bottom: 1em;\n\tmargin-left: 0em;\n\tmin-width:0;\n\tmin-height:0;\n\tdisplay:flex;\n\tflex-direction:column;\n\toverflow:hidden;\n\t}\n.wtrl-meta {\n\tfont-size:12px;\n\tcolor:#666;\n\tmargin-bottom:0.5em;\n\t}\n.wtrl-input { width:100%; box-sizing:border-box; padding:10px 12px; border:1px solid #bbb; border-radius:8px; font-size:14px; }\n.wtrl-hitlist {\n\tmargin-left:.0em;\t\n\tmargin-right:0em;\t\n\tmargin-top:12px;\n\tpadding-left: 0em;\n\tpadding-right: 0em;\n\tmax-height:none;\n\tmin-height:0;\n\tflex:1 1 auto;\n\toverflow:auto;\n\tborder:1px solid #ddd;\n\tborder-radius:8px;\n\tbackground:#eee; }\n.wtrl-hit { display:block; width:100%; text-align:left; border:0; border-bottom:1px solid #eee; background:transparent; padding:8px 10px; font-size:13px; cursor:pointer; }\n.wtrl-hit:hover { background:#f3f6fa; }\n.wtrl-kind { color:#57606a; font-size:11px; margin-right:8px; }\n.wtrl-title { margin:0 0 10px 0; font-size:22px; }\n.wtrl-sub { margin:0 0 16px 0; color:#57606a; }\n\n.wtrl-block {\n\tborder:1px solid #ddd;\n\tborder-radius:0.3em;\n\tbackground:#fff;\n\tpadding-left: .75em;\n\tpadding-right: .75em;\n\tpadding-top: 0.75em;\n\tpadding-bottom: 0.75em;\n\tbox-sizing:border-box;\n\tflex:1 1 auto;\n\tmin-height:0;\n\twidth:100%;\n\tmax-width:100%;\n\tmax-height:none;\n\toverflow:auto;\n\t}\n\n.wtrl-signature {\n\tmargin:0 0 14px 0;\n\tfont-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;\n\tfont-size:100%;\n\tcolor:#57606a;\n\twhite-space:pre-wrap;\n\toverflow-wrap:anywhere;\n\t}\n.wtrl-search-row {\n\tdisplay:grid;\n\tgrid-template-columns:auto 1fr minmax(9rem, 16rem) auto auto;\n\tgrid-template-areas:\n\t\t\"search search search  search search\"\n\t\t\"clear  .      history back   fwd\"\n\t\t\"filter filter filter  filter filter\";\n\tgap:0.4em 0.5em;\n\talign-items:center;\n\tmin-width:0;\n\t}\n#wtrl-search {\n\tgrid-area:search;\n\twidth:100%;\n\theight:30px;\n\tborder:1px solid #ccc;\n\tborder-radius:0.3em;\n\t}\n#wtrl-search-clear {\n\tgrid-area:clear;\n\theight:30px;\n\tborder:1px solid #ddd;\n\tborder-radius:0.5em;\n\t}\n#wtrl-nav-back {\n\tgrid-area:back;\n\twidth: 30px;\n\theight:30px;\n\tborder:1px solid #ddd;\n\tborder-radius:0.5em;\n\t}\n#wtrl-nav-forward {\n\tgrid-area:fwd;\n\twidth: 30px;\n\theight:30px;\n\tborder:1px solid #ddd;\n\tborder-radius:0.5em;\n\t}\n#wtrl-nav-history {\n\tgrid-area:history;\n\twidth:100%;\n\tmin-width:0;\n\tmax-width:16rem;\n\theight:30px;\n\tborder:1px solid #ddd;\n\tborder-radius:0.5em;\n\toverflow:hidden;\n\ttext-overflow:ellipsis;\n\twhite-space:nowrap;\n\t}\n.wtrl-filter-row {\n\tgrid-area:filter;\n\tdisplay:grid;\n\tgrid-template-columns:minmax(0, 1fr) minmax(0, 1fr);\n\tgap:0.5em;\n\talign-items:center;\n\tmin-width:0;\n\t}\n.wtrl-filter-pair {\n\tdisplay:flex;\n\tgap:0.5em;\n\talign-items:center;\n\tmin-width:0;\n\t}\n.wtrl-filter-label {\n\tflex:0 0 auto;\n\tfont-size:13px;\n\tcolor:#334155;\n\t}\n.wtrl-kind-filter,\n.wtrl-label-mode {\n\tflex:1 1 auto;\n\tmin-width:0;\n\tbox-sizing:border-box;\n\tpadding:0 10px;\n\tborder:1px solid #bbb;\n\tborder-radius:0.5em;\n\tbackground:#fff;\n\tcolor:#334155;\n\tfont-size:13px;\n\theight:30px;\n\tline-height:30px;\n\t}\n.wtrl-kind-filter:disabled {\n\topacity:0.55;\n\tbackground:#f8fafc;\n\t}\n.wtrl-label-mode:disabled {\n\topacity:0.55;\n\tbackground:#f8fafc;\n\t}\n\n/*----- Section ---------------------------------------------*/\n.wtrl-section {\n\tmargin-left: 0em;\n\tmargin-right: 0em;\n\tmargin-top: 0em;\n\tmargin-bottom: 0.5em;\n\tborder:1px solid #ececec;\n\tborder-radius:.3em;\n\tpadding-left: .5em;\n\tpadding-right: .5em;\n\tpadding-top: 0.3em;\n\tpadding-bottom: 0.3em;\n\tbackground:#eee;\n\t}\n.wtrl-section-head {\n\tfont-weight: normal;\n\tfont-style: italic;\n\tmargin-left: 0em;\n\tmargin-right: 0em;\n\tmargin-top: 0em;\n\tmargin-bottom: 0em;\n\tcolor:#0f172a;\n\t}\n\n/*----- Subsection ------------------------------------------*/\n.wtrl-subsection {\n\tmargin-left: 0em;\n\tmargin-right: 0em;\n\tmargin-top: 0em;\n\tmargin-bottom: 0.5em;\n\t}\n.wtrl-subsection-head {\n\tfont-weight:normal;\n\tfont-style: italic;\n\tmargin-left: 0em;\n\tmargin-right: 0em;\n\tmargin-top: 0em;\n\tmargin-bottom: 0em;\n\tmargin-left:1.5em;\n\tcolor:#1f2937;\n\t}\n\n/*----- Freeform text ---------------------------------------*/\n.wtrl-section .wtrl-text {\n\tmargin-left:1.5em;\n\tmargin-right: 0.0em;\n\tmargin-top: 0.2em;\n\tmargin-bottom: 0.3em;\n\twhite-space:pre-wrap;\n\toverflow-wrap:anywhere;\n\t}\n.wtrl-section .wtrl-subsection .wtrl-text {\n\tmargin-left:3.0em;\n\tmargin-right: 0.0em;\n\tmargin-top: 0.2em;\n\tmargin-bottom: 0.3em;\n\twhite-space:pre-wrap;\n\toverflow-wrap:anywhere;\n\t}\n.wtrl-text {\n\twhite-space:pre-wrap;\n\toverflow-wrap:anywhere;\n\t}\n/*----- Lists with text -------------------------------------*/\n.wtrl-section .wtrl-list {\n\tmargin-left: 0.0em;\n\tmargin-right: 0.0em;\n\tmargin-top: 0.5em;\n\tmargin-bottom: 0.5em;\n\t}\n.wtrl-section .wtrl-subsection .wtrl-list {\n\tmargin-left: 1.5em;\n\tmargin-right: 0.0em;\n\tmargin-top: 0.5em;\n\tmargin-bottom: 0.5em;\n\t}\n.wtrl-list li {\n\toverflow-wrap:anywhere;\n\t}\n\n.wtrl-obj {\n\tmargin:0;\n\twhite-space:pre-wrap;\n\toverflow-wrap:anywhere;\n\tfont-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;\n\tfont-size:12px;\n\tcolor:#334155;\n\t}\n\n/*----- Semantic roles ---------------------------------------*/\n.wtrl-func, .wtrl_func {\n\tcolor:#3040ff;\n\tfont-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;\n\t}\n.wtrl-type, .wtrl_type\n\t{\n\tcolor:#770000;\n\tfont-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;\n\t}\n.wtrl-var, .wtrl_var {\n\tcolor:#a00;\n\tfont-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;\n\tfont-weight: normal;\n\t}\n.wtrl-label, .wtrl_label {\n\tcolor:#1f2937;\n\tfont-style:italic;\n\t}\n.wtrl-value, .wtrl_value {\n\tcolor:#040;\n\t}\n.wtrl-mod, .wtrl_mod {\n\tcolor:#446622;\n\tfont-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;\n\t}\n.wtrl-attr, .wtrl_attr {\n\tcolor:#7c3aed;\n\t}\n.wtrl-key, .wtrl_key {\n\tcolor:#1f2937;\n\tfont-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;\n\tfont-weight: bold;\n\t}\n.wtrl-lit, .wtrl_lit {\n\tcolor:#1f2937;\n\tfont-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;\n\t}\n.wtrl-dfn, .wtrl_dfn {\n\tfont-style:italic;\n\t}\n.wtrl-term, .wtrl_term {\n\tfont-style:italic;\n\tcolor:#000;\n\t}\n.wtrl-op, .wtrl_op {\n\tcolor:#b91c1c;\n\t}\n.wtrl-file, .wtrl_file {\n\tcolor:#0f766e;\n\tfont-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;\n\t}\n.wtrl-cmd, .wtrl_cmd, .wtrl-opt, .wtrl_opt, .wtrl-tag, .wtrl_tag {\n\tcolor:#4b5563;\n\tfont-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;\n\t}\n.wtrl-ref, .wtrl_ref {\n\tcolor:#005cc5;\n\ttext-decoration-line: underline;\n\ttext-decoration-style: dotted;\n\ttext-decoration-thickness: 1px;\n\ttext-underline-offset: 0.12em;\n\t}\n.wtrl-ref.wtrl-func, .wtrl_ref.wtrl_func {\n\tcolor:#3040ff;\n\ttext-decoration-line: underline;\n\ttext-decoration-style: dotted;\n\ttext-decoration-thickness: 1px;\n\ttext-underline-offset: 0.12em;\n\t}\n.wtrl-ref.wtrl-type, .wtrl_ref.wtrl_type {\n\tcolor:#770000;\n\ttext-decoration-line: underline;\n\ttext-decoration-style: dotted;\n\ttext-decoration-thickness: 1px;\n\ttext-underline-offset: 0.12em;\n\t}\n.wtrl-ref.wtrl-var, .wtrl_ref.wtrl_var {\n\tcolor:#a00;\n\ttext-decoration-line: underline;\n\ttext-decoration-style: dotted;\n\ttext-decoration-thickness: 1px;\n\ttext-underline-offset: 0.12em;\n\t}\n.wtrl-ref.wtrl-func:visited, .wtrl_ref.wtrl_func:visited {\n\tcolor:#3040ff;\n\t}\n.wtrl-ref.wtrl-type:visited, .wtrl_ref.wtrl_type:visited {\n\tcolor:#770000;\n\t}\n.wtrl-ref.wtrl-var:visited, .wtrl_ref.wtrl_var:visited {\n\tcolor:#a00;\n\t}\n.wtrl-norm, .wtrl_norm {\n\tcolor:#b42318;\n\tfont-weight:700;\n\t}\n\n/*----- Code segements --------------------------------------*/\n.wtrl-example-code .wtrl-code {\n\tborder:1px solid #ddd;\n\tborder-radius:0.3em;\n\tbackground:#f7fff0;\n\tmargin-top: 0.25em;\n\tmargin-bottom:0em;\n\tpadding-left: 0.5em;\n\tpadding-right: 0.5em;\n\tpadding-top: 0.5em;\n\tpadding-bottom: 0.5em;\n\tbox-sizing:border-box;\n\twhite-space:pre-wrap;\n\toverflow-wrap:anywhere;\n\t}\n.wtrl-example-code .wtrl-code pre {\n/* control margins and padding by .wtrl-example-code .wtrl-code, not here. */\n\tmargin: 0em;\n\tpadding: 0em;\n}\n\n/*----- Links -----------------------------------------------*/\na {\n\ttext-decoration: none;\n\t}\n/*----- Kind filter -----------------------------------------*/\n/* Currently not possible because of the use of <option> elements\n   in the filter dropdown, which do not allow for styling individual options. */\n\n/*----- Hit list kinds --------------------------------------*/\n.wtrl-hit-kind-module-label {\n\tcolor: #446622;\n\tfont-size:100%;\t\n\tfont-style: italic;\n}\n.wtrl-hit-kind-class-label {\n\tcolor:#770000;\n\tfont-size:100%;\t\n\tfont-style: italic;\n\t}\n.wtrl-hit-kind-callable-label {\n\tcolor:#3040ff;\n\tfont-size:100%;\t\n\tfont-style: italic;\t\n}\n.wtrl-hit-kind-assignable-label {\n\tcolor:#666;\n\tfont-size:100%;\t\n\tfont-style: italic;\n\t}\n.wtrl-hit-kind-type-label {\n\tcolor:#666;\n\tfont-size:100%;\t\n\tfont-style: italic;\n\t}\n/* Label \"object\" or \"entry\" is a fallback and is not supposed to appear. */\n.wtrl-hit-kind-object-label {\n\tcolor:#000;\n\tfont-size:100%;\t\n\tfont-style: italic;\n\t}\n\n.wtrl-hit-kind-module {\n\tcolor:#000;\n\t}\n.wtrl-hit-kind-class {\n\tcolor:#000;\n\t}\n.wtrl-hit-kind-callable {\n\tcolor:#000;\n\t}\n.wtrl-hit-kind-assignable {\n\tcolor:#000;\n\t}\n/* Fallback */\n.wtrl-hit-kind-object {\n\tcolor:#000;\n\t}\n", "css_append": "", "pygments_theme": "gruvbox-light"}, "roles": {"attr": "Attribute name", "cmd": "Shell or CLI command", "dfn": "Definition of a term", "file": "File or path", "func": "Function or callable", "key": "Key on the keyboard", "label": "Section/Subsection label", "lit": "Literal text or code", "mod": "Module name", "op": "Operator symbol", "opt": "Command-line option or flag", "tag": "Tag or marker", "term": "Domain-specific term", "type": "Type name or annotation", "value": "Concrete value", "var": "Variable name", "var_type": "Variable and type, like 'var:type'"}, "scopes": {"public": {"value": 10, "description": ""}, "extension": {"value": 20, "description": ""}, "core": {"value": 30, "description": ""}}, "toc_modules": {"test_flow_control": "/__WTRL_OBJECTS__/test_flow_control"}, "toc_classes": {"test_flow_control.X": "/__WTRL_OBJECTS__/test_flow_control.X"}, "toc_callables": {"test_flow_control.X.m": "/__WTRL_OBJECTS__/test_flow_control.X.m", "test_flow_control.f": "/__WTRL_OBJECTS__/test_flow_control.f"}, "toc_types": {"test_flow_control.MyType": "/__WTRL_OBJECTS__/test_flow_control.MyType"}, "toc_variables": {"test_flow_control.my_variable": "/__WTRL_OBJECTS__/test_flow_control.my_variable"}, "toc_constants": {"test_flow_control.my_constant": "/__WTRL_OBJECTS__/test_flow_control.my_constant"}, "examples": {}, "objects": {"test_flow_control.MyType": {"doc": {}, "doc_lines": ["|label|`Public_types` is normative. The content", "is a sequence of paragraphs.", "This is the second paragraph. A single pipe character \"|\" separates paragraphs", "within the freeform text.", "|", "Itemizations and enumerations are possible:", "# Numbered item", "* An item", "* An item", "# Numbered item"], "annotation": "Tuple[int, float]", "doc_lines_kind": "type"}, "test_flow_control.my_variable": {"doc": {}, "doc_lines": ["|label|`Public_variables` is normative. The content", "is a sequence of paragraphs.", "This is the second paragraph. A single pipe character \"|\" separates paragraphs", "within the freeform text.", "|", "Itemizations and enumerations are possible:", "# Numbered item", "* An item", "* An item", "# Numbered item"], "annotation": "str", "doc_lines_kind": "variable"}, "test_flow_control.my_constant": {"doc": {}, "doc_lines": ["|label|`Public_constants` is normative. The content", "is a sequence of paragraphs.", "This is the second paragraph. A single pipe character \"|\" separates paragraphs", "within the freeform text.", "|", "Itemizations and enumerations are possible:", "* An item", "+ A subitem", "- A subsubitem", "- A subsubitem", "+ A subitem", "* An item"], "annotation": "Final[str]", "doc_lines_kind": "constant"}, "test_flow_control": {"doc": {"Preamble": {"profile": "module", "normative_sections": ["Contract", "Definitions", "Public_classes", "Public_functions", "Public_types", "Public_variables", "Public_constants"]}, "Contract": {"general": []}, "Description": ["We test several freeform and bullet-list scenarios. A |label|`Description` section", "is freeform content. A single pipe character \"|\" separates paragraphs", "within the freeform text.", "|", "This is the second paragraph. Here is an enumeration:", "# Item 1", "# Item 2"], "Definitions": {"Term_A": {"variations": [], "text": ["Definition content is freeform  A single pipe character \"|\" separates paragraphs", "within the freeform text.", "|", "This is the second paragraph. Here is an enumeration", "# Numbered item with long text, so that we use the backslash in order to create a logical line.", "# Numbered item"]}}, "Terminology": {"Term B": ["Terminology content is freeform. A single pipe character \"|\" separates paragraphs", "within the freeform text.", "|", "This is the second paragraph. Here is an item list:", "* Item 1", "* Item 2", "Some text after the item list."]}, "Notes": {"About": ["Notes content is freeform. A single pipe character \"|\" separates paragraphs", "within the freeform text.", "|", "This is the second paragraph. Here is an item list:", "* Item 1", "* Item 2", "Some text after the item list."]}, "Public_classes": ["X"], "Public_functions": ["f"], "Class_overview": {"X": ["A class overview is not normative. The content", "is a sequence of paragraphs.", "|", "This is the second paragraph. A single pipe character \"|\" separates paragraphs", "within the freeform text.", "|", "Itemizations and enumerations are possible:", "* An item", "# Numbered item", "# Numbered item", "* An item"]}, "Function_overview": {"f": ["A function overview is not normative. The content", "is a sequence of paragraphs.", "|", "This is the second paragraph. A single pipe character \"|\" separates paragraphs", "within the freeform text.", "|", "Itemizations and enumerations are possible:", "# Numbered item", "* An item", "* An item", "# Numbered item"]}, "Public_types": {"MyType": ["|label|`Public_types` is normative. The content", "is a sequence of paragraphs.", "This is the second paragraph. A single pipe character \"|\" separates paragraphs", "within the freeform text.", "|", "Itemizations and enumerations are possible:", "# Numbered item", "* An item", "* An item", "# Numbered item"]}, "Public_variables": {"my_variable": ["|label|`Public_variables` is normative. The content", "is a sequence of paragraphs.", "This is the second paragraph. A single pipe character \"|\" separates paragraphs", "within the freeform text.", "|", "Itemizations and enumerations are possible:", "# Numbered item", "* An item", "* An item", "# Numbered item"]}, "Public_constants": {"my_constant": ["|label|`Public_constants` is normative. The content", "is a sequence of paragraphs.", "This is the second paragraph. A single pipe character \"|\" separates paragraphs", "within the freeform text.", "|", "Itemizations and enumerations are possible:", "* An item", "+ A subitem", "- A subsubitem", "- A subsubitem", "+ A subitem", "* An item"]}}}, "test_flow_control.X": {"signature": {"text": "object.__init__(self, /, *args, **kwargs)", "parameters": [{"name": "args", "kind": "VAR_POSITIONAL", "annotation": null, "default": null}, {"name": "kwargs", "kind": "VAR_KEYWORD", "annotation": null, "default": null}], "returns": null}, "doc": {"Preamble": {"profile": "class", "normative_sections": ["Contract", "Factory", "Public_methods"]}, "Contract": {"general": ["Subsections in |label|`Contract` are line-based. This is the first logical line. Use backslash to merge physical lines to a logical line.", "This is the second logical line. Itemization is not supported inside these logical lines.", "A sequence of logical lines in the contract is meant to represent a line-by-line executable contract."], "constructor": ["Same format as |label|`Contract.general`.", "This is the second logical line."]}, "Factory": {"make_X": ["Line-based text flow is enforced as in |label|`Contract`. Use backslash to merge physical lines to a logical line.", "This is the second logical line. Factories are not so different from constructors in terms of documentation. The content is interpreted as a line-by-line executable contract."]}, "Public_methods": ["m"], "Method_overview": {"m": ["A method overview is not normative. The content", "is a sequence of paragraphs.", "|", "This is the second paragraph. A single pipe character \"|\" separates paragraphs", "within the freeform text.", "|", "Itemizations and enumerations are possible:", "# Numbered item", "* An item", "* An item", "# Numbered item"]}}}, "test_flow_control.X.m": {"signature": {"text": "X.m(self) -> 'None'", "parameters": [], "returns": "None"}, "doc": {"Preamble": {"profile": "method", "normative_sections": ["Contract", "Parameters", "Returns", "Raises"]}, "Contract": {"general": []}, "Parameters": {}, "Returns": [], "Raises": {}}}, "test_flow_control.f": {"signature": {"text": "f(rng: 'Tuple[int, int]', b: 'str') -> 'Tuple[float, int, List[str]]'", "parameters": [{"name": "rng", "kind": "POSITIONAL_OR_KEYWORD", "annotation": "Tuple[int, int]", "default": null}, {"name": "b", "kind": "POSITIONAL_OR_KEYWORD", "annotation": "str", "default": null}], "returns": "Tuple[float, int, List[str]]"}, "doc": {"Preamble": {"profile": "function", "normative_sections": ["Contract", "Parameters", "Returns", "Raises"]}, "Contract": {"general": ["Same format as for profile |value|`class`.", "Second line."], "requires": ["Same format as |label|`Contract.general`", "Second line."], "ensures": ["Same format as |label|`Contract.general`", "Second line."], "invariants": ["Same format as |label|`Contract.general`", "Second line."]}, "Returns": ["As opposed to the |label|`Contract` sections,", "the |label|`Return` section is intepreted as a freeform text.", "A single pipe character \"|\" separates paragraphs within the freeform text.", "|", "The free form allows us to itemize and enumerate. We can use this in", "order to describe the structure of the returned value, e.g.", "|", "The returned value has the form |var|`(u,v,[r,s])` where", "* |var|`u` is ...", "* |var|`v` is ...", "* |var|`[r,s]` consist of the following:", "+ |var|`r` which is ...", "+ |var|`s` which is ..."], "Parameters": {"rng": ["Like the |label|`Returns` section, parameter entries support", "freeform text with itemization and enumeration, which allows", "to resolve the inner structure of parameters. Example", "* Component |value|`0` is the beginning of the range.", "* Component |value|`1` is the (eclusive) end of the range."], "b": ["Nonetheless, line-by-line executable contract style is", "possible by explicit itemization:", "* MUST represent ...", "* MUST fulfill ...", "This may overlap with the |label|`requires` section.", "In case of a thematic overlap, a detailed |label|`requires` section", "should be preferred."]}, "Raises": {}}}}};
+const WTRL_DATA = {"meta": {"scope": "core", "flavour": "rfc-2119", "schema": "0.1.0", "modules": ["test_flow_control"], "css_primary": "/* This style sheet defines the styles for interactive HTML5 output.\n   For waterlint render-html5, additional styles can be provided\n   by the caller via the --additional-css option. */\n/*----- Global styles ---------------------------------------*/\nhtml, body {\n\tmargin:0;\n\tpadding:0;\n\theight:100%;\n\toverflow:hidden;\n\tfont-family: Helvetica, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif; background:#f7f7f4; color:#1f2428;\n\t}\n.wtrl-app {\n\tdisplay:grid;\n\tgrid-template-columns: 420px 1fr;\n\theight:100vh;\n\tpadding:0.5em;\n\tgap:0.5em;\n\tbox-sizing:border-box;\n\t}\n.wtrl-side {\n\tborder:1px solid #ddd;\n\tborder-radius:.3em;\n\tmargin-bottom:1em;\n\tmargin-left:0em;\n\tmargin-right:0em;\n\tbackground:#fff;\n\tpadding-left:0.75em;\n\tpadding-right:0.75em;\n\tpadding-top: 0.5em;\n\tpadding-bottom: 1em;\n\tdisplay:flex;\n\tflex-direction:column;\n\tmin-height:0;\n\t}\n#wtrl-debug-refs {\n\tmargin-top:0.5em;\n\tmargin-bottom:0.0em;\n\tbackground-color:#efd;\n\tborder-radius:8px;\n\t}\n.wtrl-main {\n\tpadding-left:0.5em;\n\tpadding-right:0em;\n\tpadding-top: 0em;\n\tpadding-bottom: 1em;\n\tmargin-left: 0em;\n\tmin-width:0;\n\tmin-height:0;\n\tdisplay:flex;\n\tflex-direction:column;\n\toverflow:hidden;\n\t}\n.wtrl-meta {\n\tfont-size:12px;\n\tcolor:#666;\n\tmargin-bottom:0.5em;\n\t}\n.wtrl-input { width:100%; box-sizing:border-box; padding:10px 12px; border:1px solid #bbb; border-radius:8px; font-size:14px; }\n.wtrl-hitlist {\n\tmargin-left:.0em;\t\n\tmargin-right:0em;\t\n\tmargin-top:12px;\n\tpadding-left: 0em;\n\tpadding-right: 0em;\n\tmax-height:none;\n\tmin-height:0;\n\tflex:1 1 auto;\n\toverflow:auto;\n\tborder:1px solid #ddd;\n\tborder-radius:8px;\n\tbackground:#eee; }\n.wtrl-hit { display:block; width:100%; text-align:left; border:0; border-bottom:1px solid #eee; background:transparent; padding:8px 10px; font-size:13px; cursor:pointer; }\n.wtrl-hit:hover { background:#f3f6fa; }\n.wtrl-kind { color:#57606a; font-size:11px; margin-right:8px; }\n.wtrl-title { margin:0 0 10px 0; font-size:22px; }\n.wtrl-sub { margin:0 0 16px 0; color:#57606a; }\n\n.wtrl-block {\n\tborder:1px solid #ddd;\n\tborder-radius:0.3em;\n\tbackground:#fff;\n\tpadding-left: .75em;\n\tpadding-right: .75em;\n\tpadding-top: 0.75em;\n\tpadding-bottom: 0.75em;\n\tbox-sizing:border-box;\n\tflex:1 1 auto;\n\tmin-height:0;\n\twidth:100%;\n\tmax-width:100%;\n\tmax-height:none;\n\toverflow:auto;\n\t}\n\n.wtrl-signature {\n\tmargin:0 0 14px 0;\n\tfont-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;\n\tfont-size:100%;\n\tcolor:#57606a;\n\twhite-space:pre-wrap;\n\toverflow-wrap:anywhere;\n\t}\n.wtrl-search-row {\n\tdisplay:grid;\n\tgrid-template-columns:auto 1fr minmax(9rem, 16rem) auto auto;\n\tgrid-template-areas:\n\t\t\"search search search  search search\"\n\t\t\"clear  .      history back   fwd\"\n\t\t\"filter filter filter  filter filter\";\n\tgap:0.4em 0.5em;\n\talign-items:center;\n\tmin-width:0;\n\t}\n#wtrl-search {\n\tgrid-area:search;\n\twidth:100%;\n\theight:30px;\n\tborder:1px solid #ccc;\n\tborder-radius:0.3em;\n\t}\n#wtrl-search-clear {\n\tgrid-area:clear;\n\theight:30px;\n\tborder:1px solid #ddd;\n\tborder-radius:0.5em;\n\t}\n#wtrl-nav-back {\n\tgrid-area:back;\n\twidth: 30px;\n\theight:30px;\n\tborder:1px solid #ddd;\n\tborder-radius:0.5em;\n\t}\n#wtrl-nav-forward {\n\tgrid-area:fwd;\n\twidth: 30px;\n\theight:30px;\n\tborder:1px solid #ddd;\n\tborder-radius:0.5em;\n\t}\n#wtrl-nav-history {\n\tgrid-area:history;\n\twidth:100%;\n\tmin-width:0;\n\tmax-width:16rem;\n\theight:30px;\n\tborder:1px solid #ddd;\n\tborder-radius:0.5em;\n\toverflow:hidden;\n\ttext-overflow:ellipsis;\n\twhite-space:nowrap;\n\t}\n.wtrl-filter-row {\n\tgrid-area:filter;\n\tdisplay:grid;\n\tgrid-template-columns:minmax(0, 1fr) minmax(0, 1fr);\n\tgap:0.5em;\n\talign-items:center;\n\tmin-width:0;\n\t}\n.wtrl-filter-pair {\n\tdisplay:flex;\n\tgap:0.5em;\n\talign-items:center;\n\tmin-width:0;\n\t}\n.wtrl-filter-label {\n\tflex:0 0 auto;\n\tfont-size:13px;\n\tcolor:#334155;\n\t}\n.wtrl-kind-filter,\n.wtrl-label-mode {\n\tflex:1 1 auto;\n\tmin-width:0;\n\tbox-sizing:border-box;\n\tpadding:0 10px;\n\tborder:1px solid #bbb;\n\tborder-radius:0.5em;\n\tbackground:#fff;\n\tcolor:#334155;\n\tfont-size:13px;\n\theight:30px;\n\tline-height:30px;\n\t}\n.wtrl-kind-filter:disabled {\n\topacity:0.55;\n\tbackground:#f8fafc;\n\t}\n.wtrl-label-mode:disabled {\n\topacity:0.55;\n\tbackground:#f8fafc;\n\t}\n\n/*----- Section ---------------------------------------------*/\n.wtrl-section {\n\tmargin-left: 0em;\n\tmargin-right: 0em;\n\tmargin-top: 0em;\n\tmargin-bottom: 0.5em;\n\tborder:1px solid #ececec;\n\tborder-radius:.3em;\n\tpadding-left: .5em;\n\tpadding-right: .5em;\n\tpadding-top: 0.3em;\n\tpadding-bottom: 0.3em;\n\tbackground:#eee;\n\t}\n.wtrl-section-head {\n\tfont-weight: normal;\n\tfont-style: italic;\n\tmargin-left: 0em;\n\tmargin-right: 0em;\n\tmargin-top: 0em;\n\tmargin-bottom: 0em;\n\tcolor:#0f172a;\n\t}\n\n/*----- Subsection ------------------------------------------*/\n.wtrl-subsection {\n\tmargin-left: 0em;\n\tmargin-right: 0em;\n\tmargin-top: 0em;\n\tmargin-bottom: 0.5em;\n\t}\n.wtrl-subsection-head {\n\tfont-weight:normal;\n\tfont-style: italic;\n\tmargin-left: 0em;\n\tmargin-right: 0em;\n\tmargin-top: 0em;\n\tmargin-bottom: 0em;\n\tmargin-left:1.5em;\n\tcolor:#1f2937;\n\t}\n\n/*----- Freeform text ---------------------------------------*/\n.wtrl-section .wtrl-text {\n\tmargin-left:1.5em;\n\tmargin-right: 0.0em;\n\tmargin-top: 0.2em;\n\tmargin-bottom: 0.3em;\n\twhite-space:pre-wrap;\n\toverflow-wrap:anywhere;\n\t}\n.wtrl-section .wtrl-subsection .wtrl-text {\n\tmargin-left:3.0em;\n\tmargin-right: 0.0em;\n\tmargin-top: 0.2em;\n\tmargin-bottom: 0.3em;\n\twhite-space:pre-wrap;\n\toverflow-wrap:anywhere;\n\t}\n.wtrl-text {\n\twhite-space:pre-wrap;\n\toverflow-wrap:anywhere;\n\t}\n/*----- Lists with text -------------------------------------*/\n.wtrl-section .wtrl-list {\n\tmargin-left: 0.0em;\n\tmargin-right: 0.0em;\n\tmargin-top: 0.5em;\n\tmargin-bottom: 0.5em;\n\t}\n.wtrl-section .wtrl-subsection .wtrl-list {\n\tmargin-left: 1.5em;\n\tmargin-right: 0.0em;\n\tmargin-top: 0.5em;\n\tmargin-bottom: 0.5em;\n\t}\n.wtrl-list li {\n\toverflow-wrap:anywhere;\n\t}\n\n.wtrl-obj {\n\tmargin:0;\n\twhite-space:pre-wrap;\n\toverflow-wrap:anywhere;\n\tfont-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;\n\tfont-size:12px;\n\tcolor:#334155;\n\t}\n\n/*----- Semantic roles ---------------------------------------*/\n.wtrl-attr, .wtrl_attr {\n\tcolor:#7c3aed;\n\t}\n.wtrl-cmd, .wtrl_cmd {\n\tcolor:#996600;\n\tfont-weight:normal;\n\tfont-style:normal;\n\tfont-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;\n\t}\n.wtrl-dfn, .wtrl_dfn {\n\tfont-style:italic;\n\t}\n.wtrl-file, .wtrl_file {\n\tcolor:#0f766e;\n\tfont-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;\n\t}\n.wtrl-func, .wtrl_func {\n\tcolor:#3040ff;\n\tfont-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;\n\t}\n.wtrl-key, .wtrl_key {\n\tcolor:#1f2937;\n\tfont-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;\n\tfont-weight: normal;\n\tfont-size:90%;\n\tborder: 1px solid black;\n\tborder-radius:3px;\n\tpadding-left:3px;\n\tpadding-right:3px;\n\t}\n.wtrl-label, .wtrl_label {\n\tcolor:#1f2937;\n\tfont-style:italic;\n\t}\n.wtrl-mod, .wtrl_mod {\n\tcolor:#446622;\n\tfont-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;\n\t}\n.wtrl-norm, .wtrl_norm {\n\tcolor:#b42318;\n\tfont-weight:700;\n\t}\n.wtrl-opt, .wtrl_opt {\n\tfont-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;\n\tfont-weight:bold;\n\t}\n.wtrl-op, .wtrl_op {\n\tcolor:#b91c1c;\n\t}\n.wtrl-lit, .wtrl_lit {\n\tcolor:#1f2937;\n\tfont-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;\n\t}\n.wtrl-pkg, .wtrl_pkg {\n\tcolor:#446622;\n\tfont-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;\n\t}\n.wtrl-ref, .wtrl_ref {\n\tcolor:#005cc5;\n\ttext-decoration-line: underline;\n\ttext-decoration-style: dotted;\n\ttext-decoration-thickness: 1px;\n\ttext-underline-offset: 0.12em;\n\t}\n.wtrl-value, .wtrl_value {\n\tcolor:#040;\n\tfont-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;\n\t}\n.wtrl-tag, .wtrl_tag {\n\tcolor:#4b5563;\n\tfont-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;\n\t}\n.wtrl-term, .wtrl_term {\n\tfont-style:italic;\n\tcolor:#000;\n\t}\n.wtrl-type, .wtrl_type\n\t{\n\tcolor:#770000;\n\tfont-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;\n\t}\n.wtrl-url, .wtrl_url {\n\tcolor:#0f766e;\n\tfont-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;\n\t}\n.wtrl-url-schema, .wtrl_url_schema {\n\tcolor:#354;\n\tfont-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;\n\t}\n.wtrl-var, .wtrl_var {\n\tcolor:#a00;\n\tfont-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;\n\tfont-weight: normal;\n\t}\n\n\n\n.wtrl-ref.wtrl-func:visited, .wtrl_ref.wtrl_func:visited {\n\tcolor:#3040ff;\n\t}\n.wtrl-ref.wtrl-type:visited, .wtrl_ref.wtrl_type:visited {\n\tcolor:#770000;\n\t}\n.wtrl-ref.wtrl-type, .wtrl_ref.wtrl_type {\n\tcolor:#770000;\n\ttext-decoration-line: underline;\n\ttext-decoration-style: dotted;\n\ttext-decoration-thickness: 1px;\n\ttext-underline-offset: 0.12em;\n\t}\n.wtrl-ref.wtrl-var, .wtrl_ref.wtrl_var {\n\tcolor:#a00;\n\ttext-decoration-line: underline;\n\ttext-decoration-style: dotted;\n\ttext-decoration-thickness: 1px;\n\ttext-underline-offset: 0.12em;\n\t}\n.wtrl-ref.wtrl-func, .wtrl_ref.wtrl_func {\n\tcolor:#3040ff;\n\ttext-decoration-line: underline;\n\ttext-decoration-style: dotted;\n\ttext-decoration-thickness: 1px;\n\ttext-underline-offset: 0.12em;\n\t}\n.wtrl-ref.wtrl-var:visited, .wtrl_ref.wtrl_var:visited {\n\tcolor:#a00;\n\t}\n\n/*----- Code segements --------------------------------------*/\n.wtrl-example-code .wtrl-code {\n\tborder:1px solid #ddd;\n\tborder-radius:0.3em;\n\tbackground:#f7fff0;\n\tmargin-top: 0.25em;\n\tmargin-bottom:0em;\n\tpadding-left: 0.5em;\n\tpadding-right: 0.5em;\n\tpadding-top: 0.5em;\n\tpadding-bottom: 0.5em;\n\tbox-sizing:border-box;\n\twhite-space:pre-wrap;\n\toverflow-wrap:anywhere;\n\t}\n.wtrl-example-code .wtrl-code pre {\n/* control margins and padding by .wtrl-example-code .wtrl-code, not here. */\n\tmargin: 0em;\n\tpadding: 0em;\n}\n\n/*----- Links -----------------------------------------------*/\na {\n\ttext-decoration: none;\n\t}\n/*----- Kind filter -----------------------------------------*/\n/* Currently not possible because of the use of <option> elements\n   in the filter dropdown, which do not allow for styling individual options. */\n\n/*----- Hit list kinds --------------------------------------*/\n.wtrl-hit-kind-module-label {\n\tcolor: #446622;\n\tfont-size:100%;\t\n\tfont-style: italic;\n}\n.wtrl-hit-kind-class-label {\n\tcolor:#770000;\n\tfont-size:100%;\t\n\tfont-style: italic;\n\t}\n.wtrl-hit-kind-callable-label {\n\tcolor:#3040ff;\n\tfont-size:100%;\t\n\tfont-style: italic;\t\n}\n.wtrl-hit-kind-assignable-label {\n\tcolor:#666;\n\tfont-size:100%;\t\n\tfont-style: italic;\n\t}\n.wtrl-hit-kind-type-label {\n\tcolor:#666;\n\tfont-size:100%;\t\n\tfont-style: italic;\n\t}\n/* Label \"object\" or \"entry\" is a fallback and is not supposed to appear. */\n.wtrl-hit-kind-object-label {\n\tcolor:#000;\n\tfont-size:100%;\t\n\tfont-style: italic;\n\t}\n\n.wtrl-hit-kind-module {\n\tcolor:#000;\n\t}\n.wtrl-hit-kind-class {\n\tcolor:#000;\n\t}\n.wtrl-hit-kind-callable {\n\tcolor:#000;\n\t}\n.wtrl-hit-kind-assignable {\n\tcolor:#000;\n\t}\n/* Fallback */\n.wtrl-hit-kind-object {\n\tcolor:#000;\n\t}\n", "css_append": "", "pygments_theme": "gruvbox-light"}, "roles": {"attr": "Attribute name", "cmd": "Shell or CLI command", "dfn": "Definition of a term", "file": "File or path", "func": "Function or callable", "key": "Key on the keyboard", "label": "Section/Subsection label", "lit": "Literal text or code", "mod": "Module name", "op": "Operator symbol", "opt": "Command-line option or flag", "tag": "Tag or marker", "term": "Domain-specific term", "type": "Type name or annotation", "value": "Concrete value", "var": "Variable name", "var_type": "Variable and type, like 'var:type'"}, "scopes": {"public": {"value": 10, "description": ""}, "extension": {"value": 20, "description": ""}, "core": {"value": 30, "description": ""}}, "toc_modules": {"test_flow_control": "/__WTRL_OBJECTS__/test_flow_control"}, "toc_classes": {"test_flow_control.X": "/__WTRL_OBJECTS__/test_flow_control.X"}, "toc_callables": {"test_flow_control.X.m": "/__WTRL_OBJECTS__/test_flow_control.X.m", "test_flow_control.f": "/__WTRL_OBJECTS__/test_flow_control.f"}, "toc_types": {"test_flow_control.MyType": "/__WTRL_OBJECTS__/test_flow_control.MyType"}, "toc_variables": {"test_flow_control.my_variable": "/__WTRL_OBJECTS__/test_flow_control.my_variable"}, "toc_constants": {"test_flow_control.my_constant": "/__WTRL_OBJECTS__/test_flow_control.my_constant"}, "examples": {}, "objects": {"test_flow_control.MyType": {"doc": {}, "doc_lines": ["|label|`Public_types` is normative. The content", "is a sequence of paragraphs.", "This is the second paragraph. A single pipe character \"|\" separates paragraphs", "within the freeform text.", "|", "Itemizations and enumerations are possible:", "# Numbered item", "* An item", "* An item", "# Numbered item"], "annotation": "Tuple[int, float]", "doc_lines_kind": "type"}, "test_flow_control.my_variable": {"doc": {}, "doc_lines": ["|label|`Public_variables` is normative. The content", "is a sequence of paragraphs.", "This is the second paragraph. A single pipe character \"|\" separates paragraphs", "within the freeform text.", "|", "Itemizations and enumerations are possible:", "# Numbered item", "* An item", "* An item", "# Numbered item"], "annotation": "str", "doc_lines_kind": "variable"}, "test_flow_control.my_constant": {"doc": {}, "doc_lines": ["|label|`Public_constants` is normative. The content", "is a sequence of paragraphs.", "This is the second paragraph. A single pipe character \"|\" separates paragraphs", "within the freeform text.", "|", "Itemizations and enumerations are possible:", "* An item", "+ A subitem", "- A subsubitem", "- A subsubitem", "+ A subitem", "* An item"], "annotation": "Final[str]", "doc_lines_kind": "constant"}, "test_flow_control": {"doc": {"Preamble": {"profile": "module", "normative_sections": ["Contract", "Definitions", "Public_classes", "Public_functions", "Public_types", "Public_variables", "Public_constants"]}, "Contract": {"general": []}, "Description": ["We test several freeform and bullet-list scenarios. A |label|`Description` section", "is freeform content. A single pipe character \"|\" separates paragraphs", "within the freeform text.", "|", "This is the second paragraph. Here is an enumeration:", "# Item 1", "# Item 2"], "Definitions": {"Term_A": {"variations": [], "text": ["Definition content is freeform  A single pipe character \"|\" separates paragraphs", "within the freeform text.", "|", "This is the second paragraph. Here is an enumeration", "# Numbered item with long text, so that we use the backslash in order to create a logical line.", "# Numbered item"]}}, "Terminology": {"Term B": ["Terminology content is freeform. A single pipe character \"|\" separates paragraphs", "within the freeform text.", "|", "This is the second paragraph. Here is an item list:", "* Item 1", "* Item 2", "Some text after the item list."]}, "Notes": {"About": ["Notes content is freeform. A single pipe character \"|\" separates paragraphs", "within the freeform text.", "|", "This is the second paragraph. Here is an item list:", "* Item 1", "* Item 2", "Some text after the item list."]}, "Public_classes": ["X"], "Public_functions": ["f"], "Class_overview": {"X": ["A class overview is not normative. The content", "is a sequence of paragraphs.", "|", "This is the second paragraph. A single pipe character \"|\" separates paragraphs", "within the freeform text.", "|", "Itemizations and enumerations are possible:", "* An item", "# Numbered item", "# Numbered item", "* An item"]}, "Function_overview": {"f": ["A function overview is not normative. The content", "is a sequence of paragraphs.", "|", "This is the second paragraph. A single pipe character \"|\" separates paragraphs", "within the freeform text.", "|", "Itemizations and enumerations are possible:", "# Numbered item", "* An item", "* An item", "# Numbered item"]}, "Public_types": {"MyType": ["|label|`Public_types` is normative. The content", "is a sequence of paragraphs.", "This is the second paragraph. A single pipe character \"|\" separates paragraphs", "within the freeform text.", "|", "Itemizations and enumerations are possible:", "# Numbered item", "* An item", "* An item", "# Numbered item"]}, "Public_variables": {"my_variable": ["|label|`Public_variables` is normative. The content", "is a sequence of paragraphs.", "This is the second paragraph. A single pipe character \"|\" separates paragraphs", "within the freeform text.", "|", "Itemizations and enumerations are possible:", "# Numbered item", "* An item", "* An item", "# Numbered item"]}, "Public_constants": {"my_constant": ["|label|`Public_constants` is normative. The content", "is a sequence of paragraphs.", "This is the second paragraph. A single pipe character \"|\" separates paragraphs", "within the freeform text.", "|", "Itemizations and enumerations are possible:", "* An item", "+ A subitem", "- A subsubitem", "- A subsubitem", "+ A subitem", "* An item"]}}}, "test_flow_control.X": {"signature": {"text": "object.__init__(self, /, *args, **kwargs)", "parameters": [{"name": "args", "kind": "VAR_POSITIONAL", "annotation": null, "default": null}, {"name": "kwargs", "kind": "VAR_KEYWORD", "annotation": null, "default": null}], "returns": null}, "doc": {"Preamble": {"profile": "class", "normative_sections": ["Contract", "Factory", "Public_methods"]}, "Contract": {"general": ["Subsections in |label|`Contract` are line-based. This is the first logical line. Use backslash to merge physical lines to a logical line.", "This is the second logical line. Itemization is not supported inside these logical lines.", "A sequence of logical lines in the contract is meant to represent a line-by-line executable contract."], "constructor": ["Same format as |label|`Contract.general`.", "This is the second logical line."]}, "Factory": {"make_X": ["Line-based text flow is enforced as in |label|`Contract`. Use backslash to merge physical lines to a logical line.", "This is the second logical line. Factories are not so different from constructors in terms of documentation. The content is interpreted as a line-by-line executable contract."]}, "Public_methods": ["m"], "Method_overview": {"m": ["A method overview is not normative. The content", "is a sequence of paragraphs.", "|", "This is the second paragraph. A single pipe character \"|\" separates paragraphs", "within the freeform text.", "|", "Itemizations and enumerations are possible:", "# Numbered item", "* An item", "* An item", "# Numbered item"]}}}, "test_flow_control.X.m": {"signature": {"text": "X.m(self) -> 'None'", "parameters": [], "returns": "None"}, "doc": {"Preamble": {"profile": "method", "normative_sections": ["Contract", "Parameters", "Returns", "Raises"]}, "Contract": {"general": []}, "Parameters": {}, "Returns": [], "Raises": {}}}, "test_flow_control.f": {"signature": {"text": "f(rng: 'Tuple[int, int]', b: 'str') -> 'Tuple[float, int, List[str]]'", "parameters": [{"name": "rng", "kind": "POSITIONAL_OR_KEYWORD", "annotation": "Tuple[int, int]", "default": null}, {"name": "b", "kind": "POSITIONAL_OR_KEYWORD", "annotation": "str", "default": null}], "returns": "Tuple[float, int, List[str]]"}, "doc": {"Preamble": {"profile": "function", "normative_sections": ["Contract", "Parameters", "Returns", "Raises"]}, "Contract": {"general": ["Same format as for profile |value|`class`.", "Second line."], "requires": ["Same format as |label|`Contract.general`", "Second line."], "ensures": ["Same format as |label|`Contract.general`", "Second line."], "invariants": ["Same format as |label|`Contract.general`", "Second line."]}, "Returns": ["As opposed to the |label|`Contract` sections,", "the |label|`Return` section is intepreted as a freeform text.", "A single pipe character \"|\" separates paragraphs within the freeform text.", "|", "The free form allows us to itemize and enumerate. We can use this in", "order to describe the structure of the returned value, e.g.", "|", "The returned value has the form |var|`(u,v,[r,s])` where", "* |var|`u` is ...", "* |var|`v` is ...", "* |var|`[r,s]` consist of the following:", "+ |var|`r` which is ...", "+ |var|`s` which is ..."], "Parameters": {"rng": ["Like the |label|`Returns` section, parameter entries support", "freeform text with itemization and enumeration, which allows", "to resolve the inner structure of parameters. Example", "* Component |value|`0` is the beginning of the range.", "* Component |value|`1` is the (eclusive) end of the range."], "b": ["Nonetheless, line-by-line executable contract style is", "possible by explicit itemization:", "* MUST represent ...", "* MUST fulfill ...", "This may overlap with the |label|`requires` section.", "In case of a thematic overlap, a detailed |label|`requires` section", "should be preferred."]}, "Raises": {}}}}};
 const WTRL_INDEX = [{"label": "test_flow_control", "target": "test_flow_control", "kind": "mod", "anchor": "wtrl-mod-17:test_flow_control"}, {"label": "test_flow_control.MyType", "target": "test_flow_control.MyType", "kind": "type", "anchor": "wtrl-type-17:test_flow_control-6:MyType"}, {"label": "test_flow_control.X", "target": "test_flow_control.X", "kind": "cls", "anchor": "wtrl-cls-17:test_flow_control-1:X"}, {"label": "test_flow_control.X.m", "target": "test_flow_control.X.m", "kind": "meth", "anchor": "wtrl-meth-17:test_flow_control-1:X-1:m"}, {"label": "test_flow_control.f", "target": "test_flow_control.f", "kind": "func", "anchor": "wtrl-func-17:test_flow_control-1:f"}, {"label": "test_flow_control.my_constant", "target": "test_flow_control.my_constant", "kind": "const", "anchor": "wtrl-const-17:test_flow_control-11:my_constant"}, {"label": "test_flow_control.my_variable", "target": "test_flow_control.my_variable", "kind": "var", "anchor": "wtrl-var-17:test_flow_control-11:my_variable"}];
 const WTRL_EXAMPLES_HTML = {};
 // The above variables are injected by waterlint_render_html5.py, the script
@@ -642,14 +673,18 @@ const ROLE_CLASS = {
   "label": "wtrl-label wtrl_label",
   "lit": "wtrl-lit wtrl_lit",
   "mod": "wtrl-mod wtrl_mod",
+  "norm": "wtrl-norm wtrl_norm",
   "opt": "wtrl-opt wtrl_opt",
   "op": "wtrl-op wtrl_op",
+  "pkg": "wtrl-pkg wtrl_pkg",
   "ref": "wtrl-ref wtrl_ref",
   "tag": "wtrl-tag wtrl_tag",
   "term": "wtrl-term wtrl_term",
   "type": "wtrl-type wtrl_type",
+  "url": "wtrl-special-handling-see-code",
   "value": "wtrl-value wtrl_value",
   "var": "wtrl-var wtrl_var",
+  "var_type": "wtrl-special-handling-see-code"
 };
 
 function buildAnchorMap() {
@@ -1497,67 +1532,143 @@ function renderReferencedBySection(container, currentQid) {
   container.appendChild(elemSection);
 }
 
-function appendInlineTokens(parent, txt) {
-  let cur = 0;
-  let m;
-  TOK_RE.lastIndex = 0;
-  while ((m = TOK_RE.exec(txt)) !== null) {
-    if (m.index > cur) parent.appendChild(document.createTextNode(txt.slice(cur, m.index)));
-    if (m[1]) {
-      const elemNorm = document.createElement("span");
-      elemNorm.className = "wtrl-norm wtrl_norm";
-      elemNorm.textContent = m[1];
-      parent.appendChild(elemNorm);
-    } else if (m[2]) {
-      const elemLiteralValue = document.createElement("span");
-      elemLiteralValue.className = "wtrl-value wtrl_value";
-      elemLiteralValue.textContent = m[2];
-      parent.appendChild(elemLiteralValue);
-    } else if (m[3]) {
-      const role = m[4];
-      const body = m[5];
-      const cls = ROLE_CLASS[role];
-      if (!cls) {
-        parent.appendChild(document.createTextNode(m[3]));
-      } else if (role === "ref") {
-        const rb = parseRefBody(body);
-        const refText = rb.label || body;
-        const elemRefLink = document.createElement("a");
-        elemRefLink.className = cls;
-        elemRefLink.textContent = refText;
-        if (rb.target.startsWith("http://") || rb.target.startsWith("https://")) {
-          elemRefLink.href = rb.target;
-          elemRefLink.target = "_blank";
-          elemRefLink.rel = "noopener noreferrer";
-        } else if (rb.target.startsWith("wtrl://")) {
-          const qid = rb.target.slice("wtrl://".length);
-          const anchor = TARGET_TO_ANCHOR.get(qid);
-          if (anchor) elemRefLink.href = "#" + anchor;
-        }
-        if (!elemRefLink.getAttribute("href")) {
-          const elemFallback = document.createElement("span");
-          elemFallback.className = cls;
-          elemFallback.textContent = refText;
-          parent.appendChild(elemFallback);
-        } else {
-          parent.appendChild(elemRefLink);
-        }
-      } else if (role === "lit" && (body === "None" || body === "Self" || body === "True" || body === "False")) {
-        const elemSpecialLiteral = document.createElement("span");
-        elemSpecialLiteral.className = "wtrl-value wtrl_value";
-        elemSpecialLiteral.textContent = body;
-        parent.appendChild(elemSpecialLiteral);
-      } else {
-        const elemRoleText = document.createElement("span");
-        elemRoleText.className = cls;
-        elemRoleText.textContent = body;
-        parent.appendChild(elemRoleText);
-      }
-    }
-    cur = TOK_RE.lastIndex;
-  }
-  if (cur < txt.length) parent.appendChild(document.createTextNode(txt.slice(cur)));
-}
+function appendInlineTokens(parent, txt)
+	{
+	let cur = 0;
+	let m;
+	TOK_RE.lastIndex = 0;
+	while ((m = TOK_RE.exec(txt)) !== null) {
+		if (m.index > cur) parent.appendChild(document.createTextNode(txt.slice(cur, m.index)));
+		if (m[1])
+			{
+			const elemNorm = document.createElement("span");
+			elemNorm.className = "wtrl-norm wtrl_norm";
+			elemNorm.textContent = m[1];
+			parent.appendChild(elemNorm);
+			}
+		else if (m[2])
+			{
+// The comment on TOK_RE says, this one captures |None|, |Self|, |True|, |False|.
+			const elemLiteralValue = document.createElement("span");
+			elemLiteralValue.className = "wtrl-value wtrl_value";
+			elemLiteralValue.textContent = m[2];
+			parent.appendChild(elemLiteralValue);
+			}
+		else if (m[3])
+			{
+// We have m[3], so check for semantic role.
+			const role = m[4];
+			const body = m[5];
+			const cls = ROLE_CLASS[role];
+			if (!cls)
+				{
+// None of the knwon roles, append as is.
+				parent.appendChild(document.createTextNode(m[3]));
+				}
+			else if (role === "ref")
+				{
+// Special handling of references.
+				const rb = parseRefBody(body);
+				const refText = rb.label || body;
+				const elemRefLink = document.createElement("a");
+				elemRefLink.className = cls;
+				elemRefLink.textContent = refText;
+				if (rb.target.startsWith("http://") || rb.target.startsWith("https://"))
+					{
+					elemRefLink.href = rb.target;
+					elemRefLink.target = "_blank";
+					elemRefLink.rel = "noopener noreferrer";
+					}
+				else if (rb.target.startsWith("wtrl://"))
+					{
+					const qid = rb.target.slice("wtrl://".length);
+					const anchor = TARGET_TO_ANCHOR.get(qid);
+					if (anchor) elemRefLink.href = "#" + anchor;
+					}
+				if (!elemRefLink.getAttribute("href"))
+					{
+					const elemFallback = document.createElement("span");
+					elemFallback.className = cls;
+					elemFallback.textContent = refText;
+					parent.appendChild(elemFallback);
+					}
+				else
+					{
+					parent.appendChild(elemRefLink);
+					}
+				}
+			else if (role === "lit" && (body === "None" || body === "Self" || body === "True" || body === "False"))
+				{
+// Mark might have the form |lit|`abc` or for instance |Self|
+// Yet this is not a recommented form in wtrl. Just write |Self|, not |lit|`Self`.
+// A form like |value|`Self` is acceptable, but is already covered below in the default branch.
+				const elemSpecialLiteral = document.createElement("span");
+				elemSpecialLiteral.className = "wtrl-value wtrl_value";
+				elemSpecialLiteral.textContent = body;
+				parent.appendChild(elemSpecialLiteral);
+				}
+// More special cases here.
+			else if (role === "var_type")
+				{
+// We are looking for the form variable-colon-type, e.g. |var_type|`x:int`. The colon is the separator.
+// Would like to render with wtrl-var/wtrl_var for the variable and wtrl-type/wtrl_type for the type.
+				const parts = body.split(":");
+				const elemVarType = document.createElement("span");
+				if (parts.length === 2)
+					{
+// Variable
+					const elemVar = document.createElement("span");
+					elemVar.className = "wtrl-var wtrl_var";
+					elemVar.textContent = parts[0];
+					elemVarType.appendChild(elemVar);
+// Colon
+					elemVarType.appendChild(document.createTextNode(":"));
+// Type
+					const elemType = document.createElement("span");
+					elemType.className = "wtrl-type wtrl_type";
+					elemType.textContent = parts[1];
+					elemVarType.appendChild(elemType);
+					}
+				else
+					{
+// Cannot interpret, append literally.
+					elemVarType.textContent = body;
+					}
+				parent.appendChild(elemVarType);
+				}
+			else if (role === "url")
+				{
+// For URLs we currently have two styles: wtrl-url and wtrl-url-schema.
+// We'd like to render the schema part in wtrl-url-schema and the rest in wtrl-url. The separator is "://".
+				const parts = body.split("://");
+				const elemUrl = document.createElement("span");
+				if (parts.length === 2) {
+					const elemUrlSchema = document.createElement("span");
+					elemUrlSchema.className = "wtrl-url-schema wtrl_url_schema";
+					elemUrlSchema.textContent = parts[0];
+					elemUrl.appendChild(elemUrlSchema);
+					const elemUrlRest = document.createElement("span");
+					elemUrlRest.className = "wtrl-url wtrl_url";
+					elemUrlRest.textContent = "://" + parts[1];
+					elemUrl.appendChild(elemUrlRest);
+				} else {
+					elemUrl.textContent = body;
+				}
+				parent.appendChild(elemUrl);
+				}
+			else
+				{
+// The default branch.
+				const elemRoleText = document.createElement("span");
+				elemRoleText.className = cls;
+				elemRoleText.textContent = body;
+				parent.appendChild(elemRoleText);
+				}
+			}
+		cur = TOK_RE.lastIndex;
+		}
+	if (cur < txt.length) parent.appendChild(document.createTextNode(txt.slice(cur)));
+	}
 
 function renderValue(value, container, depth, path, currentQid) {
   const pth = Array.isArray(path) ? path : [];
