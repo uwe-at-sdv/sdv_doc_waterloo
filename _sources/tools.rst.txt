@@ -235,6 +235,7 @@ The following fields are accepted for all non-:wtrl_value:`ping` commands:
 	  "source_fragment": "<python header fragment or empty string>",
 	  "source_file": "<absolute or relative file path>",
 	  "line": 0,
+	  "ignore": ["VLII-001"],
 	  "include_diagnostics": false
 	}
 
@@ -246,7 +247,7 @@ Command-specific requirements:
 * :wtrl_value:`validate_docstring`
 	- Required: :wtrl_attr:`version`, :wtrl_attr:`command`, :wtrl_attr:`kind`, :wtrl_attr:`source_fragment`,
 	  :wtrl_attr:`source_file`, :wtrl_attr:`line`
-	- Optional: :wtrl_attr:`include_diagnostics`
+	- Optional: :wtrl_attr:`include_diagnostics`, :wtrl_attr:`ignore`
 
 Command :wtrl_value:`ping`
 ................................................................
@@ -372,8 +373,13 @@ Request (function):
 	  "source_fragment": "def spam() -> None: pass",
 	  "source_file": "doc/examples/test_docitem_function_minimal.py",
 	  "line": 2,
+	  "ignore": ["VLII-001"],
 	  "include_diagnostics": true
 	}
+
+The optional field :wtrl_attr:`ignore` is a list of rule IDs to ignore for
+warnings. It has the same semantics as :wtrl_cmd:`waterlint validate --ignore`.
+The VSCode extension default is :wtrl_value:`["VLII-001"]`.
 
 Successful response:
 
@@ -402,7 +408,8 @@ Successful response:
 
 The validate response includes :wtrl_attr:`module_dir` and
 :wtrl_attr:`qualified_identifier`, which frontend clients can use to
-reconstruct a terminal hint such as :wtrl_cmd:`waterlint validate --basedir ... --obj ...`.
+reconstruct a terminal hint such as
+:wtrl_cmd:`waterlint validate --basedir ... --obj ... --ignore "VLII-001"`.
 
 Error response (shape):
 
