@@ -10,9 +10,9 @@ The same source docstring can be consumed by humans, LLM-assisted tooling, and
 renderers without losing structural meaning.
 
 This extension adds VS Code support for Waterloo docstrings in Python. It
-provides syntax highlighting, docstring generation and validation commands, and
-an MCP server that can help Copilot and other MCP clients inspect Waterloo
-docstrings more effectively.
+provides syntax highlighting for roles such as `class`, `pkg`, and `url`,
+docstring generation and validation commands, and an MCP server that can help
+Copilot and other MCP clients inspect Waterloo docstrings more effectively.
 
 ## Source and release
 

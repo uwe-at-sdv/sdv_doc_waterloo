@@ -4,6 +4,7 @@ Format:
 
 - VERSION [YYYY-MM-DD]: Summary.
 
+- 0.2.18 [2026-07-04]:	New markup roles
 - 0.2.17 [2026-07-04]:	Configuration for option --ignore in validation.
 - 0.2.16 [2026-07-02]:	Improved diagnostics... again.
 - 0.2.15 [2026-07-02]:	Improved diagnostics in case of missing python package.

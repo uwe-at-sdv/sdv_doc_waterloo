@@ -761,8 +761,44 @@
           }
         },
         {
+          "name": "meta.inline.role.class.waterloo",
+          "match": "(\\|class\\|)(`)([^`]*)(`)",
+          "captures": {
+            "1": {
+              "name": "support.function.role.waterloo"
+            },
+            "2": {
+              "name": "punctuation.definition.string.begin.waterloo"
+            },
+            "3": {
+              "name": "entity.name.type.waterloo"
+            },
+            "4": {
+              "name": "punctuation.definition.string.end.waterloo"
+            }
+          }
+        },
+        {
           "name": "meta.inline.role.mod.waterloo",
           "match": "(\\|mod\\|)(`)([^`]*)(`)",
+          "captures": {
+            "1": {
+              "name": "support.function.role.waterloo"
+            },
+            "2": {
+              "name": "punctuation.definition.string.begin.waterloo"
+            },
+            "3": {
+              "name": "entity.name.namespace.python.waterloo"
+            },
+            "4": {
+              "name": "punctuation.definition.string.end.waterloo"
+            }
+          }
+        },
+        {
+          "name": "meta.inline.role.pkg.waterloo",
+          "match": "(\\|pkg\\|)(`)([^`]*)(`)",
           "captures": {
             "1": {
               "name": "support.function.role.waterloo"
@@ -790,6 +826,24 @@
             },
             "3": {
               "name": "constant.numeric.waterloo"
+            },
+            "4": {
+              "name": "punctuation.definition.string.end.waterloo"
+            }
+          }
+        },
+        {
+          "name": "meta.inline.role.url.waterloo",
+          "match": "(\\|url\\|)(`)([^`]*)(`)",
+          "captures": {
+            "1": {
+              "name": "support.function.role.waterloo"
+            },
+            "2": {
+              "name": "punctuation.definition.string.begin.waterloo"
+            },
+            "3": {
+              "name": "markup.underline.link.waterloo"
             },
             "4": {
               "name": "punctuation.definition.string.end.waterloo"

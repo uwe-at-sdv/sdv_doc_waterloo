@@ -10,7 +10,7 @@
     "normativity",
     "docstring-linter"
   ],
-  "version": "0.2.17",
+  "version": "0.2.18",
   "publisher": "uwe-at-sdv",
   "engines": {
     "vscode": "^1.115.0"
