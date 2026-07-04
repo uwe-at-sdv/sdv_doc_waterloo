@@ -41,7 +41,7 @@ from pygments.token import Error, Generic, Keyword, Name, String, Literal, Numbe
 
 #----- Changelog ----------------------------------------------#
 
-__version__ = "0.6.0"
+__version__ = "0.6.1"
 
 #----- Constants ----------------------------------------------#
 RE_SECTION = re.compile(
@@ -102,12 +102,13 @@ RE_LIST_MARKER = re.compile(
 # 31,32: |opt| and argument
 # 33,34: |tag| and argument
 # 35,36: |norm| and argument
-# 37,38: |var_type| and argument
-# 39,40: |class| and argument
-# 41,42: |pkg| and argument
-# 43,44: |url| and argument
-# 45,46: Generic role and argument
-# 47: Line connector
+# 37,38: |key| and argument
+# 39,40: |var_type| and argument
+# 41,42: |class| and argument
+# 43,44: |pkg| and argument
+# 45,46: |url| and argument
+# 47,48: Generic role and argument
+# 49: Line connector
 # Todo: Sort roles alphabetically by role name.
 # A. Normativity keywords
 # B. Special values
@@ -134,6 +135,7 @@ RE_INLINE = re.compile(
 	r"|(\|opt\|)(`[^`]+`)"
 	r"|(\|tag\|)(`[^`]+`)"
 	r"|(\|norm\|)(`[^`]+`)"
+	r"|(\|key\|)(`[^`]+`)"
 	r"|(\|var_type\|)(`[^`]+`)"
 	r"|(\|class\|)(`[^`]+`)"
 	r"|(\|pkg\|)(`[^`]+`)"
@@ -563,23 +565,26 @@ class PythonWaterlooLexer(PythonLexer):
 			elif m.group(35) is not None and m.group(36) is not None: # norm
 				yield base + m.start(), Keyword, m.group(35)
 				yield base + m.start() + len(m.group(35)), Keyword, m.group(36)
-			elif m.group(37) is not None and m.group(38) is not None: # var_type
+			elif m.group(37) is not None and m.group(38) is not None: # key
 				yield base + m.start(), Keyword, m.group(37)
-				yield base + m.start() + len(m.group(37)), Name.Class, m.group(38)
-			elif m.group(39) is not None and m.group(40) is not None: # class
+				yield base + m.start() + len(m.group(37)), Name.Constant, m.group(38)
+			elif m.group(39) is not None and m.group(40) is not None: # var_type
 				yield base + m.start(), Keyword, m.group(39)
 				yield base + m.start() + len(m.group(39)), Name.Class, m.group(40)
-			elif m.group(41) is not None and m.group(42) is not None: # pkg
+			elif m.group(41) is not None and m.group(42) is not None: # class
 				yield base + m.start(), Keyword, m.group(41)
-				yield base + m.start() + len(m.group(41)), Name.Namespace, m.group(42)
-			elif m.group(43) is not None and m.group(44) is not None: # url
+				yield base + m.start() + len(m.group(41)), Name.Class, m.group(42)
+			elif m.group(43) is not None and m.group(44) is not None: # pkg
 				yield base + m.start(), Keyword, m.group(43)
-				yield base + m.start() + len(m.group(43)), String.Other, m.group(44)
-			elif m.group(45) is not None and m.group(46) is not None: # generic role
-				yield base + m.start(), String.Doc, m.group(45)
-				yield base + m.start() + len(m.group(45)), String.Doc, m.group(46)
-			elif m.group(47) is not None:
-				yield base + m.start(), Keyword, m.group(47)
+				yield base + m.start() + len(m.group(43)), Name.Namespace, m.group(44)
+			elif m.group(45) is not None and m.group(46) is not None: # url
+				yield base + m.start(), Keyword, m.group(45)
+				yield base + m.start() + len(m.group(45)), String.Other, m.group(46)
+			elif m.group(47) is not None and m.group(48) is not None: # generic role
+				yield base + m.start(), String.Doc, m.group(47)
+				yield base + m.start() + len(m.group(47)), String.Doc, m.group(48)
+			elif m.group(49) is not None:
+				yield base + m.start(), Keyword, m.group(49)
 			else:
 				yield base + m.start(), Name.Constant, token_txt
 			cur = m.end()

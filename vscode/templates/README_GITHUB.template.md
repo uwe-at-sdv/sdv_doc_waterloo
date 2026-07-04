@@ -6,8 +6,9 @@ VS Code extension for Waterloo docstrings in Python.
 
 This package provides:
 
-- Waterloo syntax highlighting for roles such as `class`, `pkg`, and `url`
-  (TextMate injection into `source.python`)
+- Waterloo syntax highlighting for roles such as `class`, `pkg`, `url`, and
+  `var_type` (TextMate injection into `source.python`; `var_type` is rendered
+  as a variable/type pair)
 - context menu commands for docstring generation and validation
 - Python backend bridge used by the extension commands
 - an MCP server under `sdv.doc.waterloo.mcp` in the `main` branch at

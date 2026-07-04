@@ -523,8 +523,8 @@
       }
     },
     "map-from-anything-to-freeform": {
-      "begin": "^([ \\t]+)([^:]*:)\\s*$",
-      "end": "^(?=(?:\\1[^:\\n]+:|\\s*(?:\\\"\\\"\\\"|''')))",
+      "begin": "^([ \\t]+)([^`\\n:]+:)\\s*$",
+      "end": "^(?=(?:\\1[^`\\n:]+:|\\s*(?:\\\"\\\"\\\"|''')))",
       "beginCaptures": {
         "2": {
           "name": "entity.name.label.waterloo"
@@ -743,6 +743,30 @@
           }
         },
         {
+          "name": "meta.inline.role.var_type.waterloo",
+          "match": "(\\|var_type\\|)(`)([^`:\\n]*)(:)([^`\\n]*)(`)",
+          "captures": {
+            "1": {
+              "name": "support.function.role.waterloo"
+            },
+            "2": {
+              "name": "punctuation.definition.string.begin.waterloo"
+            },
+            "3": {
+              "name": "variable.other.python.waterloo"
+            },
+            "4": {
+              "name": "punctuation.separator.colon.waterloo"
+            },
+            "5": {
+              "name": "entity.name.type.waterloo"
+            },
+            "6": {
+              "name": "punctuation.definition.string.end.waterloo"
+            }
+          }
+        },
+        {
           "name": "meta.inline.role.type.waterloo",
           "match": "(\\|type\\|)(`)([^`]*)(`)",
           "captures": {
@@ -797,6 +821,24 @@
           }
         },
         {
+          "name": "meta.inline.role.norm.waterloo",
+          "match": "(\\|norm\\|)(`)([^`]*)(`)",
+          "captures": {
+            "1": {
+              "name": "support.function.role.waterloo"
+            },
+            "2": {
+              "name": "punctuation.definition.string.begin.waterloo"
+            },
+            "3": {
+              "name": "entity.name.keyword.python.waterloo"
+            },
+            "4": {
+              "name": "punctuation.definition.string.end.waterloo"
+            }
+          }
+        },
+        {
           "name": "meta.inline.role.pkg.waterloo",
           "match": "(\\|pkg\\|)(`)([^`]*)(`)",
           "captures": {
@@ -834,7 +876,31 @@
         },
         {
           "name": "meta.inline.role.url.waterloo",
-          "match": "(\\|url\\|)(`)([^`]*)(`)",
+          "match": "(\\|url\\|)(`)([A-Za-z][A-Za-z0-9+.-]*)(://)([^`\\n]*)(`)",
+          "captures": {
+            "1": {
+              "name": "support.function.role.waterloo"
+            },
+            "2": {
+              "name": "punctuation.definition.string.begin.waterloo"
+            },
+            "3": {
+              "name": "entity.name.namespace.python.waterloo"
+            },
+            "4": {
+              "name": "punctuation.separator.scheme.waterloo"
+            },
+            "5": {
+              "name": "markup.underline.link.waterloo"
+            },
+            "6": {
+              "name": "punctuation.definition.string.end.waterloo"
+            }
+          }
+        },
+        {
+          "name": "meta.inline.role.url.waterloo",
+          "match": "(\\|url\\|)(`)([^`\\n]*)(`)",
           "captures": {
             "1": {
               "name": "support.function.role.waterloo"
@@ -1050,7 +1116,7 @@
         },
         {
           "name": "meta.inline.role.waterloo",
-          "match": "(\\|[A-Za-z_][A-Za-z0-9_]*\\|)(`)([^`]*)(`)",
+          "match": "(\\|(?!lit\\||ref\\||var\\||type\\||mod\\||value\\||op\\||func\\||label\\||attr\\||file\\||dfn\\||term\\||cmd\\||opt\\||tag\\||norm\\||var_type\\||class\\||pkg\\||url\\||[A-Za-z_][A-Za-z0-9_]*_)[A-Za-z_][A-Za-z0-9_]*\\|)(`)([^`]*)(`)",
           "captures": {
             "1": {
               "name": "support.function.role.waterloo"
