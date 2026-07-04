@@ -9,8 +9,8 @@
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5f771d8e" />
     <link rel="stylesheet" type="text/css" href="_static/basic.css?v=b08954a9" />
     <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=27fed22d" />
-    <link rel="stylesheet" type="text/css" href="_static/common_styles.css?v=cca7a40d" />
-    <link rel="stylesheet" type="text/css" href="_static/alabaster_waterloo.css?v=759b19e6" />
+    <link rel="stylesheet" type="text/css" href="_static/common_styles.css?v=043212d8" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster_waterloo.css?v=1341cbfe" />
     <script src="_static/documentation_options.js?v=8dde47fa"></script>
     <script src="_static/doctools.js?v=fd6eb6e6"></script>
     <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
@@ -398,7 +398,14 @@ sdv/doc/waterloo/waterlint_render_html5.py
 </pre></div>
 </div>
 <p>are validated on a regular basis. The current status is</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Success: no issues found in 33 source files
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>package_main/src/sdv/doc/waterloo/docitem_sphinx.py:122: error: Library stubs not installed for &quot;docutils&quot;  [import-untyped]
+package_main/src/sdv/doc/waterloo/docitem_sphinx.py:125: error: Library stubs not installed for &quot;docutils.parsers.rst&quot;  [import-untyped]
+package_main/src/sdv/doc/waterloo/docitem_sphinx.py:128: error: Library stubs not installed for &quot;docutils.parsers.rst.directives.admonitions&quot;  [import-untyped]
+package_main/src/sdv/doc/waterloo/docitem_sphinx.py:128: note: Hint: &quot;python3 -m pip install types-docutils&quot;
+package_main/src/sdv/doc/waterloo/docitem_sphinx.py:128: note: (or run &quot;mypy --install-types&quot; to install all missing stub packages)
+package_main/src/sdv/doc/waterloo/docitem_sphinx.py:128: note: See https://mypy.readthedocs.io/en/stable/running_mypy.html#missing-imports
+package_main/src/sdv/doc/waterloo/docitem_sphinx.py:129: error: Library stubs not installed for &quot;docutils.parsers.rst.states&quot;  [import-untyped]
+Found 4 errors in 1 file (checked 33 source files)
 </pre></div>
 </div>
 <p>Our <code class="wtrl_lit docutils literal notranslate"><span class="pre">mypy</span></code>-configuration is:</p>
@@ -421,18 +428,18 @@ sdv/doc/waterloo/waterlint_render_html5.py
 </pre></div>
 </div>
 <p>Exceptions from typechecking are:</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>docitem_helper.py:116 # type: ignore[attr-defined]
-docitem_helper.py:118 # type: ignore[no-redef]
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>docitem_helper.py:142 # type: ignore[attr-defined]
+docitem_helper.py:144 # type: ignore[no-redef]
 docitem_validator.py:41 # type: ignore
 docitem_validator.py:42 # pragma: no cover - older Python
 waterlint_carve.py:313 # pragma: no cover - defensive
-waterlint.py:775 # pragma: no cover - defensive
-waterlint.py:867 # pragma: no cover - defensive
-waterlint.py:981 # pragma: no cover - defensive
-waterlint.py:1107 # pragma: no cover - defensive
-waterlint.py:1111 # pragma: no cover - defensive
-waterlint.py:1115 # pragma: no cover - defensive
-waterlint.py:1785 # pragma: no cover - defensive
+waterlint.py:776 # pragma: no cover - defensive
+waterlint.py:868 # pragma: no cover - defensive
+waterlint.py:982 # pragma: no cover - defensive
+waterlint.py:1108 # pragma: no cover - defensive
+waterlint.py:1112 # pragma: no cover - defensive
+waterlint.py:1116 # pragma: no cover - defensive
+waterlint.py:1786 # pragma: no cover - defensive
 waterlint_render_docker.py:28 # pragma: no cover - Python 3.10 fallback
 </pre></div>
 </div>
@@ -1000,7 +1007,7 @@ Nevertheless, the historical reference is not entirely inappropriate.</p>
 <li class="toctree-l1"><a class="reference internal" href="reference.html">11. Reference - Rendering Showcase</a></li>
 <li class="toctree-l1"><a class="reference internal" href="_test_freeform.html">12. Test: Flow control in freeform sections</a></li>
 <li class="toctree-l1"><a class="reference internal" href="_test_scope.html">13. Test: Scopes</a></li>
-<li class="toctree-l1"><a class="reference internal" href="test_pygments_lexer.html">14. Test: Pygments lexer showcase</a></li>
+<li class="toctree-l1"><a class="reference internal" href="test_pygments_lexer.html">14. Test: Inline markup</a></li>
 <li class="toctree-l1"><a class="reference internal" href="legal.html">15. Legal Notes</a></li>
 </ul>
 
