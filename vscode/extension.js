@@ -31,6 +31,17 @@ function shouldShowSuccessNotifications() {
 	return cfg.get("showSuccessNotifications", true);
 }
 
+function getIgnoreList() {
+	const cfg = vscode.workspace.getConfiguration("waterloo");
+	const configured = cfg.get("ignoreList", ["VLII-001"]);
+	if (!Array.isArray(configured)) {
+		return ["VLII-001"];
+	}
+	return configured
+		.map((item) => String(item).trim())
+		.filter((item) => item.length > 0);
+}
+
 function getPythonExecutable() {
 	const cfg = vscode.workspace.getConfiguration("waterloo");
 	return String(cfg.get("pythonExecutable", "python3")).trim() || "python3";
@@ -785,7 +796,9 @@ function buildValidationTerminalHint(request, data) {
 	if (!obj) {
 		obj = "<obj>";
 	}
-	return `For a formatted terminal view of these messages, run:\nwaterlint validate --basedir ${basedir} --obj ${obj}`;
+	const ignoreList = Array.isArray(request?.ignore) ? request.ignore : [];
+	const ignoreArg = ignoreList.length > 0 ? ` --ignore "${ignoreList.join(" ")}"` : "";
+	return `For a formatted terminal view of these messages, run:\nwaterlint validate --basedir ${basedir} --obj ${obj}${ignoreArg}`;
 }
 
 function pluralizeCount(count, singular, plural = `${singular}s`) {
@@ -882,6 +895,7 @@ async function validateDocstringInBackend(prereq, commandName) {
 		kind: generationContext.kind,
 		source_fragment: generationContext.sourceFragment,
 		include_diagnostics: true,
+		ignore: getIgnoreList(),
 		source_file: editor.document.uri.fsPath,
 		line: editor.selection.active.line,
 	};
@@ -919,14 +933,14 @@ async function activate(context) {
 	fout.show(true);
 	setBackendReady(false);
 	setCapabilities([]);
+	registerWaterlooMcpProvider(context);
 	const prereq = checkActivationPrerequisites(context);
 	// Phase-A: Existence and permissions checks, and Python availability check.
 	if (!prereq.ok) {
 		emitFatalActivationError(prereq.code, prereq.detail);
-		fout.appendLine('Waterloo MCP provider not started; skipping docstring backend setup.');
+		fout.appendLine('Waterloo MCP provider remains active; skipping docstring backend setup.');
 		return;
 	}
-	registerWaterlooMcpProvider(context);
 	// Phase-B: Ping the backend to check if it is working at all, and that the protocol is compatible.
 	try {
 			const pingRequest = { version: 1, command: "ping" };

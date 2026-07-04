@@ -10,7 +10,7 @@
     "normativity",
     "docstring-linter"
   ],
-  "version": "0.2.16",
+  "version": "0.2.17",
   "publisher": "uwe-at-sdv",
   "engines": {
     "vscode": "^1.115.0"
@@ -35,6 +35,17 @@
           "type": "boolean",
           "default": false,
           "description": "Show information notifications after successful Waterloo actions."
+        },
+        "waterloo.ignoreList": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [
+            "VLII-001"
+          ],
+          "markdownDescription": "Rule IDs ignored by Waterloo validation warnings. This maps to `waterlint validate --ignore` semantics.",
+          "scope": "resource"
         },
         "waterloo.mcpProvideServer": {
           "type": "boolean",

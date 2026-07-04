@@ -167,6 +167,7 @@ def _handle_validate(
 	source_fragment: Any,
 	source_file: str,
 	line: int,
+	ignore: Any,
 	context: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
 	if context is None:
@@ -181,12 +182,23 @@ def _handle_validate(
 		tr.add_error("XTNSN-010","extension","Source file must be a non-empty string.")
 	if not isinstance(line, int):
 		tr.add_error("XTNSN-011","extension","Line must be an integer.")
+	if not isinstance(ignore, list) or not all(isinstance(item, str) for item in ignore):
+		tr.add_error("XTNSN-014","extension","Ignore list must be a list of strings.")
+	if tr.has_errors():
+		raise RuntimeError()
+
+	for rule in ignore:
+		try:
+			tr.add_ignore_rule(rule)
+		except RuntimeError as e:
+			tr.add_error("XTNSN-014","extension","Bad ignore rule.",{"rule":rule,"exc":str(e)})
 	if tr.has_errors():
 		raise RuntimeError()
 
 	qi = ""
 	context["kind"] = kind
 	context["source_file"] = source_file
+	context["ignore"] = list(ignore)
 	if kind == "module":
 		qi = Path(source_file).stem
 	else:
@@ -319,6 +331,7 @@ def main() -> int:
 				payload.get("source_fragment", ""),
 				payload.get("source_file",""),
 				payload.get("line",-1),
+				payload.get("ignore", ["VLII-001"]),
 				command_data,
 			)
 #----- end useful commands ------------------------------------#
