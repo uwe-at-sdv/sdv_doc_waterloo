@@ -59,6 +59,10 @@ Current state [2023-08-08]
 	--sdv-file-font-style: normal;
 	--sdv-file-color: #35f;
 
+	--sdv-key-color:inherit;
+	--sdv-key-font-weight:normal;
+	--sdv-key-font-style:normal;
+
 	--sdv-label-color:#304030;
 	--sdv-label-font-weight:normal;
 	--sdv-label-font-style:normal;

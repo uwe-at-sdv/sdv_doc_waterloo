@@ -9,8 +9,8 @@
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5f771d8e" />
     <link rel="stylesheet" type="text/css" href="_static/basic.css?v=b08954a9" />
     <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=27fed22d" />
-    <link rel="stylesheet" type="text/css" href="_static/common_styles.css?v=043212d8" />
-    <link rel="stylesheet" type="text/css" href="_static/alabaster_waterloo.css?v=1341cbfe" />
+    <link rel="stylesheet" type="text/css" href="_static/common_styles.css?v=33110125" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster_waterloo.css?v=162852d9" />
     <script src="_static/documentation_options.js?v=8dde47fa"></script>
     <script src="_static/doctools.js?v=fd6eb6e6"></script>
     <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
@@ -160,26 +160,27 @@ where the parser should continue to fail cleanly.</p>
 <span class="sd">		</span><span class="k">|May|</span><span class="sd"> propagate from function </span><span class="k">|func|</span><span class="nf">`some_function`</span><span class="sd">. Test roles: </span><span class="k">|type|</span><span class="nc">`CustomError`</span><span class="sd">.</span>
 <span class="gh">Notes:</span>
 <span class="sd">	</span><span class="gh">Roles:</span>
-<span class="sd">		</span><span class="k">|attr|</span><span class="na">`ABC`</span>
-<span class="sd">		</span><span class="k">|class|</span><span class="nc">`ABC`</span>
-<span class="sd">		</span><span class="k">|cmd|</span><span class="nb">`ABC`</span>
-<span class="sd">		</span><span class="k">|dfn|</span><span class="ge">`ABC`</span>
-<span class="sd">		</span><span class="k">|file|</span><span class="sx">`/path/to/ABC`</span>
-<span class="sd">		</span><span class="k">|func|</span><span class="nf">`ABC`</span>
-<span class="sd">		</span><span class="k">|label|</span><span class="gu">`ABC`</span>
-<span class="sd">		</span><span class="k">|lit|</span><span class="l">`ABC`</span>
-<span class="sd">		</span><span class="k">|mod|</span><span class="nn">`ABC`</span>
-<span class="sd">		</span><span class="k">|norm|`should`</span>
-<span class="sd">		</span><span class="k">|op|</span><span class="o">`&gt;&gt;`</span>
-<span class="sd">		</span><span class="k">|opt|</span><span class="nv">`--abc`</span>
-<span class="sd">		</span><span class="k">|pkg|</span><span class="nn">`sdv.tty`</span>
-<span class="sd">		</span><span class="k">|tag|</span><span class="nt">`ABC`</span>
-<span class="sd">		</span><span class="k">|term|</span><span class="ge">`ABC`</span>
-<span class="sd">		</span><span class="k">|type|</span><span class="nc">`float`</span>
-<span class="sd">		</span><span class="k">|url|</span><span class="sx">`https://sci-d-vis.com`</span>
-<span class="sd">		</span><span class="k">|value|</span><span class="no">`12345`</span>
-<span class="sd">		</span><span class="k">|var|</span><span class="nv">`xyz`</span>
-<span class="sd">		</span><span class="k">|var_type|</span><span class="nc">`xyz:float`</span>
+<span class="sd">		</span><span class="k">*</span><span class="sd"> </span><span class="k">|attr|</span><span class="na">`ABC`</span><span class="sd"> — </span><span class="k">|lit|</span><span class="l">`|attr|`</span><span class="sd">, for attributes in XML, keys in JSON...</span>
+<span class="sd">		</span><span class="k">*</span><span class="sd"> </span><span class="k">|class|</span><span class="nc">`ABC`</span><span class="sd"> — </span><span class="k">|lit|</span><span class="l">`|class|`</span><span class="sd">, classes</span>
+<span class="sd">		</span><span class="k">*</span><span class="sd"> </span><span class="k">|cmd|</span><span class="nb">`ABC`</span><span class="sd"> — </span><span class="k">|lit|</span><span class="l">`|cmd|`</span><span class="sd">, commands and subcommand with CLI</span>
+<span class="sd">		</span><span class="k">*</span><span class="sd"> </span><span class="k">|dfn|</span><span class="ge">`ABC`</span><span class="sd"> — </span><span class="k">|lit|</span><span class="l">`|dfn|`</span><span class="sd">, a term being defined</span>
+<span class="sd">		</span><span class="k">*</span><span class="sd"> </span><span class="k">|file|</span><span class="sx">`/path/to/ABC`</span><span class="sd"> — </span><span class="k">|lit|</span><span class="l">`|file|`</span><span class="sd">, files but also URLs</span>
+<span class="sd">		</span><span class="k">*</span><span class="sd"> </span><span class="k">|func|</span><span class="nf">`ABC`</span><span class="sd"> — </span><span class="k">|lit|</span><span class="l">`|func|`</span><span class="sd">, functions</span>
+<span class="sd">		</span><span class="k">*</span><span class="sd"> </span><span class="k">|key|</span><span class="no">`CTRL`</span><span class="sd"> — </span><span class="k">|lit|</span><span class="l">`|label|`</span><span class="sd">, keys on the keyboard</span>
+<span class="sd">		</span><span class="k">*</span><span class="sd"> </span><span class="k">|label|</span><span class="gu">`ABC`</span><span class="sd"> — </span><span class="k">|lit|</span><span class="l">`|label|`</span><span class="sd">, titles, labels</span>
+<span class="sd">		</span><span class="k">*</span><span class="sd"> </span><span class="k">|lit|</span><span class="l">`ABC`</span><span class="sd"> — </span><span class="k">|lit|</span><span class="l">`|lit|`</span><span class="sd">, catch-all for literal text</span>
+<span class="sd">		</span><span class="k">*</span><span class="sd"> </span><span class="k">|mod|</span><span class="nn">`ABC`</span><span class="sd"> — </span><span class="k">|lit|</span><span class="l">`|mod|`</span><span class="sd">, modules</span>
+<span class="sd">		</span><span class="k">*</span><span class="sd"> </span><span class="k">|norm|`should`</span><span class="sd"> — </span><span class="k">|lit|</span><span class="l">`|norm|`</span><span class="sd">, normativity keywords (meta, when talking about keywords)</span>
+<span class="sd">		</span><span class="k">*</span><span class="sd"> </span><span class="k">|op|</span><span class="o">`&gt;&gt;`</span><span class="sd"> — </span><span class="k">|lit|</span><span class="l">`|op|`</span><span class="sd">, operators</span>
+<span class="sd">		</span><span class="k">*</span><span class="sd"> </span><span class="k">|opt|</span><span class="nv">`--abc`</span><span class="sd"> — </span><span class="k">|lit|</span><span class="l">`|opt|`</span><span class="sd">, options for CLI commands</span>
+<span class="sd">		</span><span class="k">*</span><span class="sd"> </span><span class="k">|pkg|</span><span class="nn">`sdv.tty`</span><span class="sd"> — </span><span class="k">|lit|</span><span class="l">`|pkg|`</span><span class="sd">, packages</span>
+<span class="sd">		</span><span class="k">*</span><span class="sd"> </span><span class="k">|tag|</span><span class="nt">`ABC`</span><span class="sd"> — </span><span class="k">|lit|</span><span class="l">`|tag|`</span><span class="sd">, enum values, symbolic values</span>
+<span class="sd">		</span><span class="k">*</span><span class="sd"> </span><span class="k">|term|</span><span class="ge">`ABC`</span><span class="sd"> — </span><span class="k">|lit|</span><span class="l">`|term|`</span><span class="sd">, referencing a term defined in </span><span class="k">|label|</span><span class="gu">`Definitions`</span>
+<span class="sd">		</span><span class="k">*</span><span class="sd"> </span><span class="k">|type|</span><span class="nc">`float`</span><span class="sd"> — </span><span class="k">|lit|</span><span class="l">`|type|`</span><span class="sd">, types in programming or markup languages</span>
+<span class="sd">		</span><span class="k">*</span><span class="sd"> </span><span class="k">|url|</span><span class="sx">`https://pypi.org/project/sdv-doc-waterloo/`</span><span class="sd"> — </span><span class="k">|lit|</span><span class="l">`|url|`</span><span class="sd">, for URLs (currently pretty simple)</span>
+<span class="sd">		</span><span class="k">*</span><span class="sd"> </span><span class="k">|value|</span><span class="no">`12345`</span><span class="sd"> — </span><span class="k">|lit|</span><span class="l">`|value|`</span><span class="sd">, R-values, unnamed values</span>
+<span class="sd">		</span><span class="k">*</span><span class="sd"> </span><span class="k">|var|</span><span class="nv">`xyz`</span><span class="sd"> — </span><span class="k">|lit|</span><span class="l">`|var|`</span><span class="sd">, variables, but also named constants</span>
+<span class="sd">		</span><span class="k">*</span><span class="sd"> </span><span class="k">|var_type|</span><span class="nc">`xyz:float`</span><span class="sd"> — </span><span class="k">|lit|</span><span class="l">`|var_type|`</span><span class="sd">, variable and type with colon.</span>
 <span class="sd">	</span><span class="gh">Todo at 2026-06-25:</span>
 <span class="sd">		Implement &#39;pkg&#39; for &#39;package&#39; as opposed to importable module.</span>
 <span class="gh">See_also:</span>
@@ -515,7 +516,7 @@ lets us inspect the rendering consistency in a more controlled way.</p>
 <li><p><code class="wtrl_dfn docutils literal notranslate"><span class="pre">ABC</span></code> — <code class="wtrl_lit docutils literal notranslate"><span class="pre">|dfn|</span></code>, a term being defined</p></li>
 <li><p><code class="wtrl_file docutils literal notranslate"><span class="pre">/path/to/ABC</span></code> — <code class="wtrl_lit docutils literal notranslate"><span class="pre">|file|</span></code>, files but also URLs</p></li>
 <li><p><code class="wtrl_func docutils literal notranslate"><span class="pre">ABC</span></code> — <code class="wtrl_lit docutils literal notranslate"><span class="pre">|func|</span></code>, functions</p></li>
-<li><p><code class="wtrl_key docutils literal notranslate"><span class="pre">CTRL</span></code> — <code class="wtrl_lit docutils literal notranslate"><span class="pre">|label|</span></code>, keys on the keyboard</p></li>
+<li><p><code class="wtrl_key docutils literal notranslate"><span class="pre">CTRL</span></code> — <code class="wtrl_lit docutils literal notranslate"><span class="pre">|key|</span></code>, keys on the keyboard</p></li>
 <li><p><code class="wtrl_label docutils literal notranslate"><span class="pre">ABC</span></code> — <code class="wtrl_lit docutils literal notranslate"><span class="pre">|label|</span></code>, titles, labels</p></li>
 <li><p><code class="wtrl_lit docutils literal notranslate"><span class="pre">ABC</span></code> — <code class="wtrl_lit docutils literal notranslate"><span class="pre">|lit|</span></code>, catch-all for literal text</p></li>
 <li><p><code class="wtrl_mod docutils literal notranslate"><span class="pre">ABC</span></code> — <code class="wtrl_lit docutils literal notranslate"><span class="pre">|mod|</span></code>, modules</p></li>
