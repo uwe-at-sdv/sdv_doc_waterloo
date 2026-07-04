@@ -105,6 +105,14 @@ RE_LIST_MARKER = re.compile(
 # 37,38: |var_type| and argument
 # 39,40: Generic role and argument
 # 41: Line connector
+# Todo: Implement 'pkg' for 'package' as opposed to importable module.
+# Todo: Implement 'url' for URLs, e.g. |url|`https://example.com`.
+# Todo: Sort roles alphabetically by role name.
+# A. Normativity keywords
+# B. Special values
+# C. Roles with arguments
+# D. Generic role
+# E. Line connector.
 RE_INLINE = re.compile(
 	r"(\|(?:Must|must|Must_not|must_not|Should|should|Should_not|should_not|May|may)\|)"
 	r"|(\|(?:Self|None|True|False)\|)"
