@@ -520,7 +520,7 @@ The set of tokens currently available is:
 		- Renderers |should| translate this token to a suitable representation in the target format.
 		- Tools |must| preserve the token text if no translation is available.
 
-	* Tokens :wtrl_lit:`|attr|`, :wtrl_lit:`|cmd|`, :wtrl_lit:`|dfn|`, :wtrl_lit:`|file|`, :wtrl_lit:`|func|`, :wtrl_lit:`|label|`, :wtrl_lit:`|key|`, :wtrl_lit:`|lit|`, :wtrl_lit:`|mod|`, :wtrl_lit:`|op|`, :wtrl_lit:`|opt|`, :wtrl_lit:`|ref|`, :wtrl_lit:`|tag|`, :wtrl_lit:`|type|`, :wtrl_lit:`|value|`, :wtrl_lit:`|var|`, :wtrl_lit:`|var_type|`
+	* Tokens :wtrl_lit:`|attr|`, :wtrl_lit:`|class|`, :wtrl_lit:`|cmd|`, :wtrl_lit:`|dfn|`, :wtrl_lit:`|file|`, :wtrl_lit:`|func|`, :wtrl_lit:`|label|`, :wtrl_lit:`|key|`, :wtrl_lit:`|lit|`, :wtrl_lit:`|mod|`, :wtrl_lit:`|norm|`, :wtrl_lit:`|op|`, :wtrl_lit:`|opt|`, :wtrl_lit:`|pkg|`, :wtrl_lit:`|ref|`, :wtrl_lit:`|tag|`, :wtrl_lit:`|type|`, :wtrl_lit:`|url|`, :wtrl_lit:`|value|`, :wtrl_lit:`|var|`, :wtrl_lit:`|var_type|`
 		- Usage: Tools |must| accept the form :wtrl_lit:`|role|\`content\``,
 		  where :wtrl_lit:`role` is one of the above tokens and
 		  :wtrl_lit:`content` is a non-empty string that does not contain backticks.
@@ -531,7 +531,9 @@ The set of tokens currently available is:
 		  tools |must| preserve them without modification.
 		- Tools translating to a target format (e.g. :wtrl_lit:`reST`)
 		  |must| map these roles to well-defined constructs in the target format.
-		- Informative: These tokens improve semantic clarity for human readers
+		- Semantic role :wtrl_lit:`|norm|` identifies a normativity keyword as a meta-token.
+		  It is primarily useful when discussing normativity keywords themselves.
+		- Informative: The tokens improve semantic clarity for human readers
 		  and may assist automated tools or AI agents. Tools that are not tied
 		  to a specific rendering target may ignore them.
 

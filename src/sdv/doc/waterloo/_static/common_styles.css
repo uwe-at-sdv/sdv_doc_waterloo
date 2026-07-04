@@ -19,13 +19,25 @@ Current state [2023-08-08]
 	--sdv-plain-font-weight:normal;
 	--sdv-plain-font-style:normal;
 
+	--sdv-attr-color:#077;
+	--sdv-attr-font-weight:normal;
+	--sdv-attr-font-style:normal;
+
 	--sdv-cmd-color:#996600;
 	--sdv-cmd-font-weight:normal;
 	--sdv-cmd-font-style:normal;
 
+	--sdv-class-color:#770000;
+	--sdv-class-font-weight:normal;
+	--sdv-class-font-style:normal;
+
 	--sdv-comment-color:#777;
 	--sdv-comment-font-weight:normal;
 	--sdv-comment-font-style:italic;
+
+	--sdv-dfn-color:inherit;
+	--sdv-dfn-font-weight:inherit;
+	--sdv-dfn-font-style:italic;
 
 	--sdv-number-color:#708238;
 	--sdv-number-font-weight:normal;
@@ -45,8 +57,53 @@ Current state [2023-08-08]
 
 	--sdv-file-font-weight: normal;
 	--sdv-file-font-style: normal;
-	--sdv-file-color: #35f;;
-	--sdv-file-font-size: 95%;
+	--sdv-file-color: #35f;
+
+	--sdv-label-color:#304030;
+	--sdv-label-font-weight:normal;
+	--sdv-label-font-style:normal;
+
+	--sdv-mod-color:#462;
+	--sdv-mod-font-weight:normal;
+	--sdv-mod-font-style:normal;
+
+	--sdv-norm-color:inherit;
+	--sdv-norm-font-weight:normal;
+	--sdv-norm-font-style:italic;
+
+	--sdv-op-color:inherit;
+	--sdv-op-font-weight:bold;
+	--sdv-op-font-style:normal;
+
+	--sdv-opt-color:inherit;
+	--sdv-opt-font-weight:bold;
+	--sdv-opt-font-style:normal;
+
+	--sdv-pkg-color:#304030;
+	--sdv-pkg-font-weight:normal;
+	--sdv-pkg-font-style:normal;
+
+	--sdv-tag-color:#900;
+	--sdv-tag-font-weight:normal;
+	--sdv-tag-font-style:normal;
+
+	--sdv-term-color:inherit;
+	--sdv-term-font-weight:normal;
+	--sdv-term-font-style:italic;
+
+	--sdv-url-font-weight: normal;
+	--sdv-url-font-style: normal;
+	--sdv-url-color: #35f;;
+
+	--sdv-var-color:#a00;
+	--sdv-var-font-weight:normal;
+	--sdv-var-font-style:normal;
+
+/* don't know */
+	--sdv-variable-color:#077;
+	--sdv-variable-font-weight:normal;
+	--sdv-variable-font-style:normal;
+
 /* shit */
 	--sdv-string_literal-color:#708238;
 	--sdv-string_literal-font-weight:normal;
@@ -75,14 +132,9 @@ Current state [2023-08-08]
 	--sdv-builtin_func_call-color:#00d;
 	--sdv-builtin_func_call-font-weight:bold;
 	--sdv-builtin_func_call-font-style:normal;
-/* module */
-	--sdv-mod-color:#304030;
-	--sdv-mod-font-weight:normal;
-	--sdv-mod-font-style:normal;
 
-	--sdv-opt-color:inherit;
-	--sdv-opt-font-weight:bold;
-	--sdv-opt-font-style:normal;
+
+
 
 	--sdv-typedesc-color:#00f;
 	--sdv-typedesc-font-weight:bold;
@@ -104,17 +156,10 @@ Current state [2023-08-08]
 	--sdv-procinst-font-weight:bold;
 	--sdv-procinst-font-style:normal;
 
-	--sdv-tag-color:#900;
-	--sdv-tag-font-weight:normal;
-	--sdv-tag-font-style:normal;
 
 	--sdv-cdata-color:#000;
 	--sdv-cdata-font-weight:bold;
 	--sdv-cdata-font-style:normal;
-
-	--sdv-variable-color:#077;
-	--sdv-variable-font-weight:normal;
-	--sdv-variable-font-style:normal;
 
 	--sdv-entity-color:#777;
 	--sdv-entity-font-weight:bold;

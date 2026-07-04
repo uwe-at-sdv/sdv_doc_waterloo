@@ -414,6 +414,7 @@ html, body { margin:0; padding:0; font-family: ui-sans-serif, system-ui, -apple-
 .wtrl-examples { margin-top:14px; }
 .wtrl-example-head { font-weight:600; margin:0 0 6px 0; color:#334155; }
 .wtrl-func, .wtrl_func { color:#3040ff; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+.wtrl-class, .wtrl_class { color:#770000; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
 .wtrl-type, .wtrl_type { color:#770000; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
 .wtrl-var, .wtrl_var { color:#a00; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
 .wtrl-label, .wtrl_label { color:#1f2937; font-style:italic; }

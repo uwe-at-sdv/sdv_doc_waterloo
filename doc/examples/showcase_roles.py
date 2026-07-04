@@ -26,6 +26,7 @@ Notes:
 		Normativity keywords are rendered in flavour |value|`rfc-2119` in this showcase, i.e. capitalized.
 	Roles:
 		* |attr|`ABC` — |lit|`|attr|`, for attributes in XML, keys in JSON...
+		* |class|`ABC` — |lit|`|class|`, classes
 		* |cmd|`ABC` — |lit|`|cmd|`, commands and subcommand with CLI
 		* |dfn|`ABC` — |lit|`|dfn|`, a term being defined
 		* |file|`/path/to/ABC` — |lit|`|file|`, files but also URLs

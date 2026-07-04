@@ -111,6 +111,7 @@ Raises:
 Notes:
 	Roles:
 		|attr|`ABC`
+		|class|`ABC`
 		|cmd|`ABC`
 		|dfn|`ABC`
 		|file|`/path/to/ABC`
@@ -125,6 +126,7 @@ Notes:
 		|tag|`ABC`
 		|term|`ABC`
 		|type|`float`
+		|url|`https://sci-d-vis.com`
 		|value|`12345`
 		|var|`xyz`
 		|var_type|`xyz:float`

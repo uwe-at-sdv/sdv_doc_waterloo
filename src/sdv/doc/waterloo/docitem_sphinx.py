@@ -132,7 +132,8 @@ from sphinx.util.nodes import make_refnode
 
 import sdv.doc.waterloo.docitem as mod_docitem
 
-__version__ = "0.2.1"
+__version__ = "0.3.0"
+# - 0.3.0 [2026-07-04]	New semantic roles
 # - 0.2.1 [2026-05-08]	Bugfixes name resolution in link lists like "Public_methods"
 # - 0.2.0 [2026-05-06]	Scope awareness
 # - 0.1.1 [2026-04-25]	Parameters is now rendered as free-form text, not bullet list.
@@ -2584,6 +2585,10 @@ def wtrl_attr_role(name: str, rawtext: str, text: str, lineno: int, inliner: Inl
 	node = nodes.literal(text, text, classes=["wtrl_attr"])
 	return [node], []
 
+def wtrl_class_role(name: str, rawtext: str, text: str, lineno: int, inliner: InlinerProtocol, options: Mapping[str,Any] | None=None, content: list[str] | None=None) -> tuple[List[nodes.Node], list[nodes.Node]]:
+	node = nodes.literal(text, text, classes=["wtrl_class"])
+	return [node], []
+
 def wtrl_cmd_role(name: str, rawtext: str, text: str, lineno: int, inliner: InlinerProtocol, options: Mapping[str,Any] | None=None, content: list[str] | None=None) -> tuple[List[nodes.Node], list[nodes.Node]]:
 	node = nodes.literal(text, text, classes=["wtrl_cmd"])
 	return [node], []
@@ -2612,22 +2617,6 @@ def wtrl_lit_role(name: str, rawtext: str, text: str, lineno: int, inliner: Inli
 	node = nodes.literal(text, text, classes=["wtrl_lit"])
 	return [node], []
 
-def wtrl_opt_role(name: str, rawtext: str, text: str, lineno: int, inliner: InlinerProtocol, options: Mapping[str,Any] | None=None, content: list[str] | None=None) -> tuple[List[nodes.Node], list[nodes.Node]]:
-	node = nodes.literal(text, text, classes=["wtrl_opt"])
-	return [node], []
-
-def wtrl_tag_role(name: str, rawtext: str, text: str, lineno: int, inliner: InlinerProtocol, options: Mapping[str,Any] | None=None, content: list[str] | None=None) -> tuple[List[nodes.Node], list[nodes.Node]]:
-	node = nodes.literal(text, text, classes=["wtrl_tag"])
-	return [node], []
-
-def wtrl_term_role(name: str, rawtext: str, text: str, lineno: int, inliner: InlinerProtocol, options: Mapping[str,Any] | None=None, content: list[str] | None=None) -> tuple[List[nodes.Node], list[nodes.Node]]:
-	node = nodes.literal(text, text, classes=["wtrl_term"])
-	return [node], []
-
-def wtrl_type_role(name: str, rawtext: str, text: str, lineno: int, inliner: InlinerProtocol, options: Mapping[str,Any] | None=None, content: list[str] | None=None) -> tuple[List[nodes.Node], list[nodes.Node]]:
-	node = nodes.literal(text, text, classes=["wtrl_type"])
-	return [node], []
-
 def wtrl_mod_role(name: str, rawtext: str, text: str, lineno: int, inliner: InlinerProtocol, options: Mapping[str,Any] | None=None, content: list[str] | None=None) -> tuple[List[nodes.Node], list[nodes.Node]]:
 	node = nodes.literal(text, text, classes=["wtrl_mod"])
 	return [node], []
@@ -2638,6 +2627,30 @@ def wtrl_norm_role(name: str, rawtext: str, text: str, lineno: int, inliner: Inl
 
 def wtrl_op_role(name: str, rawtext: str, text: str, lineno: int, inliner: InlinerProtocol, options: Mapping[str,Any] | None=None, content: list[str] | None=None) -> tuple[List[nodes.Node], list[nodes.Node]]:
 	node = nodes.literal(text, text, classes=["wtrl_op"])
+	return [node], []
+
+def wtrl_opt_role(name: str, rawtext: str, text: str, lineno: int, inliner: InlinerProtocol, options: Mapping[str,Any] | None=None, content: list[str] | None=None) -> tuple[List[nodes.Node], list[nodes.Node]]:
+	node = nodes.literal(text, text, classes=["wtrl_opt"])
+	return [node], []
+
+def wtrl_pkg_role(name: str, rawtext: str, text: str, lineno: int, inliner: InlinerProtocol, options: Mapping[str,Any] | None=None, content: list[str] | None=None) -> tuple[List[nodes.Node], list[nodes.Node]]:
+	node = nodes.literal(text, text, classes=["wtrl_pkg"])
+	return [node], []
+
+def wtrl_tag_role(name: str, rawtext: str, text: str, lineno: int, inliner: InlinerProtocol, options: Mapping[str,Any] | None=None, content: list[str] | None=None) -> tuple[List[nodes.Node], list[nodes.Node]]:
+	node = nodes.literal(text, text, classes=["wtrl_tag"])
+	return [node], []
+
+def wtrl_term_role(name: str, rawtext: str, text: str, lineno: int, inliner: InlinerProtocol, options: Mapping[str,Any] | None=None, content: list[str] | None=None) -> tuple[List[nodes.Node], list[nodes.Node]]:
+	node = nodes.literal(text, text, classes=["wtrl_term"])
+	return [node], []
+
+def wtrl_url_role(name: str, rawtext: str, text: str, lineno: int, inliner: InlinerProtocol, options: Mapping[str,Any] | None=None, content: list[str] | None=None) -> tuple[List[nodes.Node], list[nodes.Node]]:
+	node = nodes.literal(text, text, classes=["wtrl_url"])
+	return [node], []
+
+def wtrl_type_role(name: str, rawtext: str, text: str, lineno: int, inliner: InlinerProtocol, options: Mapping[str,Any] | None=None, content: list[str] | None=None) -> tuple[List[nodes.Node], list[nodes.Node]]:
+	node = nodes.literal(text, text, classes=["wtrl_type"])
 	return [node], []
 
 def wtrl_value_role(name: str, rawtext: str, text: str, lineno: int, inliner: InlinerProtocol, options: Mapping[str,Any] | None=None, content: list[str] | None=None) -> tuple[List[nodes.Node], list[nodes.Node]]:
@@ -2726,6 +2739,7 @@ def setup(app: Any) -> dict[str, Any]:
 
 	role_map = {
 	 "wtrl_attr":wtrl_attr_role,
+	 "wtrl_class":wtrl_class_role,
 	 "wtrl_cmd":wtrl_cmd_role,
 	 "wtrl_dfn":wtrl_dfn_role,
 	 "wtrl_file":wtrl_file_role,
@@ -2737,9 +2751,11 @@ def setup(app: Any) -> dict[str, Any]:
 	 "wtrl_norm":wtrl_norm_role,
 	 "wtrl_op":wtrl_op_role,
 	 "wtrl_opt":wtrl_opt_role,
+	 "wtrl_pkg":wtrl_pkg_role,
 	 "wtrl_tag":wtrl_tag_role,
 	 "wtrl_term":wtrl_term_role,
 	 "wtrl_type":wtrl_type_role,
+	 "wtrl_url":wtrl_url_role,
 	 "wtrl_value":wtrl_value_role,
 	 "wtrl_var":wtrl_var_role,
 	 "wtrl_var_type":wtrl_var_type_role,

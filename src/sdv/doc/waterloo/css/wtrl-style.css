@@ -283,7 +283,7 @@ html, body {
 
 /*----- Semantic roles ---------------------------------------*/
 .wtrl-attr, .wtrl_attr {
-	color:#7c3aed;
+	color:#077;
 	}
 .wtrl-cmd, .wtrl_cmd {
 	color:#996600;
@@ -295,11 +295,15 @@ html, body {
 	font-style:italic;
 	}
 .wtrl-file, .wtrl_file {
-	color:#0f766e;
+	color:#35f;
 	font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 	}
 .wtrl-func, .wtrl_func {
 	color:#3040ff;
+	font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+	}
+.wtrl-class, .wtrl_class {
+	color:#770000;
 	font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 	}
 .wtrl-key, .wtrl_key {
@@ -317,10 +321,24 @@ html, body {
 	font-style:italic;
 	}
 .wtrl-mod, .wtrl_mod {
-	color:#446622;
+	color:#462;
 	font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 	}
 .wtrl-norm, .wtrl_norm {
+	font-family:inherit;
+
+	color:inherit;
+	font-weight:normal;
+	font-style:italic;
+	font-size: 100%;
+
+	background-color:inherit;
+	}
+.wtrl-norm::after, .wtrl_norm::after {
+	content: " \2696";
+	font-weight:normal;
+	font-style:normal;
+	}
 	color:#b42318;
 	font-weight:700;
 	}
@@ -329,7 +347,9 @@ html, body {
 	font-weight:bold;
 	}
 .wtrl-op, .wtrl_op {
-	color:#b91c1c;
+	color:inherit;
+	font-weight:bold;
+	font-style:normal;
 	}
 .wtrl-lit, .wtrl_lit {
 	color:#1f2937;
@@ -364,7 +384,7 @@ html, body {
 	font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 	}
 .wtrl-url, .wtrl_url {
-	color:#0f766e;
+	color:#35f;
 	font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 	}
 .wtrl-url-schema, .wtrl_url_schema {

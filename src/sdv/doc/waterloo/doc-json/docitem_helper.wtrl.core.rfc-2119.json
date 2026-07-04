@@ -1,12 +1,12 @@
 {
     "$schema": "https://sci-d-vis.com/schema/wtrl-json-0.1.0.schema.json",
-    "$id": "urn:waterlint:wtrl-json:0.20.1:core:rfc-2119:d04007ef05161155b66f1d3b782b0e45bd69899fb99c7a4d5e602643c86f1c2b",
+    "$id": "urn:waterlint:wtrl-json:0.20.3:core:rfc-2119:d04007ef05161155b66f1d3b782b0e45bd69899fb99c7a4d5e602643c86f1c2b",
     "__WTRL_VERSION__": {
         "waterloo": "0.11.1",
         "schema": "0.1.0"
     },
     "__WTRL_META__": {
-        "generated_at": "2026-07-04T15:09:43+02:00",
+        "generated_at": "2026-07-04T20:32:59+02:00",
         "generator": "waterlint",
         "scope": "core",
         "flavour": "rfc-2119"
@@ -14,6 +14,7 @@
     "__WTRL_ROLES__": {
         "attr": "Attribute name",
         "cmd": "Shell or CLI command",
+        "class": "Class name",
         "dfn": "Definition of a term",
         "file": "File or path",
         "func": "Function or callable",
@@ -21,8 +22,11 @@
         "label": "Section/Subsection label",
         "lit": "Literal text or code",
         "mod": "Module name",
+        "norm": "Normativity keyword used as metadata",
         "op": "Operator symbol",
         "opt": "Command-line option or flag",
+        "pkg": "Package name",
+        "url": "URL",
         "tag": "Tag or marker",
         "term": "Domain-specific term",
         "type": "Type name or annotation",
@@ -413,7 +417,8 @@
                         "Public_functions",
                         "Public_types",
                         "Public_constants",
-                        "Public_variables"
+                        "Public_variables",
+                        "Definitions"
                     ]
                 },
                 "Contract": {
@@ -569,11 +574,43 @@
                         "This cache is intentionally public so callers may inspect, clear, or replace it during a process lifetime."
                     ]
                 },
+                "Definitions": {
+                    "ABC": {
+                        "variations": [],
+                        "text": [
+                            "Definition of |dfn|`ABC` for testing markup roles."
+                        ]
+                    }
+                },
                 "Notes": {
                     "Render functions": [
                         "The render functions in this module are intended for building",
                         "verbose diagnostic messages that include source and expected snippets",
                         "along with suggestions on how to fix the docstring."
+                    ],
+                    "Markup roles": [
+                        "This section is a test for markup roles.",
+                        "* |attr|`ABC` \u2014 |lit|`|attr|`, for attributes in XML, keys in JSON...",
+                        "* |class|`ABC` \u2014 |lit|`|class|`, classes",
+                        "* |cmd|`ABC` \u2014 |lit|`|cmd|`, commands and subcommand with CLI",
+                        "* |dfn|`ABC` \u2014 |lit|`|dfn|`, a term being defined",
+                        "* |file|`/path/to/ABC` \u2014 |lit|`|file|`, files but also URLs",
+                        "* |func|`ABC` \u2014 |lit|`|func|`, functions",
+                        "* |key|`CTRL` \u2014 |lit|`|label|`, keys on the keyboard",
+                        "* |label|`ABC` \u2014 |lit|`|label|`, titles, labels",
+                        "* |lit|`ABC` \u2014 |lit|`|lit|`, catch-all for literal text",
+                        "* |mod|`ABC` \u2014 |lit|`|mod|`, modules",
+                        "* |norm|`should` \u2014 |lit|`|norm|`, normativity keywords (meta, when talking about keywords)",
+                        "* |op|`>>` \u2014 |lit|`|op|`, operators",
+                        "* |opt|`--abc` \u2014 |lit|`|opt|`, options for CLI commands",
+                        "* |pkg|`sdv.tty` \u2014 |lit|`|pkg|`, packages",
+                        "* |tag|`ABC` \u2014 |lit|`|tag|`, enum values, symbolic values",
+                        "* |term|`ABC` \u2014 |lit|`|term|`, referencing a term defined in |label|`Definitions`",
+                        "* |type|`float` \u2014 |lit|`|type|`, types in programming or markup languages",
+                        "* |url|`https://pypi.org/project/sdv-doc-waterloo/` \u2014 |lit|`|url|`, for URLs (currently pretty simple)",
+                        "* |value|`12345` \u2014 |lit|`|value|`, R-values, unnamed values",
+                        "* |var|`xyz` \u2014 |lit|`|var|`, variables, but also named constants",
+                        "* |var_type|`xyz:float` \u2014 |lit|`|var_type|`, variable and type with colon."
                     ]
                 }
             }

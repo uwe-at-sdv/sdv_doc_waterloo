@@ -44,6 +44,7 @@ MAP_NORM_KEYWORD_BY_FLAVOUR: Final[Dict[str,str]] = {
 ROLES_LEGEND: Final[Dict[str, str]] = {
 	"attr": "Attribute name",
 	"cmd": "Shell or CLI command",
+	"class": "Class name",
 	"dfn": "Definition of a term",
 	"file": "File or path",
 	"func": "Function or callable",
@@ -51,8 +52,11 @@ ROLES_LEGEND: Final[Dict[str, str]] = {
 	"label": "Section/Subsection label",
 	"lit": "Literal text or code",
 	"mod": "Module name",
+	"norm": "Normativity keyword used as metadata",
 	"op": "Operator symbol",
 	"opt": "Command-line option or flag",
+	"pkg": "Package name",
+	"url": "URL",
 	"tag": "Tag or marker",
 	"term": "Domain-specific term",
 	"type": "Type name or annotation",
@@ -386,4 +390,3 @@ def to_string_md(tree: DocstringTree, flavour: Flavour = Flavour.MARKDOWN, headi
 		return lines
 
 	return "\n".join(render_md(node, 1)) + "\n"
-

@@ -1,12 +1,12 @@
 {
     "$schema": "https://sci-d-vis.com/schema/wtrl-json-0.1.0.schema.json",
-    "$id": "urn:waterlint:wtrl-json:0.20.1:core:rfc-2119:e76b3b99b0a9c3c15bb087c344869fa997d284b61d82ec9682dadc13b8874103",
+    "$id": "urn:waterlint:wtrl-json:0.20.3:core:rfc-2119:e76b3b99b0a9c3c15bb087c344869fa997d284b61d82ec9682dadc13b8874103",
     "__WTRL_VERSION__": {
         "waterloo": "0.11.1",
         "schema": "0.1.0"
     },
     "__WTRL_META__": {
-        "generated_at": "2026-07-04T15:09:46+02:00",
+        "generated_at": "2026-07-04T20:33:02+02:00",
         "generator": "waterlint",
         "scope": "core",
         "flavour": "rfc-2119"
@@ -14,6 +14,7 @@
     "__WTRL_ROLES__": {
         "attr": "Attribute name",
         "cmd": "Shell or CLI command",
+        "class": "Class name",
         "dfn": "Definition of a term",
         "file": "File or path",
         "func": "Function or callable",
@@ -21,8 +22,11 @@
         "label": "Section/Subsection label",
         "lit": "Literal text or code",
         "mod": "Module name",
+        "norm": "Normativity keyword used as metadata",
         "op": "Operator symbol",
         "opt": "Command-line option or flag",
+        "pkg": "Package name",
+        "url": "URL",
         "tag": "Tag or marker",
         "term": "Domain-specific term",
         "type": "Type name or annotation",
@@ -95,6 +99,7 @@
                     ],
                     "Roles": [
                         "* |attr|`ABC` \u2014 |lit|`|attr|`, for attributes in XML, keys in JSON...",
+                        "* |class|`ABC` \u2014 |lit|`|class|`, classes",
                         "* |cmd|`ABC` \u2014 |lit|`|cmd|`, commands and subcommand with CLI",
                         "* |dfn|`ABC` \u2014 |lit|`|dfn|`, a term being defined",
                         "* |file|`/path/to/ABC` \u2014 |lit|`|file|`, files but also URLs",

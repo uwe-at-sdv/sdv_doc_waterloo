@@ -3,7 +3,7 @@ Preamble:
 	profile:
 		module
 	normative_sections:
-		Contract, Public_classes, Public_functions, Public_types, Public_constants, Public_variables
+		Contract, Public_classes, Public_functions, Public_types, Public_constants, Public_variables, Definitions
 Contract:
 	general:
 		|Must| provide shared helper functions, constants, and type aliases for Waterloo docstring validation and explanation.
@@ -88,11 +88,38 @@ Public_variables:
 	OBJ_DOCSTRING_CACHE:
 		A cache for storing resolved docstring text by object identity.
 		This cache is intentionally public so callers may inspect, clear, or replace it during a process lifetime.
+Definitions:
+	ABC:
+		Definition of |dfn|`ABC` for testing markup roles.
 Notes:
 	Render functions:
 		The render functions in this module are intended for building
 		verbose diagnostic messages that include source and expected snippets
 		along with suggestions on how to fix the docstring. 
+	Markup roles:
+		This section is a test for markup roles.
+		* |attr|`ABC` — |lit|`|attr|`, for attributes in XML, keys in JSON...
+		* |class|`ABC` — |lit|`|class|`, classes
+		* |cmd|`ABC` — |lit|`|cmd|`, commands and subcommand with CLI
+		* |dfn|`ABC` — |lit|`|dfn|`, a term being defined
+		* |file|`/path/to/ABC` — |lit|`|file|`, files but also URLs
+		* |func|`ABC` — |lit|`|func|`, functions
+		* |key|`CTRL` — |lit|`|label|`, keys on the keyboard
+		* |label|`ABC` — |lit|`|label|`, titles, labels
+		* |lit|`ABC` — |lit|`|lit|`, catch-all for literal text
+		* |mod|`ABC` — |lit|`|mod|`, modules
+		* |norm|`should` — |lit|`|norm|`, normativity keywords (meta, when talking about keywords)
+		* |op|`>>` — |lit|`|op|`, operators
+		* |opt|`--abc` — |lit|`|opt|`, options for CLI commands
+		* |pkg|`sdv.tty` — |lit|`|pkg|`, packages
+		* |tag|`ABC` — |lit|`|tag|`, enum values, symbolic values
+		* |term|`ABC` — |lit|`|term|`, referencing a term defined in |label|`Definitions`
+		* |type|`float` — |lit|`|type|`, types in programming or markup languages
+		* |url|`https://pypi.org/project/sdv-doc-waterloo/` — |lit|`|url|`, for URLs (currently pretty simple)
+		* |value|`12345` — |lit|`|value|`, R-values, unnamed values
+		* |var|`xyz` — |lit|`|var|`, variables, but also named constants
+		* |var_type|`xyz:float` — |lit|`|var_type|`, variable and type with colon.
+	
 """
 from __future__ import annotations
 from enum import Enum,IntEnum
@@ -311,7 +338,7 @@ RE_ANSI_SGR_COMPILED: Final[re.Pattern[str]] = re.compile(RE_ANSI_SGR)
 
 # Markup tokens for Waterloo roles, e.g. |type|`int` -> :wtrl_type:`int`
 # Single Source of Truth is the documentation standard.
-WTRL_MARKUP_ROLES: Final[str] = r"(attr|cmd|dfn|file|func|key|label|lit|mod|norm|op|opt|ref|tag|term|type|value|var|var_type)"
+WTRL_MARKUP_ROLES: Final[str] = r"(attr|cmd|class|dfn|file|func|key|label|lit|mod|norm|op|opt|pkg|ref|tag|term|type|url|value|var|var_type)"
 RE_WTRL_MARKUP_BACKTICK: Final[str] = rf"\|{WTRL_MARKUP_ROLES}\|`([^`]+)`"
 RE_WTRL_MARKUP_BACKTICK_COMPILED: Final[re.Pattern[str]] = re.compile(RE_WTRL_MARKUP_BACKTICK)
 

@@ -32,6 +32,7 @@ const TOK_RE = /(\|(?:Must|must|Must_not|must_not|Should|should|Should_not|shoul
 const ROLE_CLASS = {
 	"attr": "wtrl-attr wtrl_attr",
 	"cmd": "wtrl-cmd wtrl_cmd",
+	"class": "wtrl-class wtrl_class",
 	"dfn": "wtrl-dfn wtrl_dfn",
 	"file": "wtrl-file wtrl_file",
 	"func": "wtrl-func wtrl_func",

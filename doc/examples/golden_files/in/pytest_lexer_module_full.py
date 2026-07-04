@@ -40,7 +40,8 @@ Description:
 	The purpose of this module is to demonstrate waterloo docstrings
 	on module level. A linter will accept this docstring, but
 	coverage is not given, because the classes and function mentioned
-	herein do not have docstrings.
+	herein do not have docstrings. The example also demonstrates the
+	role |class|`MyClass` for class names.
 	|
 	The section "Description" allows free form text and the usage of
 	the pipe character "|" in order to subdivide the text into paragraphs.

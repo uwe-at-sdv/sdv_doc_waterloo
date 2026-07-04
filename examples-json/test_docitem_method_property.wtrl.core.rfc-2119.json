@@ -1,12 +1,12 @@
 {
     "$schema": "https://sci-d-vis.com/schema/wtrl-json-0.1.0.schema.json",
-    "$id": "urn:waterlint:wtrl-json:0.20.1:core:rfc-2119:a76ce282f1990d8b69ee42edd8c6e6916fbad1afde8ddc36b9f301b5234d7dbf",
+    "$id": "urn:waterlint:wtrl-json:0.20.3:core:rfc-2119:a76ce282f1990d8b69ee42edd8c6e6916fbad1afde8ddc36b9f301b5234d7dbf",
     "__WTRL_VERSION__": {
         "waterloo": "0.11.1",
         "schema": "0.1.0"
     },
     "__WTRL_META__": {
-        "generated_at": "2026-07-04T15:09:44+02:00",
+        "generated_at": "2026-07-04T20:33:01+02:00",
         "generator": "waterlint",
         "scope": "core",
         "flavour": "rfc-2119"
@@ -14,6 +14,7 @@
     "__WTRL_ROLES__": {
         "attr": "Attribute name",
         "cmd": "Shell or CLI command",
+        "class": "Class name",
         "dfn": "Definition of a term",
         "file": "File or path",
         "func": "Function or callable",
@@ -21,8 +22,11 @@
         "label": "Section/Subsection label",
         "lit": "Literal text or code",
         "mod": "Module name",
+        "norm": "Normativity keyword used as metadata",
         "op": "Operator symbol",
         "opt": "Command-line option or flag",
+        "pkg": "Package name",
+        "url": "URL",
         "tag": "Tag or marker",
         "term": "Domain-specific term",
         "type": "Type name or annotation",

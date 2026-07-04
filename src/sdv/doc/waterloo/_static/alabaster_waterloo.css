@@ -440,14 +440,24 @@ a.wtrl_var:visited
 	{
 	font-family:"Courier New",courier,monospace;
 
-	color:var(--sdv-variable-color);
-	font-weight:var(--sdv-variable-font-weight);
-	font-style:var(--sdv-variable-font-style);
+	color:var(--sdv-attr-color);
+	font-weight:var(--sdv-attr-font-weight);
+	font-style:var(--sdv-attr-font-style);
 	font-size: 90%;
 
 	background-color:inherit;
 	}
+.wtrl_class
+	{
+	font-family:monospace;
 
+	color:var(--sdv-class-color);
+	font-weight:var(--sdv-class-font-weight);
+	font-style:var(--sdv-class-font-style);
+	font-size: 90%;
+
+	background-color:inherit;
+	}
 .wtrl_cmd
 	{
 	font-family:monospace;
@@ -461,18 +471,20 @@ a.wtrl_var:visited
 	}
 .wtrl_dfn
 	{
-	font-family: inherit;
-	font-style: italic;
-	font-size: 100%;
-	color: inherit;
+	color:var(--sdv-dfn-color);
+	font-weight:var(--sdv-dfn-font-weight);
+	font-style:var(--sdv-dfn-font-style);
+	font-size:100%;
 
 	background-color:inherit;
 	}
 .wtrl_file {
-	font-family: "Courier New","Courier",monospace;
-	font-weight: normal;
-	font-size: 95%;
-	color: #35f;;
+	font-family:monospace;
+
+	color:var(--sdv-file-color);
+	font-weight:var(--sdv-file-font-weight);
+	font-style:var(--sdv-file-font-style);
+	font-size: 90%;
 
 	background-color:inherit;
 	}
@@ -491,9 +503,9 @@ a.wtrl_var:visited
 	{
 	font-family:inherit;
 
-	color:inherit;
-	font-weight:normal;
-	font-style:italic;
+	color:var(--sdv-label-color);
+	font-weight:var(--sdv-label-font-weight);
+	font-style:var(--sdv-label-font-style);
 	font-size: 100%;
 
 	background-color:inherit;
@@ -512,7 +524,7 @@ a.wtrl_var:visited
 	{
 	font-family:monospace;
 
-	color: #446622;
+	color: var(--sdv-mod-color);
 	font-weight:var(--sdv-mod-font-weight);
 	font-style:var(--sdv-mod-font-style);
 	font-size: 90%;
@@ -523,9 +535,9 @@ a.wtrl_var:visited
 	{
 	font-family:inherit;
 
-	color:inherit;
-	font-weight:normal;
-	font-style:italic;
+	color:var(--sdv-norm-color);
+	font-weight:var(--sdv-norm-font-weight);
+	font-style:var(--sdv-norm-font-style);
 	font-size: 100%;
 
 	background-color:inherit;
@@ -540,9 +552,9 @@ a.wtrl_var:visited
 	{
 	font-family:monospace;
 
-/*	color:var(--sdv-type-color);
-	font-weight:var(--sdv-type-font-weight);
-	font-style:var(--sdv-type-font-style);*/
+	color:var(--sdv-op-color);
+	font-weight:var(--sdv-op-font-weight);
+	font-style:var(--sdv-op-font-style);
 
 	background-color:inherit;
 	}
@@ -553,6 +565,17 @@ a.wtrl_var:visited
 	color:var(--sdv-opt-color);
 	font-weight:var(--sdv-opt-font-weight);
 	font-style:var(--sdv-opt-font-style);
+
+	background-color:inherit;
+	}
+.wtrl_pkg
+	{
+	font-family:monospace;
+
+	color: var(--sdv-pkg-color);
+	font-weight:var(--sdv-pkg-font-weight);
+	font-style:var(--sdv-pkg-font-style);
+	font-size: 90%;
 
 	background-color:inherit;
 	}
@@ -577,10 +600,9 @@ a.wtrl_var:visited
 .wtrl_term
 	{
 	font-family:inherit;
-
-	color:#000;
-	font-weight:normal;
-	font-style:italic;
+	color:var(--sdv-term-color);
+	font-weight:var(--sdv-term-font-weight);
+	font-style:var(--sdv-term-font-style);
 	font-size:100%;
 
 	background-color:inherit;
@@ -592,6 +614,16 @@ a.wtrl_var:visited
 	color:var(--sdv-type-color);
 	font-weight:var(--sdv-type-font-weight);
 	font-style:var(--sdv-type-font-style);
+	font-size: 90%;
+
+	background-color:inherit;
+	}
+.wtrl_url {
+	font-family:monospace;
+
+	color:var(--sdv-url-color);
+	font-weight:var(--sdv-url-font-weight);
+	font-style:var(--sdv-url-font-style);
 	font-size: 90%;
 
 	background-color:inherit;
@@ -609,9 +641,9 @@ a.wtrl_var:visited
 .wtrl_var
 	{
 	font-family: monospace;
-	font-weight: normal;
-	font-size: 90%;
-	color: #a00;
+	color:var(--sdv-var-color);
+	font-weight:var(--sdv-var-font-weight);
+	font-style:var(--sdv-var-font-style);
 
 	background-color:inherit;
 	}

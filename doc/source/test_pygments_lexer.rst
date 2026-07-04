@@ -1,7 +1,10 @@
 .. _test_pygments_lexer:
 
-Test: Pygments lexer showcase
-=============================
+Test: Inline markup
+===================
+
+Pygments
+--------
 
 This section is informative.
 
@@ -15,3 +18,19 @@ where the parser should continue to fail cleanly.
 
 .. literalinclude:: ../examples/pytest_syntaxhl_showcase.py
 	:language: python
+
+
+Sphinx
+------
+
+This section is informative.
+
+The module docstring intentionally contains a complete list of roles so that
+the Sphinx renderer can be evaluated in the same spirit as the lexer showcase,
+but from the rendering side. The :wtrl_label:`Notes` section contains markup
+examples that are stylistically similar to the interactive HTML output, which
+makes it possible to compare the rendered appearance directly. Unlike the
+Python lexer, whose appearance depends on the selected theme, this chapter
+lets us inspect the rendering consistency in a more controlled way.
+
+.. wtrl_autodoc_module:: sdv.doc.waterloo.docitem_helper
