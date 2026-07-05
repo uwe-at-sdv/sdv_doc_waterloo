@@ -2,22 +2,5 @@
   "$schema": "https://glama.ai/mcp/schemas/server.json",
   "maintainers": [
     "uwe-at-sdv"
-  ],
-  "name": "Waterloo MCP Server",
-  "displayName": "Waterloo Document Server",
-  "description": "An HTTP/SSE Model Context Protocol server exposing automated documentation and tools for sdv_doc_waterloo.",
-  "category": "developer-tools",
-  "keywords": ["mcp", "documentation", "waterloo", "python"],
-  "build": {
-    "type": "docker",
-    "dockerfile": "DOCKERFILE",
-    "port": 13316
-  },
-  "env": {
-    "PYTHONUNBUFFERED": {
-      "description": "Forces unbuffered stdout/stderr streams for reliable logging",
-      "required": true,
-      "default": "1"
-    }
-  }
+  ]
 }
