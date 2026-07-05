@@ -1,0 +1,36 @@
+# syntax=docker/dockerfile:1.7
+
+FROM		python:3.14.5-slim-trixie
+
+RUN		apt-get update \
+   		 && apt-get install -y --no-install-recommends bash git ca-certificates \
+   		 && rm -rf /var/lib/apt/lists/*
+
+ENV		PIP_DISABLE_PIP_VERSION_CHECK=1 \
+		PIP_NO_CACHE_DIR=1 \
+		GIT_TERMINAL_PROMPT=0 \
+		PYTHONUNBUFFERED=1
+
+WORKDIR		/workspace
+
+# Set by render-docker.
+ARG		WATERLOO_GIT_URL=https://github.com/uwe-at-sdv/sdv_doc_waterloo.git
+ARG		WATERLOO_GIT_REF=main
+
+RUN		python -m pip install "sdv_doc_waterloo @ git+${WATERLOO_GIT_URL}@${WATERLOO_GIT_REF}"; \
+		python - <<'PY'
+import sdv.doc.waterloo
+print(sdv.doc.waterloo.__file__)
+PY
+
+COPY		etc/wtrl_mcp.http.toml /workspace/etc/wtrl_mcp.http.toml
+COPY		etc/logging.toml /workspace/etc/logging.toml
+COPY		shared/doc/ /shared/doc/
+
+EXPOSE		13316
+
+ENTRYPOINT	["wtrl_mcp", "--config", "/workspace/etc/wtrl_mcp.http.toml"]
+
+# Run with: docker run --rm -p 13316:13316 wtrl-mcp-dockerfile
+# Extra wtrl_mcp args can be appended after the image name, for example:
+#   docker run --rm -p 13316:13316 wtrl-mcp-dockerfile --allowed-hosts localhost gilgamesh
