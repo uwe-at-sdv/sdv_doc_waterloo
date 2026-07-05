@@ -81,7 +81,7 @@ from starlette.types import ASGIApp, Receive, Scope, Send
 from mcp.server.fastmcp import FastMCP
 from mcp.server.fastmcp.prompts.base import Message, Prompt, PromptArgument
 from mcp.server.fastmcp.server import TransportSecuritySettings
-from mcp.types import TextContent
+from mcp.types import TextContent, ToolAnnotations
 
 LogLevel_t = Literal["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]
 
@@ -1125,6 +1125,14 @@ def build_app(config: McpConfig) -> FastMCP:
 			mcp.add_prompt(prompt)
 		return prompts
 
+	# These are hints for the MCP client. They show up as badges
+	# in the MCP inspector: click "List Tools" -> click <tool>.
+	readonly_tool_annotations = ToolAnnotations(
+		readOnlyHint=True,
+		destructiveHint=False,
+		idempotentHint=True,
+	)
+
 	@mcp.resource(
 		"wtrl-mcp://instructions",
 		name="instructions",
@@ -1134,67 +1142,67 @@ def build_app(config: McpConfig) -> FastMCP:
 	def _instructions() -> str:
 		return read_package_readme()
 
-	@mcp.tool(name="list_roots", description="List configured Waterloo data roots.")
+	@mcp.tool(name="list_roots", description="List configured Waterloo data roots.", annotations=readonly_tool_annotations)
 	def _list_roots() -> list[dict[str, WtrlJsonNode_t]]:
 		return list_roots(_root_mappings())
 
-	@mcp.tool(name="get_root", description="Read one configured Waterloo data root by root_id.")
+	@mcp.tool(name="get_root", description="Read one configured Waterloo data root by root_id.", annotations=readonly_tool_annotations)
 	def _get_root(root_id: str) -> dict[str, WtrlJsonNode_t]:
 		return get_root(root_id, _root_mappings())
 
-	@mcp.tool(name="get_root_metadata", description="Read compact header metadata for one configured Waterloo data root.")
+	@mcp.tool(name="get_root_metadata", description="Read compact header metadata for one configured Waterloo data root.", annotations=readonly_tool_annotations)
 	def _get_root_metadata(root_id: str) -> dict[str, WtrlJsonNode_t]:
 		return get_root_metadata(root_id, _root_mappings())
 
-	@mcp.tool(name="get_object", description="Read one Waterloo object by qid from a configured root.")
+	@mcp.tool(name="get_object", description="Read one Waterloo object by qid from a configured root.", annotations=readonly_tool_annotations)
 	def _get_object(root_id: str, qid: str) -> dict[str, WtrlJsonNode_t]:
 		return get_object(root_id, qid, _root_mappings())
 
-	@mcp.tool(name="get_section", description="Read one stored section of one Waterloo object.")
+	@mcp.tool(name="get_section", description="Read one stored section of one Waterloo object.", annotations=readonly_tool_annotations)
 	def _get_section(root_id: str, qid: str, section: str) -> dict[str, WtrlJsonNode_t]:
 		return get_section(root_id, qid, section, _root_mappings())
 
-	@mcp.tool(name="get_subsection", description="Read one stored subsection of one Waterloo object.")
+	@mcp.tool(name="get_subsection", description="Read one stored subsection of one Waterloo object.", annotations=readonly_tool_annotations)
 	def _get_subsection(root_id: str, qid: str, section: str, subsection: str) -> dict[str, WtrlJsonNode_t]:
 		return get_subsection(root_id, qid, section, subsection, _root_mappings())
 
-	@mcp.tool(name="list_objects", description="List all Waterloo objects in one configured root.")
+	@mcp.tool(name="list_objects", description="List all Waterloo objects in one configured root.", annotations=readonly_tool_annotations)
 	def _list_objects(root_id: str) -> list[ObjectSummary]:
 		return list_objects(root_id, _root_mappings())
 
-	@mcp.tool(name="get_examples", description="Read structured example metadata for one Waterloo object.")
+	@mcp.tool(name="get_examples", description="Read structured example metadata for one Waterloo object.", annotations=readonly_tool_annotations)
 	def _get_examples(root_id: str, qid: str) -> list[ExampleRef]:
 		return get_examples(root_id, qid, _root_mappings())
 
-	@mcp.tool(name="get_example_source", description="Read the source text for one Waterloo example reference.")
+	@mcp.tool(name="get_example_source", description="Read the source text for one Waterloo example reference.", annotations=readonly_tool_annotations)
 	def _get_example_source(root_id: str, example_path: str) -> str:
 		return get_example_source(root_id, example_path, _root_mappings())
 
-	@mcp.tool(name="get_signature", description="Read the stored signature block for one Waterloo object.")
+	@mcp.tool(name="get_signature", description="Read the stored signature block for one Waterloo object.", annotations=readonly_tool_annotations)
 	def _get_signature(root_id: str, qid: str) -> dict[str, WtrlJsonNode_t]:
 		return get_signature(root_id, qid, _root_mappings())
 
-	@mcp.tool(name="get_references", description="Read structured incoming See_also references for one Waterloo object.")
+	@mcp.tool(name="get_references", description="Read structured incoming See_also references for one Waterloo object.", annotations=readonly_tool_annotations)
 	def _get_references(root_id: str, qid: str, normative_only: bool = False) -> list[ReferenceRecord]:
 		return get_references(reference_index.reverse_map, root_id, qid, normative_only)
 
-	@mcp.tool(name="search_related", description="Read the star-shaped See_also neighborhood for one Waterloo object.")
+	@mcp.tool(name="search_related", description="Read the star-shaped See_also neighborhood for one Waterloo object.", annotations=readonly_tool_annotations)
 	def _search_related(root_id: str, qid: str, normative_only: bool = False) -> list[RelatedRecord]:
 		return search_related(reference_index.reverse_map, reference_index.qids_to_roots, root_id, qid, _root_mappings(), normative_only)
 
-	@mcp.tool(name="search_objects", description="Search Waterloo objects by expression and structural filters.")
+	@mcp.tool(name="search_objects", description="Search Waterloo objects by expression and structural filters.", annotations=readonly_tool_annotations)
 	def _search_objects(expression: str, filter: SearchObjectsFilter | None = None) -> list[tuple[str, str, str]]:
 		return search_objects(expression, _root_mappings(), filter)
 
-	@mcp.tool(name="search_sections", description="Search Waterloo section and subsection labels by expression and structural filters.")
+	@mcp.tool(name="search_sections", description="Search Waterloo section and subsection labels by expression and structural filters.", annotations=readonly_tool_annotations)
 	def _search_sections(expression: str, filter: SearchSectionsFilter | None = None) -> list[dict[str, WtrlJsonNode_t]]:
 		return search_sections(expression, _root_mappings(), filter)
 
-	@mcp.tool(name="search_text", description="Search Waterloo text content by terms and structural filters.")
+	@mcp.tool(name="search_text", description="Search Waterloo text content by terms and structural filters.", annotations=readonly_tool_annotations)
 	def _search_text(terms: list[str], filter: SearchTextFilter | None = None) -> list[dict[str, WtrlJsonNode_t]]:
 		return search_text(terms, _root_mappings(), filter)
 
-	@mcp.tool(name="gen_docstring", description="Generate a Waterloo docstring template for a given profile.")
+	@mcp.tool(name="gen_docstring", description="Generate a Waterloo docstring template for a given profile.", annotations=readonly_tool_annotations)
 	def _gen_docstring(
 		profile: DocstringProfile_t,
 		signature: str | None = None,
@@ -1204,11 +1212,11 @@ def build_app(config: McpConfig) -> FastMCP:
 	) -> dict[str, WtrlJsonNode_t]:
 		return gen_docstring(profile=profile, signature=signature, mode=mode, indent_mode=indent_mode, json_mode=json_mode)
 
-	@mcp.tool(name="about", description="Read one Waterloo help topic from the bundled about files.")
+	@mcp.tool(name="about", description="Read one Waterloo help topic from the bundled about files.", annotations=readonly_tool_annotations)
 	def _about(topic: str | None = None) -> dict[str, WtrlJsonNode_t]:
 		return about(topic)
 
-	@mcp.tool(name="describe_tool", description="Describe one MCP tool by its canonical tool name.")
+	@mcp.tool(name="describe_tool", description="Describe one MCP tool by its canonical tool name.", annotations=readonly_tool_annotations)
 	def _describe_tool(toolname: str) -> str:
 		r"""
 		Preamble:
@@ -1383,7 +1391,7 @@ def _run_loaded_config(config: McpConfig) -> None:
 		logger.info("Using configuration file: %s", config.source_path.resolve())
 		http_app = _RequestLogGroupMiddleware(http_app)
 		# Streamable HTTP is exposed directly here so browser clients can
-		# negotiate CORS. SSE stays out of v1.
+		# negotiate CORS. SSE is not part of this transport setup.
 		uvicorn.run(
 			http_app,
 			host=config.server.host,

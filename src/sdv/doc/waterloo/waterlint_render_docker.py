@@ -34,8 +34,9 @@ from sdv.doc.waterloo.docitem_helper import WTRL_TRACER_JSON_SCHEMA_VERSION, tra
 # Not relevant yet, but in case we set up a plugin concept,
 # vendors should be encouraged to follow semantic versioning
 # for their plugins.
-__version__ = "0.1.1"
+__version__ = "0.1.2"
 # Changelog:
+# 0.1.2 [2026-07-05]: Remove private-repo GitHub token handling from generated Docker scripts.
 # 0.1.1 [2026-06-09]: Fix the default build script GitHub token path to be outside the repository.
 # 0.1.0 [2026-06-06]: Initial version.
 
@@ -151,6 +152,10 @@ def _render_name_for_root(root_path: Path, root_id: str, seen_names: dict[str, i
 	if count == 0:
 		return candidate
 	return f"{base}.{digest}.{count}{suffix}"
+
+
+def _docker_image_tag(plan: DockerRenderPlan) -> str:
+	return f"wtrl-mcp-{plan.out_path.stem.lower()}"
 
 
 def _normalize_roots(
@@ -334,7 +339,8 @@ def _render_dockerfile_text(plan: DockerRenderPlan) -> str:
 		"",
 		"ENV\t\tPIP_DISABLE_PIP_VERSION_CHECK=1 \\",
 		"\t\tPIP_NO_CACHE_DIR=1 \\",
-		"\t\tGIT_TERMINAL_PROMPT=0",
+		"\t\tGIT_TERMINAL_PROMPT=0 \\",
+		"\t\tPYTHONUNBUFFERED=1",
 		"",
 		"WORKDIR\t\t/workspace",
 		"",
@@ -342,13 +348,7 @@ def _render_dockerfile_text(plan: DockerRenderPlan) -> str:
 		"ARG\t\tWATERLOO_GIT_URL=https://github.com/uwe-at-sdv/sdv_doc_waterloo.git",
 		"ARG\t\tWATERLOO_GIT_REF=main",
 		"",
-		"RUN\t\t--mount=type=secret,id=github_token,required=false \\",
-		"\t\tset -eu; \\",
-		"\t\tif [ -f /run/secrets/github_token ]; then \\",
-		"\t\t\ttoken=\"$(cat /run/secrets/github_token)\"; \\",
-		"\t\t\tgit config --global url.\"https://x-access-token:${token}@github.com/\".insteadOf \"https://github.com/\"; \\",
-		"\t\tfi; \\",
-		"\t\tpython -m pip install \"sdv_doc_waterloo @ git+${WATERLOO_GIT_URL}@${WATERLOO_GIT_REF}\"; \\",
+		"RUN\t\tpython -m pip install \"sdv_doc_waterloo @ git+${WATERLOO_GIT_URL}@${WATERLOO_GIT_REF}\"; \\",
 		"\t\tpython - <<'PY'",
 		"import sdv.doc.waterloo",
 		"print(sdv.doc.waterloo.__file__)",
@@ -367,9 +367,9 @@ def _render_dockerfile_text(plan: DockerRenderPlan) -> str:
 			"",
 			"ENTRYPOINT\t[\"wtrl_mcp\", \"--config\", \"/workspace/etc/wtrl_mcp.http.toml\"]",
 			"",
-			f"# Run with: docker run --rm -p {plan.server['port']}:{plan.server['port']} wtrl-mcp-{plan.out_path.stem}",
+			f"# Run with: docker run --rm -p {plan.server['port']}:{plan.server['port']} {_docker_image_tag(plan)}",
 			f"# Extra wtrl_mcp args can be appended after the image name, for example:",
-			f"#   docker run --rm -p {plan.server['port']}:{plan.server['port']} wtrl-mcp-{plan.out_path.stem} --allowed-hosts localhost gilgamesh",
+			f"#   docker run --rm -p {plan.server['port']}:{plan.server['port']} {_docker_image_tag(plan)} --allowed-hosts localhost gilgamesh",
 		]
 	)
 	return "\n".join(lines) + "\n"
@@ -392,12 +392,7 @@ def _render_build_script_text(plan: DockerRenderPlan) -> str:
 		[
 			"SCRIPT_DIR=$(CDPATH= cd -- \"$(dirname -- \"$0\")\" && pwd)",
 			f"DOCKERFILE=\"$SCRIPT_DIR/{plan.out_path.name}\"",
-			f"IMAGE_TAG=\"wtrl-mcp-{plan.out_path.stem}\"",
-			# Only required as long as our github repository is private. We can remove this when
-			# the repository is public. The secret is not part of the github repository and must
-			# be provided by the user in a file at the specified path on the machine where the
-			# build script is executed.
-			"GITHUB_TOKEN_FILE=\"/server/devel/sdv/privat/uwe/source/sdv_doc_waterloo/etc/secrets/github.token\"",
+			f"IMAGE_TAG=\"{_docker_image_tag(plan)}\"",
 			"# Docker layer caching is off by default; pass --cache to enable it.",
 			'CACHE_FLAG="--no-cache"',
 			'while [ "$#" -gt 0 ]; do',
@@ -442,22 +437,12 @@ def _render_build_script_text(plan: DockerRenderPlan) -> str:
 		for root in plan.roots:
 			lines.append(f'cp {shlex.quote(str(root.source_path))} "$BUILD_DIR/shared/doc/{root.render_name}"')
 	lines.extend(
-		[
-			"",
-			'if [ -f "$GITHUB_TOKEN_FILE" ]; then',
-			'\texec docker build \\',
-			'\t\t$CACHE_FLAG \\',
-			'\t\t--build-arg WATERLOO_GIT_URL=https://github.com/uwe-at-sdv/sdv_doc_waterloo.git \\',
-			'\t\t--build-arg WATERLOO_GIT_REF=main \\',
-			'\t\t--secret id=github_token,src="$GITHUB_TOKEN_FILE" \\',
-			'\t\t-t "$IMAGE_TAG" \\',
-			'\t\t-f "$BUILD_DIR/Dockerfile" \\',
-			'\t\t"$BUILD_DIR"',
-			'fi',
-			'exec docker build \\',
-			'\t$CACHE_FLAG \\',
-			'\t--build-arg WATERLOO_GIT_URL=https://github.com/uwe-at-sdv/sdv_doc_waterloo.git \\',
-			'\t--build-arg WATERLOO_GIT_REF=main \\',
+			[
+				"",
+				'exec docker build \\',
+				'\t$CACHE_FLAG \\',
+				'\t--build-arg WATERLOO_GIT_URL=https://github.com/uwe-at-sdv/sdv_doc_waterloo.git \\',
+				'\t--build-arg WATERLOO_GIT_REF=main \\',
 			'\t-t "$IMAGE_TAG" \\',
 			'\t-f "$BUILD_DIR/Dockerfile" \\',
 			'\t"$BUILD_DIR"',
@@ -473,7 +458,7 @@ def _render_launch_script_text(plan: DockerRenderPlan) -> str:
 	lines.extend(
 		[
 			"SCRIPT_DIR=$(CDPATH= cd -- \"$(dirname -- \"$0\")\" && pwd)",
-			f"IMAGE_TAG=\"wtrl-mcp-{plan.out_path.stem}\"",
+			f"IMAGE_TAG=\"{_docker_image_tag(plan)}\"",
 			"",
 			f"exec docker run --rm -i -p {host_port}:{container_port} \\",
 		]
@@ -758,7 +743,7 @@ def render_docker(args: argparse.Namespace) -> int:
 		if plan.launch_script_path is not None:
 			tr.add_info(f"render-docker: ● Run the launch script: {plan.launch_script_path}")
 		if plan.bake_roots:
-			image_tag = f"wtrl-mcp-{plan.out_path.stem}"
+			image_tag = _docker_image_tag(plan)
 			container_port = plan.server["port"]
 			host_port = plan.public_port or container_port
 			tr.add_info("render-docker: ● Launch the container, for example:")

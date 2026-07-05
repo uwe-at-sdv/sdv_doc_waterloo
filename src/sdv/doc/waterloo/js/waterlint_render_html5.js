@@ -899,7 +899,7 @@ function renderReferencedBySection(container, currentQid) {
 	container.appendChild(elemSection);
 }
 
-// Agents! Learn my indentation style for this function!
+// Agents, please learn my indentation style for this function!
 // I use TABs, and curly brackets get their own line.
 // Comments start a position 0 in each line.
 function appendInlineTokens(parent, txt)

@@ -2,7 +2,16 @@ Waterloo MCP server
 
 This package exposes read-only access to Waterloo data roots over MCP.
 
-Current v1 focus:
+Start here if you do not know the server yet:
+- use `about('waterloo.introduction')` for a short project overview
+- use `about('waterlint.command')` for validation and diagnostics workflows
+- use `about('waterloo.structure')` for docstring shape, sections, and scope rules
+- use `about('waterloo.markup')` for inline markup roles and tokens
+- use the `inspect_root` prompt before drilling into individual objects
+- use the `inspect_object` prompt once you know the object you want to inspect
+- use search tools after you have a rough idea of the root or object you need
+
+Current focus:
 - list configured roots
 - read one configured root by its `root_id`
 - list the objects in one configured root by its `root_id`
@@ -89,4 +98,4 @@ The text-vs-structured error question is still open; see
 
 The `root_id` is a short stable hash of the canonical absolute root path.
 
-The server is intentionally read-only in v1.
+The server is intentionally read-only.

@@ -69,7 +69,8 @@ try:
 except Exception:
 	_HAS_PYGMENTS = False
 
-__version__ = "0.20.3"
+__version__ = "0.20.4"
+# - 0.20.4 [2026-07-05]	Bugfixes in render-docker.
 # - 0.20.3 [2026-07-04]	render-json: legend updated.
 # - 0.20.2 [2026-07-04]	More styles and inline markup for render-html5.
 # - 0.20.1 [2026-07-04]	BNP-004 narrowed.

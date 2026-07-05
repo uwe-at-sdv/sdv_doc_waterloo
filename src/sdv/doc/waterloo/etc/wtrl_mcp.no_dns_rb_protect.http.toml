@@ -1,7 +1,7 @@
 # Waterloo MCP server configuration for streamable-http transport.
 #
 # Use this file with:
-#   wtrl_mcp --config /server/devel/sdv/privat/uwe/source/sdv_doc_waterloo/package_main/src/sdv/doc/waterloo/etc/wtrl_mcp.http.toml
+#   wtrl_mcp --config @main/src/sdv/doc/waterloo/etc/wtrl_mcp.no_dns_rb_protect.http.toml
 #
 # The roots and logging config_path are resolved relative to this file.
 
@@ -13,14 +13,14 @@ streamable_http_path = "/mcp"
 
 [security]
 # For this configuration allowed_hosts and allowed_origins
-# are disabled. While generally not advisable, for the
-# presentation on websites like glama.ai this is necessary
-# in order to allow a variable port configuration.
+# are disabled. While this is generally not advisable, it can
+# be necessary for hosted MCP frontends or marketplaces that
+# probe multiple candidate ports before connecting.
 #
 # allowed_hosts = ["127.0.0.1:13316", "localhost:13316"]
 # This matters for the browser-based Inspector, which connects
-# via CORS. Replace "gilgamesh" with your hostname if you want
-# to try it locally. This entry is not relevant for VSCode.
+# via CORS. Replace "gilgamesh" with your host name if you want
+# to try it locally. The origin list is not relevant for VSCode.
 # allowed_origins = ["http://localhost:6274", "http://gilgamesh:6274"]
 
 [logging]

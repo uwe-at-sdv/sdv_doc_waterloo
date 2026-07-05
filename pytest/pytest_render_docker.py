@@ -54,6 +54,26 @@ def test_render_docker_bake_smoke_generates_dockerfile_and_build_script(tmp_path
 	assert "http://localhost:13316/mcp" in res.stderr
 
 
+def test_render_docker_lowercases_the_image_tag(tmp_path: Path) -> None:
+	"""Uppercase output names must still produce valid lowercase Docker image tags."""
+	cfg = _write_modified_config(tmp_path)
+	out_file = tmp_path / "DOCKERFILE"
+	res = run_waterlint(
+		"render-docker",
+		"--in",
+		str(cfg),
+		"--out",
+		str(out_file),
+	)
+	assert res.returncode == 0, res.stderr
+	dockerfile = out_file.read_text(encoding="utf-8")
+	assert "wtrl-mcp-dockerfile" in dockerfile
+	build_script = tmp_path / "build.DOCKERFILE.sh"
+	build_text = build_script.read_text(encoding="utf-8")
+	assert "wtrl-mcp-dockerfile" in build_text
+	assert "wtrl-mcp-dockerfile" in res.stderr
+
+
 def test_render_docker_public_port_overrides_allowed_hosts(tmp_path: Path) -> None:
 	"""A public port without an explicit host list rewrites allowed_hosts to localhost and 127.0.0.1."""
 	cfg = _write_modified_config(tmp_path)

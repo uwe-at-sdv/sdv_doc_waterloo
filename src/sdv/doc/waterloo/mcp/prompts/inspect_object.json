@@ -18,7 +18,7 @@
   "messages": [
     {
       "role": "user",
-      "content": "Inspect the Waterloo object $qid in root $root_id.\n\nUse `get_object` first.\nThen inspect `get_signature`, `get_examples`, `get_references`, and `search_related`.\nIf useful, also inspect the relevant `get_section` or `get_subsection` results.\n\nSummarize:\n- the object's signature\n- its normative sections\n- its examples\n- its direct links to related objects\n"
+      "content": "Inspect the Waterloo object $qid in root $root_id.\n\nStart with `get_object`.\nThen inspect `get_signature`, `get_examples`, `get_references`, and `search_related`.\nUse `get_section` or `get_subsection` only when you need a specific detail.\n\nSummarize:\n- the object's signature\n- its normative sections\n- its examples\n- its direct links to related objects\n"
     }
   ]
 }

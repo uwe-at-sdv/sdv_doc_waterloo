@@ -13,7 +13,7 @@
   "messages": [
     {
       "role": "user",
-      "content": "Inspect the Waterloo root $root_id.\n\nUse `get_root_metadata` first.\nThen use `list_objects`.\nIf the root is large, also use `search_objects`, `search_sections`, and `search_text`\nbefore drilling into individual objects.\n\nReturn a short, structured summary with:\n- scope and kind\n- the main entry points for further inspection\n- notable search hits or object clusters\n- the next object(s) to inspect first\n"
+      "content": "Inspect the Waterloo root $root_id.\n\nStart with `get_root_metadata` to get the compact overview.\nThen use `list_objects` to see the available objects.\nIf the root is large, also use `search_objects`, `search_sections`, and `search_text`\nbefore drilling into individual objects.\n\nReturn a short, structured summary with:\n- scope and kind\n- the main entry points for further inspection\n- notable search hits or object clusters\n- the next object(s) to inspect first\n"
     }
   ]
 }
