@@ -69,7 +69,7 @@
         },
         "waterloo.mcpServerLabel": {
           "type": "string",
-          "default": "Waterloo Docs (stdio)",
+          "default": "Waterloo Docstrings (stdio)",
           "description": "Name shown for the Waterloo MCP server in VS Code."
         }
       }
