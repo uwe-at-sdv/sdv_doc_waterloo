@@ -18,6 +18,7 @@ where the parser should continue to fail cleanly.
 
 .. literalinclude:: ../examples/pytest_syntaxhl_showcase.py
 	:language: python
+	:tab-width: 4
 
 
 Sphinx

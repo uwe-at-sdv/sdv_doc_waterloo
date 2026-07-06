@@ -398,14 +398,7 @@ sdv/doc/waterloo/waterlint_render_html5.py
 </pre></div>
 </div>
 <p>are validated on a regular basis. The current status is</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>package_main/src/sdv/doc/waterloo/docitem_sphinx.py:122: error: Library stubs not installed for &quot;docutils&quot;  [import-untyped]
-package_main/src/sdv/doc/waterloo/docitem_sphinx.py:125: error: Library stubs not installed for &quot;docutils.parsers.rst&quot;  [import-untyped]
-package_main/src/sdv/doc/waterloo/docitem_sphinx.py:128: error: Library stubs not installed for &quot;docutils.parsers.rst.directives.admonitions&quot;  [import-untyped]
-package_main/src/sdv/doc/waterloo/docitem_sphinx.py:128: note: Hint: &quot;python3 -m pip install types-docutils&quot;
-package_main/src/sdv/doc/waterloo/docitem_sphinx.py:128: note: (or run &quot;mypy --install-types&quot; to install all missing stub packages)
-package_main/src/sdv/doc/waterloo/docitem_sphinx.py:128: note: See https://mypy.readthedocs.io/en/stable/running_mypy.html#missing-imports
-package_main/src/sdv/doc/waterloo/docitem_sphinx.py:129: error: Library stubs not installed for &quot;docutils.parsers.rst.states&quot;  [import-untyped]
-Found 4 errors in 1 file (checked 33 source files)
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Success: no issues found in 33 source files
 </pre></div>
 </div>
 <p>Our <code class="wtrl_lit docutils literal notranslate"><span class="pre">mypy</span></code>-configuration is:</p>
@@ -428,18 +421,18 @@ Found 4 errors in 1 file (checked 33 source files)
 </pre></div>
 </div>
 <p>Exceptions from typechecking are:</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>docitem_helper.py:142 # type: ignore[attr-defined]
-docitem_helper.py:144 # type: ignore[no-redef]
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>docitem_helper.py:143 # type: ignore[attr-defined]
+docitem_helper.py:145 # type: ignore[no-redef]
 docitem_validator.py:41 # type: ignore
 docitem_validator.py:42 # pragma: no cover - older Python
 waterlint_carve.py:313 # pragma: no cover - defensive
-waterlint.py:776 # pragma: no cover - defensive
-waterlint.py:868 # pragma: no cover - defensive
-waterlint.py:982 # pragma: no cover - defensive
-waterlint.py:1108 # pragma: no cover - defensive
-waterlint.py:1112 # pragma: no cover - defensive
-waterlint.py:1116 # pragma: no cover - defensive
-waterlint.py:1786 # pragma: no cover - defensive
+waterlint.py:778 # pragma: no cover - defensive
+waterlint.py:870 # pragma: no cover - defensive
+waterlint.py:984 # pragma: no cover - defensive
+waterlint.py:1110 # pragma: no cover - defensive
+waterlint.py:1114 # pragma: no cover - defensive
+waterlint.py:1118 # pragma: no cover - defensive
+waterlint.py:1788 # pragma: no cover - defensive
 waterlint_render_docker.py:28 # pragma: no cover - Python 3.10 fallback
 </pre></div>
 </div>

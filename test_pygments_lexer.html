@@ -50,308 +50,308 @@ The goal is to show what the lexer highlights, what it leaves untouched, and
 where the parser should continue to fail cleanly.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="gh">Preamble:</span>
-<span class="sd">	</span><span class="gu">profile:</span>
-<span class="sd">		</span><span class="no">module</span>
-<span class="sd">	</span><span class="gu">scope:</span>
-<span class="sd">		</span><span class="no">core</span><span class="sd">, </span><span class="no">nonexistent</span>
-<span class="sd">	</span><span class="gu">status:</span>
-<span class="sd">		</span><span class="no">frozen</span>
-<span class="sd">	</span><span class="gu">normative_sections:</span>
-<span class="sd">		</span><span class="no">Contract</span><span class="sd">, </span><span class="no">Definitions</span><span class="sd">, </span><span class="no">Parameters</span><span class="sd">, </span><span class="err">BadSection</span><span class="sd">, </span><span class="no">See_also</span>
-<span class="sd">	</span><span class="err">bad_subsection:</span>
-<span class="sd">		Content</span>
+<span class="sd">    </span><span class="gu">profile:</span>
+<span class="sd">        </span><span class="no">module</span>
+<span class="sd">    </span><span class="gu">scope:</span>
+<span class="sd">        </span><span class="no">core</span><span class="sd">, </span><span class="no">nonexistent</span>
+<span class="sd">    </span><span class="gu">status:</span>
+<span class="sd">        </span><span class="no">frozen</span>
+<span class="sd">    </span><span class="gu">normative_sections:</span>
+<span class="sd">        </span><span class="no">Contract</span><span class="sd">, </span><span class="no">Definitions</span><span class="sd">, </span><span class="no">Parameters</span><span class="sd">, </span><span class="err">BadSection</span><span class="sd">, </span><span class="no">See_also</span>
+<span class="sd">    </span><span class="err">bad_subsection:</span>
+<span class="sd">        Content</span>
 <span class="gh">Definitions:</span>
-<span class="sd">	</span><span class="ge">Identifier:</span>
-<span class="sd">		A string matching the regex </span><span class="k">|lit|</span><span class="l">`[a-zA-Z_][a-zA-Z0-9_]*`</span><span class="sd">.</span>
-<span class="sd">	</span><span class="k">_inherit:</span>
-<span class="sd">		Term_A, Term_B</span>
-<span class="sd">	bad term</span>
-<span class="sd">		bad because colon is missing and it doesn&#39;t follow the identifier format.</span>
+<span class="sd">    </span><span class="ge">Identifier:</span>
+<span class="sd">        A string matching the regex </span><span class="k">|lit|</span><span class="l">`[a-zA-Z_][a-zA-Z0-9_]*`</span><span class="sd">.</span>
+<span class="sd">    </span><span class="k">_inherit:</span>
+<span class="sd">        Term_A, Term_B</span>
+<span class="sd">    bad term</span>
+<span class="sd">        bad because colon is missing and it doesn&#39;t follow the identifier format.</span>
 <span class="gh">Terminology:</span>
-<span class="sd">	</span><span class="ge">Un!corn:</span>
-<span class="sd">		Fancy animal. Test roles: </span><span class="k">|mod|</span><span class="nn">`ABC`</span>
+<span class="sd">    </span><span class="ge">Un!corn:</span>
+<span class="sd">        Fancy animal. Test roles: </span><span class="k">|mod|</span><span class="nn">`ABC`</span>
 <span class="ge">Bad Section:</span>
-<span class="sd">	All sections are predefined, and &quot;Bad Section&quot; is not one of them.</span>
+<span class="sd">    All sections are predefined, and &quot;Bad Section&quot; is not one of them.</span>
 <span class="gh">Contract:</span>
-<span class="sd">	</span><span class="gu">general:</span>
-<span class="sd">		</span><span class="k">|Must|</span><span class="sd"> do this and that. Test roles: </span><span class="k">|term|</span><span class="ge">`ABC`</span>
-<span class="sd">		</span><span class="k">|Should_not|</span><span class="sd"> do other things. Test roles: </span><span class="k">|term|</span><span class="ge">`ABC`</span>
-<span class="sd">		</span><span class="k">|ref|</span><span class="s">`</span><span class="nn">label</span><span class="s"> &lt;</span><span class="nt">target_in_rst</span><span class="s">&gt;`</span>
-<span class="sd">		</span><span class="k">|ref|</span><span class="s">`</span><span class="nn">label</span><span class="s"> &lt;</span><span class="nt">wtrl://qi.of.documented.object</span><span class="s">&gt;`</span>
-<span class="sd">		</span><span class="k">|ref|</span><span class="s">`</span><span class="nn">label</span><span class="s"> &lt;</span><span class="nt">https://link.com</span><span class="s">&gt;`</span>
-<span class="sd">	</span><span class="gu">constructor:</span>
-<span class="sd">		default - this is freeform text describing the constructor contract.</span>
-<span class="sd">		Test roles: </span><span class="k">|func|</span><span class="nf">`__init__`</span>
-<span class="sd">	</span><span class="gu">requires:</span>
-<span class="sd">		</span><span class="k">|var|</span><span class="nv">`x`</span><span class="sd"> &gt; 0. Test roles: </span><span class="k">|var|</span><span class="nv">`x`</span>
-<span class="sd">	</span><span class="gu">ensures:</span>
-<span class="sd">		The result is positive. Test roles: </span><span class="k">|value|</span><span class="no">`positive`</span>
-<span class="sd">	</span><span class="gu">invariants:</span>
-<span class="sd">		Idempotent. Test roles: </span><span class="k">|term|</span><span class="ge">`idempotent`</span>
-<span class="sd">	</span><span class="gu">traits:</span>
-<span class="sd">		</span><span class="no">abstract</span>
-<span class="sd">	</span><span class="gu">base:</span>
-<span class="sd">		</span><span class="nc">MyBaseClassA</span><span class="sd">, </span><span class="nc">MyBaseClassB</span>
-<span class="sd">	</span><span class="err">bad_subsection:</span>
-<span class="sd">		Contract only contains predefined subsections,</span><span class="k">\</span>
-<span class="sd">		and &quot;bad_subsection&quot; is not one of them.</span>
+<span class="sd">    </span><span class="gu">general:</span>
+<span class="sd">        </span><span class="k">|Must|</span><span class="sd"> do this and that. Test roles: </span><span class="k">|term|</span><span class="ge">`ABC`</span>
+<span class="sd">        </span><span class="k">|Should_not|</span><span class="sd"> do other things. Test roles: </span><span class="k">|term|</span><span class="ge">`ABC`</span>
+<span class="sd">        </span><span class="k">|ref|</span><span class="s">`</span><span class="nn">label</span><span class="s"> &lt;</span><span class="nt">target_in_rst</span><span class="s">&gt;`</span>
+<span class="sd">        </span><span class="k">|ref|</span><span class="s">`</span><span class="nn">label</span><span class="s"> &lt;</span><span class="nt">wtrl://qi.of.documented.object</span><span class="s">&gt;`</span>
+<span class="sd">        </span><span class="k">|ref|</span><span class="s">`</span><span class="nn">label</span><span class="s"> &lt;</span><span class="nt">https://link.com</span><span class="s">&gt;`</span>
+<span class="sd">    </span><span class="gu">constructor:</span>
+<span class="sd">        default - this is freeform text describing the constructor contract.</span>
+<span class="sd">        Test roles: </span><span class="k">|func|</span><span class="nf">`__init__`</span>
+<span class="sd">    </span><span class="gu">requires:</span>
+<span class="sd">        </span><span class="k">|var|</span><span class="nv">`x`</span><span class="sd"> &gt; 0. Test roles: </span><span class="k">|var|</span><span class="nv">`x`</span>
+<span class="sd">    </span><span class="gu">ensures:</span>
+<span class="sd">        The result is positive. Test roles: </span><span class="k">|value|</span><span class="no">`positive`</span>
+<span class="sd">    </span><span class="gu">invariants:</span>
+<span class="sd">        Idempotent. Test roles: </span><span class="k">|term|</span><span class="ge">`idempotent`</span>
+<span class="sd">    </span><span class="gu">traits:</span>
+<span class="sd">        </span><span class="no">abstract</span>
+<span class="sd">    </span><span class="gu">base:</span>
+<span class="sd">        </span><span class="nc">MyBaseClassA</span><span class="sd">, </span><span class="nc">MyBaseClassB</span>
+<span class="sd">    </span><span class="err">bad_subsection:</span>
+<span class="sd">        Contract only contains predefined subsections,</span><span class="k">\</span>
+<span class="sd">        and &quot;bad_subsection&quot; is not one of them.</span>
 <span class="gh">Description:</span>
-<span class="sd">	This is a logical line consisting of two</span><span class="k">\</span>
-<span class="sd">	physical lines.</span>
-<span class="k">	|</span>
-<span class="sd">	This is another logical line. Test roles: </span><span class="k">|label|</span><span class="gu">`ABC`</span>
+<span class="sd">    This is a logical line consisting of two</span><span class="k">\</span>
+<span class="sd">    physical lines.</span>
+<span class="k">    |</span>
+<span class="sd">    This is another logical line. Test roles: </span><span class="k">|label|</span><span class="gu">`ABC`</span>
 <span class="gh">Derived_from:</span>
-<span class="sd">	</span><span class="nc">MyBaseClassA</span><span class="sd">, </span><span class="nc">MyBaseClassB</span>
+<span class="sd">    </span><span class="nc">MyBaseClassA</span><span class="sd">, </span><span class="nc">MyBaseClassB</span>
 <span class="gh">Factory:</span>
-<span class="sd">	</span><span class="nf">my_factory:</span>
-<span class="sd">		Each entry in this section describes a factory function.</span><span class="k">\</span>
-<span class="sd">		The entry name is the name of the factory function,</span><span class="k">\</span>
-<span class="sd">		and the content is freeform text describing the factory contract.</span>
+<span class="sd">    </span><span class="nf">my_factory:</span>
+<span class="sd">        Each entry in this section describes a factory function.</span><span class="k">\</span>
+<span class="sd">        The entry name is the name of the factory function,</span><span class="k">\</span>
+<span class="sd">        and the content is freeform text describing the factory contract.</span>
 <span class="gh">Public_classes:</span>
-<span class="sd">	</span><span class="nc">ClassOne</span><span class="sd">, </span><span class="nc">ClassTwo</span>
+<span class="sd">    </span><span class="nc">ClassOne</span><span class="sd">, </span><span class="nc">ClassTwo</span>
 <span class="gh">Class_overview:</span>
-<span class="sd">	</span><span class="nc">class_one:</span>
-<span class="sd">		Brief description of class one. Test roles: </span><span class="k">|type|</span><span class="nc">`class_one`</span>
-<span class="sd">	</span><span class="nc">class_two:</span>
-<span class="sd">		Brief description of class two. Test roles: </span><span class="k">|type|</span><span class="nc">`class_two`</span>
+<span class="sd">    </span><span class="nc">class_one:</span>
+<span class="sd">        Brief description of class one. Test roles: </span><span class="k">|type|</span><span class="nc">`class_one`</span>
+<span class="sd">    </span><span class="nc">class_two:</span>
+<span class="sd">        Brief description of class two. Test roles: </span><span class="k">|type|</span><span class="nc">`class_two`</span>
 <span class="gh">Public_functions:</span>
-<span class="sd">	</span><span class="nf">function_one</span><span class="sd">, </span><span class="nf">function_two</span>
+<span class="sd">    </span><span class="nf">function_one</span><span class="sd">, </span><span class="nf">function_two</span>
 <span class="gh">Function_overview:</span>
-<span class="sd">	</span><span class="nf">function_one:</span>
-<span class="sd">		Brief description of function one. Test roles: </span><span class="k">|func|</span><span class="nf">`function_one`</span>
-<span class="sd">	</span><span class="nf">function_two:</span>
-<span class="sd">		Brief description of function two. Test roles: </span><span class="k">|func|</span><span class="nf">`function_two`</span>
+<span class="sd">    </span><span class="nf">function_one:</span>
+<span class="sd">        Brief description of function one. Test roles: </span><span class="k">|func|</span><span class="nf">`function_one`</span>
+<span class="sd">    </span><span class="nf">function_two:</span>
+<span class="sd">        Brief description of function two. Test roles: </span><span class="k">|func|</span><span class="nf">`function_two`</span>
 <span class="gh">Public_methods:</span>
-<span class="sd">	</span><span class="nf">method_one</span><span class="sd">, </span><span class="nf">method_two</span>
+<span class="sd">    </span><span class="nf">method_one</span><span class="sd">, </span><span class="nf">method_two</span>
 <span class="gh">Method_overview:</span>
-<span class="sd">	</span><span class="nf">method_one:</span>
-<span class="sd">		Brief description of method one. Test roles: </span><span class="k">|func|</span><span class="nf">`method_one`</span>
-<span class="sd">	</span><span class="nf">method_two:</span>
-<span class="sd">		Brief description of method two. Test roles: </span><span class="k">|func|</span><span class="nf">`method_two`</span>
+<span class="sd">    </span><span class="nf">method_one:</span>
+<span class="sd">        Brief description of method one. Test roles: </span><span class="k">|func|</span><span class="nf">`method_one`</span>
+<span class="sd">    </span><span class="nf">method_two:</span>
+<span class="sd">        Brief description of method two. Test roles: </span><span class="k">|func|</span><span class="nf">`method_two`</span>
 <span class="gh">Public_types:</span>
-<span class="sd">	</span><span class="nc">type_one:</span>
-<span class="sd">		Description of type one. Test roles: </span><span class="k">|type|</span><span class="nc">`type_one`</span>
-<span class="sd">	</span><span class="nc">type_two:</span>
-<span class="sd">		Description of type two. Test roles: </span><span class="k">|type|</span><span class="nc">`type_two`</span>
+<span class="sd">    </span><span class="nc">type_one:</span>
+<span class="sd">        Description of type one. Test roles: </span><span class="k">|type|</span><span class="nc">`type_one`</span>
+<span class="sd">    </span><span class="nc">type_two:</span>
+<span class="sd">        Description of type two. Test roles: </span><span class="k">|type|</span><span class="nc">`type_two`</span>
 <span class="gh">Public_variables:</span>
-<span class="sd">	</span><span class="nv">VAR_ONE:</span>
-<span class="sd">		Description of variable one. Test roles: </span><span class="k">|value|</span><span class="no">`1`</span>
-<span class="sd">	</span><span class="nv">VAR_TWO:</span>
-<span class="sd">		Description of variable two. Test roles: </span><span class="k">|value|</span><span class="no">`2`</span>
+<span class="sd">    </span><span class="nv">VAR_ONE:</span>
+<span class="sd">        Description of variable one. Test roles: </span><span class="k">|value|</span><span class="no">`1`</span>
+<span class="sd">    </span><span class="nv">VAR_TWO:</span>
+<span class="sd">        Description of variable two. Test roles: </span><span class="k">|value|</span><span class="no">`2`</span>
 <span class="gh">Public_constants:</span>
-<span class="sd">	</span><span class="nv">CONST_ONE:</span>
-<span class="sd">		Description of constant one. Test roles: </span><span class="k">|value|</span><span class="no">`1`</span>
-<span class="sd">	</span><span class="nv">CONST_TWO:</span>
-<span class="sd">		Description of constant two. Test roles: </span><span class="k">|value|</span><span class="no">`2`</span>
+<span class="sd">    </span><span class="nv">CONST_ONE:</span>
+<span class="sd">        Description of constant one. Test roles: </span><span class="k">|value|</span><span class="no">`1`</span>
+<span class="sd">    </span><span class="nv">CONST_TWO:</span>
+<span class="sd">        Description of constant two. Test roles: </span><span class="k">|value|</span><span class="no">`2`</span>
 <span class="gh">Parameters:</span>
-<span class="sd">	</span><span class="nv">x:</span>
-<span class="sd">		Description of parameter x. Test roles: </span><span class="k">|var|</span><span class="nv">`x`</span>
-<span class="sd">	</span><span class="nv">y:</span>
-<span class="sd">		Description of parameter y. Test roles: </span><span class="k">|var|</span><span class="nv">`y`</span>
-<span class="sd">	not a par:</span>
-<span class="sd">		Invalid because it doesn&#39;t follow the identifier format</span><span class="k">\</span>
-<span class="sd">		and cannot be used as a parameter name.</span>
+<span class="sd">    </span><span class="nv">x:</span>
+<span class="sd">        Description of parameter x. Test roles: </span><span class="k">|var|</span><span class="nv">`x`</span>
+<span class="sd">    </span><span class="nv">y:</span>
+<span class="sd">        Description of parameter y. Test roles: </span><span class="k">|var|</span><span class="nv">`y`</span>
+<span class="sd">    not a par:</span>
+<span class="sd">        Invalid because it doesn&#39;t follow the identifier format</span><span class="k">\</span>
+<span class="sd">        and cannot be used as a parameter name.</span>
 <span class="gh">Returns:</span>
-<span class="sd">	</span><span class="k">|Must|</span><span class="sd"> return </span><span class="kc">|Self|</span><span class="sd">, due to fluent interface. Test roles: </span><span class="k">|type|</span><span class="nc">`ABC`</span>
+<span class="sd">    </span><span class="k">|Must|</span><span class="sd"> return </span><span class="kc">|Self|</span><span class="sd">, due to fluent interface. Test roles: </span><span class="k">|type|</span><span class="nc">`ABC`</span>
 <span class="gh">Raises:</span>
-<span class="sd">	</span><span class="ne">ValueError:</span>
-<span class="sd">		</span><span class="k">|Must|</span><span class="sd"> raise if the input is invalid. Test roles: </span><span class="k">|type|</span><span class="nc">`ValueError`</span>
-<span class="sd">	</span><span class="ne">CustomError:</span>
-<span class="sd">		</span><span class="k">|May|</span><span class="sd"> propagate from function </span><span class="k">|func|</span><span class="nf">`some_function`</span><span class="sd">. Test roles: </span><span class="k">|type|</span><span class="nc">`CustomError`</span><span class="sd">.</span>
+<span class="sd">    </span><span class="ne">ValueError:</span>
+<span class="sd">        </span><span class="k">|Must|</span><span class="sd"> raise if the input is invalid. Test roles: </span><span class="k">|type|</span><span class="nc">`ValueError`</span>
+<span class="sd">    </span><span class="ne">CustomError:</span>
+<span class="sd">        </span><span class="k">|May|</span><span class="sd"> propagate from function </span><span class="k">|func|</span><span class="nf">`some_function`</span><span class="sd">. Test roles: </span><span class="k">|type|</span><span class="nc">`CustomError`</span><span class="sd">.</span>
 <span class="gh">Notes:</span>
-<span class="sd">	</span><span class="gh">Roles:</span>
-<span class="sd">		</span><span class="k">*</span><span class="sd"> </span><span class="k">|attr|</span><span class="na">`ABC`</span><span class="sd"> — </span><span class="k">|lit|</span><span class="l">`|attr|`</span><span class="sd">, for attributes in XML, keys in JSON...</span>
-<span class="sd">		</span><span class="k">*</span><span class="sd"> </span><span class="k">|class|</span><span class="nc">`ABC`</span><span class="sd"> — </span><span class="k">|lit|</span><span class="l">`|class|`</span><span class="sd">, classes</span>
-<span class="sd">		</span><span class="k">*</span><span class="sd"> </span><span class="k">|cmd|</span><span class="nb">`ABC`</span><span class="sd"> — </span><span class="k">|lit|</span><span class="l">`|cmd|`</span><span class="sd">, commands and subcommand with CLI</span>
-<span class="sd">		</span><span class="k">*</span><span class="sd"> </span><span class="k">|dfn|</span><span class="ge">`ABC`</span><span class="sd"> — </span><span class="k">|lit|</span><span class="l">`|dfn|`</span><span class="sd">, a term being defined</span>
-<span class="sd">		</span><span class="k">*</span><span class="sd"> </span><span class="k">|file|</span><span class="sx">`/path/to/ABC`</span><span class="sd"> — </span><span class="k">|lit|</span><span class="l">`|file|`</span><span class="sd">, files but also URLs</span>
-<span class="sd">		</span><span class="k">*</span><span class="sd"> </span><span class="k">|func|</span><span class="nf">`ABC`</span><span class="sd"> — </span><span class="k">|lit|</span><span class="l">`|func|`</span><span class="sd">, functions</span>
-<span class="sd">		</span><span class="k">*</span><span class="sd"> </span><span class="k">|key|</span><span class="no">`CTRL`</span><span class="sd"> — </span><span class="k">|lit|</span><span class="l">`|label|`</span><span class="sd">, keys on the keyboard</span>
-<span class="sd">		</span><span class="k">*</span><span class="sd"> </span><span class="k">|label|</span><span class="gu">`ABC`</span><span class="sd"> — </span><span class="k">|lit|</span><span class="l">`|label|`</span><span class="sd">, titles, labels</span>
-<span class="sd">		</span><span class="k">*</span><span class="sd"> </span><span class="k">|lit|</span><span class="l">`ABC`</span><span class="sd"> — </span><span class="k">|lit|</span><span class="l">`|lit|`</span><span class="sd">, catch-all for literal text</span>
-<span class="sd">		</span><span class="k">*</span><span class="sd"> </span><span class="k">|mod|</span><span class="nn">`ABC`</span><span class="sd"> — </span><span class="k">|lit|</span><span class="l">`|mod|`</span><span class="sd">, modules</span>
-<span class="sd">		</span><span class="k">*</span><span class="sd"> </span><span class="k">|norm|`should`</span><span class="sd"> — </span><span class="k">|lit|</span><span class="l">`|norm|`</span><span class="sd">, normativity keywords (meta, when talking about keywords)</span>
-<span class="sd">		</span><span class="k">*</span><span class="sd"> </span><span class="k">|op|</span><span class="o">`&gt;&gt;`</span><span class="sd"> — </span><span class="k">|lit|</span><span class="l">`|op|`</span><span class="sd">, operators</span>
-<span class="sd">		</span><span class="k">*</span><span class="sd"> </span><span class="k">|opt|</span><span class="nv">`--abc`</span><span class="sd"> — </span><span class="k">|lit|</span><span class="l">`|opt|`</span><span class="sd">, options for CLI commands</span>
-<span class="sd">		</span><span class="k">*</span><span class="sd"> </span><span class="k">|pkg|</span><span class="nn">`sdv.tty`</span><span class="sd"> — </span><span class="k">|lit|</span><span class="l">`|pkg|`</span><span class="sd">, packages</span>
-<span class="sd">		</span><span class="k">*</span><span class="sd"> </span><span class="k">|tag|</span><span class="nt">`ABC`</span><span class="sd"> — </span><span class="k">|lit|</span><span class="l">`|tag|`</span><span class="sd">, enum values, symbolic values</span>
-<span class="sd">		</span><span class="k">*</span><span class="sd"> </span><span class="k">|term|</span><span class="ge">`ABC`</span><span class="sd"> — </span><span class="k">|lit|</span><span class="l">`|term|`</span><span class="sd">, referencing a term defined in </span><span class="k">|label|</span><span class="gu">`Definitions`</span>
-<span class="sd">		</span><span class="k">*</span><span class="sd"> </span><span class="k">|type|</span><span class="nc">`float`</span><span class="sd"> — </span><span class="k">|lit|</span><span class="l">`|type|`</span><span class="sd">, types in programming or markup languages</span>
-<span class="sd">		</span><span class="k">*</span><span class="sd"> </span><span class="k">|url|</span><span class="sx">`https://pypi.org/project/sdv-doc-waterloo/`</span><span class="sd"> — </span><span class="k">|lit|</span><span class="l">`|url|`</span><span class="sd">, for URLs (currently pretty simple)</span>
-<span class="sd">		</span><span class="k">*</span><span class="sd"> </span><span class="k">|value|</span><span class="no">`12345`</span><span class="sd"> — </span><span class="k">|lit|</span><span class="l">`|value|`</span><span class="sd">, R-values, unnamed values</span>
-<span class="sd">		</span><span class="k">*</span><span class="sd"> </span><span class="k">|var|</span><span class="nv">`xyz`</span><span class="sd"> — </span><span class="k">|lit|</span><span class="l">`|var|`</span><span class="sd">, variables, but also named constants</span>
-<span class="sd">		</span><span class="k">*</span><span class="sd"> </span><span class="k">|var_type|</span><span class="nc">`xyz:float`</span><span class="sd"> — </span><span class="k">|lit|</span><span class="l">`|var_type|`</span><span class="sd">, variable and type with colon.</span>
-<span class="sd">	</span><span class="gh">Todo at 2026-06-25:</span>
-<span class="sd">		Implement &#39;pkg&#39; for &#39;package&#39; as opposed to importable module.</span>
+<span class="sd">    </span><span class="gh">Roles:</span>
+<span class="sd">        </span><span class="k">*</span><span class="sd"> </span><span class="k">|attr|</span><span class="na">`ABC`</span><span class="sd"> — </span><span class="k">|lit|</span><span class="l">`|attr|`</span><span class="sd">, for attributes in XML, keys in JSON...</span>
+<span class="sd">        </span><span class="k">*</span><span class="sd"> </span><span class="k">|class|</span><span class="nc">`ABC`</span><span class="sd"> — </span><span class="k">|lit|</span><span class="l">`|class|`</span><span class="sd">, classes</span>
+<span class="sd">        </span><span class="k">*</span><span class="sd"> </span><span class="k">|cmd|</span><span class="nb">`ABC`</span><span class="sd"> — </span><span class="k">|lit|</span><span class="l">`|cmd|`</span><span class="sd">, commands and subcommand with CLI</span>
+<span class="sd">        </span><span class="k">*</span><span class="sd"> </span><span class="k">|dfn|</span><span class="ge">`ABC`</span><span class="sd"> — </span><span class="k">|lit|</span><span class="l">`|dfn|`</span><span class="sd">, a term being defined</span>
+<span class="sd">        </span><span class="k">*</span><span class="sd"> </span><span class="k">|file|</span><span class="sx">`/path/to/ABC`</span><span class="sd"> — </span><span class="k">|lit|</span><span class="l">`|file|`</span><span class="sd">, files but also URLs</span>
+<span class="sd">        </span><span class="k">*</span><span class="sd"> </span><span class="k">|func|</span><span class="nf">`ABC`</span><span class="sd"> — </span><span class="k">|lit|</span><span class="l">`|func|`</span><span class="sd">, functions</span>
+<span class="sd">        </span><span class="k">*</span><span class="sd"> </span><span class="k">|key|</span><span class="no">`CTRL`</span><span class="sd"> — </span><span class="k">|lit|</span><span class="l">`|label|`</span><span class="sd">, keys on the keyboard</span>
+<span class="sd">        </span><span class="k">*</span><span class="sd"> </span><span class="k">|label|</span><span class="gu">`ABC`</span><span class="sd"> — </span><span class="k">|lit|</span><span class="l">`|label|`</span><span class="sd">, titles, labels</span>
+<span class="sd">        </span><span class="k">*</span><span class="sd"> </span><span class="k">|lit|</span><span class="l">`ABC`</span><span class="sd"> — </span><span class="k">|lit|</span><span class="l">`|lit|`</span><span class="sd">, catch-all for literal text</span>
+<span class="sd">        </span><span class="k">*</span><span class="sd"> </span><span class="k">|mod|</span><span class="nn">`ABC`</span><span class="sd"> — </span><span class="k">|lit|</span><span class="l">`|mod|`</span><span class="sd">, modules</span>
+<span class="sd">        </span><span class="k">*</span><span class="sd"> </span><span class="k">|norm|`should`</span><span class="sd"> — </span><span class="k">|lit|</span><span class="l">`|norm|`</span><span class="sd">, normativity keywords (meta, when talking about keywords)</span>
+<span class="sd">        </span><span class="k">*</span><span class="sd"> </span><span class="k">|op|</span><span class="o">`&gt;&gt;`</span><span class="sd"> — </span><span class="k">|lit|</span><span class="l">`|op|`</span><span class="sd">, operators</span>
+<span class="sd">        </span><span class="k">*</span><span class="sd"> </span><span class="k">|opt|</span><span class="nv">`--abc`</span><span class="sd"> — </span><span class="k">|lit|</span><span class="l">`|opt|`</span><span class="sd">, options for CLI commands</span>
+<span class="sd">        </span><span class="k">*</span><span class="sd"> </span><span class="k">|pkg|</span><span class="nn">`sdv.tty`</span><span class="sd"> — </span><span class="k">|lit|</span><span class="l">`|pkg|`</span><span class="sd">, packages</span>
+<span class="sd">        </span><span class="k">*</span><span class="sd"> </span><span class="k">|tag|</span><span class="nt">`ABC`</span><span class="sd"> — </span><span class="k">|lit|</span><span class="l">`|tag|`</span><span class="sd">, enum values, symbolic values</span>
+<span class="sd">        </span><span class="k">*</span><span class="sd"> </span><span class="k">|term|</span><span class="ge">`ABC`</span><span class="sd"> — </span><span class="k">|lit|</span><span class="l">`|term|`</span><span class="sd">, referencing a term defined in </span><span class="k">|label|</span><span class="gu">`Definitions`</span>
+<span class="sd">        </span><span class="k">*</span><span class="sd"> </span><span class="k">|type|</span><span class="nc">`float`</span><span class="sd"> — </span><span class="k">|lit|</span><span class="l">`|type|`</span><span class="sd">, types in programming or markup languages</span>
+<span class="sd">        </span><span class="k">*</span><span class="sd"> </span><span class="k">|url|</span><span class="sx">`https://pypi.org/project/sdv-doc-waterloo/`</span><span class="sd"> — </span><span class="k">|lit|</span><span class="l">`|url|`</span><span class="sd">, for URLs (currently pretty simple)</span>
+<span class="sd">        </span><span class="k">*</span><span class="sd"> </span><span class="k">|value|</span><span class="no">`12345`</span><span class="sd"> — </span><span class="k">|lit|</span><span class="l">`|value|`</span><span class="sd">, R-values, unnamed values</span>
+<span class="sd">        </span><span class="k">*</span><span class="sd"> </span><span class="k">|var|</span><span class="nv">`xyz`</span><span class="sd"> — </span><span class="k">|lit|</span><span class="l">`|var|`</span><span class="sd">, variables, but also named constants</span>
+<span class="sd">        </span><span class="k">*</span><span class="sd"> </span><span class="k">|var_type|</span><span class="nc">`xyz:float`</span><span class="sd"> — </span><span class="k">|lit|</span><span class="l">`|var_type|`</span><span class="sd">, variable and type with colon.</span>
+<span class="sd">    </span><span class="gh">Todo at 2026-06-25:</span>
+<span class="sd">        Implement &#39;pkg&#39; for &#39;package&#39; as opposed to importable module.</span>
 <span class="gh">See_also:</span>
-<span class="sd">	</span><span class="nv">other.class</span><span class="sd">, </span><span class="nv">other.function</span>
+<span class="sd">    </span><span class="nv">other.class</span><span class="sd">, </span><span class="nv">other.function</span>
 <span class="nv">&quot;&quot;&quot;</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
 
 <span class="k">class</span><span class="w"> </span><span class="nc">MyClassA</span><span class="p">:</span>
-<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">	Preamble:</span>
-<span class="sd">		profile:</span>
-<span class="sd">			class</span>
-<span class="sd">		scope:</span>
-<span class="sd">			core</span>
-<span class="sd">	Notes:</span>
-<span class="sd">		Not a docstring:</span>
-<span class="sd">			Missing Contract - Testing edge case in pygemnts lexer.</span>
-<span class="sd">	&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Preamble:</span>
+<span class="sd">        profile:</span>
+<span class="sd">            class</span>
+<span class="sd">        scope:</span>
+<span class="sd">            core</span>
+<span class="sd">    Notes:</span>
+<span class="sd">        Not a docstring:</span>
+<span class="sd">            Missing Contract - Testing edge case in pygemnts lexer.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
 <span class="k">class</span><span class="w"> </span><span class="nc">MyClassB</span><span class="p">:</span>
-	<span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="c1"># Trying to confuse the lexer with a string which is not a valid docstring.</span>
-		<span class="n">a</span> <span class="o">=</span> <span class="s2">&quot;Preamble:</span><span class="se">\n\t</span><span class="s2">profile:</span><span class="se">\n\t\t</span><span class="s2">function</span><span class="se">\n</span><span class="s2">Contract:</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="s2">&quot;Preamble:</span><span class="se">\n\t</span><span class="s2">profile:</span><span class="se">\n\t\t</span><span class="s2">function</span><span class="se">\n</span><span class="s2">Contract:</span><span class="se">\n</span><span class="s2">&quot;</span>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">bar</span><span class="p">():</span>
-<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="gh">	Preamble:</span>
-<span class="sd">		</span><span class="gu">profile:</span>
-<span class="sd">			</span><span class="no">function</span>
-<span class="sd">		</span><span class="gu">normative_sections:</span>
-<span class="sd">			</span><span class="no">Contract</span><span class="sd">, </span><span class="no">Parameters</span><span class="sd">, </span><span class="no">Returns</span><span class="sd">, </span><span class="no">Raises</span>
-<span class="gh">	Contract:</span>
-<span class="sd">		</span><span class="gu">general:</span>
-<span class="gh">	Parameters:</span>
-<span class="gh">	Returns:</span>
-<span class="gh">	Raises:</span>
-<span class="sd">	&quot;&quot;&quot;</span>
-	<span class="k">pass</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="gh">    Preamble:</span>
+<span class="sd">        </span><span class="gu">profile:</span>
+<span class="sd">            </span><span class="no">function</span>
+<span class="sd">        </span><span class="gu">normative_sections:</span>
+<span class="sd">            </span><span class="no">Contract</span><span class="sd">, </span><span class="no">Parameters</span><span class="sd">, </span><span class="no">Returns</span><span class="sd">, </span><span class="no">Raises</span>
+<span class="gh">    Contract:</span>
+<span class="sd">        </span><span class="gu">general:</span>
+<span class="gh">    Parameters:</span>
+<span class="gh">    Returns:</span>
+<span class="gh">    Raises:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">pass</span>
 
 <span class="c1">#----- Pygments Lexer edge cases -----------------------------#</span>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">foo_no_preamble</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">	Notes:</span>
-<span class="sd">		Not a valid docstring:</span>
-<span class="sd">			The content looks like a docstring but has no Preamble.</span>
-<span class="sd">	Returns:</span>
-<span class="sd">		float: The input converted to a float.</span>
-<span class="sd">	&quot;&quot;&quot;</span>
-	<span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Notes:</span>
+<span class="sd">        Not a valid docstring:</span>
+<span class="sd">            The content looks like a docstring but has no Preamble.</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        float: The input converted to a float.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">foo_no_contract</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">	Preamble:</span>
-<span class="sd">		profile:</span>
-<span class="sd">			function</span>
-<span class="sd">		normative_sections:</span>
-<span class="sd">			Contract, Parameters, Returns, Raises</span>
-<span class="sd">	Notes:</span>
-<span class="sd">		Not a valid docstring:</span>
-<span class="sd">			The content looks like a docstring but has no Contract.</span>
-<span class="sd">	Returns:</span>
-<span class="sd">		float: The input converted to a float.</span>
-<span class="sd">	&quot;&quot;&quot;</span>
-	<span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Preamble:</span>
+<span class="sd">        profile:</span>
+<span class="sd">            function</span>
+<span class="sd">        normative_sections:</span>
+<span class="sd">            Contract, Parameters, Returns, Raises</span>
+<span class="sd">    Notes:</span>
+<span class="sd">        Not a valid docstring:</span>
+<span class="sd">            The content looks like a docstring but has no Contract.</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        float: The input converted to a float.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">foo_mixed_indent</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">	Preamble:</span>
-<span class="sd">		profile:</span>
-<span class="sd">			function</span>
-<span class="sd">		normative_sections:</span>
-<span class="sd">			Contract, Parameters, Returns, Raises</span>
-<span class="sd">	Contract:</span>
-<span class="sd">		general:</span>
-<span class="sd">			|Must| provide a test case with mixed indentation</span>
-<span class="sd">			(tabs and spaces) in the Contract section.</span>
-<span class="sd">	Notes:</span>
-<span class="sd">		Not a valid docstring:</span>
-<span class="sd">		    This line is indented with spaces, while</span>
-<span class="sd">			the previous line is indented with a tab.</span>
-<span class="sd">			This is valid in Python (because it&#39;s inside</span>
-<span class="sd">			a docstring) but invalid as a docstring</span>
-<span class="sd">			according to the waterloo specification.</span>
-<span class="sd">	Returns:</span>
-<span class="sd">		float: The input converted to a float.</span>
-<span class="sd">	&quot;&quot;&quot;</span>
-	<span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="gh">    Preamble:</span>
+<span class="sd">        </span><span class="gu">profile:</span>
+<span class="sd">            </span><span class="no">function</span>
+<span class="sd">        </span><span class="gu">normative_sections:</span>
+<span class="sd">            </span><span class="no">Contract</span><span class="sd">, </span><span class="no">Parameters</span><span class="sd">, </span><span class="no">Returns</span><span class="sd">, </span><span class="no">Raises</span>
+<span class="gh">    Contract:</span>
+<span class="sd">        </span><span class="gu">general:</span>
+<span class="sd">            </span><span class="k">|Must|</span><span class="sd"> provide a test case with mixed indentation</span>
+<span class="sd">            (tabs and spaces) in the Contract section.</span>
+<span class="gh">    Notes:</span>
+<span class="sd">        </span><span class="gh">Not a valid docstring:</span>
+<span class="sd">            This line is indented with spaces, while</span>
+<span class="sd">            the previous line is indented with a tab.</span>
+<span class="sd">            This is valid in Python (because it&#39;s inside</span>
+<span class="sd">            a docstring) but invalid as a docstring</span>
+<span class="sd">            according to the waterloo specification.</span>
+<span class="gh">    Returns:</span>
+<span class="sd">        float: The input converted to a float.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">foo_empty_lines</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="gh">	Preamble:   </span>
-<span class="sd">		</span><span class="gu">profile:</span>
-<span class="sd">			</span><span class="no">function</span>
-<span class="sd">		</span><span class="gu">normative_sections:</span>
-<span class="sd">			</span><span class="no">Contract</span><span class="sd">, </span><span class="no">Parameters</span>
-<span class="sd">						</span>
-<span class="sd">			</span><span class="no">Returns</span><span class="sd">, </span><span class="no">Raises</span>
-<span class="gh">	Contract:</span>
-<span class="sd">		</span><span class="gu">general:</span>
-<span class="sd">			</span><span class="k">|Must|</span><span class="sd"> provide a test case with empty lines in CSV-like sections.</span>
-<span class="sd">			Tools </span><span class="k">|must|</span><span class="sd"> accept these empty lines as part of the section content.</span>
-<span class="sd">			</span><span class="k">|Must|</span><span class="sd"> provide a test for deliberately inserted whitespace in</span>
-<span class="sd">			ref-directives, which should be preserved as part of the content.</span>
-<span class="sd">			</span><span class="k">|Must|</span><span class="sd"> provide a test for semantics roles not defined in waterloo.</span>
-<span class="sd">			</span><span class="k">|Must|</span><span class="sd"> provide a test for linesline connectors followed by whitespace.</span>
-<span class="gh">	Notes:</span>
-<span class="sd">		</span><span class="gh">Trailing whitespace in Section labels:</span>
-<span class="sd">			&quot;Preamble:&quot; in this docstring has trailing spaces,</span>
-<span class="sd">			which should be ignored when parsing the section label.</span>
-<span class="sd">		</span><span class="gh">Testing ref:</span>
-<span class="sd">			</span><span class="k">|ref|</span><span class="s">`</span><span class="nn">label</span><span class="s"> &lt;</span><span class="nt"> target_in_rst</span><span class="s">&gt;`</span>
-<span class="sd">			</span><span class="k">|ref|</span><span class="s">`</span><span class="nn"> label</span><span class="s"> &lt;</span><span class="nt">wtrl://qi.of.documented.object</span><span class="s">&gt;`</span>
-<span class="sd">			</span><span class="k">|ref|</span><span class="s">`</span><span class="nn">label</span><span class="s"> &lt;</span><span class="nt">https://link.com</span><span class="s">&gt;`</span>
-<span class="sd">			</span><span class="k">|ref|</span><span class="err">`label https://link.com`</span>
-<span class="sd">			</span><span class="k">|ref|</span><span class="err">`label`</span>
-<span class="sd">		</span><span class="gh">Testing undefined roles:</span>
-<span class="sd">			|my_fancy_role|`some content` &lt;- should be treated as literal text, not a role.</span>
-<span class="sd">			|not_valid| &lt;- should be treated as literal text, not a role.</span>
-<span class="sd">		</span><span class="gh">Testing line connectors with whitespace:</span>
-<span class="sd">			This is a line with a connector at the end, followed by three spaces. \</span><span class="k">\</span><span class="sd">   </span>
-<span class="sd">			This is the continuation of the previous line.</span>
-<span class="gh">	Returns:</span>
-<span class="sd">		float: The input converted to a float.</span>
-<span class="sd">	&quot;&quot;&quot;</span>
-	<span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="gh">    Preamble:   </span>
+<span class="sd">        </span><span class="gu">profile:</span>
+<span class="sd">            </span><span class="no">function</span>
+<span class="sd">        </span><span class="gu">normative_sections:</span>
+<span class="sd">            </span><span class="no">Contract</span><span class="sd">, </span><span class="no">Parameters</span>
+<span class="sd">                        </span>
+<span class="sd">            </span><span class="no">Returns</span><span class="sd">, </span><span class="no">Raises</span>
+<span class="gh">    Contract:</span>
+<span class="sd">        </span><span class="gu">general:</span>
+<span class="sd">            </span><span class="k">|Must|</span><span class="sd"> provide a test case with empty lines in CSV-like sections.</span>
+<span class="sd">            Tools </span><span class="k">|must|</span><span class="sd"> accept these empty lines as part of the section content.</span>
+<span class="sd">            </span><span class="k">|Must|</span><span class="sd"> provide a test for deliberately inserted whitespace in</span>
+<span class="sd">            ref-directives, which should be preserved as part of the content.</span>
+<span class="sd">            </span><span class="k">|Must|</span><span class="sd"> provide a test for semantics roles not defined in waterloo.</span>
+<span class="sd">            </span><span class="k">|Must|</span><span class="sd"> provide a test for linesline connectors followed by whitespace.</span>
+<span class="gh">    Notes:</span>
+<span class="sd">        </span><span class="gh">Trailing whitespace in Section labels:</span>
+<span class="sd">            &quot;Preamble:&quot; in this docstring has trailing spaces,</span>
+<span class="sd">            which should be ignored when parsing the section label.</span>
+<span class="sd">        </span><span class="gh">Testing ref:</span>
+<span class="sd">            </span><span class="k">|ref|</span><span class="s">`</span><span class="nn">label</span><span class="s"> &lt;</span><span class="nt"> target_in_rst</span><span class="s">&gt;`</span>
+<span class="sd">            </span><span class="k">|ref|</span><span class="s">`</span><span class="nn"> label</span><span class="s"> &lt;</span><span class="nt">wtrl://qi.of.documented.object</span><span class="s">&gt;`</span>
+<span class="sd">            </span><span class="k">|ref|</span><span class="s">`</span><span class="nn">label</span><span class="s"> &lt;</span><span class="nt">https://link.com</span><span class="s">&gt;`</span>
+<span class="sd">            </span><span class="k">|ref|</span><span class="err">`label https://link.com`</span>
+<span class="sd">            </span><span class="k">|ref|</span><span class="err">`label`</span>
+<span class="sd">        </span><span class="gh">Testing undefined roles:</span>
+<span class="sd">            |my_fancy_role|`some content` &lt;- should be treated as literal text, not a role.</span>
+<span class="sd">            |not_valid| &lt;- should be treated as literal text, not a role.</span>
+<span class="sd">        </span><span class="gh">Testing line connectors with whitespace:</span>
+<span class="sd">            This is a line with a connector at the end, followed by three spaces. \</span><span class="k">\</span><span class="sd">   </span>
+<span class="sd">            This is the continuation of the previous line.</span>
+<span class="gh">    Returns:</span>
+<span class="sd">        float: The input converted to a float.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">foo_state_leak_a</span><span class="p">():</span>
-<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">	Not a waterloo docstring</span>
-<span class="sd">	&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Not a waterloo docstring</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">foo_state_leak_b</span><span class="p">():</span>
-<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="gh">	Preamble:</span>
-<span class="sd">		</span><span class="gu">profile:</span>
-<span class="sd">			</span><span class="no">function</span>
-<span class="sd">		</span><span class="gu">normative_sections:</span>
-<span class="sd">			</span><span class="no">Contract</span><span class="sd">, </span><span class="no">Parameters</span><span class="sd">, </span><span class="no">Returns</span><span class="sd">, </span><span class="no">Raises</span>
-<span class="gh">	Contract:</span>
-<span class="sd">		</span><span class="gu">general:</span>
-<span class="sd">			</span><span class="k">|Must|</span><span class="sd"> provide test cases for state leak between functions.</span>
-<span class="sd">	&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="gh">    Preamble:</span>
+<span class="sd">        </span><span class="gu">profile:</span>
+<span class="sd">            </span><span class="no">function</span>
+<span class="sd">        </span><span class="gu">normative_sections:</span>
+<span class="sd">            </span><span class="no">Contract</span><span class="sd">, </span><span class="no">Parameters</span><span class="sd">, </span><span class="no">Returns</span><span class="sd">, </span><span class="no">Raises</span>
+<span class="gh">    Contract:</span>
+<span class="sd">        </span><span class="gu">general:</span>
+<span class="sd">            </span><span class="k">|Must|</span><span class="sd"> provide test cases for state leak between functions.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">foo_state_leak_c</span><span class="p">():</span>
-<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">	Not a waterloo docstring</span>
-<span class="sd">	&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Not a waterloo docstring</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
 
 <span class="c1">#----- VSCode generateDocstring edge cases -------------------#</span>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">func_with_comment_edgecase</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span> <span class="c1"># todo</span>
-<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="gh">	Preamble:</span>
-<span class="sd">		</span><span class="gu">profile:</span>
-<span class="sd">			</span><span class="no">function</span>
-<span class="sd">		</span><span class="gu">normative_sections:</span>
-<span class="sd">			</span><span class="no">Contract</span><span class="sd">, </span><span class="no">Parameters</span><span class="sd">, </span><span class="no">Returns</span><span class="sd">, </span><span class="no">Raises</span>
-<span class="gh">	Contract:</span>
-<span class="sd">		</span><span class="gu">general:</span>
-<span class="sd">			</span><span class="k">|Must|</span><span class="sd"> provide an edge case for an inline comment in the function signature.</span>
-<span class="gh">	Parameters:</span>
-<span class="gh">	Returns:</span>
-<span class="sd">		</span><span class="kc">|None|</span>
-<span class="gh">	Raises:</span>
-<span class="gh">	Notes:</span>
-<span class="sd">		</span><span class="gh">Edge case:</span>
-<span class="sd">			The function signature contains an inline comment,</span>
-<span class="sd">			which should not interfere with synthesizing a function</span>
-<span class="sd">			definition by appending &quot;pass&quot;.</span>
-<span class="sd">	&quot;&quot;&quot;</span>
-	<span class="k">pass</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="gh">    Preamble:</span>
+<span class="sd">        </span><span class="gu">profile:</span>
+<span class="sd">            </span><span class="no">function</span>
+<span class="sd">        </span><span class="gu">normative_sections:</span>
+<span class="sd">            </span><span class="no">Contract</span><span class="sd">, </span><span class="no">Parameters</span><span class="sd">, </span><span class="no">Returns</span><span class="sd">, </span><span class="no">Raises</span>
+<span class="gh">    Contract:</span>
+<span class="sd">        </span><span class="gu">general:</span>
+<span class="sd">            </span><span class="k">|Must|</span><span class="sd"> provide an edge case for an inline comment in the function signature.</span>
+<span class="gh">    Parameters:</span>
+<span class="gh">    Returns:</span>
+<span class="sd">        </span><span class="kc">|None|</span>
+<span class="gh">    Raises:</span>
+<span class="gh">    Notes:</span>
+<span class="sd">        </span><span class="gh">Edge case:</span>
+<span class="sd">            The function signature contains an inline comment,</span>
+<span class="sd">            which should not interfere with synthesizing a function</span>
+<span class="sd">            definition by appending &quot;pass&quot;.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">pass</span>
 </pre></div>
 </div>
 </section>

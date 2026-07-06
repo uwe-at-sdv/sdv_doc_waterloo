@@ -75,10 +75,87 @@ relative to the current working directory and then relative to the installed
 Waterloo package root. The usual package-local configuration path is therefore
 prefixed with <code class="wtrl_file docutils literal notranslate"><span class="pre">etc/</span></code>. If neither candidate exists, the server reports a
 clear configuration error and exits.</p>
+<p>The following configuration attributes are supported:</p>
+<section id="server-and-security-related">
+<h3><span class="section-number">10.2.1. </span>Server- and security-related<a class="headerlink" href="#server-and-security-related" title="Link to this heading">¶</a></h3>
+<p class="rubric"><code class="wtrl_attr docutils literal notranslate"><span class="pre">transport</span></code>: <code class="wtrl_type docutils literal notranslate"><span class="pre">string</span></code></p>
+<p>Transport mode for the server. The current package supports
+<code class="wtrl_lit docutils literal notranslate"><span class="pre">stdio</span></code> for local execution and editor-integrated clients such
+as VS Code, and <code class="wtrl_value docutils literal notranslate"><span class="pre">streamable-http</span></code> for browser- and
+Inspector-based access.</p>
+<p class="rubric"><code class="wtrl_attr docutils literal notranslate"><span class="pre">host</span></code>: <code class="wtrl_type docutils literal notranslate"><span class="pre">string</span></code></p>
+<p>Bind host for the MCP server. The HTTP transport usually binds to
+<code class="wtrl_value docutils literal notranslate"><span class="pre">0.0.0.0</span></code>, which listens on all interfaces, so that local
+clients, browser frontends, and container port mappings can reach it.
+For stdio transport the host setting is not used in practice.</p>
+<p class="rubric"><code class="wtrl_attr docutils literal notranslate"><span class="pre">port</span></code>: <code class="wtrl_type docutils literal notranslate"><span class="pre">int</span></code></p>
+<p>Bind port for the HTTP transport. The default development port is
+<code class="wtrl_value docutils literal notranslate"><span class="pre">13316</span></code>.</p>
+<p class="rubric"><code class="wtrl_attr docutils literal notranslate"><span class="pre">streamable_http_path</span></code>: <code class="wtrl_type docutils literal notranslate"><span class="pre">string</span></code></p>
+<p>Path component used for the HTTP endpoint. The current server uses
+<code class="wtrl_file docutils literal notranslate"><span class="pre">/mcp</span></code>, so the resulting URL is typically
+<code class="wtrl_url docutils literal notranslate"><span class="pre">http://127.0.0.1:13316/mcp</span></code> during local development.</p>
+<p class="rubric"><code class="wtrl_attr docutils literal notranslate"><span class="pre">allowed_hosts</span></code>: <code class="wtrl_type docutils literal notranslate"><span class="pre">List[string]</span></code></p>
+<p>Host allowlist used together with the HTTP transport. This protects the
+server against DNS rebinding in browser-based deployments and is the
+main knob for Inspector-based setups and containerized deployments.
+When omitted, the server uses the configured values from the TOML file.</p>
+<p class="rubric"><code class="wtrl_attr docutils literal notranslate"><span class="pre">allowed_origins</span></code>: <code class="wtrl_type docutils literal notranslate"><span class="pre">List[string]</span></code></p>
+<p>Origin allowlist used for browser clients and CORS negotiation. This is
+primarily relevant for the MCP Inspector and similar browser-based
+frontends.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Current access control status</p>
+<p>The current Waterloo MCP server does not implement a separate
+authentication layer yet. Access control is therefore limited to the
+transport setup and the host/origin allowlists described above.
+This is sufficient for the current read-only development workflow,
+local Inspector sessions, and the container-based deployment examples
+described later in this chapter. The remaining configuration details are
+covered in the Logging and Roots sections below.</p>
+</div>
+</section>
+<section id="logging">
+<h3><span class="section-number">10.2.2. </span>Logging<a class="headerlink" href="#logging" title="Link to this heading">¶</a></h3>
+<p class="rubric"><code class="wtrl_attr docutils literal notranslate"><span class="pre">level</span></code>: <code class="wtrl_type docutils literal notranslate"><span class="pre">string</span></code></p>
+<p>Logging level for the server process. It controls how verbose the
+Waterloo and Uvicorn log output should be.</p>
+<p class="rubric"><code class="wtrl_attr docutils literal notranslate"><span class="pre">config_path</span></code>: <code class="wtrl_type docutils literal notranslate"><span class="pre">string</span></code></p>
+<p>Optional path to a dedicated logging configuration file. When present,
+the server loads that file instead of relying only on the built-in log
+formatting defaults.</p>
+<p class="rubric"><code class="wtrl_attr docutils literal notranslate"><span class="pre">access_log</span></code>: <code class="wtrl_type docutils literal notranslate"><span class="pre">bool</span></code></p>
+<p>Toggle for the HTTP access log. This is useful when you want either a
+quiet development console or a more detailed request trace.</p>
+</section>
+<section id="roots">
+<h3><span class="section-number">10.2.3. </span>Roots<a class="headerlink" href="#roots" title="Link to this heading">¶</a></h3>
+<p>An arbitrary number of root entries can be provided.</p>
+<p>Each root entry describes one Waterloo JSON document that the MCP server
+offers to clients. The configured roots determine what the discovery,
+lookup, and search tools can see.</p>
+<p class="rubric"><code class="wtrl_attr docutils literal notranslate"><span class="pre">path</span></code>: <code class="wtrl_type docutils literal notranslate"><span class="pre">string</span></code></p>
+<p>Path to the root document or root directory. Relative paths are resolved
+against the configuration location; absolute paths are also supported.</p>
+<p class="rubric"><code class="wtrl_attr docutils literal notranslate"><span class="pre">label</span></code>: <code class="wtrl_type docutils literal notranslate"><span class="pre">string</span></code></p>
+<p>Human-readable label for the configured root. This label is used in MCP
+responses and helps distinguish multiple roots.</p>
+<p class="rubric"><code class="wtrl_attr docutils literal notranslate"><span class="pre">enabled</span></code>: <code class="wtrl_type docutils literal notranslate"><span class="pre">bool</span></code></p>
+<p>Controls whether the root is active in the current server configuration.</p>
+<p class="rubric"><code class="wtrl_attr docutils literal notranslate"><span class="pre">kind</span></code>: <code class="wtrl_type docutils literal notranslate"><span class="pre">string</span></code></p>
+<p>Kind of root represented by the entry. The current server mainly uses
+<code class="wtrl_value docutils literal notranslate"><span class="pre">wtrl-json</span></code>.</p>
+</section>
 </section>
 <section id="tools">
 <h2><span class="section-number">10.3. </span>Tools<a class="headerlink" href="#tools" title="Link to this heading">¶</a></h2>
 <p>The MCP-server supports the following tools:</p>
+<p>The server is intentionally read-only in the current implementation.
+It serves discovery, lookup, and inspection tools for Waterloo JSON
+documentation roots. The same runtime also serves bundled prompt
+templates and the <code class="docutils literal notranslate"><span class="pre">wtrl-mcp://instructions</span></code> resource that points
+clients to the current package README.</p>
 <p class="rubric">Tool discovery</p>
 <ul class="simple">
 <li><p><code class="wtrl_cmd docutils literal notranslate"><span class="pre">describe_tool</span></code> — reads the Waterloo signature and docstring for one MCP tool.</p></li>
@@ -155,7 +232,7 @@ describes the object.</p>
 <p>[Last tested with VSCode 1.115.0 on 2026-05-31]</p>
 <p>With transport <code class="wtrl_lit docutils literal notranslate"><span class="pre">streamable-http</span></code>, the MCP-server is added to VSCode by:</p>
 <blockquote>
-<div><p><code class="wtrl_key docutils literal notranslate"><span class="pre">Shift+Ctrl+P</span></code> and <code class="wtrl_lit docutils literal notranslate"><span class="pre">MCP:</span> <span class="pre">Open</span> <span class="pre">User</span> <span class="pre">Configuration</span></code></p>
+<div><p><code class="wtrl_key docutils literal notranslate"><span class="pre">Shift</span></code> + <code class="wtrl_key docutils literal notranslate"><span class="pre">Ctrl</span></code> + <code class="wtrl_key docutils literal notranslate"><span class="pre">P</span></code> and <code class="wtrl_lit docutils literal notranslate"><span class="pre">MCP:</span> <span class="pre">Open</span> <span class="pre">User</span> <span class="pre">Configuration</span></code></p>
 </div></blockquote>
 <p>The code to be added should look like</p>
 <div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
@@ -185,7 +262,7 @@ not need to add a JSON server definition by hand.</p>
 <p>The default configuration lives in <code class="wtrl_file docutils literal notranslate"><span class="pre">etc/wtrl_mcp.stdio.toml</span></code>. If you
 want to customize the roots or other settings, make a copy of that file and
 point VSCode to the copy. Open the command palette with
-<code class="wtrl_key docutils literal notranslate"><span class="pre">Shift+Ctrl+P</span></code>, choose <code class="wtrl_lit docutils literal notranslate"><span class="pre">MCP:</span> <span class="pre">Open</span> <span class="pre">User</span> <span class="pre">Configuration</span></code>, and
+<code class="wtrl_key docutils literal notranslate"><span class="pre">Shift</span></code> + <code class="wtrl_key docutils literal notranslate"><span class="pre">Ctrl</span></code> + <code class="wtrl_key docutils literal notranslate"><span class="pre">P</span></code>, choose <code class="wtrl_lit docutils literal notranslate"><span class="pre">MCP:</span> <span class="pre">Open</span> <span class="pre">User</span> <span class="pre">Configuration</span></code>, and
 then set <code class="wtrl_lit docutils literal notranslate"><span class="pre">waterloo.mcpConfigPath</span></code> to your copied stdio configuration.
 The path may be absolute (recommended) or relative; if it is relative, the extension also
 looks in the open workspace and in the installed Waterloo package root.</p>
@@ -397,7 +474,12 @@ impractical once the MCP server roots are supplied externally.</p>
 <li class="toctree-l1"><a class="reference internal" href="html_output_layer.html">9. The HTML Output Layer</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">10. Model Context Protocol</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#the-waterloo-mcp-server">10.1. The Waterloo MCP-Server</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#executable-and-configuration">10.2. Executable and configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#executable-and-configuration">10.2. Executable and configuration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#server-and-security-related">10.2.1. Server- and security-related</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#logging">10.2.2. Logging</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#roots">10.2.3. Roots</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="#tools">10.3. Tools</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#typical-agent-workflow">10.4. Typical agent workflow</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#using-the-mcp-server-in-vscode">10.5. Using the MCP-server in VSCode</a></li>
