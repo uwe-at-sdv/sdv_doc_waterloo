@@ -45,10 +45,118 @@ Waterloo package root. The usual package-local configuration path is therefore
 prefixed with :wtrl_file:`etc/`. If neither candidate exists, the server reports a
 clear configuration error and exits.
 
+The following configuration attributes are supported:
+
+Server- and security-related
+............................
+
+.. rubric:: :wtrl_attr:`transport`\: :wtrl_type:`string`
+
+Transport mode for the server. The current package supports
+:wtrl_lit:`stdio` for local execution and editor-integrated clients such
+as VS Code, and :wtrl_value:`streamable-http` for browser- and
+Inspector-based access.
+
+.. rubric:: :wtrl_attr:`host`\: :wtrl_type:`string`
+
+Bind host for the MCP server. The HTTP transport usually binds to
+:wtrl_value:`0.0.0.0`, which listens on all interfaces, so that local
+clients, browser frontends, and container port mappings can reach it.
+For stdio transport the host setting is not used in practice.
+
+.. rubric:: :wtrl_attr:`port`\: :wtrl_type:`int`
+
+Bind port for the HTTP transport. The default development port is
+:wtrl_value:`13316`.
+
+.. rubric:: :wtrl_attr:`streamable_http_path`\: :wtrl_type:`string`
+
+Path component used for the HTTP endpoint. The current server uses
+:wtrl_file:`/mcp`, so the resulting URL is typically
+:wtrl_url:`http://127.0.0.1:13316/mcp` during local development.
+
+.. rubric:: :wtrl_attr:`allowed_hosts`\: :wtrl_type:`List[string]`
+
+Host allowlist used together with the HTTP transport. This protects the
+server against DNS rebinding in browser-based deployments and is the
+main knob for Inspector-based setups and containerized deployments.
+When omitted, the server uses the configured values from the TOML file.
+
+.. rubric:: :wtrl_attr:`allowed_origins`\: :wtrl_type:`List[string]`
+
+Origin allowlist used for browser clients and CORS negotiation. This is
+primarily relevant for the MCP Inspector and similar browser-based
+frontends.
+
+.. Note:: Current access control status
+
+	The current Waterloo MCP server does not implement a separate
+	authentication layer yet. Access control is therefore limited to the
+	transport setup and the host/origin allowlists described above.
+	This is sufficient for the current read-only development workflow,
+	local Inspector sessions, and the container-based deployment examples
+	described later in this chapter. The remaining configuration details are
+	covered in the Logging and Roots sections below.
+
+Logging
+.......
+
+.. rubric:: :wtrl_attr:`level`\: :wtrl_type:`string`
+
+Logging level for the server process. It controls how verbose the
+Waterloo and Uvicorn log output should be.
+
+.. rubric:: :wtrl_attr:`config_path`\: :wtrl_type:`string`
+
+Optional path to a dedicated logging configuration file. When present,
+the server loads that file instead of relying only on the built-in log
+formatting defaults.
+
+.. rubric:: :wtrl_attr:`access_log`\: :wtrl_type:`bool`
+
+Toggle for the HTTP access log. This is useful when you want either a
+quiet development console or a more detailed request trace.
+
+Roots
+.....
+
+An arbitrary number of root entries can be provided.
+
+Each root entry describes one Waterloo JSON document that the MCP server
+offers to clients. The configured roots determine what the discovery,
+lookup, and search tools can see.
+
+.. rubric:: :wtrl_attr:`path`\: :wtrl_type:`string`
+
+Path to the root document or root directory. Relative paths are resolved
+against the configuration location; absolute paths are also supported.
+
+.. rubric:: :wtrl_attr:`label`\: :wtrl_type:`string`
+
+Human-readable label for the configured root. This label is used in MCP
+responses and helps distinguish multiple roots.
+
+.. rubric:: :wtrl_attr:`enabled`\: :wtrl_type:`bool`
+
+Controls whether the root is active in the current server configuration.
+
+.. rubric:: :wtrl_attr:`kind`\: :wtrl_type:`string`
+
+Kind of root represented by the entry. The current server mainly uses
+:wtrl_value:`wtrl-json`.
+
+
+
 Tools
 -----
 
 The MCP-server supports the following tools:
+
+The server is intentionally read-only in the current implementation.
+It serves discovery, lookup, and inspection tools for Waterloo JSON
+documentation roots. The same runtime also serves bundled prompt
+templates and the ``wtrl-mcp://instructions`` resource that points
+clients to the current package README.
 
 .. rubric:: Tool discovery
 
@@ -130,7 +238,7 @@ Using the MCP-server in VSCode
 
 With transport :wtrl_lit:`streamable-http`, the MCP-server is added to VSCode by:
 
-	:wtrl_key:`Shift+Ctrl+P` and :wtrl_lit:`MCP: Open User Configuration`
+	:wtrl_key:`Shift` + :wtrl_key:`Ctrl` + :wtrl_key:`P` and :wtrl_lit:`MCP: Open User Configuration`
 
 The code to be added should look like
 
@@ -165,7 +273,7 @@ not need to add a JSON server definition by hand.
 The default configuration lives in :wtrl_file:`etc/wtrl_mcp.stdio.toml`. If you
 want to customize the roots or other settings, make a copy of that file and
 point VSCode to the copy. Open the command palette with
-:wtrl_key:`Shift+Ctrl+P`, choose :wtrl_lit:`MCP: Open User Configuration`, and
+:wtrl_key:`Shift` + :wtrl_key:`Ctrl` + :wtrl_key:`P`, choose :wtrl_lit:`MCP: Open User Configuration`, and
 then set :wtrl_lit:`waterloo.mcpConfigPath` to your copied stdio configuration.
 The path may be absolute (recommended) or relative; if it is relative, the extension also
 looks in the open workspace and in the installed Waterloo package root.

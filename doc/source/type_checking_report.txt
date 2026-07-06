@@ -1,8 +1,1 @@
-package_main/src/sdv/doc/waterloo/docitem_sphinx.py:122: error: Library stubs not installed for "docutils"  [import-untyped]
-package_main/src/sdv/doc/waterloo/docitem_sphinx.py:125: error: Library stubs not installed for "docutils.parsers.rst"  [import-untyped]
-package_main/src/sdv/doc/waterloo/docitem_sphinx.py:128: error: Library stubs not installed for "docutils.parsers.rst.directives.admonitions"  [import-untyped]
-package_main/src/sdv/doc/waterloo/docitem_sphinx.py:128: note: Hint: "python3 -m pip install types-docutils"
-package_main/src/sdv/doc/waterloo/docitem_sphinx.py:128: note: (or run "mypy --install-types" to install all missing stub packages)
-package_main/src/sdv/doc/waterloo/docitem_sphinx.py:128: note: See https://mypy.readthedocs.io/en/stable/running_mypy.html#missing-imports
-package_main/src/sdv/doc/waterloo/docitem_sphinx.py:129: error: Library stubs not installed for "docutils.parsers.rst.states"  [import-untyped]
-Found 4 errors in 1 file (checked 33 source files)
+Success: no issues found in 33 source files

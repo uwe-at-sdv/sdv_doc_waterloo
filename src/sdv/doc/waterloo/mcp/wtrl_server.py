@@ -175,11 +175,16 @@ class ServerConfig:
 		transport:
 			Stores the configured transport mode.
 		host:
-			Stores the configured host name or address.
+			Stores the configured host name or address. A value of |value|`0.0.0.0`
+			means the server will listen on all interfaces (see Security notes).
 		port:
-			Stores the configured bind port.
+			Stores the configured bind port. The default is |value|`13316`,
+			which is the standard port for the Waterloo MCP server.
 		streamable_http_path:
 			Stores the configured streamable HTTP path.
+	Notes:
+		Security:
+			Binding to |value|`0.0.0.0` is a security risk if the server is exposed to untrusted networks.
 	"""
 
 	transport: str
@@ -202,11 +207,21 @@ class SecurityConfig:
 			|Must| bundle the effective allowlist values used by the server.
 		constructor:
 			|Must| be constructible from parsed host and origin allowlists.
+	Terminology:
+		CORS:
+			Cross-Origin Resource Sharing, a security feature implemented by browsers to control how resources
+			are requested from different origins. The server's CORS policy is determined by the allowed origins configuration.
 	Public_variables:
 		allowed_hosts:
 			Stores the configured host allowlist.
 		allowed_origins:
-			Stores the configured origin allowlist.
+			Stores the configured origin allowlist. This is important for clients like the MCP Inspector
+			which connect to the server via a browser and need to be allowed by the server's CORS policy.
+	Notes:
+		Security:
+			Host and origin allowlists are important for security when the server is exposed to untrusted networks.
+			If both allowlists are empty, the server will accept requests from any host or origin, which makes
+			it vulnerable to dns rebinding attacks and other security risks.
 	"""
 
 	allowed_hosts: list[str]
@@ -477,7 +492,7 @@ transport = "streamable-http"
 # host = "127.0.0.1"
 host = "127.0.0.1"
 # port = 8000
-port = 8000
+port = 13316
 # streamable_http_path = "/mcp"
 streamable_http_path = "/mcp"
 
