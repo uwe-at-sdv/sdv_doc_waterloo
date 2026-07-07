@@ -95,6 +95,13 @@ The server can optionally require Bearer-token authentication for MCP
 requests. When auth is enabled, the server also exposes loopback-only
 ``/admin`` routes for token management.
 
+.. warning::
+
+   In the current implementation, bearer tokens are transmitted over plain
+   HTTP. This is acceptable only on trusted networks, loopback connections,
+   or SSH-tunneled setups. It is not sufficient for an internet-exposed
+   server unless you add transport-layer protection elsewhere.
+
 .. rubric:: :wtrl_attr:`enabled`\: :wtrl_type:`bool`
 
 Toggle bearer-token verification for MCP requests. The default is
@@ -579,15 +586,40 @@ that outgoing requests include an :wtrl_lit:`Authorization: Bearer ...`
 header. The exact file or dialog depends on the Claude integration version,
 but the token value itself is the same.
 
+.. code-block:: json
+
+	{
+	  "mcpServers": {
+	    "my_smart_server": {
+              "type": "http",
+              "url": "http://<my_host>:<my_port>/mcp",
+              "headers": {
+        	"Authorization": "Bearer rGd3Gjts4zgRnqBELoCY7xuIQ_74P7Gm4OFmIXT0qgk"
+              }
+	    }
+	  }
+	}
+
+
 Configuring the token in VS Code
 ................................
 
 VS Code can also use the same bearer token, provided the MCP server entry
 supports custom HTTP headers. Add an :wtrl_lit:`Authorization: Bearer ...`
 header to the server configuration and point the client at the MCP URL.
-If a specific client cannot send custom headers, it cannot use the current
-bearer-token mode.
+The following pattern has been tested successfully with VS Code version 1.115.0:
 
+.. code-block:: json
 
-
-
+	{
+	  "servers": {
+	    "my_smart_server": {
+	      "url": "http://<my_host>:<my_port>/mcp",
+	      "type": "http",
+	      "headers": {
+	        "Authorization": "Bearer rGd3Gjts4zgRnqBELoCY7xuIQ_74P7Gm4OFmIXT0qgk"
+	      }
+	    }
+	  },
+	"inputs": []
+	}
