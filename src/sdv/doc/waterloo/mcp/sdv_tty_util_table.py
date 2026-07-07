@@ -65,7 +65,7 @@ import sys
 import string
 import re
 import wcwidth
-from typing import Any, Final, Iterable, Literal, Sequence
+from typing import Any, Final, Iterable, Literal, Sequence, cast
 from enum import IntEnum
 
 ANSI_ESCAPE_SEQUENCE_RE = re.compile(r"\x1b\[[0-9;?]*[ -/]*[@-~]")
@@ -76,7 +76,7 @@ def strip_ansi_escape_sequences(s: str) -> str:
 
 
 def wcswidth(s: str) -> int:
-	return wcwidth.wcswidth(s)
+	return cast(int, wcwidth.wcswidth(s))
 
 # Helpers from sdv.tty.util.ansi
 def display_width(s: str) -> int:
@@ -88,7 +88,7 @@ def strlen(s: str) -> int:
 	return display_width(s)
 
 #----- begin Typing ------------------------------------------#
-Style_t = Literal["ascii","fancy_ascii","unicode"]
+Style_t = Literal["ascii", "fancy_ascii", "unicode", "raw"]
 
 class Align(IntEnum):
 	"""
@@ -296,7 +296,7 @@ class cell:
 # Minimum requirement of this cell
 		self._w_min = max(self._lens)
 		self._w = self._w_min
-	def __str__(self):
+	def __str__(self) -> str:
 		if self._table._i_clir < self._h_min:
 			if self._col in self._table._col_align and self._table._col_align[self._col] == Align.COL_ALIGN_LEFT:
 				return  self._lines[self._table._i_clir] + (" " * (self._w - self._lens[self._table._i_clir]))
@@ -322,7 +322,7 @@ class row:
 		heights = list(map(lambda c:c._h_min,self._cells))
 		if len(heights) > 0:
 			self._h = max(heights)
-	def __str__(self):
+	def __str__(self) -> str:
 		sht = _style_sheet
 		s = sht.VER_DASH
 		for c in self._cells:
@@ -402,7 +402,7 @@ class caption:
 # Minimum requirement of this cell
 		self._w_min = max(self._lens)
 		self._w = self._w_min
-	def __str__(self):
+	def __str__(self) -> str:
 		sht = _style_sheet
 		s = sht.VER_DASH
 		if self._table._i_clir < self._h_min:

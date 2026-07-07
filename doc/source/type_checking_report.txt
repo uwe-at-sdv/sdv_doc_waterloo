@@ -1,7 +1,1 @@
-package_main/src/sdv/doc/waterloo/mcp/sdv_tty_util_table.py:79: error: Returning Any from function declared to return "int"  [no-any-return]
-package_main/src/sdv/doc/waterloo/mcp/sdv_tty_util_table.py:174: error: Non-overlapping equality check (left operand type: "Literal['ascii', 'fancy_ascii', 'unicode']", right operand type: "Literal['raw']")  [comparison-overlap]
-package_main/src/sdv/doc/waterloo/mcp/sdv_tty_util_table.py:175: error: Statement is unreachable  [unreachable]
-package_main/src/sdv/doc/waterloo/mcp/sdv_tty_util_table.py:299: error: Function is missing a type annotation  [no-untyped-def]
-package_main/src/sdv/doc/waterloo/mcp/sdv_tty_util_table.py:325: error: Function is missing a type annotation  [no-untyped-def]
-package_main/src/sdv/doc/waterloo/mcp/sdv_tty_util_table.py:405: error: Function is missing a type annotation  [no-untyped-def]
-Found 6 errors in 1 file (checked 36 source files)
+Success: no issues found in 36 source files

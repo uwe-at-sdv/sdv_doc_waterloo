@@ -9,6 +9,7 @@ sdv/doc/waterloo/mcp/jsonrpc_echo.py
 sdv/doc/waterloo/mcp/wtrl_mcp_admin.py
 sdv/doc/waterloo/mcp/prompts/__init__.py
 sdv/doc/waterloo/mcp/wtrl_logging.py
+sdv/doc/waterloo/mcp/sdv_tty_util_table.py
 sdv/doc/waterloo/waterlint_explain_section.py
 sdv/doc/waterloo/docitem_preamble.py
 sdv/doc/waterloo/docitem_docstring.py
