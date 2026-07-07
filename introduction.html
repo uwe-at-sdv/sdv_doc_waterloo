@@ -367,8 +367,10 @@ sdv/doc/waterloo/waterlint_gen_minimal.py
 sdv/doc/waterloo/mcp/wtrl_error.py
 sdv/doc/waterloo/mcp/wtrl_server.py
 sdv/doc/waterloo/mcp/wtrl_tools.py
+sdv/doc/waterloo/mcp/wtrl_auth.py
 sdv/doc/waterloo/mcp/__init__.py
 sdv/doc/waterloo/mcp/jsonrpc_echo.py
+sdv/doc/waterloo/mcp/wtrl_mcp_admin.py
 sdv/doc/waterloo/mcp/prompts/__init__.py
 sdv/doc/waterloo/mcp/wtrl_logging.py
 sdv/doc/waterloo/waterlint_explain_section.py
@@ -398,7 +400,13 @@ sdv/doc/waterloo/waterlint_render_html5.py
 </pre></div>
 </div>
 <p>are validated on a regular basis. The current status is</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Success: no issues found in 33 source files
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>package_main/src/sdv/doc/waterloo/mcp/sdv_tty_util_table.py:79: error: Returning Any from function declared to return &quot;int&quot;  [no-any-return]
+package_main/src/sdv/doc/waterloo/mcp/sdv_tty_util_table.py:174: error: Non-overlapping equality check (left operand type: &quot;Literal[&#39;ascii&#39;, &#39;fancy_ascii&#39;, &#39;unicode&#39;]&quot;, right operand type: &quot;Literal[&#39;raw&#39;]&quot;)  [comparison-overlap]
+package_main/src/sdv/doc/waterloo/mcp/sdv_tty_util_table.py:175: error: Statement is unreachable  [unreachable]
+package_main/src/sdv/doc/waterloo/mcp/sdv_tty_util_table.py:299: error: Function is missing a type annotation  [no-untyped-def]
+package_main/src/sdv/doc/waterloo/mcp/sdv_tty_util_table.py:325: error: Function is missing a type annotation  [no-untyped-def]
+package_main/src/sdv/doc/waterloo/mcp/sdv_tty_util_table.py:405: error: Function is missing a type annotation  [no-untyped-def]
+Found 6 errors in 1 file (checked 36 source files)
 </pre></div>
 </div>
 <p>Our <code class="wtrl_lit docutils literal notranslate"><span class="pre">mypy</span></code>-configuration is:</p>

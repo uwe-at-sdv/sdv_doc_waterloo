@@ -88,15 +88,34 @@ Origin allowlist used for browser clients and CORS negotiation. This is
 primarily relevant for the MCP Inspector and similar browser-based
 frontends.
 
-.. Note:: Current access control status
+Authentication
+..............
 
-	The current Waterloo MCP server does not implement a separate
-	authentication layer yet. Access control is therefore limited to the
-	transport setup and the host/origin allowlists described above.
-	This is sufficient for the current read-only development workflow,
-	local Inspector sessions, and the container-based deployment examples
-	described later in this chapter. The remaining configuration details are
-	covered in the Logging and Roots sections below.
+The server can optionally require Bearer-token authentication for MCP
+requests. When auth is enabled, the server also exposes loopback-only
+``/admin`` routes for token management.
+
+.. rubric:: :wtrl_attr:`enabled`\: :wtrl_type:`bool`
+
+Toggle bearer-token verification for MCP requests. The default is
+:wtrl_lit:`false`.
+
+.. rubric:: :wtrl_attr:`token_store`\: :wtrl_type:`string`
+
+Path to the JSON file with hashed token records. If this option is omitted,
+the server uses ``${XDG_STATE_HOME:-~/.local/state}/wtrl_mcp/tokens.json`` for
+user-mode operation. For system-wide service deployments, prefer an explicit
+instance-specific path such as ``/var/lib/wtrl_mcp/<instance_label>/tokens.json``.
+
+.. rubric:: :wtrl_attr:`realm`\: :wtrl_type:`string`
+
+Stable label for auth responses and diagnostics. A good default is
+:wtrl_value:`Waterloo MCP`.
+
+Remote administration is expected to go through ``wtrl_mcp_admin`` and, when
+needed, through an SSH tunnel to remote loopback. The admin API remains
+loopback-only in v1; it is not meant to be exposed as a generally reachable
+public interface.
 
 Logging
 .......
@@ -487,3 +506,88 @@ Logging is written to :wtrl_lit:`stdout`.
 
 The container runs in the foreground and can be stopped with
 :wtrl_key:`CTRL C`.
+
+
+Authentication
+--------------
+
+The current implementation of :wtrl_cmd:`wtrl_mcp` supports
+Bearer-token authentication for MCP requests.
+:wtrl_cmd:`wtrl_mcp_admin` is used to manage the server and issue tokens.
+Administrative access is intentionally loopback-only: the admin reaches the
+server host over SSH and, when needed, opens an SSH tunnel to the remote
+loopback interface. This keeps the admin path separate from normal client
+access while still making remote administration practical.
+
+In practice, the workflow can look like this:
+
+1. The admin registers the server in the local admin configuration file:
+
+.. code-block:: bash
+
+	wtrl_mcp_admin add-server --label my_smart_server --url http://my_host:my_port
+
+2. Once the MCP server is running, the admin generates a token:
+
+.. code-block:: bash
+
+	wtrl_mcp_admin gen-token --server my_smart_server --user alice --client vscode --location notebook
+
+
+The server may respond with a JSON object such as
+
+.. code-block:: json
+
+	{
+	  "client": "vscode",
+	  "created_at": "2026-07-07T14:28:09Z",
+	  "expires_at": null,
+	  "location": "notebook",
+	  "notes": null,
+	  "revoked_at": null,
+	  "token": "rGd3Gjts4zgRnqBELoCY7xuIQ_74P7Gm4OFmIXT0qgk",
+	  "token_id": "alice-vscode-notebook",
+	  "token_sha256": "b89321eda7bbdd9d7cdc2e2829aa6fe433d1c108205d7db647e7224d4c84984c",
+	  "user": "alice"
+	}
+
+3. The admin sends the token
+   :wtrl_value:`rGd3Gjts4zgRnqBELoCY7xuIQ_74P7Gm4OFmIXT0qgk`
+   to the user through a secure channel, and the user stores it in the
+   client configuration. From that point on, the client can authenticate
+   against the MCP server.
+
+Configuring the token in Codex
+..............................
+
+Codex can send the bearer token directly in the MCP server configuration.
+
+.. code-block:: toml
+
+	[mcp_servers.my_server]
+	url = "http://<my_host>:<my_port>/mcp"
+	http_headers = {
+		Accept = "application/json, text/event-stream",
+		Authorization = "Bearer rGd3Gjts4zgRnqBELoCY7xuIQ_74P7Gm4OFmIXT0qgk"
+		}
+
+Configuring the token in Claude
+................................
+
+Claude Code follows the same basic idea: configure the MCP server entry so
+that outgoing requests include an :wtrl_lit:`Authorization: Bearer ...`
+header. The exact file or dialog depends on the Claude integration version,
+but the token value itself is the same.
+
+Configuring the token in VS Code
+................................
+
+VS Code can also use the same bearer token, provided the MCP server entry
+supports custom HTTP headers. Add an :wtrl_lit:`Authorization: Bearer ...`
+header to the server configuration and point the client at the MCP URL.
+If a specific client cannot send custom headers, it cannot use the current
+bearer-token mode.
+
+
+
+

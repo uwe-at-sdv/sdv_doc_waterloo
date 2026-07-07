@@ -104,20 +104,30 @@ When omitted, the server uses the configured values from the TOML file.</p>
 <p>Origin allowlist used for browser clients and CORS negotiation. This is
 primarily relevant for the MCP Inspector and similar browser-based
 frontends.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Current access control status</p>
-<p>The current Waterloo MCP server does not implement a separate
-authentication layer yet. Access control is therefore limited to the
-transport setup and the host/origin allowlists described above.
-This is sufficient for the current read-only development workflow,
-local Inspector sessions, and the container-based deployment examples
-described later in this chapter. The remaining configuration details are
-covered in the Logging and Roots sections below.</p>
-</div>
+</section>
+<section id="authentication">
+<h3><span class="section-number">10.2.2. </span>Authentication<a class="headerlink" href="#authentication" title="Link to this heading">¶</a></h3>
+<p>The server can optionally require Bearer-token authentication for MCP
+requests. When auth is enabled, the server also exposes loopback-only
+<code class="docutils literal notranslate"><span class="pre">/admin</span></code> routes for token management.</p>
+<p class="rubric"><code class="wtrl_attr docutils literal notranslate"><span class="pre">enabled</span></code>: <code class="wtrl_type docutils literal notranslate"><span class="pre">bool</span></code></p>
+<p>Toggle bearer-token verification for MCP requests. The default is
+<code class="wtrl_lit docutils literal notranslate"><span class="pre">false</span></code>.</p>
+<p class="rubric"><code class="wtrl_attr docutils literal notranslate"><span class="pre">token_store</span></code>: <code class="wtrl_type docutils literal notranslate"><span class="pre">string</span></code></p>
+<p>Path to the JSON file with hashed token records. If this option is omitted,
+the server uses <code class="docutils literal notranslate"><span class="pre">${XDG_STATE_HOME:-~/.local/state}/wtrl_mcp/tokens.json</span></code> for
+user-mode operation. For system-wide service deployments, prefer an explicit
+instance-specific path such as <code class="docutils literal notranslate"><span class="pre">/var/lib/wtrl_mcp/&lt;instance_label&gt;/tokens.json</span></code>.</p>
+<p class="rubric"><code class="wtrl_attr docutils literal notranslate"><span class="pre">realm</span></code>: <code class="wtrl_type docutils literal notranslate"><span class="pre">string</span></code></p>
+<p>Stable label for auth responses and diagnostics. A good default is
+<code class="wtrl_value docutils literal notranslate"><span class="pre">Waterloo</span> <span class="pre">MCP</span></code>.</p>
+<p>Remote administration is expected to go through <code class="docutils literal notranslate"><span class="pre">wtrl_mcp_admin</span></code> and, when
+needed, through an SSH tunnel to remote loopback. The admin API remains
+loopback-only in v1; it is not meant to be exposed as a generally reachable
+public interface.</p>
 </section>
 <section id="logging">
-<h3><span class="section-number">10.2.2. </span>Logging<a class="headerlink" href="#logging" title="Link to this heading">¶</a></h3>
+<h3><span class="section-number">10.2.3. </span>Logging<a class="headerlink" href="#logging" title="Link to this heading">¶</a></h3>
 <p class="rubric"><code class="wtrl_attr docutils literal notranslate"><span class="pre">level</span></code>: <code class="wtrl_type docutils literal notranslate"><span class="pre">string</span></code></p>
 <p>Logging level for the server process. It controls how verbose the
 Waterloo and Uvicorn log output should be.</p>
@@ -130,7 +140,7 @@ formatting defaults.</p>
 quiet development console or a more detailed request trace.</p>
 </section>
 <section id="roots">
-<h3><span class="section-number">10.2.3. </span>Roots<a class="headerlink" href="#roots" title="Link to this heading">¶</a></h3>
+<h3><span class="section-number">10.2.4. </span>Roots<a class="headerlink" href="#roots" title="Link to this heading">¶</a></h3>
 <p>An arbitrary number of root entries can be provided.</p>
 <p>Each root entry describes one Waterloo JSON document that the MCP server
 offers to clients. The configured roots determine what the discovery,
@@ -428,6 +438,78 @@ impractical once the MCP server roots are supplied externally.</p>
 <code class="wtrl_key docutils literal notranslate"><span class="pre">CTRL</span> <span class="pre">C</span></code>.</p>
 </section>
 </section>
+<section id="id1">
+<h2><span class="section-number">10.8. </span>Authentication<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h2>
+<p>The current implementation of <code class="wtrl_cmd docutils literal notranslate"><span class="pre">wtrl_mcp</span></code> supports
+Bearer-token authentication for MCP requests.
+<code class="wtrl_cmd docutils literal notranslate"><span class="pre">wtrl_mcp_admin</span></code> is used to manage the server and issue tokens.
+Administrative access is intentionally loopback-only: the admin reaches the
+server host over SSH and, when needed, opens an SSH tunnel to the remote
+loopback interface. This keeps the admin path separate from normal client
+access while still making remote administration practical.</p>
+<p>In practice, the workflow can look like this:</p>
+<ol class="arabic simple">
+<li><p>The admin registers the server in the local admin configuration file:</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>wtrl_mcp_admin<span class="w"> </span>add-server<span class="w"> </span>--label<span class="w"> </span>my_smart_server<span class="w"> </span>--url<span class="w"> </span>http://my_host:my_port
+</pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>Once the MCP server is running, the admin generates a token:</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>wtrl_mcp_admin<span class="w"> </span>gen-token<span class="w"> </span>--server<span class="w"> </span>my_smart_server<span class="w"> </span>--user<span class="w"> </span>alice<span class="w"> </span>--client<span class="w"> </span>vscode<span class="w"> </span>--location<span class="w"> </span>notebook
+</pre></div>
+</div>
+<p>The server may respond with a JSON object such as</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;client&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;vscode&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;created_at&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2026-07-07T14:28:09Z&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;expires_at&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;location&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;notebook&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;notes&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;revoked_at&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;token&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;rGd3Gjts4zgRnqBELoCY7xuIQ_74P7Gm4OFmIXT0qgk&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;token_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;alice-vscode-notebook&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;token_sha256&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;b89321eda7bbdd9d7cdc2e2829aa6fe433d1c108205d7db647e7224d4c84984c&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;user&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;alice&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="3">
+<li><p>The admin sends the token
+<code class="wtrl_value docutils literal notranslate"><span class="pre">rGd3Gjts4zgRnqBELoCY7xuIQ_74P7Gm4OFmIXT0qgk</span></code>
+to the user through a secure channel, and the user stores it in the
+client configuration. From that point on, the client can authenticate
+against the MCP server.</p></li>
+</ol>
+<section id="configuring-the-token-in-codex">
+<h3><span class="section-number">10.8.1. </span>Configuring the token in Codex<a class="headerlink" href="#configuring-the-token-in-codex" title="Link to this heading">¶</a></h3>
+<p>Codex can send the bearer token directly in the MCP server configuration.</p>
+<div class="highlight-toml notranslate"><div class="highlight"><pre><span></span><span class="k">[mcp_servers.my_server]</span>
+<span class="n">url</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;http://&lt;my_host&gt;:&lt;my_port&gt;/mcp&quot;</span>
+<span class="n">http_headers</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">Accept</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s2">&quot;application/json, text/event-stream&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="n">Authorization</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s2">&quot;Bearer rGd3Gjts4zgRnqBELoCY7xuIQ_74P7Gm4OFmIXT0qgk&quot;</span>
+<span class="w">        </span><span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="configuring-the-token-in-claude">
+<h3><span class="section-number">10.8.2. </span>Configuring the token in Claude<a class="headerlink" href="#configuring-the-token-in-claude" title="Link to this heading">¶</a></h3>
+<p>Claude Code follows the same basic idea: configure the MCP server entry so
+that outgoing requests include an <code class="wtrl_lit docutils literal notranslate"><span class="pre">Authorization:</span> <span class="pre">Bearer</span> <span class="pre">...</span></code>
+header. The exact file or dialog depends on the Claude integration version,
+but the token value itself is the same.</p>
+</section>
+<section id="configuring-the-token-in-vs-code">
+<h3><span class="section-number">10.8.3. </span>Configuring the token in VS Code<a class="headerlink" href="#configuring-the-token-in-vs-code" title="Link to this heading">¶</a></h3>
+<p>VS Code can also use the same bearer token, provided the MCP server entry
+supports custom HTTP headers. Add an <code class="wtrl_lit docutils literal notranslate"><span class="pre">Authorization:</span> <span class="pre">Bearer</span> <span class="pre">...</span></code>
+header to the server configuration and point the client at the MCP URL.
+If a specific client cannot send custom headers, it cannot use the current
+bearer-token mode.</p>
+</section>
+</section>
 </section>
 
 
@@ -476,8 +558,9 @@ impractical once the MCP server roots are supplied externally.</p>
 <li class="toctree-l2"><a class="reference internal" href="#the-waterloo-mcp-server">10.1. The Waterloo MCP-Server</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#executable-and-configuration">10.2. Executable and configuration</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#server-and-security-related">10.2.1. Server- and security-related</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#logging">10.2.2. Logging</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#roots">10.2.3. Roots</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#authentication">10.2.2. Authentication</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#logging">10.2.3. Logging</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#roots">10.2.4. Roots</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#tools">10.3. Tools</a></li>
@@ -487,6 +570,12 @@ impractical once the MCP server roots are supplied externally.</p>
 <li class="toctree-l2"><a class="reference internal" href="#running-the-mcp-server-in-a-docker-container">10.7. Running the MCP Server in a Docker Container</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#bake-mode-bake-roots-default">10.7.1. Bake Mode (<code class="wtrl_opt docutils literal notranslate"><span class="pre">--bake-roots</span></code>, default)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#no-bake-mode-no-bake-roots">10.7.2. No-Bake Mode (<code class="wtrl_opt docutils literal notranslate"><span class="pre">--no-bake-roots</span></code>)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#id1">10.8. Authentication</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#configuring-the-token-in-codex">10.8.1. Configuring the token in Codex</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#configuring-the-token-in-claude">10.8.2. Configuring the token in Claude</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#configuring-the-token-in-vs-code">10.8.3. Configuring the token in VS Code</a></li>
 </ul>
 </li>
 </ul>

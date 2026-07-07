@@ -119,6 +119,8 @@ against the corresponding schema:
 * :wtrl_file:`schema/wtrl-explain-subsection-json-*.*.*.schema.json` for subsection explanations
 * :wtrl_file:`schema/wtrl-tracer-json-*.*.*.schema.json` for diagnostics
 * :wtrl_file:`schema/wtrl-example-refs-json-*.*.*.schema.json` for example references
+* :wtrl_file:`schema/wtrl-mcp-admin-registry-json-*.*.*.schema.json` for the MCP admin server registry
+* :wtrl_file:`schema/wtrl-mcp-auth-token-store-json-*.*.*.schema.json` for MCP bearer-token stores
 * :wtrl_file:`schema/wtrl-walk-json-*.*.*.schema.json` for structured and detailed output of subcommand :wtrl_cmd:`walk`.
 
 The JSON file to be validated contains the version number of the schema
