@@ -8,10 +8,12 @@ from pathlib import Path
 import pytest
 
 from sdv.doc.waterloo.mcp.wtrl_server import (
+	AuthConfig,
 	SecurityConfig,
 	LoggingConfig,
 	McpConfig,
 	ServerConfig,
+	_print_config_error,
 	_runtime_allowed_hosts,
 	_with_runtime_security_overrides,
 )
@@ -63,6 +65,7 @@ def test_with_runtime_security_overrides_keeps_non_security_fields() -> None:
 			allowed_hosts=["127.0.0.1:13316"],
 			allowed_origins=["http://gilgamesh:6274"],
 		),
+		auth=AuthConfig(enabled=False, token_store_path=Path("/tmp/tokens.json"), realm="Waterloo MCP"),
 		logging=LoggingConfig(level="INFO", config_path=None, access_log=True),
 		roots=[],
 		source_path=Path("/tmp/wtrl.toml"),
@@ -77,3 +80,11 @@ def test_with_runtime_security_overrides_keeps_non_security_fields() -> None:
 	assert overridden.server.streamable_http_path == config.server.streamable_http_path
 	assert overridden.security.allowed_hosts == ["localhost:13314", "gilgamesh:13314"]
 	assert overridden.security.allowed_origins == config.security.allowed_origins
+	assert overridden.auth == config.auth
+
+
+def test_print_config_error_includes_load_context(capsys) -> None:
+	_print_config_error(ValueError("broken config"), Path("/tmp/wtrl.toml"))
+	captured = capsys.readouterr()
+	assert "Loading configuration file: /tmp/wtrl.toml" in captured.err
+	assert "broken config" in captured.err

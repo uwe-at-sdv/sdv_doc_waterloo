@@ -14,10 +14,24 @@ from pytest_mcp_common import (
 	mcp_or_skip,
 )
 
+DOCITEM_HELPER_ROOT_SUFFIX = "/package_gh-pages/doc-json/docitem_helper.wtrl.core.rfc-2119.json"
+
 
 @pytest.fixture(scope="module")
 def mcp_session() -> str:
 	return mcp_or_skip()
+
+
+@pytest.fixture(scope="module")
+def mcp_docs_root_id(mcp_session: str) -> str:
+	roots = mcp_call_tool_entries(mcp_session, "list_roots", {})
+	for root in roots:
+		path = root.get("path")
+		if isinstance(path, str) and path.endswith(DOCITEM_HELPER_ROOT_SUFFIX):
+			root_id = root.get("root_id")
+			if isinstance(root_id, str):
+				return root_id
+	raise AssertionError(f"could not find docitem helper root in roots: {roots}")
 
 
 def _structured_result(result: dict[str, object]) -> dict[str, object]:
@@ -93,8 +107,8 @@ def test_mcp_list_prompts_includes_bundled_prompt_defs(mcp_session: str) -> None
 	assert {"draft_docstring", "inspect_object", "inspect_root"} <= names, prompts
 
 
-def test_mcp_get_prompt_renders_inspect_root_message(mcp_session: str) -> None:
-	result = mcp_get_prompt(mcp_session, "inspect_root", {"root_id": "root:eadb7d51f9fa"})
+def test_mcp_get_prompt_renders_inspect_root_message(mcp_session: str, mcp_docs_root_id: str) -> None:
+	result = mcp_get_prompt(mcp_session, "inspect_root", {"root_id": mcp_docs_root_id})
 	assert result.get("description") == "Get a compact structural overview of one Waterloo root before drilling into objects or searches.", result
 	messages = result.get("messages")
 	assert isinstance(messages, list) and messages, result
@@ -103,40 +117,40 @@ def test_mcp_get_prompt_renders_inspect_root_message(mcp_session: str) -> None:
 	content = first.get("content")
 	assert isinstance(content, dict), result
 	assert content.get("type") == "text", result
-	assert "root:eadb7d51f9fa" in str(content.get("text")), result
+	assert mcp_docs_root_id in str(content.get("text")), result
 
 
-def test_mcp_get_signature_returns_wrapper_for_function(mcp_session: str) -> None:
+def test_mcp_get_signature_returns_wrapper_for_function(mcp_session: str, mcp_docs_root_id: str) -> None:
 	result = mcp_call_tool(
 		mcp_session,
 		"get_signature",
 		{
-			"root_id": "root:eadb7d51f9fa",
-			"qid": "sdv.doc.waterloo.mcp.wtrl_server.build_app",
+			"root_id": mcp_docs_root_id,
+			"qid": "sdv.doc.waterloo.docitem_helper.get_obj_path",
 		},
 	)
 	structured = _structured_result(result)
-	assert structured.get("qid") == "sdv.doc.waterloo.mcp.wtrl_server.build_app", structured
+	assert structured.get("qid") == "sdv.doc.waterloo.docitem_helper.get_obj_path", structured
 	assert structured.get("profile") == "function", structured
 	signature = structured.get("signature")
 	assert isinstance(signature, dict), structured
-	assert signature.get("text") == "build_app(config: 'McpConfig') -> 'FastMCP'", signature
+	assert signature.get("text") == "get_obj_path(obj: 'object') -> 'str | None'", signature
 	parameters = signature.get("parameters")
-	assert isinstance(parameters, list) and [entry.get("name") for entry in parameters if isinstance(entry, dict)] == ["config"], signature
-	assert signature.get("returns") == "FastMCP", signature
+	assert isinstance(parameters, list) and [entry.get("name") for entry in parameters if isinstance(entry, dict)] == ["obj"], signature
+	assert signature.get("returns") == "str | None", signature
 
 
-def test_mcp_get_root_metadata_returns_header_block(mcp_session: str) -> None:
+def test_mcp_get_root_metadata_returns_header_block(mcp_session: str, mcp_docs_root_id: str) -> None:
 	result = mcp_call_tool(
 		mcp_session,
 		"get_root_metadata",
 		{
-			"root_id": "root:eadb7d51f9fa",
+			"root_id": mcp_docs_root_id,
 		},
 	)
 	structured = _structured_result(result)
-	assert structured.get("root_id") == "root:eadb7d51f9fa", structured
-	assert structured.get("label") == "Waterloo MCP Server and Tool set Reference", structured
+	assert structured.get("root_id") == mcp_docs_root_id, structured
+	assert structured.get("label") == "Waterloo/Docitem Helper classes, functions, and types", structured
 	assert isinstance(structured.get("__WTRL_VERSION__"), dict), structured
 	assert isinstance(structured.get("__WTRL_META__"), dict), structured
 	assert isinstance(structured.get("__WTRL_ROLES__"), dict), structured
@@ -144,88 +158,87 @@ def test_mcp_get_root_metadata_returns_header_block(mcp_session: str) -> None:
 	assert "document" not in structured, structured
 
 
-def test_mcp_list_objects_reports_inventory_rows(mcp_session: str) -> None:
+def test_mcp_list_objects_reports_inventory_rows(mcp_session: str, mcp_docs_root_id: str) -> None:
 	entries = mcp_call_tool_entries(
 		mcp_session,
 		"list_objects",
 		{
-			"root_id": "root:352f5dfbee7c",
+			"root_id": mcp_docs_root_id,
 		},
 	)
 	assert entries, entries
-	row = next(entry for entry in entries if entry.get("qid") == "tde4.get3DEVersion")
+	row = next(entry for entry in entries if entry.get("qid") == "sdv.doc.waterloo.docitem_helper.get_obj_name")
 	assert row.get("profile") == "function", row
 	assert row.get("kind") == "callable", row
 	assert row.get("scope") == "public", row
 	assert row.get("status") is None, row
 	assert row.get("has_doc") is True, row
 	assert row.get("has_examples") is True, row
-	assert row.get("has_see_also") is True, row
 
 
-def test_mcp_get_references_and_search_related_agree_on_tde4_widget_callback_function(
+def test_mcp_get_references_and_search_related_agree_on_docitem_helper_names(
 	mcp_session: str,
+	mcp_docs_root_id: str,
 ) -> None:
 	references = mcp_call_tool_entries(
 		mcp_session,
 		"get_references",
 		{
-			"root_id": "root:352f5dfbee7c",
-			"qid": "tde4.setWidgetCallbackFunction",
+			"root_id": mcp_docs_root_id,
+			"qid": "sdv.doc.waterloo.docitem_helper.get_obj_fully_qualified_name",
 		},
 	)
 	reference_qids = {entry.get("source_qid") for entry in references if isinstance(entry.get("source_qid"), str)}
-	assert "tde4.addButtonWidget" in reference_qids, references
-	assert "tde4.getWidgetCallbackFunction" in reference_qids, references
-	assert "tde4.setWidgetShortcut" in reference_qids, references
+	assert "sdv.doc.waterloo.docitem_helper.get_obj_name" in reference_qids, references
 
 	related = mcp_call_tool_entries(
 		mcp_session,
 		"search_related",
 		{
-			"root_id": "root:352f5dfbee7c",
-			"qid": "tde4.setWidgetCallbackFunction",
+			"root_id": mcp_docs_root_id,
+			"qid": "sdv.doc.waterloo.docitem_helper.get_obj_name",
 		},
 	)
 	related_qids = {entry.get("related_qid") for entry in related if isinstance(entry.get("related_qid"), str)}
-	assert "tde4.addButtonWidget" in related_qids, related
-	assert "tde4.getWidgetCallbackFunction" in related_qids, related
-	assert "tde4.setWidgetShortcut" in related_qids, related
+	assert "sdv.doc.waterloo.docitem_helper.get_obj_fully_qualified_name" in related_qids, related
 	directions = {entry.get("direction") for entry in related if isinstance(entry.get("direction"), str)}
 	assert directions <= {"in", "out", "in_out"}, related
 
 
-def test_mcp_get_references_unknown_qid_returns_empty_list(mcp_session: str) -> None:
+def test_mcp_get_references_unknown_qid_returns_empty_list(mcp_session: str, mcp_docs_root_id: str) -> None:
 	entries = mcp_call_tool_entries(
 		mcp_session,
 		"get_references",
 		{
-			"root_id": "root:eadb7d51f9fa",
+			"root_id": mcp_docs_root_id,
 			"qid": "does.not.exist",
 		},
 	)
 	assert entries == [], entries
 
 
-def test_mcp_search_related_unknown_qid_reports_unknown_qid(mcp_session: str) -> None:
+def test_mcp_search_related_unknown_qid_reports_unknown_qid(mcp_session: str, mcp_docs_root_id: str) -> None:
 	text = mcp_call_tool_error_text(
 		mcp_session,
 		"search_related",
 		{
-			"root_id": "root:eadb7d51f9fa",
+			"root_id": mcp_docs_root_id,
 			"qid": "does.not.exist",
 		},
 	)
 	assert "Unknown qid: does.not.exist" in text, text
 
 
-def test_mcp_get_examples_and_source_roundtrip_for_tde4_version(mcp_session: str) -> None:
+def test_mcp_get_examples_and_source_roundtrip_for_docitem_helper_object(
+	mcp_session: str,
+	mcp_docs_root_id: str,
+) -> None:
 	examples = mcp_call_tool_entries(
 		mcp_session,
 		"get_examples",
 		{
-			"root_id": "root:352f5dfbee7c",
-			"qid": "tde4.get3DEVersion",
+			"root_id": mcp_docs_root_id,
+			"qid": "sdv.doc.waterloo.docitem_helper.get_obj_path",
 		},
 	)
 	assert examples, examples
@@ -240,23 +253,23 @@ def test_mcp_get_examples_and_source_roundtrip_for_tde4_version(mcp_session: str
 		mcp_session,
 		"get_example_source",
 		{
-			"root_id": "root:352f5dfbee7c",
+			"root_id": mcp_docs_root_id,
 			"example_path": example_path,
 		},
 	)
 	structured = _structured_result(result)
 	source = structured.get("result")
 	assert isinstance(source, str), structured
-	assert "get3DEVersion" in source, source
+	assert "get_obj_path" in source, source
 
 
-def test_mcp_get_signature_module_returns_no_signature_block(mcp_session: str) -> None:
+def test_mcp_get_signature_module_returns_no_signature_block(mcp_session: str, mcp_docs_root_id: str) -> None:
 	result = mcp_call_tool(
 		mcp_session,
 		"get_signature",
 		{
-			"root_id": "root:eadb7d51f9fa",
-			"qid": "sdv.doc.waterloo.mcp.wtrl_tools",
+			"root_id": mcp_docs_root_id,
+			"qid": "sdv.doc.waterloo.docitem_helper",
 		},
 	)
 	structured = _structured_result(result)
@@ -264,36 +277,36 @@ def test_mcp_get_signature_module_returns_no_signature_block(mcp_session: str) -
 	assert structured.get("signature") is None, structured
 
 
-def test_mcp_get_signature_unknown_qid_reports_mcps_002(mcp_session: str) -> None:
+def test_mcp_get_signature_unknown_qid_reports_mcps_002(mcp_session: str, mcp_docs_root_id: str) -> None:
 	text = mcp_call_tool_error_text(
 		mcp_session,
 		"get_signature",
 		{
-			"root_id": "root:eadb7d51f9fa",
+			"root_id": mcp_docs_root_id,
 			"qid": "does.not.exist",
 		},
 	)
 	assert "Unknown qid: does.not.exist" in text, text
 
 
-def test_mcp_get_examples_unknown_qid_reports_mcps_002(mcp_session: str) -> None:
+def test_mcp_get_examples_unknown_qid_reports_mcps_002(mcp_session: str, mcp_docs_root_id: str) -> None:
 	text = mcp_call_tool_error_text(
 		mcp_session,
 		"get_examples",
 		{
-			"root_id": "root:eadb7d51f9fa",
+			"root_id": mcp_docs_root_id,
 			"qid": "does.not.exist",
 		},
 	)
 	assert "Unknown qid: does.not.exist" in text, text
 
 
-def test_mcp_get_example_source_unknown_example_reports_mcps_006(mcp_session: str) -> None:
+def test_mcp_get_example_source_unknown_example_reports_mcps_006(mcp_session: str, mcp_docs_root_id: str) -> None:
 	text = mcp_call_tool_error_text(
 		mcp_session,
 		"get_example_source",
 		{
-			"root_id": "root:352f5dfbee7c",
+			"root_id": mcp_docs_root_id,
 			"example_path": "/__WTRL_EXAMPLES__/sha256_does_not_exist",
 		},
 	)

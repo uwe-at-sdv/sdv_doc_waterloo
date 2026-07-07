@@ -10,12 +10,14 @@ r"""
 		general:
 			|Must| provide the entry point for the Waterloo MCP server.
 	Public_classes:
-		ServerConfig, SecurityConfig, LoggingConfig, RootConfig, _RequestLogGroupMiddleware, RootMTimeRecord, ReferenceIndex, McpConfig, McpAppRunner
+		ServerConfig, SecurityConfig, AuthConfig, LoggingConfig, RootConfig, _RequestLogGroupMiddleware, RootMTimeRecord, ReferenceIndex, McpConfig, McpAppRunner
 	Class_overview:
 		ServerConfig:
 			Parsed configuration for the MCP transport layer.
 		SecurityConfig:
 			Parsed configuration for browser and host allowlisting.
+		AuthConfig:
+			Parsed configuration for MCP bearer-token support and token-store location.
 		LoggingConfig:
 			Parsed configuration for logging behavior.
 		RootConfig:
@@ -27,7 +29,7 @@ r"""
 		ReferenceIndex:
 			Per-run cache for reverse references, qid-to-root membership, and root modification timestamps.
 		McpConfig:
-			Normalized runtime configuration for the MCP server, including transport, security, logging, and configured roots.
+			Normalized runtime configuration for the MCP server, including transport, security, auth, logging, and configured roots.
 		McpAppRunner:
 			Public launcher object that loads the configuration and starts the MCP server; its `run` method is part of the entry-point API.
 	Public_functions:
@@ -51,23 +53,47 @@ r"""
 	Public_variables:
 		logger:
 			A module-level logger for the Waterloo MCP server.
+	Notes:
+		Admin_api:
+			When auth is enabled, the server also exposes loopback-only `/admin` routes for token
+			management in the configured JSON token store. These routes live in the same HTTP
+			application as the MCP endpoint.
+		Token_store:
+			The token store path is resolved from the server configuration and used by both the
+			bearer-token verifier and the admin routes.
+	Terminology:
+		CORS:
+			Cross-Origin Resource Sharing, a security feature implemented by browsers to control how resources
+			are requested from different origins. The server's CORS policy is determined by the allowed origins configuration.
+		ASGI:
+			Asynchronous Server Gateway Interface, a standard interface between async Python web servers and applications.
+		Starlette:
+			A lightweight ASGI framework used to build the MCP server app.
+		FastMCP:
+			A Python library that implements the Model Context Protocol (MCP) server and client functionality.
+		Uvicorn:
+			A lightning-fast ASGI server implementation used to run the MCP server app.
 """
 
 from __future__ import annotations
 
 import argparse
 import json
+import os
 import importlib.resources
 import inspect
 import logging
 import logging.config
 import re
+import tempfile
 import sys
 import textwrap
 from string import Template
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Callable, Final, Literal, Mapping, cast
+
+from jsonschema import Draft202012Validator
 
 try:
 	import tomllib
@@ -76,11 +102,20 @@ except ModuleNotFoundError:  # pragma: no cover - Python 3.10 fallback
 
 import uvicorn
 from starlette.middleware.cors import CORSMiddleware
+from starlette.applications import Starlette
+from starlette.requests import Request
+from starlette.responses import JSONResponse, Response
+
+# Route is a class that represents a single route in the Starlette application.
+# It is used to define the path, endpoint, and methods for handling HTTP requests.
+from starlette.routing import Route
+
 from starlette.types import ASGIApp, Receive, Scope, Send
 
 from mcp.server.fastmcp import FastMCP
 from mcp.server.fastmcp.prompts.base import Message, Prompt, PromptArgument
 from mcp.server.fastmcp.server import TransportSecuritySettings
+from mcp.server.auth.settings import AuthSettings
 from mcp.types import TextContent, ToolAnnotations
 
 LogLevel_t = Literal["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]
@@ -127,11 +162,22 @@ from sdv.doc.waterloo.mcp.wtrl_logging import (
     reset_request_id,
     set_request_id,
 )
+from sdv.doc.waterloo.mcp.wtrl_auth import (
+	AuthTokenConflictError,
+	AuthTokenNotFoundError,
+	AuthTokenValidationError,
+	FileTokenVerifier,
+	create_token,
+	list_tokens,
+	revoke_token,
+)
 
 # Run browser-based MCP-inspector with npx @modelcontextprotocol/inspector 
 
 #----- begin constants and global variables ------------------#
 logger = logging.getLogger("wtrl_mcp")
+ADMIN_ENDPOINT_BASE: Final[str] = "/admin"
+ADMIN_LOOPBACK_ONLY_ERROR: Final[str] = "The /admin API is loopback-only in v1."
 
 # Global tool documentation registry
 WTRL_TOOL_DOCS: Final[dict[str, Callable[..., object] | None]] = {
@@ -226,6 +272,39 @@ class SecurityConfig:
 
 	allowed_hosts: list[str]
 	allowed_origins: list[str]
+
+
+@dataclass(frozen=True)
+class AuthConfig:
+	r"""
+	Preamble:
+		profile:
+			class
+		normative_sections:
+			Contract, Public_variables
+	Contract:
+		general:
+			|Must| hold the parsed configuration for MCP bearer-token support.
+			|Must| bundle the effective enabled flag, token-store path, and realm label.
+		constructor:
+			|Must| be constructible from parsed auth settings.
+	Public_variables:
+		enabled:
+			Stores whether MCP bearer-token support is enabled.
+		token_store_path:
+			Stores the resolved path to the JSON token-store file.
+		realm:
+			Stores the realm label used in auth-related responses.
+	Notes:
+		Default_store:
+			When the configuration does not specify a token store path, the server uses
+			``$XDG_STATE_HOME/wtrl_mcp/tokens.json`` if ``XDG_STATE_HOME`` is set, otherwise
+			``~/.local/state/wtrl_mcp/tokens.json``.
+	"""
+
+	enabled: bool
+	token_store_path: Path
+	realm: str
 
 
 @dataclass(frozen=True)
@@ -356,7 +435,7 @@ class McpConfig:
 	Contract:
 		general:
 			|Must| hold the normalized runtime configuration for the MCP server.
-			|Must| bundle transport, security, logging, configured roots, and the source path of the loaded configuration.
+			|Must| bundle transport, security, auth, logging, configured roots, and the source path of the loaded configuration.
 		constructor:
 			|Must| be constructible from the parsed configuration objects and the resolved source path.
 	Public_variables:
@@ -364,6 +443,8 @@ class McpConfig:
 			stores the parsed transport settings.
 		security:
 			stores the parsed host and origin allowlists.
+		auth:
+			stores the parsed bearer-token configuration.
 		logging:
 			stores the parsed logging settings.
 		roots:
@@ -373,6 +454,7 @@ class McpConfig:
 	"""
 	server: ServerConfig
 	security: SecurityConfig
+	auth: AuthConfig
 	logging: LoggingConfig
 	roots: list[RootConfig]
 	source_path: Path
@@ -459,6 +541,102 @@ def _package_root() -> Path:
 	return Path(__file__).resolve().parent.parent
 
 
+def _default_auth_token_store_path() -> Path:
+	"""Return the default JSON token-store path for MCP bearer tokens."""
+	xdg_state_home = os.environ.get("XDG_STATE_HOME", "").strip()
+	if xdg_state_home:
+		base = Path(xdg_state_home).expanduser()
+	else:
+		base = Path("~/.local/state").expanduser()
+	return (base / "wtrl_mcp" / "tokens.json").resolve()
+
+
+def _format_os_error(exc: OSError) -> str:
+	errno_text = f" {exc.errno}" if exc.errno is not None else ""
+	strerror = exc.strerror or str(exc)
+	return f"{exc.__class__.__name__}{errno_text}: {strerror}"
+
+
+def _validate_auth_token_store_path(token_store_path: Path) -> None:
+# Must not point to an existing directory.
+	if token_store_path.exists() and token_store_path.is_dir():
+		raise ValueError(
+			"Auth token store path must point to a file, not a directory: "
+			f"{token_store_path}. Create a file path instead."
+		)
+# At least the parent directory of the token store path must exist.
+# We will not create paths for the token store file.
+	if not token_store_path.parent.exists():
+		raise ValueError(
+			"Auth token store directory does not exist: "
+			f"{token_store_path.parent}. Create the directory first or change auth.token_store."
+		)
+	try:
+# If there is a token store file, it must be readable and writable.
+		if token_store_path.exists():
+			with token_store_path.open("r", encoding="utf-8"):
+				pass
+			with token_store_path.open("a", encoding="utf-8"):
+				pass
+# If there is no such file, we must be able to create it.
+		else:
+			probe_path: Path | None = None
+			try:
+				with tempfile.NamedTemporaryFile(
+					mode="w",
+					encoding="utf-8",
+					dir=token_store_path.parent,
+					prefix=f".{token_store_path.name}.",
+					suffix=".probe",
+					delete=False,
+				) as probe_fh:
+					probe_path = Path(probe_fh.name)
+			finally:
+				if probe_path is not None:
+					try:
+						probe_path.unlink()
+					except FileNotFoundError:
+						pass
+	except OSError as exc:
+		raise ValueError(
+			"Validating auth token store file: "
+			f"{token_store_path}. Auth token store file must be readable and writable: "
+			f"Fix the file permissions or change auth.token_store. ({_format_os_error(exc)})"
+		) from exc
+
+
+def _validate_auth_token_store_contents(token_store_path: Path) -> None:
+	if not token_store_path.exists():
+		return
+	schema_path = importlib.resources.files("sdv.doc.waterloo") / "schema" / "wtrl-mcp-auth-token-store-json-0.1.0.schema.json"
+	schema = json.loads(Path(str(schema_path)).read_text(encoding="utf-8"))
+	doc = json.loads(token_store_path.read_text(encoding="utf-8"))
+	validator = Draft202012Validator(schema)
+	errors = sorted(validator.iter_errors(doc), key=lambda exc: list(exc.path))
+	if errors:
+		raise ValueError(
+			f"Validating auth token store file: {token_store_path}. "
+			f"Auth token store file is invalid: {errors[0].message}"
+		)
+
+
+def _auth_token_stats(token_store_path: Path) -> tuple[int, int]:
+	tokens = list_tokens(token_store_path)
+	valid = 0
+	for token in tokens:
+		if str(token.get("revoked_at") or "") == "":
+			valid += 1
+	revoked = len(tokens) - valid
+	return valid, revoked
+
+
+def _auth_issuer_url(config: McpConfig) -> str:
+	host = config.server.host.strip() or "127.0.0.1"
+	if host in {"0.0.0.0", "::"}:
+		host = "127.0.0.1"
+	return f"http://{host}:{config.server.port}/auth"
+
+
 def _logging_toml_resource_path() -> str:
 	"""Resolve the absolute path to the installed etc/logging.toml package resource."""
 	ref = importlib.resources.files("sdv.doc.waterloo").joinpath("etc/logging.toml")
@@ -474,6 +652,7 @@ def _default_root_json_resource_path() -> str:
 def _template_text() -> str:
 	logging_toml = _logging_toml_resource_path()
 	default_root_json = _default_root_json_resource_path()
+	default_token_store = _default_auth_token_store_path()
 	return f"""# Waterloo MCP server configuration template
 #
 # Save this under etc/ as wtrl_mcp.http.toml or wtrl_mcp.stdio.toml and edit it.
@@ -508,6 +687,11 @@ allowed_origins = ["http://myhost:6274"]
 # level = "INFO"
 # access_log = true
 config_path = \"{logging_toml}\"
+
+[auth]
+enabled = false
+token_store = \"{default_token_store}\"
+realm = "Waterloo MCP"
 
 [[roots]]
 # Possible kind at current state of development: wtrl-json.
@@ -617,6 +801,7 @@ def _with_runtime_security_overrides(
 			allowed_hosts=effective_allowed_hosts,
 			allowed_origins=config.security.allowed_origins,
 		),
+		auth=config.auth,
 		logging=config.logging,
 		roots=config.roots,
 		source_path=config.source_path,
@@ -900,12 +1085,15 @@ def load_config(config_path: Path | None = None) -> McpConfig:
 		raise ValueError("Waterloo MCP configuration file must contain a TOML table.")
 	server_data = config_map.get("server", {})
 	security_data = config_map.get("security", {})
+	auth_data = config_map.get("auth", {})
 	logging_data = config_map.get("logging", {})
 	roots_data = config_map.get("roots", [])
 	if not isinstance(server_data, Mapping):
 		raise ValueError("[server] must be a TOML table.")
 	if not isinstance(security_data, Mapping):
 		raise ValueError("[security] must be a TOML table.")
+	if not isinstance(auth_data, Mapping):
+		raise ValueError("[auth] must be a TOML table.")
 	if not isinstance(logging_data, Mapping):
 		raise ValueError("[logging] must be a TOML table.")
 	config_dir = path.parent.resolve()
@@ -921,6 +1109,18 @@ def load_config(config_path: Path | None = None) -> McpConfig:
 		allowed_hosts=[str(item) for item in security_data.get("allowed_hosts", [])],
 		allowed_origins=[str(item) for item in security_data.get("allowed_origins", [])],
 	)
+	token_store_text = str(auth_data.get("token_store") or _default_auth_token_store_path())
+	token_store_path = Path(token_store_text).expanduser()
+	if not token_store_path.is_absolute():
+		token_store_path = (config_dir / token_store_path).resolve()
+	auth = AuthConfig(
+		enabled=bool(auth_data.get("enabled", False)),
+		token_store_path=token_store_path,
+		realm=str(auth_data.get("realm", "Waterloo MCP")).strip() or "Waterloo MCP",
+	)
+	if auth.enabled:
+		_validate_auth_token_store_path(auth.token_store_path)
+		_validate_auth_token_store_contents(auth.token_store_path)
 	# If a logging config path is provided, we will attempt to load it during server startup
 	# and pass it to uvicorn. If the path is invalid or the file cannot be loaded,
 	# the server will fail to start with an error message.
@@ -938,7 +1138,7 @@ def load_config(config_path: Path | None = None) -> McpConfig:
 			access_log=logging_cfg.access_log,
 		)
 	roots = parse_roots(roots_data, config_dir)
-	return McpConfig(server=server, security=security, logging=logging_cfg, roots=roots, source_path=path)
+	return McpConfig(server=server, security=security, auth=auth, logging=logging_cfg, roots=roots, source_path=path)
 
 
 def _make_prompt_renderer(raw_messages: list[object], prompt_source: str) -> Callable[..., list[Message]]:
@@ -1082,15 +1282,26 @@ def build_app(config: McpConfig) -> FastMCP:
 	"""
 	"""Build the Waterloo MCP app with the configured data roots."""
 	reference_index = build_reference_index(config.roots)
+	token_verifier = FileTokenVerifier(config.auth.token_store_path) if config.auth.enabled else None
+	auth_settings = (
+		AuthSettings(
+			issuer_url=_auth_issuer_url(config),
+			resource_server_url=None,
+		)
+		if config.auth.enabled
+		else None
+	)
 
 	mcp = FastMCP(
 		name="wtrl_mcp",
 		instructions=read_package_readme(),
+		token_verifier=token_verifier,
 		debug=False,
 		log_level=cast(LogLevel_t, config.logging.level),
 		host=config.server.host,
 		port=config.server.port,
 		streamable_http_path=config.server.streamable_http_path,
+		auth=auth_settings,
 	)
 	setattr(mcp, "_waterloo_reference_index", reference_index)
 	if config.security.allowed_hosts or config.security.allowed_origins:
@@ -1287,6 +1498,15 @@ def build_app(config: McpConfig) -> FastMCP:
 	prompts = _register_prompts(mcp)
 
 	logger.info("wtrl_mcp %s ready.", __version__)
+	if config.auth.enabled:
+		logger.info("Authentication is enabled for MCP clients. Token store: %s", config.auth.token_store_path)
+		try:
+			valid_tokens, revoked_tokens = _auth_token_stats(config.auth.token_store_path)
+		except Exception as exc:
+			logger.info("* Token store status: unavailable (%s)", exc)
+		else:
+			logger.info("* Valid tokens: %d", valid_tokens)
+			logger.info("* Revoked tokens: %d", revoked_tokens)
 	# Log security stuff: allowed_hosts
 	logger.info(f"Allowed hosts is the list of urls under which the MCP server is allowed to be accessed.")
 	logger.info(f"This is important for preventing DNS rebinding attacks if the server is exposed to untrusted networks.")
@@ -1319,6 +1539,92 @@ def build_app(config: McpConfig) -> FastMCP:
 	return mcp
 
 
+def _json_error(message: str, status_code: int) -> JSONResponse:
+	return JSONResponse({"error": message}, status_code=status_code)
+
+
+def _is_loopback_request(request: Request) -> bool:
+	client = request.client
+	if client is None:
+		return False
+	return client.host in {"127.0.0.1", "::1", "::ffff:127.0.0.1", "localhost"}
+
+
+def _install_admin_routes(app: Starlette, auth_config: AuthConfig) -> None:
+	async def _reject_if_not_loopback(request: Request) -> JSONResponse | None:
+		if _is_loopback_request(request):
+			return None
+		return _json_error(ADMIN_LOOPBACK_ONLY_ERROR, 403)
+
+	async def _admin_status(request: Request) -> JSONResponse:
+		rejection = await _reject_if_not_loopback(request)
+		if rejection is not None:
+			return rejection
+		payload: dict[str, object] = {"auth_enabled": auth_config.enabled}
+		if auth_config.enabled:
+			try:
+				valid_tokens, revoked_tokens = _auth_token_stats(auth_config.token_store_path)
+			except Exception as exc:
+				return _json_error(f"Could not read auth token store: {exc}", 500)
+			payload["valid_tokens"] = valid_tokens
+			payload["revoked_tokens"] = revoked_tokens
+		return JSONResponse(payload)
+
+	async def _list_tokens(request: Request) -> JSONResponse:
+		rejection = await _reject_if_not_loopback(request)
+		if rejection is not None:
+			return rejection
+		return JSONResponse({"tokens": list_tokens(auth_config.token_store_path)})
+
+	async def _create_token(request: Request) -> JSONResponse:
+		rejection = await _reject_if_not_loopback(request)
+		if rejection is not None:
+			return rejection
+		try:
+			payload = await request.json()
+		except json.JSONDecodeError:
+			return _json_error("The admin request body must contain valid JSON.", 400)
+		if not isinstance(payload, dict):
+			return _json_error("The admin request body must be a JSON object.", 400)
+		try:
+			tid = payload.get("token_id")
+			if not isinstance(tid, str):
+				raise AuthTokenValidationError()
+			record = create_token(
+				auth_config.token_store_path,
+				token_id=tid,
+				expires_at=payload.get("expires_at"),
+				notes=payload.get("notes"),
+			)
+		except AuthTokenValidationError as exc:
+			return _json_error(str(exc), 400)
+		except AuthTokenConflictError as exc:
+			return _json_error(str(exc), 409)
+		return JSONResponse(record, status_code=201)
+
+	async def _revoke_token(request: Request) -> Response:
+		rejection = await _reject_if_not_loopback(request)
+		if rejection is not None:
+			return rejection
+		token_id = request.path_params.get("token_id")
+		if not isinstance(token_id, str) or not token_id.strip():
+			return _json_error("The token id path parameter is required.", 400)
+		try:
+			revoke_token(auth_config.token_store_path, token_id.strip())
+		except AuthTokenNotFoundError as exc:
+			return _json_error(str(exc), 404)
+		except AuthTokenConflictError as exc:
+			return _json_error(str(exc), 409)
+		return Response(status_code=204)
+	# Register the admin routes under the configured base path.
+	app.router.routes.append(Route(f"{ADMIN_ENDPOINT_BASE}", endpoint=_admin_status, methods=["GET"]))
+	if auth_config.enabled:
+		app.router.routes.append(Route(f"{ADMIN_ENDPOINT_BASE}/tokens", endpoint=_list_tokens, methods=["GET"]))
+		app.router.routes.append(Route(f"{ADMIN_ENDPOINT_BASE}/tokens", endpoint=_create_token, methods=["POST"]))
+		app.router.routes.append(Route(f"{ADMIN_ENDPOINT_BASE}/tokens/{{token_id}}", endpoint=_revoke_token, methods=["DELETE"])
+		)
+
+
 def _wrap_browser_cors(app: ASGIApp, origins: list[str]) -> ASGIApp:
 	"""Wrap an ASGI app with permissive browser CORS for MCP Inspector use."""
 	return CORSMiddleware(
@@ -1328,6 +1634,15 @@ def _wrap_browser_cors(app: ASGIApp, origins: list[str]) -> ASGIApp:
 		allow_headers=["*"],
 		expose_headers=["Mcp-Session-Id"],
 	)
+
+
+def _build_http_app(config: McpConfig, mcp: FastMCP) -> ASGIApp:
+	http_app = mcp.streamable_http_app()
+	_install_admin_routes(http_app, config.auth)
+	if config.security.allowed_origins:
+		http_app = _wrap_browser_cors(http_app, list(config.security.allowed_origins))
+	http_app = _RequestLogGroupMiddleware(http_app)
+	return http_app
 
 
 class _RequestLogGroupMiddleware:
@@ -1390,9 +1705,15 @@ class _RequestLogGroupMiddleware:
 			reset_log_group_key(group_token)
 
 
-def _print_config_error(exc: Exception) -> None:
-	"""Print a user-facing configuration error."""
-	print(f"wtrl_mcp: {exc}", file=sys.stderr)
+def _print_config_error(exc: Exception, config_path: Path | None = None) -> None:
+	"""Print a user-facing configuration error with load context."""
+	if config_path is not None:
+		print(f"wtrl_mcp: Loading configuration file: {config_path}", file=sys.stderr)
+	message = str(exc).strip()
+	if not message:
+		message = exc.__class__.__name__
+	for line in message.splitlines():
+		print(f"wtrl_mcp: {line}", file=sys.stderr)
 
 
 def _run_loaded_config(config: McpConfig) -> None:
@@ -1400,11 +1721,8 @@ def _run_loaded_config(config: McpConfig) -> None:
 	_configure_waterloo_logging(config)
 	mcp = build_app(config)
 	if config.server.transport == "streamable-http":
-		http_app: ASGIApp = mcp.streamable_http_app()
-		if config.security.allowed_origins:
-			http_app = _wrap_browser_cors(http_app, list(config.security.allowed_origins))
+		http_app = _build_http_app(config, mcp)
 		logger.info("Using configuration file: %s", config.source_path.resolve())
-		http_app = _RequestLogGroupMiddleware(http_app)
 		# Streamable HTTP is exposed directly here so browser clients can
 		# negotiate CORS. SSE is not part of this transport setup.
 		uvicorn.run(
@@ -1445,7 +1763,7 @@ class McpAppRunner:
 		try:
 			config = load_config(self._config_path)
 		except (FileNotFoundError, ValueError) as exc:
-			_print_config_error(exc)
+			_print_config_error(exc, self._config_path)
 			raise SystemExit(1) from exc
 		if transport is not None:
 			config = McpConfig(
@@ -1456,6 +1774,7 @@ class McpAppRunner:
 					streamable_http_path=config.server.streamable_http_path,
 				),
 				security=config.security,
+				auth=config.auth,
 				logging=config.logging,
 				roots=config.roots,
 				source_path=config.source_path,
@@ -1480,7 +1799,7 @@ def main(argv: list[str] | None = None) -> int:
 			getattr(args, "public_port", None),
 		)
 	except (FileNotFoundError, ValueError) as exc:
-		_print_config_error(exc)
+		_print_config_error(exc, args.config)
 		return 1
 	_run_loaded_config(config)
 	return 0

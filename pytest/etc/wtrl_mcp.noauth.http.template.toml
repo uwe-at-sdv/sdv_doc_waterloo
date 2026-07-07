@@ -1,0 +1,41 @@
+# Waterloo MCP server configuration for streamable-http transport.
+# This template is required by the run.sh script in order to pytest
+# the MCP server.
+
+[auth]
+enabled = false
+_TOKEN_STORE_
+realm = "WTRL"
+
+[server]
+transport = "streamable-http"
+host = "0.0.0.0"
+_PORT_
+streamable_http_path = "/mcp"
+
+[security]
+_ALLOWED_HOSTS_
+# This matters for the browser-based Inspector, which connects
+# via CORS. Replace "gilgamesh" with your hostname if you want
+# to try it locally. This entry is not relevant for VSCode.
+allowed_origins = ["http://localhost:6274", "http://gilgamesh:6274"]
+
+[logging]
+level = "INFO"
+access_log = true
+_CONFIG_PATH_
+
+# Possible kind at current state of development: wtrl-json.
+
+[[roots]]
+path = "/server/devel/sdv/privat/uwe/source/sdv_doc_waterloo/mcp_roots/wtrl_mcp.wtrl.core.rfc-2119.json"
+label = "Waterloo MCP Server and Tool set Reference"
+enabled = true
+kind = "wtrl-json"
+
+[[roots]]
+path = "/server/devel/sdv/privat/uwe/source/sdv_doc_waterloo/package_gh-pages/doc-json/docitem_helper.wtrl.core.rfc-2119.json"
+label = "Waterloo/Docitem Helper classes, functions, and types"
+enabled = true
+kind = "wtrl-json"
+

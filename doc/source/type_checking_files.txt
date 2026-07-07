@@ -3,8 +3,10 @@ sdv/doc/waterloo/waterlint_gen_minimal.py
 sdv/doc/waterloo/mcp/wtrl_error.py
 sdv/doc/waterloo/mcp/wtrl_server.py
 sdv/doc/waterloo/mcp/wtrl_tools.py
+sdv/doc/waterloo/mcp/wtrl_auth.py
 sdv/doc/waterloo/mcp/__init__.py
 sdv/doc/waterloo/mcp/jsonrpc_echo.py
+sdv/doc/waterloo/mcp/wtrl_mcp_admin.py
 sdv/doc/waterloo/mcp/prompts/__init__.py
 sdv/doc/waterloo/mcp/wtrl_logging.py
 sdv/doc/waterloo/waterlint_explain_section.py

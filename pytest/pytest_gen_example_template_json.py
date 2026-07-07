@@ -28,7 +28,7 @@ def test_gen_example_template_json_with_custom_id_segments() -> None:
 		"--org-or-project",
 		"sdv",
 		"--domain",
-		"tde4",
+		"waterloo",
 	)
 	assert res.returncode == 0, res.stderr
 	doc = json.loads(res.stdout)

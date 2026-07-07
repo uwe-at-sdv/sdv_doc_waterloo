@@ -51,6 +51,8 @@ dev = ["pytest"]
 waterlint = "sdv.doc.waterloo.waterlint:main"
 # MCP server entry point for Waterloo data roots and tool access.
 wtrl_mcp = "sdv.doc.waterloo.mcp.wtrl_server:main"
+# MCP admin helper for Waterloo token-store management.
+wtrl_mcp_admin = "sdv.doc.waterloo.mcp.wtrl_mcp_admin:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]

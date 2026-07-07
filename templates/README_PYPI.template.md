@@ -6,6 +6,12 @@
 
 _BADGES_
 
+### Latest
+
+Bearer-token authentication is now supported for MCP server deployments.
+The server can be configured to require bearer tokens, and `wtrl_mcp_admin`
+now provides token issuance and revocation for the loopback-only admin path.
+
 ### On PyPI
 
 `sdv-doc-waterloo` is the published PyPI package that contains the Waterloo
@@ -24,6 +30,16 @@ the optional extra that provides the external `sphinx` dependency:
 ```bash
 pip install "sdv-doc-waterloo[sphinx]"
 ```
+
+### Current status
+
+Waterloo is under active development. Recent milestones include:
+
+Current work focuses on the MCP server:
+
+* Bearer-token authentication
+* Docker deployment
+* Administration tooling
 
 ### Quick tutorials
 

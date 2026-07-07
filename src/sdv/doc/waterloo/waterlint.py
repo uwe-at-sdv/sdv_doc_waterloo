@@ -1996,6 +1996,8 @@ def version_json_command(args: argparse.Namespace) -> int:
 
 	WTRL_MCP_ABOUT_JSON_SCHEMA_VERSION="TBD"
 	WTRL_MCP_ABOUT_TOPIC_JSON_SCHEMA_VERSION="TBD"
+	WTRL_MCP_ADMIN_REGISTRY_JSON_SCHEMA_VERSION="TBD"
+	WTRL_MCP_AUTH_TOKEN_STORE_JSON_SCHEMA_VERSION="TBD"
 	WTRL_EXPLAIN_SECTION_JSON_SCHEMA_VERSION="TBD"
 	WTRL_EXPLAIN_SUBSECTION_JSON_SCHEMA_VERSION="TBD"
 	WTRL_MCP_VERSION = sdv.doc.waterloo.mcp.__version__
@@ -2006,6 +2008,10 @@ def version_json_command(args: argparse.Namespace) -> int:
 				WTRL_MCP_ABOUT_JSON_SCHEMA_VERSION = f[len("wtrl-mcp-about-json-"):-len(".schema.json")]
 			elif f.startswith("wtrl-mcp-about-topic-json-") and f.endswith(".schema.json"):
 				WTRL_MCP_ABOUT_TOPIC_JSON_SCHEMA_VERSION = f[len("wtrl-mcp-about-topic-json-"):-len(".schema.json")]
+			elif f.startswith("wtrl-mcp-admin-registry-json-") and f.endswith(".schema.json"):
+				WTRL_MCP_ADMIN_REGISTRY_JSON_SCHEMA_VERSION = f[len("wtrl-mcp-admin-registry-json-"):-len(".schema.json")]
+			elif f.startswith("wtrl-mcp-auth-token-store-json-") and f.endswith(".schema.json"):
+				WTRL_MCP_AUTH_TOKEN_STORE_JSON_SCHEMA_VERSION = f[len("wtrl-mcp-auth-token-store-json-"):-len(".schema.json")]
 			elif f.startswith("wtrl-explain-section-json-") and f.endswith(".schema.json"):
 				WTRL_EXPLAIN_SECTION_JSON_SCHEMA_VERSION = f[len("wtrl-explain-section-json-"):-len(".schema.json")]
 			elif f.startswith("wtrl-explain-subsection-json-") and f.endswith(".schema.json"):
@@ -2018,6 +2024,8 @@ def version_json_command(args: argparse.Namespace) -> int:
 		"wtrl-example-refs-json": {"kind": "schema", "version": WTRL_EXAMPLE_REFS_JSON_SCHEMA_VERSION},
 		"wtrl-explain-section-json": {"kind": "schema", "version": WTRL_EXPLAIN_SECTION_JSON_SCHEMA_VERSION},
 		"wtrl-explain-subsection-json": {"kind": "schema", "version": WTRL_EXPLAIN_SUBSECTION_JSON_SCHEMA_VERSION},
+		"wtrl-mcp-admin-registry-json": {"kind": "schema", "version": WTRL_MCP_ADMIN_REGISTRY_JSON_SCHEMA_VERSION},
+		"wtrl-mcp-auth-token-store-json": {"kind": "schema", "version": WTRL_MCP_AUTH_TOKEN_STORE_JSON_SCHEMA_VERSION},
 		"wtrl-walk-json": {"kind": "schema", "version": WTRL_WALK_JSON_SCHEMA_VERSION},
 		"wtrl-mcp-about-json": {"kind": "schema", "version": WTRL_MCP_ABOUT_JSON_SCHEMA_VERSION},
 		"wtrl-mcp-about-topic-json": {"kind": "schema", "version": WTRL_MCP_ABOUT_TOPIC_JSON_SCHEMA_VERSION},

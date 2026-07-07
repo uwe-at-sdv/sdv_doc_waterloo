@@ -8,6 +8,9 @@ import pytest
 from pytest_mcp_common import mcp_list_roots, mcp_call_tool_entries, mcp_or_skip, mcp_call_tool
 
 
+DOCITEM_HELPER_ROOT_SUFFIX = "/package_gh-pages/doc-json/docitem_helper.wtrl.core.rfc-2119.json"
+
+
 @pytest.fixture(scope="module")
 def mcp_session() -> str:
 	return mcp_or_skip()
@@ -18,7 +21,7 @@ def mcp_docs_root_id(mcp_session: str) -> str:
 	roots = mcp_list_roots(mcp_session)
 	for root in roots:
 		path = root.get("path")
-		if isinstance(path, str) and path.endswith("/mcp_roots/wtrl_mcp.wtrl.core.rfc-2119.json"):
+		if isinstance(path, str) and path.endswith(DOCITEM_HELPER_ROOT_SUFFIX):
 			root_id = root.get("root_id")
 			if isinstance(root_id, str):
 				return root_id
@@ -49,14 +52,13 @@ def test_mcp_search_sections_public_functions_hits_server_and_tools(
 		},
 	)
 	qids = _entry_qids(entries)
-	assert "sdv.doc.waterloo.mcp.wtrl_server" in qids, entries
-	assert "sdv.doc.waterloo.mcp.wtrl_tools" in qids, entries
+	assert "sdv.doc.waterloo.docitem_helper" in qids, entries
 	for entry in entries:
 		assert entry.get("section") == "Public_functions", entry
 		assert entry.get("match_kind") == "section", entry
 
 
-def test_mcp_search_sections_public_types_is_tools_only(
+def test_mcp_search_sections_public_types_is_docitem_helper_only(
 	mcp_session: str,
 	mcp_docs_root_id: str,
 ) -> None:
@@ -71,7 +73,8 @@ def test_mcp_search_sections_public_types_is_tools_only(
 		},
 	)
 	qids = _entry_qids(entries)
-	assert qids == {"sdv.doc.waterloo.mcp.wtrl_tools"}, entries
+	assert {"sdv.doc.waterloo.docitem_helper.DocSession", "sdv.doc.waterloo.docitem_helper.tracer"} <= qids, entries
+	assert all(qid.startswith("sdv.doc.waterloo.docitem_helper") for qid in qids), entries
 	for entry in entries:
 		assert entry.get("section") == "Public_types", entry
 
@@ -79,9 +82,9 @@ def test_mcp_search_sections_public_types_is_tools_only(
 @pytest.mark.parametrize(
 	"terms,expected_qid,expected_section,expected_subsection,expected_excerpt",
 	[
-		(["entry point"], "sdv.doc.waterloo.mcp.wtrl_server", "Contract", "general", "entry point"),
-		(["tool set"], "sdv.doc.waterloo.mcp.wtrl_tools", "Contract", "general", "tool set"),
-		(["compact excerpts"], "sdv.doc.waterloo.mcp.wtrl_tools", "Function_overview", "search_text", "compact excerpts"),
+		(["fully qualified object name"], "sdv.doc.waterloo.docitem_helper.get_obj_fully_qualified_name", "Contract", "general", "fully qualified object name"),
+		(["direct owner module"], "sdv.doc.waterloo.docitem_helper.get_obj_direct_module", "Contract", "general", "direct owner module"),
+		(["best-effort and object-local"], "sdv.doc.waterloo.docitem_helper.get_obj_name", "Notes", "Limitations", "best-effort and object-local"),
 	],
 )
 def test_mcp_search_text_finds_mcp_doc_phrases(
@@ -124,8 +127,8 @@ def test_mcp_get_section_function_overview_lists_docstring_tools(
 		"get_section",
 		{
 			"root_id": mcp_docs_root_id,
-			"qid": "sdv.doc.waterloo.mcp.wtrl_tools",
-			"section": "Function_overview",
+			"qid": "sdv.doc.waterloo.docitem_helper",
+			"section": "Public_functions",
 		},
 	)
 	assert result.get("isError") is False, result
@@ -133,11 +136,11 @@ def test_mcp_get_section_function_overview_lists_docstring_tools(
 	if not isinstance(structured, dict):
 		raise AssertionError(f"missing structuredContent: {result}")
 	section = structured.get("section_value")
-	if not isinstance(section, dict):
+	if not isinstance(section, list):
 		raise AssertionError(f"missing section payload: {structured}")
-	assert "gen_docstring" in section, section
-	assert "search_text" in section, section
-	assert "get_section" in section, section
+	assert "get_obj_name" in section, section
+	assert "get_obj_path" in section, section
+	assert "get_obj_fully_qualified_name" in section, section
 
 
 def test_mcp_get_subsection_public_functions_entry_point(
@@ -149,9 +152,9 @@ def test_mcp_get_subsection_public_functions_entry_point(
 		"get_subsection",
 		{
 			"root_id": mcp_docs_root_id,
-			"qid": "sdv.doc.waterloo.mcp.wtrl_server",
-			"section": "Contract",
-			"subsection": "general",
+			"qid": "sdv.doc.waterloo.docitem_helper.get_obj_name",
+			"section": "Notes",
+			"subsection": "Limitations",
 		},
 	)
 	assert result.get("isError") is False, result
@@ -161,4 +164,4 @@ def test_mcp_get_subsection_public_functions_entry_point(
 	subsection = structured.get("subsection_value")
 	if not isinstance(subsection, list):
 		raise AssertionError(f"missing subsection payload: {structured}")
-	assert any("entry point for the Waterloo MCP server" in str(item) for item in subsection), subsection
+	assert any("more precise identifier" in str(item) for item in subsection), subsection

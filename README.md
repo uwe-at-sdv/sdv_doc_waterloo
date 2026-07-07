@@ -38,6 +38,16 @@ SSH works as well for authenticated access:
 pip install "git+ssh://git@github.com/uwe-at-sdv/sdv_doc_waterloo.git@main"
 ```
 
+### Current status
+
+Waterloo is under active development. Recent milestones include:
+
+Current work focuses on the MCP server:
+
+* Bearer-token authentication
+* Docker deployment
+* Administration tooling
+
 ### Quick tutorials
 
 #### waterlint

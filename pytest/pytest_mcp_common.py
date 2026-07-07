@@ -7,16 +7,17 @@ import json
 import os
 import urllib.error
 import urllib.request
+from pathlib import Path
 from typing import cast
 
 import pytest
 
 from pytest_common import PATH_MAIN
 
-MCP_URL = os.environ.get("WTRL_MCP_URL", "http://127.0.0.1:13316/mcp")
+MCP_URL = os.environ.get("WTRL_MCP_URL", "http://127.0.0.1:7998/mcp")
 MCP_ORIGIN = os.environ.get("WTRL_MCP_ORIGIN", "http://gilgamesh:6274")
 MCP_PROTOCOL_VERSION = os.environ.get("WTRL_MCP_PROTOCOL_VERSION", "2025-11-25")
-MCP_START_COMMAND = "wtrl_mcp --config etc/wtrl_mcp.http.toml"
+MCP_START_COMMAND = "bash package_main/pytest/run.sh"
 
 PATH_TEMPLATES_JSON_OUT = PATH_MAIN / "templates-json" / "out"
 
@@ -222,7 +223,7 @@ def mcp_or_skip() -> str:
 	try:
 		return mcp_initialize_session()
 	except MCPUnavailableError:
-		pytest.skip(f"start the MCP server with: {MCP_START_COMMAND}")
+		pytest.skip(f"start the MCP servers with: {MCP_START_COMMAND}")
 
 
 def load_template_json(name: str) -> dict[str, object]:

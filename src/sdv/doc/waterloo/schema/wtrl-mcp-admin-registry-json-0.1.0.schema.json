@@ -1,0 +1,61 @@
+{
+	"description": "Waterloo MCP admin registry JSON schema.",
+	"x-published": "2026-07-07",
+	"x-changelog": [
+		{
+			"version": "0.1.0",
+			"date": "2026-07-07",
+			"changes": [
+				{
+					"type": "meta",
+					"summary": "Initial schema version."
+				}
+			]
+		}
+	],
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"$id": "https://sci-d-vis.com/schema/wtrl-mcp-admin-registry-json-0.1.0.schema.json",
+	"title": "Waterloo MCP admin registry JSON",
+	"type": "object",
+	"required": [
+		"servers"
+	],
+	"additionalProperties": false,
+	"properties": {
+		"servers": {
+			"type": "array",
+			"items": {
+				"type": "object",
+				"required": [
+					"label",
+					"url",
+					"mcp_endpoint",
+					"admin_endpoint",
+					"description"
+				],
+				"additionalProperties": false,
+				"properties": {
+					"label": {
+						"type": "string",
+						"minLength": 1
+					},
+					"url": {
+						"type": "string",
+						"format": "uri"
+					},
+					"mcp_endpoint": {
+						"type": "string",
+						"pattern": "^/(?:[^\\s/]+(?:/[^\\s/]+)*)?$"
+					},
+					"admin_endpoint": {
+						"type": "string",
+						"pattern": "^/(?:[^\\s/]+(?:/[^\\s/]+)*)?$"
+					},
+					"description": {
+						"type": "string"
+					}
+				}
+			}
+		}
+	}
+}
