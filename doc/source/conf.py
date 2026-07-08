@@ -96,6 +96,10 @@ html_favicon = '_static/favicon.ico'
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
 
+html_css_files = [
+	'wtrl_doc_custom.css',
+	]
+
 # Keep Sphinx-level fallback values as well.
 pygments_style = "gruvbox-light"
 pygments_dark_style = "gruvbox-dark"

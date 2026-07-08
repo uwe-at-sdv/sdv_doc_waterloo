@@ -1,0 +1,84 @@
+{
+	"description": "Waterloo MCP admin registry JSON schema.",
+	"x-published": "2026-07-08",
+	"x-changelog": [
+		{
+			"version": "0.2.0",
+			"date": "2026-07-08",
+			"changes": [
+				{
+					"type": "breaking",
+					"summary": "Add identity field for stable server identity bookkeeping."
+				}
+			]
+		},
+		{
+			"version": "0.1.0",
+			"date": "2026-07-07",
+			"changes": [
+				{
+					"type": "meta",
+					"summary": "Initial schema version."
+				}
+			]
+		}
+	],
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"$id": "https://sci-d-vis.com/schema/wtrl-mcp-admin-registry-json-0.2.0.schema.json",
+	"title": "Waterloo MCP admin registry JSON",
+	"type": "object",
+	"required": [
+		"servers"
+	],
+	"additionalProperties": false,
+	"properties": {
+		"servers": {
+			"type": "array",
+			"items": {
+				"type": "object",
+				"required": [
+					"identity",
+					"label",
+					"url",
+					"mcp_endpoint",
+					"admin_endpoint",
+					"description"
+				],
+				"additionalProperties": false,
+				"properties": {
+					"identity": {
+						"anyOf": [
+							{
+								"type": "string",
+								"maxLength": 63,
+								"pattern": "^$|^[-_a-zA-Z][-_a-zA-Z0-9+]*$"
+							},
+							{
+								"type": "null"
+							}
+						]
+					},
+					"label": {
+						"type": "string",
+						"minLength": 1
+					},
+					"url": {
+						"type": "string",
+						"format": "uri"
+					},
+					"mcp_endpoint": {
+						"type": "string",
+						"pattern": "^/(?:[^\\s/]+(?:/[^\\s/]+)*)?$"
+					},
+					"admin_endpoint": {
+						"type": "string",
+						"pattern": "^/(?:[^\\s/]+(?:/[^\\s/]+)*)?$"
+					},
+					"description": {
+						"type": "string"
+					}
+				}
+			}
+		}
+	}
+}
