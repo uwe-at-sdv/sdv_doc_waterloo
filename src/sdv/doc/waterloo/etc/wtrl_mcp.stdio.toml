@@ -13,6 +13,7 @@
 #   The extension uses it to start the stdio provider.
 
 [server]
+# identity = "wtrl_mcp"
 transport = "stdio"
 # host, port, and streamable_http_path are only used for streamable-http.
 
@@ -42,4 +43,3 @@ path = "../mcp/doc-json/wtrl_mcp.wtrl.core.rfc-2119.json"
 label = "Waterloo MCP Server and Tool set Reference"
 enabled = true
 kind = "wtrl-json"
-

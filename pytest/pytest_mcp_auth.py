@@ -33,9 +33,15 @@ from sdv.doc.waterloo.mcp.wtrl_server import (
 )
 
 
-def _config(tmp_path: Path, *, auth_enabled: bool = True) -> McpConfig:
+def _config(
+	tmp_path: Path,
+	*,
+	auth_enabled: bool = True,
+	identity: str | None = "wtrl-mcp-test",
+) -> McpConfig:
 	return McpConfig(
 		server=ServerConfig(
+			identity=identity,
 			transport="streamable-http",
 			host="127.0.0.1",
 			port=13316,
@@ -73,6 +79,19 @@ def test_create_token_derives_token_id_and_verify_roundtrip(tmp_path: Path) -> N
 	assert verified is not None
 	assert verified["token_id"] == "karl_ernst-any-any"
 	assert verified["notes"] == "demo"
+
+
+def test_verify_token_reflects_store_updates(tmp_path: Path) -> None:
+	path = tmp_path / "tokens.json"
+	record = create_token(
+		path,
+		token_id="karl_ernst-vscode-tablet",
+		expires_at=None,
+		notes=None,
+	)
+	assert verify_token(path, record["token"]) is not None
+	path.write_text("{\"tokens\": []}\n", encoding="utf-8")
+	assert verify_token(path, record["token"]) is None
 
 
 def test_create_token_rejects_duplicate_active_token_id(tmp_path: Path) -> None:
@@ -150,6 +169,7 @@ def test_load_config_parses_auth_section(tmp_path: Path) -> None:
 	config_path.write_text(
 		"""
 [server]
+identity = "wtrl-mcp-test"
 transport = "streamable-http"
 host = "127.0.0.1"
 port = 13316
@@ -182,6 +202,45 @@ kind = "wtrl-json"
 	assert not (tmp_path / "state" / "tokens.json").exists()
 
 
+def test_load_config_rejects_missing_server_identity_when_auth_is_enabled(tmp_path: Path) -> None:
+	(tmp_path / "state").mkdir()
+	config_path = tmp_path / "wtrl_mcp.toml"
+	config_path.write_text(
+		"""
+[server]
+transport = "streamable-http"
+host = "127.0.0.1"
+port = 13316
+streamable_http_path = "/mcp"
+
+[security]
+allowed_hosts = ["127.0.0.1:13316"]
+allowed_origins = []
+
+[auth]
+enabled = true
+token_store = "state/tokens.json"
+realm = "Test Realm"
+
+[logging]
+level = "INFO"
+
+[[roots]]
+path = "/tmp/root.json"
+label = "Root"
+enabled = false
+kind = "wtrl-json"
+""".strip(),
+		encoding="utf-8",
+	)
+	try:
+		load_config(config_path)
+	except ValueError as exc:
+		assert "[server].identity is required when [auth].enabled is true." in str(exc)
+	else:
+		raise AssertionError("expected missing server identity validation to fail")
+
+
 def test_load_config_accepts_existing_valid_auth_token_store(tmp_path: Path) -> None:
 	(tmp_path / "state").mkdir()
 	(tmp_path / "state" / "tokens.json").write_text(
@@ -197,6 +256,7 @@ def test_load_config_accepts_existing_valid_auth_token_store(tmp_path: Path) -> 
 	config_path.write_text(
 		"""
 [server]
+identity = "wtrl-mcp-test"
 transport = "streamable-http"
 host = "127.0.0.1"
 port = 13316
@@ -234,6 +294,7 @@ def test_load_config_rejects_invalid_existing_auth_token_store(tmp_path: Path) -
 	config_path.write_text(
 		"""
 [server]
+identity = "wtrl-mcp-test"
 transport = "streamable-http"
 host = "127.0.0.1"
 port = 13316
@@ -279,6 +340,7 @@ def test_load_config_rejects_missing_auth_token_store_directory(tmp_path: Path) 
 	config_path.write_text(
 		"""
 [server]
+identity = "wtrl-mcp-test"
 transport = "streamable-http"
 host = "127.0.0.1"
 port = 13316
@@ -320,14 +382,14 @@ def test_build_app_enables_token_verifier_when_auth_is_enabled(tmp_path: Path) -
 
 
 def test_build_app_keeps_token_verifier_disabled_when_auth_is_disabled(tmp_path: Path) -> None:
-	config = _config(tmp_path, auth_enabled=False)
+	config = _config(tmp_path, auth_enabled=False, identity=None)
 	app = build_app(config)
 	assert app._token_verifier is None
 	assert app.settings.auth is None
 
 
 def test_build_app_exposes_admin_status_when_auth_is_disabled(tmp_path: Path) -> None:
-	config = _config(tmp_path, auth_enabled=False)
+	config = _config(tmp_path, auth_enabled=False, identity=None)
 	app = _build_http_app(config, build_app(config))
 
 	async def _run() -> None:
@@ -346,7 +408,7 @@ def test_build_app_exposes_admin_status_when_auth_is_disabled(tmp_path: Path) ->
 def test_admin_routes_create_list_and_revoke_tokens(tmp_path: Path) -> None:
 	config = _config(tmp_path, auth_enabled=True)
 	app = Starlette()
-	_install_admin_routes(app, config.auth)
+	_install_admin_routes(app, config.auth, config.server.identity)
 	async def _run() -> None:
 		transport = httpx.ASGITransport(app=app, client=("127.0.0.1", 50123))
 		async with httpx.AsyncClient(transport=transport, base_url="http://testserver") as client:
@@ -413,7 +475,7 @@ def test_streamable_http_requires_bearer_token_when_auth_is_enabled(tmp_path: Pa
 def test_admin_routes_reject_non_loopback_clients(tmp_path: Path) -> None:
 	config = _config(tmp_path, auth_enabled=True)
 	app = Starlette()
-	_install_admin_routes(app, config.auth)
+	_install_admin_routes(app, config.auth, config.server.identity)
 	async def _run() -> None:
 		transport = httpx.ASGITransport(app=app, client=("gilgamesh", 50123))
 		async with httpx.AsyncClient(transport=transport, base_url="http://testserver") as client:
@@ -424,9 +486,9 @@ def test_admin_routes_reject_non_loopback_clients(tmp_path: Path) -> None:
 
 
 def test_admin_routes_absent_when_auth_disabled(tmp_path: Path) -> None:
-	config = _config(tmp_path, auth_enabled=False)
+	config = _config(tmp_path, auth_enabled=False, identity=None)
 	app = Starlette()
-	_install_admin_routes(app, config.auth)
+	_install_admin_routes(app, config.auth, config.server.identity)
 	async def _run() -> None:
 		transport = httpx.ASGITransport(app=app, client=("127.0.0.1", 50123))
 		async with httpx.AsyncClient(transport=transport, base_url="http://testserver") as client:

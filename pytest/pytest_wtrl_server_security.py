@@ -56,6 +56,7 @@ def test_runtime_allowed_hosts_rejects_ports_inside_host_names() -> None:
 def test_with_runtime_security_overrides_keeps_non_security_fields() -> None:
 	config = McpConfig(
 		server=ServerConfig(
+			identity=None,
 			transport="streamable-http",
 			host="127.0.0.1",
 			port=13316,

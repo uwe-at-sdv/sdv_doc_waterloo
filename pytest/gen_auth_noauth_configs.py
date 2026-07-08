@@ -39,6 +39,7 @@ def _free_port(used: set[int] | None = None) -> int:
 
 def _write_config(template: Path, port: int, *, logging_config: Path) -> Path:
 	text = template.read_text(encoding="utf-8")
+	text = text.replace("_IDENTITY_", f'identity = "wtrl-mcp-{port}"')
 	text = text.replace("_PORT_", f"port = {port}")
 	text = text.replace(
 		"_ALLOWED_HOSTS_",

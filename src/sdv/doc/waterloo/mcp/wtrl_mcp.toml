@@ -3,6 +3,10 @@
 # Save this as wtrl_mcp.toml next to wtrl_server.py and edit it as needed.
 
 [server]
+# identity = "wtrl_mcp"
+# Set identity explicitly when auth.enabled = true.
+# Choose a descriptive, preferably host-unique identity so the server can be
+# identified reliably across different hosts and admin registries.
 # transport = "stdio"
 transport = "streamable-http"
 # host = "127.0.0.1"

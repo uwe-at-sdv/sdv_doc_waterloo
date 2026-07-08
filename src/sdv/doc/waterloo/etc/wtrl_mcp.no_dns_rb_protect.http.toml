@@ -6,6 +6,7 @@
 # The roots and logging config_path are resolved relative to this file.
 
 [server]
+# identity = "wtrl_mcp"
 transport = "streamable-http"
 host = "0.0.0.0"
 port = 13316

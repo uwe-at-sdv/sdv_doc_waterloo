@@ -22,10 +22,11 @@ def _load_schema(name: str) -> dict[str, object]:
 
 
 def test_mcp_admin_registry_schema_accepts_current_shape() -> None:
-	schema = _load_schema("wtrl-mcp-admin-registry-json-0.1.0.schema.json")
+	schema = _load_schema("wtrl-mcp-admin-registry-json-0.2.0.schema.json")
 	doc = {
 		"servers": [
 			{
+				"identity": "",
 				"label": "local-waterloo",
 				"url": "http://127.0.0.1:13316",
 				"mcp_endpoint": "/mcp",
@@ -38,10 +39,11 @@ def test_mcp_admin_registry_schema_accepts_current_shape() -> None:
 
 
 def test_mcp_admin_registry_schema_rejects_extra_properties() -> None:
-	schema = _load_schema("wtrl-mcp-admin-registry-json-0.1.0.schema.json")
+	schema = _load_schema("wtrl-mcp-admin-registry-json-0.2.0.schema.json")
 	doc = {
 		"servers": [
 			{
+				"identity": "",
 				"label": "local-waterloo",
 				"url": "http://127.0.0.1:13316",
 				"mcp_endpoint": "/mcp",

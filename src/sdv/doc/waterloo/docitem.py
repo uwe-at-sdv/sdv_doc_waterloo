@@ -253,7 +253,8 @@ from contextlib import contextmanager
 from sdv.doc.waterloo.docitem_docstring import *
 from sdv.doc.waterloo.docitem_validator import *
 
-__version__ = "0.12.1"
+__version__ = "0.12.2"
+# - 0.12.2 [2026-07-07] Version bump for MCP server: unique server identity
 # - 0.12.1 [2026-07-07] Fix in dependencies
 # - 0.12.0 [2026-07-07] Version Bump for MCP server: Bearer token authentication and tooling
 # - 0.11.1 [2026-07-04] Rule PNB-004 exceptions for quotes words: single, double, backtick.

@@ -17,6 +17,7 @@ from sdv.doc.waterloo.mcp.wtrl_mcp_admin import (
 	_cmd_add_server,
 	_cmd_del_server,
 	_cmd_list_servers,
+	_cmd_ping_servers,
 	_cmd_list_tokens,
 	_build_token_id,
 	_format_add_server_message,
@@ -44,6 +45,7 @@ def test_registry_round_trip_and_upsert(tmp_path: Path) -> None:
 	path = tmp_path / "registry.json"
 	data = _load_registry(path)
 	entry = ServerEntry(
+		identity="local-waterloo",
 		label="local-waterloo",
 		url="http://127.0.0.1:13316",
 		mcp_endpoint="/mcp",
@@ -59,6 +61,7 @@ def test_registry_round_trip_and_upsert(tmp_path: Path) -> None:
 	assert servers[0]["url"] == "http://127.0.0.1:13316"
 
 	updated = ServerEntry(
+		identity="local-waterloo",
 		label="local-waterloo",
 		url="http://127.0.0.1:13317",
 		mcp_endpoint="/mcp",
@@ -80,6 +83,7 @@ def test_registry_load_accepts_current_schema_shape(tmp_path: Path) -> None:
 		{
 		  "servers": [
 		    {
+		      "identity": "",
 		      "label": "local-waterloo",
 		      "url": "http://127.0.0.1:13316",
 		      "mcp_endpoint": "/mcp",
@@ -97,6 +101,7 @@ def test_registry_load_accepts_current_schema_shape(tmp_path: Path) -> None:
 	assert isinstance(servers, list)
 	assert len(servers) == 1
 	assert servers[0]["label"] == "local-waterloo"
+	assert servers[0]["identity"] == ""
 
 
 def test_registry_load_rejects_invalid_json_with_context(tmp_path: Path) -> None:
@@ -119,6 +124,7 @@ def test_registry_load_rejects_extra_properties(tmp_path: Path) -> None:
 		{
 		  "servers": [
 		    {
+		      "identity": "",
 		      "label": "local-waterloo",
 		      "url": "http://127.0.0.1:13316",
 		      "mcp_endpoint": "/mcp",
@@ -188,6 +194,7 @@ def test_format_admin_status_is_readable() -> None:
 
 def test_format_admin_token_operation_error_is_specific() -> None:
 	entry = ServerEntry(
+		identity="auth-server",
 		label="auth-server",
 		url="http://127.0.0.1:23316",
 		mcp_endpoint="/mcp",
@@ -204,6 +211,7 @@ def test_format_admin_token_operation_error_is_specific() -> None:
 
 def test_ping_admin_uses_ssh_tunnel_for_non_loopback_host(monkeypatch) -> None:
 	entry = ServerEntry(
+		identity="remote-waterloo",
 		label="remote-waterloo",
 		url="http://gilgamesh:23316",
 		mcp_endpoint="/mcp",
@@ -245,9 +253,10 @@ def test_ping_admin_uses_ssh_tunnel_for_non_loopback_host(monkeypatch) -> None:
 	monkeypatch.setattr(admin_mod, "_wait_for_tcp_port", lambda host, port, timeout: None)
 	monkeypatch.setattr(admin_mod, "_request_json", _fake_request_json)
 
-	mode, status = admin_mod._ping_admin(entry)
+	mode, status, identity = admin_mod._ping_admin(entry)
 	assert mode == "ssh"
 	assert status == "auth-disabled"
+	assert identity == ""
 	assert calls["method"] == "GET"
 	assert calls["url"] == "http://127.0.0.1:45678/admin"
 	assert calls["ssh_cmd"] == [
@@ -265,6 +274,7 @@ def test_ping_admin_uses_ssh_tunnel_for_non_loopback_host(monkeypatch) -> None:
 
 def test_format_add_and_del_server_messages_are_specific() -> None:
 	entry = ServerEntry(
+		identity="",
 		label="local-waterloo",
 		url="http://127.0.0.1:13316",
 		mcp_endpoint="/mcp",
@@ -294,12 +304,13 @@ def test_format_table_keeps_status_columns_left_aligned() -> None:
 		kind="ping",
 		columns=(
 			TableColumn("label", "Label"),
+			TableColumn("identity", "Identity"),
 			TableColumn("host", "Host"),
 			TableColumn("admin_access", "Admin access"),
 			TableColumn("admin_status", "Admin status"),
 			TableColumn("client_status", "Client status"),
 		),
-		rows=[{"label": "server", "host": "localhost", "admin_access": "direct", "admin_status": "auth-required (401)", "client_status": "ok"}],
+		rows=[{"label": "server", "identity": "server-id", "host": "localhost", "admin_access": "direct", "admin_status": "auth-required (401)", "client_status": "ok"}],
 	)
 	out = _render_table_report(report)
 	assert "auth-required (401)" in out
@@ -309,13 +320,17 @@ def test_format_table_keeps_status_columns_left_aligned() -> None:
 def test_table_report_to_json_has_stable_shape() -> None:
 	report = TableReport(
 		kind="servers",
-		columns=(TableColumn("label", "Label"), TableColumn("host_port", "Host:Port")),
-		rows=[{"label": "local-waterloo", "host_port": "127.0.0.1:13316"}],
+		columns=(TableColumn("label", "Label"), TableColumn("identity", "Identity"), TableColumn("host_port", "Host:Port")),
+		rows=[{"label": "local-waterloo", "identity": "local-waterloo", "host_port": "127.0.0.1:13316"}],
 	)
 	doc = _table_report_to_json(report)
 	assert doc["kind"] == "servers"
-	assert doc["columns"] == [{"key": "label", "label": "Label"}, {"key": "host_port", "label": "Host:Port"}]
-	assert doc["rows"] == [{"label": "local-waterloo", "host_port": "127.0.0.1:13316"}]
+	assert doc["columns"] == [
+		{"key": "label", "label": "Label"},
+		{"key": "identity", "label": "Identity"},
+		{"key": "host_port", "label": "Host:Port"},
+	]
+	assert doc["rows"] == [{"label": "local-waterloo", "identity": "local-waterloo", "host_port": "127.0.0.1:13316"}]
 
 
 def test_write_report_can_emit_json_to_stdout(capsys) -> None:
@@ -348,6 +363,22 @@ def test_list_servers_json_mode_keeps_empty_report(monkeypatch, capsys) -> None:
 	doc = json.loads(capsys.readouterr().out)
 	assert doc["kind"] == "servers"
 	assert doc["rows"] == []
+
+
+def test_ping_servers_json_mode_falls_back_to_label_when_identity_missing(monkeypatch, capsys) -> None:
+	monkeypatch.setattr(
+		admin_mod,
+		"_load_registry",
+		lambda path: {"servers": [{"identity": "", "label": "noauth-server", "url": "http://127.0.0.1:13316"}]},
+	)
+	monkeypatch.setattr(admin_mod, "_ping_admin", lambda entry: ("direct", "auth-disabled", ""))
+	monkeypatch.setattr(admin_mod, "_ping_client", lambda entry: "ok")
+	args = argparse.Namespace(registry=None, out=None, out_json="-")
+	assert _cmd_ping_servers(args) == 0
+	doc = json.loads(capsys.readouterr().out)
+	assert doc["kind"] == "ping"
+	assert doc["rows"][0]["label"] == "noauth-server"
+	assert doc["rows"][0]["identity"] == "noauth-server"
 
 
 def test_add_server_reports_registration_message(monkeypatch, capsys) -> None:
@@ -429,6 +460,7 @@ def test_request_json_uses_extra_headers(monkeypatch) -> None:
 
 def test_verify_token_command_uses_bearer_token(monkeypatch) -> None:
 	entry = ServerEntry(
+		identity="auth-server",
 		label="auth-server",
 		url="http://127.0.0.1:23316",
 		mcp_endpoint="/mcp",
@@ -449,6 +481,7 @@ def test_verify_token_command_uses_bearer_token(monkeypatch) -> None:
 		return 200, {"result": "ok"}
 
 	monkeypatch.setattr(admin_mod, "_read_server_entry", _fake_read_server_entry)
+	monkeypatch.setattr(admin_mod, "_load_registry", lambda path: {"servers": [{"identity": "auth-server", "label": "auth-server", "url": "http://127.0.0.1:23316"}]})
 	monkeypatch.setattr(admin_mod, "_request_json", _fake_request_json)
 	args = argparse.Namespace(server="auth-server", token="BearerToken", registry=None)
 	assert _cmd_verify_token(args) == 0
@@ -460,6 +493,7 @@ def test_verify_token_command_uses_bearer_token(monkeypatch) -> None:
 
 def test_verify_token_command_uses_ssh_tunnel_for_non_loopback_host(monkeypatch, capsys) -> None:
 	entry = ServerEntry(
+		identity="remote-waterloo",
 		label="remote-waterloo",
 		url="http://gilgamesh:23316",
 		mcp_endpoint="/mcp",
@@ -485,6 +519,7 @@ def test_verify_token_command_uses_ssh_tunnel_for_non_loopback_host(monkeypatch,
 
 	monkeypatch.setattr(admin_mod, "_read_server_entry", _fake_read_server_entry)
 	monkeypatch.setattr(admin_mod, "_admin_access", _fake_admin_access)
+	monkeypatch.setattr(admin_mod, "_load_registry", lambda path: {"servers": [{"identity": "remote-waterloo", "label": "remote-waterloo", "url": "http://gilgamesh:23316"}]})
 	monkeypatch.setattr(admin_mod, "_request_json", _fake_request_json)
 	args = argparse.Namespace(server="remote-waterloo", token="BearerToken", registry=None)
 	assert _cmd_verify_token(args) == 0
@@ -497,6 +532,7 @@ def test_verify_token_command_uses_ssh_tunnel_for_non_loopback_host(monkeypatch,
 
 def test_verify_token_command_reports_invalid_token_on_401(monkeypatch, capsys) -> None:
 	entry = ServerEntry(
+		identity="auth-server",
 		label="auth-server",
 		url="http://127.0.0.1:23316",
 		mcp_endpoint="/mcp",
@@ -512,14 +548,16 @@ def test_verify_token_command_reports_invalid_token_on_401(monkeypatch, capsys) 
 		return 401, {"error": "unauthorized"}
 
 	monkeypatch.setattr(admin_mod, "_read_server_entry", _fake_read_server_entry)
+	monkeypatch.setattr(admin_mod, "_load_registry", lambda path: {"servers": [{"identity": "auth-server", "label": "auth-server", "url": "http://127.0.0.1:23316"}]})
 	monkeypatch.setattr(admin_mod, "_request_json", _fake_request_json)
 	args = argparse.Namespace(server="auth-server", token="BearerToken", registry=None)
 	assert _cmd_verify_token(args) == 1
 	assert capsys.readouterr().out.strip() == "invalid token (401)"
 
 
-def test_verify_token_command_reports_unknown_server_cleanly() -> None:
+def test_verify_token_command_reports_unknown_server_cleanly(monkeypatch) -> None:
 	args = argparse.Namespace(server="missing-server", token="abc", registry=None)
+	monkeypatch.setattr(admin_mod, "_load_registry", lambda path: {"servers": []})
 	try:
 		_cmd_verify_token(args)
 	except ValueError as exc:
@@ -530,6 +568,7 @@ def test_verify_token_command_reports_unknown_server_cleanly() -> None:
 
 def test_list_tokens_reports_malformed_token_list(monkeypatch) -> None:
 	entry = ServerEntry(
+		identity="auth-server",
 		label="auth-server",
 		url="http://127.0.0.1:23316",
 		mcp_endpoint="/mcp",
@@ -545,6 +584,7 @@ def test_list_tokens_reports_malformed_token_list(monkeypatch) -> None:
 		return 200, {"tokens": "not-a-list"}
 
 	monkeypatch.setattr(admin_mod, "_read_server_entry", _fake_read_server_entry)
+	monkeypatch.setattr(admin_mod, "_load_registry", lambda path: {"servers": [{"identity": "auth-server", "label": "auth-server", "url": "http://127.0.0.1:23316"}]})
 	monkeypatch.setattr(admin_mod, "_request_json", _fake_request_json)
 	args = argparse.Namespace(server="auth-server", registry=None, out=None, out_json=None)
 	try:

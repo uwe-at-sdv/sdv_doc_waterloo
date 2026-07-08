@@ -8,6 +8,7 @@ _TOKEN_STORE_
 realm = "WTRL"
 
 [server]
+_IDENTITY_
 transport = "streamable-http"
 host = "0.0.0.0"
 _PORT_
@@ -38,4 +39,3 @@ path = "/server/devel/sdv/privat/uwe/source/sdv_doc_waterloo/package_gh-pages/do
 label = "Waterloo/Docitem Helper classes, functions, and types"
 enabled = true
 kind = "wtrl-json"
-

@@ -178,6 +178,7 @@ from sdv.doc.waterloo.mcp.wtrl_auth import (
 logger = logging.getLogger("wtrl_mcp")
 ADMIN_ENDPOINT_BASE: Final[str] = "/admin"
 ADMIN_LOOPBACK_ONLY_ERROR: Final[str] = "The /admin API is loopback-only in v1."
+_SERVER_IDENTITY_RE = re.compile(r"^[-_a-zA-Z][-_a-zA-Z0-9+]*$")
 
 # Global tool documentation registry
 WTRL_TOOL_DOCS: Final[dict[str, Callable[..., object] | None]] = {
@@ -218,6 +219,8 @@ class ServerConfig:
 		constructor:
 			|Must| be constructible from parsed transport settings.
 	Public_variables:
+		identity:
+			Stores the optional stable server identity.
 		transport:
 			Stores the configured transport mode.
 		host:
@@ -233,6 +236,7 @@ class ServerConfig:
 			Binding to |value|`0.0.0.0` is a security risk if the server is exposed to untrusted networks.
 	"""
 
+	identity: str | None
 	transport: str
 	host: str
 	port: int
@@ -666,6 +670,10 @@ def _template_text() -> str:
 # which includes one root with the default root JSON resource.
 
 [server]
+# identity = "wtrl_mcp"
+# Set identity explicitly when auth.enabled = true.
+# Choose a descriptive, preferably host-unique identity so the server can be
+# identified reliably across different hosts and admin registries.
 # transport = "stdio"
 transport = "streamable-http"
 # host = "127.0.0.1"
@@ -792,6 +800,7 @@ def _with_runtime_security_overrides(
 		return config
 	return McpConfig(
 		server=ServerConfig(
+			identity=config.server.identity,
 			transport=config.server.transport,
 			host=config.server.host,
 			port=effective_server_port,
@@ -1097,7 +1106,14 @@ def load_config(config_path: Path | None = None) -> McpConfig:
 	if not isinstance(logging_data, Mapping):
 		raise ValueError("[logging] must be a TOML table.")
 	config_dir = path.parent.resolve()
+	server_identity_raw = server_data.get("identity")
+	server_identity_text = "" if server_identity_raw is None else str(server_identity_raw).strip()
+	if server_identity_text and not _SERVER_IDENTITY_RE.fullmatch(server_identity_text):
+		raise ValueError("[server].identity must match [-_a-zA-Z][-_a-zA-Z0-9+]*.")
+	if bool(auth_data.get("enabled", False)) and not server_identity_text:
+		raise ValueError("[server].identity is required when [auth].enabled is true.")
 	server = ServerConfig(
+		identity=server_identity_text or None,
 		transport=str(server_data.get("transport", "stdio")).strip().lower(),
 		host=str(server_data.get("host", "127.0.0.1")),
 		port=int(server_data.get("port", 8000)),
@@ -1498,6 +1514,8 @@ def build_app(config: McpConfig) -> FastMCP:
 	prompts = _register_prompts(mcp)
 
 	logger.info("wtrl_mcp %s ready.", __version__)
+	if config.server.identity is not None:
+		logger.info("Server identity: %s", config.server.identity)
 	if config.auth.enabled:
 		logger.info("Authentication is enabled for MCP clients. Token store: %s", config.auth.token_store_path)
 		try:
@@ -1550,7 +1568,7 @@ def _is_loopback_request(request: Request) -> bool:
 	return client.host in {"127.0.0.1", "::1", "::ffff:127.0.0.1", "localhost"}
 
 
-def _install_admin_routes(app: Starlette, auth_config: AuthConfig) -> None:
+def _install_admin_routes(app: Starlette, auth_config: AuthConfig, server_identity: str | None) -> None:
 	async def _reject_if_not_loopback(request: Request) -> JSONResponse | None:
 		if _is_loopback_request(request):
 			return None
@@ -1560,7 +1578,7 @@ def _install_admin_routes(app: Starlette, auth_config: AuthConfig) -> None:
 		rejection = await _reject_if_not_loopback(request)
 		if rejection is not None:
 			return rejection
-		payload: dict[str, object] = {"auth_enabled": auth_config.enabled}
+		payload: dict[str, object] = {"auth_enabled": auth_config.enabled, "identity": server_identity or ""}
 		if auth_config.enabled:
 			try:
 				valid_tokens, revoked_tokens = _auth_token_stats(auth_config.token_store_path)
@@ -1638,7 +1656,7 @@ def _wrap_browser_cors(app: ASGIApp, origins: list[str]) -> ASGIApp:
 
 def _build_http_app(config: McpConfig, mcp: FastMCP) -> ASGIApp:
 	http_app = mcp.streamable_http_app()
-	_install_admin_routes(http_app, config.auth)
+	_install_admin_routes(http_app, config.auth, config.server.identity)
 	if config.security.allowed_origins:
 		http_app = _wrap_browser_cors(http_app, list(config.security.allowed_origins))
 	http_app = _RequestLogGroupMiddleware(http_app)
@@ -1768,6 +1786,7 @@ class McpAppRunner:
 		if transport is not None:
 			config = McpConfig(
 				server=ServerConfig(
+					identity=config.server.identity,
 					transport=transport,
 					host=config.server.host,
 					port=config.server.port,

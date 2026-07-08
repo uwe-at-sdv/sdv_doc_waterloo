@@ -4,6 +4,7 @@ Format:
 
 - VERSION [YYYY-MM-DD]: Summary.
 
+- 0.6.0 [2026-07-08]: Stable server identity; JSON Schema; wtrl_mcp_admin CLI
 - 0.5.0 [2026-07-07]: Bearer Token Authentification
 - 0.4.1 [2026-07-05]: Tool annotations/hints
 - 0.4.0 [2026-06-20]: Server serves prompts

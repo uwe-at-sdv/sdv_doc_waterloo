@@ -51,7 +51,7 @@ def set_log_group_key(group_key: str | None) -> contextvars.Token[str | None]:
 		profile:
 			function
 		normative_sections:
-			Contract, Returns
+			Contract, Parameters, Returns, Raises, See_also
 		scope:
 			extension
 	Contract:
@@ -59,8 +59,16 @@ def set_log_group_key(group_key: str | None) -> contextvars.Token[str | None]:
 			|Must| set the current log-group key in request-local context.
 			|Must| make the value visible to the timestamp-grouping formatter for the current request task.
 			|May| accept |value|`None` to clear the active request-local group key.
+	Parameters:
+		group_key:
+			The log-group key to set in request-local context, or |value|`None` to clear the current key.
 	Returns:
 		A context token that can be passed to |func|`reset_log_group_key`.
+	Raises:
+		ValueError:
+			|May| raise if |var|`group_key` is not |value|`None` and is not a valid string.
+	See_also:
+		reset_log_group_key
 	"""
 	return _LOG_GROUP_KEY.set(group_key)
 
@@ -71,15 +79,23 @@ def reset_log_group_key(token: contextvars.Token[str | None]) -> None:
 		profile:
 			function
 		normative_sections:
-			Contract, Returns
+			Contract, Parameters, Returns, Raises, See_also
 		scope:
 			extension
 	Contract:
 		general:
 			|Must| restore the previous log-group key in request-local context.
 			|Must| accept a token previously returned by |func|`set_log_group_key`.
+	Parameters:
+		token:
+			A context token previously returned by |func|`set_log_group_key`.
 	Returns:
 		No return value.
+	Raises:
+		ValueError:
+			|May| raise if |var|`token` is not a valid context token for the |var|`_LOG_GROUP_KEY` context variable.
+	See_also:
+		set_log_group_key
 	"""
 	_LOG_GROUP_KEY.reset(token)
 
@@ -90,15 +106,21 @@ def allocate_request_id() -> str:
 		profile:
 			function
 		normative_sections:
-			Contract, Returns
+			Contract, Parameters, Returns, Raises, See_also
 		scope:
 			extension
 	Contract:
 		general:
 			|Must| return a fresh short request identifier for log prefixes.
 			|Must| generate identifiers in a monotonically increasing sequence for the lifetime of the process.
+	Parameters:
 	Returns:
 		A short request identifier such as |value|`req-0001`.
+	Raises:
+		ValueError:
+			|May| raise if the request identifier sequence exceeds its maximum value.
+	See_also:
+		set_request_id, reset_request_id
 	"""
 	return f"req-{next(_REQUEST_ID_SEQ):04d}"
 
@@ -109,7 +131,7 @@ def set_request_id(request_id: str | None) -> contextvars.Token[str | None]:
 		profile:
 			function
 		normative_sections:
-			Contract, Returns
+			Contract, Parameters, Returns, Raises, See_also
 		scope:
 			extension
 	Contract:
@@ -117,8 +139,16 @@ def set_request_id(request_id: str | None) -> contextvars.Token[str | None]:
 			|Must| set the current request identifier in request-local context.
 			|Must| make the identifier visible to log formatters that emit request prefixes.
 			|May| accept |value|`None` to clear the active request id.
+	Parameters:
+		request_id:
+			The request identifier to set in request-local context, or |value|`None` to clear the current identifier.
 	Returns:
 		A context token that can be passed to |func|`reset_request_id`.
+	Raises:
+		ValueError:
+			|May| raise if |var|`request_id` is not |value|`None` and is not a valid string.
+	See_also:
+		reset_request_id
 	"""
 	return _LOG_REQUEST_ID.set(request_id)
 
@@ -129,24 +159,32 @@ def reset_request_id(token: contextvars.Token[str | None]) -> None:
 		profile:
 			function
 		normative_sections:
-			Contract, Returns
+			Contract, Parameters, Returns, Raises, See_also
 		scope:
 			extension
 	Contract:
 		general:
 			|Must| restore the previous request identifier in request-local context.
 			|Must| accept a token previously returned by |func|`set_request_id`.
+	Parameters:
+		token:
+			A context token previously returned by |func|`set_request_id`.
 	Returns:
 		No return value.
+	Raises:
+		ValueError:
+			|May| raise if |var|`token` is not a valid context token for the |var|`_LOG_REQUEST_ID` context variable.
+	See_also:
+		set_request_id
 	"""
 	_LOG_REQUEST_ID.reset(token)
 
 
 class _RequestIdFormatterMixin(logging.Formatter):
-	"""Inject the current request identifier into the log record."""
-
+	# Inject the current request identifier into the log record.
 	def format(self, record: logging.LogRecord) -> str:
 		request_id = _LOG_REQUEST_ID.get()
+		# This in fact happens during startup when Uvicorn logs a message before the first request is processed.
 		if request_id is None:
 			request_id = "-"
 		record.wtrl_request_id = request_id
@@ -170,6 +208,9 @@ class GroupingFormatter(_RequestIdFormatterMixin, _UvicornDefaultFormatter):
 			whose Unix creation time lies within |attr|`timestamp_window` seconds of the last
 			record for which the timestamp was emitted.
 			|Must| resume emitting the full timestamp when the configured time window has elapsed.
+		constructor:
+			|Must| accept the arguments of the underlying Uvicorn default formatter.
+			|Must| accept |attr|`timestamp_window` as a positive floating-point number that controls the suppression window.
 	Notes:
 		Purpose:
 			When several log records are emitted in a short burst, the timestamp repeats on
@@ -186,10 +227,6 @@ class GroupingFormatter(_RequestIdFormatterMixin, _UvicornDefaultFormatter):
 			full timestamp where suppression would have been correct.
 	"""
 
-	"""	constructor:
-			|Must| accept the arguments of the underlying Uvicorn default formatter.
-			|Must| accept |attr|`timestamp_window` as a positive floating-point number that controls the suppression window.
-    """
 	def __init__(
 		self,
 		fmt: str | None = None,

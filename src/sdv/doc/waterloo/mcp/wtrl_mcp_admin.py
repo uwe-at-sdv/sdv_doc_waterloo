@@ -6,6 +6,7 @@ import argparse
 import importlib.resources
 import json
 import os
+import re
 import shutil
 import socket
 import sys
@@ -32,10 +33,13 @@ DEFAULT_PROTOCOL_VERSION = "2025-11-25"
 DEFAULT_TIMEOUT = 5.0
 TABLE_CELL_WRAP_WIDTH = 32
 SSH_TUNNEL_TIMEOUT = 5.0
+SERVER_IDENTITY_MAX_LENGTH = 63
+SERVER_IDENTITY_RE = re.compile(r"^[-_a-zA-Z][-_a-zA-Z0-9+]*$")
 
 
 @dataclass(frozen=True)
 class ServerEntry:
+	identity: str
 	label: str
 	url: str
 	mcp_endpoint: str = DEFAULT_MCP_ENDPOINT
@@ -75,6 +79,17 @@ def _normalize_label(text: str) -> str:
 	if not label:
 		raise ValueError("label must not be empty")
 	return label
+
+
+def _normalize_identity(text: str | None) -> str:
+	identity = "" if text is None else str(text).strip()
+	if not identity:
+		return ""
+	if len(identity) > SERVER_IDENTITY_MAX_LENGTH:
+		raise ValueError(f"identity must not exceed {SERVER_IDENTITY_MAX_LENGTH} characters")
+	if not SERVER_IDENTITY_RE.fullmatch(identity):
+		raise ValueError("identity must match [-_a-zA-Z][-_a-zA-Z0-9+]*")
+	return identity
 
 
 def _normalize_path(path: str, default: str) -> str:
@@ -138,7 +153,7 @@ def _load_registry(path: Path) -> dict[str, Any]:
 
 
 def _validate_registry_schema(data: dict[str, Any], path: Path) -> None:
-	schema_path = importlib.resources.files("sdv.doc.waterloo") / "schema" / "wtrl-mcp-admin-registry-json-0.1.0.schema.json"
+	schema_path = importlib.resources.files("sdv.doc.waterloo") / "schema" / "wtrl-mcp-admin-registry-json-0.2.0.schema.json"
 	try:
 		schema = json.loads(schema_path.read_text(encoding="utf-8"))
 	except OSError as exc:
@@ -173,10 +188,12 @@ def _server_entries(data: dict[str, Any]) -> list[dict[str, Any]]:
 def _read_server_entry(data: dict[str, Any], label: str) -> ServerEntry:
 	for entry in _server_entries(data):
 		if str(entry.get("label", "")).strip() == label:
+			identity = _normalize_identity(entry.get("identity"))
 			url = str(entry.get("url") or "").strip()
 			if not url:
 				raise ValueError(f"server '{label}' is missing its url")
 			return ServerEntry(
+				identity=identity,
 				label=label,
 				url=url,
 				mcp_endpoint=_normalize_path(entry.get("mcp_endpoint", DEFAULT_MCP_ENDPOINT), DEFAULT_MCP_ENDPOINT),
@@ -191,6 +208,7 @@ def _store_server_entry(data: dict[str, Any], entry: ServerEntry) -> dict[str, A
 	updated: list[dict[str, Any]] = [srv for srv in servers if str(srv.get("label", "")).strip() != entry.label]
 	updated.append(
 		{
+			"identity": entry.identity,
 			"label": entry.label,
 			"url": entry.url,
 			"mcp_endpoint": entry.mcp_endpoint,
@@ -419,7 +437,11 @@ def _parse_json_or_sse(raw: str, *, url: str, status: int, content_type: str) ->
 	return json.loads("\n".join(data_lines))
 
 
-def _ping_admin(entry: ServerEntry) -> tuple[str, str]:
+# There are two categories of routes on the server side:
+# 1. The MCP endpoint, which is used by clients to communicate with the server.
+# 2. The admin endpoint, which is used by administrators to manage the server and its tokens.
+# Both are subject to our ping and status checks.
+def _ping_admin(entry: ServerEntry) -> tuple[str, str, str]:
 	try:
 		with _admin_access(entry) as access:
 			status, data = _request_json(
@@ -428,10 +450,10 @@ def _ping_admin(entry: ServerEntry) -> tuple[str, str]:
 				extra_headers=_admin_request_headers(entry),
 			)
 	except Exception as exc:
-		return _admin_access_mode(entry), f"error: {exc}"
+		return _admin_access_mode(entry), f"error: {exc}", ""
 	if status == 200:
-		return access.mode, _format_admin_status(data)
-	return access.mode, _format_status(status)
+		return access.mode, _format_admin_status(data), str(data.get("identity") or "").strip()
+	return access.mode, _format_status(status), ""
 
 
 def _ping_client(entry: ServerEntry) -> str:
@@ -469,6 +491,8 @@ def _format_verify_status(status: int) -> str:
 		return "invalid token (401)"
 	if status == 403:
 		return "forbidden (403)"
+	if status == 404:
+		return "not found (404)"
 	return f"http {status}"
 
 
@@ -501,6 +525,7 @@ def _cmd_add_server(args: argparse.Namespace) -> int:
 	data = _load_registry(registry_path)
 	base_url = _base_url_from_args(args.url, args.host, args.port)
 	entry = ServerEntry(
+		identity="",
 		label=_normalize_label(args.label),
 		url=base_url,
 		mcp_endpoint=_normalize_path(args.mcp_endpoint, DEFAULT_MCP_ENDPOINT),
@@ -528,6 +553,7 @@ def _cmd_list_servers(args: argparse.Namespace) -> int:
 	data = _load_registry(registry_path)
 	entries = [
 		ServerEntry(
+			identity=_normalize_identity(entry.get("identity")),
 			label=str(entry.get("label", "")).strip(),
 			url=str(entry.get("url") or "").strip(),
 			mcp_endpoint=_normalize_path(entry.get("mcp_endpoint", DEFAULT_MCP_ENDPOINT), DEFAULT_MCP_ENDPOINT),
@@ -540,6 +566,7 @@ def _cmd_list_servers(args: argparse.Namespace) -> int:
 		kind="servers",
 		columns=(
 			TableColumn("label", "Label"),
+			TableColumn("identity", "Identity"),
 			TableColumn("host_port", "Host:Port"),
 			TableColumn("mcp_endpoint", "MCP path"),
 			TableColumn("admin_endpoint", "Admin path"),
@@ -548,6 +575,7 @@ def _cmd_list_servers(args: argparse.Namespace) -> int:
 		rows=[
 			{
 				"label": entry.label,
+				"identity": entry.identity,
 				"host_port": entry.host_port(),
 				"mcp_endpoint": entry.mcp_endpoint,
 				"admin_endpoint": entry.admin_endpoint,
@@ -571,6 +599,7 @@ def _cmd_ping_servers(args: argparse.Namespace) -> int:
 	data = _load_registry(registry_path)
 	entries = [
 		ServerEntry(
+			identity=_normalize_identity(entry.get("identity")),
 			label=str(entry.get("label", "")).strip(),
 			url=str(entry.get("url") or "").strip(),
 			mcp_endpoint=_normalize_path(entry.get("mcp_endpoint", DEFAULT_MCP_ENDPOINT), DEFAULT_MCP_ENDPOINT),
@@ -581,20 +610,24 @@ def _cmd_ping_servers(args: argparse.Namespace) -> int:
 	]
 	rows: list[dict[str, str]] = []
 	for entry in entries:
-		admin_access, admin_status = _ping_admin(entry)
+		admin_access, admin_status, discovered_identity = _ping_admin(entry)
+		client_status = _ping_client(entry)
+		identity = discovered_identity or entry.identity or ""
 		rows.append(
 			{
 				"label": entry.label,
+				"identity": identity,
 				"host": entry.host_port(),
 				"admin_access": admin_access,
 				"admin_status": admin_status,
-				"client_status": _ping_client(entry),
+				"client_status": client_status,
 			}
 		)
 	report = TableReport(
 		kind="ping",
 		columns=(
 			TableColumn("label", "Label"),
+			TableColumn("identity", "Identity"),
 			TableColumn("host", "Host"),
 			TableColumn("admin_access", "Admin access"),
 			TableColumn("admin_status", "Admin status"),
@@ -744,7 +777,7 @@ def build_parser() -> argparse.ArgumentParser:
 	)
 	subparsers = parser.add_subparsers(dest="command", required=True)
 
-	prsr_add = subparsers.add_parser("add-server", help="Add or update a managed MCP server.")
+	prsr_add = subparsers.add_parser("add-server", help="Register a managed MCP server without contacting it yet.")
 	prsr_add.add_argument("--label", required=True)
 	prsr_add.add_argument("--url")
 	prsr_add.add_argument("--host")
@@ -763,7 +796,7 @@ def build_parser() -> argparse.ArgumentParser:
 	prsr_list.add_argument("--out-json", help='Write the JSON report to FILE, "-" or "@STDOUT".')
 	prsr_list.set_defaults(func=_cmd_list_servers)
 
-	prsr_ping = subparsers.add_parser("ping-servers", help="Ping registered MCP servers.")
+	prsr_ping = subparsers.add_parser("ping-servers", help="Ping registered MCP servers and report discovered identities.")
 	prsr_ping.add_argument("--out", help='Write the human-readable table to FILE, "-" or "@STDOUT".')
 	prsr_ping.add_argument("--out-json", help='Write the JSON report to FILE, "-" or "@STDOUT".')
 	prsr_ping.set_defaults(func=_cmd_ping_servers)

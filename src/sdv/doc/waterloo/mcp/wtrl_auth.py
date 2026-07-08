@@ -26,6 +26,7 @@ Function_overview:
 """
 from __future__ import annotations
 
+from copy import deepcopy
 import fcntl
 import hashlib
 import json
@@ -35,12 +36,15 @@ from contextlib import contextmanager
 from datetime import datetime, timezone
 from pathlib import Path
 import re
+from threading import RLock
 from typing import Iterator
 
 from mcp.server.auth.provider import AccessToken, TokenVerifier
 
 
 _IDENTIFIER_RE = re.compile(r"^[a-zA-Z_][a-zA-Z_0-9]*$")
+_STORE_CACHE_LOCK = RLock()
+_STORE_CACHE: dict[Path, tuple[int, int, dict[str, object]]] = {}
 
 
 class AuthTokenError(ValueError):
@@ -168,9 +172,29 @@ def _empty_store() -> dict[str, object]:
 	return {"tokens": []}
 
 
+def _store_cache_key(path: Path) -> Path:
+	return path.expanduser().resolve()
+
+
+def _invalidate_store_cache(path: Path) -> None:
+	key = _store_cache_key(path)
+	with _STORE_CACHE_LOCK:
+		_STORE_CACHE.pop(key, None)
+
+
 def _load_store(path: Path) -> dict[str, object]:
 	if not path.exists():
+		_invalidate_store_cache(path)
 		return _empty_store()
+	cache_key = _store_cache_key(path)
+	try:
+		stat = path.stat()
+	except OSError:
+		return _empty_store()
+	with _STORE_CACHE_LOCK:
+		cached = _STORE_CACHE.get(cache_key)
+		if cached is not None and cached[0] == stat.st_mtime_ns and cached[1] == stat.st_size:
+			return deepcopy(cached[2])
 	try:
 		data = json.loads(path.read_text(encoding="utf-8"))
 	except json.JSONDecodeError as exc:
@@ -183,6 +207,8 @@ def _load_store(path: Path) -> dict[str, object]:
 	for entry in tokens:
 		if not isinstance(entry, dict):
 			raise AuthTokenValidationError(f"Token store contains a non-object token record: {path}")
+	with _STORE_CACHE_LOCK:
+		_STORE_CACHE[cache_key] = (stat.st_mtime_ns, stat.st_size, deepcopy(data))
 	return data
 
 
@@ -191,6 +217,7 @@ def _write_store(path: Path, store: dict[str, object]) -> None:
 	tmp_path = path.with_name(f"{path.name}.tmp.{os.getpid()}")
 	tmp_path.write_text(json.dumps(store, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 	tmp_path.replace(path)
+	_invalidate_store_cache(path)
 
 
 def _token_records(store: dict[str, object]) -> list[dict[str, object]]:

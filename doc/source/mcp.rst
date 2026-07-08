@@ -69,6 +69,18 @@ For stdio transport the host setting is not used in practice.
 Bind port for the HTTP transport. The default development port is
 :wtrl_value:`13316`.
 
+.. rubric:: :wtrl_attr:`identity`\: :wtrl_type:`string`
+
+Stable server identity used for configuration, token-store namespacing, and
+admin-side bookkeeping. This value must be configured explicitly when bearer
+token authentication is enabled.
+
+The recommended naming pattern is ``[-_a-zA-Z][-_a-zA-Z0-9+]*``. The first
+character must be a letter, underscore, or dash. Subsequent characters may
+also include digits and plus signs. This keeps identifiers readable while
+still allowing names such as ``lots_of_stuff+auth``. The current
+implementation limits the identity to 63 characters.
+
 .. rubric:: :wtrl_attr:`streamable_http_path`\: :wtrl_type:`string`
 
 Path component used for the HTTP endpoint. The current server uses
@@ -123,6 +135,10 @@ Remote administration is expected to go through ``wtrl_mcp_admin`` and, when
 needed, through an SSH tunnel to remote loopback. The admin API remains
 loopback-only in v1; it is not meant to be exposed as a generally reachable
 public interface.
+
+The configured :wtrl_attr:`identity` is the natural namespace key for a
+future shared token store per host. That keeps the server identity separate
+from transport details such as host or port.
 
 Logging
 .......
@@ -534,6 +550,16 @@ In practice, the workflow can look like this:
 
 	wtrl_mcp_admin add-server --label my_smart_server --url http://my_host:my_port
 
+The :wtrl_attr:`identity` is the stable machine-facing server key, while
+the :wtrl_attr:`label` remains the human-oriented name used in the admin
+registry and output tables. In the current workflow, ``add-server`` creates
+the registry entry first and leaves :wtrl_attr:`identity` empty until the
+server has been contacted successfully.
+
+``list-servers`` may therefore show an empty identity for newly registered
+servers. ``ping-servers`` is the step that can later reveal the identity once
+the server answers its admin status request.
+
 2. Once the MCP server is running, the admin generates a token:
 
 .. code-block:: bash
@@ -571,7 +597,7 @@ Codex can send the bearer token directly in the MCP server configuration.
 
 .. code-block:: toml
 
-	[mcp_servers.my_server]
+	[mcp_servers.my_smart_server]
 	url = "http://<my_host>:<my_port>/mcp"
 	http_headers = {
 		Accept = "application/json, text/event-stream",
