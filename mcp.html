@@ -91,6 +91,14 @@ For stdio transport the host setting is not used in practice.</p>
 <p class="rubric"><code class="wtrl_attr docutils literal notranslate"><span class="pre">port</span></code>: <code class="wtrl_type docutils literal notranslate"><span class="pre">int</span></code></p>
 <p>Bind port for the HTTP transport. The default development port is
 <code class="wtrl_value docutils literal notranslate"><span class="pre">13316</span></code>.</p>
+<p class="rubric"><code class="wtrl_attr docutils literal notranslate"><span class="pre">identity</span></code>: <code class="wtrl_type docutils literal notranslate"><span class="pre">string</span></code></p>
+<p>Stable server identity used for configuration, token-store namespacing, and
+admin-side bookkeeping. This value must be configured explicitly when bearer
+token authentication is enabled.</p>
+<p>The recommended naming pattern is <code class="docutils literal notranslate"><span class="pre">[-_a-zA-Z][-_a-zA-Z0-9+]*</span></code>. The first
+character must be a letter, underscore, or dash. Subsequent characters may
+also include digits and plus signs. This keeps identifiers readable while
+still allowing names such as <code class="docutils literal notranslate"><span class="pre">lots_of_stuff+auth</span></code>.</p>
 <p class="rubric"><code class="wtrl_attr docutils literal notranslate"><span class="pre">streamable_http_path</span></code>: <code class="wtrl_type docutils literal notranslate"><span class="pre">string</span></code></p>
 <p>Path component used for the HTTP endpoint. The current server uses
 <code class="wtrl_file docutils literal notranslate"><span class="pre">/mcp</span></code>, so the resulting URL is typically
@@ -132,6 +140,10 @@ instance-specific path such as <code class="docutils literal notranslate"><span 
 needed, through an SSH tunnel to remote loopback. The admin API remains
 loopback-only in v1; it is not meant to be exposed as a generally reachable
 public interface.</p>
+<p>When bearer-token authentication is enabled, the configured
+<code class="wtrl_attr docutils literal notranslate"><span class="pre">identity</span></code> is also used as the top-level key for the token store.
+This makes it possible to keep one token-store file per host while still
+separating multiple server instances inside the same file.</p>
 </section>
 <section id="logging">
 <h3><span class="section-number">10.2.3. </span>Logging<a class="headerlink" href="#logging" title="Link to this heading">¶</a></h3>
@@ -492,7 +504,7 @@ against the MCP server.</p></li>
 <section id="configuring-the-token-in-codex">
 <h3><span class="section-number">10.8.1. </span>Configuring the token in Codex<a class="headerlink" href="#configuring-the-token-in-codex" title="Link to this heading">¶</a></h3>
 <p>Codex can send the bearer token directly in the MCP server configuration.</p>
-<div class="highlight-toml notranslate"><div class="highlight"><pre><span></span><span class="k">[mcp_servers.my_server]</span>
+<div class="highlight-toml notranslate"><div class="highlight"><pre><span></span><span class="k">[mcp_servers.my_smart_server]</span>
 <span class="n">url</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;http://&lt;my_host&gt;:&lt;my_port&gt;/mcp&quot;</span>
 <span class="n">http_headers</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="n">Accept</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s2">&quot;application/json, text/event-stream&quot;</span><span class="p">,</span>
