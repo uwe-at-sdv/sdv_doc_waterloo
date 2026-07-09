@@ -78,7 +78,8 @@ token authentication is enabled.
 The recommended naming pattern is ``[-_a-zA-Z][-_a-zA-Z0-9+]*``. The first
 character must be a letter, underscore, or dash. Subsequent characters may
 also include digits and plus signs. This keeps identifiers readable while
-still allowing names such as ``lots_of_stuff+auth``.
+still allowing names such as ``lots_of_stuff+auth``. The current
+implementation limits the identity to 63 characters.
 
 .. rubric:: :wtrl_attr:`streamable_http_path`\: :wtrl_type:`string`
 
@@ -135,10 +136,9 @@ needed, through an SSH tunnel to remote loopback. The admin API remains
 loopback-only in v1; it is not meant to be exposed as a generally reachable
 public interface.
 
-When bearer-token authentication is enabled, the configured
-:wtrl_attr:`identity` is also used as the top-level key for the token store.
-This makes it possible to keep one token-store file per host while still
-separating multiple server instances inside the same file.
+The configured :wtrl_attr:`identity` is the natural namespace key for a
+future shared token store per host. That keeps the server identity separate
+from transport details such as host or port.
 
 Logging
 .......
@@ -549,6 +549,16 @@ In practice, the workflow can look like this:
 .. code-block:: bash
 
 	wtrl_mcp_admin add-server --label my_smart_server --url http://my_host:my_port
+
+The :wtrl_attr:`identity` is the stable machine-facing server key, while
+the :wtrl_attr:`label` remains the human-oriented name used in the admin
+registry and output tables. In the current workflow, ``add-server`` creates
+the registry entry first and leaves :wtrl_attr:`identity` empty until the
+server has been contacted successfully.
+
+``list-servers`` may therefore show an empty identity for newly registered
+servers. ``ping-servers`` is the step that can later reveal the identity once
+the server answers its admin status request.
 
 2. Once the MCP server is running, the admin generates a token:
 

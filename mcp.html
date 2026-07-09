@@ -10,7 +10,8 @@
     <link rel="stylesheet" type="text/css" href="_static/basic.css?v=b08954a9" />
     <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=27fed22d" />
     <link rel="stylesheet" type="text/css" href="_static/common_styles.css?v=33110125" />
-    <link rel="stylesheet" type="text/css" href="_static/alabaster_waterloo.css?v=162852d9" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster_waterloo.css?v=bea6f65f" />
+    <link rel="stylesheet" type="text/css" href="_static/wtrl_doc_custom.css?v=b79d6bfc" />
     <script src="_static/documentation_options.js?v=8dde47fa"></script>
     <script src="_static/doctools.js?v=fd6eb6e6"></script>
     <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
@@ -98,7 +99,8 @@ token authentication is enabled.</p>
 <p>The recommended naming pattern is <code class="docutils literal notranslate"><span class="pre">[-_a-zA-Z][-_a-zA-Z0-9+]*</span></code>. The first
 character must be a letter, underscore, or dash. Subsequent characters may
 also include digits and plus signs. This keeps identifiers readable while
-still allowing names such as <code class="docutils literal notranslate"><span class="pre">lots_of_stuff+auth</span></code>.</p>
+still allowing names such as <code class="docutils literal notranslate"><span class="pre">lots_of_stuff+auth</span></code>. The current
+implementation limits the identity to 63 characters.</p>
 <p class="rubric"><code class="wtrl_attr docutils literal notranslate"><span class="pre">streamable_http_path</span></code>: <code class="wtrl_type docutils literal notranslate"><span class="pre">string</span></code></p>
 <p>Path component used for the HTTP endpoint. The current server uses
 <code class="wtrl_file docutils literal notranslate"><span class="pre">/mcp</span></code>, so the resulting URL is typically
@@ -140,10 +142,9 @@ instance-specific path such as <code class="docutils literal notranslate"><span 
 needed, through an SSH tunnel to remote loopback. The admin API remains
 loopback-only in v1; it is not meant to be exposed as a generally reachable
 public interface.</p>
-<p>When bearer-token authentication is enabled, the configured
-<code class="wtrl_attr docutils literal notranslate"><span class="pre">identity</span></code> is also used as the top-level key for the token store.
-This makes it possible to keep one token-store file per host while still
-separating multiple server instances inside the same file.</p>
+<p>The configured <code class="wtrl_attr docutils literal notranslate"><span class="pre">identity</span></code> is the natural namespace key for a
+future shared token store per host. That keeps the server identity separate
+from transport details such as host or port.</p>
 </section>
 <section id="logging">
 <h3><span class="section-number">10.2.3. </span>Logging<a class="headerlink" href="#logging" title="Link to this heading">¶</a></h3>
@@ -473,6 +474,14 @@ access while still making remote administration practical.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>wtrl_mcp_admin<span class="w"> </span>add-server<span class="w"> </span>--label<span class="w"> </span>my_smart_server<span class="w"> </span>--url<span class="w"> </span>http://my_host:my_port
 </pre></div>
 </div>
+<p>The <code class="wtrl_attr docutils literal notranslate"><span class="pre">identity</span></code> is the stable machine-facing server key, while
+the <code class="wtrl_attr docutils literal notranslate"><span class="pre">label</span></code> remains the human-oriented name used in the admin
+registry and output tables. In the current workflow, <code class="docutils literal notranslate"><span class="pre">add-server</span></code> creates
+the registry entry first and leaves <code class="wtrl_attr docutils literal notranslate"><span class="pre">identity</span></code> empty until the
+server has been contacted successfully.</p>
+<p><code class="docutils literal notranslate"><span class="pre">list-servers</span></code> may therefore show an empty identity for newly registered
+servers. <code class="docutils literal notranslate"><span class="pre">ping-servers</span></code> is the step that can later reveal the identity once
+the server answers its admin status request.</p>
 <ol class="arabic simple" start="2">
 <li><p>Once the MCP server is running, the admin generates a token:</p></li>
 </ol>

@@ -471,6 +471,7 @@ a.wtrl_var:visited
 	}
 .wtrl_dfn
 	{
+	font-family: inherit;
 	color:var(--sdv-dfn-color);
 	font-weight:var(--sdv-dfn-font-weight);
 	font-style:var(--sdv-dfn-font-style);
@@ -717,3 +718,4 @@ table > thead.wtrl-box-head-inherited_method > tr > th {
 	background-color: #90a0d3;
 	color:#fff;
 	}
+
