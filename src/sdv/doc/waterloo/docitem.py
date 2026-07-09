@@ -253,7 +253,8 @@ from contextlib import contextmanager
 from sdv.doc.waterloo.docitem_docstring import *
 from sdv.doc.waterloo.docitem_validator import *
 
-__version__ = "0.12.2"
+__version__ = "0.12.3"
+# - 0.12.3 [2026-07-09] Version bump for wtrl_mcp_admin: standardized diagnostics.
 # - 0.12.2 [2026-07-07] Version bump for MCP server: unique server identity
 # - 0.12.1 [2026-07-07] Fix in dependencies
 # - 0.12.0 [2026-07-07] Version Bump for MCP server: Bearer token authentication and tooling

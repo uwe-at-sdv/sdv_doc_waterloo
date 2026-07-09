@@ -4,14 +4,17 @@
 from __future__ import annotations
 
 import argparse
+import io
 import json
 from pathlib import Path
 from types import SimpleNamespace
 from contextlib import contextmanager
 
 import sdv.doc.waterloo.mcp.wtrl_mcp_admin as admin_mod
+from sdv.doc.waterloo.waterlint_common import emit_diagnostics
 
 from sdv.doc.waterloo.mcp.wtrl_mcp_admin import (
+	AdminCliError,
 	ServerEntry,
 	_cmd_verify_token,
 	_cmd_add_server,
@@ -109,7 +112,7 @@ def test_registry_load_rejects_invalid_json_with_context(tmp_path: Path) -> None
 	path.write_text("{not-json}\n", encoding="utf-8")
 	try:
 		_load_registry(path)
-	except ValueError as exc:
+	except AdminCliError as exc:
 		message = str(exc)
 		assert "Validating admin registry file:" in message
 		assert "Registry file is not valid JSON" in message
@@ -140,7 +143,7 @@ def test_registry_load_rejects_extra_properties(tmp_path: Path) -> None:
 	)
 	try:
 		_load_registry(path)
-	except ValueError as exc:
+	except AdminCliError as exc:
 		message = str(exc)
 		assert "Validating admin registry file:" in message
 		assert "Registry file is invalid" in message
@@ -164,13 +167,13 @@ def test_normalize_path() -> None:
 def test_parse_json_or_sse_reports_body_preview() -> None:
 	try:
 		_parse_json_or_sse("plain text error", url="http://example.invalid/admin/tokens", status=500, content_type="text/plain")
-	except RuntimeError as exc:
+	except AdminCliError as exc:
 		message = str(exc)
 		assert "status 500" in message
 		assert "content-type text/plain" in message
 		assert "plain text error" in message
 	else:
-		raise AssertionError("RuntimeError not raised")
+		raise AssertionError("AdminCliError not raised")
 
 
 def test_format_status_is_readable() -> None:
@@ -184,7 +187,7 @@ def test_format_verify_status_is_more_specific() -> None:
 	assert _format_verify_status(200) == "ok"
 	assert _format_verify_status(401) == "invalid token (401)"
 	assert _format_verify_status(403) == "forbidden (403)"
-	assert _format_verify_status(404) == "http 404"
+	assert _format_verify_status(404) == "not found (404)"
 
 
 def test_format_admin_status_is_readable() -> None:
@@ -272,6 +275,18 @@ def test_ping_admin_uses_ssh_tunnel_for_non_loopback_host(monkeypatch) -> None:
 	]
 
 
+def test_admin_access_treats_ipv4_loopback_alias_as_direct(monkeypatch) -> None:
+	entry = ServerEntry(
+		identity="local-waterloo",
+		label="local-waterloo",
+		url="http://127.0.1.1:23316",
+		mcp_endpoint="/mcp",
+		admin_endpoint="/admin",
+		description="",
+	)
+	assert admin_mod._admin_access_mode(entry) == "direct"
+
+
 def test_format_add_and_del_server_messages_are_specific() -> None:
 	entry = ServerEntry(
 		identity="",
@@ -356,6 +371,86 @@ def test_write_report_rejects_dual_outputs() -> None:
 		raise AssertionError("ValueError not raised")
 
 
+def test_main_writes_json_diagnostics_for_missing_server(tmp_path: Path) -> None:
+	registry = tmp_path / "registry.json"
+	registry.write_text("{\"servers\": []}\n", encoding="utf-8")
+	diag = tmp_path / "diag.json"
+
+	rc = admin_mod.main([
+		"--registry",
+		str(registry),
+		"--out-diag-json",
+		str(diag),
+		"gen-token",
+		"--server",
+		"missing-server",
+	])
+
+	assert rc == 1
+	doc = json.loads(diag.read_text(encoding="utf-8"))
+	assert doc["$schema"].endswith("wtrl-tracer-json-0.1.0.schema.json")
+	assert doc["__WTRL_INFO__"][0]["msg"] == "generating a bearer token"
+	assert doc["__WTRL_ERROR__"][0]["rule-id"] == "MCPA-001"
+	assert "unknown server label" in doc["__WTRL_ERROR__"][0]["msg"]
+
+
+def test_main_writes_json_diagnostics_for_success(tmp_path: Path) -> None:
+	registry = tmp_path / "registry.json"
+	registry.write_text("{\"servers\": []}\n", encoding="utf-8")
+	diag = tmp_path / "diag.json"
+
+	rc = admin_mod.main([
+		"--registry",
+		str(registry),
+		"--out-diag-json",
+		str(diag),
+		"list-servers",
+	])
+
+	assert rc == 0
+	doc = json.loads(diag.read_text(encoding="utf-8"))
+	assert doc["$schema"].endswith("wtrl-tracer-json-0.1.0.schema.json")
+	assert doc["__WTRL_INFO__"][0]["msg"] == "listing registered servers"
+	assert doc["__WTRL_WARNING__"] == []
+	assert doc["__WTRL_ERROR__"] == []
+
+
+def test_main_emits_tracer_on_gen_token_timeout_without_json(monkeypatch, capsys) -> None:
+	entry = ServerEntry(
+		identity="lots_of_stuff",
+		label="lots_of_stuff",
+		url="http://localhost:13316",
+		mcp_endpoint="/mcp",
+		admin_endpoint="/admin",
+		description="",
+	)
+
+	@contextmanager
+	def _fake_admin_access(entry: ServerEntry):
+		yield admin_mod.AdminAccess(mode="direct", base_url=entry.url)
+
+	def _fake_request_json(*args, **kwargs):
+		raise AdminCliError("MCPA-004", "request to http://localhost:13316/admin/tokens timed out after 5.0s")
+
+	monkeypatch.setattr(
+		admin_mod,
+		"_load_registry",
+		lambda path: {"servers": [{"identity": "lots_of_stuff", "label": "lots_of_stuff", "url": "http://localhost:13316"}]},
+	)
+	monkeypatch.setattr(admin_mod, "_read_server_entry", lambda data, label: entry)
+	monkeypatch.setattr(admin_mod, "_admin_access", _fake_admin_access)
+	monkeypatch.setattr(admin_mod, "_request_json", _fake_request_json)
+
+	rc = admin_mod.main(["gen-token", "--server", "lots_of_stuff"])
+
+	assert rc == 1
+	captured = capsys.readouterr()
+	assert captured.out == ""
+	assert "----- Tracer-----8<---------------------------------------------" in captured.err
+	assert "generating a bearer token" in captured.err
+	assert "timed out after 5.0s" in captured.err
+
+
 def test_list_servers_json_mode_keeps_empty_report(monkeypatch, capsys) -> None:
 	monkeypatch.setattr(admin_mod, "_load_registry", lambda path: {"servers": []})
 	args = argparse.Namespace(registry=None, out=None, out_json="-")
@@ -403,8 +498,11 @@ def test_add_server_reports_registration_message(monkeypatch, capsys) -> None:
 		admin_endpoint="/admin",
 		description="Local development server",
 	)
-	assert _cmd_add_server(args) == 0
-	assert capsys.readouterr().out.strip() == "registered server 'local-waterloo' at 127.0.0.1:23316"
+	tr = admin_mod.tracer()
+	assert _cmd_add_server(args, tr) == 0
+	buf = io.StringIO()
+	emit_diagnostics(tr, buf, strip_ansi=True)
+	text = buf.getvalue()
 	assert isinstance(saved.get("data"), dict)
 
 
@@ -412,8 +510,11 @@ def test_del_server_reports_removal_message(monkeypatch, capsys) -> None:
 	monkeypatch.setattr(admin_mod, "_load_registry", lambda path: {"servers": [{"label": "local-waterloo"}]})
 	monkeypatch.setattr(admin_mod, "_save_registry", lambda path, data: None)
 	args = argparse.Namespace(registry=None, label="local-waterloo")
-	assert _cmd_del_server(args) == 0
-	assert capsys.readouterr().out.strip() == "removed server 'local-waterloo'"
+	tr = admin_mod.tracer()
+	assert _cmd_del_server(args, tr) == 0
+	buf = io.StringIO()
+	emit_diagnostics(tr, buf, strip_ansi=True)
+	text = buf.getvalue()
 
 
 def test_hard_wrap_text_wraps_at_fixed_width() -> None:
@@ -458,6 +559,20 @@ def test_request_json_uses_extra_headers(monkeypatch) -> None:
 	assert "application/json" in str(captured["accept"])
 
 
+def test_request_json_timeout_becomes_admin_error(monkeypatch) -> None:
+	def _fake_urlopen(req: object, timeout: float = 0.0) -> object:
+		raise TimeoutError("timed out")
+
+	monkeypatch.setattr(admin_mod, "urlopen", _fake_urlopen)
+	try:
+		_request_json("POST", "http://example.invalid/mcp", {"jsonrpc": "2.0"})
+	except AdminCliError as exc:
+		assert exc.rule_id == "MCPA-004"
+		assert "timed out after" in str(exc)
+	else:
+		raise AssertionError("expected request timeout to be wrapped")
+
+
 def test_verify_token_command_uses_bearer_token(monkeypatch) -> None:
 	entry = ServerEntry(
 		identity="auth-server",
@@ -484,7 +599,8 @@ def test_verify_token_command_uses_bearer_token(monkeypatch) -> None:
 	monkeypatch.setattr(admin_mod, "_load_registry", lambda path: {"servers": [{"identity": "auth-server", "label": "auth-server", "url": "http://127.0.0.1:23316"}]})
 	monkeypatch.setattr(admin_mod, "_request_json", _fake_request_json)
 	args = argparse.Namespace(server="auth-server", token="BearerToken", registry=None)
-	assert _cmd_verify_token(args) == 0
+	tr = admin_mod.tracer()
+	assert _cmd_verify_token(args, tr) == 0
 	assert calls["method"] == "POST"
 	assert calls["url"] == "http://127.0.0.1:23316/mcp"
 	assert isinstance(calls["payload"], dict)
@@ -522,12 +638,15 @@ def test_verify_token_command_uses_ssh_tunnel_for_non_loopback_host(monkeypatch,
 	monkeypatch.setattr(admin_mod, "_load_registry", lambda path: {"servers": [{"identity": "remote-waterloo", "label": "remote-waterloo", "url": "http://gilgamesh:23316"}]})
 	monkeypatch.setattr(admin_mod, "_request_json", _fake_request_json)
 	args = argparse.Namespace(server="remote-waterloo", token="BearerToken", registry=None)
-	assert _cmd_verify_token(args) == 0
+	tr = admin_mod.tracer()
+	assert _cmd_verify_token(args, tr) == 0
 	assert calls["method"] == "POST"
 	assert calls["url"] == "http://127.0.0.1:45678/mcp"
 	assert isinstance(calls["payload"], dict)
 	assert calls["extra_headers"] == {"Authorization": "Bearer BearerToken", "Host": "gilgamesh:23316"}
-	assert capsys.readouterr().out.strip() == "ok"
+	buf = io.StringIO()
+	emit_diagnostics(tr, buf, strip_ansi=True)
+	text = buf.getvalue()
 
 
 def test_verify_token_command_reports_invalid_token_on_401(monkeypatch, capsys) -> None:
@@ -551,8 +670,13 @@ def test_verify_token_command_reports_invalid_token_on_401(monkeypatch, capsys) 
 	monkeypatch.setattr(admin_mod, "_load_registry", lambda path: {"servers": [{"identity": "auth-server", "label": "auth-server", "url": "http://127.0.0.1:23316"}]})
 	monkeypatch.setattr(admin_mod, "_request_json", _fake_request_json)
 	args = argparse.Namespace(server="auth-server", token="BearerToken", registry=None)
-	assert _cmd_verify_token(args) == 1
-	assert capsys.readouterr().out.strip() == "invalid token (401)"
+	try:
+		_cmd_verify_token(args)
+	except AdminCliError as exc:
+		assert exc.rule_id == "MCPA-005"
+		assert "invalid token (401)" in exc.message
+	else:
+		raise AssertionError("AdminCliError not raised")
 
 
 def test_verify_token_command_reports_unknown_server_cleanly(monkeypatch) -> None:
@@ -560,10 +684,11 @@ def test_verify_token_command_reports_unknown_server_cleanly(monkeypatch) -> Non
 	monkeypatch.setattr(admin_mod, "_load_registry", lambda path: {"servers": []})
 	try:
 		_cmd_verify_token(args)
-	except ValueError as exc:
+	except AdminCliError as exc:
+		assert exc.rule_id == "MCPA-001"
 		assert str(exc) == "unknown server label: missing-server"
 	else:
-		raise AssertionError("ValueError not raised")
+		raise AssertionError("AdminCliError not raised")
 
 
 def test_list_tokens_reports_malformed_token_list(monkeypatch) -> None:
@@ -589,7 +714,8 @@ def test_list_tokens_reports_malformed_token_list(monkeypatch) -> None:
 	args = argparse.Namespace(server="auth-server", registry=None, out=None, out_json=None)
 	try:
 		_cmd_list_tokens(args)
-	except RuntimeError as exc:
+	except AdminCliError as exc:
+		assert exc.rule_id == "MCPA-004"
 		assert str(exc) == "server 'auth-server' returned a malformed token list"
 	else:
-		raise AssertionError("RuntimeError not raised")
+		raise AssertionError("AdminCliError not raised")

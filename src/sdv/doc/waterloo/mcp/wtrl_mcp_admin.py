@@ -1,9 +1,12 @@
 """Command-line helper for managing Waterloo MCP admin servers and tokens."""
 
-from __future__ import annotations
+from typing import Final
 
 import argparse
+import io
+import contextlib
 import importlib.resources
+import ipaddress
 import json
 import os
 import re
@@ -16,26 +19,42 @@ import subprocess
 from dataclasses import dataclass
 from contextlib import contextmanager
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 from urllib.error import HTTPError, URLError
 from urllib.parse import urlparse
 from urllib.request import Request, urlopen
 
 from jsonschema import Draft202012Validator
+import sdv.doc.waterloo.docitem as docitem
+
+from sdv.doc.waterloo.docitem_helper import tracer
 from sdv.doc.waterloo.mcp.sdv_tty_util_table import Align, table as tty_table
+from sdv.doc.waterloo.waterlint_common import DIAG_TARGET_STDERR, DIAG_TARGET_STDOUT, emit_diagnostics
 
 
 DEFAULT_REGISTRY_PATH = Path.home() / ".wtrl_mcp_admin.json"
 DEFAULT_MCP_ENDPOINT = "/mcp"
 DEFAULT_ADMIN_ENDPOINT = "/admin"
-DEFAULT_ORIGIN = "http://gilgamesh:6274"
+DEFAULT_ORIGIN = "http://localhost:6274"
 DEFAULT_PROTOCOL_VERSION = "2025-11-25"
 DEFAULT_TIMEOUT = 5.0
 TABLE_CELL_WRAP_WIDTH = 32
 SSH_TUNNEL_TIMEOUT = 5.0
 SERVER_IDENTITY_MAX_LENGTH = 63
 SERVER_IDENTITY_RE = re.compile(r"^[-_a-zA-Z][-_a-zA-Z0-9+]*$")
+TRACER_JSON_ID_PREFIX = "urn:wtrl_mcp_admin:wtrl-tracer-json"
 
+HTTP_STATUS_MESSAGE: Final[dict[int, str]] = {
+	200: "ok",
+	201: "created",
+	202: "accepted",
+	204: "no content",
+	400: "bad request",
+	401: "unauthorized",
+	403: "forbidden",
+	404: "not found",
+	500: "internal server error",
+}
 
 @dataclass(frozen=True)
 class ServerEntry:
@@ -68,6 +87,16 @@ class TableReport:
 class AdminAccess:
 	mode: str
 	base_url: str
+
+
+@dataclass
+class AdminCliError(Exception):
+	rule_id: str
+	message: str
+	exit_code: int = 1
+
+	def __str__(self) -> str:
+		return self.message
 
 
 def _print_err(message: str) -> None:
@@ -139,15 +168,15 @@ def _load_registry(path: Path) -> dict[str, Any]:
 	try:
 		data = json.loads(text)
 	except json.JSONDecodeError as exc:
-		raise ValueError(f"{_registry_load_context(path)} Registry file is not valid JSON: {exc.msg}") from exc
+		raise AdminCliError("MCPA-002", f"{_registry_load_context(path)} Registry file is not valid JSON: {exc.msg}") from exc
 	if not isinstance(data, dict):
-		raise ValueError(f"{_registry_load_context(path)} Registry root must be a JSON object")
+		raise AdminCliError("MCPA-002", f"{_registry_load_context(path)} Registry root must be a JSON object")
 	servers = data.get("servers", [])
 	if not isinstance(servers, list):
-		raise ValueError(f"{_registry_load_context(path)} Registry must contain a servers list")
+		raise AdminCliError("MCPA-002", f"{_registry_load_context(path)} Registry must contain a servers list")
 	for entry in servers:
 		if not isinstance(entry, dict):
-			raise ValueError(f"{_registry_load_context(path)} Registry contains a non-object server entry")
+			raise AdminCliError("MCPA-002", f"{_registry_load_context(path)} Registry contains a non-object server entry")
 	_validate_registry_schema(data, path)
 	return data
 
@@ -157,13 +186,14 @@ def _validate_registry_schema(data: dict[str, Any], path: Path) -> None:
 	try:
 		schema = json.loads(schema_path.read_text(encoding="utf-8"))
 	except OSError as exc:
-		raise ValueError(f"could not read admin registry schema: {schema_path}") from exc
+		raise AdminCliError("MCPA-002", f"could not read admin registry schema: {schema_path}") from exc
 	validator = Draft202012Validator(schema)
 	errors = sorted(validator.iter_errors(data), key=lambda exc: list(exc.path))
 	if errors:
 		first = errors[0]
 		location = "/".join(str(part) for part in first.path) or "<root>"
-		raise ValueError(
+		raise AdminCliError(
+			"MCPA-002",
 			f"Validating admin registry file: {path}. "
 			f"Registry file is invalid at {location}: {first.message}"
 		)
@@ -181,7 +211,7 @@ def _save_registry(path: Path, data: dict[str, Any]) -> None:
 def _server_entries(data: dict[str, Any]) -> list[dict[str, Any]]:
 	servers = data.get("servers", [])
 	if not isinstance(servers, list):
-		raise ValueError("registry must contain a servers list")
+		raise AdminCliError("MCPA-002", "registry must contain a servers list")
 	return [entry for entry in servers if isinstance(entry, dict)]
 
 
@@ -191,7 +221,7 @@ def _read_server_entry(data: dict[str, Any], label: str) -> ServerEntry:
 			identity = _normalize_identity(entry.get("identity"))
 			url = str(entry.get("url") or "").strip()
 			if not url:
-				raise ValueError(f"server '{label}' is missing its url")
+				raise AdminCliError("MCPA-002", f"server '{label}' is missing its url")
 			return ServerEntry(
 				identity=identity,
 				label=label,
@@ -200,7 +230,7 @@ def _read_server_entry(data: dict[str, Any], label: str) -> ServerEntry:
 				admin_endpoint=_normalize_path(entry.get("admin_endpoint", DEFAULT_ADMIN_ENDPOINT), DEFAULT_ADMIN_ENDPOINT),
 				description=str(entry.get("description") or ""),
 			)
-	raise ValueError(f"unknown server label: {label}")
+	raise AdminCliError("MCPA-001", f"unknown server label: {label}")
 
 
 def _store_server_entry(data: dict[str, Any], entry: ServerEntry) -> dict[str, Any]:
@@ -244,7 +274,12 @@ def _server_port(entry: ServerEntry) -> int:
 
 
 def _is_loopback_host(host: str) -> bool:
-	return host in {"localhost", "127.0.0.1", "::1"}
+	if host == "localhost":
+		return True
+	try:
+		return ipaddress.ip_address(host).is_loopback
+	except ValueError:
+		return False
 
 
 def _free_local_port() -> int:
@@ -286,7 +321,7 @@ def _admin_access(entry: ServerEntry) -> Any:
 		yield AdminAccess(mode="direct", base_url=entry.url)
 		return
 	if shutil.which("ssh") is None:
-		raise RuntimeError("ssh is required for non-loopback admin access, but it was not found")
+		raise AdminCliError("MCPA-003", "ssh is required for non-loopback admin access, but it was not found")
 	local_port = _free_local_port()
 	remote_port = _server_port(entry)
 	ssh_target = host
@@ -339,24 +374,98 @@ def _render_table_report(report: TableReport) -> str:
 	return str(tbl)
 
 
-def _write_output(path_text: str | None, text: str) -> None:
+def _write_output(path_text: str | None, text: str, *, default_stream: Any | None = None) -> None:
+	if default_stream is None:
+		default_stream = sys.stdout
 	if path_text is None:
-		print(text)
+		print(text, file=default_stream)
 		return
 	if path_text in {"-", "@STDOUT"}:
-		print(text)
+		print(text, file=default_stream)
 		return
 	Path(path_text).write_text(text, encoding="utf-8")
 
 
-def _write_report(report: TableReport, *, out: str | None, out_json: str | None) -> None:
+def _write_report(report: TableReport, *, out: str | None, out_json: str | None, default_stream: Any | None = None) -> None:
 	if out is not None and out_json is not None:
 		raise ValueError("use only one of --out or --out-json")
 	if out_json is not None:
 		payload = json.dumps(_table_report_to_json(report), indent=2, sort_keys=True, ensure_ascii=False)
-		_write_output(out_json, payload + "\n")
+		_write_output(out_json, payload + "\n", default_stream=default_stream)
 		return
-	_write_output(out, _render_table_report(report))
+	_write_output(out, _render_table_report(report), default_stream=default_stream)
+
+
+def _strip_ansi_for_stream(stream: Any) -> bool:
+	isatty = getattr(stream, "isatty", None)
+	if callable(isatty):
+		try:
+			return not bool(isatty())
+		except Exception:
+			return True
+	return True
+
+
+def _open_diag_target(path: str | None, default_stream: Any) -> Any:
+	if path is None:
+		return contextlib.nullcontext(default_stream)
+	if path == DIAG_TARGET_STDOUT:
+		return contextlib.nullcontext(sys.stdout)
+	if path == DIAG_TARGET_STDERR:
+		return contextlib.nullcontext(sys.stderr)
+	return open(path, "w", encoding="utf-8")
+
+
+def _build_admin_tracer_json_doc(tr: tracer) -> dict[str, Any]:
+	return tr.build_json(
+		tr.Severity.INFO,
+		schema_version=docitem.WTRL_TRACER_JSON_SCHEMA_VERSION,
+		waterloo_version=docitem.__version__,
+		id_prefix=TRACER_JSON_ID_PREFIX,
+		include_debug=False,
+	)
+
+
+def _emit_admin_diagnostics(tr: tracer, out_diag: str | None, out_diag_json: str | None) -> None:
+	if out_diag is not None:
+		with _open_diag_target(out_diag, sys.stderr) as fh:
+			emit_diagnostics(tr, fh, debug=False, strip_ansi=_strip_ansi_for_stream(fh))
+	if out_diag_json is not None:
+		doc = _build_admin_tracer_json_doc(tr)
+		with _open_diag_target(out_diag_json, sys.stdout) as fh:
+			json.dump(doc, fh, indent=2, sort_keys=True, ensure_ascii=False)
+			fh.write("\n")
+
+
+def _command_info_message(command: str) -> str:
+	return {
+		"add-server": "adding a server registry entry",
+		"del-server": "removing a server registry entry",
+		"list-servers": "listing registered servers",
+		"ping-servers": "pinging registered servers",
+		"gen-token": "generating a bearer token",
+		"revoke-token": "revoking a bearer token",
+		"verify-token": "verifying a bearer token",
+		"list-tokens": "listing bearer tokens",
+	}.get(command, f"running subcommand '{command}'")
+
+
+def _add_diag_args(parser: argparse.ArgumentParser) -> None:
+	parser.add_argument(
+		"--out-diag",
+		help=f"Write tracer diagnostics to PATH, {DIAG_TARGET_STDOUT}, or {DIAG_TARGET_STDERR}. Use {DIAG_TARGET_STDERR} to keep command output on standard output.",
+	)
+	parser.add_argument(
+		"--out-diag-json",
+		help=f"Write tracer diagnostics in machine-readable JSON format to PATH, {DIAG_TARGET_STDOUT}, or {DIAG_TARGET_STDERR}. Use {DIAG_TARGET_STDERR} to keep command output on standard output.",
+	)
+
+
+def _split_diag_args(argv: list[str]) -> tuple[list[str], str | None, str | None]:
+	diag_parser = argparse.ArgumentParser(add_help=False, allow_abbrev=False)
+	_add_diag_args(diag_parser)
+	diag_args, remainder = diag_parser.parse_known_args(argv)
+	return remainder, diag_args.out_diag, diag_args.out_diag_json
 
 
 def _admin_request_headers(entry: ServerEntry) -> dict[str, str]:
@@ -403,11 +512,13 @@ def _request_json(
 		raw = exc.read().decode("utf-8")
 		status = exc.code
 		content_type = exc.headers.get_content_type() if exc.headers is not None else ""
+	except TimeoutError as exc:
+		raise AdminCliError("MCPA-004", f"request to {url} timed out after {DEFAULT_TIMEOUT:.1f}s") from exc
 	except URLError as exc:
-		raise RuntimeError(str(exc)) from exc
+		raise AdminCliError("MCPA-004", str(exc)) from exc
 	obj = _parse_json_or_sse(raw, url=url, status=status, content_type=content_type)
 	if not isinstance(obj, dict):
-		raise RuntimeError(f"expected a JSON object response from {url} (status {status}, content-type {content_type or 'unknown'})")
+		raise AdminCliError("MCPA-004", f"expected a JSON object response from {url} (status {status}, content-type {content_type or 'unknown'})")
 	return status, obj
 
 
@@ -430,7 +541,8 @@ def _parse_json_or_sse(raw: str, *, url: str, status: int, content_type: str) ->
 			data_lines.append(line.split(":", 1)[1].lstrip())
 	if not data_lines:
 		preview = _body_preview(text)
-		raise RuntimeError(
+		raise AdminCliError(
+			"MCPA-004",
 			f"could not find JSON content in response from {url} "
 			f"(status {status}, content-type {content_type or 'unknown'}, body starts with {preview!r})"
 		)
@@ -493,8 +605,7 @@ def _format_verify_status(status: int) -> str:
 		return "forbidden (403)"
 	if status == 404:
 		return "not found (404)"
-	return f"http {status}"
-
+	return _format_status(status)
 
 def _format_admin_status(data: dict[str, Any]) -> str:
 	if not bool(data.get("auth_enabled")):
@@ -520,7 +631,7 @@ def _format_del_server_message(label: str) -> str:
 	return f"removed server '{label}'"
 
 
-def _cmd_add_server(args: argparse.Namespace) -> int:
+def _cmd_add_server(args: argparse.Namespace, tr: tracer | None = None) -> int:
 	registry_path = _registry_path(args.registry)
 	data = _load_registry(registry_path)
 	base_url = _base_url_from_args(args.url, args.host, args.port)
@@ -533,22 +644,24 @@ def _cmd_add_server(args: argparse.Namespace) -> int:
 		description=str(args.description or "").strip(),
 	)
 	_save_registry(registry_path, _store_server_entry(data, entry))
-	print(_format_add_server_message(entry))
+	if tr is not None:
+		tr.add_info(_format_add_server_message(entry), "tool")
 	return 0
 
 
-def _cmd_del_server(args: argparse.Namespace) -> int:
+def _cmd_del_server(args: argparse.Namespace, tr: tracer | None = None) -> int:
 	registry_path = _registry_path(args.registry)
 	data = _load_registry(registry_path)
 	label = _normalize_label(args.label)
 	if not _remove_server_entry(data, label):
-		raise ValueError(f"unknown server label: {label}")
+		raise AdminCliError("MCPA-001", f"unknown server label: {label}")
 	_save_registry(registry_path, data)
-	print(_format_del_server_message(label))
+	if tr is not None:
+		tr.add_info(_format_del_server_message(label), "tool")
 	return 0
 
 
-def _cmd_list_servers(args: argparse.Namespace) -> int:
+def _cmd_list_servers(args: argparse.Namespace, tr: tracer | None = None) -> int:
 	registry_path = _registry_path(args.registry)
 	data = _load_registry(registry_path)
 	entries = [
@@ -586,15 +699,15 @@ def _cmd_list_servers(args: argparse.Namespace) -> int:
 	)
 	if not report.rows:
 		if args.out is not None or args.out_json is not None:
-			_write_report(report, out=args.out, out_json=args.out_json)
+			_write_report(report, out=args.out, out_json=args.out_json, default_stream=sys.stdout)
 			return 0
 		print("No servers registered.")
 		return 0
-	_write_report(report, out=args.out, out_json=args.out_json)
+	_write_report(report, out=args.out, out_json=args.out_json, default_stream=sys.stdout)
 	return 0
 
 
-def _cmd_ping_servers(args: argparse.Namespace) -> int:
+def _cmd_ping_servers(args: argparse.Namespace, tr: tracer | None = None) -> int:
 	registry_path = _registry_path(args.registry)
 	data = _load_registry(registry_path)
 	entries = [
@@ -612,7 +725,7 @@ def _cmd_ping_servers(args: argparse.Namespace) -> int:
 	for entry in entries:
 		admin_access, admin_status, discovered_identity = _ping_admin(entry)
 		client_status = _ping_client(entry)
-		identity = discovered_identity or entry.identity or ""
+		identity = discovered_identity or entry.identity or entry.label
 		rows.append(
 			{
 				"label": entry.label,
@@ -637,11 +750,11 @@ def _cmd_ping_servers(args: argparse.Namespace) -> int:
 	)
 	if not report.rows:
 		if args.out is not None or args.out_json is not None:
-			_write_report(report, out=args.out, out_json=args.out_json)
+			_write_report(report, out=args.out, out_json=args.out_json, default_stream=sys.stdout)
 			return 0
 		print("No servers registered.")
 		return 0
-	_write_report(report, out=args.out, out_json=args.out_json)
+	_write_report(report, out=args.out, out_json=args.out_json, default_stream=sys.stdout)
 	return 0
 
 
@@ -654,7 +767,7 @@ def _build_token_id(args: argparse.Namespace) -> str:
 	return _normalize_label(f"{user}-{client}-{location}")
 
 
-def _cmd_gen_token(args: argparse.Namespace) -> int:
+def _cmd_gen_token(args: argparse.Namespace, tr: tracer | None = None) -> int:
 	entry = _read_server_entry(_load_registry(_registry_path(args.registry)), _normalize_label(args.server))
 	token_id = _build_token_id(args)
 	token_endpoint = f"{entry.admin_endpoint}/tokens"
@@ -671,12 +784,12 @@ def _cmd_gen_token(args: argparse.Namespace) -> int:
 			_admin_request_headers(entry),
 		)
 	if status != 201:
-		raise RuntimeError(_format_admin_token_operation_error(entry, "token generation", status, token_endpoint))
+		raise AdminCliError("MCPA-006", _format_admin_token_operation_error(entry, "token generation", status, token_endpoint))
 	print(json.dumps(data, indent=2, sort_keys=True))
 	return 0
 
 
-def _cmd_revoke_token(args: argparse.Namespace) -> int:
+def _cmd_revoke_token(args: argparse.Namespace, tr: tracer | None = None) -> int:
 	entry = _read_server_entry(_load_registry(_registry_path(args.registry)), _normalize_label(args.server))
 	token_id = _build_token_id(args)
 	token_endpoint = f"{entry.admin_endpoint}/tokens/{token_id}"
@@ -687,11 +800,13 @@ def _cmd_revoke_token(args: argparse.Namespace) -> int:
 			extra_headers=_admin_request_headers(entry),
 		)
 	if status != 204:
-		raise RuntimeError(_format_admin_token_operation_error(entry, "token revocation", status, token_endpoint))
+		raise AdminCliError("MCPA-005", _format_admin_token_operation_error(entry, "token revocation", status, token_endpoint))
+	if tr is not None:
+		tr.add_info(f"revoked bearer token '{token_id}'", "tool")
 	return 0
 
 
-def _cmd_verify_token(args: argparse.Namespace) -> int:
+def _cmd_verify_token(args: argparse.Namespace, tr: tracer | None = None) -> int:
 	entry = _read_server_entry(_load_registry(_registry_path(args.registry)), _normalize_label(args.server))
 	token = str(args.token or "").strip()
 	if not token:
@@ -713,11 +828,14 @@ def _cmd_verify_token(args: argparse.Namespace) -> int:
 			payload,
 			{"Authorization": f"Bearer {token}", **_admin_request_headers(entry)},
 		)
-	print(_format_verify_status(status))
-	return 0 if status == 200 else 1
+	if status != 200:
+		raise AdminCliError("MCPA-005" if status == 401 else "MCPA-004", _format_verify_status(status))
+	if tr is not None:
+		tr.add_info(_format_verify_status(status), "tool")
+	return 0
 
 
-def _cmd_list_tokens(args: argparse.Namespace) -> int:
+def _cmd_list_tokens(args: argparse.Namespace, tr: tracer | None = None) -> int:
 	entry = _read_server_entry(_load_registry(_registry_path(args.registry)), _normalize_label(args.server))
 	token_endpoint = f"{entry.admin_endpoint}/tokens"
 	with _admin_access(entry) as access:
@@ -727,10 +845,10 @@ def _cmd_list_tokens(args: argparse.Namespace) -> int:
 			extra_headers=_admin_request_headers(entry),
 		)
 	if status != 200:
-		raise RuntimeError(_format_admin_token_operation_error(entry, "token listing", status, token_endpoint))
+		raise AdminCliError("MCPA-004", _format_admin_token_operation_error(entry, "token listing", status, token_endpoint))
 	tokens = data.get("tokens", [])
 	if not isinstance(tokens, list):
-		raise RuntimeError(f"server '{entry.label}' returned a malformed token list")
+		raise AdminCliError("MCPA-004", f"server '{entry.label}' returned a malformed token list")
 	rows: list[dict[str, str]] = []
 	for token in tokens:
 		if not isinstance(token, dict):
@@ -761,11 +879,11 @@ def _cmd_list_tokens(args: argparse.Namespace) -> int:
 	)
 	if not report.rows:
 		if args.out is not None or args.out_json is not None:
-			_write_report(report, out=args.out, out_json=args.out_json)
+			_write_report(report, out=args.out, out_json=args.out_json, default_stream=sys.stdout)
 			return 0
 		print("No tokens registered.")
 		return 0
-	_write_report(report, out=args.out, out_json=args.out_json)
+	_write_report(report, out=args.out, out_json=args.out_json, default_stream=sys.stdout)
 	return 0
 
 
@@ -775,6 +893,7 @@ def build_parser() -> argparse.ArgumentParser:
 		"--registry",
 		help=f"Registry JSON file (default: {DEFAULT_REGISTRY_PATH})",
 	)
+	_add_diag_args(parser)
 	subparsers = parser.add_subparsers(dest="command", required=True)
 
 	prsr_add = subparsers.add_parser("add-server", help="Register a managed MCP server without contacting it yet.")
@@ -835,17 +954,38 @@ def build_parser() -> argparse.ArgumentParser:
 
 def main(argv: list[str] | None = None) -> int:
 	parser = build_parser()
-	args = parser.parse_args(argv)
+	raw_argv = list(sys.argv[1:] if argv is None else argv)
+	parsed_argv, out_diag, out_diag_json = _split_diag_args(raw_argv)
+	args = parser.parse_args(parsed_argv)
+	args.out_diag = out_diag
+	args.out_diag_json = out_diag_json
+	tr = tracer()
 	try:
-		return int(args.func(args))
+		tr.add_info(_command_info_message(str(args.command)))
+		result = int(args.func(args, tr))
+		if args.out_diag is not None or args.out_diag_json is not None:
+			_emit_admin_diagnostics(tr, args.out_diag, args.out_diag_json)
+		else:
+			stderr = cast(io.TextIOBase, sys.stderr)
+			emit_diagnostics(tr, stderr, debug=False, strip_ansi=_strip_ansi_for_stream(stderr))
+		return result
+	except AdminCliError as exc:
+		tr.add_error(exc.rule_id, "tool", exc.message)
+		if args.out_diag is not None or args.out_diag_json is not None:
+			_emit_admin_diagnostics(tr, args.out_diag, args.out_diag_json)
+		else:
+			stderr = cast(io.TextIOBase, sys.stderr)
+			emit_diagnostics(tr, stderr, debug=False, strip_ansi=_strip_ansi_for_stream(stderr))
+		return exc.exit_code
 	except ValueError as exc:
 		_print_err(str(exc))
 		return 2
-	except KeyError as exc:
-		_print_err(str(exc))
-		return 1
 	except RuntimeError as exc:
-		_print_err(str(exc))
+		tr.add_error("MCPA-003", "tool", str(exc))
+		if args.out_diag is not None or args.out_diag_json is not None:
+			_emit_admin_diagnostics(tr, args.out_diag, args.out_diag_json)
+		else:
+			_print_err(str(exc))
 		return 1
 
 
