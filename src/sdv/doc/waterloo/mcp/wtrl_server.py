@@ -84,6 +84,7 @@ import importlib.resources
 import inspect
 import logging
 import logging.config
+from functools import lru_cache
 import re
 import tempfile
 import sys
@@ -1561,11 +1562,40 @@ def _json_error(message: str, status_code: int) -> JSONResponse:
 	return JSONResponse({"error": message}, status_code=status_code)
 
 
+@lru_cache(maxsize=1)
+def _local_request_hosts() -> frozenset[str]:
+	hosts = {"127.0.0.1", "::1", "::ffff:127.0.0.1", "localhost"}
+	route_path = Path("/proc/net/route")
+	try:
+		text = route_path.read_text(encoding="utf-8")
+	except OSError:
+		return frozenset(hosts)
+	hosts.update(_local_request_hosts_from_route_text(text))
+	return frozenset(hosts)
+
+
+def _local_request_hosts_from_route_text(text: str) -> set[str]:
+	hosts: set[str] = set()
+	for line in text.splitlines()[1:]:
+		parts = line.split()
+		if len(parts) < 3 or parts[1] != "00000000":
+			continue
+		gateway_hex = parts[2].strip()
+		if len(gateway_hex) != 8 or gateway_hex == "00000000":
+			continue
+		try:
+			gateway = ".".join(str(int(gateway_hex[idx : idx + 2], 16)) for idx in (6, 4, 2, 0))
+		except ValueError:
+			continue
+		hosts.add(gateway)
+	return hosts
+
+
 def _is_loopback_request(request: Request) -> bool:
 	client = request.client
 	if client is None:
 		return False
-	return client.host in {"127.0.0.1", "::1", "::ffff:127.0.0.1", "localhost"}
+	return client.host in _local_request_hosts()
 
 
 def _install_admin_routes(app: Starlette, auth_config: AuthConfig, server_identity: str | None) -> None:

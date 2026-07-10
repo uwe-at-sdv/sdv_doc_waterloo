@@ -7,6 +7,8 @@ from pathlib import Path
 
 import pytest
 
+import sdv.doc.waterloo.mcp.wtrl_server as wtrl_server
+
 from sdv.doc.waterloo.mcp.wtrl_server import (
 	AuthConfig,
 	SecurityConfig,
@@ -89,3 +91,24 @@ def test_print_config_error_includes_load_context(capsys) -> None:
 	captured = capsys.readouterr()
 	assert "Loading configuration file: /tmp/wtrl.toml" in captured.err
 	assert "broken config" in captured.err
+
+
+def test_local_request_hosts_from_route_text_extracts_default_gateway() -> None:
+	route_text = """Iface\tDestination\tGateway\tFlags\tRefCnt\tUse\tMetric\tMask\tMTU\tWindow\tIRTT
+eth0\t00000000\t010011AC\t0003\t0\t0\t0\t00000000\t0\t0\t0
+eth0\t000011AC\t00000000\t0001\t0\t0\t0\t0000FFFF\t0\t0\t0
+"""
+	assert wtrl_server._local_request_hosts_from_route_text(route_text) == {"172.17.0.1"}
+
+
+def test_local_request_hosts_includes_loopback_and_default_gateway(monkeypatch) -> None:
+	wtrl_server._local_request_hosts.cache_clear()
+	route_text = """Iface Destination Gateway Flags RefCnt Use Metric Mask MTU Window IRTT
+eth0 00000000 010011AC 0003 0 0 0 00000000 0 0 0
+"""
+
+	def _fake_read_text(self: Path, encoding: str = "utf-8") -> str:
+		return route_text
+
+	monkeypatch.setattr(wtrl_server.Path, "read_text", _fake_read_text, raising=True)
+	assert wtrl_server._local_request_hosts() == {"127.0.0.1", "::1", "::ffff:127.0.0.1", "localhost", "172.17.0.1"}

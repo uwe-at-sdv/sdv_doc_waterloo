@@ -4,6 +4,7 @@ Format:
 
 - VERSION [YYYY-MM-DD]: Summary.
 
+- 0.7.1 [2026-07-10]: Bugfixing session. Inside a container we need to determine what "local host" means, for bearer-token administration.
 - 0.7.0 [2026-07-09]: Standardized human- and machine-readable diagnostics in wtrl_mcp_admin
 - 0.6.0 [2026-07-08]: Stable server identity; JSON Schema; wtrl_mcp_admin CLI
 - 0.5.0 [2026-07-07]: Bearer Token Authentification
