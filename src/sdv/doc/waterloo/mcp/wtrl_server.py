@@ -1526,6 +1526,14 @@ def build_app(config: McpConfig) -> FastMCP:
 		else:
 			logger.info("* Valid tokens: %d", valid_tokens)
 			logger.info("* Revoked tokens: %d", revoked_tokens)
+	else:
+		logger.info("Authentication is disabled.")
+
+	# Hosts allowed for administration, e.g. generate bearer-tokens.
+	# We leave this in regardless of authentication config.
+	logger.info(f"Allowed hosts for administration:")
+	logger.info(f"* {', '.join(_local_request_hosts())}")
+
 	# Log security stuff: allowed_hosts
 	logger.info(f"Allowed hosts is the list of urls under which the MCP server is allowed to be accessed.")
 	logger.info(f"This is important for preventing DNS rebinding attacks if the server is exposed to untrusted networks.")
