@@ -1577,6 +1577,7 @@ def _install_admin_routes(app: Starlette, auth_config: AuthConfig, server_identi
 	async def _admin_status(request: Request) -> JSONResponse:
 		rejection = await _reject_if_not_loopback(request)
 		if rejection is not None:
+			logger.info(f"request.client is {str(request.client)}. Will be rejected.")
 			return rejection
 		payload: dict[str, object] = {"auth_enabled": auth_config.enabled, "identity": server_identity or ""}
 		if auth_config.enabled:

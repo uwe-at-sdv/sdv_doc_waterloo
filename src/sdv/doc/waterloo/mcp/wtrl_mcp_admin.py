@@ -491,11 +491,13 @@ def _request_json(
 	url: str,
 	payload: dict[str, Any] | None = None,
 	extra_headers: dict[str, str] | None = None,
+	include_origin: bool = True,
 ) -> tuple[int, dict[str, Any]]:
 	headers = {
-		"Origin": DEFAULT_ORIGIN,
 		"Accept": "application/json, text/event-stream",
 	}
+	if include_origin:
+		headers["Origin"] = DEFAULT_ORIGIN
 	if extra_headers:
 		headers.update(extra_headers)
 	data = None
@@ -560,6 +562,7 @@ def _ping_admin(entry: ServerEntry) -> tuple[str, str, str]:
 				"GET",
 				_server_url(access.base_url, entry.admin_endpoint),
 				extra_headers=_admin_request_headers(entry),
+				include_origin=False,
 			)
 	except Exception as exc:
 		return _admin_access_mode(entry), f"error: {exc}", ""
@@ -580,7 +583,7 @@ def _ping_client(entry: ServerEntry) -> str:
 		},
 	}
 	try:
-		status, _ = _request_json("POST", _server_url(entry.url, entry.mcp_endpoint), payload)
+		status, _ = _request_json("POST", _server_url(entry.url, entry.mcp_endpoint), payload, include_origin=False)
 	except Exception as exc:
 		return f"error: {exc}"
 	return _format_status(status)

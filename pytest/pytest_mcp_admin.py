@@ -245,7 +245,13 @@ def test_ping_admin_uses_ssh_tunnel_for_non_loopback_host(monkeypatch) -> None:
 		calls["ssh_cmd"] = cmd
 		return _FakeProc()
 
-	def _fake_request_json(method: str, url: str, payload: dict[str, object] | None = None, extra_headers: dict[str, str] | None = None) -> tuple[int, dict[str, object]]:
+	def _fake_request_json(
+		method: str,
+		url: str,
+		payload: dict[str, object] | None = None,
+		extra_headers: dict[str, str] | None = None,
+		**kwargs: object,
+	) -> tuple[int, dict[str, object]]:
 		calls["method"] = method
 		calls["url"] = url
 		return 200, {"auth_enabled": False}
@@ -588,7 +594,13 @@ def test_verify_token_command_uses_bearer_token(monkeypatch) -> None:
 		assert label == "auth-server"
 		return entry
 
-	def _fake_request_json(method: str, url: str, payload: dict[str, object] | None = None, extra_headers: dict[str, str] | None = None) -> tuple[int, dict[str, object]]:
+	def _fake_request_json(
+		method: str,
+		url: str,
+		payload: dict[str, object] | None = None,
+		extra_headers: dict[str, str] | None = None,
+		**kwargs: object,
+	) -> tuple[int, dict[str, object]]:
 		calls["method"] = method
 		calls["url"] = url
 		calls["payload"] = payload
@@ -626,7 +638,13 @@ def test_verify_token_command_uses_ssh_tunnel_for_non_loopback_host(monkeypatch,
 		assert label == "remote-waterloo"
 		return entry
 
-	def _fake_request_json(method: str, url: str, payload: dict[str, object] | None = None, extra_headers: dict[str, str] | None = None) -> tuple[int, dict[str, object]]:
+	def _fake_request_json(
+		method: str,
+		url: str,
+		payload: dict[str, object] | None = None,
+		extra_headers: dict[str, str] | None = None,
+		**kwargs: object,
+	) -> tuple[int, dict[str, object]]:
 		calls["method"] = method
 		calls["url"] = url
 		calls["payload"] = payload
@@ -663,7 +681,13 @@ def test_verify_token_command_reports_invalid_token_on_401(monkeypatch, capsys) 
 		assert label == "auth-server"
 		return entry
 
-	def _fake_request_json(method: str, url: str, payload: dict[str, object] | None = None, extra_headers: dict[str, str] | None = None) -> tuple[int, dict[str, object]]:
+	def _fake_request_json(
+		method: str,
+		url: str,
+		payload: dict[str, object] | None = None,
+		extra_headers: dict[str, str] | None = None,
+		**kwargs: object,
+	) -> tuple[int, dict[str, object]]:
 		return 401, {"error": "unauthorized"}
 
 	monkeypatch.setattr(admin_mod, "_read_server_entry", _fake_read_server_entry)
@@ -705,7 +729,13 @@ def test_list_tokens_reports_malformed_token_list(monkeypatch) -> None:
 		assert label == "auth-server"
 		return entry
 
-	def _fake_request_json(method: str, url: str, payload: dict[str, object] | None = None, extra_headers: dict[str, str] | None = None) -> tuple[int, dict[str, object]]:
+	def _fake_request_json(
+		method: str,
+		url: str,
+		payload: dict[str, object] | None = None,
+		extra_headers: dict[str, str] | None = None,
+		**kwargs: object,
+	) -> tuple[int, dict[str, object]]:
 		return 200, {"tokens": "not-a-list"}
 
 	monkeypatch.setattr(admin_mod, "_read_server_entry", _fake_read_server_entry)
