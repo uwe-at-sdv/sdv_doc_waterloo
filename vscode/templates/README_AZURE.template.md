@@ -68,6 +68,7 @@ The extension contributes the following commands:
 - `Waterloo: Generate Minimal Docstring`
 - `Waterloo: Generate Full Docstring`
 - `Waterloo: Save and Validate Docstring`
+- `Waterloo: Save and Check Coverage of Docstring`
 
 In Python files, these commands are also available from the editor context
 menu under:
