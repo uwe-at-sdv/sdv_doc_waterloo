@@ -124,6 +124,7 @@ from the source tree.
 - `Waterloo: Generate Minimal Docstring`
 - `Waterloo: Generate Full Docstring`
 - `Waterloo: Save and Validate Docstring`
+- `Waterloo: Save and Check Coverage of Docstring`
 
 The context menu appears for Python when the backend is available and the current line matches a supported location (`def`, `class`, or module docstring position).
 
