@@ -10,7 +10,7 @@
     "normativity",
     "docstring-linter"
   ],
-  "version": "0.2.19",
+  "version": "0.3.0",
   "publisher": "uwe-at-sdv",
   "engines": {
     "vscode": "^1.115.0"
@@ -101,6 +101,10 @@
       {
         "command": "waterloo.validateDocstring",
         "title": "Waterloo: Save and Validate Docstring"
+      },
+      {
+        "command": "waterloo.validateCoverageDocstring",
+        "title": "Waterloo: Save and Check Coverage of Docstring"
       }
     ],
     "submenus": [
@@ -132,6 +136,11 @@
           "command": "waterloo.validateDocstring",
           "group": "2_validate@10",
           "when": "resourceLangId == python && editorTextFocus && waterloo.backendReady && waterloo.cap.validateDocstring && waterloo.isFuncClassOrModuleLine"
+        },
+        {
+          "command": "waterloo.validateCoverageDocstring",
+          "group": "2_validate@20",
+          "when": "resourceLangId == python && editorTextFocus && waterloo.backendReady && waterloo.cap.validateCoverageDocstring && waterloo.isClassOrModuleLine"
         }
       ]
     }

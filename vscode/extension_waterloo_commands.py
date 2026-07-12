@@ -1,4 +1,9 @@
 #!/usr/bin/env python3
+r"""
+This module implements the backend of the VSCode extension "Waterloo Docstring Support".
+It is invoked by the extension via a JSON-based protocol.
+"""
+
 from __future__ import annotations
 
 import sys
@@ -15,7 +20,7 @@ try:
 except ImportError as e:
 	print(f"Error importing Waterloo modules(2): {e}", file=sys.stderr)
 	print("Please download and install sdv_doc_waterloo from one of the following sites:")
-	print("* Github: https://github.com/uwe-at-sdv/sdv_doc_waterloo", file=sys.stderr)
+	print("* Github: python3 -m pip install git+https://github.com/uwe-at-sdv/sdv_doc_waterloo.git@main", file=sys.stderr)
 	print("* PyPI: python3 -m pip install sdv-doc-waterloo", file=sys.stderr)
 	sys.exit(1)
 
@@ -24,6 +29,7 @@ COMMAND_PING = "ping"
 COMMAND_GENERATE_MINIMAL = "generate_minimal_docstring_to_tmp"
 COMMAND_GENERATE_FULL = "generate_full_docstring_to_tmp"
 COMMAND_VALIDATE = "validate_docstring"
+COMMAND_COVERAGE = "validate_coverage_of_docstring"
 
 # From module ast.
 HeaderNode_t = Module | ClassDef | FunctionDef | AsyncFunctionDef
@@ -115,6 +121,7 @@ def _handle_ping(tr: wtrl.tracer,version: Any) -> dict[str, Any]:
 			"generateMinimalDocstring",
 			"generateFullDocstring",
 			"validateDocstring",
+			"validateCoverageDocstring",
 		],
 		"sdv_doc_waterloo": {
 			"file":wtrl.__file__,
@@ -163,15 +170,14 @@ def _handle_generate_full(tr: wtrl.tracer,version: Any, kind: Any, source_fragme
 def _handle_validate(
 	tr: wtrl.tracer,
 	version: Any,
+	command: str,
 	kind: Any,
 	source_fragment: Any,
 	source_file: str,
 	line: int,
 	ignore: Any,
-	context: dict[str, Any] | None = None,
+	context: dict[str, Any],
 ) -> dict[str, Any]:
-	if context is None:
-		context = {}
 	if version != 1:
 		tr.add_error("XTNSN-003","extension","Unsupported protocol version",{"version":f"{version!r}"})
 	if kind not in {"module", "class", "function", "method"}:
@@ -180,8 +186,6 @@ def _handle_validate(
 		tr.add_error("XTNSN-005","extension","Source fragment must be a string")
 	if not isinstance(source_file, str) or not source_file.strip():
 		tr.add_error("XTNSN-010","extension","Source file must be a non-empty string.")
-	if not isinstance(line, int):
-		tr.add_error("XTNSN-011","extension","Line must be an integer.")
 	if not isinstance(ignore, list) or not all(isinstance(item, str) for item in ignore):
 		tr.add_error("XTNSN-014","extension","Ignore list must be a list of strings.")
 	if tr.has_errors():
@@ -200,6 +204,7 @@ def _handle_validate(
 	context["source_file"] = source_file
 	context["ignore"] = list(ignore)
 	if kind == "module":
+# The qualified identifier -module name- is the filename without ".py".
 		qi = Path(source_file).stem
 	else:
 # Parse source fragment
@@ -235,8 +240,17 @@ def _handle_validate(
 		tr.add_error("XTNSN-009","extension","Could not resolve object",{"dir":module_dir,"qi":qi,"exc":str(e)})
 	if tr.has_errors():
 		raise RuntimeError()
-# Validate
-	wtrl.validate_docstring(tr,obj,top=None, session=wtrl.DocSession())
+
+# Validate or check coverage of the docstring.
+	if command == COMMAND_COVERAGE:
+		if kind == "module":
+			wtrl.validate_module_coverage(tr,obj)
+		elif kind == "class":
+			wtrl.validate_class_coverage(tr,obj)
+		else:
+			tr.add_error("XTNSN-015","extension","Coverage validation is only supported for module and class docstrings.",{"kind":f"{kind!r}"})
+	elif command == COMMAND_VALIDATE:
+		wtrl.validate_docstring(tr,obj,top=None, session=wtrl.DocSession())
 	if tr.has_errors():
 		raise RuntimeError()
 	return {"kind": kind, "qualified_identifier": qi, "module_dir": module_dir}
@@ -323,10 +337,11 @@ def main() -> int:
 				payload.get("kind"),
 				payload.get("source_fragment", ""),
 			)
-		elif command == COMMAND_VALIDATE:
+		elif command == COMMAND_VALIDATE or command == COMMAND_COVERAGE:
 			command_data = {}
 			data = _handle_validate(tr,
 				version,
+				command,
 				payload.get("kind"),
 				payload.get("source_fragment", ""),
 				payload.get("source_file",""),

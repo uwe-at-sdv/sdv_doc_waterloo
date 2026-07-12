@@ -4,6 +4,8 @@ Format:
 
 - VERSION [YYYY-MM-DD]: Summary.
 
+- 0.3.0 [2026-07-12]:	Command "Save and check coverage of docstring"
+- 0.2.20 [2026-07-12]:	Remove development artifacts
 - 0.2.19 [2026-07-04]:	Fixed syntax highlighting
 - 0.2.18 [2026-07-04]:	New markup roles
 - 0.2.17 [2026-07-04]:	Configuration for option --ignore in validation.

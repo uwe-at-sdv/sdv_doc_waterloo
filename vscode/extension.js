@@ -25,6 +25,7 @@ const FATAL_BACKEND_PROTOCOL_ERROR = "WTRL_VSCODE_PYTHON_BACKEND_PROTOCOL_ERROR"
 const CAP_GENERATE_MINIMAL = "generateMinimalDocstring";
 const CAP_GENERATE_FULL = "generateFullDocstring";
 const CAP_VALIDATE = "validateDocstring";
+const CAP_COVERAGE = "validateCoverageDocstring";
 
 function shouldShowSuccessNotifications() {
 	const cfg = vscode.workspace.getConfiguration("waterloo");
@@ -72,22 +73,31 @@ function formatMissingWaterlooPackageDetail() {
 		;
 }
 
-function getDefOrClassKind(text) {
-	if (/^\s*def\b/.test(text)) {
-		return "def";
-	}
+function getClassKind(text) {
 	if (/^\s*class\b/.test(text)) {
 		return "class";
 	}
 	return null;
 }
-
+function getDefKind(text) {
+	if (/^\s*def\b/.test(text)) {
+		return "def";
+	}
+	return null;
+}
+function getDefOrClassKind(text) {
+	return getDefKind(text) || getClassKind(text);
+}
 function isDefOrClassLine(text)	{
-	return getDefOrClassKind(text) !== null;
+	return getDefKind(text) !== null || getClassKind(text) !== null;
 }
 
 function isFuncClassOrModuleLine(document, line, text) {
 	return isDefOrClassLine(text) || isModuleDocstringPosition(document, line);
+}
+
+function isClassOrModuleLine(document, line, text) {
+	return getClassKind(text) !== null || isModuleDocstringPosition(document, line);
 }
 
 function isEncodingCommentLine(text) {
@@ -268,6 +278,7 @@ function getFunctionHeaderInfo(document, startLine) {
 	// Rebuild a minimal but syntactically valid function definition for backend use.
 	const headerText = headerScan.headerText.trim();
 	const draft_code = (decoratorLines.join("\n") + "\n" + headerText).trim();
+	// Strip inline comments so the synthetic snippet stays compact and parseable.
 	const final_code = draft_code.replace(/\s*#.*$/m, "");
 	return {
 		sourceFragment: final_code.trim() + " pass\n",
@@ -350,7 +361,7 @@ function extractFirstParameterNameFromFunctionHeader(headerText) {
 	return null;
 }
 
-function classifyFunctionVsMethod(document, startLine, lineText, headerInfo) {
+function classifyFunctionVsMethod(lineText, headerInfo) {
 	// The backend needs to know whether the generated docstring should be for a
 	// function or a method. This is only heuristic, so we try the strongest
 	// signals first and keep the fallback behavior simple.
@@ -417,13 +428,11 @@ function buildDocstringForInsertion(rawDocstring, kind, editor, lineTextForInden
 	return indentNonEmptyLines(normalized, bodyIndent);
 }
 
-// The function updates the context variable `waterloo.isFuncClassOrModuleLine`
-// based on the current editor state (what is selected; position of the cursor)
-// In package.json this context variable is used as a condition for rendering
-// the context menu (right mouse button), see field "when".
+// Update context variables used by package.json "when" clauses for the editor menu.
 function updateFuncClassModuleContext(editor) {
 	if (!editor || editor.document.languageId !== 'python') {
 		void vscode.commands.executeCommand('setContext', 'waterloo.isFuncClassOrModuleLine', false);
+		void vscode.commands.executeCommand('setContext', 'waterloo.isClassOrModuleLine', false);
 		return;
 	}
 	const position = editor.selection.active;
@@ -435,6 +444,11 @@ function updateFuncClassModuleContext(editor) {
 		'setContext',
 		'waterloo.isFuncClassOrModuleLine',
 		isFuncClassOrModuleLine(editor.document, position.line, lineText)
+	);
+	void vscode.commands.executeCommand(
+		'setContext',
+		'waterloo.isClassOrModuleLine',
+		isClassOrModuleLine(editor.document, position.line, lineText)
 	);
 }
 
@@ -503,6 +517,7 @@ function setCapabilities(capabilities) {
 	void vscode.commands.executeCommand('setContext', 'waterloo.cap.generateMinimalDocstring', caps.has(CAP_GENERATE_MINIMAL));
 	void vscode.commands.executeCommand('setContext', 'waterloo.cap.generateFullDocstring', caps.has(CAP_GENERATE_FULL));
 	void vscode.commands.executeCommand('setContext', 'waterloo.cap.validateDocstring', caps.has(CAP_VALIDATE));
+	void vscode.commands.executeCommand('setContext', 'waterloo.cap.validateCoverageDocstring', caps.has(CAP_COVERAGE));
 	void vscode.commands.executeCommand('setContext', 'waterloo.cap.any', caps.size > 0);
 }
 
@@ -547,27 +562,6 @@ function resolveWaterlooMcpConfigPath() {
 			const candidate = path.join(folder.uri.fsPath, configured);
 			if (fs.existsSync(candidate)) {
 				fout.appendLine(`Waterloo MCP provider: found TOML at configured relative path: ${candidate}`);
-				return candidate;
-			}
-		}
-	}
-
-	// Last resort: try a handful of common workspace layouts. This keeps the
-	// extension usable even when the project is checked out in slightly different
-	// directory structures. The order is not magic; it just reflects the layouts
-	// we have seen so far in this repository.
-	const workspaceFolders = vscode.workspace.workspaceFolders || [];
-	for (const folder of workspaceFolders) {
-		const candidates = [
-			// Development only. We should remove these once the MCP provider is stable and we have a better story for using it from the source tree.
-			path.join(folder.uri.fsPath, "etc", "wtrl_mcp.stdio.toml"),
-			path.join(folder.uri.fsPath, "sdw", "etc", "wtrl_mcp.stdio.toml"),
-			path.join(folder.uri.fsPath, "package_main", "etc", "wtrl_mcp.stdio.toml"),
-			path.join(folder.uri.fsPath, "package_main", "src", "sdv", "doc", "waterloo", "mcp", "wtrl_mcp.stdio.toml"),
-		];
-		for (const candidate of candidates) {
-			if (fs.existsSync(candidate)) {
-				fout.appendLine(`Waterloo MCP provider: found TOML at workspace path: ${candidate}`);
 				return candidate;
 			}
 		}
@@ -673,10 +667,11 @@ function buildGenerationRequestContext(editor) {
 	let kind = null;
 	let sourceFragment = "";
 	let insertionPosition = new vscode.Position(0, 0);
+	// Determine whether the current line is a function, method, class, or module docstring position.
 	const currentKind = getDefOrClassKind(currentLineText);
 	if (currentKind === "def") {
 		const headerInfo = getFunctionHeaderInfo(editor.document, position.line);
-		const classification = classifyFunctionVsMethod(editor.document, position.line, currentLineText, headerInfo);
+		const classification = classifyFunctionVsMethod(currentLineText, headerInfo);
 		kind = classification.kind;
 		if (classification.confidence !== "high") {
 			fout.appendLine(
@@ -685,15 +680,18 @@ function buildGenerationRequestContext(editor) {
 			);
 		}
 		sourceFragment = headerInfo.sourceFragment;
+		// For functions/methods, we insert the docstring after the function header, which is the line after the last line of the header.
 		insertionPosition = new vscode.Position(headerInfo.endLine + 1, 0);
 	} else if (currentKind === "class") {
 		kind = "class";
 		const headerInfo = getClassHeaderInfo(editor.document, position.line);
 		sourceFragment = headerInfo.sourceFragment;
+		// For classes, we insert the docstring after the class header, which is the line after the last line of the header.
 		insertionPosition = new vscode.Position(headerInfo.endLine + 1, 0);
 	} else if (isModuleDocstringPosition(editor.document, position.line)) {
 		kind = "module";
 		sourceFragment = "";
+		// For module docstrings, we insert at the top of the file.
 		insertionPosition = new vscode.Position(0, 0);
 	} else {
 		throw new Error("Current line is neither 'def' nor 'class' and not a module-docstring position.");
@@ -961,10 +959,10 @@ async function activate(context) {
 			fout.appendLine("sdv.doc.waterloo    file: " + pong.sdv_doc_waterloo.file)
 			fout.appendLine("sdv.doc.waterloo version: " + pong.sdv_doc_waterloo.version)
 		}
-		catch (err) {
-			emitFatalActivationError(FATAL_BACKEND_PING_FAILED, String(err));
-			fout.appendLine('Waterloo MCP provider remains active; skipping docstring backend setup.');
-			return;
+	catch (err) {
+		emitFatalActivationError(FATAL_BACKEND_PING_FAILED, String(err));
+		fout.appendLine('Waterloo MCP provider remains active; skipping docstring backend setup.');
+		return;
 		}
 	setBackendReady(true);
 	fout.appendLine('done.');
@@ -984,6 +982,10 @@ async function activate(context) {
 		await validateDocstringInBackend(prereq, "validate_docstring");
 	});
 
+	let disposableValidateCoverage = vscode.commands.registerCommand('waterloo.validateCoverageDocstring', async () => {
+		await validateDocstringInBackend(prereq, "validate_coverage_of_docstring");
+	});
+
 	updateFuncClassModuleContext(vscode.window.activeTextEditor);
 	context.subscriptions.push(
 		vscode.window.onDidChangeActiveTextEditor((editor) => {
@@ -999,6 +1001,7 @@ async function activate(context) {
 	context.subscriptions.push(disposableGenerateMinimal);
 	context.subscriptions.push(disposableGenerateFull);
 	context.subscriptions.push(disposableValidate);
+	context.subscriptions.push(disposableValidateCoverage);
 }
 
 exports.activate = activate;
