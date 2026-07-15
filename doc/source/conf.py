@@ -51,6 +51,7 @@ release = '0'
 extensions = [
 	"sphinx_sitemap",
 	"sdv.doc.waterloo.docitem_sphinx",
+#	"sphinxcontrib.waterloo_docstrings",
 	]
 
 # For sitemap:
@@ -78,6 +79,7 @@ locale_dirs = []
 # a list of builtin themes.
 #
 html_theme = 'alabaster'
+#html_theme = 'furo'
 
 html_theme_options = {
 # Filename rel _static/
