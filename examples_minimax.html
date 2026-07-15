@@ -1,44 +1,255 @@
-<!DOCTYPE html>
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="./">
+  <head><meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="index" title="Index" href="genindex.html"><link rel="search" title="Search" href="search.html"><link rel="next" title="4. Examples" href="examples.html"><link rel="prev" title="2. Getting Started" href="getting_started.html">
+        <link rel="canonical" href="https://uwe-at-sdv.github.io/sdv_doc_waterloo/examples_minimax.html">
 
-<html lang="en" data-content_root="./">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="shortcut icon" href="_static/favicon.ico"><!-- Generated with Sphinx 9.1.0 and Furo 2025.12.19 -->
+        <title>3. Docstrings - minimal and full examples - Waterloo Docstrings 0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5f771d8e" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=7bdb33bb" />
+    <link rel="stylesheet" type="text/css" href="_static/common_styles.css?v=72f503a7" />
+    <link rel="stylesheet" type="text/css" href="_static/waterloo_base.css?v=e96343ab" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=8dab3a3b" />
+    <link rel="stylesheet" type="text/css" href="_static/wtrl_doc_custom.css" />
+    
+    
 
-    <title>3. Docstrings - minimal and full examples &#8212; Waterloo Docstrings 0 documentation</title>
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5f771d8e" />
-    <link rel="stylesheet" type="text/css" href="_static/basic.css?v=b08954a9" />
-    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=27fed22d" />
-    <link rel="stylesheet" type="text/css" href="_static/common_styles.css?v=33110125" />
-    <link rel="stylesheet" type="text/css" href="_static/alabaster_waterloo.css?v=bea6f65f" />
-    <link rel="stylesheet" type="text/css" href="_static/wtrl_doc_custom.css?v=b79d6bfc" />
-    <script src="_static/documentation_options.js?v=8dde47fa"></script>
-    <script src="_static/doctools.js?v=fd6eb6e6"></script>
-    <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
-    <link rel="canonical" href="https://uwe-at-sdv.github.io/sdv_doc_waterloo/examples_minimax.html" />
-    <link rel="icon" href="_static/favicon.ico"/>
-    <link rel="index" title="Index" href="genindex.html" />
-    <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="4. Examples" href="examples.html" />
-    <link rel="prev" title="2. Getting Started" href="getting_started.html" />
-   
-  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+
+<style>
+  body {
+    --color-code-background: #fbf1c7;
+  --color-code-foreground: black;
   
-
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #282828;
+  --color-code-foreground: #dddddd;
   
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #282828;
+  --color-code-foreground: #dddddd;
   
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
 
-  </head><body>
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle site navigation sidebar">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc" aria-label="Toggle table of contents sidebar">
+<label class="overlay sidebar-overlay" for="__navigation"></label>
+<label class="overlay toc-overlay" for="__toc"></label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <span class="icon"><svg><use href="#svg-menu"></use></svg></span>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="index.html"><div class="brand">Waterloo Docstrings 0 documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="index.html">
   
+  <span class="sidebar-brand-text">Waterloo Docstrings 0 documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">1. Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="getting_started.html">2. Getting Started</a></li>
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">3. Docstrings - minimal and full examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">4. Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="format.html">5. Docstring format</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tools.html">6. Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="io_layers.html">7. Overview: I/O Layers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="json_io.html">8. The JSON I/O Layer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="html_output_layer.html">9. The HTML Output Layer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mcp.html">10. Model Context Protocol</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reference.html">11. Reference - Rendering Showcase</a></li>
+<li class="toctree-l1"><a class="reference internal" href="_test_freeform.html">12. Test: Flow control in freeform sections</a></li>
+<li class="toctree-l1"><a class="reference internal" href="_test_scope.html">13. Test: Scopes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="test_pygments_lexer.html">14. Test: Inline markup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="legal.html">15. Legal Notes</a></li>
+</ul>
 
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
-          
+</div>
+</div>
 
-          <div class="body" role="main">
-            
-  <section id="docstrings-minimal-and-full-examples">
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="view-this-page">
+  <a class="muted-link" href="_sources/examples_minimax.rst.txt" title="View this page">
+    <svg><use href="#svg-eye"></use></svg>
+    <span class="visually-hidden">View this page</span>
+  </a>
+</div>
+<div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <section id="docstrings-minimal-and-full-examples">
 <span id="chapter-examples-minimax"></span><h1><span class="section-number">3. </span>Docstrings - minimal and full examples<a class="headerlink" href="#docstrings-minimal-and-full-examples" title="Link to this heading">¶</a></h1>
 <p>In this section, we will systematically look at the docstrings for the
 various categories, modules, classes, and functions or methods. The aim
@@ -46,19 +257,19 @@ is to clarify which sections and subsections are optional and which
 are mandatory, and what purpose they serve.</p>
 <section id="module-docstrings-minimal-example">
 <h2><span class="section-number">3.1. </span>Module docstrings – minimal example<a class="headerlink" href="#module-docstrings-minimal-example" title="Link to this heading">¶</a></h2>
-<p>The minimum requirements for any Waterloo docstring are a valid <code class="wtrl_label docutils literal notranslate"><span class="pre">Preamble</span></code>
-with subsections <code class="wtrl_label docutils literal notranslate"><span class="pre">profile</span></code> and <code class="wtrl_label docutils literal notranslate"><span class="pre">normative_sections</span></code>,
-and a <code class="wtrl_label docutils literal notranslate"><span class="pre">Contract</span></code>.</p>
+<p>The minimum requirements for any Waterloo docstring are a valid <span class="wtrl_label">Preamble</span>
+with subsections <span class="wtrl_label">profile</span> and <span class="wtrl_label">normative_sections</span>,
+and a <span class="wtrl_label">Contract</span>.</p>
 <p class="rubric">Mandatory</p>
-<p><code class="wtrl_label docutils literal notranslate"><span class="pre">Preamble</span></code> – The <code class="wtrl_label docutils literal notranslate"><span class="pre">Preamble</span></code> represents the metadata of the docstring.
-It specifies what type of object is being documented (here <code class="wtrl_label docutils literal notranslate"><span class="pre">profile:</span></code> <code class="wtrl_value docutils literal notranslate"><span class="pre">module</span></code>)
-and which sections of the docstring are normative (<code class="wtrl_label docutils literal notranslate"><span class="pre">normative_sections</span></code>). Sections not listed
+<p><span class="wtrl_label">Preamble</span> – The <span class="wtrl_label">Preamble</span> represents the metadata of the docstring.
+It specifies what type of object is being documented (here <span class="wtrl_label">profile:</span> <code class="wtrl_value docutils literal notranslate"><span class="pre">module</span></code>)
+and which sections of the docstring are normative (<span class="wtrl_label">normative_sections</span>). Sections not listed
 here are not normative.</p>
 <p class="rubric">Mandatory and always normative</p>
-<p><code class="wtrl_label docutils literal notranslate"><span class="pre">Contract</span></code> – The <code class="wtrl_label docutils literal notranslate"><span class="pre">Contract</span></code> is the central section in which it is normatively documented
+<p><span class="wtrl_label">Contract</span> – The <span class="wtrl_label">Contract</span> is the central section in which it is normatively documented
 what an object is used for, what it must be capable of, what preconditions must be fulfiled
 in order to use it, and what guarantees the object provides for the result.
-In the case of the module, there is a subsection named <code class="wtrl_label docutils literal notranslate"><span class="pre">general</span></code>.</p>
+In the case of the module, there is a subsection named <span class="wtrl_label">general</span>.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="gh">Preamble:</span>
 <span class="sd">	</span><span class="gu">profile:</span>
@@ -71,35 +282,31 @@ In the case of the module, there is a subsection named <code class="wtrl_label d
 <span class="sd">&quot;&quot;&quot;</span>
 </pre></div>
 </div>
+<div class="table-wrapper wtrl-box docutils container" id="wtrl-mod-27:test_docitem_module_minimal">
 <table class="wtrl-box docutils align-default" id="wtrl-mod-27:test_docitem_module_minimal">
 <tbody>
-<tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Preamble</span></code></p></td>
-<td><ul class="simple">
-<li><p><code class="wtrl_label docutils literal notranslate"><span class="pre">normative</span> <span class="pre">sections</span></code></p>
-<ul>
-<li><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Contract</span></code></p></li>
-</ul>
-</li>
+<tr class="wtrl-section row-odd"><td><p><span class="wtrl_label">Preamble</span></p></td>
+<td><p><span class="wtrl_label">normative sections</span></p>
+<ul class="simple">
+<li><p><span class="wtrl_label">Contract</span></p></li>
 </ul>
 </td>
 </tr>
-<tr class="wtrl-section row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Contract</span></code></p></td>
-<td><ul class="simple">
-<li><p><code class="wtrl_label docutils literal notranslate"><span class="pre">general</span></code></p>
-<ul>
-<li><p><code class="wtrl_norm docutils literal notranslate"><span class="pre">Must</span></code> demonstrate the minimal module docstring.</p></li>
-</ul>
-</li>
+<tr class="wtrl-section row-even"><td><p><span class="wtrl_label">Contract</span></p></td>
+<td><p><span class="wtrl_label">general</span></p>
+<ul class="simple">
+<li><p><span class="wtrl_norm">Must</span> demonstrate the minimal module docstring.</p></li>
 </ul>
 </td>
 </tr>
 </tbody>
 <thead class="wtrl-box-head-module">
-<tr class="row-odd"><th class="head"><code class="wtrl_label docutils literal notranslate"><span class="pre">Module</span></code></th>
-<th class="head"><p>test_docitem_module_minimal</p></th>
+<tr class="row-odd"><th class="head"><p class="wtrl-obj-kind">«Module»</p></th>
+<th class="head"><p class="wtrl-obj-qid">test_docitem_module_minimal</p></th>
 </tr>
 </thead>
 </table>
+</div>
 </section>
 <section id="module-docstrings-full-example">
 <h2><span class="section-number">3.2. </span>Module docstrings – full example<a class="headerlink" href="#module-docstrings-full-example" title="Link to this heading">¶</a></h2>
@@ -108,31 +315,31 @@ Some of the sections must always be listed as normative, some only under
 certain conditions (e.g. if they contain normativity keywords),
 while others are explicitly non-normative and must not be listed as normative.</p>
 <p class="rubric">Mandatory and always normative</p>
-<p>Sections <code class="wtrl_label docutils literal notranslate"><span class="pre">Contract</span></code></p>
+<p>Sections <span class="wtrl_label">Contract</span></p>
 <p class="rubric">Optional and always normative</p>
-<p>Sections <code class="wtrl_label docutils literal notranslate"><span class="pre">Definitions</span></code>, <code class="wtrl_label docutils literal notranslate"><span class="pre">Public_classes</span></code>, <code class="wtrl_label docutils literal notranslate"><span class="pre">Public_functions</span></code>,
-<code class="wtrl_label docutils literal notranslate"><span class="pre">Public_types</span></code>, <code class="wtrl_label docutils literal notranslate"><span class="pre">Public_variables</span></code>, <code class="wtrl_label docutils literal notranslate"><span class="pre">Public_constants</span></code></p>
+<p>Sections <span class="wtrl_label">Definitions</span>, <span class="wtrl_label">Public_classes</span>, <span class="wtrl_label">Public_functions</span>,
+<span class="wtrl_label">Public_types</span>, <span class="wtrl_label">Public_variables</span>, <span class="wtrl_label">Public_constants</span></p>
 <p class="rubric">Optional and normative under conditions</p>
-<p>Sections <code class="wtrl_label docutils literal notranslate"><span class="pre">Description</span></code> and <code class="wtrl_label docutils literal notranslate"><span class="pre">See_also</span></code> are normative under
+<p>Sections <span class="wtrl_label">Description</span> and <span class="wtrl_label">See_also</span> are normative under
 certain conditions.
 If the description contains at least one normativity keyword in tokenized form,
-it must be listed under <code class="wtrl_label docutils literal notranslate"><span class="pre">normative_sections</span></code> – and vice versa.
-For <code class="wtrl_label docutils literal notranslate"><span class="pre">See_also</span></code> the following rule applies:
-Any validator will check whether the objects listed under <code class="wtrl_label docutils literal notranslate"><span class="pre">See_also</span></code>
+it must be listed under <span class="wtrl_label">normative_sections</span> – and vice versa.
+For <span class="wtrl_label">See_also</span> the following rule applies:
+Any validator will check whether the objects listed under <span class="wtrl_label">See_also</span>
 can be resolved. If the section is listed as normative, resolution failure leads
 to an error. If it is not listed, resolution failure only leads to a warning.</p>
 <p class="rubric">Optional and never normative</p>
 <ul class="simple">
-<li><p>The <code class="wtrl_label docutils literal notranslate"><span class="pre">Terminology</span></code> and <code class="wtrl_label docutils literal notranslate"><span class="pre">Notes</span></code> sections are intended
+<li><p>The <span class="wtrl_label">Terminology</span> and <span class="wtrl_label">Notes</span> sections are intended
 for human-readable explanations and notes. Since one of the basic principles
 of the Waterloo format is the strict separation between normative and
 informative content, certain sections must never be listed as normative.</p></li>
-<li><p>Sections <code class="wtrl_label docutils literal notranslate"><span class="pre">Class_overview</span></code> and <code class="wtrl_label docutils literal notranslate"><span class="pre">Function_overview</span></code>
-are informative by design. Normative statements in <code class="wtrl_label docutils literal notranslate"><span class="pre">*_overview</span></code>
+<li><p>Sections <span class="wtrl_label">Class_overview</span> and <span class="wtrl_label">Function_overview</span>
+are informative by design. Normative statements in <span class="wtrl_label">*_overview</span>
 sections would violate <a class="reference internal" href="introduction.html#principles"><span class="std std-ref">SSoT</span></a> by introducing an additional normative source
 besides the class or function docstring. They would also violate <a class="reference internal" href="introduction.html#principles"><span class="std std-ref">LoII</span></a>, as
 normative information would be distributed across multiple docstrings.
-The split between <code class="wtrl_label docutils literal notranslate"><span class="pre">*_overview</span></code> and <code class="wtrl_label docutils literal notranslate"><span class="pre">Public_*</span></code>
+The split between <span class="wtrl_label">*_overview</span> and <span class="wtrl_label">Public_*</span>
 sections is therefore necessary to satisfy BinNorm. Without this split,
 sections would contain a mixture of normative and informative content.</p></li>
 </ul>
@@ -247,55 +454,50 @@ sections would contain a mixture of normative and informative content.</p></li>
 <span class="n">MY_CONSTANT</span> <span class="p">:</span> <span class="n">Final</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="mi">42</span>
 </pre></div>
 </div>
+<div class="table-wrapper wtrl-box docutils container" id="wtrl-mod-24:test_docitem_module_full">
 <table class="wtrl-box docutils align-default" id="wtrl-mod-24:test_docitem_module_full">
 <tbody>
-<tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Preamble</span></code></p></td>
-<td><ul class="simple">
-<li><p><code class="wtrl_label docutils literal notranslate"><span class="pre">normative</span> <span class="pre">sections</span></code></p>
-<ul>
-<li><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Contract</span></code>, <code class="wtrl_label docutils literal notranslate"><span class="pre">Definitions</span></code>, <code class="wtrl_label docutils literal notranslate"><span class="pre">Public</span> <span class="pre">classes</span></code>, <code class="wtrl_label docutils literal notranslate"><span class="pre">Public</span> <span class="pre">functions</span></code>, <code class="wtrl_label docutils literal notranslate"><span class="pre">Public</span> <span class="pre">types</span></code>, <code class="wtrl_label docutils literal notranslate"><span class="pre">Public</span> <span class="pre">variables</span></code>, <code class="wtrl_label docutils literal notranslate"><span class="pre">Public</span> <span class="pre">constants</span></code></p></li>
-</ul>
-</li>
+<tr class="wtrl-section row-odd"><td><p><span class="wtrl_label">Preamble</span></p></td>
+<td><p><span class="wtrl_label">normative sections</span></p>
+<ul class="simple">
+<li><p><span class="wtrl_label">Contract</span>, <span class="wtrl_label">Definitions</span>, <span class="wtrl_label">Public classes</span>, <span class="wtrl_label">Public functions</span>, <span class="wtrl_label">Public types</span>, <span class="wtrl_label">Public variables</span>, <span class="wtrl_label">Public constants</span></p></li>
 </ul>
 </td>
 </tr>
-<tr class="wtrl-section row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Definitions</span></code></p></td>
+<tr class="wtrl-section row-even"><td><p><span class="wtrl_label">Definitions</span></p></td>
 <td><dl class="simple wtrl-dfn-list">
-<dt><code class="wtrl_dfn docutils literal notranslate"><span class="pre">MyItem</span></code></dt><dd><p>This is a term named <code class="wtrl_term docutils literal notranslate"><span class="pre">MyItem</span></code> in section “Definitions”. This section is always normative and <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span></code> be listed in “normative_sections”. You can refer to this term by using the syntax token “|” + term + “|” followed by the referred term in backticks. Any validator will ensure that the terms you refer to by this token are defined in section “Definitions”.</p>
+<dt><span class="wtrl_dfn">MyItem</span></dt><dd><p>This is a term named <span class="wtrl_term">MyItem</span> in section “Definitions”. This section is always normative and <span class="wtrl_norm">must</span> be listed in “normative_sections”. You can refer to this term by using the syntax token “|” + term + “|” followed by the referred term in backticks. Any validator will ensure that the terms you refer to by this token are defined in section “Definitions”.</p>
 </dd>
-<dt><code class="wtrl_dfn docutils literal notranslate"><span class="pre">My_Other_Item</span></code></dt><dd><p>Here is another example. Note that term names are Identifiers like variable names in most programming languages, restricted to letters, digits, and underscore.</p>
+<dt><span class="wtrl_dfn">My_Other_Item</span></dt><dd><p>Here is another example. Note that term names are Identifiers like variable names in most programming languages, restricted to letters, digits, and underscore.</p>
 </dd>
 </dl>
 </td>
 </tr>
-<tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Terminology</span></code></p></td>
+<tr class="wtrl-section row-odd"><td><p><span class="wtrl_label">Terminology</span></p></td>
 <td><dl class="wtrl-dfn-list">
-<dt><code class="wtrl_dfn docutils literal notranslate"><span class="pre">Fancy-Unicorn</span></code></dt><dd><p>The section “Terminology” allows to define terms in an informative manner. Typically, this subsection would start like “A Fancy-Unicorn is …” followed by an explanation.</p>
+<dt><span class="wtrl_dfn">Fancy-Unicorn</span></dt><dd><p>The section “Terminology” allows to define terms in an informative manner. Typically, this subsection would start like “A Fancy-Unicorn is …” followed by an explanation.</p>
 <p>The section “Terminology” is never normative, never listed in “normative_sections” and does not contain normativity keywords in tokenized form.</p>
 <p>As opposed to section “Definitions”, any non-empty string is allowed, like here “Fancy-Unicorn”. Take care, however, that the name does not collide with syntax rules of the intermediate document language (like reST in our case).</p>
 </dd>
 </dl>
 </td>
 </tr>
-<tr class="wtrl-section row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Contract</span></code></p></td>
-<td><ul class="simple">
-<li><p><code class="wtrl_label docutils literal notranslate"><span class="pre">general</span></code></p>
-<ul>
-<li><p><code class="wtrl_norm docutils literal notranslate"><span class="pre">Must</span></code> demonstrate all sections and subsections and syntax tokens like backslash for continued lines.</p></li>
-<li><p><code class="wtrl_norm docutils literal notranslate"><span class="pre">Must</span></code> point out that logical lines are interpreted as items, so here we have two logical lines, i.e. two items.</p></li>
-<li><p>This docstring <code class="wtrl_norm docutils literal notranslate"><span class="pre">may</span></code> refer to <code class="wtrl_term docutils literal notranslate"><span class="pre">MyItem</span></code> for demonstration purposes.</p></li>
-</ul>
-</li>
+<tr class="wtrl-section row-even"><td><p><span class="wtrl_label">Contract</span></p></td>
+<td><p><span class="wtrl_label">general</span></p>
+<ul class="simple">
+<li><p><span class="wtrl_norm">Must</span> demonstrate all sections and subsections and syntax tokens like backslash for continued lines.</p></li>
+<li><p><span class="wtrl_norm">Must</span> point out that logical lines are interpreted as items, so here we have two logical lines, i.e. two items.</p></li>
+<li><p>This docstring <span class="wtrl_norm">may</span> refer to <span class="wtrl_term">MyItem</span> for demonstration purposes.</p></li>
 </ul>
 </td>
 </tr>
-<tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Description</span></code></p></td>
+<tr class="wtrl-section row-odd"><td><p><span class="wtrl_label">Description</span></p></td>
 <td><p>The purpose of this module is to demonstrate waterloo docstrings on module level. A linter will accept this docstring, but coverage is not given, because the classes and function mentioned herein do not have docstrings.</p>
 <p>The section “Description” allows free form text and the usage of the pipe character “|” in order to subdivide the text into paragraphs.</p>
 <p>A section “Description” may be normative, but in this example it is not, since it does not contain normativity keywords in tokenized form.</p>
 </td>
 </tr>
-<tr class="wtrl-section row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Notes</span></code></p></td>
+<tr class="wtrl-section row-even"><td><p><span class="wtrl_label">Notes</span></p></td>
 <td><p class="wtrl-note-title rubric">What is it good for</p>
 <p class="wtrl-freeform-paragraph-content">Section “Notes” allows you to add informative content.</p>
 <p class="wtrl-note-title rubric">What it is not good for</p>
@@ -304,10 +506,10 @@ sections would contain a mixture of normative and informative content.</p></li>
 <p class="wtrl-freeform-paragraph-content">The section “Notes” is subdivided into subsections with user-defined labels like in this example “What is it good for:”, “What it is not good for:” and “Syntax:”</p>
 </td>
 </tr>
-<tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Public</span> <span class="pre">classes</span></code></p></td>
-<td><p><a class="wtrl_type reference internal" href="#wtrl-cls-24:test_docitem_module_full-7:MyClass" title="test_docitem_module_full.MyClass"><span>MyClass</span></a></p></td>
+<tr class="wtrl-section row-odd"><td><p><span class="wtrl_label">Public classes</span></p></td>
+<td><p><a class="wtrl_class reference internal" href="#wtrl-cls-24:test_docitem_module_full-7:MyClass" title="test_docitem_module_full.MyClass"><span>MyClass</span></a></p></td>
 </tr>
-<tr class="wtrl-section row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Class</span> <span class="pre">overview</span></code></p></td>
+<tr class="wtrl-section row-even"><td><p><span class="wtrl_label">Class overview</span></p></td>
 <td><ul>
 <li><p><code class="wtrl_type docutils literal notranslate"><span class="pre">MyClass</span></code></p>
 <p class="wtrl-freeform-paragraph-content">Class for nothing</p>
@@ -315,10 +517,10 @@ sections would contain a mixture of normative and informative content.</p></li>
 </ul>
 </td>
 </tr>
-<tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Public</span> <span class="pre">functions</span></code></p></td>
+<tr class="wtrl-section row-odd"><td><p><span class="wtrl_label">Public functions</span></p></td>
 <td><p><a class="wtrl_func reference internal" href="#wtrl-func-24:test_docitem_module_full-11:my_function" title="test_docitem_module_full.my_function"><span>my_function</span></a></p></td>
 </tr>
-<tr class="wtrl-section row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Function</span> <span class="pre">overview</span></code></p></td>
+<tr class="wtrl-section row-even"><td><p><span class="wtrl_label">Function overview</span></p></td>
 <td><ul>
 <li><p><code class="wtrl_func docutils literal notranslate"><span class="pre">my_function</span></code></p>
 <p class="wtrl-freeform-paragraph-content">Important for demonstration but does nothing</p>
@@ -326,40 +528,41 @@ sections would contain a mixture of normative and informative content.</p></li>
 </ul>
 </td>
 </tr>
-<tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Public</span> <span class="pre">types</span></code></p></td>
+<tr class="wtrl-section row-odd"><td><p><span class="wtrl_label">Public types</span></p></td>
 <td><ul>
 <li><p><a class="wtrl_type reference internal" href="#wtrl-obj-6:typing-5:Union" title="typing.Union"><span>MyTypeAlias_t</span></a></p>
-<p class="wtrl-freeform-paragraph-content"><code class="wtrl_norm docutils literal notranslate"><span class="pre">Must</span></code> represent a union of <code class="wtrl_type docutils literal notranslate"><span class="pre">float</span></code> and <code class="wtrl_type docutils literal notranslate"><span class="pre">int</span></code>. This section is always normative. All relevant information about the type alias is specified here, as type aliases do not provide their own machine-verifiable docstrings.</p>
+<p class="wtrl-freeform-paragraph-content"><span class="wtrl_norm">Must</span> represent a union of <code class="wtrl_type docutils literal notranslate"><span class="pre">float</span></code> and <code class="wtrl_type docutils literal notranslate"><span class="pre">int</span></code>. This section is always normative. All relevant information about the type alias is specified here, as type aliases do not provide their own machine-verifiable docstrings.</p>
 </li>
 </ul>
 </td>
 </tr>
-<tr class="wtrl-section row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Public</span> <span class="pre">variables</span></code></p></td>
+<tr class="wtrl-section row-even"><td><p><span class="wtrl_label">Public variables</span></p></td>
 <td><ul>
 <li><p><a class="wtrl_var reference internal" href="#wtrl-obj-5:float" title="float"><span>my_variable</span></a></p>
-<p class="wtrl-freeform-paragraph-content"><code class="wtrl_norm docutils literal notranslate"><span class="pre">Must</span></code> represent a value for this and that. This section is always normative. All relevant information is specified here, since variables do not have standardized, machine-verifiable docstrings.</p>
+<p class="wtrl-freeform-paragraph-content"><span class="wtrl_norm">Must</span> represent a value for this and that. This section is always normative. All relevant information is specified here, since variables do not have standardized, machine-verifiable docstrings.</p>
 </li>
 </ul>
 </td>
 </tr>
-<tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Public</span> <span class="pre">constants</span></code></p></td>
+<tr class="wtrl-section row-odd"><td><p><span class="wtrl_label">Public constants</span></p></td>
 <td><ul>
 <li><p><a class="wtrl_var reference internal" href="#wtrl-obj-3:int" title="int"><span>MY_CONSTANT</span></a></p>
-<p class="wtrl-freeform-paragraph-content"><code class="wtrl_norm docutils literal notranslate"><span class="pre">Must</span></code> represent a constant value annotated as <code class="wtrl_type docutils literal notranslate"><span class="pre">Final</span></code>. This section is always normative. All relevant information is specified here, as constants do not provide their own machine-verifiable docstrings.</p>
+<p class="wtrl-freeform-paragraph-content"><span class="wtrl_norm">Must</span> represent a constant value annotated as <code class="wtrl_type docutils literal notranslate"><span class="pre">Final</span></code>. This section is always normative. All relevant information is specified here, as constants do not provide their own machine-verifiable docstrings.</p>
 </li>
 </ul>
 </td>
 </tr>
-<tr class="wtrl-section row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">See</span> <span class="pre">also</span></code></p></td>
+<tr class="wtrl-section row-even"><td><p><span class="wtrl_label">See also</span></p></td>
 <td><p><a class="wtrl_var reference internal" href="#wtrl-mod-27:test_docitem_module_minimal" title="test_docitem_module_minimal"><span>test_docitem_module_minimal</span></a></p></td>
 </tr>
 </tbody>
 <thead class="wtrl-box-head-module">
-<tr class="row-odd"><th class="head"><code class="wtrl_label docutils literal notranslate"><span class="pre">Module</span></code></th>
-<th class="head"><p>test_docitem_module_full</p></th>
+<tr class="row-odd"><th class="head"><p class="wtrl-obj-kind">«Module»</p></th>
+<th class="head"><p class="wtrl-obj-qid">test_docitem_module_full</p></th>
 </tr>
 </thead>
 </table>
+</div>
 </section>
 <section id="class-docstrings-minimal-example">
 <h2><span class="section-number">3.3. </span>Class docstrings – minimal example<a class="headerlink" href="#class-docstrings-minimal-example" title="Link to this heading">¶</a></h2>
@@ -367,9 +570,9 @@ sections would contain a mixture of normative and informative content.</p></li>
 counterparts in module docstring, but there are sections
 and subsections specific to class docstrings:</p>
 <p class="rubric">Mandatory and always normative</p>
-<p><code class="wtrl_label docutils literal notranslate"><span class="pre">Contract.constructor</span></code> – Each instance of a class is constructed in one or the other way.
+<p><span class="wtrl_label">Contract.constructor</span> – Each instance of a class is constructed in one or the other way.
 Therefore the Waterloo format demands a normative statement
-on the class constructor in section <code class="wtrl_label docutils literal notranslate"><span class="pre">Contract</span></code>.</p>
+on the class constructor in section <span class="wtrl_label">Contract</span>.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">MyClass</span><span class="p">:</span>
 <span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="gh">Preamble:</span>
@@ -386,51 +589,46 @@ on the class constructor in section <code class="wtrl_label docutils literal not
 	<span class="k">pass</span>
 </pre></div>
 </div>
+<div class="table-wrapper wtrl-box docutils container" id="wtrl-cls-26:test_docitem_class_minimal-7:MyClass">
 <table class="wtrl-box docutils align-default" id="wtrl-cls-26:test_docitem_class_minimal-7:MyClass">
 <tbody>
-<tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Preamble</span></code></p></td>
-<td><ul class="simple">
-<li><p><code class="wtrl_label docutils literal notranslate"><span class="pre">normative</span> <span class="pre">sections</span></code></p>
-<ul>
-<li><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Contract</span></code></p></li>
-</ul>
-</li>
+<tr class="wtrl-section row-odd"><td><p><span class="wtrl_label">Preamble</span></p></td>
+<td><p><span class="wtrl_label">normative sections</span></p>
+<ul class="simple">
+<li><p><span class="wtrl_label">Contract</span></p></li>
 </ul>
 </td>
 </tr>
-<tr class="wtrl-section row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Contract</span></code></p></td>
-<td><ul class="simple">
-<li><p><code class="wtrl_label docutils literal notranslate"><span class="pre">general</span></code></p>
-<ul>
-<li><p><code class="wtrl_norm docutils literal notranslate"><span class="pre">Must</span></code> demonstrate the minimal class docstring.</p></li>
+<tr class="wtrl-section row-even"><td><p><span class="wtrl_label">Contract</span></p></td>
+<td><p><span class="wtrl_label">general</span></p>
+<ul class="simple">
+<li><p><span class="wtrl_norm">Must</span> demonstrate the minimal class docstring.</p></li>
 </ul>
-</li>
-<li><p><code class="wtrl_label docutils literal notranslate"><span class="pre">constructor</span></code></p>
-<ul>
-<li><p><code class="wtrl_norm docutils literal notranslate"><span class="pre">Must</span></code> be default-constructible</p></li>
-</ul>
-</li>
+<p><span class="wtrl_label">constructor</span></p>
+<ul class="simple">
+<li><p><span class="wtrl_norm">Must</span> be default-constructible</p></li>
 </ul>
 </td>
 </tr>
 </tbody>
 <thead class="wtrl-box-head-class">
-<tr class="row-odd"><th class="head"><code class="wtrl_label docutils literal notranslate"><span class="pre">Class</span></code></th>
-<th class="head"><p>MyClass</p></th>
+<tr class="row-odd"><th class="head"><p class="wtrl-obj-kind">«Class»</p></th>
+<th class="head"><p class="wtrl-obj-qid">MyClass</p></th>
 </tr>
 </thead>
 </table>
+</div>
 </section>
 <section id="class-docstrings-full-example">
 <h2><span class="section-number">3.4. </span>Class docstrings – full example<a class="headerlink" href="#class-docstrings-full-example" title="Link to this heading">¶</a></h2>
 <p>For demonstration purposes, the constructor signature in this example
 covers all supported ways to pass and accept parameters. Subsection
-<code class="wtrl_label docutils literal notranslate"><span class="pre">Contract.constructor</span></code> should describe the constructor
+<span class="wtrl_label">Contract.constructor</span> should describe the constructor
 parameters, how they are passed, and what the constructor does.</p>
 <p>In addition to the sections described for module docstrings, class
 docstrings support the following optional sections and subsections.</p>
 <p class="rubric">Optional and always normative</p>
-<p><code class="wtrl_label docutils literal notranslate"><span class="pre">Contract.traits</span></code> –
+<p><span class="wtrl_label">Contract.traits</span> –
 This optional subsection allows to declare certain semantic properties
 of a class. A limited set of trait identifiers is defined by this
 specification, including <code class="wtrl_value docutils literal notranslate"><span class="pre">abstract</span></code> for classes that are
@@ -442,8 +640,8 @@ instantiated and may serve as a base class.
 The purpose of this subsection is to provide a normative way to express
 design intent, such as indicating that a class is part of an API surface
 only, or that it must not be used as a base for further extensions.</p>
-<p><code class="wtrl_label docutils literal notranslate"><span class="pre">Derived_from</span></code> –
-This optional section is related to <code class="wtrl_label docutils literal notranslate"><span class="pre">Contract.traits</span></code>. It
+<p><span class="wtrl_label">Derived_from</span> –
+This optional section is related to <span class="wtrl_label">Contract.traits</span>. It
 normatively extends the public API of the documented class by declaring
 which base classes contribute public methods, types, variables, constants,
 or semantic guarantees.
@@ -451,14 +649,14 @@ Validators verify that the classes listed in this section can be resolved
 using Python’s import mechanism. This serves as an anti-drift mechanism:
 if a base class is renamed, removed, or moved without updating this
 section, validation fails.</p>
-<p><code class="wtrl_label docutils literal notranslate"><span class="pre">Public_methods</span></code> –
+<p><span class="wtrl_label">Public_methods</span> –
 This section defines which methods of the class are part of the public
 API and is therefore normative.</p>
-<p><code class="wtrl_label docutils literal notranslate"><span class="pre">Method_overview</span></code> –
+<p><span class="wtrl_label">Method_overview</span> –
 This section is informative. It may be used to provide human-readable
 descriptions for selected methods, explaining their purpose or typical
 usage. This section may only be present if section
-<code class="wtrl_label docutils literal notranslate"><span class="pre">Public_methods</span></code> exists.</p>
+<span class="wtrl_label">Public_methods</span> exists.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Final</span><span class="p">,</span> <span class="n">TypeAlias</span>
 
 <span class="c1"># A base class which becomes part of the API.</span>
@@ -556,73 +754,66 @@ usage. This section may only be present if section
 	<span class="n">m</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="n">c</span><span class="o">=</span><span class="mf">4.56</span><span class="p">,</span><span class="n">b</span><span class="o">=</span><span class="s2">&quot;hi&quot;</span><span class="p">,</span><span class="n">d</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">e</span><span class="o">=</span><span class="s2">&quot;zxy&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
+<div class="table-wrapper wtrl-box docutils container" id="wtrl-cls-23:test_docitem_class_full-7:MyClass">
 <table class="wtrl-box docutils align-default" id="wtrl-cls-23:test_docitem_class_full-7:MyClass">
 <tbody>
-<tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Preamble</span></code></p></td>
-<td><ul class="simple">
-<li><p><code class="wtrl_label docutils literal notranslate"><span class="pre">normative</span> <span class="pre">sections</span></code></p>
-<ul>
-<li><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Contract</span></code>, <code class="wtrl_label docutils literal notranslate"><span class="pre">Definitions</span></code>, <code class="wtrl_label docutils literal notranslate"><span class="pre">Derived</span> <span class="pre">from</span></code>, <code class="wtrl_label docutils literal notranslate"><span class="pre">Public</span> <span class="pre">classes</span></code>, <code class="wtrl_label docutils literal notranslate"><span class="pre">Public</span> <span class="pre">methods</span></code>, <code class="wtrl_label docutils literal notranslate"><span class="pre">Public</span> <span class="pre">types</span></code>, <code class="wtrl_label docutils literal notranslate"><span class="pre">Public</span> <span class="pre">variables</span></code>, <code class="wtrl_label docutils literal notranslate"><span class="pre">Public</span> <span class="pre">constants</span></code></p></li>
-</ul>
-</li>
+<tr class="wtrl-section row-odd"><td><p><span class="wtrl_label">Preamble</span></p></td>
+<td><p><span class="wtrl_label">normative sections</span></p>
+<ul class="simple">
+<li><p><span class="wtrl_label">Contract</span>, <span class="wtrl_label">Definitions</span>, <span class="wtrl_label">Derived from</span>, <span class="wtrl_label">Public classes</span>, <span class="wtrl_label">Public methods</span>, <span class="wtrl_label">Public types</span>, <span class="wtrl_label">Public variables</span>, <span class="wtrl_label">Public constants</span></p></li>
 </ul>
 </td>
 </tr>
-<tr class="wtrl-section row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Definitions</span></code></p></td>
+<tr class="wtrl-section row-even"><td><p><span class="wtrl_label">Definitions</span></p></td>
 <td><dl class="simple wtrl-dfn-list">
-<dt><code class="wtrl_dfn docutils literal notranslate"><span class="pre">MyExampleItem</span></code></dt><dd><p>Define a term normatively. Same as for modules.</p>
+<dt><span class="wtrl_dfn">MyExampleItem</span></dt><dd><p>Define a term normatively. Same as for modules.</p>
 </dd>
 </dl>
 </td>
 </tr>
-<tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Terminology</span></code></p></td>
+<tr class="wtrl-section row-odd"><td><p><span class="wtrl_label">Terminology</span></p></td>
 <td><dl class="simple wtrl-dfn-list">
-<dt><code class="wtrl_dfn docutils literal notranslate"><span class="pre">Fancy-Unicorn</span></code></dt><dd><p>Define a term informatively. Same as for modules.</p>
+<dt><span class="wtrl_dfn">Fancy-Unicorn</span></dt><dd><p>Define a term informatively. Same as for modules.</p>
 </dd>
 </dl>
 </td>
 </tr>
-<tr class="wtrl-section row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Contract</span></code></p></td>
-<td><ul class="simple">
-<li><p><code class="wtrl_label docutils literal notranslate"><span class="pre">general</span></code></p>
-<ul>
-<li><p><code class="wtrl_norm docutils literal notranslate"><span class="pre">Must</span></code> demonstrate the minimal class docstring.</p></li>
+<tr class="wtrl-section row-even"><td><p><span class="wtrl_label">Contract</span></p></td>
+<td><p><span class="wtrl_label">general</span></p>
+<ul class="simple">
+<li><p><span class="wtrl_norm">Must</span> demonstrate the minimal class docstring.</p></li>
 </ul>
-</li>
-<li><p><code class="wtrl_label docutils literal notranslate"><span class="pre">constructor</span></code></p>
-<ul>
-<li><p><code class="wtrl_norm docutils literal notranslate"><span class="pre">Must</span></code> demand an int-valued positional parameter ‘a’.</p></li>
-<li><p><code class="wtrl_norm docutils literal notranslate"><span class="pre">Must</span></code> demand a str-valued positional or keyword parameter ‘b’.</p></li>
-<li><p><code class="wtrl_norm docutils literal notranslate"><span class="pre">Must</span></code> accept a float-valued positional or keyword parameter ‘c’.</p></li>
-<li><p><code class="wtrl_norm docutils literal notranslate"><span class="pre">Must</span></code> demand a bool-valued keyword parameter ‘d’.</p></li>
-<li><p><code class="wtrl_norm docutils literal notranslate"><span class="pre">Must</span></code> accept (variadic) keyword parameters and dispatch them as follows:</p></li>
-<li><p><code class="wtrl_norm docutils literal notranslate"><span class="pre">Must</span></code> accept a keyword parameter ‘e’ and assert it is str-valued (if present).</p></li>
-<li><p>The constructor <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span></code> print all parameter values to ‘stdout’.</p></li>
+<p><span class="wtrl_label">constructor</span></p>
+<ul class="simple">
+<li><p><span class="wtrl_norm">Must</span> demand an int-valued positional parameter ‘a’.</p></li>
+<li><p><span class="wtrl_norm">Must</span> demand a str-valued positional or keyword parameter ‘b’.</p></li>
+<li><p><span class="wtrl_norm">Must</span> accept a float-valued positional or keyword parameter ‘c’.</p></li>
+<li><p><span class="wtrl_norm">Must</span> demand a bool-valued keyword parameter ‘d’.</p></li>
+<li><p><span class="wtrl_norm">Must</span> accept (variadic) keyword parameters and dispatch them as follows:</p></li>
+<li><p><span class="wtrl_norm">Must</span> accept a keyword parameter ‘e’ and assert it is str-valued (if present).</p></li>
+<li><p>The constructor <span class="wtrl_norm">must</span> print all parameter values to ‘stdout’.</p></li>
 </ul>
-</li>
-<li><p><code class="wtrl_label docutils literal notranslate"><span class="pre">traits</span></code></p>
-<ul>
+<p><span class="wtrl_label">traits</span></p>
+<ul class="simple">
 <li><p><code class="wtrl_value docutils literal notranslate"><span class="pre">final</span></code></p></li>
 </ul>
-</li>
-</ul>
 </td>
 </tr>
-<tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Derived</span> <span class="pre">from</span></code></p></td>
+<tr class="wtrl-section row-odd"><td><p><span class="wtrl_label">Derived from</span></p></td>
 <td><p><a class="wtrl_type reference internal" href="#wtrl-cls-23:test_docitem_class_full-11:MyBaseClass" title="test_docitem_class_full.MyBaseClass"><span>MyBaseClass</span></a></p></td>
 </tr>
-<tr class="wtrl-section row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Description</span></code></p></td>
+<tr class="wtrl-section row-even"><td><p><span class="wtrl_label">Description</span></p></td>
 <td><p>As for modules</p></td>
 </tr>
-<tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Notes</span></code></p></td>
+<tr class="wtrl-section row-odd"><td><p><span class="wtrl_label">Notes</span></p></td>
 <td><p class="wtrl-note-title rubric">Purpose and Syntax</p>
 <p class="wtrl-freeform-paragraph-content">Same as for modules</p>
 </td>
 </tr>
-<tr class="wtrl-section row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Public</span> <span class="pre">classes</span></code></p></td>
-<td><p><a class="wtrl_type reference internal" href="#wtrl-cls-23:test_docitem_class_full-7:MyClass-13:MyNestedClass" title="test_docitem_class_full.MyClass.MyNestedClass"><span>MyNestedClass</span></a></p></td>
+<tr class="wtrl-section row-even"><td><p><span class="wtrl_label">Public classes</span></p></td>
+<td><p><a class="wtrl_class reference internal" href="#wtrl-cls-23:test_docitem_class_full-7:MyClass-13:MyNestedClass" title="test_docitem_class_full.MyClass.MyNestedClass"><span>MyNestedClass</span></a></p></td>
 </tr>
-<tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Class</span> <span class="pre">overview</span></code></p></td>
+<tr class="wtrl-section row-odd"><td><p><span class="wtrl_label">Class overview</span></p></td>
 <td><ul>
 <li><p><code class="wtrl_type docutils literal notranslate"><span class="pre">MyNestedClass</span></code></p>
 <p class="wtrl-freeform-paragraph-content">Use this section for informative reminders what the class			is good for. Multiple lines are possible. Do not use Normativity Keywords.</p>
@@ -630,10 +821,10 @@ usage. This section may only be present if section
 </ul>
 </td>
 </tr>
-<tr class="wtrl-section row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Public</span> <span class="pre">methods</span></code></p></td>
+<tr class="wtrl-section row-even"><td><p><span class="wtrl_label">Public methods</span></p></td>
 <td><p><a class="wtrl_func reference internal" href="#wtrl-func-23:test_docitem_class_full-7:MyClass-9:my_method" title="test_docitem_class_full.MyClass.my_method"><span>my_method</span></a></p></td>
 </tr>
-<tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Method</span> <span class="pre">overview</span></code></p></td>
+<tr class="wtrl-section row-odd"><td><p><span class="wtrl_label">Method overview</span></p></td>
 <td><ul>
 <li><p><code class="wtrl_func docutils literal notranslate"><span class="pre">my_method</span></code></p>
 <p class="wtrl-freeform-paragraph-content">Important for demonstration but does nothing</p>
@@ -641,7 +832,7 @@ usage. This section may only be present if section
 </ul>
 </td>
 </tr>
-<tr class="wtrl-section row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Public</span> <span class="pre">types</span></code></p></td>
+<tr class="wtrl-section row-even"><td><p><span class="wtrl_label">Public types</span></p></td>
 <td><ul>
 <li><p><a class="wtrl_type reference internal" href="#wtrl-obj-6:typing-5:Union" title="typing.Union"><span>MyTypeAlias_t</span></a></p>
 <p class="wtrl-freeform-paragraph-content">Important type for annotations</p>
@@ -649,7 +840,7 @@ usage. This section may only be present if section
 </ul>
 </td>
 </tr>
-<tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Public</span> <span class="pre">variables</span></code></p></td>
+<tr class="wtrl-section row-odd"><td><p><span class="wtrl_label">Public variables</span></p></td>
 <td><ul>
 <li><p><a class="wtrl_var reference internal" href="#wtrl-obj-3:int" title="int"><span>my_variable</span></a></p>
 <p class="wtrl-freeform-paragraph-content">A variable</p>
@@ -657,7 +848,7 @@ usage. This section may only be present if section
 </ul>
 </td>
 </tr>
-<tr class="wtrl-section row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Public</span> <span class="pre">constants</span></code></p></td>
+<tr class="wtrl-section row-even"><td><p><span class="wtrl_label">Public constants</span></p></td>
 <td><ul>
 <li><p><a class="wtrl_var reference internal" href="#wtrl-obj-5:hello" title="hello"><span>MY_CONSTANT</span></a></p>
 <p class="wtrl-freeform-paragraph-content">Another constant</p>
@@ -665,33 +856,34 @@ usage. This section may only be present if section
 </ul>
 </td>
 </tr>
-<tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">See</span> <span class="pre">also</span></code></p></td>
+<tr class="wtrl-section row-odd"><td><p><span class="wtrl_label">See also</span></p></td>
 <td><p><a class="wtrl_var reference internal" href="#wtrl-mod-27:test_docitem_module_minimal" title="test_docitem_module_minimal"><span>test_docitem_module_minimal</span></a></p></td>
 </tr>
 </tbody>
 <thead class="wtrl-box-head-class">
-<tr class="row-even"><th class="head"><code class="wtrl_label docutils literal notranslate"><span class="pre">Class</span></code></th>
-<th class="head"><p>MyClass</p></th>
+<tr class="row-even"><th class="head"><p class="wtrl-obj-kind">«Class»</p></th>
+<th class="head"><p class="wtrl-obj-qid">MyClass</p></th>
 </tr>
 </thead>
 </table>
+</div>
 </section>
 <section id="function-docstrings-minimal-example">
 <h2><span class="section-number">3.5. </span>Function docstrings – minimal example<a class="headerlink" href="#function-docstrings-minimal-example" title="Link to this heading">¶</a></h2>
 <p>The following minimal example illustrates the essential structure of a
 function docstring. While deliberately simple, it highlights the sections
 that appear in every function docstring.</p>
-<p>Apart from <code class="wtrl_label docutils literal notranslate"><span class="pre">Preamble</span></code> and <code class="wtrl_label docutils literal notranslate"><span class="pre">Contract</span></code>, which are already
+<p>Apart from <span class="wtrl_label">Preamble</span> and <span class="wtrl_label">Contract</span>, which are already
 known from module and class docstrings, the following sections are present.</p>
 <p class="rubric">Mandatory and always normative</p>
-<p><code class="wtrl_label docutils literal notranslate"><span class="pre">Parameters</span></code> –
+<p><span class="wtrl_label">Parameters</span> –
 Each subsection of this normative section represents a parameter of the
 function. The minimal example shown below does not define any parameters.</p>
-<p><code class="wtrl_label docutils literal notranslate"><span class="pre">Returns</span></code> –
+<p><span class="wtrl_label">Returns</span> –
 This section describes the return value. It is normative by definition,
 but it is up to the author whether to formulate requirements using
 Normativity Keywords or to keep the description purely descriptive.</p>
-<p><code class="wtrl_label docutils literal notranslate"><span class="pre">Raises</span></code> –
+<p><span class="wtrl_label">Raises</span> –
 Each subsection is labelled by an exception class and describes, normatively,
 the circumstances under which the exception is raised.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">spam</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -711,54 +903,50 @@ the circumstances under which the exception is raised.</p>
 <span class="sd">	&quot;&quot;&quot;</span>
 </pre></div>
 </div>
-<span class="wtrl_func">spam</span><span class="wtrl_op">(</span><span class="wtrl_op">)</span><span class="wtrl_op"> -&gt; </span><span class="wtrl_type">None</span><table class="wtrl-box docutils align-default" id="wtrl-func-29:test_docitem_function_minimal-4:spam">
+<span class="wtrl_func">spam</span><span class="wtrl_op">(</span><span class="wtrl_op">)</span><span class="wtrl_op"> -&gt; </span><span class="wtrl_type">None</span><div class="table-wrapper wtrl-box docutils container" id="wtrl-func-29:test_docitem_function_minimal-4:spam">
+<table class="wtrl-box docutils align-default" id="wtrl-func-29:test_docitem_function_minimal-4:spam">
 <tbody>
-<tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Signature</span></code></p></td>
+<tr class="wtrl-section row-odd"><td><p><span class="wtrl_label">Signature</span></p></td>
 <td><div class="wtrl-signature-head line"><span class="wtrl_mod">test_docitem_function_minimal</span><span class="wtrl_op">.</span><span class="wtrl_func">spam</span><span class="wtrl_op">(</span></div>
 <div class="wtrl-signature-ret line"><span class="wtrl_op">)</span><span class="wtrl_op"> -&gt; </span><span class="wtrl_type">None</span></div>
 </td>
 </tr>
-<tr class="wtrl-section row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Preamble</span></code></p></td>
-<td><ul class="simple">
-<li><p><code class="wtrl_label docutils literal notranslate"><span class="pre">normative</span> <span class="pre">sections</span></code></p>
-<ul>
-<li><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Contract</span></code>, <code class="wtrl_label docutils literal notranslate"><span class="pre">Parameters</span></code>, <code class="wtrl_label docutils literal notranslate"><span class="pre">Returns</span></code>, <code class="wtrl_label docutils literal notranslate"><span class="pre">Raises</span></code></p></li>
-</ul>
-</li>
+<tr class="wtrl-section row-even"><td><p><span class="wtrl_label">Preamble</span></p></td>
+<td><p><span class="wtrl_label">normative sections</span></p>
+<ul class="simple">
+<li><p><span class="wtrl_label">Contract</span>, <span class="wtrl_label">Parameters</span>, <span class="wtrl_label">Returns</span>, <span class="wtrl_label">Raises</span></p></li>
 </ul>
 </td>
 </tr>
-<tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Contract</span></code></p></td>
-<td><ul class="simple">
-<li><p><code class="wtrl_label docutils literal notranslate"><span class="pre">general</span></code></p>
-<ul>
-<li><p><code class="wtrl_norm docutils literal notranslate"><span class="pre">Must</span></code> demonstrate the minimal function docstring.</p></li>
-</ul>
-</li>
+<tr class="wtrl-section row-odd"><td><p><span class="wtrl_label">Contract</span></p></td>
+<td><p><span class="wtrl_label">general</span></p>
+<ul class="simple">
+<li><p><span class="wtrl_norm">Must</span> demonstrate the minimal function docstring.</p></li>
 </ul>
 </td>
 </tr>
-<tr class="wtrl-section row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Parameters</span></code></p></td>
+<tr class="wtrl-section row-even"><td><p><span class="wtrl_label">Parameters</span></p></td>
 <td><ul class="simple">
 </ul>
 </td>
 </tr>
-<tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Returns</span></code></p></td>
+<tr class="wtrl-section row-odd"><td><p><span class="wtrl_label">Returns</span></p></td>
 <td><p><code class="wtrl_value docutils literal notranslate"><span class="pre">None</span></code></p></td>
 </tr>
-<tr class="wtrl-section row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Raises</span></code></p></td>
+<tr class="wtrl-section row-even"><td><p><span class="wtrl_label">Raises</span></p></td>
 <td><code class="wtrl_value docutils literal notranslate"><span class="pre">&lt;empty&gt;</span></code></td>
 </tr>
 </tbody>
 <thead class="wtrl-box-head-function">
-<tr class="row-odd"><th class="head"><code class="wtrl_label docutils literal notranslate"><span class="pre">Function</span></code></th>
-<th class="head"><p>spam</p></th>
+<tr class="row-odd"><th class="head"><p class="wtrl-obj-kind">«Function»</p></th>
+<th class="head"><p class="wtrl-obj-qid">spam</p></th>
 </tr>
 </thead>
 </table>
-<p>A typical way to populate the <code class="wtrl_label docutils literal notranslate"><span class="pre">Raises</span></code> section is as follows:
-An exception <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span></code> be raised if it is a direct consequence of the function’s
-own behavior. An exception <code class="wtrl_norm docutils literal notranslate"><span class="pre">may</span></code> be raised if it originates from a function
+</div>
+<p>A typical way to populate the <span class="wtrl_label">Raises</span> section is as follows:
+An exception <span class="wtrl_norm">must</span> be raised if it is a direct consequence of the function’s
+own behavior. An exception <span class="wtrl_norm">may</span> be raised if it originates from a function
 called internally, potentially even from a different package.</p>
 <p>Since the behavior of external functions may change over time (for example
 due to refactoring), the most conservative approach for such cases is to
@@ -783,16 +971,16 @@ even though the method itself is not implemented in the base class.</p>
 are expected to provide the actual implementation while adhering to a
 shared contract.</p>
 <p>Most of the sections used in this example have already been introduced
-for module and class docstrings. However, the <code class="wtrl_label docutils literal notranslate"><span class="pre">Contract</span></code>
-section now contains a <code class="wtrl_label docutils literal notranslate"><span class="pre">requires</span></code> subsection, which is
+for module and class docstrings. However, the <span class="wtrl_label">Contract</span>
+section now contains a <span class="wtrl_label">requires</span> subsection, which is
 optional but normative as part of the contract.</p>
-<p>The <code class="wtrl_label docutils literal notranslate"><span class="pre">requires</span></code> subsection should be used to specify the
+<p>The <span class="wtrl_label">requires</span> subsection should be used to specify the
 conditions that must be satisfied by the caller in order for the
 function to operate correctly.</p>
-<p>The functionality of <code class="wtrl_label docutils literal notranslate"><span class="pre">requires</span></code> partially overlaps with
-<code class="wtrl_label docutils literal notranslate"><span class="pre">Raises</span></code>, as unmet prerequisites often lead to error
+<p>The functionality of <span class="wtrl_label">requires</span> partially overlaps with
+<span class="wtrl_label">Raises</span>, as unmet prerequisites often lead to error
 conditions. Since such error behavior can also be described in
-<code class="wtrl_label docutils literal notranslate"><span class="pre">Raises</span></code>, the <code class="wtrl_label docutils literal notranslate"><span class="pre">requires</span></code> subsection itself is
+<span class="wtrl_label">Raises</span>, the <span class="wtrl_label">requires</span> subsection itself is
 optional.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">TypeAlias</span><span class="p">,</span> <span class="n">Union</span>
 
@@ -863,44 +1051,38 @@ the rendered documentation. This can be achieved using the directive</p>
 </div>
 <p>While there is some flexibility in how the signature is presented, it
 must be included in order to make the documentation complete.</p>
+<div class="table-wrapper wtrl-box docutils container" id="wtrl-func-28:test_docitem_function_medium-12:docitem_base-5:parse">
 <table class="wtrl-box docutils align-default" id="wtrl-func-28:test_docitem_function_medium-12:docitem_base-5:parse">
 <tbody>
-<tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Signature</span></code></p></td>
+<tr class="wtrl-section row-odd"><td><p><span class="wtrl_label">Signature</span></p></td>
 <td><div class="wtrl-signature-head line"><span class="wtrl_mod">test_docitem_function_medium</span><span class="wtrl_op">.</span><span class="wtrl_type">docitem_base</span><span class="wtrl_op">.</span><span class="wtrl_func">parse</span><span class="wtrl_op">(</span></div>
 <div class="wtrl-signature-param line"><span class="wtrl_var">tr</span><span class="wtrl_op">: </span><span class="wtrl_type">tracer</span></div>
 <div class="wtrl-signature-param line"><span class="wtrl_var">subtree</span><span class="wtrl_op">: </span><span class="wtrl_type">str | typing.List[ForwardRef(‘DocstringSubtree’)]</span></div>
 <div class="wtrl-signature-ret line"><span class="wtrl_op">)</span><span class="wtrl_op"> -&gt; </span><span class="wtrl_type">None</span></div>
 </td>
 </tr>
-<tr class="wtrl-section row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Preamble</span></code></p></td>
-<td><ul class="simple">
-<li><p><code class="wtrl_label docutils literal notranslate"><span class="pre">normative</span> <span class="pre">sections</span></code></p>
-<ul>
-<li><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Contract</span></code>, <code class="wtrl_label docutils literal notranslate"><span class="pre">Parameters</span></code>, <code class="wtrl_label docutils literal notranslate"><span class="pre">Returns</span></code>, <code class="wtrl_label docutils literal notranslate"><span class="pre">Raises</span></code></p></li>
-</ul>
-</li>
+<tr class="wtrl-section row-even"><td><p><span class="wtrl_label">Preamble</span></p></td>
+<td><p><span class="wtrl_label">normative sections</span></p>
+<ul class="simple">
+<li><p><span class="wtrl_label">Contract</span>, <span class="wtrl_label">Parameters</span>, <span class="wtrl_label">Returns</span>, <span class="wtrl_label">Raises</span></p></li>
 </ul>
 </td>
 </tr>
-<tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Description</span></code></p></td>
+<tr class="wtrl-section row-odd"><td><p><span class="wtrl_label">Description</span></p></td>
 <td><p>This docstring is located in the base class of all docitem node classes. The method is not implemented here and will raise an exception if it is invoked without a corresponding implementation in a derived class.</p></td>
 </tr>
-<tr class="wtrl-section row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Contract</span></code></p></td>
-<td><ul class="simple">
-<li><p><code class="wtrl_label docutils literal notranslate"><span class="pre">general</span></code></p>
-<ul>
-<li><p><code class="wtrl_norm docutils literal notranslate"><span class="pre">Must</span></code> parse a docstring subtree and create the related child items.</p></li>
+<tr class="wtrl-section row-even"><td><p><span class="wtrl_label">Contract</span></p></td>
+<td><p><span class="wtrl_label">general</span></p>
+<ul class="simple">
+<li><p><span class="wtrl_norm">Must</span> parse a docstring subtree and create the related child items.</p></li>
 </ul>
-</li>
-<li><p><code class="wtrl_label docutils literal notranslate"><span class="pre">requires</span></code></p>
-<ul>
-<li><p><code class="wtrl_var docutils literal notranslate"><span class="pre">subtree</span></code> <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span></code> be a formally correct docstring subtree				from a Waterloo docstring; otherwise parsing will fail.</p></li>
-</ul>
-</li>
+<p><span class="wtrl_label">requires</span></p>
+<ul class="simple">
+<li><p><code class="wtrl_var docutils literal notranslate"><span class="pre">subtree</span></code> <span class="wtrl_norm">must</span> be a formally correct docstring subtree				from a Waterloo docstring; otherwise parsing will fail.</p></li>
 </ul>
 </td>
 </tr>
-<tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Parameters</span></code></p></td>
+<tr class="wtrl-section row-odd"><td><p><span class="wtrl_label">Parameters</span></p></td>
 <td><ul>
 <li><p><code class="wtrl_var docutils literal notranslate"><span class="pre">tr</span></code></p>
 <p class="wtrl-freeform-paragraph-content">The tracer for collecting diagnostics.</p>
@@ -911,17 +1093,17 @@ must be included in order to make the documentation complete.</p>
 </ul>
 </td>
 </tr>
-<tr class="wtrl-section row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Returns</span></code></p></td>
+<tr class="wtrl-section row-even"><td><p><span class="wtrl_label">Returns</span></p></td>
 <td><p><code class="wtrl_value docutils literal notranslate"><span class="pre">None</span></code></p></td>
 </tr>
-<tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Raises</span></code></p></td>
+<tr class="wtrl-section row-odd"><td><p><span class="wtrl_label">Raises</span></p></td>
 <td><ul class="simple">
 <li><p><code class="wtrl_type docutils literal notranslate"><span class="pre">NotImplementedError</span></code><ul>
-<li><p><code class="wtrl_norm docutils literal notranslate"><span class="pre">Must</span></code> raise if not implemented in the derived class.</p></li>
+<li><p><span class="wtrl_norm">Must</span> raise if not implemented in the derived class.</p></li>
 </ul>
 </p></li>
 <li><p><code class="wtrl_type docutils literal notranslate"><span class="pre">RuntimeError</span></code><ul>
-<li><p><code class="wtrl_norm docutils literal notranslate"><span class="pre">Must</span></code> raise if the subtree does not match the expected format.</p></li>
+<li><p><span class="wtrl_norm">Must</span> raise if the subtree does not match the expected format.</p></li>
 </ul>
 </p></li>
 </ul>
@@ -929,21 +1111,22 @@ must be included in order to make the documentation complete.</p>
 </tr>
 </tbody>
 <thead class="wtrl-box-head-method">
-<tr class="row-even"><th class="head"><code class="wtrl_label docutils literal notranslate"><span class="pre">Method</span></code></th>
-<th class="head"><p>docitem_base.parse</p></th>
+<tr class="row-even"><th class="head"><p class="wtrl-obj-kind">«Method»</p></th>
+<th class="head"><p class="wtrl-obj-qid">docitem_base.parse</p></th>
 </tr>
 </thead>
 </table>
+</div>
 </section>
 <section id="interlude-docstring-for-inherited-methods">
 <h2><span class="section-number">3.7. </span>Interlude – Docstring for inherited methods<a class="headerlink" href="#interlude-docstring-for-inherited-methods" title="Link to this heading">¶</a></h2>
 <p>The following example shows how to build a docstring for an inherited method.
-It is noticeable that, apart from the usual sections <code class="wtrl_label docutils literal notranslate"><span class="pre">Preamble</span></code>
-and <code class="wtrl_label docutils literal notranslate"><span class="pre">Contract</span></code>, there are no other mandatory sections. In particular,
-the sections <code class="wtrl_label docutils literal notranslate"><span class="pre">Parameters</span></code>, <code class="wtrl_label docutils literal notranslate"><span class="pre">Returns</span></code>, and <code class="wtrl_label docutils literal notranslate"><span class="pre">Raises</span></code>
+It is noticeable that, apart from the usual sections <span class="wtrl_label">Preamble</span>
+and <span class="wtrl_label">Contract</span>, there are no other mandatory sections. In particular,
+the sections <span class="wtrl_label">Parameters</span>, <span class="wtrl_label">Returns</span>, and <span class="wtrl_label">Raises</span>
 are missing because they are already included in the normative documentation of the
-base method. In section <code class="wtrl_label docutils literal notranslate"><span class="pre">Contract</span></code>, we see how this base method
-is explicitly referenced using the mandatory subsection <code class="wtrl_label docutils literal notranslate"><span class="pre">base</span></code>.</p>
+base method. In section <span class="wtrl_label">Contract</span>, we see how this base method
+is explicitly referenced using the mandatory subsection <span class="wtrl_label">base</span>.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">docitem_list_of_symbols_base</span><span class="p">(</span><span class="n">docitem_base</span><span class="p">):</span>
 	<span class="k">def</span><span class="w"> </span><span class="nf">_parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tr</span><span class="p">:</span> <span class="n">tracer</span><span class="p">,</span> <span class="n">refs</span><span class="p">:</span> <span class="n">DocstringSubtree</span><span class="p">,</span> <span class="n">pattern</span> <span class="o">=</span> <span class="nb">str</span><span class="p">):</span>
 <span class="c1"># Some implementation here...</span>
@@ -977,78 +1160,73 @@ is explicitly referenced using the mandatory subsection <code class="wtrl_label 
 <div class="wtrl-signature-param line"><span class="wtrl_var">refs</span><span class="wtrl_op">: </span><span class="wtrl_type">str | typing.List[ForwardRef(‘DocstringSubtree’)]</span></div>
 <div class="wtrl-signature-ret line"><span class="wtrl_op">)</span><span class="wtrl_op"> -&gt; </span><span class="wtrl_type">None</span></div>
 </div>
+<div class="table-wrapper wtrl-box docutils container" id="wtrl-func-28:test_docitem_function_medium-14:docitem_traits-5:parse">
 <table class="wtrl-box docutils align-default" id="wtrl-func-28:test_docitem_function_medium-14:docitem_traits-5:parse">
 <tbody>
-<tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Signature</span></code></p></td>
+<tr class="wtrl-section row-odd"><td><p><span class="wtrl_label">Signature</span></p></td>
 <td><div class="wtrl-signature-head line"><span class="wtrl_mod">test_docitem_function_medium</span><span class="wtrl_op">.</span><span class="wtrl_type">docitem_traits</span><span class="wtrl_op">.</span><span class="wtrl_func">parse</span><span class="wtrl_op">(</span></div>
 <div class="wtrl-signature-param line"><span class="wtrl_var">tr</span><span class="wtrl_op">: </span><span class="wtrl_type">tracer</span></div>
 <div class="wtrl-signature-param line"><span class="wtrl_var">refs</span><span class="wtrl_op">: </span><span class="wtrl_type">str | typing.List[ForwardRef(‘DocstringSubtree’)]</span></div>
 <div class="wtrl-signature-ret line"><span class="wtrl_op">)</span><span class="wtrl_op"> -&gt; </span><span class="wtrl_type">None</span></div>
 </td>
 </tr>
-<tr class="wtrl-section row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Preamble</span></code></p></td>
-<td><ul class="simple">
-<li><p><code class="wtrl_label docutils literal notranslate"><span class="pre">normative</span> <span class="pre">sections</span></code></p>
-<ul>
-<li><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Contract</span></code></p></li>
-</ul>
-</li>
+<tr class="wtrl-section row-even"><td><p><span class="wtrl_label">Preamble</span></p></td>
+<td><p><span class="wtrl_label">normative sections</span></p>
+<ul class="simple">
+<li><p><span class="wtrl_label">Contract</span></p></li>
 </ul>
 </td>
 </tr>
-<tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Contract</span></code></p></td>
-<td><ul class="simple">
-<li><p><code class="wtrl_label docutils literal notranslate"><span class="pre">general</span></code></p>
-<ul>
-<li><p><code class="wtrl_norm docutils literal notranslate"><span class="pre">Must</span></code> set rules-on-fail in the tracer and delegate				to method <code class="wtrl_func docutils literal notranslate"><span class="pre">._parse</span></code> in class				<code class="wtrl_type docutils literal notranslate"><span class="pre">docitem_list_of_symbols_base</span></code>.</p></li>
+<tr class="wtrl-section row-odd"><td><p><span class="wtrl_label">Contract</span></p></td>
+<td><p><span class="wtrl_label">general</span></p>
+<ul class="simple">
+<li><p><span class="wtrl_norm">Must</span> set rules-on-fail in the tracer and delegate				to method <code class="wtrl_func docutils literal notranslate"><span class="pre">._parse</span></code> in class				<code class="wtrl_type docutils literal notranslate"><span class="pre">docitem_list_of_symbols_base</span></code>.</p></li>
 </ul>
-</li>
-<li><p><code class="wtrl_label docutils literal notranslate"><span class="pre">base</span></code></p>
-<ul>
+<p><span class="wtrl_label">base</span></p>
+<ul class="simple">
 <li><p><a class="wtrl_func reference internal" href="#wtrl-func-28:test_docitem_function_medium-12:docitem_base-5:parse" title="test_docitem_function_medium.docitem_base.parse"><span>test_docitem_function_medium.docitem_base.parse</span></a></p></li>
-</ul>
-</li>
 </ul>
 </td>
 </tr>
 </tbody>
 <thead class="wtrl-box-head-inherited_method">
-<tr class="row-even"><th class="head"><code class="wtrl_label docutils literal notranslate"><span class="pre">Inherited_method</span></code></th>
-<th class="head"><p>docitem_traits.parse</p></th>
+<tr class="row-even"><th class="head"><p class="wtrl-obj-kind">«Inherited_method»</p></th>
+<th class="head"><p class="wtrl-obj-qid">docitem_traits.parse</p></th>
 </tr>
 </thead>
 </table>
+</div>
 <p>Apart from these differences, there are optional sections that are used
 in the same way as for modules, classes, and functions. So, all in all we have:</p>
 <p class="rubric">Mandatory and always normative</p>
-<p>Subsection <code class="wtrl_label docutils literal notranslate"><span class="pre">base</span></code> is mandatory and normative. It unambiguously refers
+<p>Subsection <span class="wtrl_label">base</span> is mandatory and normative. It unambiguously refers
 to the base method whose contract is authoritative for the derived method.</p>
-<p>A derived method docstring <code class="wtrl_norm docutils literal notranslate"><span class="pre">may</span></code> add additional normative statements, but it <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span></code>
+<p>A derived method docstring <span class="wtrl_norm">may</span> add additional normative statements, but it <span class="wtrl_norm">must</span>
 remain substitutable for the base method.</p>
 <ul class="simple">
 <li><p>Preconditions:
-A derived method <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span> <span class="pre">not</span></code> strengthen the base method’s preconditions.
-In particular, any requirement that constrains valid inputs <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span></code> be expressed
-in <code class="wtrl_label docutils literal notranslate"><span class="pre">Contract.requires</span></code> and <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span></code> be compatible with the base method.</p></li>
+A derived method <span class="wtrl_norm">must not</span> strengthen the base method’s preconditions.
+In particular, any requirement that constrains valid inputs <span class="wtrl_norm">must</span> be expressed
+in <span class="wtrl_label">Contract.requires</span> and <span class="wtrl_norm">must</span> be compatible with the base method.</p></li>
 <li><p>Guarantees:
-A derived method <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span></code> preserve all guarantees of the base method.
-A derived method <code class="wtrl_norm docutils literal notranslate"><span class="pre">may</span></code> provide additional guarantees by adding or refining
-<code class="wtrl_label docutils literal notranslate"><span class="pre">Contract.ensures</span></code>. Callers that only rely on the base contract
-<code class="wtrl_norm docutils literal notranslate"><span class="pre">may</span></code> ignore such additional guarantees.</p></li>
-<li><p>Failure modes documented in the base method <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span> <span class="pre">not</span></code> be replaced by weaker
-guarantees. Additional failure modes <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span> <span class="pre">not</span></code> occur for inputs that satisfy
+A derived method <span class="wtrl_norm">must</span> preserve all guarantees of the base method.
+A derived method <span class="wtrl_norm">may</span> provide additional guarantees by adding or refining
+<span class="wtrl_label">Contract.ensures</span>. Callers that only rely on the base contract
+<span class="wtrl_norm">may</span> ignore such additional guarantees.</p></li>
+<li><p>Failure modes documented in the base method <span class="wtrl_norm">must not</span> be replaced by weaker
+guarantees. Additional failure modes <span class="wtrl_norm">must not</span> occur for inputs that satisfy
 the base preconditions, unless they are explicitly permitted by the base contract.</p></li>
 </ul>
 <p class="rubric">Optional and always normative</p>
 <ul class="simple">
-<li><p>Section <code class="wtrl_label docutils literal notranslate"><span class="pre">Definitions</span></code></p></li>
-<li><p>Subsection <code class="wtrl_label docutils literal notranslate"><span class="pre">Contract.requires</span></code> as discussed above under “Preconditions”</p></li>
-<li><p>Subsection <code class="wtrl_label docutils literal notranslate"><span class="pre">Contract.ensures</span></code> as discussed above under “Guarantees”</p></li>
+<li><p>Section <span class="wtrl_label">Definitions</span></p></li>
+<li><p>Subsection <span class="wtrl_label">Contract.requires</span> as discussed above under “Preconditions”</p></li>
+<li><p>Subsection <span class="wtrl_label">Contract.ensures</span> as discussed above under “Guarantees”</p></li>
 </ul>
 <p class="rubric">Optional and normative under conditions</p>
-<p>Sections <code class="wtrl_label docutils literal notranslate"><span class="pre">Description</span></code> and <code class="wtrl_label docutils literal notranslate"><span class="pre">See_also</span></code></p>
+<p>Sections <span class="wtrl_label">Description</span> and <span class="wtrl_label">See_also</span></p>
 <p class="rubric">Optional and never normative</p>
-<p>Sections <code class="wtrl_label docutils literal notranslate"><span class="pre">Terminology</span></code> and  <code class="wtrl_label docutils literal notranslate"><span class="pre">Notes</span></code></p>
+<p>Sections <span class="wtrl_label">Terminology</span> and  <span class="wtrl_label">Notes</span></p>
 </section>
 <section id="function-docstrings-full-example">
 <h2><span class="section-number">3.8. </span>Function docstrings – full example<a class="headerlink" href="#function-docstrings-full-example" title="Link to this heading">¶</a></h2>
@@ -1146,70 +1324,63 @@ the base preconditions, unless they are explicitly permitted by the base contrac
 	<span class="k">return</span> <span class="n">result</span>
 </pre></div>
 </div>
-<span class="wtrl_func">factorial</span><span class="wtrl_op">(</span><span class="wtrl_var">n</span><span class="wtrl_op">: </span><span class="wtrl_type">int</span><span class="wtrl_op">)</span><span class="wtrl_op"> -&gt; </span><span class="wtrl_type">int</span><table class="wtrl-box docutils align-default" id="wtrl-func-26:test_docitem_function_full-9:factorial">
+<span class="wtrl_func">factorial</span><span class="wtrl_op">(</span><span class="wtrl_var">n</span><span class="wtrl_op">: </span><span class="wtrl_type">int</span><span class="wtrl_op">)</span><span class="wtrl_op"> -&gt; </span><span class="wtrl_type">int</span><div class="table-wrapper wtrl-box docutils container" id="wtrl-func-26:test_docitem_function_full-9:factorial">
+<table class="wtrl-box docutils align-default" id="wtrl-func-26:test_docitem_function_full-9:factorial">
 <tbody>
-<tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Signature</span></code></p></td>
+<tr class="wtrl-section row-odd"><td><p><span class="wtrl_label">Signature</span></p></td>
 <td><div class="wtrl-signature-head line"><span class="wtrl_mod">test_docitem_function_full</span><span class="wtrl_op">.</span><span class="wtrl_func">factorial</span><span class="wtrl_op">(</span></div>
 <div class="wtrl-signature-param line"><span class="wtrl_var">n</span><span class="wtrl_op">: </span><span class="wtrl_type">int</span></div>
 <div class="wtrl-signature-ret line"><span class="wtrl_op">)</span><span class="wtrl_op"> -&gt; </span><span class="wtrl_type">int</span></div>
 </td>
 </tr>
-<tr class="wtrl-section row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Preamble</span></code></p></td>
-<td><ul class="simple">
-<li><p><code class="wtrl_label docutils literal notranslate"><span class="pre">normative</span> <span class="pre">sections</span></code></p>
-<ul>
-<li><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Definitions</span></code>, <code class="wtrl_label docutils literal notranslate"><span class="pre">Contract</span></code>, <code class="wtrl_label docutils literal notranslate"><span class="pre">Parameters</span></code>, <code class="wtrl_label docutils literal notranslate"><span class="pre">Returns</span></code>, <code class="wtrl_label docutils literal notranslate"><span class="pre">Raises</span></code>, <code class="wtrl_label docutils literal notranslate"><span class="pre">See</span> <span class="pre">also</span></code></p></li>
-</ul>
-</li>
+<tr class="wtrl-section row-even"><td><p><span class="wtrl_label">Preamble</span></p></td>
+<td><p><span class="wtrl_label">normative sections</span></p>
+<ul class="simple">
+<li><p><span class="wtrl_label">Definitions</span>, <span class="wtrl_label">Contract</span>, <span class="wtrl_label">Parameters</span>, <span class="wtrl_label">Returns</span>, <span class="wtrl_label">Raises</span>, <span class="wtrl_label">See also</span></p></li>
 </ul>
 </td>
 </tr>
-<tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Definitions</span></code></p></td>
+<tr class="wtrl-section row-odd"><td><p><span class="wtrl_label">Definitions</span></p></td>
 <td><dl class="simple wtrl-dfn-list">
-<dt><code class="wtrl_dfn docutils literal notranslate"><span class="pre">factorial</span></code></dt><dd><p>For a non-negative integer n, factorial(n) is defined recursively by: factorial(0) = 1 and factorial(n) = n * factorial(n-1) for n &gt; 0.</p>
+<dt><span class="wtrl_dfn">factorial</span></dt><dd><p>For a non-negative integer n, factorial(n) is defined recursively by: factorial(0) = 1 and factorial(n) = n * factorial(n-1) for n &gt; 0.</p>
 </dd>
-<dt><code class="wtrl_dfn docutils literal notranslate"><span class="pre">positive</span></code></dt><dd><p>An integer x is called <code class="docutils literal notranslate"><span class="pre">positive</span></code> if x &gt; 0.</p>
+<dt><span class="wtrl_dfn">positive</span></dt><dd><p>An integer x is called <code class="docutils literal notranslate"><span class="pre">positive</span></code> if x &gt; 0.</p>
 </dd>
 </dl>
 </td>
 </tr>
-<tr class="wtrl-section row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Description</span></code></p></td>
+<tr class="wtrl-section row-even"><td><p><span class="wtrl_label">Description</span></p></td>
 <td><p>This function provides a simple, deterministic reference implementation. It is intended to demonstrate a full Waterloo function docstring with a clear contract and well-defined failure modes.</p></td>
 </tr>
-<tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Terminology</span></code></p></td>
+<tr class="wtrl-section row-odd"><td><p><span class="wtrl_label">Terminology</span></p></td>
 <td><dl class="simple wtrl-dfn-list">
-<dt><code class="wtrl_dfn docutils literal notranslate"><span class="pre">recursion</span></code></dt><dd><p>The definition uses recursion; the implementation does not have to.</p>
+<dt><span class="wtrl_dfn">recursion</span></dt><dd><p>The definition uses recursion; the implementation does not have to.</p>
 </dd>
 </dl>
 </td>
 </tr>
-<tr class="wtrl-section row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Contract</span></code></p></td>
-<td><ul class="simple">
-<li><p><code class="wtrl_label docutils literal notranslate"><span class="pre">general</span></code></p>
-<ul>
-<li><p><code class="wtrl_norm docutils literal notranslate"><span class="pre">Must</span></code> compute <code class="wtrl_term docutils literal notranslate"><span class="pre">factorial</span></code> for the given argument.</p></li>
-<li><p><code class="wtrl_norm docutils literal notranslate"><span class="pre">Must</span></code> be thread-safe.</p></li>
+<tr class="wtrl-section row-even"><td><p><span class="wtrl_label">Contract</span></p></td>
+<td><p><span class="wtrl_label">general</span></p>
+<ul class="simple">
+<li><p><span class="wtrl_norm">Must</span> compute <span class="wtrl_term">factorial</span> for the given argument.</p></li>
+<li><p><span class="wtrl_norm">Must</span> be thread-safe.</p></li>
 </ul>
-</li>
-<li><p><code class="wtrl_label docutils literal notranslate"><span class="pre">requires</span></code></p>
-<ul>
-<li><p><code class="wtrl_var docutils literal notranslate"><span class="pre">n</span></code> <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span></code> be an integer.</p></li>
-<li><p><code class="wtrl_var docutils literal notranslate"><span class="pre">n</span></code> <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span></code> be greater than or equal to 0.</p></li>
-<li><p><code class="wtrl_var docutils literal notranslate"><span class="pre">n</span></code> <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span></code> be less than or equal to <code class="wtrl_var docutils literal notranslate"><span class="pre">_MAX_N</span></code>.</p></li>
+<p><span class="wtrl_label">requires</span></p>
+<ul class="simple">
+<li><p><code class="wtrl_var docutils literal notranslate"><span class="pre">n</span></code> <span class="wtrl_norm">must</span> be an integer.</p></li>
+<li><p><code class="wtrl_var docutils literal notranslate"><span class="pre">n</span></code> <span class="wtrl_norm">must</span> be greater than or equal to 0.</p></li>
+<li><p><code class="wtrl_var docutils literal notranslate"><span class="pre">n</span></code> <span class="wtrl_norm">must</span> be less than or equal to <code class="wtrl_var docutils literal notranslate"><span class="pre">_MAX_N</span></code>.</p></li>
 </ul>
-</li>
-<li><p><code class="wtrl_label docutils literal notranslate"><span class="pre">ensures</span></code></p>
-<ul>
-<li><p>The return value <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span></code> be an integer.</p></li>
-<li><p>If <code class="wtrl_var docutils literal notranslate"><span class="pre">n</span></code> is 0, the result <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span></code> be 1.</p></li>
-<li><p>If <code class="wtrl_var docutils literal notranslate"><span class="pre">n</span></code> is greater than 0, the result <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span></code> be <code class="wtrl_term docutils literal notranslate"><span class="pre">positive</span></code>.</p></li>
-<li><p>The result <code class="wtrl_norm docutils literal notranslate"><span class="pre">must</span></code> be divisible by <code class="wtrl_var docutils literal notranslate"><span class="pre">n</span></code> for all <code class="wtrl_var docutils literal notranslate"><span class="pre">n</span></code> &gt; 0.</p></li>
-</ul>
-</li>
+<p><span class="wtrl_label">ensures</span></p>
+<ul class="simple">
+<li><p>The return value <span class="wtrl_norm">must</span> be an integer.</p></li>
+<li><p>If <code class="wtrl_var docutils literal notranslate"><span class="pre">n</span></code> is 0, the result <span class="wtrl_norm">must</span> be 1.</p></li>
+<li><p>If <code class="wtrl_var docutils literal notranslate"><span class="pre">n</span></code> is greater than 0, the result <span class="wtrl_norm">must</span> be <span class="wtrl_term">positive</span>.</p></li>
+<li><p>The result <span class="wtrl_norm">must</span> be divisible by <code class="wtrl_var docutils literal notranslate"><span class="pre">n</span></code> for all <code class="wtrl_var docutils literal notranslate"><span class="pre">n</span></code> &gt; 0.</p></li>
 </ul>
 </td>
 </tr>
-<tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Parameters</span></code></p></td>
+<tr class="wtrl-section row-odd"><td><p><span class="wtrl_label">Parameters</span></p></td>
 <td><ul>
 <li><p><code class="wtrl_var docutils literal notranslate"><span class="pre">n</span></code></p>
 <p class="wtrl-freeform-paragraph-content">Non-negative integer input.</p>
@@ -1217,134 +1388,118 @@ the base preconditions, unless they are explicitly permitted by the base contrac
 </ul>
 </td>
 </tr>
-<tr class="wtrl-section row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Returns</span></code></p></td>
+<tr class="wtrl-section row-even"><td><p><span class="wtrl_label">Returns</span></p></td>
 <td><p>The factorial value.</p></td>
 </tr>
-<tr class="wtrl-section row-odd"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">Raises</span></code></p></td>
+<tr class="wtrl-section row-odd"><td><p><span class="wtrl_label">Raises</span></p></td>
 <td><ul class="simple">
 <li><p><code class="wtrl_type docutils literal notranslate"><span class="pre">TypeError</span></code><ul>
-<li><p><code class="wtrl_norm docutils literal notranslate"><span class="pre">Must</span></code> raise if <code class="wtrl_var docutils literal notranslate"><span class="pre">n</span></code> is not an <code class="wtrl_type docutils literal notranslate"><span class="pre">int</span></code>.</p></li>
+<li><p><span class="wtrl_norm">Must</span> raise if <code class="wtrl_var docutils literal notranslate"><span class="pre">n</span></code> is not an <code class="wtrl_type docutils literal notranslate"><span class="pre">int</span></code>.</p></li>
 </ul>
 </p></li>
 <li><p><code class="wtrl_type docutils literal notranslate"><span class="pre">ValueError</span></code><ul>
-<li><p><code class="wtrl_norm docutils literal notranslate"><span class="pre">Must</span></code> raise if <code class="wtrl_var docutils literal notranslate"><span class="pre">n</span></code> is negative.</p></li>
+<li><p><span class="wtrl_norm">Must</span> raise if <code class="wtrl_var docutils literal notranslate"><span class="pre">n</span></code> is negative.</p></li>
 </ul>
 </p></li>
 <li><p><code class="wtrl_type docutils literal notranslate"><span class="pre">OverflowError</span></code><ul>
-<li><p><code class="wtrl_norm docutils literal notranslate"><span class="pre">Must</span></code> raise if <code class="wtrl_var docutils literal notranslate"><span class="pre">n</span></code> is greater than <code class="wtrl_var docutils literal notranslate"><span class="pre">_MAX_N</span></code>.</p></li>
+<li><p><span class="wtrl_norm">Must</span> raise if <code class="wtrl_var docutils literal notranslate"><span class="pre">n</span></code> is greater than <code class="wtrl_var docutils literal notranslate"><span class="pre">_MAX_N</span></code>.</p></li>
 </ul>
 </p></li>
 </ul>
 </td>
 </tr>
-<tr class="wtrl-section row-even"><td><p><code class="wtrl_label docutils literal notranslate"><span class="pre">See</span> <span class="pre">also</span></code></p></td>
+<tr class="wtrl-section row-even"><td><p><span class="wtrl_label">See also</span></p></td>
 <td><p><a class="wtrl_var reference internal" href="#wtrl-func-4:math-9:factorial" title="math.factorial"><span>math.factorial</span></a>, <a class="wtrl_var reference internal" href="#wtrl-func-26:test_docitem_function_full-4:test" title="test_docitem_function_full.test"><span>test</span></a></p></td>
 </tr>
 </tbody>
 <thead class="wtrl-box-head-function">
-<tr class="row-odd"><th class="head"><code class="wtrl_label docutils literal notranslate"><span class="pre">Function</span></code></th>
-<th class="head"><p>factorial</p></th>
+<tr class="row-odd"><th class="head"><p class="wtrl-obj-kind">«Function»</p></th>
+<th class="head"><p class="wtrl-obj-qid">factorial</p></th>
 </tr>
 </thead>
 </table>
+</div>
 </section>
 </section>
 
-
-          </div>
-          
-        </div>
+        </article>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="Main">
-        <div class="sphinxsidebarwrapper">
-<p class="logo">
-  <a href="index.html">
-    <img class="logo" src="_static/wtrl_logo_color_64x64.png" alt="Logo" />
-    
-  </a>
-</p>
-
-
-
-
-
-
-
-
-
-<search id="searchbox" style="display: none" role="search">
-    <div class="searchformwrapper">
-    <form class="search" action="search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
-      <input type="submit" value="Go" />
-    </form>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="examples.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title"><span class="section-number">4. </span>Examples</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="getting_started.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title"><span class="section-number">2. </span>Getting Started</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2026, Uwe
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
     </div>
-</search>
-<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
-<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="introduction.html">1. Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="getting_started.html">2. Getting Started</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">3. Docstrings - minimal and full examples</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#module-docstrings-minimal-example">3.1. Module docstrings – minimal example</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-docstrings-full-example">3.2. Module docstrings – full example</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#class-docstrings-minimal-example">3.3. Class docstrings – minimal example</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#class-docstrings-full-example">3.4. Class docstrings – full example</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#function-docstrings-minimal-example">3.5. Function docstrings – minimal example</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#function-and-method-docstrings-intermediate-example">3.6. Function and method docstrings – intermediate example</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#interlude-docstring-for-inherited-methods">3.7. Interlude – Docstring for inherited methods</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#function-docstrings-full-example">3.8. Function docstrings – full example</a></li>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">3. Docstrings - minimal and full examples</a><ul>
+<li><a class="reference internal" href="#module-docstrings-minimal-example">3.1. Module docstrings – minimal example</a></li>
+<li><a class="reference internal" href="#module-docstrings-full-example">3.2. Module docstrings – full example</a></li>
+<li><a class="reference internal" href="#class-docstrings-minimal-example">3.3. Class docstrings – minimal example</a></li>
+<li><a class="reference internal" href="#class-docstrings-full-example">3.4. Class docstrings – full example</a></li>
+<li><a class="reference internal" href="#function-docstrings-minimal-example">3.5. Function docstrings – minimal example</a></li>
+<li><a class="reference internal" href="#function-and-method-docstrings-intermediate-example">3.6. Function and method docstrings – intermediate example</a></li>
+<li><a class="reference internal" href="#interlude-docstring-for-inherited-methods">3.7. Interlude – Docstring for inherited methods</a></li>
+<li><a class="reference internal" href="#function-docstrings-full-example">3.8. Function docstrings – full example</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="examples.html">4. Examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="format.html">5. Docstring format</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tools.html">6. Tools</a></li>
-<li class="toctree-l1"><a class="reference internal" href="io_layers.html">7. Overview: I/O Layers</a></li>
-<li class="toctree-l1"><a class="reference internal" href="json_io.html">8. The JSON I/O Layer</a></li>
-<li class="toctree-l1"><a class="reference internal" href="html_output_layer.html">9. The HTML Output Layer</a></li>
-<li class="toctree-l1"><a class="reference internal" href="mcp.html">10. Model Context Protocol</a></li>
-<li class="toctree-l1"><a class="reference internal" href="reference.html">11. Reference - Rendering Showcase</a></li>
-<li class="toctree-l1"><a class="reference internal" href="_test_freeform.html">12. Test: Flow control in freeform sections</a></li>
-<li class="toctree-l1"><a class="reference internal" href="_test_scope.html">13. Test: Scopes</a></li>
-<li class="toctree-l1"><a class="reference internal" href="test_pygments_lexer.html">14. Test: Inline markup</a></li>
-<li class="toctree-l1"><a class="reference internal" href="legal.html">15. Legal Notes</a></li>
 </ul>
 
-<div class="relations">
-<h3>Related Topics</h3>
-<ul>
-  <li><a href="index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="getting_started.html" title="previous chapter"><span class="section-number">2. </span>Getting Started</a></li>
-      <li>Next: <a href="examples.html" title="next chapter"><span class="section-number">4. </span>Examples</a></li>
-  </ul></li>
-</ul>
-</div>
-
-
-
-
-
-
-
-
+          </div>
         </div>
       </div>
-      <div class="clearer"></div>
-    </div>
-    <div class="footer">
-      &#169;2026, Uwe.
       
-      |
-      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 9.1.0</a>
-      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
       
-      |
-      <a href="_sources/examples_minimax.rst.txt"
-          rel="nofollow">Page source</a>
-    </div>
-
-    
-
-    
-  </body>
+    </aside>
+  </div>
+</div><script src="_static/documentation_options.js?v=8dde47fa"></script>
+    <script src="_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="_static/scripts/furo.js?v=46bd48cc"></script>
+    </body>
 </html>

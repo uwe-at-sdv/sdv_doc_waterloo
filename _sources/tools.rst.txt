@@ -130,6 +130,20 @@ inspect.
 * [MCPS-006] -- The requested canonical example reference is unknown or malformed.
 * [MCPS-007] -- The requested MCP tool name is unknown.
 
+.. rubric:: MCP admin helper diagnostics (wtrl_mcp_admin)
+
+* [MCPA-001] -- Unknown server label.
+* [MCPA-002] -- Invalid registry file.
+* [MCPA-003] -- SSH tunnel failed.
+* [MCPA-004] -- Remote admin request failed.
+* [MCPA-005] -- Token not found.
+* [MCPA-006] -- Token generation failed.
+
+The ``MCPA`` family is the stable error-code family for ``wtrl_mcp_admin`` and
+related admin flows. The family name itself is defined in :ref:`section_meta`
+via the rule taxonomy, while the individual error definitions live in this
+chapter.
+
 
 
 Extension error codes

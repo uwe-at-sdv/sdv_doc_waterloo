@@ -13,6 +13,22 @@ Current state [2023-08-08]
 - python
 */
 
+:root {
+    /* 1. Etwas kleinere Schrift macht die Box kompakter und hebt sie optisch an */
+    --font-size--code: 0.875em;
+
+    /* 2. Falls installiert: Furo bevorzugt eigentlich Fira Code oder JetBrains Mono.
+          Indem wir moderne Programmierschriften nach vorne stellen, nutzt Firefox 
+          bessere Schriftmetriken, falls du sie auf dem System hast. */
+    --font-stack--monospace: "JetBrains Mono", "Fira Code", "Fira Mono", "Menlo", "Consolas", monospace;
+}
+
+/* 3. Korrektur des Innenabstands (Padding) speziell für Firefox/Linux */
+code.docutils.literal {
+	vertical-align: 0.06em;
+	font-size:95%;
+}
+
 :root
 	{
 	--sdv-plain-color:inherit;
@@ -39,6 +55,10 @@ Current state [2023-08-08]
 	--sdv-dfn-font-weight:inherit;
 	--sdv-dfn-font-style:italic;
 
+	--sdv-func-color:#3040ff;
+	--sdv-func-font-weight:normal;
+	--sdv-func-font-style:normal;
+
 	--sdv-number-color:#708238;
 	--sdv-number-font-weight:normal;
 	--sdv-number-font-style:normal;
@@ -63,9 +83,9 @@ Current state [2023-08-08]
 	--sdv-key-font-weight:normal;
 	--sdv-key-font-style:normal;
 
-	--sdv-label-color:#304030;
+	--sdv-label-color:inherit;
 	--sdv-label-font-weight:normal;
-	--sdv-label-font-style:normal;
+	--sdv-label-font-style:oblique;
 
 	--sdv-mod-color:#462;
 	--sdv-mod-font-weight:normal;
@@ -95,6 +115,10 @@ Current state [2023-08-08]
 	--sdv-term-font-weight:normal;
 	--sdv-term-font-style:italic;
 
+	--sdv-type-color:#770000;
+	--sdv-type-font-weight:normal;
+	--sdv-type-font-style:normal;
+
 	--sdv-url-font-weight: normal;
 	--sdv-url-font-style: normal;
 	--sdv-url-color: #35f;;
@@ -120,14 +144,6 @@ Current state [2023-08-08]
 	--sdv-storage-color:#aa0000;
 	--sdv-storage-font-weight:normal;
 	--sdv-storage-font-style:normal;
-
-	--sdv-type-color:#770000;
-	--sdv-type-font-weight:normal;
-	--sdv-type-font-style:normal;
-
-	--sdv-func-color:#3040ff;
-	--sdv-func-font-weight:normal;
-	--sdv-func-font-style:normal;
 
 	--sdv-func_call-color:#00d;
 	--sdv-func_call-font-weight:normal;
@@ -204,4 +220,74 @@ Current state [2023-08-08]
 	--sdv-verdict-statement-color:#0077ff;
 	--sdv-verdict-statement-font-weight:bold;
 	--sdv-verdict-statement-font-style:normal;
+	}
+
+/* Furo stores the active theme on body, not on :root. */
+:root {
+	--sdv-dark-attr-color:#099;
+	--sdv-dark-class-color:#e66;
+	--sdv-dark-cmd-color:#cc8800;
+	--sdv-dark-comment-color:#777;
+	--sdv-dark-func-color:#6090ff;
+	--sdv-dark-number-color:#708238;
+	--sdv-dark-preprocessor-color:#000055;
+	--sdv-dark-string-literal-color:#708238;
+	--sdv-dark-file-color: #7af;
+	--sdv-dark-label-color:var(--color-foreground-primary);
+	--sdv-dark-mod-color:#8c4;
+	--sdv-dark-pkg-color:#8b8;
+	--sdv-dark-pkg-font-weight:normal;
+	--sdv-dark-pkg-font-style:normal;
+	--sdv-dark-tag-color:#e44;
+	--sdv-dark-type-color:#e66;
+	--sdv-dark-url-color: #7af;
+	--sdv-dark-value-color:#8c4;
+	--sdv-dark-var-color:#f34;
+	}
+
+body[data-theme="dark"] {
+	--sdv-attr-color:var(--sdv-dark-attr-color);
+	--sdv-class-color:var(--sdv-dark-class-color);
+	--sdv-cmd-color:var(--sdv-dark-cmd-color);
+	--sdv-comment-color:var(--sdv-dark-comment-color);
+	--sdv-func-color:var(--sdv-dark-func-color);
+	--sdv-number-color:var(--sdv-dark-number-color);
+	--sdv-preprocessor-color:var(--sdv-dark-preprocessor-color);
+	--sdv-string-literal-color:var(--sdv-dark-string-literal-color);
+	--sdv-file-color:var(--sdv-dark-file-color);
+	--sdv-label-color:var(--sdv-dark-label-color);
+	--sdv-mod-color:var(--sdv-dark-mod-color);
+	--sdv-pkg-color:var(--sdv-dark-pkg-color);
+	--sdv-pkg-font-weight:var(--sdv-dark-pkg-font-weight);
+	--sdv-pkg-font-style:var(--sdv-dark-pkg-font-style);
+	--sdv-tag-color:var(--sdv-dark-tag-color);
+	--sdv-type-color:var(--sdv-dark-type-color);
+	--sdv-url-color:var(--sdv-dark-url-color);
+	--sdv-value-color:var(--sdv-dark-value-color);
+	--sdv-var-color:var(--sdv-dark-var-color);
+	}
+
+@media (prefers-color-scheme: dark) {
+	:root,
+	body[data-theme="auto"] {
+		--sdv-attr-color:var(--sdv-dark-attr-color);
+		--sdv-class-color:var(--sdv-dark-class-color);
+		--sdv-cmd-color:var(--sdv-dark-cmd-color);
+		--sdv-comment-color:var(--sdv-dark-comment-color);
+		--sdv-func-color:var(--sdv-dark-func-color);
+		--sdv-number-color:var(--sdv-dark-number-color);
+		--sdv-preprocessor-color:var(--sdv-dark-preprocessor-color);
+		--sdv-string-literal-color:var(--sdv-dark-string-literal-color);
+		--sdv-file-color:var(--sdv-dark-file-color);
+		--sdv-label-color:var(--sdv-dark-label-color);
+		--sdv-mod-color:var(--sdv-dark-mod-color);
+		--sdv-pkg-color:var(--sdv-dark-pkg-color);
+		--sdv-pkg-font-weight:var(--sdv-dark-pkg-font-weight);
+		--sdv-pkg-font-style:var(--sdv-dark-pkg-font-style);
+		--sdv-tag-color:var(--sdv-dark-tag-color);
+		--sdv-type-color:var(--sdv-dark-type-color);
+		--sdv-url-color:var(--sdv-dark-url-color);
+		--sdv-value-color:var(--sdv-dark-value-color);
+		--sdv-var-color:var(--sdv-dark-var-color);
+		}
 	}
