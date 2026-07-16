@@ -50,8 +50,8 @@ release = '0'
 # ones.
 extensions = [
 	"sphinx_sitemap",
-	"sdv.doc.waterloo.docitem_sphinx",
-#	"sphinxcontrib.waterloo_docstrings",
+#	"sdv.doc.waterloo.docitem_sphinx",
+	"sphinxcontrib.waterloo_docstrings",
 	]
 
 # For sitemap:
@@ -99,6 +99,7 @@ html_favicon = '_static/favicon.ico'
 html_static_path = ['_static']
 
 html_css_files = [
+	'waterloo_alabaster.css',
 	'wtrl_doc_custom.css',
 	]
 

@@ -519,24 +519,27 @@ Method_overview:
 		return "Contract"
 	def parse(self,tr : tracer,subtree : DocstringSubtree) -> None:
 		"""
-Preamble:
-	profile:
-		method
-	normative_sections:
-		Contract, Parameters, Returns, Raises
-Contract:
-	general:
-		|Must| parse the content of an |label|`Contract` section for profile |value|`class`.
-Parameters:
-	tr:
-		The tracer for collecting diagnostics.
-	subtree:
-		The docstring subtree to parse, a set of concatenated sections.
-Returns:
-	|Must| return |None|.
-Raises:
-	RuntimeError:
-		|Must| raise if a section to be parsed is not one of the allowed ones: {|label|`general`,|label|`constructor`,|label|`api`}.
+		Preamble:
+			profile:
+				method
+			normative_sections:
+				Contract, Parameters, Returns, Raises
+		Contract:
+			general:
+				|Must| parse the content of an |label|`Contract` section for profile |value|`class`.
+		Parameters:
+			tr:
+				The tracer for collecting diagnostics.
+			subtree:
+				The docstring subtree to parse, a set of concatenated sections.
+		Returns:
+			|Must| return |None|.
+		Raises:
+			RuntimeError:
+				|Must| raise if a section to be parsed is not one of the allowed ones: {|label|`general`, |label|`constructor`, |label|`traits`}.
+		Notes:
+			Last review:
+				2026-07-16
 		"""
 		pos = 0
 		dispatch_map = {
