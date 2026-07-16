@@ -23,8 +23,12 @@ div.wtrl-signature-param {
 
 /*----- Visited links ----------------------------------------*/
 
-/* We don't change color since it carries semantics like "function"
-   or "class".*/
+/* We don't change color since it carries semantics like
+   "module:, "class", or "function". */
+a.wtrl_class:visited
+	{
+	color: var(--sdv-class-color);
+	}
 a.wtrl_func:visited
 	{
 	color: var(--sdv-func-color);
@@ -35,7 +39,7 @@ a.wtrl_type:visited
 	}
 a.wtrl_var:visited
 	{
-	color: #a00;
+	color: var(--sdv-var-color);
 	}
 
 /*===== Roles ================================================*/
@@ -264,6 +268,7 @@ a.wtrl_var:visited
 	}
 
 /* 4th and deeper nested bullet lists use an open square marker. */
+/* leave to theme
 .wtrl-section ul {
 	list-style: none;
 	}
@@ -288,6 +293,7 @@ a.wtrl_var:visited
 .wtrl-section ul ul ul ul > li::marker {
 	content: "▫ ";
 	}
+*/
 
 /*===== Docstring boxes for modules, classes, callables ======*/
 
@@ -299,9 +305,14 @@ table.wtrl-box {
 	margin-top:0.5em;
 	margin-bottom:1em;
 */
+/* Here we interfer a little. Docstring boxes are not quite
+   like "normal" tables. We need to create a more technical
+   look, like a data-sheet. It does not need to be 100%, but
+   should be a fixed number. */
 	width:100%;
 	}
 
+/* leave to theme
 table.wtrl-box p {
 	margin: 0;
 	}
@@ -313,6 +324,7 @@ table.wtrl-box p + p {
 table.wtrl-box p.wtrl-freeform-paragraph-content {
 	margin-top: 0lh;
 	}
+*/
 
 /*----- Docstring box interior -------------------------------*/
 

@@ -696,26 +696,30 @@ a.wtrl_var:visited
 	content: "▫ ";
 	}
 
+table.wtrl-box tbody tr td > p.wtrl-dfn-content {
+	margin-left: 1.25em;
+	}
+
 /*----- Docstring boxes for modules, classes, callables ------*/
 
 table > thead.wtrl-box-head-module > tr > th {
-	background-color: #335522;
-	color:#fff;
+	background-color: #eff5ef;
+	vertical-align:middle;
 	}
 table > thead.wtrl-box-head-class > tr > th {
-	background-color: #885555;
-	color:#fff;
+	background-color: #f5efef;
+	vertical-align:middle;
 	}
 table > thead.wtrl-box-head-method > tr > th {
-	background-color: #7080d3;
-	color:#fff;
+	background-color: #efeff5;
+	vertical-align:middle;
 	}
 table > thead.wtrl-box-head-function > tr > th {
-	background-color: #7080d3;
-	color:#fff;
+	background-color: #efeff5;
+	vertical-align:middle;
 	}
 table > thead.wtrl-box-head-inherited_method > tr > th {
-	background-color: #90a0d3;
-	color:#fff;
+	background-color: #efeff5;
+	vertical-align:middle;
 	}
 
