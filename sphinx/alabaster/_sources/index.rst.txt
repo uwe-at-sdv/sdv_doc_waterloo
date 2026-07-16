@@ -17,6 +17,14 @@ documentation for details.
 
 .. wtrl_autodoc_module:: mymodule
 
+.. wtrl_autodoc_class:: mymodule.A
+
+.. wtrl_autodoc_method:: mymodule.A.spam
+
+.. wtrl_autodoc_class:: mymodule.X
+
+.. wtrl_autodoc_method:: mymodule.X.spam
+
 .. wtrl_autodoc_module:: sdv.doc.waterloo.docitem_helper
 
 .. wtrl_push_current_module:: sdv.doc.waterloo
