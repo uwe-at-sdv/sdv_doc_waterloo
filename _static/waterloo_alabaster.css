@@ -1,0 +1,725 @@
+
+body
+	{
+	font-family:Helvetica;
+	font-size:12pt;
+	}
+
+@media screen
+	{
+	div.document {
+		width:30cm;
+		}
+/* Trying a little what you see is what you get,
+   so this is around the width of DIN A4 */
+	div.body {
+		width: 21cm;
+		min-width:21cm;
+		max-width:21cm;
+		padding-left:1.5cm;
+		padding-right:1.5cm;
+		}
+	div.footer {
+		width:30cm;
+		padding-left:0cm;
+		padding-right:0cm;
+		}
+	}
+
+/* I tried things, but the original looks better.
+p.wtrl-note-title {
+	margin-bottom: 0cm;
+	margin-top: 0.5em;
+	}
+*/
+/* Same here
+p.wtrl-note-content {
+	margin-top: 0.5em;
+	}	
+*/
+
+div.sphinxsidebar {
+	width: 11cm;
+	font-size: 14px;
+	line-height: 1.5;
+	}
+@media screen {
+	div.document {
+		width: 34cm;
+		}
+	div.body {
+		width: 21cm;
+		min-width: 21cm;
+		max-width: 21cm;
+		padding-left: 5.5cm;
+		padding-right: 1.5cm;
+		}
+	}
+div.warning
+	{
+	background-color: #fec;
+	color: #432;
+	border: 1px #db8 solid;
+	padding-left: 15px;
+	padding-right: 15px;
+	padding-bottom: 5px;
+	padding-top: 5px;
+	margin-left: 0%;
+	margin-right: 0%;
+	margin-top: .5em;
+	margin-bottom: 1em;
+	}
+
+div.warning p.admonition-title::before {
+	content: "";
+	display: inline-block;
+	width: 1.5em;
+	height: 1.5em;
+	background-image: url("wtrl_icon_warning.svg");
+	background-size: contain;
+	background-repeat: no-repeat;
+	margin-right: 0.4em;
+	vertical-align: middle;
+	}
+
+div.warning p.admonition-title::after {
+	content: "";
+	}
+
+div.highlight-bash pre {
+	border: 1px solid #aaa;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	padding-left: 5px;
+	padding-right: 5px;
+	margin-left: 0px;
+	margin-right: 0px;
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+	background-color: #eeeeee;
+	font-size: 80%;
+	}
+
+div.highlight-xml pre {
+	border: 1px solid #aaa;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	padding-left: 5px;
+	padding-right: 5px;
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+	background-color: #eee;
+	color: inherit;
+	font-size: smaller;
+	font-family: monospace;
+	tab-size: 4;
+	}
+
+div.highlight-python div.highlight {
+/*	background-color: #e4ebf0;*/
+	background-color: #f9fbf9;
+	border: 1px solid #797;
+	}
+div.highlight-python div.highlight pre {
+	background-color: inherit;
+	}
+/* Overriding pygments */
+span.sd {
+	color: black;
+	}
+
+div.code_ansi pre {
+	border: 1px solid #aaa;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	padding-left: 5px;
+	padding-right: 5px;
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+	background-color: #eee;
+	color: inherit;
+	font-size: smaller;
+	font-family: monospace;
+	}
+
+/* The table */
+table.wtrl-box {
+	}
+
+table.wtrl-box p {
+	margin: 0;
+	}
+
+table.wtrl-box p + p {
+	margin-top: 0.5lh;
+	}
+
+table.wtrl-box p.wtrl-freeform-paragraph-content {
+	margin-top: 0lh;
+	}
+
+.wtrl-code-ansi pre {
+	padding: 7px 30px;
+	}
+
+div.filelist-block div.highlight pre {
+	background-color:inherit;
+	font-size:80%;
+	line-height:110%;
+	}
+
+code.filelist {
+	color: #1e90ff;
+	background: #f0f8ff;
+	padding: 2px 4px;
+	border-radius: 4px;
+	font-weight: bold;
+	font-family: monospace;
+	}
+
+/* Paths */
+code.file, .literal.path {
+	background-color:inherit;
+	color: #35f;
+	font-weight: normal;
+	}
+
+code.bash {
+	background-color:inherit;
+	color: red;
+	font-weight: normal;
+	}
+
+/* Inline */
+span.path {
+	color: #35f;
+	font-family: monospace;
+	font-weight: bold;
+	}
+
+div.code-block-caption {
+	text-align:center
+	}
+div.code-block-caption span.caption-number {
+	font-style:normal;
+	font-weight:bold;
+	}
+div.code-block-caption span.caption-text {
+	font-style:italic;
+	font-weight:normal;
+	}
+
+/*----- table stuff ------------------------------------------*/
+
+/* Prevent docstring boxes from expanding horizontally due to long pre/code
+    elements (e.g. long Literal["..."] type annotations).
+    max-width:82% keeps the right td in the intended table proportion;
+    pre-wrap + break-all then wraps verbatim content at any character. */
+
+table.wtrl-box td:nth-child(2) {
+	max-width: 82%;
+	}
+
+table.wtrl-box td:nth-child(2) pre,
+table.wtrl-box td:nth-child(2) span.pre,
+table.wtrl-box td:nth-child(2) code.literal {
+	white-space: pre-wrap;
+	overflow-wrap: anywhere;
+	word-break: break-all;
+	}
+
+
+table caption {
+	text-align:center;
+	font-size:80%;
+	margin-bottom:0.5em;
+	}
+table caption span.caption-number {
+	font-style:normal;
+	font-weight:bold;
+	}
+table caption span.caption-text {
+	font-style:italic;
+	font-weight:normal;
+	}
+
+table.docutils
+	{
+	border: 0px;
+	padding: 0px;
+	border-spacing:2px;
+	border-collapse:separate;
+	box-shadow: 0px 0px 0px;
+	}
+table.docutils td, table.docutils th {
+	border: 0px;;
+	}
+/* Das ist dann also die Default-Tabelle. */
+table
+	{
+/* Tabellen sind per-default zentriert. */
+	margin-left:auto;
+	margin-right:auto;
+
+	margin-top:0.5em;
+	margin-bottom:1em;
+	padding:0px;
+	border-spacing:2px;
+	width:100%;
+	}
+table > tbody > tr:nth-child(even)
+	{
+	padding-left:10px;
+	padding-right:10px;
+	background-color:#e6e6e6;
+	}
+table > tbody > tr:nth-child(odd)
+	{
+	background-color:#eeeeee;
+	}
+table > thead > tr > th
+	{
+	font-weight:bold;
+	background-color:#dea;
+	padding-left:10px;
+	padding-right:10px;
+	}
+table > tbody > tr > td
+	{
+	padding-left:10px;
+	padding-right:10px;
+	vertical-align:top;
+	}
+
+span.descclassname {
+	font-family: monospace;
+	font-weight: normal;
+	font-size: 90%;
+	color: #a00;
+
+	background-color:inherit;
+	}
+span.descname {
+	font-family: monospace;
+	font-weight: normal;
+	font-size: 90%;
+	color: #a00;
+
+	background-color:inherit;
+	}
+
+/* For sections "Notes" which contains a rubric elements.*/
+tr.wtrl-section p + p.rubric {
+	margin-top:0.5lh;
+	margin-bottom:0.0lh;
+	}
+
+tr.wtrl-section ul {
+	margin-top: 0.2lh;
+	}
+
+.wtrl-side-by-side {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 1em;
+	margin: 1.2em 0;
+	padding-top: 0em;
+	margin-top: 0em;
+	}
+
+.wtrl-side-by-side > * {
+	margin: 0;
+	}
+
+.wtrl-side-by-side .literal-block-wrapper {
+	margin-top:0em;
+	margin-bottom:0em;
+	}
+.wtrl-side-by-side .literal-block-wrapper .code-block-caption {
+	margin-top:0em;
+	margin-bottom:0em;
+	}
+.wtrl-side-by-side .code-block-caption {
+	font-size: 90%;
+	}
+
+/*----- Status messages for push and pop ---------------------*/
+.wtrl-current-module-message {
+	border: 1px #bbb solid;
+	border-radius: 0.4em;
+	padding-left:1em;
+	padding-right:1em;
+	padding-top:0.5em;
+	padding-bottom:0.5em;
+	}
+.wtrl-current-module-push {
+	}
+.wtrl-current-module-pop {
+	}
+
+.wtrl-current-class-message {
+	border: 1px #bbb solid;
+	border-radius: 0.4em;
+	padding-left:1em;
+	padding-right:1em;
+	padding-top:0.5em;
+	padding-bottom:0.5em;
+	}
+.wtrl-current-class-push {
+	}
+.wtrl-current-class-pop {
+	}
+
+.wtrl-current-scope-message {
+	border: 1px #bbb solid;
+	border-radius: 0.4em;
+	padding-left:1em;
+	padding-right:1em;
+	padding-top:0.5em;
+	padding-bottom:0.5em;
+	}
+.wtrl-current-scope-push {
+	}
+.wtrl-current-scope-pop {
+	}
+
+
+/*----- Signatures -------------------------------------------*/
+
+div.wtrl-signature-multiline {
+	border: solid 0.1em #cce;
+	padding:0.5em;
+	border-radius:0.3em;
+	}
+.wtrl-section div.wtrl-signature-multiline {
+	border: 0;
+	padding: 0em;
+	}
+div.wtrl-signature-param {
+	font-family: monospace;
+	padding-left: 3em;
+	}
+
+/*----- Sections "Definitions", "Terminology" ----------------*/
+/* List of definitions */
+dl {
+	margin: 1em 0;
+	background-color: inherit;
+	}
+/* The term to define */
+dt {
+	margin-bottom: 0.3em;
+	}
+/* Definition content */
+dd {
+	margin-left: 1em;
+	font-size: 100%;
+	color: #333;
+	}
+
+/*----- Visited links ----------------------------------------*/
+
+/* We don't change color since it carries semantics like "function"
+   or "class".*/
+a.wtrl_func:visited
+	{
+	color: var(--sdv-func-color);
+	}
+a.wtrl_type:visited
+	{
+	color: var(--sdv-type-color);
+	}
+a.wtrl_var:visited
+	{
+	color: #a00;
+	}
+
+/*----- Roles ------------------------------------------------*/
+
+.wtrl_attr
+	{
+	font-family:"Courier New",courier,monospace;
+
+	color:var(--sdv-attr-color);
+	font-weight:var(--sdv-attr-font-weight);
+	font-style:var(--sdv-attr-font-style);
+	font-size: 90%;
+
+	background-color:inherit;
+	}
+.wtrl_class
+	{
+	font-family:monospace;
+
+	color:var(--sdv-class-color);
+	font-weight:var(--sdv-class-font-weight);
+	font-style:var(--sdv-class-font-style);
+	font-size: 90%;
+
+	background-color:inherit;
+	}
+.wtrl_cmd
+	{
+	font-family:monospace;
+
+	color:var(--sdv-cmd-color);
+	font-weight:var(--sdv-cmd-font-weight);
+	font-style:var(--sdv-cmd-font-style);
+	font-size: 90%;
+
+	background-color:inherit;
+	}
+.wtrl_dfn
+	{
+	font-family: inherit;
+	color:var(--sdv-dfn-color);
+	font-weight:var(--sdv-dfn-font-weight);
+	font-style:var(--sdv-dfn-font-style);
+	font-size:100%;
+
+	background-color:inherit;
+	}
+.wtrl_file {
+	font-family:monospace;
+
+	color:var(--sdv-file-color);
+	font-weight:var(--sdv-file-font-weight);
+	font-style:var(--sdv-file-font-style);
+	font-size: 90%;
+
+	background-color:inherit;
+	}
+.wtrl_func
+	{
+	font-family:monospace;
+
+	color:var(--sdv-func-color);
+	font-weight:var(--sdv-func-font-weight);
+	font-style:var(--sdv-func-font-style);
+	font-size: 90%;
+
+	background-color:inherit;
+	}
+.wtrl_key
+	{
+	font-family:monospace;
+
+	color:var(--sdv-key-color);
+	font-weight:var(--sdv-key-font-weight);
+	font-style:var(--sdv-key-font-style);
+	font-size: 90%;
+	border: 1px solid black;
+	border-radius:3px;
+	padding-left:3px;
+	padding-right:3px;
+
+	background-color:inherit;
+	}
+.wtrl_label
+	{
+	font-family:inherit;
+
+	color:var(--sdv-label-color);
+	font-weight:var(--sdv-label-font-weight);
+	font-style:var(--sdv-label-font-style);
+	font-size: 100%;
+
+	background-color:inherit;
+	}
+.wtrl_lit
+	{
+	font-family:monospace;
+
+	color:inherit;
+	font-weight:normal;
+	font-size: 90%;
+
+	background-color:inherit;
+	}
+.wtrl_mod
+	{
+	font-family:monospace;
+
+	color: var(--sdv-mod-color);
+	font-weight:var(--sdv-mod-font-weight);
+	font-style:var(--sdv-mod-font-style);
+	font-size: 90%;
+
+	background-color:inherit;
+	}
+.wtrl_norm
+	{
+	font-family:inherit;
+
+	color:var(--sdv-norm-color);
+	font-weight:var(--sdv-norm-font-weight);
+	font-style:var(--sdv-norm-font-style);
+	font-size: 100%;
+
+	background-color:inherit;
+	}
+.wtrl_norm::after
+	{
+	content: " \2696";
+	font-weight:normal;
+	font-style:normal;
+	}
+.wtrl_op
+	{
+	font-family:monospace;
+
+	color:var(--sdv-op-color);
+	font-weight:var(--sdv-op-font-weight);
+	font-style:var(--sdv-op-font-style);
+
+	background-color:inherit;
+	}
+.wtrl_opt
+	{
+	font-family:monospace;
+
+	color:var(--sdv-opt-color);
+	font-weight:var(--sdv-opt-font-weight);
+	font-style:var(--sdv-opt-font-style);
+
+	background-color:inherit;
+	}
+.wtrl_pkg
+	{
+	font-family:monospace;
+
+	color: var(--sdv-pkg-color);
+	font-weight:var(--sdv-pkg-font-weight);
+	font-style:var(--sdv-pkg-font-style);
+	font-size: 90%;
+
+	background-color:inherit;
+	}
+.wtrl_tag
+	{
+	font-family:monospace;
+
+	color:var(--sdv-tag-color);
+	font-weight:var(--sdv-tag-font-weight);
+	font-style:var(--sdv-tag-font-style);
+
+	background-color:inherit;
+	}
+.wtrl_tag:before
+	{
+	content:"<";
+	}
+.wtrl_tag:after
+	{
+	content:">";
+	}
+.wtrl_term
+	{
+	font-family:inherit;
+	color:var(--sdv-term-color);
+	font-weight:var(--sdv-term-font-weight);
+	font-style:var(--sdv-term-font-style);
+	font-size:100%;
+
+	background-color:inherit;
+	}
+.wtrl_type
+	{
+	font-family:monospace;
+
+	color:var(--sdv-type-color);
+	font-weight:var(--sdv-type-font-weight);
+	font-style:var(--sdv-type-font-style);
+	font-size: 90%;
+
+	background-color:inherit;
+	}
+.wtrl_url {
+	font-family:monospace;
+
+	color:var(--sdv-url-color);
+	font-weight:var(--sdv-url-font-weight);
+	font-style:var(--sdv-url-font-style);
+	font-size: 90%;
+
+	background-color:inherit;
+	}
+.wtrl_value
+	{
+	font-family:monospace;
+	color:var(--sdv-value-color);
+	font-weight:var(--sdv-value-font-weight);
+	font-style:var(--sdv-value-font-style);
+	font-size:90%;
+
+	background-color:inherit;
+	}
+.wtrl_var
+	{
+	font-family: monospace;
+	color:var(--sdv-var-color);
+	font-weight:var(--sdv-var-font-weight);
+	font-style:var(--sdv-var-font-style);
+
+	background-color:inherit;
+	}
+.wtrl_out_of_scope,
+.wtrl_out_of_scope *
+	{
+	color:#777 !important;
+	opacity:0.85;
+	}
+
+/* 4th and deeper nested bullet lists use an open square marker. */
+.wtrl-section ul {
+	list-style: none;
+	}
+.wtrl-section ul > li::marker {
+	content: "• ";
+	}
+.wtrl-section ul ul {
+	list-style: none;
+	}
+.wtrl-section ul ul > li::marker {
+	content: "◦ ";
+	}
+.wtrl-section ul ul ul {
+	list-style: none;
+	}
+.wtrl-section ul ul ul > li::marker {
+	content: "▪ ";
+	}
+.wtrl-section ul ul ul ul {
+	list-style: none;
+	}
+.wtrl-section ul ul ul ul > li::marker {
+	content: "▫ ";
+	}
+
+table.wtrl-box tbody tr td > p.wtrl-dfn-content {
+	margin-left: 1.25em;
+	}
+
+/*----- Docstring boxes for modules, classes, callables ------*/
+
+table > thead.wtrl-box-head-module > tr > th {
+	background-color: #eff5ef;
+	vertical-align:middle;
+	}
+table > thead.wtrl-box-head-class > tr > th {
+	background-color: #f5efef;
+	vertical-align:middle;
+	}
+table > thead.wtrl-box-head-method > tr > th {
+	background-color: #efeff5;
+	vertical-align:middle;
+	}
+table > thead.wtrl-box-head-function > tr > th {
+	background-color: #efeff5;
+	vertical-align:middle;
+	}
+table > thead.wtrl-box-head-inherited_method > tr > th {
+	background-color: #efeff5;
+	vertical-align:middle;
+	}
+
