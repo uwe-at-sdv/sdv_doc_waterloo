@@ -77,10 +77,10 @@ a.wtrl_var:visited
 .wtrl_dfn
 	{
 	font-family: inherit;
+
 	color:var(--sdv-dfn-color);
 	font-weight:var(--sdv-dfn-font-weight);
 	font-style:var(--sdv-dfn-font-style);
-	font-size:100%;
 
 	background-color:inherit;
 	}
@@ -132,8 +132,9 @@ a.wtrl_var:visited
 	{
 	font-family:monospace;
 
-	color:inherit;
-	font-weight:normal;
+	color: var(--sdv-lit-color);
+	font-weight:var(--sdv-lit-font-weight);
+	font-style:var(--sdv-lit-font-style);
 
 	background-color:inherit;
 	}
@@ -473,31 +474,4 @@ table.wtrl-box > tbody > tr.wtrl-section p + p.rubric {
 
 table.wtrl-box > tbody > tr.wtrl-section ul {
 	margin-top: 0.2lh;
-	}
-
-
-/*===== side-by-side stuff does not belong here! ====*/
-/* Move to wtrl-specific */
-.wtrl-side-by-side {
-	display: grid;
-	grid-template-columns: 1fr 1fr;
-	gap: 1em;
-	margin: 1.2em 0;
-	padding-top: 0em;
-	margin-top: 0em;
-	}
-
-.wtrl-side-by-side > * {
-	margin: 0;
-	}
-
-.wtrl-side-by-side .literal-block-wrapper {
-	margin-top:0em;
-	margin-bottom:0em;
-	}
-.wtrl-side-by-side .literal-block-wrapper .code-block-caption {
-	margin-top:0em;
-	margin-bottom:0em;
-	}
-.wtrl-side-by-side .code-block-caption {
 	}
