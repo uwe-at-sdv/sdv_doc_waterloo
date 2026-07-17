@@ -4,6 +4,7 @@ Format:
 
 - VERSION [YYYY-MM-DD]: Summary.
 
+- 0.3.1 [2026-07-17]:	Version bump following main repo
 - 0.3.0 [2026-07-12]:	Command "Save and check coverage of docstring"
 - 0.2.20 [2026-07-12]:	Remove development artifacts
 - 0.2.19 [2026-07-04]:	Fixed syntax highlighting
