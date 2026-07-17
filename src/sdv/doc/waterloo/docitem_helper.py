@@ -1974,6 +1974,12 @@ class tracer:
 		WARNING		= 2
 		ERROR		= 3
 
+	RE_ANSI_ESCAPE_SEQUENCE = re.compile(r"\x1b\[[0-9;?]*[ -/]*[@-~]")
+
+	@classmethod
+	def strip_ansi_escape_sequences(cls,s: str) -> str:
+		return cls.RE_ANSI_ESCAPE_SEQUENCE.sub("", s)
+
 	def __init__(self) -> None:
 		self._names : List[str] = []
 # Debugging notes

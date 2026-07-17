@@ -435,7 +435,11 @@ Notes:
 			node_pc = top._items["Public_classes"]
 			for cls_name in node_co.items():
 				if not hasattr(obj, cls_name):
-					details = render_missing_entry_details("Class_overview", node_co.items(), cls_name, profile)
+					details = {
+						"found":["Class_overview",f"\t{cls_name}:"],
+						"expected":["Class_overview",f"\t<omit subsection '{cls_name}'>"],
+						"hint":explain_try_self_for_section("Class_overview", "module")
+						}
 					raise_validation_error(tr, obj, "MCLO-008", f"Entry '{cls_name}' does not exist on module.", details)
 				attr = getattr(obj, cls_name)
 				if not is_obj_class(attr):
@@ -461,7 +465,11 @@ Notes:
 			node_pf = top._items["Public_functions"]
 			for fn_name in node_fo.items():
 				if not hasattr(obj, fn_name):
-					details = render_missing_entry_details("Function_overview", node_fo.items(), fn_name, profile)
+					details = {
+						"found":["Function_overview",f"\t{fn_name}:"],
+						"expected":["Function_overview",f"\t<omit subsection '{fn_name}'>"],
+						"hint":explain_try_self_for_section("Function_overview", "module")
+						}
 					raise_validation_error(tr, obj, "MFNO-008", f"Entry '{fn_name}' does not exist on module.", details)
 				attr = getattr(obj, fn_name)
 				if not is_obj_function(attr):
@@ -836,7 +844,11 @@ Notes:
 			node_pm = top._items["Public_classes"]
 			for cls_name in node_co.items():
 				if not hasattr(obj, cls_name):
-					details = render_missing_entry_details("Class_overview", node_co.items(), cls_name, profile)
+					details = {
+						"found":["Class_overview",f"\t{cls_name}:"],
+						"expected":["Class_overview",f"\t<omit subsection '{cls_name}'>"],
+						"hint":explain_try_self_for_section("Class_overview", "class")
+						}
 					raise_validation_error(tr, obj, "CCLO-008", f"Entry '{cls_name}' does not exist on class.", details)
 				attr = getattr(obj, cls_name)
 				if not is_obj_class(attr):
@@ -862,7 +874,11 @@ Notes:
 			node_pm = top._items["Public_methods"]
 			for m_name in node_mo.items():
 				if not hasattr(obj, m_name):
-					details = render_missing_entry_details("Method_overview", node_mo.items(), m_name, profile)
+					details = {
+						"found":["Method_overview",f"\t{m_name}:"],
+						"expected":["Method_overview",f"\t<omit subsection '{m_name}'>"],
+						"hint":explain_try_self_for_section("Method_overview", "class")
+						}
 					raise_validation_error(tr, obj, "CMTO-008", f"Entry '{m_name}' does not exist on class.", details)
 				attr = getattr(obj, m_name)
 				if not is_obj_function(attr):

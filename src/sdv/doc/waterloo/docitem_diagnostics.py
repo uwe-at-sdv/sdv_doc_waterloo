@@ -593,7 +593,7 @@ def render_listed_object_missing_details(label: str, member_name: str, expected_
 	Raises:
 	"""
 	return {
-		"found": render_source_snippet(label, [member_name]),
+		"found": [label + ":","\t" + member_name],
 		"expected": [expected_text],
 		"hint": explain_try_self_for_section(label, profile),
 	}
@@ -695,13 +695,13 @@ def render_exception_reference_details(exception_name: str, profile: str, *, exp
 	Raises:
 	"""
 	if expected_kind == "qualified identifier":
-		expected = ["<check for typos or qualify properly>"]
+		expected = "<check for typos or qualify properly>"
 	else:
-		expected = ["<refer to an Exception class derived from BaseException>"]
+		expected = "<refer to an Exception class derived from BaseException>"
 	return {
 		"found": render_source_snippet("Raises", [exception_name]),
-		"expected": expected,
-		"hint": explain_try_self_for_subsection("Raises.<item>", profile),
+		"expected": ["Raises:",f"\t{expected}"],
+		"hint": explain_try_self_for_section("Raises", profile),
 	}
 
 
