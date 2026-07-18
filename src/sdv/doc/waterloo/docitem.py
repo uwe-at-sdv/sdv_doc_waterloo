@@ -253,7 +253,8 @@ from contextlib import contextmanager
 from sdv.doc.waterloo.docitem_docstring import *
 from sdv.doc.waterloo.docitem_validator import *
 
-__version__ = "0.12.5"
+__version__ = "0.12.6"
+# - 0.12.6 [2026-07-18] Version bump: Sphinx extension moved to branch "sphinx".
 # - 0.12.5 [2026-07-17] Diagnostics improved for sections ..._overview, Public_...
 # - 0.12.4 [2026-07-10] Version bump for bugfix in wtrl_mcp_admin
 # - 0.12.3 [2026-07-09] Version bump for wtrl_mcp_admin: standardized diagnostics.

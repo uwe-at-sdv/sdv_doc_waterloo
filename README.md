@@ -8,6 +8,10 @@
 ![Python](https://img.shields.io/badge/python-3.10%2B-blue)
 [![PyPI](https://img.shields.io/badge/PyPI-package-3775A9?logo=pypi&logoColor=white)](https://pypi.org/project/sdv-doc-waterloo/)
 
+### Note
+
+As of 2026-07-18, the Sphinx extension is now located in branch `sphinx`.
+
 ### Install from source
 
 `package_main` contains the Waterloo Python package and the Sphinx extension.

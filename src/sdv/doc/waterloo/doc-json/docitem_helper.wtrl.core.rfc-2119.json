@@ -6,7 +6,7 @@
         "schema": "0.1.0"
     },
     "__WTRL_META__": {
-        "generated_at": "2026-07-18T12:15:39+02:00",
+        "generated_at": "2026-07-18T14:46:59+02:00",
         "generator": "waterlint",
         "scope": "core",
         "flavour": "rfc-2119"
@@ -178,7 +178,7 @@
             "doc_lines": [
                 "Recursive docstring tree node type."
             ],
-            "annotation": "str | List[ForwardRef('DocstringSubtree')]",
+            "annotation": "Union[str, List[ForwardRef('DocstringSubtree')]]",
             "doc_lines_kind": "type"
         },
         "sdv.doc.waterloo.docitem_helper.DocstringTree": {
@@ -186,7 +186,7 @@
             "doc_lines": [
                 "A full docstring tree represented as a list of subtree values."
             ],
-            "annotation": "List[str | List[ForwardRef('DocstringSubtree')]]",
+            "annotation": "List[Union[str, List[ForwardRef('DocstringSubtree')]]]",
             "doc_lines_kind": "type"
         },
         "sdv.doc.waterloo.docitem_helper.AnnotatableObject": {
@@ -194,7 +194,7 @@
             "doc_lines": [
                 "Objects that can be annotated by the helper layer."
             ],
-            "annotation": "type | module | function | method",
+            "annotation": "Union[type, module, function, method]",
             "doc_lines_kind": "type"
         },
         "sdv.doc.waterloo.docitem_helper.RuleId": {
@@ -234,7 +234,7 @@
             "doc_lines": [
                 "Objects that can be traversed by the helper functions."
             ],
-            "annotation": "module | type[object] | Callable[..., Any]",
+            "annotation": "Union[module, type[object], Callable[..., Any]]",
             "doc_lines_kind": "type"
         },
         "sdv.doc.waterloo.docitem_helper.AstDocNode": {
@@ -242,7 +242,7 @@
             "doc_lines": [
                 "An AST node type relevant for docstring extraction."
             ],
-            "annotation": "ast.ClassDef | ast.FunctionDef | ast.AsyncFunctionDef",
+            "annotation": "Union[ast.ClassDef, ast.FunctionDef, ast.AsyncFunctionDef]",
             "doc_lines_kind": "type"
         },
         "sdv.doc.waterloo.docitem_helper.SOURCE_DOCSTRING_CACHE": {
@@ -2715,7 +2715,7 @@
             "doc_lines": [
                 "Objects already processed in the current run."
             ],
-            "annotation": "dict[object, Any]",
+            "annotation": "dict",
             "doc_lines_kind": "type"
         },
         "sdv.doc.waterloo.docitem_helper.DocSession.Validated": {
@@ -2723,7 +2723,7 @@
             "doc_lines": [
                 "Objects successfully validated in the current run."
             ],
-            "annotation": "dict[object, Any]",
+            "annotation": "dict",
             "doc_lines_kind": "type"
         },
         "sdv.doc.waterloo.docitem_helper.DocSession": {

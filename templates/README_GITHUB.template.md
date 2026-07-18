@@ -6,6 +6,10 @@
 
 _BADGES_
 
+### Note
+
+As of 2026-07-18, the Sphinx extension is now located in branch `sphinx`.
+
 ### Install from source
 
 `package_main` contains the Waterloo Python package and the Sphinx extension.

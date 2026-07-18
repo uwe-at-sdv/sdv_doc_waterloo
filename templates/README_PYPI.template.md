@@ -6,6 +6,10 @@
 
 _BADGES_
 
+### Note
+
+As of 2026-07-18, the Sphinx extension is now located in branch `sphinx`.
+
 ### On PyPI
 
 `sdv-doc-waterloo` is the published PyPI package that contains the Waterloo
