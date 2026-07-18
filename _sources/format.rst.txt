@@ -1,3 +1,19 @@
+.. |Must| replace:: :wtrl_norm:`Must`
+.. |must| replace:: :wtrl_norm:`must`
+.. |Must_not| replace:: :wtrl_norm:`Must not`
+.. |must_not| replace:: :wtrl_norm:`must not`
+.. |Should| replace:: :wtrl_norm:`Should`
+.. |should| replace:: :wtrl_norm:`should`
+.. |Should_not| replace:: :wtrl_norm:`Should not`
+.. |should_not| replace:: :wtrl_norm:`should not`
+.. |May| replace:: :wtrl_norm:`May`
+.. |may| replace:: :wtrl_norm:`may`
+.. |Self| replace:: :wtrl_value:`Self`
+.. |None| replace:: :wtrl_value:`None`
+.. |True| replace:: :wtrl_value:`True`
+.. |False| replace:: :wtrl_value:`False`
+.. |empty| replace:: :wtrl_value:`<empty>`
+
 .. |LastReview| replace:: **Last review**
 .. |ObsoleteRules| replace:: **Obsolete rules**
 .. |Rationale| replace:: **Rationale** (informative)
