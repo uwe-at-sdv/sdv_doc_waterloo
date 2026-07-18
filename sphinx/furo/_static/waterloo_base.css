@@ -25,6 +25,10 @@ div.wtrl-signature-param {
 
 /* We don't change color since it carries semantics like
    "module:, "class", or "function". */
+a.wtrl_module:visited
+	{
+	color: var(--sdv-class-color);
+	}
 a.wtrl_class:visited
 	{
 	color: var(--sdv-class-color);
