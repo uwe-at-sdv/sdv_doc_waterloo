@@ -346,7 +346,7 @@ RE_WTRL_MARKUP_BACKTICK_COMPILED: Final[re.Pattern[str]] = re.compile(RE_WTRL_MA
 RE_WTRL_ANGLE_HTTPS_REF: Final[str] = r"^\s*([^<>`]+?)\s*<\s*(https?://[^>\s]+)\s*>\s*$"
 RE_WTRL_ANGLE_HTTPS_REF_COMPILED: Final[re.Pattern[str]] = re.compile(RE_WTRL_ANGLE_HTTPS_REF)
 
-RE_WTRL_ANGLE_WTRL_REF: Final[str] = r"^\s*([^<>`]+?)\s*<\s*wtrl://([^>\s]+)\s*>\s*$"
+RE_WTRL_ANGLE_WTRL_REF: Final[str] = r"^\s*([^<>`]+?)\s*<\s*(wtrl://[^>\s]+)\s*>\s*$"
 RE_WTRL_ANGLE_WTRL_REF_COMPILED: Final[re.Pattern[str]] = re.compile(RE_WTRL_ANGLE_WTRL_REF)
 
 #RE_SUSPICIOUS_MARKUP_BACKTICK: Final[str] = rf"\|[a-zA-Z0-9_]+\|`"
