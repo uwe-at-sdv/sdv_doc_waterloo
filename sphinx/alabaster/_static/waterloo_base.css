@@ -212,14 +212,6 @@ span.wtrl_ref_unresolved
 
 	background-color:inherit;
 	}
-.wtrl_tag:before
-	{
-	content:"<";
-	}
-.wtrl_tag:after
-	{
-	content:">";
-	}
 .wtrl_term
 	{
 	font-family:inherit;
