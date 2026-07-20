@@ -1,0 +1,43 @@
+name: Publish to PyPI
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+  release:
+    types: [ published ]
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  publish:
+    name: Build and publish sdv-doc-waterloo
+    runs-on: ubuntu-latest
+    environment: env_pypi
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.14"
+
+      - name: Install build tooling
+        run: python -m pip install --upgrade build
+
+      - name: Render PyPI README
+        run: bash templates/instantiate_readme.sh PYPI
+
+      - name: Build package
+        run: |
+          rm -rf build dist src/*.egg-info
+          python -m build
+
+      - name: Publish package to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          skip-existing: true
