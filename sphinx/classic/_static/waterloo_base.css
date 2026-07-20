@@ -2,7 +2,7 @@
 	padding: 7px 30px;
 	}
 
-/*===== Status messages for push and pop =====================*/
+/*----- Status messages for push and pop ---------------------*/
 
 
 /*----- Signatures -------------------------------------------*/
@@ -25,28 +25,31 @@ div.wtrl-signature-param {
 
 /* We don't change color since it carries semantics like
    "module:, "class", or "function". */
-a.wtrl_module:visited
-	{
+a.wtrl_module:visited {
 	color: var(--sdv-class-color);
 	}
-a.wtrl_class:visited
-	{
+a.wtrl_class:visited {
 	color: var(--sdv-class-color);
 	}
-a.wtrl_func:visited
-	{
+a.wtrl_func:visited {
 	color: var(--sdv-func-color);
 	}
-a.wtrl_type:visited
-	{
+a.wtrl_type:visited {
 	color: var(--sdv-type-color);
 	}
-a.wtrl_var:visited
-	{
+a.wtrl_var:visited {
 	color: var(--sdv-var-color);
 	}
 
-/*===== Roles ================================================*/
+/*----- Broken links -----------------------------------------*/
+
+span.wtrl_ref_unresolved
+	{
+	color: #f30;
+	font-weight: bold;
+	}
+
+/*----- Roles ------------------------------------------------*/
 
 .wtrl_attr
 	{
@@ -272,44 +275,10 @@ a.wtrl_var:visited
 	opacity:0.85;
 	}
 
-/* 4th and deeper nested bullet lists use an open square marker. */
-/* leave to theme
-.wtrl-section ul {
-	list-style: none;
-	}
-.wtrl-section ul > li::marker {
-	content: "• ";
-	}
-.wtrl-section ul ul {
-	list-style: none;
-	}
-.wtrl-section ul ul > li::marker {
-	content: "◦ ";
-	}
-.wtrl-section ul ul ul {
-	list-style: none;
-	}
-.wtrl-section ul ul ul > li::marker {
-	content: "▪ ";
-	}
-.wtrl-section ul ul ul ul {
-	list-style: none;
-	}
-.wtrl-section ul ul ul ul > li::marker {
-	content: "▫ ";
-	}
-*/
-
 /*===== Docstring boxes for modules, classes, callables ======*/
 
 /*--- The relation of docstring boxes w.r.t each others ------*/
 table.wtrl-box {
-/* leave to theme
-	margin-left:auto;
-	margin-right:auto;
-	margin-top:0.5em;
-	margin-bottom:1em;
-*/
 /* Here we interfer a little. Docstring boxes are not quite
    like "normal" tables. We need to create a more technical
    look, like a data-sheet. It does not need to be 100%, but
@@ -317,141 +286,61 @@ table.wtrl-box {
 	width:100%;
 	}
 
-/* leave to theme
-table.wtrl-box p {
-	margin: 0;
-	}
-
-table.wtrl-box p + p {
-	margin-top: 0.5lh;
-	}
-
-table.wtrl-box p.wtrl-freeform-paragraph-content {
-	margin-top: 0lh;
-	}
-*/
-
 /*----- Docstring box interior -------------------------------*/
 
-/* leave to theme
-table.wtrl-box
-	{
-	font-family:sans-serif;
-/ * These seem to be necessary in order to be compatible to both,
-   classic and alabaster. * /
-	font-size: 12pt;
-	line-height: 140%;
-
-	border: 0px;
-	padding: 0px;
-	border-spacing:2px;
-	border-collapse:separate;
-	box-shadow: 0px 0px 0px;
-	}
-*/
-
-/* General properties of table cells (head and body) */
-
-table.wtrl-box td, table.wtrl-box th {
-/* leave to theme
-	border: 0px;;
-*/
+table.wtrl-box td {
 	vertical-align: top;
 	}
 
-/* leave to theme
-table.wtrl-box td .pre, table.wtrl-box th .pre {
-	background-color:inherit;
+table.wtrl-box th {
+	vertical-align: bottom;
 	}
-*/
 
-/*..... Table head ...........................................*/
-
-/* leave to theme
-table.wtrl-box > thead > tr > th
-	{
-	font-weight:bold;
-	background-color:#dea;
-	padding-left:10px;
-	padding-right:10px;
-	}
-*/
-
-table.wtrl-box > thead > tr > th p.wtrl-obj-kind {
+table.wtrl-box > thead > tr > th .wtrl-obj-kind {
 	font-weight:normal;
-	color: var(--color-foreground-primary);
 	}
 
-table.wtrl-box > thead > tr > th p.wtrl-obj-qid
-	{
-	font-family:monospace;
-	}
-table.wtrl-box > thead.wtrl-box-head-module > tr > th p.wtrl-obj-qid
-	{
+table.wtrl-box > thead.wtrl-box-head-module > tr > th .wtrl-obj-kind {
 	color:var(--sdv-mod-color);
 	}
-table.wtrl-box > thead.wtrl-box-head-class > tr > th p.wtrl-obj-qid
-	{
+
+table.wtrl-box > thead.wtrl-box-head-class > tr > th .wtrl-obj-kind {
 	color:var(--sdv-class-color);
 	}
-table.wtrl-box > thead.wtrl-box-head-function > tr > th p.wtrl-obj-qid
-	{
-	color:var(--sdv-func-color);
-	}
-table.wtrl-box > thead.wtrl-box-head-method > tr > th p.wtrl-obj-qid
-	{
-	color:var(--sdv-func-color);
-	}
-table.wtrl-box > thead.wtrl-box-head-inherited_method > tr > th p.wtrl-obj-qid
-	{
+
+table.wtrl-box > thead.wtrl-box-head-function > tr > th .wtrl-obj-kind {
 	color:var(--sdv-func-color);
 	}
 
-/* Coloured background depending on object "kind".
-   modules: green
-   classes: red
-   callables: blue
-   */
-
-table.wtrl-box > thead.wtrl-box-head-module > tr > th {
-	color: #335522;
-	}
-table.wtrl-box > thead.wtrl-box-head-class > tr > th {
-	color: #885555;
-	}
-table.wtrl-box > thead.wtrl-box-head-method > tr > th {
-	color: #7080d3;
-	}
-table.wtrl-box > thead.wtrl-box-head-function > tr > th {
-	color: #7080d3;
-	}
-table.wtrl-box > thead.wtrl-box-head-inherited_method > tr > th {
-	color: #90a0d3;
+table.wtrl-box > thead.wtrl-box-head-method > tr > th .wtrl-obj-kind {
+	color:var(--sdv-func-color);
 	}
 
-/*..... Table body ...........................................*/
+table.wtrl-box > thead.wtrl-box-head-inherited_method > tr > th .wtrl-obj-kind {
+	font-weight:normal;
+	color:var(--sdv-func-color);
+	}
 
-/* leave to theme
-table.wtrl-box > tbody > tr:nth-child(even)
-	{
-	padding-left:10px;
-	padding-right:10px;
-	background-color:#e6e6e6;
+table.wtrl-box > thead > tr > th p.wtrl-obj-qid {
+	font-family:monospace;
+	font-weight:bold;
 	}
-table.wtrl-box > tbody > tr:nth-child(odd)
-	{
-	background-color:#eeeeee;
-	}
-*/
 
-/* leave to theme
-table.wtrl-box > tbody > tr > td
-	{
-	padding-left:10px;
-	padding-right:10px;
-	vertical-align:top;
+table.wtrl-box > thead.wtrl-box-head-module > tr > th p.wtrl-obj-qid {
+	color:var(--sdv-mod-color);
 	}
-*/
+table.wtrl-box > thead.wtrl-box-head-class > tr > th p.wtrl-obj-qid {
+	color:var(--sdv-class-color);
+	}
+table.wtrl-box > thead.wtrl-box-head-function > tr > th p.wtrl-obj-qid {
+	color:var(--sdv-func-color);
+	}
+table.wtrl-box > thead.wtrl-box-head-method > tr > th p.wtrl-obj-qid {
+	color:var(--sdv-func-color);
+	}
+table.wtrl-box > thead.wtrl-box-head-inherited_method > tr > th p.wtrl-obj-qid {
+	color:var(--sdv-func-color);
+	}
 
 /* Prevent docstring boxes from expanding horizontally due to long pre/code
    elements (e.g. long Literal["..."] type annotations).

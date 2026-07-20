@@ -10,7 +10,7 @@
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=7bdb33bb" />
     <link rel="stylesheet" type="text/css" href="_static/common_styles.css?v=0f4247c0" />
-    <link rel="stylesheet" type="text/css" href="_static/waterloo_base.css?v=edd27acf" />
+    <link rel="stylesheet" type="text/css" href="_static/waterloo_base.css?v=9c9de062" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=8dab3a3b" />
     
     
@@ -252,7 +252,7 @@
 </tr>
 </tbody>
 <thead class="wtrl-box-head-module">
-<tr class="row-odd"><th class="head"><p class="wtrl-obj-kind">«Module»</p></th>
+<tr class="row-odd"><th class="head"><span class="wtrl-obj-kind">«Module»</span></th>
 <th class="head"><p class="wtrl-obj-qid">mymodule</p></th>
 </tr>
 </thead>
@@ -279,7 +279,7 @@
 </tr>
 </tbody>
 <thead class="wtrl-box-head-class">
-<tr class="row-odd"><th class="head"><p class="wtrl-obj-kind">«Class»</p></th>
+<tr class="row-odd"><th class="head"><span class="wtrl-obj-kind">«Class»</span></th>
 <th class="head"><p class="wtrl-obj-qid">A</p></th>
 </tr>
 </thead>
@@ -323,7 +323,7 @@
 </tr>
 </tbody>
 <thead class="wtrl-box-head-method">
-<tr class="row-odd"><th class="head"><p class="wtrl-obj-kind">«Method»</p></th>
+<tr class="row-odd"><th class="head"><span class="wtrl-obj-kind">«Method»</span></th>
 <th class="head"><p class="wtrl-obj-qid">A.spam</p></th>
 </tr>
 </thead>
@@ -353,7 +353,7 @@
 </tr>
 </tbody>
 <thead class="wtrl-box-head-class">
-<tr class="row-even"><th class="head"><p class="wtrl-obj-kind">«Class»</p></th>
+<tr class="row-even"><th class="head"><span class="wtrl-obj-kind">«Class»</span></th>
 <th class="head"><p class="wtrl-obj-qid">X</p></th>
 </tr>
 </thead>
@@ -420,7 +420,7 @@
 <p class="wtrl-freeform-paragraph-content">Regular expression for matching Waterloo backtick markup with roles. Undocumented: RE_WTRL_MARKUP_BACKTICK_COMPILED, the precompiled version for performance.</p>
 <p><a class="wtrl_var reference internal" href="#wtrl-obj-47:^\s*([^&lt;&gt;`]+?)\s*&lt;\s*(https?://[^&gt;\s]+)\s*&gt;\s*$" title="^\s*([^&lt;&gt;`]+?)\s*&lt;\s*(https?://[^&gt;\s]+)\s*&gt;\s*$"><span>RE_WTRL_ANGLE_HTTPS_REF</span></a></p>
 <p class="wtrl-freeform-paragraph-content">Regular expression for matching Waterloo angle bracket HTTPS references. Undocumented: RE_WTRL_ANGLE_HTTPS_REF_COMPILED, the precompiled version for performance. References consist of two parts: clear text and &lt;link&gt;, optionally separated by whitespace.</p>
-<p><a class="wtrl_var reference internal" href="#wtrl-obj-45:^\s*([^&lt;&gt;`]+?)\s*&lt;\s*wtrl://([^&gt;\s]+)\s*&gt;\s*$" title="^\s*([^&lt;&gt;`]+?)\s*&lt;\s*wtrl://([^&gt;\s]+)\s*&gt;\s*$"><span>RE_WTRL_ANGLE_WTRL_REF</span></a></p>
+<p><a class="wtrl_var reference internal" href="#wtrl-obj-45:^\s*([^&lt;&gt;`]+?)\s*&lt;\s*(wtrl://[^&gt;\s]+)\s*&gt;\s*$" title="^\s*([^&lt;&gt;`]+?)\s*&lt;\s*(wtrl://[^&gt;\s]+)\s*&gt;\s*$"><span>RE_WTRL_ANGLE_WTRL_REF</span></a></p>
 <p class="wtrl-freeform-paragraph-content">Regular expression for matching Waterloo angle bracket wtrl references. Undocumented: RE_WTRL_ANGLE_WTRL_REF_COMPILED, the precompiled version for performance. References consist of two parts: clear text and &lt;link&gt;, optionally separated by whitespace.</p>
 <p><a class="wtrl_var reference internal" href="#wtrl-obj-26:^wtrl-[a-zA-Z\-_]*-[0-9+]\-7:[0-9+]\-7:[0-9+]\-7:schema\-5:json$" title="^wtrl-[a-zA-Z\-_]*-[0-9+]\.[0-9+]\.[0-9+]\.schema\.json$"><span>RE_WTRL_JSON_SCHEMA_NAME</span></a></p>
 <p class="wtrl-freeform-paragraph-content">Regular expression for matching Waterloo JSON Schema filenames. Undocumented: RE_WTRL_JSON_SCHEMA_NAME_COMPILED, the precompiled version for performance.</p>
@@ -488,7 +488,7 @@
 </tr>
 </tbody>
 <thead class="wtrl-box-head-module">
-<tr class="row-even"><th class="head"><p class="wtrl-obj-kind">«Module»</p></th>
+<tr class="row-even"><th class="head"><span class="wtrl-obj-kind">«Module»</span></th>
 <th class="head"><p class="wtrl-obj-qid">sdv.doc.waterloo.docitem_helper</p></th>
 </tr>
 </thead>
@@ -578,7 +578,7 @@
 </tr>
 </tbody>
 <thead class="wtrl-box-head-class">
-<tr class="row-even"><th class="head"><p class="wtrl-obj-kind">«Class»</p></th>
+<tr class="row-even"><th class="head"><span class="wtrl-obj-kind">«Class»</span></th>
 <th class="head"><p class="wtrl-obj-qid">tracer</p></th>
 </tr>
 </thead>
@@ -625,7 +625,7 @@
 <p class="wtrl-freeform-paragraph-content">Specify the WTRL Tracer JSON Schema version to declare in the output. Defaults to the current version if not provided. This does not affect the structure of the output, which always follows the current schema. Including the schema version allows consumers to validate against the correct schema and maintain compatibility as the schema evolves.<ul class="simple">
 <li><p><span class="wtrl_norm">Must</span> be a string in the format <code class="wtrl_lit docutils literal notranslate"><span class="pre">X.Y.Z</span></code> where X, Y, and Z are non-negative integers.</p></li>
 <li><p><span class="wtrl_norm">Must</span> default to the current schema version if not provided.</p></li>
-<li><p><span class="wtrl_norm">Must</span> be included in the output under the <cite>__WTRL_VERSION__</cite> metadata section.</p></li>
+<li><p><span class="wtrl_norm">Must</span> be included in the output under the `__WTRL_VERSION__` metadata section.</p></li>
 <li><p><span class="wtrl_norm">Must not</span> affect the actual structure of the output, which always follows the current schema.</p></li>
 </ul>
 </p>
@@ -635,9 +635,9 @@
 </ul>
 </p>
 <p><code class="wtrl_var docutils literal notranslate"><span class="pre">id_prefix</span></code></p>
-<p class="wtrl-freeform-paragraph-content">Optionally include a prefix for the <cite>$id</cite> field in the output JSON.<ul class="simple">
+<p class="wtrl-freeform-paragraph-content">Optionally include a prefix for the `$id` field in the output JSON.<ul class="simple">
 <li><p><span class="wtrl_norm">Must</span> be a string if provided.</p></li>
-<li><p><span class="wtrl_norm">May</span> be omitted, in which case the <cite>$id</cite> field will not include a prefix.</p></li>
+<li><p><span class="wtrl_norm">May</span> be omitted, in which case the `$id` field will not include a prefix.</p></li>
 </ul>
 </p>
 <p><code class="wtrl_var docutils literal notranslate"><span class="pre">include_debug</span></code></p>
@@ -645,14 +645,14 @@
 </td>
 </tr>
 <tr class="wtrl-section row-odd"><td><p><span class="wtrl_label">Returns</span></p></td>
-<td><p>A JSON-serializable <code class="wtrl_type docutils literal notranslate"><span class="pre">dict</span></code> containing the tracer’s data structured according to the WTRL Tracer JSON Schema, including entries up to the specified severity level and metadata about the schema and optionally the Waterloo version. The return value <span class="wtrl_norm">must</span> conform to JSON Schema <code class="file docutils literal notranslate"><span class="pre">wtrl-tracer-json-X.Y.Z.schema.json</span></code> where X.Y.Z is the declared schema version.</p></td>
+<td><p>A JSON-serializable <code class="wtrl_type docutils literal notranslate"><span class="pre">dict</span></code> containing the tracer’s data structured according to the WTRL Tracer JSON Schema, including entries up to the specified severity level and metadata about the schema and optionally the Waterloo version. The return value <span class="wtrl_norm">must</span> conform to JSON Schema :file:`wtrl-tracer-json-X.Y.Z.schema.json` where X.Y.Z is the declared schema version.</p></td>
 </tr>
 <tr class="wtrl-section row-even"><td><p><span class="wtrl_label">Raises</span></p></td>
 <td><code class="wtrl_value docutils literal notranslate"><span class="pre">&lt;empty&gt;</span></code></td>
 </tr>
 </tbody>
 <thead class="wtrl-box-head-method">
-<tr class="row-odd"><th class="head"><p class="wtrl-obj-kind">«Method»</p></th>
+<tr class="row-odd"><th class="head"><span class="wtrl-obj-kind">«Method»</span></th>
 <th class="head"><p class="wtrl-obj-qid">tracer.build_json</p></th>
 </tr>
 </thead>

@@ -704,22 +704,22 @@ table.wtrl-box tbody tr td > p.wtrl-dfn-content {
 
 table > thead.wtrl-box-head-module > tr > th {
 	background-color: #eff5ef;
-	vertical-align:middle;
+	vertical-align:bottom;
 	}
 table > thead.wtrl-box-head-class > tr > th {
 	background-color: #f5efef;
-	vertical-align:middle;
+	vertical-align:bottom;
 	}
 table > thead.wtrl-box-head-method > tr > th {
 	background-color: #efeff5;
-	vertical-align:middle;
+	vertical-align:bottom;
 	}
 table > thead.wtrl-box-head-function > tr > th {
 	background-color: #efeff5;
-	vertical-align:middle;
+	vertical-align:bottom;
 	}
 table > thead.wtrl-box-head-inherited_method > tr > th {
 	background-color: #efeff5;
-	vertical-align:middle;
+	vertical-align:bottom;
 	}
 
