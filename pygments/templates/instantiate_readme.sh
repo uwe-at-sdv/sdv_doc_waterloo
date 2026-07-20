@@ -4,19 +4,7 @@ set -euo pipefail
 script_dir=$(cd "$(dirname "$0")" && pwd)
 repo_dir=$(cd "${script_dir}/.." && pwd)
 target=${1:-GITHUB}
-version=$(
-python3 - "${repo_dir}" <<'PY'
-from pathlib import Path
-import re
-import sys
-
-lexer = Path(sys.argv[1]) / "python_waterloo_lexer.py"
-match = re.search(r'^__version__\s*=\s*"([^"]+)"', lexer.read_text(), re.M)
-if not match:
-	raise SystemExit("Could not determine python-waterloo-lexer version.")
-print(match.group(1))
-PY
-)
+version=$(tr -d '[:space:]' < "${repo_dir}/VERSION")
 
 case "${target}" in
 	GITHUB)

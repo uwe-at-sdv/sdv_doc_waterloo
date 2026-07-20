@@ -32,6 +32,8 @@ import sys,re
 import ast
 import textwrap
 import inspect
+from pathlib import Path
+from importlib import metadata as importlib_metadata
 from typing import Any, Iterable, Iterator
 
 from pygments.lexer import Lexer
@@ -39,9 +41,18 @@ from pygments.lexers.python import PythonLexer
 from pygments.token import Error, Generic, Keyword, Name, String, Literal, Number, Operator
 
 
-#----- Changelog ----------------------------------------------#
+#----- Version ------------------------------------------------#
 
-__version__ = "0.6.1"
+def _read_version() -> str:
+	version_path = Path(__file__).resolve().with_name("VERSION")
+	if version_path.exists():
+		return version_path.read_text(encoding="utf-8").strip()
+	try:
+		return importlib_metadata.version("python-waterloo-lexer")
+	except importlib_metadata.PackageNotFoundError:
+		return "0.0.0"
+
+__version__ = _read_version()
 
 #----- Constants ----------------------------------------------#
 RE_SECTION = re.compile(
