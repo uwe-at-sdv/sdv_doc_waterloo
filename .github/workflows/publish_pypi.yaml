@@ -1,0 +1,47 @@
+name: Publish Pygments lexer to PyPI
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ ide-plugins ]
+  release:
+    types: [ published ]
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  publish:
+    name: Build and publish python-waterloo-lexer
+    runs-on: ubuntu-latest
+    environment: env_pypi
+    defaults:
+      run:
+        working-directory: pygments
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.14"
+
+      - name: Install build tooling
+        run: python -m pip install --upgrade build
+
+      - name: Render PyPI README
+        run: bash templates/instantiate_readme.sh PYPI
+
+      - name: Build package
+        run: |
+          rm -rf build dist *.egg-info
+          python -m build
+
+      - name: Publish package to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          packages-dir: pygments/dist
+          skip-existing: true
