@@ -1,13 +1,17 @@
 #!/usr/bin/env python3
-"""Interpreter fuer die Snippet-Sprache (siehe snippets_syntax.json).
+"""Interpreter fuer die Snippet-Sprache (siehe snippets_syntax.txt).
+
+# Version: 1.2.0
+# - 1.2.0 [2026-07-21]	Function write returns content.
+# - 1.1.0 [2026-07-21]	Function lit for literals.
+# - 1.0.0 [2026-07-21]	initial
 
 Ein Snippet-Dokument ist gueltiges JSON. Jeder Knoten ist entweder
 ein String-Literal oder ein Dict mit genau einem $-Schluessel (= Funktion).
-Auswertung ist ein Tree-Walk; jeder Knoten evaluiert zu einem String,
-ausser $write (Seiteneffekt, liefert None).
+Auswertung ist ein Tree-Walk; jeder Knoten evaluiert zu einem String.
 
 Aufruf:
-    python snippets.py <snippet.json> [--option wert ...]
+    python sdv_snippets.py <snippet.json> [--option wert ...]
 """
 from __future__ import annotations
 
@@ -21,7 +25,6 @@ class Interp:
         self.opts = opts
         self.basedir = pathlib.Path(basedir)
 
-    # -- Kern -------------------------------------------------------------
     def eval(self, node):
         if isinstance(node, str):
             return node
@@ -42,7 +45,6 @@ class Interp:
 
     @staticmethod
     def _subject(payload: dict) -> dict:
-        """Der einzelne $-Eintrag im Payload ist das positionale Subjekt."""
         key = Interp._fn_key(payload)
         return {key: payload[key]}
 
@@ -50,16 +52,13 @@ class Interp:
         p = pathlib.Path(path)
         return p if p.is_absolute() else self.basedir / p
 
-    # -- Funktionen -------------------------------------------------------
     def fn_read(self, a):
-        # Abschluss-Newlines strippen: der Datei-End-Newline ist POSIX-Konvention,
-        # kein Inhalt, der an der Splice-Stelle eingefuegt werden soll.
         return self._resolve(self.eval(a["path"])).read_text().rstrip("\n")
 
     def fn_write(self, a):
-        # Genau ein Abschluss-Newline (wie printf "%s\n" im Shell-Skript).
-        self._resolve(self.eval(a["path"])).write_text(self.eval(a["content"]) + "\n")
-        return None
+        content = self.eval(a["content"])
+        self._resolve(self.eval(a["path"])).write_text(content + "\n")
+        return content
 
     def fn_opt(self, a):
         name = self.eval(a["arg"])
@@ -82,9 +81,13 @@ class Interp:
                 s = s.replace(k, self.eval(v))
         return s
 
+    def fn_lit(self, a):
+        if not isinstance(a, str):
+            raise SyntaxError(f"$lit erwartet ein String-Literal: {a!r}")
+        return a
+
 
 def run(doc: dict, opts: dict[str, str], doc_dir: pathlib.Path):
-    """Top-Level = Statement-Liste. $basedir zuerst (setzt Pfad-Wurzel)."""
     interp = Interp(opts, basedir=doc_dir)
     if isinstance(doc, dict) and "$basedir" in doc:
         base = interp.eval(doc["$basedir"])

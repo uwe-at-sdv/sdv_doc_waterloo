@@ -1,0 +1,47 @@
+# Variable, deren Inhalt als Basisverzeichnis fuer relative Pfade interpretiert wird.
+"$basedir":STRING_VALUE
+
+# Erzeuge ein File (truncate) und schreibe content.
+# Gib content zurueck.
+"$write":{
+	"path":STRING_VALUE,
+	"content":STRING_VALUE
+	}
+
+# Lies das File und gib den Inhalt als String zurueck
+"$read":{
+	"path":STRING_VALUE,
+	}
+
+# Gib STRING_LITERAL unveraendert als String zurueck.
+# Nuetzlich, wenn an einer Position syntaktisch ein Funktionsaufruf
+# gebraucht wird, z.B. als Subjekt von $replace.
+"$lit":STRING_LITERAL
+
+# Suche in STRING_VALUE_1 nach STRING_LITERAL und gib den
+# String zurueck bei dem es durch STRING_VALUE_2 ersetzt ist.
+"$replace":{
+	STRING_VALUE_1,
+	STRING_LITERAL:STRING_VALUE_2
+	}
+
+# Teste STRING_VALUE_0 gegen STRING_LITERAL_1..N
+# und liefere den passenden STRING_VALUE_1..N
+"$switch":{
+	STRING_VALUE_0,
+	STRING_LITERAL_1:STRING_VALUE_1,
+	...
+	STRING_LITERAL_N:STRING_VALUE_N,
+	}
+
+# Werte eine Option aus und gibt den Inhalt als String zurueck.
+"$opt":{
+	"arg":STRING_VALUE
+	}
+
+STRING_VALUE	: STRING_LITERAL
+		| Aufruf einer Funktion, die einen String zurueckgibt.
+		;
+
+STRING_LITERAL	: "[^"]*"
+		;
