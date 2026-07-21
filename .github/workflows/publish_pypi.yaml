@@ -30,7 +30,7 @@ jobs:
         run: python -m pip install --upgrade build
 
       - name: Render PyPI README
-        run: python templates/sdv_snippets.py readme_snippets.json --target pypi
+        run: python templates/sdv_snippets.py templates/readme_snippets.json --target pypi
 
       - name: Build package
         run: |
