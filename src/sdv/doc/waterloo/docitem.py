@@ -253,7 +253,8 @@ from contextlib import contextmanager
 from sdv.doc.waterloo.docitem_docstring import *
 from sdv.doc.waterloo.docitem_validator import *
 
-__version__ = "0.12.8"
+__version__ = "0.12.9"
+# - 0.12.9 [2026-07-21] Packaging details
 # - 0.12.8 [2026-07-20] PyPI packaging now per github workflow.
 # - 0.12.7 [2026-07-19] Bugfix RE_WTRL_ANGLE_WTRL_REF in docitem_helper.py.
 # - 0.12.6 [2026-07-18] Version bump: Sphinx extension moved to branch "sphinx".
