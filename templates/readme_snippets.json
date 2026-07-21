@@ -9,7 +9,7 @@
 				"github":{ "$read":{ "path":"README_GITHUB.template.md" } },
 				"pypi":{ "$read":{ "path":"README_PYPI.template.md" } }
 				},
-			"_README_LOGO_":{
+			"_LOGO_":{
 				"$switch":{
 					"$opt":{ "arg":"--target" },
 					"github":{ "$read":{ "path":"README_LOGO_GITHUB.template.md" } },
@@ -18,27 +18,37 @@
 				},
 			"_BADGES_":{
 				"$replace":{
-					"$read":{ "path":"README_BADGES.template.md" },
-					"_COMMON_":{
-						"$replace":{
-							"$read":{ "path":"README_BADGES_COMMON.template.md" },
-							"_VERSION_":{ "$read":{ "path":"../VERSION" } }
-							}
+					"$switch":{
+						"$opt":{ "arg":"--target" },
+						"github":{ "$read":{ "path":"README_BADGES_GITHUB.template.md" } },
+						"pypi":{ "$read":{ "path":"README_BADGES_PYPI.template.md" } }
 						},
-					"_TARGET_":{
-						"$replace":{
-							"$switch":{
-								"$opt":{ "arg":"--target" },
-								"github":{ "$read":{ "path":"README_BADGES_GITHUB.template.md" } },
-								"pypi":{ "$read":{ "path":"README_BADGES_PYPI.template.md" } }
-								},
-							"_VERSION_":{ "$read":{ "path":"../VERSION" } }
+					"_COMMON_":{
+						"$read":{ "path":"README_BADGES_COMMON.template.md" }
+						}
+					}
+				},
+			"_INSTALL_":{
+				"$switch":{
+					"$opt":{ "arg":"--target" },
+					"github":{ "$read":{ "path":"README_INSTALL_GITHUB.template.md" } },
+					"pypi":{ "$read":{ "path":"README_INSTALL_PYPI.template.md" } }
+					}
+				},
+			"_COMMON_":{
+				"$replace":{
+					"$read":{ "path":"README_COMMON.template.md" },
+					"_MCP_CONFIG_":{
+						"$switch":{
+							"$opt":{ "arg":"--target" },
+							"github":{ "$read":{ "path":"README_MCP_CONFIG_GITHUB.template.md" } },
+							"pypi":{ "$read":{ "path":"README_MCP_CONFIG_PYPI.template.md" } }
 							}
 						}
 					}
 				},
-			"_README_COMMON_":{
-				"$read":{ "path":"README_COMMON.template.md" }
+			"_SITEMAP_":{
+				"$read":{ "path":"README_SITEMAP_GITHUB.template.md" }
 				}
 			}
 		}
