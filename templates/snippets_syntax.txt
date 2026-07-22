@@ -1,7 +1,18 @@
-# Variable, deren Inhalt als Basisverzeichnis fuer relative Pfade interpretiert wird.
+# Grammatik der Snippet-Sprache. Maschinenlesbar: sdv_snippets.schema.json
+# (JSON Schema, draft 2020-12). Ein Dokument darf per "$schema" darauf verweisen.
+
+# Ein Dokument ist ein JSON-Objekt (Statement-Liste). Die optionalen Annotationen
+# "$schema" und "$basedir" werden uebersprungen; alle uebrigen $-Eintraege sind
+# Statements und werden der Reihe nach ausgewertet. Ueblich: "$basedir" + ein "$write".
+#
+# Ein Funktionsaufruf ist ein Objekt mit genau EINEM $-Schluessel (dem Funktionsnamen);
+# sein Wert traegt die benannten Parameter. Jeder Knoten evaluiert zu einem String.
+
+# Variable, deren Inhalt als Basisverzeichnis fuer relative Pfade interpretiert wird
+# (relativ zum Verzeichnis des Dokuments).
 "$basedir":STRING_VALUE
 
-# Erzeuge ein File (truncate) und schreibe content.
+# Erzeuge ein File (truncate), schreibe content plus genau einen Zeilenumbruch.
 # Gib content zurueck.
 "$write":{
 	"path":STRING_VALUE,
@@ -9,29 +20,31 @@
 	}
 
 # Lies das File und gib den Inhalt als String zurueck
+# (abschliessende Zeilenumbrueche werden entfernt).
 "$read":{
-	"path":STRING_VALUE,
+	"path":STRING_VALUE
 	}
 
-# Gib STRING_LITERAL unveraendert als String zurueck.
-# Nuetzlich, wenn an einer Position syntaktisch ein Funktionsaufruf
-# gebraucht wird, z.B. als Subjekt von $replace.
-"$lit":STRING_LITERAL
-
-# Suche in STRING_VALUE_1 nach STRING_LITERAL und gib den
-# String zurueck bei dem es durch STRING_VALUE_2 ersetzt ist.
+# Suche in STRING_VALUE_0 nach STRING_LITERAL_<i> und gib den
+# String zurueck bei dem es durch STRING_VALUE_<i> ersetzt ist.
 "$replace":{
-	STRING_VALUE_1,
-	STRING_LITERAL:STRING_VALUE_2
+	"content":STRING_VALUE_0,
+	"rules":{
+		STRING_LITERAL_1:STRING_VALUE_1,
+		...
+		STRING_LITERAL_N:STRING_VALUE_N,
+		}
 	}
 
 # Teste STRING_VALUE_0 gegen STRING_LITERAL_1..N
 # und liefere den passenden STRING_VALUE_1..N
 "$switch":{
-	STRING_VALUE_0,
-	STRING_LITERAL_1:STRING_VALUE_1,
-	...
-	STRING_LITERAL_N:STRING_VALUE_N,
+	"cond":STRING_VALUE_0,
+	"cases":{
+		STRING_LITERAL_1:STRING_VALUE_1,
+		...
+		STRING_LITERAL_N:STRING_VALUE_N,
+		}
 	}
 
 # Werte eine Option aus und gibt den Inhalt als String zurueck.
@@ -40,7 +53,15 @@
 	}
 
 STRING_VALUE	: STRING_LITERAL
-		| Aufruf einer Funktion, die einen String zurueckgibt.
+		| FUNCTION_CALL
+		;
+
+# Ein String-zurueckgebender Aufruf (Objekt mit genau einem $-Schluessel).
+FUNCTION_CALL	: "$read"    "{" ... "}"
+		| "$write"   "{" ... "}"
+		| "$replace" "{" ... "}"
+		| "$switch"  "{" ... "}"
+		| "$opt"     "{" ... "}"
 		;
 
 STRING_LITERAL	: "[^"]*"
