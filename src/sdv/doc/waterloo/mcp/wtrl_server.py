@@ -1207,6 +1207,7 @@ def load_prompts() -> list[Prompt]:
 			|May| raise if a bundled prompt definition is malformed.
 	Notes:
 		Bundled prompts:
+			- `docstring_sphinx_guidelines`: Best practices for writing Sphinx-compatible Waterloo docstrings.
 			- `draft_docstring`: Draft or refine a Waterloo docstring from a callable signature or an existing object.
 			- `inspect_object`: Inspect one Waterloo object together with its signature, examples, and reverse references.
 			- `inspect_root`: Get a compact structural overview of one Waterloo root before drilling into objects or searches.
@@ -1290,6 +1291,7 @@ def build_app(config: McpConfig) -> FastMCP:
 	Notes:
 		Prompt_registration:
 			The app currently registers the bundled prompts from `sdv.doc.waterloo.mcp.prompts`:
+			- `docstring_sphinx_guidelines`
 			- `draft_docstring`
 			- `inspect_object`
 			- `inspect_root`
