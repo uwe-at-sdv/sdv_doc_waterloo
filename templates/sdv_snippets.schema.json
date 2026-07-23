@@ -1,0 +1,152 @@
+{
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"$id": "https://sci-d-vis.com/schemas/sdv_snippets.schema.json",
+	"title": "SDV Snippet Document",
+	"description": "A snippet document is valid JSON. Every value is a STRING_VALUE: either a string literal or a single-key function call (an object with exactly one $-key). Evaluation is a tree-walk; every node evaluates to a string. The interpreter is sdv_snippets.py; the grammar is snippets_syntax.txt.",
+	"type": "object",
+	"minProperties": 1,
+	"additionalProperties": false,
+	"properties": {
+		"$schema": {
+			"type": "string",
+			"description": "Optional pointer to this schema, for editor tooling. Ignored by the interpreter."
+		},
+		"$basedir": {
+			"$ref": "#/$defs/stringValue",
+			"description": "Base directory for relative paths, resolved relative to the document's own directory. Usually a string literal such as \".\"."
+		},
+		"$read": { "$ref": "#/$defs/readParams" },
+		"$write": { "$ref": "#/$defs/writeParams" },
+		"$replace": { "$ref": "#/$defs/replaceParams" },
+		"$switch": { "$ref": "#/$defs/switchParams" },
+		"$opt": { "$ref": "#/$defs/optParams" }
+	},
+	"$comment": "The root is a statement list: the interpreter iterates its keys, skips $schema and $basedir, and evaluates each remaining {$fn: params} in order. In practice a document declares $basedir and one $write.",
+	"$defs": {
+		"stringValue": {
+			"description": "Either a string literal or a function call that returns a string.",
+			"oneOf": [
+				{ "type": "string" },
+				{ "$ref": "#/$defs/functionCall" }
+			]
+		},
+		"functionCall": {
+			"description": "An object with exactly one $-key naming the function; its value holds the named parameters.",
+			"oneOf": [
+				{ "$ref": "#/$defs/readCall" },
+				{ "$ref": "#/$defs/writeCall" },
+				{ "$ref": "#/$defs/replaceCall" },
+				{ "$ref": "#/$defs/switchCall" },
+				{ "$ref": "#/$defs/optCall" }
+			]
+		},
+		"readCall": {
+			"type": "object",
+			"additionalProperties": false,
+			"required": ["$read"],
+			"properties": { "$read": { "$ref": "#/$defs/readParams" } }
+		},
+		"writeCall": {
+			"type": "object",
+			"additionalProperties": false,
+			"required": ["$write"],
+			"properties": { "$write": { "$ref": "#/$defs/writeParams" } }
+		},
+		"replaceCall": {
+			"type": "object",
+			"additionalProperties": false,
+			"required": ["$replace"],
+			"properties": { "$replace": { "$ref": "#/$defs/replaceParams" } }
+		},
+		"switchCall": {
+			"type": "object",
+			"additionalProperties": false,
+			"required": ["$switch"],
+			"properties": { "$switch": { "$ref": "#/$defs/switchParams" } }
+		},
+		"optCall": {
+			"type": "object",
+			"additionalProperties": false,
+			"required": ["$opt"],
+			"properties": { "$opt": { "$ref": "#/$defs/optParams" } }
+		},
+		"readParams": {
+			"type": "object",
+			"description": "$read: read the file at path and return its contents as a string (trailing newlines stripped).",
+			"additionalProperties": false,
+			"required": ["path"],
+			"properties": {
+				"path": {
+					"$ref": "#/$defs/stringValue",
+					"description": "Path to the file, relative to $basedir unless absolute."
+				}
+			}
+		},
+		"writeParams": {
+			"type": "object",
+			"description": "$write: create (truncate) the file at path, write content followed by one newline, and return content.",
+			"additionalProperties": false,
+			"required": ["path", "content"],
+			"properties": {
+				"path": {
+					"$ref": "#/$defs/stringValue",
+					"description": "Destination path, relative to $basedir unless absolute."
+				},
+				"content": {
+					"$ref": "#/$defs/stringValue",
+					"description": "The string to write."
+				}
+			}
+		},
+		"replaceParams": {
+			"type": "object",
+			"description": "$replace: in content, replace each literal token from rules with its value, applied in order.",
+			"additionalProperties": false,
+			"required": ["content", "rules"],
+			"properties": {
+				"content": {
+					"$ref": "#/$defs/stringValue",
+					"description": "The string to search in."
+				},
+				"rules": {
+					"$ref": "#/$defs/literalMap",
+					"description": "Map of literal token -> replacement string. A token absent from content is a harmless no-op."
+				}
+			}
+		},
+		"switchParams": {
+			"type": "object",
+			"description": "$switch: evaluate cond, then return the value of the case whose literal key equals it. No matching case raises an error.",
+			"additionalProperties": false,
+			"required": ["cond", "cases"],
+			"properties": {
+				"cond": {
+					"$ref": "#/$defs/stringValue",
+					"description": "The string to test against the case labels, e.g. {\"$opt\":{\"arg\":\"--target\"}}."
+				},
+				"cases": {
+					"$ref": "#/$defs/literalMap",
+					"description": "Map of literal label -> string value returned when cond equals that label."
+				}
+			}
+		},
+		"optParams": {
+			"type": "object",
+			"description": "$opt: return the value of the named command-line option (e.g. --target). Unset option raises an error.",
+			"additionalProperties": false,
+			"required": ["arg"],
+			"properties": {
+				"arg": {
+					"$ref": "#/$defs/stringValue",
+					"description": "The option name including leading dashes, e.g. \"--target\"."
+				}
+			}
+		},
+		"literalMap": {
+			"type": "object",
+			"description": "Object mapping string literals to STRING_VALUEs. Keys are matched literally, never evaluated.",
+			"minProperties": 1,
+			"additionalProperties": { "$ref": "#/$defs/stringValue" }
+		}
+	}
+}

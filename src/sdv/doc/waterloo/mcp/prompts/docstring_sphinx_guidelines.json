@@ -1,0 +1,22 @@
+{
+  "name": "docstring_sphinx_guidelines",
+  "title": "Waterloo Docstring Guidelines for Sphinx",
+  "description": "Best practices for writing Sphinx-compatible Waterloo docstrings",
+  "arguments": [
+    {
+      "name": "context",
+      "description": "Optional context about what you're documenting",
+      "required": false
+    }
+  ],
+  "messages": [
+    {
+      "role": "user",
+      "content": "I'm writing a Waterloo docstring that will be processed by Sphinx. $context"
+    },
+    {
+      "role": "assistant",
+      "content": "When generating Waterloo docstrings for code processed by Sphinx:\n\nAvoid pipe-expressions (|...|) except for:\n- Normativity Keywords: |Must|, |Should|, |May|, etc.\n- Defined markup roles (as specified in waterloo.markup)\n\nDo not use pipes for arbitrary symbols (|messages|, |parse|, |Element|, etc.) to prevent Sphinx xref errors when extracting docstrings.\n\nThis ensures correct rendering in both Sphinx documentation and Waterloo tools."
+    }
+  ]
+}
