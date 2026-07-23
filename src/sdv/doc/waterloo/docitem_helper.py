@@ -2376,44 +2376,47 @@ class DocSession:
 	Contract:
 		general:
 			|Must| provide per-run state for validation and parsing operations.
-			|Must| remember already validated objects in order to avoid recursion divergence.
+			|Must| remember already validated objects by object identity in order to avoid recursion divergence.
 			|Must| offer a stable place for future per-run caches and statistics data.
 		constructor:
 			|Must| be default-constructible.
 	Public_types:
 		Seen:
-			Objects already processed in the current run.
+			Objects already processed in the current run, keyed by |func|`id`.
 		Validated:
-			Objects successfully validated in the current run.
+			Objects successfully validated in the current run, keyed by |func|`id`.
 	"""
-	Seen: TypeAlias = dict[object, Any]
-	Validated: TypeAlias = dict[object, Any]
+	Seen: TypeAlias = dict[int, Any]
+	Validated: TypeAlias = dict[int, Any]
 
 	def __init__(self) -> None:
-		self._seen: Dict[object, "docitem_docstring_base"] = {}
-		self._validated: Dict[object, "docitem_docstring_base"] = {}
+		self._seen: Dict[int, "docitem_docstring_base"] = {}
+		self._validated: Dict[int, "docitem_docstring_base"] = {}
 		self._parsed_docstring_cache: Dict[str, DocstringTree] = {}
 
+	def _obj_key(self, obj: object) -> int:
+		return id(obj)
+
 	def has_seen(self, obj: object) -> bool:
-		return obj in self._seen
+		return self._obj_key(obj) in self._seen
 
 	def get_seen(self, obj: object) -> docitem_docstring_base:
-		return self._seen[obj]
+		return self._seen[self._obj_key(obj)]
 
 	def remember(self, obj: object, top: docitem_docstring_base) -> None:
-		self._seen[obj] = top
+		self._seen[self._obj_key(obj)] = top
 
 	def forget(self, obj: object) -> None:
-		self._seen.pop(obj, None)
+		self._seen.pop(self._obj_key(obj), None)
 
 	def has_validated(self, obj: object) -> bool:
-		return obj in self._validated
+		return self._obj_key(obj) in self._validated
 
 	def get_validated(self, obj: object) -> docitem_docstring_base:
-		return self._validated[obj]
+		return self._validated[self._obj_key(obj)]
 
 	def remember_validated(self, obj: object, top: docitem_docstring_base) -> None:
-		self._validated[obj] = top
+		self._validated[self._obj_key(obj)] = top
 
 	def has_parsed(self, text: str) -> bool:
 		return text in self._parsed_docstring_cache
