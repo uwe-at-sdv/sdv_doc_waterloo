@@ -31,176 +31,185 @@ code.docutils.literal {
 
 :root
 	{
-	--sdv-plain-color:inherit;
+	--wtrl-plain-color:currentColor;
 
 /* light theme colors */
-	--sdv-attr-color:#077;
-	--sdv-cmd-color:#996600;
-	--sdv-class-color:#770000;
-	--sdv-dfn-color:inherit;
-	--sdv-file-color: #35f;
-	--sdv-key-color:inherit;
-	--sdv-func-color:#3040ff;
-	--sdv-label-color:inherit;
-	--sdv-mod-color:#462;
-	--sdv-norm-color:inherit;
-	--sdv-op-color:inherit;
-	--sdv-opt-color:inherit;
-	--sdv-pkg-color:#252;
-	--sdv-tag-color:#900;
-	--sdv-term-color:inherit;
-	--sdv-type-color:#770000;
-	--sdv-url-color: #35f;;
-	--sdv-value-color:#004400;
-	--sdv-var-color:#a00;
+/* begin-roles */
+	--wtrl-attr-color:#077;
+	--wtrl-class-color:#770000;
+	--wtrl-cmd-color:#996600;
+	--wtrl-dfn-color:currentColor;
+	--wtrl-file-color: #35f;
+	--wtrl-func-color:#3040ff;
+	--wtrl-key-color:currentColor;
+	--wtrl-label-color:currentColor;
+	--wtrl-lit-color:currentColor;
+	--wtrl-mod-color:#462;
+	--wtrl-norm-color:currentColor;
+	--wtrl-op-color:currentColor;
+	--wtrl-opt-color:currentColor;
+	--wtrl-pkg-color:#252;
+	--wtrl-tag-color:#900;
+	--wtrl-term-color:currentColor;
+	--wtrl-type-color:#770000;
+	--wtrl-url-color: #35f;;
+	--wtrl-value-color:#004400;
+	--wtrl-var-color:#a00;
+/* end-roles */
 
 /* font properties */
-	--sdv-plain-font-weight:normal;
-	--sdv-plain-font-style:normal;
+	--wtrl-plain-font-weight:normal;
+	--wtrl-plain-font-style:normal;
 
-	--sdv-attr-font-weight:normal;
-	--sdv-attr-font-style:normal;
+	--wtrl-attr-font-weight:normal;
+	--wtrl-attr-font-style:normal;
 
-	--sdv-cmd-font-weight:normal;
-	--sdv-cmd-font-style:normal;
+	--wtrl-cmd-font-weight:normal;
+	--wtrl-cmd-font-style:normal;
 
-	--sdv-class-font-weight:normal;
-	--sdv-class-font-style:normal;
+	--wtrl-class-font-weight:normal;
+	--wtrl-class-font-style:normal;
 
-	--sdv-dfn-font-weight:normal;
-	--sdv-dfn-font-style:italic;
+	--wtrl-dfn-font-weight:normal;
+	--wtrl-dfn-font-style:italic;
 
-	--sdv-file-font-weight: normal;
-	--sdv-file-font-style: normal;
+	--wtrl-file-font-weight: normal;
+	--wtrl-file-font-style: normal;
 
-	--sdv-func-font-weight:normal;
-	--sdv-func-font-style:normal;
+	--wtrl-func-font-weight:normal;
+	--wtrl-func-font-style:normal;
 
-	--sdv-key-font-weight:normal;
-	--sdv-key-font-style:normal;
+	--wtrl-key-font-weight:normal;
+	--wtrl-key-font-style:normal;
 
-	--sdv-label-font-weight:normal;
-	--sdv-label-font-style:oblique;
+	--wtrl-label-font-weight:normal;
+	--wtrl-label-font-style:oblique;
 
-	--sdv-mod-font-weight:normal;
-	--sdv-mod-font-style:normal;
+	--wtrl-lit-font-weight:normal;
+	--wtrl-lit-font-style:normal;
 
-	--sdv-norm-font-weight:normal;
-	--sdv-norm-font-style:italic;
+	--wtrl-mod-font-weight:normal;
+	--wtrl-mod-font-style:normal;
 
-	--sdv-op-font-weight:bold;
-	--sdv-op-font-style:normal;
+	--wtrl-norm-font-weight:normal;
+	--wtrl-norm-font-style:italic;
 
-	--sdv-opt-font-weight:bold;
-	--sdv-opt-font-style:normal;
+	--wtrl-op-font-weight:bold;
+	--wtrl-op-font-style:normal;
 
-	--sdv-pkg-font-weight:normal;
-	--sdv-pkg-font-style:normal;
+	--wtrl-opt-font-weight:bold;
+	--wtrl-opt-font-style:normal;
 
-	--sdv-tag-font-weight:normal;
-	--sdv-tag-font-style:normal;
+	--wtrl-pkg-font-weight:normal;
+	--wtrl-pkg-font-style:normal;
 
-	--sdv-term-font-weight:normal;
-	--sdv-term-font-style:italic;
+	--wtrl-tag-font-weight:normal;
+	--wtrl-tag-font-style:normal;
 
-	--sdv-type-font-weight:normal;
-	--sdv-type-font-style:normal;
+	--wtrl-term-font-weight:normal;
+	--wtrl-term-font-style:italic;
 
-	--sdv-url-font-weight: normal;
-	--sdv-url-font-style: normal;
+	--wtrl-type-font-weight:normal;
+	--wtrl-type-font-style:normal;
 
-	--sdv-value-font-weight:normal;
-	--sdv-value-font-style:normal;
+	--wtrl-url-font-weight: normal;
+	--wtrl-url-font-style: normal;
 
-	--sdv-var-font-weight:normal;
-	--sdv-var-font-style:normal;
+	--wtrl-value-font-weight:normal;
+	--wtrl-value-font-style:normal;
+
+	--wtrl-var-font-weight:normal;
+	--wtrl-var-font-style:normal;
 
 /* future-use */
-	--sdv-comment-color:#777;
-	--sdv-comment-font-weight:normal;
-	--sdv-comment-font-style:italic;
+	--wtrl-comment-color:#777;
+	--wtrl-comment-font-weight:normal;
+	--wtrl-comment-font-style:italic;
 
-	--sdv-entity-color:#777;
-	--sdv-entity-font-weight:bold;
-	--sdv-entity-font-style:normal;
+	--wtrl-entity-color:#777;
+	--wtrl-entity-font-weight:bold;
+	--wtrl-entity-font-style:normal;
 	}
 
 :root {
 /* dark theme colors */
-	--sdv-dark-attr-color:#099;
-	--sdv-dark-class-color:#e66;
-	--sdv-dark-cmd-color:#cc8800;
-	--sdv-dark-file-color: #7af;
-	--sdv-dark-func-color:#6090ff;
-	--sdv-dark-key-color:var(--color-foreground-primary);
-	--sdv-dark-label-color:var(--color-foreground-primary);
-	--sdv-dark-lit-color:var(--color-foreground-primary);
-	--sdv-dark-mod-color:#8c4;
-	--sdv-dark-norm-color:var(--color-foreground-primary);
-	--sdv-dark-op-color:var(--color-foreground-primary);
-	--sdv-dark-opt-color:var(--color-foreground-primary);
-	--sdv-dark-pkg-color:#8b8;
-	--sdv-dark-tag-color:#e44;
-	--sdv-dark-term-color:var(--color-foreground-primary);
-	--sdv-dark-type-color:#e66;
-	--sdv-dark-url-color: #7af;
-	--sdv-dark-value-color:#8c4;
-	--sdv-dark-var-color:#f34;
+	--wtrl-dark-foreground-color:var(--color-foreground-primary, currentColor);
 
-	--sdv-dark-comment-color:#777;
-	--sdv-dark-entity-color:#777;
+	--wtrl-dark-attr-color:#099;
+	--wtrl-dark-class-color:#e66;
+	--wtrl-dark-cmd-color:#cc8800;
+	--wtrl-dark-dfn-color:var(--wtrl-dark-foreground-color);
+	--wtrl-dark-file-color: #7af;
+	--wtrl-dark-func-color:#6090ff;
+	--wtrl-dark-key-color:var(--wtrl-dark-foreground-color);
+	--wtrl-dark-label-color:var(--wtrl-dark-foreground-color);
+	--wtrl-dark-lit-color:var(--wtrl-dark-foreground-color);
+	--wtrl-dark-mod-color:#8c4;
+	--wtrl-dark-norm-color:var(--wtrl-dark-foreground-color);
+	--wtrl-dark-op-color:var(--wtrl-dark-foreground-color);
+	--wtrl-dark-opt-color:var(--wtrl-dark-foreground-color);
+	--wtrl-dark-pkg-color:#8b8;
+	--wtrl-dark-tag-color:#e44;
+	--wtrl-dark-term-color:var(--wtrl-dark-foreground-color);
+	--wtrl-dark-type-color:#e66;
+	--wtrl-dark-url-color: #7af;
+	--wtrl-dark-value-color:#8c4;
+	--wtrl-dark-var-color:#f34;
+
+	--wtrl-dark-comment-color:#777;
+	--wtrl-dark-entity-color:#777;
 	}
 
 /* Furo stores the active theme on body, not on :root. */
 body[data-theme="dark"] {
-	--sdv-attr-color:var(--sdv-dark-attr-color);
-	--sdv-class-color:var(--sdv-dark-class-color);
-	--sdv-cmd-color:var(--sdv-dark-cmd-color);
-	--sdv-file-color:var(--sdv-dark-file-color);
-	--sdv-func-color:var(--sdv-dark-func-color);
-	--sdv-key-color:var(--sdv-dark-key-color);
-	--sdv-label-color:var(--sdv-dark-label-color);
-	--sdv-lit-color:var(--sdv-dark-lit-color);
-	--sdv-mod-color:var(--sdv-dark-mod-color);
-	--sdv-norm-color:var(--sdv-dark-norm-color);
-	--sdv-op-color:var(--sdv-dark-op-color);
-	--sdv-opt-color:var(--sdv-dark-opt-color);
-	--sdv-pkg-color:var(--sdv-dark-pkg-color);
-	--sdv-tag-color:var(--sdv-dark-tag-color);
-	--sdv-term-color:var(--sdv-dark-term-color);
-	--sdv-type-color:var(--sdv-dark-type-color);
-	--sdv-url-color:var(--sdv-dark-url-color);
-	--sdv-value-color:var(--sdv-dark-value-color);
-	--sdv-var-color:var(--sdv-dark-var-color);
+	--wtrl-attr-color:var(--wtrl-dark-attr-color);
+	--wtrl-class-color:var(--wtrl-dark-class-color);
+	--wtrl-cmd-color:var(--wtrl-dark-cmd-color);
+	--wtrl-file-color:var(--wtrl-dark-file-color);
+	--wtrl-func-color:var(--wtrl-dark-func-color);
+	--wtrl-key-color:var(--wtrl-dark-key-color);
+	--wtrl-label-color:var(--wtrl-dark-label-color);
+	--wtrl-lit-color:var(--wtrl-dark-lit-color);
+	--wtrl-mod-color:var(--wtrl-dark-mod-color);
+	--wtrl-norm-color:var(--wtrl-dark-norm-color);
+	--wtrl-op-color:var(--wtrl-dark-op-color);
+	--wtrl-opt-color:var(--wtrl-dark-opt-color);
+	--wtrl-pkg-color:var(--wtrl-dark-pkg-color);
+	--wtrl-tag-color:var(--wtrl-dark-tag-color);
+	--wtrl-term-color:var(--wtrl-dark-term-color);
+	--wtrl-type-color:var(--wtrl-dark-type-color);
+	--wtrl-url-color:var(--wtrl-dark-url-color);
+	--wtrl-value-color:var(--wtrl-dark-value-color);
+	--wtrl-var-color:var(--wtrl-dark-var-color);
 
-	--sdv-comment-color:var(--sdv-dark-comment-color);
-	--sdv-entity-color:var(--sdv-dark-wntity-color);
+	--wtrl-comment-color:var(--wtrl-dark-comment-color);
+	--wtrl-entity-color:var(--wtrl-dark-entity-color);
 	}
 
 @media (prefers-color-scheme: dark) {
 	:root,
 	body[data-theme="auto"] {
-		--sdv-attr-color:var(--sdv-dark-attr-color);
-		--sdv-class-color:var(--sdv-dark-class-color);
-		--sdv-cmd-color:var(--sdv-dark-cmd-color);
-		--sdv-file-color:var(--sdv-dark-file-color);
-		--sdv-func-color:var(--sdv-dark-func-color);
-		--sdv-key-color:var(--sdv-dark-key-color);
-		--sdv-label-color:var(--sdv-dark-label-color);
-		--sdv-lit-color:var(--sdv-dark-lit-color);
-		--sdv-mod-color:var(--sdv-dark-mod-color);
-		--sdv-norm-color:var(--sdv-dark-norm-color);
-		--sdv-op-color:var(--sdv-dark-op-color);
-		--sdv-opt-color:var(--sdv-dark-opt-color);
-		--sdv-pkg-color:var(--sdv-dark-pkg-color);
-		--sdv-tag-color:var(--sdv-dark-tag-color);
-		--sdv-term-color:var(--sdv-dark-term-color);
-		--sdv-type-color:var(--sdv-dark-type-color);
-		--sdv-url-color:var(--sdv-dark-url-color);
-		--sdv-value-color:var(--sdv-dark-value-color);
-		--sdv-var-color:var(--sdv-dark-var-color);
+		--wtrl-attr-color:var(--wtrl-dark-attr-color);
+		--wtrl-class-color:var(--wtrl-dark-class-color);
+		--wtrl-cmd-color:var(--wtrl-dark-cmd-color);
+		--wtrl-file-color:var(--wtrl-dark-file-color);
+		--wtrl-func-color:var(--wtrl-dark-func-color);
+		--wtrl-key-color:var(--wtrl-dark-key-color);
+		--wtrl-label-color:var(--wtrl-dark-label-color);
+		--wtrl-lit-color:var(--wtrl-dark-lit-color);
+		--wtrl-mod-color:var(--wtrl-dark-mod-color);
+		--wtrl-norm-color:var(--wtrl-dark-norm-color);
+		--wtrl-op-color:var(--wtrl-dark-op-color);
+		--wtrl-opt-color:var(--wtrl-dark-opt-color);
+		--wtrl-pkg-color:var(--wtrl-dark-pkg-color);
+		--wtrl-tag-color:var(--wtrl-dark-tag-color);
+		--wtrl-term-color:var(--wtrl-dark-term-color);
+		--wtrl-type-color:var(--wtrl-dark-type-color);
+		--wtrl-url-color:var(--wtrl-dark-url-color);
+		--wtrl-value-color:var(--wtrl-dark-value-color);
+		--wtrl-var-color:var(--wtrl-dark-var-color);
 
-		--sdv-comment-color:var(--sdv-dark-comment-color);
-		--sdv-entity-color:var(--sdv-dark-entity-color);
+		--wtrl-comment-color:var(--wtrl-dark-comment-color);
+		--wtrl-entity-color:var(--wtrl-dark-entity-color);
 		}
 	}

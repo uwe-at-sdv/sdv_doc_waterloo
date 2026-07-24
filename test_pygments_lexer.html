@@ -5,23 +5,23 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>14. Test: Inline markup &#8212; Waterloo Docstrings 0 documentation</title>
+    <title>15. Test: Inline markup &#8212; Waterloo Docstrings 0 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5f771d8e" />
-    <link rel="stylesheet" type="text/css" href="_static/basic.css?v=686e5160" />
+    <link rel="stylesheet" type="text/css" href="_static/basic.css?v=b08954a9" />
     <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=27fed22d" />
-    <link rel="stylesheet" type="text/css" href="_static/common_styles.css?v=0f4247c0" />
-    <link rel="stylesheet" type="text/css" href="_static/waterloo_base.css?v=edd27acf" />
-    <link rel="stylesheet" type="text/css" href="_static/waterloo_alabaster.css?v=637a6a24" />
+    <link rel="stylesheet" type="text/css" href="_static/common_styles.css?v=b66e391a" />
+    <link rel="stylesheet" type="text/css" href="_static/waterloo_base.css?v=512472bd" />
+    <link rel="stylesheet" type="text/css" href="_static/waterloo_alabaster.css?v=5a8d1525" />
     <link rel="stylesheet" type="text/css" href="_static/wtrl_doc_custom.css" />
     <script src="_static/documentation_options.js?v=8dde47fa"></script>
-    <script src="_static/doctools.js?v=9bcbadda"></script>
-    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <link rel="canonical" href="https://uwe-at-sdv.github.io/sdv_doc_waterloo/test_pygments_lexer.html" />
     <link rel="icon" href="_static/favicon.ico"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="15. Legal Notes" href="legal.html" />
-    <link rel="prev" title="13. Test: Scopes" href="_test_scope.html" />
+    <link rel="next" title="16. Legal Notes" href="legal.html" />
+    <link rel="prev" title="14. Test: Scopes" href="_test_scope.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
@@ -40,9 +40,9 @@
           <div class="body" role="main">
             
   <section id="test-inline-markup">
-<span id="test-pygments-lexer"></span><h1><span class="section-number">14. </span>Test: Inline markup<a class="headerlink" href="#test-inline-markup" title="Link to this heading">¶</a></h1>
+<span id="test-pygments-lexer"></span><h1><span class="section-number">15. </span>Test: Inline markup<a class="headerlink" href="#test-inline-markup" title="Link to this heading">¶</a></h1>
 <section id="pygments">
-<h2><span class="section-number">14.1. </span>Pygments<a class="headerlink" href="#pygments" title="Link to this heading">¶</a></h2>
+<h2><span class="section-number">15.1. </span>Pygments<a class="headerlink" href="#pygments" title="Link to this heading">¶</a></h2>
 <p>This section is informative.</p>
 <p>In this chapter we exercise the Waterloo-aware Pygments lexer on a compact
 but deliberately varied test file. The example includes ordinary Waterloo
@@ -358,7 +358,7 @@ where the parser should continue to fail cleanly.</p>
 </div>
 </section>
 <section id="sphinx">
-<h2><span class="section-number">14.2. </span>Sphinx<a class="headerlink" href="#sphinx" title="Link to this heading">¶</a></h2>
+<h2><span class="section-number">15.2. </span>Sphinx<a class="headerlink" href="#sphinx" title="Link to this heading">¶</a></h2>
 <p>This section is informative.</p>
 <p>The module docstring intentionally contains a complete list of roles so that
 the Sphinx renderer can be evaluated in the same spirit as the lexer showcase,
@@ -427,7 +427,7 @@ lets us inspect the rendering consistency in a more controlled way.</p>
 <p class="wtrl-freeform-paragraph-content">Regular expression for matching Waterloo backtick markup with roles. Undocumented: RE_WTRL_MARKUP_BACKTICK_COMPILED, the precompiled version for performance.</p>
 <p><a class="wtrl_var reference internal" href="#wtrl-obj-47:^\s*([^&lt;&gt;`]+?)\s*&lt;\s*(https?://[^&gt;\s]+)\s*&gt;\s*$" title="^\s*([^&lt;&gt;`]+?)\s*&lt;\s*(https?://[^&gt;\s]+)\s*&gt;\s*$"><span>RE_WTRL_ANGLE_HTTPS_REF</span></a></p>
 <p class="wtrl-freeform-paragraph-content">Regular expression for matching Waterloo angle bracket HTTPS references. Undocumented: RE_WTRL_ANGLE_HTTPS_REF_COMPILED, the precompiled version for performance. References consist of two parts: clear text and &lt;link&gt;, optionally separated by whitespace.</p>
-<p><a class="wtrl_var reference internal" href="#wtrl-obj-45:^\s*([^&lt;&gt;`]+?)\s*&lt;\s*wtrl://([^&gt;\s]+)\s*&gt;\s*$" title="^\s*([^&lt;&gt;`]+?)\s*&lt;\s*wtrl://([^&gt;\s]+)\s*&gt;\s*$"><span>RE_WTRL_ANGLE_WTRL_REF</span></a></p>
+<p><a class="wtrl_var reference internal" href="#wtrl-obj-45:^\s*([^&lt;&gt;`]+?)\s*&lt;\s*(wtrl://[^&gt;\s]+)\s*&gt;\s*$" title="^\s*([^&lt;&gt;`]+?)\s*&lt;\s*(wtrl://[^&gt;\s]+)\s*&gt;\s*$"><span>RE_WTRL_ANGLE_WTRL_REF</span></a></p>
 <p class="wtrl-freeform-paragraph-content">Regular expression for matching Waterloo angle bracket wtrl references. Undocumented: RE_WTRL_ANGLE_WTRL_REF_COMPILED, the precompiled version for performance. References consist of two parts: clear text and &lt;link&gt;, optionally separated by whitespace.</p>
 <p><a class="wtrl_var reference internal" href="#wtrl-obj-26:^wtrl-[a-zA-Z\-_]*-[0-9+]\-7:[0-9+]\-7:[0-9+]\-7:schema\-5:json$" title="^wtrl-[a-zA-Z\-_]*-[0-9+]\.[0-9+]\.[0-9+]\.schema\.json$"><span>RE_WTRL_JSON_SCHEMA_NAME</span></a></p>
 <p class="wtrl-freeform-paragraph-content">Regular expression for matching Waterloo JSON Schema filenames. Undocumented: RE_WTRL_JSON_SCHEMA_NAME_COMPILED, the precompiled version for performance.</p>
@@ -495,7 +495,7 @@ lets us inspect the rendering consistency in a more controlled way.</p>
 </tr>
 </tbody>
 <thead class="wtrl-box-head-module">
-<tr class="row-even"><th class="head"><p class="wtrl-obj-kind">«Module»</p></th>
+<tr class="row-even"><th class="head"><span class="wtrl-obj-kind">«Module»</span></th>
 <th class="head"><p class="wtrl-obj-qid">sdv.doc.waterloo.docitem_helper</p></th>
 </tr>
 </thead>
@@ -547,22 +547,23 @@ lets us inspect the rendering consistency in a more controlled way.</p>
 <li class="toctree-l1"><a class="reference internal" href="html_output_layer.html">9. The HTML Output Layer</a></li>
 <li class="toctree-l1"><a class="reference internal" href="mcp.html">10. Model Context Protocol</a></li>
 <li class="toctree-l1"><a class="reference internal" href="reference.html">11. Reference - Rendering Showcase</a></li>
-<li class="toctree-l1"><a class="reference internal" href="_test_freeform.html">12. Test: Flow control in freeform sections</a></li>
-<li class="toctree-l1"><a class="reference internal" href="_test_scope.html">13. Test: Scopes</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">14. Test: Inline markup</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#pygments">14.1. Pygments</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#sphinx">14.2. Sphinx</a></li>
+<li class="toctree-l1"><a class="reference internal" href="faq.html">12. Requests for Rationales</a></li>
+<li class="toctree-l1"><a class="reference internal" href="_test_freeform.html">13. Test: Flow control in freeform sections</a></li>
+<li class="toctree-l1"><a class="reference internal" href="_test_scope.html">14. Test: Scopes</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">15. Test: Inline markup</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#pygments">15.1. Pygments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#sphinx">15.2. Sphinx</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="legal.html">15. Legal Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="legal.html">16. Legal Notes</a></li>
 </ul>
 
 <div class="relations">
 <h3>Related Topics</h3>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="_test_scope.html" title="previous chapter"><span class="section-number">13. </span>Test: Scopes</a></li>
-      <li>Next: <a href="legal.html" title="next chapter"><span class="section-number">15. </span>Legal Notes</a></li>
+      <li>Previous: <a href="_test_scope.html" title="previous chapter"><span class="section-number">14. </span>Test: Scopes</a></li>
+      <li>Next: <a href="legal.html" title="next chapter"><span class="section-number">16. </span>Legal Notes</a></li>
   </ul></li>
 </ul>
 </div>
@@ -582,7 +583,7 @@ lets us inspect the rendering consistency in a more controlled way.</p>
       &#169;2026, Uwe.
       
       |
-      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.1.3</a>
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 9.1.0</a>
       &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
       
       |

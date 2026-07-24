@@ -423,11 +423,11 @@ dd {
    or "class".*/
 a.wtrl_func:visited
 	{
-	color: var(--sdv-func-color);
+	color: var(--wtrl-func-color);
 	}
 a.wtrl_type:visited
 	{
-	color: var(--sdv-type-color);
+	color: var(--wtrl-type-color);
 	}
 a.wtrl_var:visited
 	{
@@ -440,9 +440,9 @@ a.wtrl_var:visited
 	{
 	font-family:"Courier New",courier,monospace;
 
-	color:var(--sdv-attr-color);
-	font-weight:var(--sdv-attr-font-weight);
-	font-style:var(--sdv-attr-font-style);
+	color:var(--wtrl-attr-color);
+	font-weight:var(--wtrl-attr-font-weight);
+	font-style:var(--wtrl-attr-font-style);
 	font-size: 90%;
 
 	background-color:inherit;
@@ -451,9 +451,9 @@ a.wtrl_var:visited
 	{
 	font-family:monospace;
 
-	color:var(--sdv-class-color);
-	font-weight:var(--sdv-class-font-weight);
-	font-style:var(--sdv-class-font-style);
+	color:var(--wtrl-class-color);
+	font-weight:var(--wtrl-class-font-weight);
+	font-style:var(--wtrl-class-font-style);
 	font-size: 90%;
 
 	background-color:inherit;
@@ -462,9 +462,9 @@ a.wtrl_var:visited
 	{
 	font-family:monospace;
 
-	color:var(--sdv-cmd-color);
-	font-weight:var(--sdv-cmd-font-weight);
-	font-style:var(--sdv-cmd-font-style);
+	color:var(--wtrl-cmd-color);
+	font-weight:var(--wtrl-cmd-font-weight);
+	font-style:var(--wtrl-cmd-font-style);
 	font-size: 90%;
 
 	background-color:inherit;
@@ -472,9 +472,9 @@ a.wtrl_var:visited
 .wtrl_dfn
 	{
 	font-family: inherit;
-	color:var(--sdv-dfn-color);
-	font-weight:var(--sdv-dfn-font-weight);
-	font-style:var(--sdv-dfn-font-style);
+	color:var(--wtrl-dfn-color);
+	font-weight:var(--wtrl-dfn-font-weight);
+	font-style:var(--wtrl-dfn-font-style);
 	font-size:100%;
 
 	background-color:inherit;
@@ -482,9 +482,9 @@ a.wtrl_var:visited
 .wtrl_file {
 	font-family:monospace;
 
-	color:var(--sdv-file-color);
-	font-weight:var(--sdv-file-font-weight);
-	font-style:var(--sdv-file-font-style);
+	color:var(--wtrl-file-color);
+	font-weight:var(--wtrl-file-font-weight);
+	font-style:var(--wtrl-file-font-style);
 	font-size: 90%;
 
 	background-color:inherit;
@@ -493,9 +493,9 @@ a.wtrl_var:visited
 	{
 	font-family:monospace;
 
-	color:var(--sdv-func-color);
-	font-weight:var(--sdv-func-font-weight);
-	font-style:var(--sdv-func-font-style);
+	color:var(--wtrl-func-color);
+	font-weight:var(--wtrl-func-font-weight);
+	font-style:var(--wtrl-func-font-style);
 	font-size: 90%;
 
 	background-color:inherit;
@@ -504,9 +504,9 @@ a.wtrl_var:visited
 	{
 	font-family:monospace;
 
-	color:var(--sdv-key-color);
-	font-weight:var(--sdv-key-font-weight);
-	font-style:var(--sdv-key-font-style);
+	color:var(--wtrl-key-color);
+	font-weight:var(--wtrl-key-font-weight);
+	font-style:var(--wtrl-key-font-style);
 	font-size: 90%;
 	border: 1px solid black;
 	border-radius:3px;
@@ -519,9 +519,9 @@ a.wtrl_var:visited
 	{
 	font-family:inherit;
 
-	color:var(--sdv-label-color);
-	font-weight:var(--sdv-label-font-weight);
-	font-style:var(--sdv-label-font-style);
+	color:var(--wtrl-label-color);
+	font-weight:var(--wtrl-label-font-weight);
+	font-style:var(--wtrl-label-font-style);
 	font-size: 100%;
 
 	background-color:inherit;
@@ -540,9 +540,9 @@ a.wtrl_var:visited
 	{
 	font-family:monospace;
 
-	color: var(--sdv-mod-color);
-	font-weight:var(--sdv-mod-font-weight);
-	font-style:var(--sdv-mod-font-style);
+	color: var(--wtrl-mod-color);
+	font-weight:var(--wtrl-mod-font-weight);
+	font-style:var(--wtrl-mod-font-style);
 	font-size: 90%;
 
 	background-color:inherit;
@@ -551,9 +551,9 @@ a.wtrl_var:visited
 	{
 	font-family:inherit;
 
-	color:var(--sdv-norm-color);
-	font-weight:var(--sdv-norm-font-weight);
-	font-style:var(--sdv-norm-font-style);
+	color:var(--wtrl-norm-color);
+	font-weight:var(--wtrl-norm-font-weight);
+	font-style:var(--wtrl-norm-font-style);
 	font-size: 100%;
 
 	background-color:inherit;
@@ -568,9 +568,9 @@ a.wtrl_var:visited
 	{
 	font-family:monospace;
 
-	color:var(--sdv-op-color);
-	font-weight:var(--sdv-op-font-weight);
-	font-style:var(--sdv-op-font-style);
+	color:var(--wtrl-op-color);
+	font-weight:var(--wtrl-op-font-weight);
+	font-style:var(--wtrl-op-font-style);
 
 	background-color:inherit;
 	}
@@ -578,9 +578,9 @@ a.wtrl_var:visited
 	{
 	font-family:monospace;
 
-	color:var(--sdv-opt-color);
-	font-weight:var(--sdv-opt-font-weight);
-	font-style:var(--sdv-opt-font-style);
+	color:var(--wtrl-opt-color);
+	font-weight:var(--wtrl-opt-font-weight);
+	font-style:var(--wtrl-opt-font-style);
 
 	background-color:inherit;
 	}
@@ -588,9 +588,9 @@ a.wtrl_var:visited
 	{
 	font-family:monospace;
 
-	color: var(--sdv-pkg-color);
-	font-weight:var(--sdv-pkg-font-weight);
-	font-style:var(--sdv-pkg-font-style);
+	color: var(--wtrl-pkg-color);
+	font-weight:var(--wtrl-pkg-font-weight);
+	font-style:var(--wtrl-pkg-font-style);
 	font-size: 90%;
 
 	background-color:inherit;
@@ -599,9 +599,9 @@ a.wtrl_var:visited
 	{
 	font-family:monospace;
 
-	color:var(--sdv-tag-color);
-	font-weight:var(--sdv-tag-font-weight);
-	font-style:var(--sdv-tag-font-style);
+	color:var(--wtrl-tag-color);
+	font-weight:var(--wtrl-tag-font-weight);
+	font-style:var(--wtrl-tag-font-style);
 
 	background-color:inherit;
 	}
@@ -616,9 +616,9 @@ a.wtrl_var:visited
 .wtrl_term
 	{
 	font-family:inherit;
-	color:var(--sdv-term-color);
-	font-weight:var(--sdv-term-font-weight);
-	font-style:var(--sdv-term-font-style);
+	color:var(--wtrl-term-color);
+	font-weight:var(--wtrl-term-font-weight);
+	font-style:var(--wtrl-term-font-style);
 	font-size:100%;
 
 	background-color:inherit;
@@ -627,9 +627,9 @@ a.wtrl_var:visited
 	{
 	font-family:monospace;
 
-	color:var(--sdv-type-color);
-	font-weight:var(--sdv-type-font-weight);
-	font-style:var(--sdv-type-font-style);
+	color:var(--wtrl-type-color);
+	font-weight:var(--wtrl-type-font-weight);
+	font-style:var(--wtrl-type-font-style);
 	font-size: 90%;
 
 	background-color:inherit;
@@ -637,9 +637,9 @@ a.wtrl_var:visited
 .wtrl_url {
 	font-family:monospace;
 
-	color:var(--sdv-url-color);
-	font-weight:var(--sdv-url-font-weight);
-	font-style:var(--sdv-url-font-style);
+	color:var(--wtrl-url-color);
+	font-weight:var(--wtrl-url-font-weight);
+	font-style:var(--wtrl-url-font-style);
 	font-size: 90%;
 
 	background-color:inherit;
@@ -647,9 +647,9 @@ a.wtrl_var:visited
 .wtrl_value
 	{
 	font-family:monospace;
-	color:var(--sdv-value-color);
-	font-weight:var(--sdv-value-font-weight);
-	font-style:var(--sdv-value-font-style);
+	color:var(--wtrl-value-color);
+	font-weight:var(--wtrl-value-font-weight);
+	font-style:var(--wtrl-value-font-style);
 	font-size:90%;
 
 	background-color:inherit;
@@ -657,9 +657,9 @@ a.wtrl_var:visited
 .wtrl_var
 	{
 	font-family: monospace;
-	color:var(--sdv-var-color);
-	font-weight:var(--sdv-var-font-weight);
-	font-style:var(--sdv-var-font-style);
+	color:var(--wtrl-var-color);
+	font-weight:var(--wtrl-var-font-weight);
+	font-style:var(--wtrl-var-font-style);
 
 	background-color:inherit;
 	}
@@ -704,22 +704,22 @@ table.wtrl-box tbody tr td > p.wtrl-dfn-content {
 
 table > thead.wtrl-box-head-module > tr > th {
 	background-color: #eff5ef;
-	vertical-align:middle;
+	vertical-align:bottom;
 	}
 table > thead.wtrl-box-head-class > tr > th {
 	background-color: #f5efef;
-	vertical-align:middle;
+	vertical-align:bottom;
 	}
 table > thead.wtrl-box-head-method > tr > th {
 	background-color: #efeff5;
-	vertical-align:middle;
+	vertical-align:bottom;
 	}
 table > thead.wtrl-box-head-function > tr > th {
 	background-color: #efeff5;
-	vertical-align:middle;
+	vertical-align:bottom;
 	}
 table > thead.wtrl-box-head-inherited_method > tr > th {
 	background-color: #efeff5;
-	vertical-align:middle;
+	vertical-align:bottom;
 	}
 

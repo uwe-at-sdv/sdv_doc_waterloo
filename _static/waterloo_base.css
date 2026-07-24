@@ -2,7 +2,7 @@
 	padding: 7px 30px;
 	}
 
-/*===== Status messages for push and pop =====================*/
+/*----- Status messages for push and pop ---------------------*/
 
 
 /*----- Signatures -------------------------------------------*/
@@ -12,49 +12,56 @@ div.wtrl-signature-multiline {
 	padding:0.5em;
 	border-radius:0.3em;
 	}
-.wtrl-section div.wtrl-signature-multiline {
-	border: 0;
-	padding: 0em;
-	}
 div.wtrl-signature-param {
 	font-family: monospace;
 	padding-left: 3em;
+	}
+div.wtrl-signature-ret {
+	font-family: monospace;
+	padding-left: 0em;
+	}
+.wtrl-section div.wtrl-signature-multiline {
+	border: 0;
+	padding: 0em;
 	}
 
 /*----- Visited links ----------------------------------------*/
 
 /* We don't change color since it carries semantics like
    "module:, "class", or "function". */
-a.wtrl_module:visited
-	{
-	color: var(--sdv-class-color);
+a.wtrl_module:visited {
+	color: var(--wtrl-class-color);
 	}
-a.wtrl_class:visited
-	{
-	color: var(--sdv-class-color);
+a.wtrl_class:visited {
+	color: var(--wtrl-class-color);
 	}
-a.wtrl_func:visited
-	{
-	color: var(--sdv-func-color);
+a.wtrl_func:visited {
+	color: var(--wtrl-func-color);
 	}
-a.wtrl_type:visited
-	{
-	color: var(--sdv-type-color);
+a.wtrl_type:visited {
+	color: var(--wtrl-type-color);
 	}
-a.wtrl_var:visited
-	{
-	color: var(--sdv-var-color);
+a.wtrl_var:visited {
+	color: var(--wtrl-var-color);
 	}
 
-/*===== Roles ================================================*/
+/*----- Broken links -----------------------------------------*/
+
+span.wtrl_ref_unresolved
+	{
+	color: #f30;
+	font-weight: bold;
+	}
+
+/*----- Roles ------------------------------------------------*/
 
 .wtrl_attr
 	{
 	font-family:monospace;
 
-	color:var(--sdv-attr-color);
-	font-weight:var(--sdv-attr-font-weight);
-	font-style:var(--sdv-attr-font-style);
+	color:var(--wtrl-attr-color);
+	font-weight:var(--wtrl-attr-font-weight);
+	font-style:var(--wtrl-attr-font-style);
 
 	background-color:inherit;
 	}
@@ -62,9 +69,9 @@ a.wtrl_var:visited
 	{
 	font-family:monospace;
 
-	color:var(--sdv-class-color);
-	font-weight:var(--sdv-class-font-weight);
-	font-style:var(--sdv-class-font-style);
+	color:var(--wtrl-class-color);
+	font-weight:var(--wtrl-class-font-weight);
+	font-style:var(--wtrl-class-font-style);
 
 	background-color:inherit;
 	}
@@ -72,9 +79,9 @@ a.wtrl_var:visited
 	{
 	font-family:monospace;
 
-	color:var(--sdv-cmd-color);
-	font-weight:var(--sdv-cmd-font-weight);
-	font-style:var(--sdv-cmd-font-style);
+	color:var(--wtrl-cmd-color);
+	font-weight:var(--wtrl-cmd-font-weight);
+	font-style:var(--wtrl-cmd-font-style);
 
 	background-color:inherit;
 	}
@@ -82,18 +89,18 @@ a.wtrl_var:visited
 	{
 	font-family: inherit;
 
-	color:var(--sdv-dfn-color);
-	font-weight:var(--sdv-dfn-font-weight);
-	font-style:var(--sdv-dfn-font-style);
+	color:var(--wtrl-dfn-color);
+	font-weight:var(--wtrl-dfn-font-weight);
+	font-style:var(--wtrl-dfn-font-style);
 
 	background-color:inherit;
 	}
 .wtrl_file {
 	font-family:monospace;
 
-	color:var(--sdv-file-color);
-	font-weight:var(--sdv-file-font-weight);
-	font-style:var(--sdv-file-font-style);
+	color:var(--wtrl-file-color);
+	font-weight:var(--wtrl-file-font-weight);
+	font-style:var(--wtrl-file-font-style);
 
 	background-color:inherit;
 	}
@@ -101,9 +108,9 @@ a.wtrl_var:visited
 	{
 	font-family:monospace;
 
-	color:var(--sdv-func-color);
-	font-weight:var(--sdv-func-font-weight);
-	font-style:var(--sdv-func-font-style);
+	color:var(--wtrl-func-color);
+	font-weight:var(--wtrl-func-font-weight);
+	font-style:var(--wtrl-func-font-style);
 
 	background-color:inherit;
 	}
@@ -111,9 +118,9 @@ a.wtrl_var:visited
 	{
 	font-family:monospace;
 
-	color:var(--sdv-key-color);
-	font-weight:var(--sdv-key-font-weight);
-	font-style:var(--sdv-key-font-style);
+	color:var(--wtrl-key-color);
+	font-weight:var(--wtrl-key-font-weight);
+	font-style:var(--wtrl-key-font-style);
 	border: 1px solid black;
 	border-radius:3px;
 	padding-left:3px;
@@ -125,9 +132,9 @@ a.wtrl_var:visited
 	{
 	font-family:inherit;
 
-	color:var(--sdv-label-color);
-	font-weight:var(--sdv-label-font-weight);
-	font-style:var(--sdv-label-font-style);
+	color:var(--wtrl-label-color);
+	font-weight:var(--wtrl-label-font-weight);
+	font-style:var(--wtrl-label-font-style);
 	font-size: 100%;
 
 	background-color:inherit;
@@ -136,9 +143,9 @@ a.wtrl_var:visited
 	{
 	font-family:monospace;
 
-	color: var(--sdv-lit-color);
-	font-weight:var(--sdv-lit-font-weight);
-	font-style:var(--sdv-lit-font-style);
+	color: var(--wtrl-lit-color);
+	font-weight:var(--wtrl-lit-font-weight);
+	font-style:var(--wtrl-lit-font-style);
 
 	background-color:inherit;
 	}
@@ -146,9 +153,9 @@ a.wtrl_var:visited
 	{
 	font-family:monospace;
 
-	color: var(--sdv-mod-color);
-	font-weight:var(--sdv-mod-font-weight);
-	font-style:var(--sdv-mod-font-style);
+	color: var(--wtrl-mod-color);
+	font-weight:var(--wtrl-mod-font-weight);
+	font-style:var(--wtrl-mod-font-style);
 
 	background-color:inherit;
 	}
@@ -156,9 +163,9 @@ a.wtrl_var:visited
 	{
 	font-family:inherit;
 
-	color:var(--sdv-norm-color);
-	font-weight:var(--sdv-norm-font-weight);
-	font-style:var(--sdv-norm-font-style);
+	color:var(--wtrl-norm-color);
+	font-weight:var(--wtrl-norm-font-weight);
+	font-style:var(--wtrl-norm-font-style);
 	font-size: 100%;
 
 	background-color:inherit;
@@ -166,16 +173,16 @@ a.wtrl_var:visited
 .wtrl_norm::after
 	{
 	content: " \2696";
-	font-weight:normal;
+	font-weight:bold;
 	font-style:normal;
 	}
 .wtrl_op
 	{
 	font-family:monospace;
 
-	color:var(--sdv-op-color);
-	font-weight:var(--sdv-op-font-weight);
-	font-style:var(--sdv-op-font-style);
+	color:var(--wtrl-op-color);
+	font-weight:var(--wtrl-op-font-weight);
+	font-style:var(--wtrl-op-font-style);
 
 	background-color:inherit;
 	}
@@ -183,9 +190,9 @@ a.wtrl_var:visited
 	{
 	font-family:monospace;
 
-	color:var(--sdv-opt-color);
-	font-weight:var(--sdv-opt-font-weight);
-	font-style:var(--sdv-opt-font-style);
+	color:var(--wtrl-opt-color);
+	font-weight:var(--wtrl-opt-font-weight);
+	font-style:var(--wtrl-opt-font-style);
 
 	background-color:inherit;
 	}
@@ -193,9 +200,9 @@ a.wtrl_var:visited
 	{
 	font-family:monospace;
 
-	color: var(--sdv-pkg-color);
-	font-weight:var(--sdv-pkg-font-weight);
-	font-style:var(--sdv-pkg-font-style);
+	color: var(--wtrl-pkg-color);
+	font-weight:var(--wtrl-pkg-font-weight);
+	font-style:var(--wtrl-pkg-font-style);
 
 	background-color:inherit;
 	}
@@ -203,26 +210,18 @@ a.wtrl_var:visited
 	{
 	font-family:monospace;
 
-	color:var(--sdv-tag-color);
-	font-weight:var(--sdv-tag-font-weight);
-	font-style:var(--sdv-tag-font-style);
+	color:var(--wtrl-tag-color);
+	font-weight:var(--wtrl-tag-font-weight);
+	font-style:var(--wtrl-tag-font-style);
 
 	background-color:inherit;
-	}
-.wtrl_tag:before
-	{
-	content:"<";
-	}
-.wtrl_tag:after
-	{
-	content:">";
 	}
 .wtrl_term
 	{
 	font-family:inherit;
-	color:var(--sdv-term-color);
-	font-weight:var(--sdv-term-font-weight);
-	font-style:var(--sdv-term-font-style);
+	color:var(--wtrl-term-color);
+	font-weight:var(--wtrl-term-font-weight);
+	font-style:var(--wtrl-term-font-style);
 	font-size:100%;
 
 	background-color:inherit;
@@ -231,27 +230,27 @@ a.wtrl_var:visited
 	{
 	font-family:monospace;
 
-	color:var(--sdv-type-color);
-	font-weight:var(--sdv-type-font-weight);
-	font-style:var(--sdv-type-font-style);
+	color:var(--wtrl-type-color);
+	font-weight:var(--wtrl-type-font-weight);
+	font-style:var(--wtrl-type-font-style);
 
 	background-color:inherit;
 	}
 .wtrl_url {
 	font-family:monospace;
 
-	color:var(--sdv-url-color);
-	font-weight:var(--sdv-url-font-weight);
-	font-style:var(--sdv-url-font-style);
+	color:var(--wtrl-url-color);
+	font-weight:var(--wtrl-url-font-weight);
+	font-style:var(--wtrl-url-font-style);
 
 	background-color:inherit;
 	}
 .wtrl_value
 	{
 	font-family:monospace;
-	color:var(--sdv-value-color);
-	font-weight:var(--sdv-value-font-weight);
-	font-style:var(--sdv-value-font-style);
+	color:var(--wtrl-value-color);
+	font-weight:var(--wtrl-value-font-weight);
+	font-style:var(--wtrl-value-font-style);
 	font-size:90%;
 
 	background-color:inherit;
@@ -259,57 +258,22 @@ a.wtrl_var:visited
 .wtrl_var
 	{
 	font-family: monospace;
-	color:var(--sdv-var-color);
-	font-weight:var(--sdv-var-font-weight);
-	font-style:var(--sdv-var-font-style);
+	color:var(--wtrl-var-color);
+	font-weight:var(--wtrl-var-font-weight);
+	font-style:var(--wtrl-var-font-style);
 
 	background-color:inherit;
 	}
-.wtrl_out_of_scope,
-.wtrl_out_of_scope *
+.wtrl_out_of_scope, .wtrl_out_of_scope *
 	{
 	color:#777 !important;
 	opacity:0.85;
 	}
 
-/* 4th and deeper nested bullet lists use an open square marker. */
-/* leave to theme
-.wtrl-section ul {
-	list-style: none;
-	}
-.wtrl-section ul > li::marker {
-	content: "• ";
-	}
-.wtrl-section ul ul {
-	list-style: none;
-	}
-.wtrl-section ul ul > li::marker {
-	content: "◦ ";
-	}
-.wtrl-section ul ul ul {
-	list-style: none;
-	}
-.wtrl-section ul ul ul > li::marker {
-	content: "▪ ";
-	}
-.wtrl-section ul ul ul ul {
-	list-style: none;
-	}
-.wtrl-section ul ul ul ul > li::marker {
-	content: "▫ ";
-	}
-*/
-
 /*===== Docstring boxes for modules, classes, callables ======*/
 
 /*--- The relation of docstring boxes w.r.t each others ------*/
 table.wtrl-box {
-/* leave to theme
-	margin-left:auto;
-	margin-right:auto;
-	margin-top:0.5em;
-	margin-bottom:1em;
-*/
 /* Here we interfer a little. Docstring boxes are not quite
    like "normal" tables. We need to create a more technical
    look, like a data-sheet. It does not need to be 100%, but
@@ -317,141 +281,61 @@ table.wtrl-box {
 	width:100%;
 	}
 
-/* leave to theme
-table.wtrl-box p {
-	margin: 0;
-	}
-
-table.wtrl-box p + p {
-	margin-top: 0.5lh;
-	}
-
-table.wtrl-box p.wtrl-freeform-paragraph-content {
-	margin-top: 0lh;
-	}
-*/
-
 /*----- Docstring box interior -------------------------------*/
 
-/* leave to theme
-table.wtrl-box
-	{
-	font-family:sans-serif;
-/ * These seem to be necessary in order to be compatible to both,
-   classic and alabaster. * /
-	font-size: 12pt;
-	line-height: 140%;
-
-	border: 0px;
-	padding: 0px;
-	border-spacing:2px;
-	border-collapse:separate;
-	box-shadow: 0px 0px 0px;
-	}
-*/
-
-/* General properties of table cells (head and body) */
-
-table.wtrl-box td, table.wtrl-box th {
-/* leave to theme
-	border: 0px;;
-*/
+table.wtrl-box td {
 	vertical-align: top;
 	}
 
-/* leave to theme
-table.wtrl-box td .pre, table.wtrl-box th .pre {
-	background-color:inherit;
+table.wtrl-box th {
+	vertical-align: bottom;
 	}
-*/
 
-/*..... Table head ...........................................*/
-
-/* leave to theme
-table.wtrl-box > thead > tr > th
-	{
-	font-weight:bold;
-	background-color:#dea;
-	padding-left:10px;
-	padding-right:10px;
-	}
-*/
-
-table.wtrl-box > thead > tr > th p.wtrl-obj-kind {
+table.wtrl-box > thead > tr > th .wtrl-obj-kind {
 	font-weight:normal;
-	color: var(--color-foreground-primary);
 	}
 
-table.wtrl-box > thead > tr > th p.wtrl-obj-qid
-	{
+table.wtrl-box > thead.wtrl-box-head-module > tr > th .wtrl-obj-kind {
+	color:var(--wtrl-mod-color);
+	}
+
+table.wtrl-box > thead.wtrl-box-head-class > tr > th .wtrl-obj-kind {
+	color:var(--wtrl-class-color);
+	}
+
+table.wtrl-box > thead.wtrl-box-head-function > tr > th .wtrl-obj-kind {
+	color:var(--wtrl-func-color);
+	}
+
+table.wtrl-box > thead.wtrl-box-head-method > tr > th .wtrl-obj-kind {
+	color:var(--wtrl-func-color);
+	}
+
+table.wtrl-box > thead.wtrl-box-head-inherited_method > tr > th .wtrl-obj-kind {
+	font-weight:normal;
+	color:var(--wtrl-func-color);
+	}
+
+table.wtrl-box > thead > tr > th .wtrl-obj-qid {
 	font-family:monospace;
-	}
-table.wtrl-box > thead.wtrl-box-head-module > tr > th p.wtrl-obj-qid
-	{
-	color:var(--sdv-mod-color);
-	}
-table.wtrl-box > thead.wtrl-box-head-class > tr > th p.wtrl-obj-qid
-	{
-	color:var(--sdv-class-color);
-	}
-table.wtrl-box > thead.wtrl-box-head-function > tr > th p.wtrl-obj-qid
-	{
-	color:var(--sdv-func-color);
-	}
-table.wtrl-box > thead.wtrl-box-head-method > tr > th p.wtrl-obj-qid
-	{
-	color:var(--sdv-func-color);
-	}
-table.wtrl-box > thead.wtrl-box-head-inherited_method > tr > th p.wtrl-obj-qid
-	{
-	color:var(--sdv-func-color);
+	font-weight:bold;
 	}
 
-/* Coloured background depending on object "kind".
-   modules: green
-   classes: red
-   callables: blue
-   */
-
-table.wtrl-box > thead.wtrl-box-head-module > tr > th {
-	color: #335522;
+table.wtrl-box > thead.wtrl-box-head-module > tr > th .wtrl-obj-qid {
+	color:var(--wtrl-mod-color);
 	}
-table.wtrl-box > thead.wtrl-box-head-class > tr > th {
-	color: #885555;
+table.wtrl-box > thead.wtrl-box-head-class > tr > th .wtrl-obj-qid {
+	color:var(--wtrl-class-color);
 	}
-table.wtrl-box > thead.wtrl-box-head-method > tr > th {
-	color: #7080d3;
+table.wtrl-box > thead.wtrl-box-head-function > tr > th .wtrl-obj-qid {
+	color:var(--wtrl-func-color);
 	}
-table.wtrl-box > thead.wtrl-box-head-function > tr > th {
-	color: #7080d3;
+table.wtrl-box > thead.wtrl-box-head-method > tr > th .wtrl-obj-qid {
+	color:var(--wtrl-func-color);
 	}
-table.wtrl-box > thead.wtrl-box-head-inherited_method > tr > th {
-	color: #90a0d3;
+table.wtrl-box > thead.wtrl-box-head-inherited_method > tr > th .wtrl-obj-qid {
+	color:var(--wtrl-func-color);
 	}
-
-/*..... Table body ...........................................*/
-
-/* leave to theme
-table.wtrl-box > tbody > tr:nth-child(even)
-	{
-	padding-left:10px;
-	padding-right:10px;
-	background-color:#e6e6e6;
-	}
-table.wtrl-box > tbody > tr:nth-child(odd)
-	{
-	background-color:#eeeeee;
-	}
-*/
-
-/* leave to theme
-table.wtrl-box > tbody > tr > td
-	{
-	padding-left:10px;
-	padding-right:10px;
-	vertical-align:top;
-	}
-*/
 
 /* Prevent docstring boxes from expanding horizontally due to long pre/code
    elements (e.g. long Literal["..."] type annotations).

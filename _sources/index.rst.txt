@@ -17,6 +17,7 @@ Waterloo Docstrings
 	html_output_layer.rst
 	mcp.rst
 	reference.rst
+	faq.rst
 	_test_freeform.rst
 	_test_scope.rst
 	test_pygments_lexer.rst
