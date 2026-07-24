@@ -1553,6 +1553,13 @@ def get_obj_path(obj: object) -> str | None:
 	except Exception:
 		return None
 
+def build_anchor_from_fully_qualified_name(fqn: str,kind: str) -> str:
+	segs = [s for s in fqn.split(".") if s]
+	if not segs:
+		return f"wtrl-{kind}"
+	enc = "-".join(f"{len(s)}:{s}" for s in segs)
+	return f"wtrl-{kind}-{enc}"
+
 def build_anchor(obj: object, kind: str | None = None) -> str:
 	"""
 	Preamble:
@@ -1591,11 +1598,7 @@ def build_anchor(obj: object, kind: str | None = None) -> str:
 		else:
 			kind = "obj"
 	fqn = get_obj_fully_qualified_name(obj)
-	segs = [s for s in fqn.split(".") if s]
-	if not segs:
-		return f"wtrl-{kind}"
-	enc = "-".join(f"{len(s)}:{s}" for s in segs)
-	return f"wtrl-{kind}-{enc}"
+	return build_anchor_from_fully_qualified_name(fqn,kind)
 
 def get_func_obj_from_callable(obj : object) -> Callable[..., Any] | None:
 	"""
