@@ -107,6 +107,47 @@ object. Repeating or relocating such information into overview sections would
 introduce duplication and additional maintenance effort.</p>
 </dd>
 </dl>
+<p class="rubric" id="rfr-0003">[RFR-0003] – On sections <span class="wtrl_label">Public_{variables|constants|types}</span></p>
+<p>Given rationale RFR-0002, why isn’t there the same kind of separation for
+sections <span class="wtrl_label">Public_{variables|constants|types}</span> and (non-existing)
+sections <span class="wtrl_label">{Variable|Constant|Type}_overview</span>}?</p>
+<dl>
+<dt><span class="wtrl_label">Status</span>:</dt><dd><p>active</p>
+</dd>
+<dt><span class="wtrl_label">Created</span>:</dt><dd><p>2026-07-25</p>
+</dd>
+<dt><span class="wtrl_label">Related rules</span>:</dt><dd><p>MPCON-001, MPVAR-001,MPTYP-001
+CPCON-001, CPVAR-001,CPTYP-001</p>
+</dd>
+<dt><span class="wtrl_label">Rationale</span>:</dt><dd><p>While modules, classes, functions, and methods each have their own docstring,
+variables, constants, and types do not. Consequently, Waterloo had to choose
+between the following approaches:</p>
+<ul class="simple">
+<li><p>introduce a synthetic docstring mechanism for these categories;</p></li>
+<li><p>rely on an unofficial convention, for example interpreting a nearby string
+literal as the object’s docstring;</p></li>
+<li><p>place the normative documentation into dedicated
+<span class="wtrl_label">Public_{variables|constants|types}</span> sections of the parent
+module or class.</p></li>
+</ul>
+<p>Waterloo deliberately adopts the latter approach. Introducing synthetic
+docstrings would make the language more intrusive, while relying on unofficial
+conventions is considered inappropriate for normative documentation.</p>
+</dd>
+<dt><span class="wtrl_label">Consequences</span>:</dt><dd><p>As explained above, the parent module or class already serves as the
+authoritative location for the normative documentation of variables,
+constants, and types.</p>
+<p>Introducing separate overview sections would place informative summaries
+immediately beside the corresponding normative documentation. Unlike the
+situation described in RFR-0002, this separation would provide little practical
+benefit while increasing the overall size and complexity of the documentation.</p>
+<p>This design preserves the principles <a class="reference internal" href="introduction.html#principles"><span class="std std-ref">BinNorm</span></a>, <a class="reference internal" href="introduction.html#principles"><span class="std std-ref">SSoT</span></a>, and :<a class="reference internal" href="introduction.html#principles"><span class="std std-ref">LoII</span></a>.</p>
+<p>The parent module or class becomes the authoritative documentation location
+for variables, constants, and types. Since the normative documentation already
+resides there, introducing additional overview sections would separate closely
+related information without providing the benefits described in RFR-0002.</p>
+</dd>
+</dl>
 </section>
 
 
