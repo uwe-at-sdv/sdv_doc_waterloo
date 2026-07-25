@@ -253,7 +253,8 @@ from contextlib import contextmanager
 from sdv.doc.waterloo.docitem_docstring import *
 from sdv.doc.waterloo.docitem_validator import *
 
-__version__ = "0.12.11"
+__version__ = "0.12.12"
+# - 0.12.12 [2026-07-26] Infrastructure of build_anchor-functions.
 # - 0.12.11 [2026-07-25] Added a function build_anchor_from_fully_qualified_name which helps in creating referentiable objects
 # - 0.12.10 [2026-07-22] Bugfix: docitem_helper.py: Caching now over IDs, not over objects.
 # - 0.12.9 [2026-07-21] Packaging details

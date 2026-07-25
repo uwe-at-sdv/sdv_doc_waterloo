@@ -1,5 +1,5 @@
-docitem_helper.py:143 # type: ignore[attr-defined]
-docitem_helper.py:145 # type: ignore[no-redef]
+docitem_helper.py:145 # type: ignore[attr-defined]
+docitem_helper.py:147 # type: ignore[no-redef]
 docitem_validator.py:41 # type: ignore
 docitem_validator.py:42 # pragma: no cover - older Python
 waterlint_carve.py:313 # pragma: no cover - defensive

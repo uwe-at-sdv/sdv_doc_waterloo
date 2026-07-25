@@ -1,12 +1,12 @@
 {
     "$schema": "https://sci-d-vis.com/schema/wtrl-json-0.1.0.schema.json",
-    "$id": "urn:waterlint:wtrl-json:0.20.4:core:rfc-2119:e4f5bfc5eb7fa93632e5dfc11b75796f15ac7ea49ce1ce3b8182a188ef050c88",
+    "$id": "urn:waterlint:wtrl-json:0.20.4:core:rfc-2119:502bbc465744c6ab29b87807a3cf2f30798ffa93a2a685f4c92dde9d9d91f932",
     "__WTRL_VERSION__": {
-        "waterloo": "0.12.10",
+        "waterloo": "0.12.11",
         "schema": "0.1.0"
     },
     "__WTRL_META__": {
-        "generated_at": "2026-07-24T12:19:10+02:00",
+        "generated_at": "2026-07-25T08:40:09+02:00",
         "generator": "waterlint",
         "scope": "core",
         "flavour": "rfc-2119"
@@ -299,7 +299,8 @@
         "sdv.doc.waterloo.docitem_helper.Details": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.Details",
         "sdv.doc.waterloo.docitem_helper.Scopes": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.Scopes",
         "sdv.doc.waterloo.docitem_helper.Documentable": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.Documentable",
-        "sdv.doc.waterloo.docitem_helper.AstDocNode": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.AstDocNode"
+        "sdv.doc.waterloo.docitem_helper.AstDocNode": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.AstDocNode",
+        "sdv.doc.waterloo.docitem_helper.AnchorKind_t": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.AnchorKind_t"
     },
     "__WTRL_TOC_VARIABLES__": {
         "sdv.doc.waterloo.docitem_helper.SOURCE_DOCSTRING_CACHE": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.SOURCE_DOCSTRING_CACHE",
@@ -1105,6 +1106,9 @@
                     ],
                     "AstDocNode": [
                         "An AST node type relevant for docstring extraction."
+                    ],
+                    "AnchorKind_t": [
+                        "Infixes for building anchors, like \"mod\" in \"wtrl-mod-4:spam-4:eggs\"."
                     ]
                 },
                 "Public_constants": {
@@ -2452,7 +2456,7 @@
         },
         "sdv.doc.waterloo.docitem_helper.build_anchor": {
             "signature": {
-                "text": "build_anchor(obj: 'object', kind: 'str | None' = None) -> 'str'",
+                "text": "build_anchor(obj: 'object', kind: 'AnchorKind_t | None' = None) -> 'str'",
                 "parameters": [
                     {
                         "name": "obj",
@@ -2463,7 +2467,7 @@
                     {
                         "name": "kind",
                         "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "str | None",
+                        "annotation": "AnchorKind_t | None",
                         "default": "None"
                     }
                 ],
@@ -13101,6 +13105,13 @@
                 "An AST node type relevant for docstring extraction."
             ],
             "annotation": "ast.ClassDef | ast.FunctionDef | ast.AsyncFunctionDef",
+            "doc_lines_kind": "type"
+        },
+        "sdv.doc.waterloo.docitem_helper.AnchorKind_t": {
+            "doc": {},
+            "doc_lines": [
+                "Infixes for building anchors, like \"mod\" in \"wtrl-mod-4:spam-4:eggs\"."
+            ],
             "doc_lines_kind": "type"
         },
         "sdv.doc.waterloo.docitem_helper.SOURCE_DOCSTRING_CACHE": {

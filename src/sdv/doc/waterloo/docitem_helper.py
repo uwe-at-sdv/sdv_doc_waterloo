@@ -40,6 +40,8 @@ Public_types:
 		Objects that can be traversed by the helper functions.
 	AstDocNode:
 		An AST node type relevant for docstring extraction.
+	AnchorKind_t:
+		Infixes for building anchors, like "mod" in "wtrl-mod-4:spam-4:eggs".
 Public_constants:
 	RE_RULE_ID:
 		Regular expression for rule IDs. Undocumented: RE_RULE_ID_COMPILED, the precompiled version for performance.
@@ -391,6 +393,9 @@ TRAIT_TAG_MAP = MappingProxyType(trait_tag_map)
 
 # Valid profiles
 Profile: TypeAlias = Literal["module", "class", "function", "method", "inherited_method"]
+
+# Infixes for anchors
+AnchorKind_t = Literal["mod", "cls", "func", "obj"]
 
 # Scope values
 class Scope(IntEnum):
@@ -1553,14 +1558,25 @@ def get_obj_path(obj: object) -> str | None:
 	except Exception:
 		return None
 
-def build_anchor_from_fully_qualified_name(fqn: str,kind: str) -> str:
+# Returned values must match the build_anchor-functions in docitem_helper.
+def get_obj_anchor_kind(obj: object) -> AnchorKind_t:
+	if is_obj_module(obj):
+		return "mod"
+	elif is_obj_class(obj):
+		return "cls"
+	elif is_obj_function(obj):
+		return "func"
+	else:
+		return "obj"
+
+def build_anchor_from_fully_qualified_name(fqn: str,kind: AnchorKind_t) -> str:
 	segs = [s for s in fqn.split(".") if s]
 	if not segs:
 		return f"wtrl-{kind}"
 	enc = "-".join(f"{len(s)}:{s}" for s in segs)
 	return f"wtrl-{kind}-{enc}"
 
-def build_anchor(obj: object, kind: str | None = None) -> str:
+def build_anchor(obj: object, kind: AnchorKind_t | None = None) -> str:
 	"""
 	Preamble:
 		profile:
@@ -1589,14 +1605,7 @@ def build_anchor(obj: object, kind: str | None = None) -> str:
 			2026-06-22
 	"""
 	if kind is None:
-		if is_obj_module(obj):
-			kind = "mod"
-		elif is_obj_class(obj):
-			kind = "cls"
-		elif is_obj_function(obj):
-			kind = "func"
-		else:
-			kind = "obj"
+		kind = get_obj_anchor_kind(obj)
 	fqn = get_obj_fully_qualified_name(obj)
 	return build_anchor_from_fully_qualified_name(fqn,kind)
 
