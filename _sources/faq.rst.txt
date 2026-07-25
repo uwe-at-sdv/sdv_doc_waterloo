@@ -90,7 +90,7 @@ would fit thematically within the :wtrl_label:`Public` sections, and the docstri
 
 .. rubric:: [RFR-0003] -- On sections :wtrl_label:`Public_{variables|constants|types}`
 
-Given rationale RFR-0002, why isn't there the same kind of separation for
+Why does Waterloo not apply the separation introduced in RFR-0002 to
 sections :wtrl_label:`Public_{variables|constants|types}` and (non-existing)
 sections :wtrl_label:`{Variable|Constant|Type}_overview`}?
 
@@ -130,7 +130,7 @@ sections :wtrl_label:`{Variable|Constant|Type}_overview`}?
 	situation described in RFR-0002, this separation would provide little practical
 	benefit while increasing the overall size and complexity of the documentation.
 
-	This design preserves the principles |BinNorm|, |SSoT|, and :|LoII|.
+	This design preserves the principles |BinNorm|, |SSoT|, and |LoII|.
 
 	The parent module or class becomes the authoritative documentation location
 	for variables, constants, and types. Since the normative documentation already
