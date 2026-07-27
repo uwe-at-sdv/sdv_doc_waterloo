@@ -449,6 +449,7 @@ function getRoleClassForSubsectionHead(path, key) {
 	if (section === "Public_variables" || section === "Public_constants") return "wtrl-var wtrl_var";
 	if (section === "Class_overview") return "wtrl-type wtrl_type";
 	if (section === "Function_overview" || section === "Method_overview") return "wtrl-func wtrl_func";
+	if (section === "Factory") return "wtrl-func wtrl_func";
 	if (section === "Raises") return "wtrl-type wtrl_type";
 	if (section === "Parameters") return "wtrl-var wtrl_var";
 	return "";
@@ -1214,7 +1215,7 @@ function renderValue(value, container, depth, path, currentQid) {
 				const roleCls = getRoleClassForSubsectionHead(pth, k);
 				if (k === "normative_sections") {
 					elemHead.textContent = formatSectionHead(k);
-				} else if (section === "Class_overview" || section === "Function_overview" || section === "Method_overview") {
+				} else if (section === "Class_overview" || section === "Function_overview" || section === "Method_overview" || section === "Factory") {
 					// Overview entry labels are linked only when the local name resolves
 					// unambiguously to a documented object in the current scope.
 					appendLinkedOrStyledText(elemHead, k, roleCls, currentQid);

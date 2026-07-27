@@ -50,7 +50,7 @@ from sdv.doc.waterloo.waterlint_common import (
 # Not relevant yet, but in case we set up a plugin concept,
 # vendors should be encouraged to follow semantic versioning
 # for their plugins.
-__version__ = "0.1.1"
+__version__ = "0.1.2"
 
 #===== Typing ================================================#
 # "obj" is a fallback for objects that do not map to a more specific kind.

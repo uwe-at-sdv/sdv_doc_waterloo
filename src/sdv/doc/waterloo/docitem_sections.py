@@ -475,6 +475,10 @@ Method_overview:
 # An entry for a function in section Public types is only a brief
 # description that the class is good for. types must be explained
 # in details outside the module documentation block.
+# Update: In order to maintain LoIO the description is not so
+# brief! Public_types is normative, and we provide various means
+# that allow a detailed normative descritption, e.g. itemization
+# and (future) the special role |expand|.
 class docitem_public_types_entry(docitem_free_text_entry_base):
 	"""
 Preamble:
