@@ -4,10 +4,17 @@
 from __future__ import annotations
 
 import json
+import os
 import subprocess
 from pathlib import Path
 
-from pytest_common import ROOT, WATERLINT, run_waterlint, DIR_EXAMPLES
+from pytest_common import ROOT, WATERLINT, run_waterlint, DIR_EXAMPLES, DIR_DOC_EXAMPLES
+
+
+def _walk_qualnames(path: Path) -> list[str]:
+	with path.open("r", encoding="utf-8") as fh:
+		doc = json.load(fh)
+	return [entry["qualname"] for entry in doc["__WTRL_OBJECTS__"]]
 
 
 def test_walk_json_and_schema_inference(tmp_path: Path) -> None:
@@ -97,7 +104,40 @@ def test_walk_multiple_objects(tmp_path: Path) -> None:
 	assert len(doc["__WTRL_OBJECTS__"]) > 0
 
 
+def test_walk_include_qid_prefix_uses_synthetic_package_tree(tmp_path: Path) -> None:
+	out_json = tmp_path / "walk_A_B0_C1.json"
+	res = run_waterlint(
+		"walk",
+		"--basedir", DIR_DOC_EXAMPLES,
+		"--obj", "A",
+		"--include-qid-prefix", "A.B0.C1",
+		"--out-json", str(out_json),
+	)
+	assert res.returncode == 0, res.stderr
+	assert _walk_qualnames(out_json) == [
+		"A",
+		"A.B0.C1",
+		"A.B0.C1.mod_D0",
+		"A.B0.C1.mod_D1",
+	]
+
+
+def test_walk_include_qid_prefix_is_segment_aware(tmp_path: Path) -> None:
+	out_json = tmp_path / "walk_A_segment_aware.json"
+	res = run_waterlint(
+		"walk",
+		"--basedir", DIR_DOC_EXAMPLES,
+		"--obj", "A",
+		"--include-qid-prefix", "A.B0.C1.mod_D",
+		"--out-json", str(out_json),
+	)
+	assert res.returncode == 0, res.stderr
+	assert _walk_qualnames(out_json) == ["A"]
+
+
 def test_walk_reports_invalid_basedir(tmp_path: Path) -> None:
+	env = os.environ.copy()
+	env["PYTHONPATH"] = os.pathsep.join([str(ROOT / "src"), env.get("PYTHONPATH", "")])
 	res = subprocess.run(
 		[
 			*WATERLINT,
@@ -113,6 +153,7 @@ def test_walk_reports_invalid_basedir(tmp_path: Path) -> None:
 		stderr=subprocess.PIPE,
 		text=True,
 		check=False,
+		env=env,
 		cwd=ROOT.parent,
 	)
 	assert res.returncode == 1, res.stderr

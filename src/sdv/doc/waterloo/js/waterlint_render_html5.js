@@ -788,6 +788,16 @@ function resolveLocalTarget(entry, currentQid) {
 		if (hit && hit !== cand) return "";
 		hit = cand;
 	}
+	if (hit) return hit;
+
+	// Imported or re-exported Public_* entries may be documented under their
+	// defining module, not under the module that lists them as public API.
+	for (const qid of TARGET_TO_ANCHOR.keys()) {
+		if (qid.endsWith("." + raw)) {
+			if (hit && hit !== qid) return "";
+			hit = qid;
+		}
+	}
 	return hit;
 }
 

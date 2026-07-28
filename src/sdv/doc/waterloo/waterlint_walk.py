@@ -379,20 +379,39 @@ def walk_command(args: argparse.Namespace) -> int:
 		if not obj_qnames:
 			print("Error: --obj is required for walk.", file=sys.stderr)
 			return 2
+		prefix_raw = getattr(args, "include_qid_prefixes", None)
+		include_qid_prefixes: list[str] = []
+		if prefix_raw:
+			for grp in prefix_raw:
+				if isinstance(grp, list):
+					include_qid_prefixes.extend(str(item).strip() for item in grp if str(item).strip())
+				else:
+					item = str(grp).strip()
+					if item:
+						include_qid_prefixes.append(item)
 		#----- Object traversal and config ----------------------------#
 		config = docitem.ConfigTraversal()
 		if getattr(args, "include_imported", True):
 			config.enable_include_imported()
 		config.disable_walk_packages()
+		try:
+			config.set_include_qid_prefixes(include_qid_prefixes)
+		except ValueError as exc:
+			print(f"Error: {exc}", file=sys.stderr)
+			return 2
 		#----- Walk and build list of entries -------------------------#
 		entries: list[dict[str, Any]] = []
 		seen_qnames: set[str] = set()
+		root_qnames: set[str] = set()
 		for obj_qname in obj_qnames:
 			_apply_basedir(getattr(args, "basedir", None), obj_qname)
 			obj = _resolve_object(obj_qname)
+			root_qnames.add(get_obj_fully_qualified_name(obj))
 			for o in docitem.gen_documentable_objects(cast(Documentable, obj), config):
 				qname = get_obj_fully_qualified_name(o)
 				if qname in seen_qnames:
+					continue
+				if qname not in root_qnames and not config.qid_matches_include_prefixes(qname):
 					continue
 				seen_qnames.add(qname)
 				reason, included, scope_text, reason_detail = _walk_analyze_object(o)
@@ -501,6 +520,14 @@ def build_parser(
 	)
 	prsr.add_argument("--include-imported", dest="include_imported", action="store_true", default=True, help="Include imported members and submodules (default).")
 	prsr.add_argument("--no-include-imported", dest="include_imported", action="store_false", help="Do not include imported members/submodules.")
+	prsr.add_argument(
+		"--include-qid-prefix",
+		dest="include_qid_prefixes",
+		nargs="+",
+		action="append",
+		metavar="QID_PREFIX",
+		help="Only traverse members whose qualified identifier starts with one of the given segment-aware prefixes. Option may be repeated and grouped.",
+	)
 	prsr.add_argument("--debug", action="store_true", help="Emit debugging data to stderr (reserved)")
 	return prsr
 

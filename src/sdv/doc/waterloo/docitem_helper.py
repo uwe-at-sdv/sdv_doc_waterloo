@@ -1020,6 +1020,7 @@ class ConfigTraversal:
 	def __init__(self) -> None:
 		self._include_imported = False
 		self._walk_packages = False
+		self._include_qid_prefixes: Tuple[str, ...] = ()
 	def __repr__(self) -> str:
 		return "ConfigTraversal()"
 	def enable_include_imported(self) -> Self:
@@ -1035,6 +1036,32 @@ class ConfigTraversal:
 		return self
 	def walk_packages(self) -> bool:
 		return self._walk_packages
+	def set_include_qid_prefixes(self, prefixes: Iterable[str]) -> Self:
+		clean: list[str] = []
+		for prefix in prefixes:
+			prefix_str = str(prefix).strip()
+			if not prefix_str:
+				continue
+			parts = prefix_str.split(".")
+			if any(not part.isidentifier() for part in parts):
+				raise ValueError(f"Invalid qualified-identifier prefix: {prefix_str!r}")
+			clean.append(prefix_str)
+		self._include_qid_prefixes = tuple(clean)
+		return self
+	def include_qid_prefixes(self) -> Tuple[str, ...]:
+		return self._include_qid_prefixes
+	def qid_matches_include_prefixes(self, qid: str) -> bool:
+		if not self._include_qid_prefixes:
+			return True
+		return any(qid == prefix or qid.startswith(prefix + ".") for prefix in self._include_qid_prefixes)
+	def qid_can_contain_include_prefix(self, qid: str) -> bool:
+		if not self._include_qid_prefixes:
+			return True
+		return self.qid_matches_include_prefixes(qid) or any(prefix.startswith(qid + ".") for prefix in self._include_qid_prefixes)
+	def accept_object_by_qid(self, member: Documentable) -> bool:
+		return self.qid_matches_include_prefixes(get_obj_fully_qualified_name(member))
+	def accept_traversal_by_qid(self, member: Documentable) -> bool:
+		return self.qid_can_contain_include_prefix(get_obj_fully_qualified_name(member))
 	def is_member_in_module(self,obj_parent: ModuleType | None,member: Documentable) -> bool:
 		if obj_parent == None:
 			return True
@@ -1836,12 +1863,13 @@ Returns:
 Raises:
 	"""
 	_seen: Set[Documentable] = set()
-	def _iter(o: Documentable,seen: Set[Documentable]) -> Generator[Documentable,None,None]:
+	def _iter(o: Documentable,seen: Set[Documentable], include_self: bool = True) -> Generator[Documentable,None,None]:
 		if o in seen:
 			return
 # With the seen-mechanisms each direct yield must be paired with updating `seen`.
 		seen.add(o)
-		yield o
+		if include_self:
+			yield o
 		if isinstance(o, ModuleType):
 			# We're in a module. There might be classes and functions:
 			for name, member in list(o.__dict__.items()):
@@ -1851,15 +1879,21 @@ Raises:
 					# descend into submodules
 					if not config.accept_imported_module(o,member):
 						continue
-					yield from _iter(member, seen)
+					if not config.accept_traversal_by_qid(member):
+						continue
+					yield from _iter(member, seen, config.accept_object_by_qid(member))
 				elif isinstance(member, type):
 					# class
 					if not config.accept_member_of_module(o,member):
 						continue
-					yield from _iter(member, seen)
+					if not config.accept_traversal_by_qid(member):
+						continue
+					yield from _iter(member, seen, config.accept_object_by_qid(member))
 				elif isinstance(member, FunctionType):
 					# function
 					if not config.accept_member_of_module(o,member):
+						continue
+					if not config.accept_object_by_qid(member):
 						continue
 					yield from _iter(member, seen)
 				else:
@@ -1871,17 +1905,23 @@ Raises:
 						submod = importlib.import_module(mod_name)
 					except Exception:
 						continue
-					yield from _iter(submod, seen)
+					if not config.accept_traversal_by_qid(submod):
+						continue
+					yield from _iter(submod, seen, config.accept_object_by_qid(submod))
 		elif isinstance(o, type):
 			# We're in a class. There might be classes, static functions, class methods and "normal" methods:
 			for name, member in list(o.__dict__.items()):
 				if name == "__annotate__" or name.startswith("__annotate") or getattr(member, "__name__", "") == "__annotate__":
 					continue
 				if isinstance(member, type):
-					yield from _iter(member, seen)
+					if not config.accept_traversal_by_qid(member):
+						continue
+					yield from _iter(member, seen, config.accept_object_by_qid(member))
 				else:
 					func_obj = get_func_obj_from_callable(member)
 					if func_obj is None:
+						continue
+					if not config.accept_object_by_qid(func_obj):
 						continue
 					yield from _iter(func_obj, seen)
 		elif callable(o):

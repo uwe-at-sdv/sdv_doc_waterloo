@@ -7,7 +7,7 @@ import json
 import re
 from pathlib import Path
 
-from pytest_common import ROOT, run_waterlint, DIR_EXAMPLES, DIR_MODULE
+from pytest_common import ROOT, run_waterlint, DIR_EXAMPLES, DIR_DOC_EXAMPLES, DIR_MODULE
 
 DOC_JSON_DIR = ROOT / "src" / "sdv" / "doc" / "waterloo" / "doc-json"
 NORMATIVE_TOKEN_RE = re.compile(r"\|(Must_not|Must|Should_not|Should|May|must_not|must|should_not|should|may)\|")
@@ -390,6 +390,50 @@ def test_render_json_from_walk_input(tmp_path: Path) -> None:
 	assert out_json.exists()
 	val = _run_waterlint_validate_json(str(out_json))
 	assert val.returncode == 0, val.stderr
+
+
+def test_render_json_include_qid_prefix_uses_synthetic_package_tree(tmp_path: Path) -> None:
+	out_json = tmp_path / "render_A_B1_C0.json"
+	res = run_waterlint(
+		"render-json",
+		"--basedir", DIR_DOC_EXAMPLES,
+		"--obj", "A",
+		"--include-qid-prefix", "A.B1.C0",
+		"--scope", "core",
+		"--flavour", "rfc-2119",
+		"--no-allow-local-paths",
+		"--out", str(out_json),
+	)
+	assert res.returncode == 0, res.stderr
+	doc = _load_json_doc(out_json)
+	assert list(doc["__WTRL_OBJECTS__"]) == [
+		"A",
+		"A.B1.C0",
+		"A.B1.C0.mod_D0",
+		"A.B1.C0.mod_D1",
+	]
+
+
+def test_render_json_include_qid_prefix_is_rejected_for_walk_replay(tmp_path: Path) -> None:
+	walk_json = tmp_path / "walk_A.json"
+	res_walk = run_waterlint(
+		"walk",
+		"--basedir", DIR_DOC_EXAMPLES,
+		"--obj", "A",
+		"--out-json", str(walk_json),
+	)
+	assert res_walk.returncode == 0, res_walk.stderr
+
+	res_render = run_waterlint(
+		"render-json",
+		"--in", str(walk_json),
+		"--include-qid-prefix", "A.B0",
+		"--scope", "core",
+		"--flavour", "rfc-2119",
+		"--no-allow-local-paths",
+	)
+	assert res_render.returncode == 2, res_render.stderr
+	assert "--include-qid-prefix is not supported with render-json --in" in res_render.stderr
 
 
 def _render_json_scope_triangle(tmp_path: Path, scope: str) -> None:

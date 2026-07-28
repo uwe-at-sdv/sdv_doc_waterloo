@@ -69,7 +69,9 @@ try:
 except Exception:
 	_HAS_PYGMENTS = False
 
-__version__ = "0.20.5"
+__version__ = "0.21.0"
+# - 0.21.0 [2026-07-28]	Option --include-qid-prefix for subcommands walk and render-json
+# - 0.20.6 [2026-07-27]	Improved resolution for linked objects.
 # - 0.20.5 [2026-07-27]	Factory items now clickable.
 # - 0.20.4 [2026-07-05]	Bugfixes in render-docker.
 # - 0.20.3 [2026-07-04]	render-json: legend updated.
@@ -1279,9 +1281,13 @@ def render_json_command(args: argparse.Namespace) -> int:
 		include_imported = bool(getattr(args, "include_imported", True))
 		walk_basedir: str | None = None
 		walk_included_qnames: set[str] = set()
+		include_qid_prefixes: list[str] = []
 		if getattr(args, "in_file", None):
 			if getattr(args, "basedir", None) or getattr(args, "obj", None):
 				print("Error: --in is mutually exclusive with direct --basedir/--obj mode.", file=sys.stderr)
+				return 2
+			if getattr(args, "include_qid_prefixes", None):
+				print("Error: --include-qid-prefix is not supported with render-json --in; edit the walk JSON with carve instead.", file=sys.stderr)
 				return 2
 			input_walk_doc = _load_walk_input(tr, str(getattr(args, "in_file")))
 			if input_walk_doc is None:
@@ -1327,6 +1333,15 @@ def render_json_command(args: argparse.Namespace) -> int:
 			if not obj_qnames:
 				print("Error: --obj is required for render-json.", file=sys.stderr)
 				return 2
+			prefix_raw = getattr(args, "include_qid_prefixes", None)
+			if prefix_raw:
+				for grp in prefix_raw:
+					if isinstance(grp, list):
+						include_qid_prefixes.extend(str(item).strip() for item in grp if str(item).strip())
+					else:
+						item = str(grp).strip()
+						if item:
+							include_qid_prefixes.append(item)
 # Each qualified name must resolve to a module, and we need the module objects for traversal, so resolve them all upfront.
 		modules: list[Documentable] = []
 		for qname in obj_qnames:
@@ -1345,9 +1360,15 @@ def render_json_command(args: argparse.Namespace) -> int:
 		if include_imported:
 			config.enable_include_imported()
 		config.disable_walk_packages()
+		try:
+			config.set_include_qid_prefixes(include_qid_prefixes)
+		except ValueError as exc:
+			print(f"Error: {exc}", file=sys.stderr)
+			return 2
 #----- Filter by scope ----------------------------------------#
 		objs: list[object] = []
 		included_roots: set[str] = set()
+		root_qnames: set[str] = {get_obj_fully_qualified_name(mod) for mod in modules}
 		for mod in modules:
 			for cand in docitem.gen_documentable_objects(mod, config):
 				qname = get_obj_fully_qualified_name(cand)
@@ -1355,6 +1376,8 @@ def render_json_command(args: argparse.Namespace) -> int:
 					if qname not in walk_included_qnames:
 						continue
 					included_roots.add(qname)
+				elif qname not in root_qnames and not config.qid_matches_include_prefixes(qname):
+					continue
 				objs.append(cand)
 # Use from argparse if available, otherwise fall back to "core" (maximimum output).
 		scope_str: str = args.scope
@@ -2281,6 +2304,14 @@ def _build_parser() -> argparse.ArgumentParser:
 	)
 	render_json.add_argument("--include-imported", dest="include_imported", action="store_true", default=True, help="Include imported members and submodules (default).")
 	render_json.add_argument("--no-include-imported", dest="include_imported", action="store_false", help="Do not include imported members/submodules.")
+	render_json.add_argument(
+		"--include-qid-prefix",
+		dest="include_qid_prefixes",
+		nargs="+",
+		action="append",
+		metavar="QID_PREFIX",
+		help="Only traverse members whose qualified identifier starts with one of the given segment-aware prefixes in direct mode. Option may be repeated and grouped.",
+	)
 	render_json.add_argument("--allow-local-paths", dest="allow_local_paths", action="store_true", default=True, help="Include filesystem paths in JSON (default).")
 	render_json.add_argument("--no-allow-local-paths", dest="allow_local_paths", action="store_false", help="Omit filesystem paths in JSON.")
 	render_json.add_argument("--debug", action="store_true", help="Emit debugging data to stderr (reserved)")
