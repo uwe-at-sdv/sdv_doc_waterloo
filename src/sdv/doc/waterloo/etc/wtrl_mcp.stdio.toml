@@ -2,13 +2,13 @@
 #
 # Relative root paths are resolved relative to this file.
 #
-# This is the recommended VSCode configuration for the Waterloo
+# This is the recommended Visual Studio Code configuration for the Waterloo
 # MCP stdio provider. Copy it outside the package for your own
 # setup and fill in the [[roots]] section. Add one [[roots]]
 # block per document. Absolute paths are recommended for long-
 # lived setups.
 #
-# VSCode:
+# VS Code:
 #   Put the path to this TOML file into "MCP Config Path".
 #   The extension uses it to start the stdio provider.
 

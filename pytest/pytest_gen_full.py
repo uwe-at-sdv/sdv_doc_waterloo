@@ -8,7 +8,7 @@ from pathlib import Path
 import json
 import pytest
 
-from pytest_common import run_waterlint, DIR_EXAMPLES
+from pytest_common import ROOT, run_waterlint, DIR_EXAMPLES
 
 OBJECTS = [
 	("empty_objects", "module"),
@@ -87,6 +87,45 @@ def test_gen_full_raw_stdout_smoke() -> None:
 	assert res.stdout.startswith('r"""')
 	assert "Raises:" in res.stdout
 	assert "|Must| return |None|." in res.stdout
+
+
+def test_gen_full_raw_out_stdout_special_target() -> None:
+	res = run_waterlint(
+		"gen-full",
+		"--basedir",
+		DIR_EXAMPLES,
+		"--obj",
+		"empty_objects.empty_function",
+		"--format",
+		"raw",
+		"--indent",
+		"spc4",
+		"--out",
+		"@STDOUT",
+	)
+	assert res.returncode == 0, res.stderr
+	assert res.stdout.startswith('r"""')
+	assert "Raises:" in res.stdout
+	assert not (ROOT / "@STDOUT").exists()
+
+
+def test_gen_full_json_out_stdout_special_target() -> None:
+	res = run_waterlint(
+		"gen-full",
+		"--basedir",
+		DIR_EXAMPLES,
+		"--obj",
+		"empty_objects",
+		"--recursive",
+		"--format",
+		"json",
+		"--out",
+		"@STDOUT",
+	)
+	assert res.returncode == 0, res.stderr
+	doc = json.loads(res.stdout)
+	assert doc["mode"] == "full"
+	assert not (ROOT / "@STDOUT").exists()
 
 
 def test_gen_full_recursive_json_traverses_expected_objects() -> None:

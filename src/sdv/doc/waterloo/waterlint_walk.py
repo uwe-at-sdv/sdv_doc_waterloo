@@ -434,19 +434,12 @@ def walk_command(args: argparse.Namespace) -> int:
 		out_json = getattr(args, "out_json", None)
 		out_file = getattr(args, "out_file", None)
 		if out_json:
-			# Render JSON
 			doc = _walk_build_json_doc(entries, getattr(args, "basedir", None), obj_qnames, getattr(args, "include_imported", True), show_fields)
-			with open(out_json, "w", encoding="utf-8") as fh:
-				json.dump(doc, fh, indent=4)
-				fh.write("\n")
+			wl_common.write_json_output(doc, out_json, ensure_ascii=True)
 		else:
 			# Render human readable text, apply labels from path compression.
 			txt = _walk_render_text(entries, show_fields, path_labels)
-			if out_file:
-				with open(out_file, "w", encoding="utf-8") as fh:
-					fh.write(txt)
-			else:
-				sys.stdout.write(txt)
+			wl_common.write_text_output(txt, out_file)
 		# Write summary to tracer.
 		tr.add_info(f"Num objects traversed: {len(entries)}.", "tool")
 		tr.add_info(f"Num objects excluded: {sum(1 for e in entries if not e.get('included'))}.", "tool")

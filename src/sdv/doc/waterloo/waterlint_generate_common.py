@@ -25,7 +25,6 @@ Notes:
 from __future__ import annotations
 
 import argparse
-import json
 import sys
 from typing import Any, Literal
 
@@ -295,11 +294,7 @@ def generate_command(args: argparse.Namespace, mode: Literal["minimal", "full"],
 			else:
 				doc = genutil.generate_full_docstring(targets[0], profile=profile)
 			doc = _retab_docstring(doc, args.indent)
-			if args.out_file:
-				with open(args.out_file, "w", encoding="utf-8") as fh:
-					fh.write(doc)
-			else:
-				sys.stdout.write(doc)
+			wl_common.write_text_output(doc, args.out_file)
 		else:
 			doc_json = _render_generation_json(
 				mode=mode,
@@ -308,13 +303,7 @@ def generate_command(args: argparse.Namespace, mode: Literal["minimal", "full"],
 				targets=targets,
 				indent_mode=args.indent,
 			)
-			if args.out_file:
-				with open(args.out_file, "w", encoding="utf-8") as fh:
-					json.dump(doc_json, fh, indent=2)
-					fh.write("\n")
-			else:
-				json.dump(doc_json, sys.stdout, indent=2)
-				sys.stdout.write("\n")
+			wl_common.write_json_output(doc_json, args.out_file, indent=2, ensure_ascii=True)
 	except SOURCE_CODE_ERRORS:
 		if not out_diag:
 			wl_common.add_traceback(tr)

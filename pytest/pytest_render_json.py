@@ -69,6 +69,22 @@ def _load_json_doc(path: Path) -> dict[str, object]:
 		return json.load(fh)
 
 
+def test_render_json_out_stdout_special_target() -> None:
+	res = _run_render_json_cli([
+		"--scope", "core",
+		"--basedir", DIR_EXAMPLES,
+		"--obj", "test_docitem_coroutine",
+		"--no-include-imported",
+		"--no-allow-local-paths",
+		"--out", "@STDOUT",
+	])
+	assert res.returncode == 0, res.stderr
+	doc = json.loads(res.stdout)
+	assert isinstance(doc, dict)
+	assert "__WTRL_OBJECTS__" in doc
+	assert not (ROOT / "@STDOUT").exists()
+
+
 def _iter_doc_lines_with_paths(node: object, path: str = "$"):
 	if isinstance(node, dict):
 		for key, value in node.items():

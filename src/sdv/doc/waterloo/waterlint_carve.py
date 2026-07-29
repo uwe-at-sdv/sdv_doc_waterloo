@@ -303,13 +303,7 @@ def carve_command(args: argparse.Namespace) -> int:
 		tr.add_info(f"Num entries tested: {tested}.")
 		tr.add_info(f"Num entries kept: {kept}.")
 		tr.add_info(f"Num entries dropped: {dropped}.")
-		if getattr(args, "out_file", None):
-			with open(args.out_file, "w", encoding="utf-8") as fh:
-				json.dump(doc, fh, indent=4)
-				fh.write("\n")
-		else:
-			json.dump(doc, sys.stdout, indent=4)
-			sys.stdout.write("\n")
+		wl_common.write_json_output(doc, getattr(args, "out_file", None), ensure_ascii=True)
 	except Exception as exc:  # pragma: no cover - defensive
 		tr.add_error("CARVE-800", "tool", f"[{get_obj_fully_qualified_name(exc)}] {exc}")
 		_emit_tracer(tr, out_diag, out_diag_json, debug=debug)

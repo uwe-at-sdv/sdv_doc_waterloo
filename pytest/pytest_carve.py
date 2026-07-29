@@ -9,7 +9,7 @@ from pathlib import Path
 
 from sdv.doc.waterloo import waterlint_carve as carve
 from sdv.doc.waterloo import waterlint_common as wl_common
-from pytest_common import DIR_EXAMPLES, run_waterlint
+from pytest_common import ROOT, DIR_EXAMPLES, run_waterlint
 
 
 def _load_json_doc(path: Path) -> dict[str, object]:
@@ -129,6 +129,23 @@ def test_carve_simplify_and_recompute(tmp_path: Path) -> None:
 	assert summary["total"] == len(entries)
 	assert summary["included"] == len(entries)
 	assert doc["__WTRL_META__"]["generator"] == "waterlint.carve"
+
+
+def test_carve_out_stdout_special_target(tmp_path: Path) -> None:
+	"""--out @STDOUT writes carved JSON to stdout, not to a file named @STDOUT."""
+	walk_json = _make_walk_json(tmp_path)
+	res = run_waterlint(
+		"carve",
+		"--in", str(walk_json),
+		"--simplify",
+		"--recompute",
+		"--out", "@STDOUT",
+	)
+	assert res.returncode == 0, res.stderr
+	doc = json.loads(res.stdout)
+	assert isinstance(doc, dict)
+	assert doc["__WTRL_META__"]["generator"] == "waterlint.carve"
+	assert not (ROOT / "@STDOUT").exists()
 
 
 def test_carve_recompute_fixes_tampered_summary(tmp_path: Path) -> None:

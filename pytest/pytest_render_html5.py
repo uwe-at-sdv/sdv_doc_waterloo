@@ -95,6 +95,21 @@ def test_render_html5_single_in_to_out(tmp_path: Path) -> None:
 	assert "wtrl-search" in txt
 
 
+def test_render_html5_out_stdout_special_target() -> None:
+	"""--out @STDOUT writes HTML to stdout, not to a file named @STDOUT."""
+	res = run_waterlint(
+		"render-html5",
+		"--in",
+		DIR_EXAMPLES_JSON + "/test_docitem_method_property.wtrl.core.rfc-2119.json",
+		"--out",
+		"@STDOUT",
+	)
+	assert res.returncode == 0, res.stderr
+	assert "<!doctype html>" in res.stdout.lower()
+	assert "wtrl-search" in res.stdout
+	assert not (ROOT / "@STDOUT").exists()
+
+
 def test_render_html5_multi_in_to_out_dir_generates_default_name(tmp_path: Path) -> None:
 	"""Multiple JSON inputs rendered via --out-dir get the documented default name."""
 	res = run_waterlint(

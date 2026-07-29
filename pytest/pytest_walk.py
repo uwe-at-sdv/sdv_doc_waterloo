@@ -63,6 +63,37 @@ def test_walk_text_show_subset(tmp_path: Path) -> None:
 	assert "reason" in txt
 
 
+def test_walk_json_out_stdout_special_target() -> None:
+	res = run_waterlint(
+		"walk",
+		"--basedir", DIR_EXAMPLES,
+		"--obj", "test_docitem_coroutine",
+		"--no-include-imported",
+		"--out-json", "@STDOUT",
+	)
+	assert res.returncode == 0, res.stderr
+	doc = json.loads(res.stdout)
+	assert isinstance(doc, dict)
+	assert "__WTRL_OBJECTS__" in doc
+	assert not (ROOT / "@STDOUT").exists()
+
+
+def test_walk_text_out_stdout_special_target() -> None:
+	res = run_waterlint(
+		"walk",
+		"--basedir", DIR_EXAMPLES,
+		"--obj", "test_docitem_coroutine",
+		"--no-include-imported",
+		"--show", "qualname,kind",
+		"--out", "@STDOUT",
+	)
+	assert res.returncode == 0, res.stderr
+	assert "qualname" in res.stdout
+	assert "kind" in res.stdout
+	assert "test_docitem_coroutine" in res.stdout
+	assert not (ROOT / "@STDOUT").exists()
+
+
 def test_walk_text_show_default_alias(tmp_path: Path) -> None:
 	out_txt = tmp_path / "walk_default.txt"
 	res = run_waterlint(

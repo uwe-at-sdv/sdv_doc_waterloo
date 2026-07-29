@@ -616,9 +616,7 @@ def add_example_json_command(args: argparse.Namespace) -> int:
 		).encode("utf-8")
 		digest = hashlib.sha256(canonical_doc).hexdigest()
 		doc["$id"] = f"urn:waterlint:wtrl-json:{__version__}:{scope}:{flavour}:{digest}"
-		with open(str(out_file), "w", encoding="utf-8") as fh:
-			json.dump(doc, fh, indent=4)
-			fh.write("\n")
+		wl_common.write_json_output(doc, str(out_file), ensure_ascii=True)
 		tr.add_info(f"JSON with examples written to: {out_file}")
 	except SOURCE_CODE_ERRORS:
 		if not out_diag:
@@ -951,11 +949,7 @@ def extract_command(args: argparse.Namespace) -> int:
 			out = tokenizer.to_string_tree(tree)
 		out = _render_terminal_highlighted_text(out, syntax_hl_style, force_color, syntax_hl)
 
-		if getattr(args, "out_file", None):
-			with open(args.out_file, "w", encoding="utf-8") as fh:
-				fh.write(out)
-		else:
-			sys.stdout.write(out)
+		wl_common.write_text_output(out, getattr(args, "out_file", None))
 	except SectionNotFoundError as exc:
 		tr.add_error("TOOL-004", "tool", str(exc))
 		_emit_tracer(tr, out_diag, out_diag_json)
@@ -1780,8 +1774,7 @@ def render_json_command(args: argparse.Namespace) -> int:
 			raise RuntimeError("--out-prefix requires --out-dir.")
 		if args.out_file:
 # --out is given? Dump to file.
-			with open(args.out_file, "w", encoding="utf-8") as fh:
-				json.dump(tree_full, fh, indent=4)
+			wl_common.write_json_output(tree_full, args.out_file, ensure_ascii=True)
 		elif getattr(args, "out_dir", None):
 # If --out-dir is specified, we construct the filename by a strict pattern,
 # which contains scope and flavour as segments.
@@ -1800,11 +1793,9 @@ def render_json_command(args: argparse.Namespace) -> int:
 # The pattern:
 			out_name = f"{base_name}.wtrl.{scope_str}.{flavour_str}.json"
 			out_path = out_dir / out_name
-			with open(out_path, "w", encoding="utf-8") as fh:
-				json.dump(tree_full, fh, indent=4)
+			wl_common.write_json_output(tree_full, str(out_path), ensure_ascii=True)
 		else:
-			json.dump(tree_full, sys.stdout, indent=4)
-			sys.stdout.write("\n")
+			wl_common.write_json_output(tree_full, None, ensure_ascii=True)
 #----- Catch implementation bugs ------------------------------#
 	except (IndexError, NameError, AssertionError, NotImplementedError, AttributeError, TypeError):
 		raise

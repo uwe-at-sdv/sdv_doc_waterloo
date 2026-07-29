@@ -5,7 +5,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from pytest_common import run_waterlint, DIR_EXAMPLES
+from pytest_common import ROOT, run_waterlint, DIR_EXAMPLES
 
 def test_extract_full_docstring_from_object() -> None:
 	"""Extracting a full docstring from an object returns text on stdout."""
@@ -59,6 +59,26 @@ def test_extract_writes_to_output_file(tmp_path: Path) -> None:
 	assert out_file.exists()
 	txt = out_file.read_text(encoding="utf-8")
 	assert "|Must| represent a constant value annotated as :wtrl_type:`Final`." in txt
+
+
+def test_extract_out_stdout_special_target() -> None:
+	"""--out @STDOUT writes extracted text to stdout, not to a file named @STDOUT."""
+	res = run_waterlint(
+		"extract",
+		"--basedir",
+		DIR_EXAMPLES,
+		"--obj",
+		"test_docitem_module_full",
+		"--section",
+		"Public_constants",
+		"--subsection",
+		"MY_CONSTANT",
+		"--out",
+		"@STDOUT",
+	)
+	assert res.returncode == 0, res.stderr
+	assert "|Must| represent a constant value annotated as :wtrl_type:`Final`." in res.stdout
+	assert not (ROOT / "@STDOUT").exists()
 
 
 def test_extract_is_idempotent_via_input_file(tmp_path: Path) -> None:

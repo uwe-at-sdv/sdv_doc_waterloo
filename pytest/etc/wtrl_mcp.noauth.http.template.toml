@@ -18,7 +18,7 @@ streamable_http_path = "/mcp"
 _ALLOWED_HOSTS_
 # This matters for the browser-based Inspector, which connects
 # via CORS. Replace "gilgamesh" with your hostname if you want
-# to try it locally. This entry is not relevant for VSCode.
+# to try it locally. This entry is not relevant for Visual Studio Code.
 allowed_origins = ["http://localhost:6274", "http://gilgamesh:6274"]
 
 [logging]

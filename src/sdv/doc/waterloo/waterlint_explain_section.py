@@ -22,8 +22,6 @@ Function_overview:
 from __future__ import annotations
 
 import argparse
-import json
-import sys
 
 from sdv.doc.waterloo import waterlint_common as wl_common
 from sdv.doc.waterloo.docitem_helper import tracer
@@ -57,17 +55,11 @@ def explain_section_command(args: argparse.Namespace) -> int:
 	out_file = getattr(args, "out_file", None)
 	if out_json:
 		doc = render_explanation_json(spec)
-		with open(out_json, "w", encoding="utf-8") as fh:
-			json.dump(doc, fh, indent=4, ensure_ascii=False)
-			fh.write("\n")
+		wl_common.write_json_output(doc, out_json)
 		_emit_explain_tracer(tr, getattr(args, "out_diag", None), getattr(args, "out_diag_json", None), debug=bool(getattr(args, "debug", False)))
 		return 0
 	txt = render_explanation_text(spec)
-	if out_file:
-		with open(out_file, "w", encoding="utf-8") as fh:
-			fh.write(txt)
-	else:
-		sys.stdout.write(txt)
+	wl_common.write_text_output(txt, out_file)
 	_emit_explain_tracer(tr, getattr(args, "out_diag", None), getattr(args, "out_diag_json", None), debug=bool(getattr(args, "debug", False)))
 	return 0
 

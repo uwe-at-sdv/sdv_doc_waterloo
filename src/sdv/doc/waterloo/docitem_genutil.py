@@ -14,7 +14,7 @@ Contract:
 		|Must| provide JSON representations of these templates as a result from a canonical generation process (e.g. a script) in order to avoid drift.
 Description:
 	This module is intended for IDE-extension workflows.
-	A typical use case is a VSCode context-menu action on a |lit|`class` or |lit|`def` line:
+	A typical use case is a Visual Studio Code context-menu action on a |lit|`class` or |lit|`def` line:
 	parse the selected header fragment, infer/select a profile, and generate a minimal or full Waterloo docstring template.
 	The signature-to-AST bridge in |func|`parse_signature_fragment` is shared by MCP
 	and IDE workflows. Keep it close to the AST-based generators so that the

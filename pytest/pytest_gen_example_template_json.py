@@ -6,7 +6,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from pytest_common import run_waterlint
+from pytest_common import ROOT, run_waterlint
 
 
 def test_gen_example_template_json_stdout_default() -> None:
@@ -50,3 +50,17 @@ def test_gen_example_template_json_out_file(tmp_path: Path) -> None:
 	assert doc["__WTRL_EXAMPLE_REFS__"] == {
 		"my_module.my_function": ["path/to/example1.py", "path/to/example2.py"],
 	}
+
+
+def test_gen_example_template_json_out_stdout_special_target() -> None:
+	"""--out @STDOUT writes template JSON to stdout, not to a file named @STDOUT."""
+	res = run_waterlint(
+		"gen-example-template-json",
+		"--out",
+		"@STDOUT",
+	)
+	assert res.returncode == 0, res.stderr
+	doc = json.loads(res.stdout)
+	assert isinstance(doc, dict)
+	assert "__WTRL_EXAMPLE_REFS__" in doc
+	assert not (ROOT / "@STDOUT").exists()

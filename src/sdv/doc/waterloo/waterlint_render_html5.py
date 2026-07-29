@@ -696,8 +696,7 @@ def render_html5_document(
 			out_file = str(od / f"waterloo-docs.{scope}.{flavour}.html")
 
 		try:
-			with open(out_file, "w", encoding="utf-8") as fh:
-				fh.write(html)
+			wl_common.write_text_output(html, out_file)
 		except Exception as exc:
 			_add_error("RHTM-005", f"Cannot write HTML output '{out_file}': {exc}")
 			return ""

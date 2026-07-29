@@ -23,8 +23,6 @@ Function_overview:
 from __future__ import annotations
 
 import argparse
-import json
-import sys
 from typing import Any
 
 from sdv.doc.waterloo import docitem
@@ -125,14 +123,9 @@ def gen_example_template_json_command(args: argparse.Namespace, waterlint_versio
 		domain = str(getattr(args, "domain", "local"))
 		nodes = _render_example_refs_template(org_or_project=org_or_project, domain=domain)
 		out_file = getattr(args, "out_file", None)
+		wl_common.write_json_output(nodes, out_file, ensure_ascii=True)
 		if out_file:
-			with open(out_file, "w", encoding="utf-8") as fh:
-				json.dump(nodes, fh, indent=4)
-				fh.write("\n")
 			tr.add_info(f"Example refs template written to: {out_file}", "tool")
-		else:
-			json.dump(nodes, sys.stdout, indent=4)
-			sys.stdout.write("\n")
 	except OSError as exc:
 		tr.add_error("AXMPL-004", "tool", str(exc))
 		_emit_tracer(tr, out_diag, out_diag_json, waterlint_version, debug=getattr(args, "debug", False))

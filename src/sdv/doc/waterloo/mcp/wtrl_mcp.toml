@@ -26,7 +26,7 @@ allowed_hosts = ["127.0.0.1:13316", "localhost:13316"]
 allowed_origins = ["http://gilgamesh:6274"]
 
 # Example profiles (copy/paste into active values above):
-# Dev profile (Inspector + local VS Code):
+# Dev profile (Inspector + local Visual Studio Code):
 # allowed_hosts = ["127.0.0.1:13316", "localhost:13316"]
 # allowed_origins = ["http://localhost:6274", "http://gilgamesh:6274"]
 #

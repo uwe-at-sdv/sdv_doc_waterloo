@@ -269,7 +269,7 @@ def foo_state_leak_c():
 	"""
 
 
-#----- VSCode generateDocstring edge cases -------------------#
+#----- Visual Studio Code generateDocstring edge cases ------------------#
 
 def func_with_comment_edgecase() -> None: # todo
 	"""

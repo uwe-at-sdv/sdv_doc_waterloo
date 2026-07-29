@@ -165,17 +165,17 @@ This section is normative.
 * [XTNSN-012] -- Cannot qualify documented object
 * [XTNSN-013] -- The selected object has no docstring.
 
-The JSON protocol used by the VSCode editor integration is documented
+The JSON protocol used by the Visual Studio Code editor integration is documented
 separately in chapter :ref:`vscode_extension_backend`.
 
 .. _vscode_extension_backend:
 
-Reference: VSCode Extension Backend
+Reference: VS Code Extension Backend
 ----------------------------------------------------------------
 
 This chapter is informative.
 
-It documents the JSON protocol currently used between the VSCode editor
+It documents the JSON protocol currently used between the VS Code editor
 integration and the Python backend. The material is primarily intended
 for extension developers and for debugging integration issues.
 
@@ -183,7 +183,7 @@ for extension developers and for debugging integration issues.
 JSON protocol shape
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The Python backend used by the VSCode extension returns a unified
+The Python backend used by the VS Code extension returns a unified
 JSON envelope for all commands.
 
 Minimal response shape:
@@ -393,7 +393,7 @@ Request (function):
 
 The optional field :wtrl_attr:`ignore` is a list of rule IDs to ignore for
 warnings. It has the same semantics as :wtrl_cmd:`waterlint validate --ignore`.
-The VSCode extension default is :wtrl_value:`["VLII-001"]`.
+The VS Code extension default is :wtrl_value:`["VLII-001"]`.
 
 Successful response:
 

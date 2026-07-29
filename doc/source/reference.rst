@@ -4,7 +4,7 @@ Reference - Rendering Showcase
 This chapter is primarily a reference showcase for the Sphinx rendering
 layer. The Waterloo project itself is best understood as a toolkit
 consisting of :wtrl_cmd:`waterlint`, the Pygments lexer, the MCP server,
-and the VSCode extension.
+and the Visual Studio Code extension.
 
 Most users will not import the internal :wtrl_file:`docitem*.py` modules
 directly in their own projects. Those modules are implementation details

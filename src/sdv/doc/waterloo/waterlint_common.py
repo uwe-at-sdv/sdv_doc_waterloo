@@ -14,7 +14,8 @@ Public_classes:
 	ParserParts_t
 Public_functions:
 	tokens_to_json_pointer, load_json, emit_diagnostics, validate_json_against_schema,
-	recompute_walk_summary, build_tracer_json_doc, emit_tracer
+	recompute_walk_summary, build_tracer_json_doc, open_output_target,
+	write_text_output, write_json_output, emit_tracer
 Public_constants:
 	DIAG_TARGET_STDOUT, DIAG_TARGET_STDERR
 Function_overview:
@@ -32,6 +33,12 @@ Function_overview:
 		Build a structured JSON document from the contents of a tracer.
 	emit_tracer:
 		Emit tracer diagnostics as text and/or JSON depending on the specified output arguments.
+	open_output_target:
+		Open a data-output target, including the special targets for standard streams.
+	write_text_output:
+		Write text data to a data-output target.
+	write_json_output:
+		Write JSON data to a data-output target.
 Public_types:
 	WtrlJsonNode_t:
 		Type alias for JSON data structures used in this module.
@@ -564,3 +571,112 @@ def emit_tracer(
 		with _open_diag_target(out_json_path, sys.stdout) as fh:
 			json.dump(doc, fh, indent=4)
 			fh.write("\n")
+
+
+def open_output_target(path: str | None, default_stream: Any) -> contextlib.AbstractContextManager[Any]:
+	r"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+		scope:
+			extension
+	Contract:
+		general:
+			|Must| return a context manager for writing command data output.
+			|Must| map |lit|`@STDOUT` to standard output.
+			|Must| map |lit|`@STDERR` to standard error.
+			|Must| use |var|`default_stream` when |var|`path` is |None|.
+			|Must| treat all other values as filesystem paths.
+	Parameters:
+		path:
+			Optional output target.
+		default_stream:
+			Stream used when |var|`path` is |None|.
+	Returns:
+		|Must| return a context manager yielding a writable text stream.
+	Raises:
+		OSError:
+			|May| raise if a filesystem path cannot be opened for writing.
+	"""
+	if path is None:
+		return contextlib.nullcontext(default_stream)
+	if path == DIAG_TARGET_STDOUT:
+		return contextlib.nullcontext(sys.stdout)
+	if path == DIAG_TARGET_STDERR:
+		return contextlib.nullcontext(sys.stderr)
+	return open(path, "w", encoding="utf-8")
+
+
+def write_text_output(text: str, path: str | None, *, default_stream: Any = sys.stdout) -> None:
+	r"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+		scope:
+			extension
+	Contract:
+		general:
+			|Must| write text output using |func|`open_output_target`.
+	Parameters:
+		text:
+			Text to write.
+		path:
+			Optional output target.
+		default_stream:
+			Stream used when |var|`path` is |None|.
+	Returns:
+		|Must| return |None|.
+	Raises:
+		OSError:
+			|May| raise if a filesystem path cannot be opened or written.
+	"""
+	with open_output_target(path, default_stream) as fh:
+		fh.write(text)
+
+
+def write_json_output(
+	doc: WtrlJsonNode_t,
+	path: str | None,
+	*,
+	default_stream: Any = sys.stdout,
+	indent: int = 4,
+	ensure_ascii: bool = False,
+) -> None:
+	r"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+		scope:
+			extension
+	Contract:
+		general:
+			|Must| write JSON output using |func|`open_output_target`.
+			|Must| append one final newline.
+	Parameters:
+		doc:
+			JSON-compatible document to write.
+		path:
+			Optional output target.
+		default_stream:
+			Stream used when |var|`path` is |None|.
+		indent:
+			Indentation passed to |func|`json.dump`.
+		ensure_ascii:
+			ASCII escaping flag passed to |func|`json.dump`.
+	Returns:
+		|Must| return |None|.
+	Raises:
+		OSError:
+			|May| raise if a filesystem path cannot be opened or written.
+		TypeError:
+			|May| raise if |var|`doc` is not JSON-serializable.
+	"""
+	with open_output_target(path, default_stream) as fh:
+		json.dump(doc, fh, indent=indent, ensure_ascii=ensure_ascii)
+		fh.write("\n")

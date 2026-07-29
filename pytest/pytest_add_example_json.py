@@ -72,6 +72,27 @@ def test_add_example_json_success_hash_key_and_no_path_default(tmp_path: Path) -
 	assert f"/__WTRL_EXAMPLES__/{ex_key}" in doc["__WTRL_OBJECTS__"]["mymod.X"]["examples"]
 
 
+def test_add_example_json_out_stdout_special_target(tmp_path: Path) -> None:
+	in_json = PATH_EXAMPLES_JSON / "mymod.wtrl.core.rfc-2119.json"
+	mapping = tmp_path / "map_stdout.json"
+	mapping.write_text(
+		json.dumps(_build_example_refs_doc({"mymod.X": ["example_mymod_X.py"]}), ensure_ascii=False),
+		encoding="utf-8",
+	)
+	res = _run_waterlint_add_example_json(
+		str(in_json),
+		str(mapping),
+		"@STDOUT",
+		basedir=str(PATH_EXAMPLES_JSON),
+		allow_local_paths=False,
+	)
+	assert res.returncode == 0, res.stderr
+	doc = json.loads(res.stdout)
+	assert isinstance(doc, dict)
+	assert "__WTRL_EXAMPLES__" in doc
+	assert not (ROOT / "@STDOUT").exists()
+
+
 def test_add_example_json_fails_for_unknown_object(tmp_path: Path) -> None:
 	in_json = PATH_EXAMPLES_JSON / "mymod.wtrl.core.rfc-2119.json"
 	mapping = tmp_path / "map_bad.json"
