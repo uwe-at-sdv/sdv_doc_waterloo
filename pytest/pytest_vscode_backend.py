@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Pytests for the Waterloo VS Code extension backend protocol."""
+"""Pytests for the Waterloo Visual Studio Code extension backend protocol."""
 
 from __future__ import annotations
 

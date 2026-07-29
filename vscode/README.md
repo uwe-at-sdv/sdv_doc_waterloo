@@ -1,7 +1,7 @@
-# Waterloo Docstrings for VS Code
+# Waterloo Docstrings for Visual Studio Code
 
 ![License](https://img.shields.io/badge/license-BSD--2--Clause-blue)
-![Version](https://img.shields.io/badge/version-0.3.2-orange)
+![Version](https://img.shields.io/badge/version-0.3.3-orange)
 [![GitHub](https://img.shields.io/badge/GitHub-sdv_doc_waterloo-181717?logo=github)](https://github.com/uwe-at-sdv/sdv_doc_waterloo)
 
 VS Code extension for Waterloo docstrings in Python.
@@ -86,7 +86,7 @@ This creates a file like:
 waterloo-docstrings-<version>.vsix
 ```
 
-The script updates the generated VSCode package files, but it does not stage,
+The script updates the generated VS Code package files, but it does not stage,
 commit, or push. Use `publish.sh` for the release workflow, or stage the
 changes manually when building this branch directly.
 

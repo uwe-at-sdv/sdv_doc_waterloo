@@ -5,7 +5,7 @@ integration in a broad sense.
 
 It currently contains:
 
-- [`vscode/`](vscode/) for the VS Code extension
+- [`vscode/`](vscode/) for the Visual Studio Code extension
 - [`pygments/`](pygments/) for the Pygments lexer
 
 Use the subdirectories for implementation details, installation notes, and

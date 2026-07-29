@@ -1,4 +1,4 @@
-# Waterloo Docstrings for VS Code
+# Waterloo Docstrings for Visual Studio Code
 
 _BADGES_
 

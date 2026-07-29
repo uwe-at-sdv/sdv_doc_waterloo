@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 r"""
-This module implements the backend of the VSCode extension "Waterloo Docstring Support".
+This module implements the backend of the Visual Studio Code extension "Waterloo Docstring Support".
 It is invoked by the extension via a JSON-based protocol.
 """
 
@@ -106,7 +106,7 @@ def _write_docstring_to_tmp(content: str) -> str:
 		return str(Path(handle.name))
 
 
-# A ping is sent by VSCode when the extension is activated,
+# A ping is sent by VS Code when the extension is activated,
 # e.g. when a Python file is loaded in the Editor panel.
 def _handle_ping(tr: wtrl.tracer,version: Any) -> dict[str, Any]:
 	if version != 1:

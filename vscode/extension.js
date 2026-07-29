@@ -584,7 +584,7 @@ function createWaterlooMcpServerDefinition() {
 		`Waterloo MCP provider: advertising '${label}' via '${command} --config ${configArg}'.`
 	);
 
-	// VS Code's MCP API wants a stdio server definition, so we hand it the
+	// Visual Studio Code's MCP API wants a stdio server definition, so we hand it the
 	// command plus the config path we resolved above.
 	const args = ["--config", configArg];
 	return new vscode.McpStdioServerDefinition(label, command, args);

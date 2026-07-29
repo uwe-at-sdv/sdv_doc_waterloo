@@ -438,7 +438,7 @@
       },
       "patterns": [
         {
-          "match": "\\b(Contract|Parameters|Returns|Raises|See_also|Definitions|Derived_from|Factory|Public_(classes|functions|methods|types|constants|variables))\\b",
+          "match": "\\b(Contract|Parameters|Returns|Raises|See_also|Definitions|Description|Derived_from|Factory|Public_(classes|functions|methods|types|constants|variables))\\b",
           "name": "markup.inline.raw.waterloo markup.italic.literal.waterloo"
         },
         {
