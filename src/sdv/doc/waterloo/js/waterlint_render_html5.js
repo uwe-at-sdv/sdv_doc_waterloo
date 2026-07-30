@@ -11,6 +11,49 @@ function setTextIfPresent(id, text) {
 	if (elem) elem.textContent = text;
 }
 
+const THEME_STORAGE_KEY = "wtrl-html5-theme";
+const THEME_VALUES = new Set(["light", "auto", "dark"]);
+
+function normalizeThemeValue(value) {
+	const theme = String(value || "").trim();
+	return THEME_VALUES.has(theme) ? theme : "auto";
+}
+
+function loadStoredTheme() {
+	try {
+		return normalizeThemeValue(window.localStorage.getItem(THEME_STORAGE_KEY));
+	} catch (_) {
+		return "auto";
+	}
+}
+
+function storeTheme(theme) {
+	try {
+		window.localStorage.setItem(THEME_STORAGE_KEY, theme);
+	} catch (_) {
+		// Static files may be viewed in environments where localStorage is unavailable.
+	}
+}
+
+function setTheme(theme, persist) {
+	const normalized = normalizeThemeValue(theme);
+	document.documentElement.dataset.wtrlTheme = normalized;
+	if (persist) storeTheme(normalized);
+	for (const name of THEME_VALUES) {
+		const elemButton = byId(`wtrl-theme-${name}`);
+		if (elemButton) elemButton.setAttribute("aria-pressed", name === normalized ? "true" : "false");
+	}
+}
+
+function setupThemeSwitcher() {
+	setTheme(loadStoredTheme(), false);
+	for (const name of THEME_VALUES) {
+		const elemButton = byId(`wtrl-theme-${name}`);
+		if (!elemButton) continue;
+		elemButton.addEventListener("click", () => { setTheme(name, true); });
+	}
+}
+
 // Map fully qualified identifiers to renderable anchor ids.
 // This is used e.g. in function resolveLocalTarget() to determine
 // whether a given QID can be linked to from the current page.
@@ -1680,6 +1723,7 @@ function setupSearch() {
 window.addEventListener("hashchange", () => { handlerHashNavigation(); });
 window.addEventListener("DOMContentLoaded", () => {
 	if (DEBUG_REFS_ENABLED) pushDebugRefEvent("debug-enabled", { query: window.location.search || "" });
+	setupThemeSwitcher();
 	byId("wtrl-scope").textContent = String((WTRL_DATA.meta || {}).scope || "");
 	byId("wtrl-flavour").textContent = String((WTRL_DATA.meta || {}).flavour || "");
 	byId("wtrl-modules").textContent = ((WTRL_DATA.meta || {}).modules || []).join(", ");

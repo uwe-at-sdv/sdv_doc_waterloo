@@ -4,9 +4,38 @@
 from __future__ import annotations
 
 import json
+import re
 from pathlib import Path
 
 from pytest_common import ROOT, run_waterlint, DIR_DOC, DIR_EXAMPLES, DIR_EXAMPLES_JSON, DIR_MODULE, PATH_EXAMPLES_JSON
+
+
+CSS_DIR = ROOT / "src" / "sdv" / "doc" / "waterloo" / "css"
+
+
+def _strip_css_comments(txt: str) -> str:
+	return re.sub(r"/\*.*?\*/", "", txt, flags=re.S)
+
+
+def test_render_html5_default_css_variables_are_defined() -> None:
+	"""wtrl-style.css may rely on common_styles.css, but not on missing variables."""
+	common_css = (CSS_DIR / "common_styles.css").read_text(encoding="utf-8")
+	wtrl_css = (CSS_DIR / "wtrl-style.css").read_text(encoding="utf-8")
+	combined_css = _strip_css_comments(common_css + "\n" + wtrl_css)
+
+	defined = {
+		match.group(1)
+		for match in re.finditer(r"(?<![\w-])(--[A-Za-z_][A-Za-z0-9_-]*)\s*:", combined_css)
+	}
+	references_without_fallback = {
+		match.group(1)
+		for match in re.finditer(r"var\(\s*(--[A-Za-z_][A-Za-z0-9_-]*)\s*\)", combined_css)
+	}
+	missing = sorted(references_without_fallback - defined)
+	assert not missing, "undefined CSS variables without fallback: " + ", ".join(missing)
+
+	suspicious = sorted(set(re.findall(r"\b[A-Za-z-]+var\s*\(", combined_css)) - {"var("})
+	assert not suspicious, "suspicious CSS var-like functions: " + ", ".join(suspicious)
 
 
 def test_render_html5_lists_in_freeform_smoketest(tmp_path: Path) -> None:
@@ -93,6 +122,10 @@ def test_render_html5_single_in_to_out(tmp_path: Path) -> None:
 	txt = out_file.read_text(encoding="utf-8")
 	assert "<!doctype html>" in txt.lower()
 	assert "wtrl-search" in txt
+	assert "wtrl-html5-theme" in txt
+	assert "wtrl-theme-light" in txt
+	assert "wtrl-theme-auto" in txt
+	assert "wtrl-theme-dark" in txt
 
 
 def test_render_html5_out_stdout_special_target() -> None:

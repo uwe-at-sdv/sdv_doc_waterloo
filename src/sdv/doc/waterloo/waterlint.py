@@ -69,7 +69,8 @@ try:
 except Exception:
 	_HAS_PYGMENTS = False
 
-__version__ = "0.21.0"
+__version__ = "0.22.0"
+# - 0.22.0 [2026-07-30] Dark theme for render-html5 output.
 # - 0.21.0 [2026-07-28]	Option --include-qid-prefix for subcommands walk and render-json
 # - 0.20.6 [2026-07-27]	Improved resolution for linked objects.
 # - 0.20.5 [2026-07-27]	Factory items now clickable.

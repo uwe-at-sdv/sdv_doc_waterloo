@@ -167,22 +167,32 @@ def _load_render_js_source() -> str:
 
 def _load_default_css_source() -> str:
 	"""Load default CSS source for render-html5 from packaged data."""
-	rel_path = Path("css") / "wtrl-style.css"
-	candidates: list[Path] = []
-	candidates.append(Path(__file__).resolve().parent / rel_path)
-	try:
-		p = importlib_resources.files("sdv.doc.waterloo") / "css" / "wtrl-style.css"
-		candidates.append(Path(str(p)))
-	except Exception:
-		pass
-	for p in candidates:
-		if p.is_file():
-			return p.read_text(encoding="utf-8")
-	raise RuntimeError(
-		"Cannot load default CSS asset 'css/wtrl-style.css'. "
-		+ "Tried: "
-		+ ", ".join(str(p) for p in candidates)
-	)
+	rel_paths = [
+		Path("css") / "common_styles.css",
+		Path("css") / "wtrl-style.css",
+	]
+	s = ""
+	for rel_path in rel_paths:
+		candidates: list[Path] = []
+		# Candidate 1: Try to load from the same directory as this script (useful for development).
+		candidates.append(Path(__file__).resolve().parent / rel_path)
+		try:
+			# Candidate 2: Try to load from the installed package resources (useful for production).
+			p = importlib_resources.files("sdv.doc.waterloo") / str(rel_path)
+			candidates.append(Path(str(p)))
+		except Exception:
+			pass
+		for p in candidates:
+			if p.is_file():
+				s += p.read_text(encoding="utf-8") + "\n"
+				break
+		else:
+			raise RuntimeError(
+				"Cannot load default CSS asset 'css/{}'. ".format(rel_path)
+				+ "Tried: "
+				+ ", ".join(str(p) for p in candidates)
+			)
+	return s
 
 
 def _build_examples_html_map(merged: Dict[str, Any], pygments_theme: str | None = None) -> Tuple[Dict[str, str], str]:
@@ -438,6 +448,8 @@ a.wtrl-ref:visited { color:inherit; }
 button.wtrl-hit-kind-module { color:#770000; }
 button.wtrl-hit-kind-class { color:#770000; }
 button.wtrl-hit-kind-callable { color:#3040ff; }
+button.wtrl-hit-kind-type { color:#770000; }
+button.wtrl-hit-kind-assignable { color:#308030; }
 button.wtrl-hit-kind-variable { color:#308030; }
 button.wtrl-hit-kind-constant { color:#308030; }
 """
@@ -468,15 +480,27 @@ button.wtrl-hit-kind-constant { color:#308030; }
 	html = f"""<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Waterloo HTML5 Documentation</title>
-  <style>{css}</style>
-</head>
-<body>
-  <div class="wtrl-app">
-    <aside class="wtrl-side">
-      <div class="wtrl-meta"><strong>Scope:</strong> <span id="wtrl-scope"></span></div>
+	  <meta charset="utf-8">
+	  <meta name="viewport" content="width=device-width, initial-scale=1">
+	  <title>Waterloo HTML5 Documentation</title>
+	  <script>
+	    try {{
+	      document.documentElement.dataset.wtrlTheme = localStorage.getItem("wtrl-html5-theme") || "auto";
+	    }} catch (_) {{
+	      document.documentElement.dataset.wtrlTheme = "auto";
+	    }}
+	  </script>
+	  <style>{css}</style>
+	</head>
+	<body>
+	  <div class="wtrl-app">
+	    <aside class="wtrl-side">
+	      <div class="wtrl-theme-switcher" aria-label="Theme">
+	        <button id="wtrl-theme-light" class="wtrl-theme-button wtrl-theme-light" type="button" title="Use light theme" aria-label="Use light theme"></button>
+	        <button id="wtrl-theme-auto" class="wtrl-theme-button wtrl-theme-auto" type="button" title="Use system theme" aria-label="Use system theme"></button>
+	        <button id="wtrl-theme-dark" class="wtrl-theme-button wtrl-theme-dark" type="button" title="Use dark theme" aria-label="Use dark theme"></button>
+	      </div>
+	      <div class="wtrl-meta"><strong>Scope:</strong> <span id="wtrl-scope"></span></div>
       <div class="wtrl-meta"><strong>Flavour:</strong> <span id="wtrl-flavour"></span></div>
       <div class="wtrl-meta"><strong>Modules:</strong> <span id="wtrl-modules"></span></div>
       <div class="wtrl-meta"><strong>Classes:</strong> <span id="wtrl-num-classes"></span></div>
