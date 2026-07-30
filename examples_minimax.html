@@ -10,7 +10,7 @@
     <link rel="stylesheet" type="text/css" href="_static/basic.css?v=b08954a9" />
     <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=27fed22d" />
     <link rel="stylesheet" type="text/css" href="_static/common_styles.css?v=b66e391a" />
-    <link rel="stylesheet" type="text/css" href="_static/waterloo_base.css?v=512472bd" />
+    <link rel="stylesheet" type="text/css" href="_static/waterloo_base.css?v=1910b4a6" />
     <link rel="stylesheet" type="text/css" href="_static/waterloo_alabaster.css?v=5a8d1525" />
     <link rel="stylesheet" type="text/css" href="_static/wtrl_doc_custom.css" />
     <script src="_static/documentation_options.js?v=8dde47fa"></script>
@@ -91,7 +91,7 @@ In the case of the module, there is a subsection named <span class="wtrl_label">
 </tbody>
 <thead class="wtrl-box-head-module">
 <tr class="row-odd"><th class="head"><span class="wtrl-obj-kind">«Module»</span></th>
-<th class="head"><p class="wtrl-obj-qid">test_docitem_module_minimal</p></th>
+<th class="head"><p><span class="wtrl-obj-qid">test_docitem_module_minimal</span></p></th>
 </tr>
 </thead>
 </table>
@@ -294,7 +294,9 @@ sections would contain a mixture of normative and informative content.</p></li>
 </tr>
 <tr class="wtrl-section row-even"><td><p><span class="wtrl_label">Class overview</span></p></td>
 <td><p><code class="wtrl_class docutils literal notranslate"><span class="pre">MyClass</span></code></p>
+<div class="wtrl-public-entry-content docutils container">
 <p class="wtrl-freeform-paragraph-content">Class for nothing</p>
+</div>
 </td>
 </tr>
 <tr class="wtrl-section row-odd"><td><p><span class="wtrl_label">Public functions</span></p></td>
@@ -302,22 +304,31 @@ sections would contain a mixture of normative and informative content.</p></li>
 </tr>
 <tr class="wtrl-section row-even"><td><p><span class="wtrl_label">Function overview</span></p></td>
 <td><p><code class="wtrl_func docutils literal notranslate"><span class="pre">my_function</span></code></p>
+<div class="wtrl-public-entry-content docutils container">
 <p class="wtrl-freeform-paragraph-content">Important for demonstration but does nothing</p>
+</div>
 </td>
 </tr>
 <tr class="wtrl-section row-odd"><td><p><span class="wtrl_label">Public types</span></p></td>
 <td><p id="wtrl-obj-24:test_docitem_module_full-13:MyTypeAlias_t"><code class="wtrl_type docutils literal notranslate"><span class="pre">MyTypeAlias_t</span></code></p>
+<div class="wtrl-public-entry-content docutils container">
+<p class="wtrl-public-type-annotation"><span class="wtrl-public-type-annotation-label">Type Alias for </span><span class="wtrl_type">float | int</span></p>
 <p class="wtrl-freeform-paragraph-content"><span class="wtrl_norm">Must</span> represent a union of :wtrl_type:`float` and :wtrl_type:`int`. This section is always normative. All relevant information about the type alias is specified here, as type aliases do not provide their own machine-verifiable docstrings.</p>
+</div>
 </td>
 </tr>
 <tr class="wtrl-section row-even"><td><p><span class="wtrl_label">Public variables</span></p></td>
 <td><p id="wtrl-obj-24:test_docitem_module_full-11:my_variable"><code class="wtrl_var docutils literal notranslate"><span class="pre">my_variable</span></code></p>
+<div class="wtrl-public-entry-content docutils container">
 <p class="wtrl-freeform-paragraph-content"><span class="wtrl_norm">Must</span> represent a value for this and that. This section is always normative. All relevant information is specified here, since variables do not have standardized, machine-verifiable docstrings.</p>
+</div>
 </td>
 </tr>
 <tr class="wtrl-section row-odd"><td><p><span class="wtrl_label">Public constants</span></p></td>
 <td><p id="wtrl-obj-24:test_docitem_module_full-11:MY_CONSTANT"><code class="wtrl_var docutils literal notranslate"><span class="pre">MY_CONSTANT</span></code></p>
+<div class="wtrl-public-entry-content docutils container">
 <p class="wtrl-freeform-paragraph-content"><span class="wtrl_norm">Must</span> represent a constant value annotated as :wtrl_type:`Final`. This section is always normative. All relevant information is specified here, as constants do not provide their own machine-verifiable docstrings.</p>
+</div>
 </td>
 </tr>
 <tr class="wtrl-section row-even"><td><p><span class="wtrl_label">See also</span></p></td>
@@ -326,7 +337,7 @@ sections would contain a mixture of normative and informative content.</p></li>
 </tbody>
 <thead class="wtrl-box-head-module">
 <tr class="row-odd"><th class="head"><span class="wtrl-obj-kind">«Module»</span></th>
-<th class="head"><p class="wtrl-obj-qid">test_docitem_module_full</p></th>
+<th class="head"><p><span class="wtrl-obj-qid">test_docitem_module_full</span></p></th>
 </tr>
 </thead>
 </table>
@@ -379,7 +390,7 @@ on the class constructor in section <span class="wtrl_label">Contract</span>.</p
 </tbody>
 <thead class="wtrl-box-head-class">
 <tr class="row-odd"><th class="head"><span class="wtrl-obj-kind">«Class»</span></th>
-<th class="head"><p class="wtrl-obj-qid">MyClass</p></th>
+<th class="head"><p><span class="wtrl-obj-qid">MyClass</span><span class="wtrl_lit"> –⁠ from </span><span class="wtrl_mod">test_docitem_class_minimal</span></p></th>
 </tr>
 </thead>
 </table>
@@ -575,7 +586,9 @@ usage. This section may only be present if section
 </tr>
 <tr class="wtrl-section row-odd"><td><p><span class="wtrl_label">Class overview</span></p></td>
 <td><p><code class="wtrl_class docutils literal notranslate"><span class="pre">MyNestedClass</span></code></p>
+<div class="wtrl-public-entry-content docutils container">
 <p class="wtrl-freeform-paragraph-content">Use this section for informative reminders what the class			is good for. Multiple lines are possible. Do not use Normativity Keywords.</p>
+</div>
 </td>
 </tr>
 <tr class="wtrl-section row-even"><td><p><span class="wtrl_label">Public methods</span></p></td>
@@ -583,22 +596,31 @@ usage. This section may only be present if section
 </tr>
 <tr class="wtrl-section row-odd"><td><p><span class="wtrl_label">Method overview</span></p></td>
 <td><p><code class="wtrl_func docutils literal notranslate"><span class="pre">my_method</span></code></p>
+<div class="wtrl-public-entry-content docutils container">
 <p class="wtrl-freeform-paragraph-content">Important for demonstration but does nothing</p>
+</div>
 </td>
 </tr>
 <tr class="wtrl-section row-even"><td><p><span class="wtrl_label">Public types</span></p></td>
 <td><p id="wtrl-obj-23:test_docitem_class_full-7:MyClass-13:MyTypeAlias_t"><code class="wtrl_type docutils literal notranslate"><span class="pre">MyTypeAlias_t</span></code></p>
+<div class="wtrl-public-entry-content docutils container">
+<p class="wtrl-public-type-annotation"><span class="wtrl-public-type-annotation-label">Type Alias for </span><span class="wtrl_type">float | int</span></p>
 <p class="wtrl-freeform-paragraph-content">Important type for annotations</p>
+</div>
 </td>
 </tr>
 <tr class="wtrl-section row-odd"><td><p><span class="wtrl_label">Public variables</span></p></td>
 <td><p id="wtrl-obj-23:test_docitem_class_full-7:MyClass-11:my_variable"><code class="wtrl_var docutils literal notranslate"><span class="pre">my_variable</span></code></p>
+<div class="wtrl-public-entry-content docutils container">
 <p class="wtrl-freeform-paragraph-content">A variable</p>
+</div>
 </td>
 </tr>
 <tr class="wtrl-section row-even"><td><p><span class="wtrl_label">Public constants</span></p></td>
 <td><p id="wtrl-obj-23:test_docitem_class_full-7:MyClass-11:MY_CONSTANT"><code class="wtrl_var docutils literal notranslate"><span class="pre">MY_CONSTANT</span></code></p>
+<div class="wtrl-public-entry-content docutils container">
 <p class="wtrl-freeform-paragraph-content">Another constant</p>
+</div>
 </td>
 </tr>
 <tr class="wtrl-section row-odd"><td><p><span class="wtrl_label">See also</span></p></td>
@@ -607,7 +629,7 @@ usage. This section may only be present if section
 </tbody>
 <thead class="wtrl-box-head-class">
 <tr class="row-even"><th class="head"><span class="wtrl-obj-kind">«Class»</span></th>
-<th class="head"><p class="wtrl-obj-qid">MyClass</p></th>
+<th class="head"><p><span class="wtrl-obj-qid">MyClass</span><span class="wtrl_lit"> –⁠ from </span><span class="wtrl_mod">test_docitem_class_full</span></p></th>
 </tr>
 </thead>
 </table>
@@ -680,7 +702,7 @@ the circumstances under which the exception is raised.</p>
 </tbody>
 <thead class="wtrl-box-head-function">
 <tr class="row-odd"><th class="head"><span class="wtrl-obj-kind">«Function»</span></th>
-<th class="head"><p class="wtrl-obj-qid">spam</p></th>
+<th class="head"><p><span class="wtrl-obj-qid">spam</span><span class="wtrl_lit"> –⁠ from </span><span class="wtrl_mod">test_docitem_function_minimal</span></p></th>
 </tr>
 </thead>
 </table>
@@ -823,9 +845,13 @@ must be included in order to make the documentation complete.</p>
 </tr>
 <tr class="wtrl-section row-odd"><td><p><span class="wtrl_label">Parameters</span></p></td>
 <td><p><code class="wtrl_var docutils literal notranslate"><span class="pre">tr</span></code></p>
+<div class="wtrl-public-entry-content docutils container">
 <p class="wtrl-freeform-paragraph-content">The tracer for collecting diagnostics.</p>
+</div>
 <p><code class="wtrl_var docutils literal notranslate"><span class="pre">subtree</span></code></p>
+<div class="wtrl-public-entry-content docutils container">
 <p class="wtrl-freeform-paragraph-content">A subtree of the tree matching this instance.</p>
+</div>
 </td>
 </tr>
 <tr class="wtrl-section row-even"><td><p><span class="wtrl_label">Returns</span></p></td>
@@ -845,7 +871,7 @@ must be included in order to make the documentation complete.</p>
 </tbody>
 <thead class="wtrl-box-head-method">
 <tr class="row-even"><th class="head"><span class="wtrl-obj-kind">«Method»</span></th>
-<th class="head"><p class="wtrl-obj-qid">docitem_base.parse</p></th>
+<th class="head"><p><span class="wtrl-obj-qid">docitem_base.parse</span><span class="wtrl_lit"> –⁠ from </span><span class="wtrl_mod">test_docitem_function_medium</span></p></th>
 </tr>
 </thead>
 </table>
@@ -922,7 +948,7 @@ is explicitly referenced using the mandatory subsection <span class="wtrl_label"
 </tbody>
 <thead class="wtrl-box-head-inherited_method">
 <tr class="row-even"><th class="head"><span class="wtrl-obj-kind">«Inherited_method»</span></th>
-<th class="head"><p class="wtrl-obj-qid">docitem_traits.parse</p></th>
+<th class="head"><p><span class="wtrl-obj-qid">docitem_traits.parse</span><span class="wtrl_lit"> –⁠ from </span><span class="wtrl_mod">test_docitem_function_medium</span></p></th>
 </tr>
 </thead>
 </table>
@@ -1107,7 +1133,9 @@ the base preconditions, unless they are explicitly permitted by the base contrac
 </tr>
 <tr class="wtrl-section row-odd"><td><p><span class="wtrl_label">Parameters</span></p></td>
 <td><p><code class="wtrl_var docutils literal notranslate"><span class="pre">n</span></code></p>
+<div class="wtrl-public-entry-content docutils container">
 <p class="wtrl-freeform-paragraph-content">Non-negative integer input.</p>
+</div>
 </td>
 </tr>
 <tr class="wtrl-section row-even"><td><p><span class="wtrl_label">Returns</span></p></td>
@@ -1134,7 +1162,7 @@ the base preconditions, unless they are explicitly permitted by the base contrac
 </tbody>
 <thead class="wtrl-box-head-function">
 <tr class="row-odd"><th class="head"><span class="wtrl-obj-kind">«Function»</span></th>
-<th class="head"><p class="wtrl-obj-qid">factorial</p></th>
+<th class="head"><p><span class="wtrl-obj-qid">factorial</span><span class="wtrl_lit"> –⁠ from </span><span class="wtrl_mod">test_docitem_function_full</span></p></th>
 </tr>
 </thead>
 </table>

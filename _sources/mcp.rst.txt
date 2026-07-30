@@ -54,7 +54,7 @@ Server- and security-related
 
 Transport mode for the server. The current package supports
 :wtrl_lit:`stdio` for local execution and editor-integrated clients such
-as VS Code, and :wtrl_value:`streamable-http` for browser- and
+as Visual Studio Code, and :wtrl_value:`streamable-http` for browser- and
 Inspector-based access.
 
 .. rubric:: :wtrl_attr:`host`\: :wtrl_type:`string`
@@ -271,14 +271,14 @@ down to a canonical target, and then inspect the exact Waterloo text that
 describes the object.
 
 
-Using the MCP-server in VSCode
+Using the MCP-server in VS Code
 ------------------------------
 
 .. rubric:: HTTP transport
 
-[Last tested with VSCode 1.115.0 on 2026-05-31]
+[Last tested with VS Code 1.115.0 on 2026-05-31]
 
-With transport :wtrl_lit:`streamable-http`, the MCP-server is added to VSCode by:
+With transport :wtrl_lit:`streamable-http`, the MCP-server is added to VS Code by:
 
 	:wtrl_key:`Shift` + :wtrl_key:`Ctrl` + :wtrl_key:`P` and :wtrl_lit:`MCP: Open User Configuration`
 
@@ -299,7 +299,7 @@ where the :wtrl_attr:`url` is the URL of the MCP server. Use the host and port
 from the running server configuration, and make sure the URL matches the
 configured :wtrl_lit:`streamable-http` endpoint. The MCP server must be
 running and accessible at that URL for the integration to work. As a smoke
-test, open the MCP panel in VSCode and see whether it connects successfully.
+test, open the MCP panel in VS Code and see whether it connects successfully.
 Then ask Copilot to run :wtrl_cmd:`list_roots` and check whether it returns the
 expected list of documents.
 
@@ -308,13 +308,13 @@ expected list of documents.
 With transport :wtrl_lit:`stdio`, the setup is usually more convenient for
 day-to-day use because no separate terminal and no TCP port are needed. If the
 Waterloo extension and the Python package :wtrl_file:`sdv.doc.waterloo` are
-installed, VSCode can talk to the MCP-server directly through the stdio
+installed, VS Code can talk to the MCP-server directly through the stdio
 transport. The extension contributes the server automatically, so the user does
 not need to add a JSON server definition by hand.
 
 The default configuration lives in :wtrl_file:`etc/wtrl_mcp.stdio.toml`. If you
 want to customize the roots or other settings, make a copy of that file and
-point VSCode to the copy. Open the command palette with
+point VS Code to the copy. Open the command palette with
 :wtrl_key:`Shift` + :wtrl_key:`Ctrl` + :wtrl_key:`P`, choose :wtrl_lit:`MCP: Open User Configuration`, and
 then set :wtrl_lit:`waterloo.mcpConfigPath` to your copied stdio configuration.
 The path may be absolute (recommended) or relative; if it is relative, the extension also
@@ -325,7 +325,7 @@ If you want to disable the automatic MCP server contribution entirely, set
 use the configured command and configuration path, with sensible defaults when
 no custom path is given.
 
-After saving the settings, open the MCP panel in VSCode and check whether the
+After saving the settings, open the MCP panel in VS Code and check whether the
 server appears. As a smoke test, ask Copilot to run :wtrl_cmd:`list_roots` and
 verify that the expected roots are returned.
 

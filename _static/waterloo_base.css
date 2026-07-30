@@ -53,6 +53,13 @@ span.wtrl_ref_unresolved
 	font-weight: bold;
 	}
 
+.wtrl_plain
+	{
+	color:var(--wtrl-plain-color);
+	font-weight:var(--wtrl-plain-font-weight);
+	font-style:var(--wtrl-plain-font-style);
+	}
+
 /*----- Roles ------------------------------------------------*/
 
 .wtrl_attr
@@ -288,7 +295,7 @@ table.wtrl-box td {
 	}
 
 table.wtrl-box th {
-	vertical-align: bottom;
+	vertical-align: middle;
 	}
 
 table.wtrl-box > thead > tr > th .wtrl-obj-kind {
@@ -335,6 +342,11 @@ table.wtrl-box > thead.wtrl-box-head-method > tr > th .wtrl-obj-qid {
 	}
 table.wtrl-box > thead.wtrl-box-head-inherited_method > tr > th .wtrl-obj-qid {
 	color:var(--wtrl-func-color);
+	}
+
+div.wtrl-public-entry-content {
+	margin-left: 1em;
+	margin-bottom: 0.2em;
 	}
 
 /* Prevent docstring boxes from expanding horizontally due to long pre/code

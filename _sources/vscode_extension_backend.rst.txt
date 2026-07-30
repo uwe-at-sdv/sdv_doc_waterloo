@@ -1,9 +1,9 @@
-VSCode Extension Backend
+Visual Studio Code Extension Backend
 ========================
 
 This chapter is informative.
 
-It documents the JSON protocol currently used between the VSCode editor
+It documents the JSON protocol currently used between the VS Code editor
 integration and the Python backend. The material is primarily intended
 for extension developers and for debugging integration issues.
 
@@ -11,7 +11,7 @@ for extension developers and for debugging integration issues.
 JSON protocol shape
 ----------------------------------------------
 
-The Python backend used by the VSCode extension returns a unified
+The Python backend used by the VS Code extension returns a unified
 JSON envelope for all commands.
 
 Minimal response shape:
