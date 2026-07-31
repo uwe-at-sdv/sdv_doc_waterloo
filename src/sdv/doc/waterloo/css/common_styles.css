@@ -162,7 +162,7 @@ code.docutils.literal {
 	--wtrl-theme-light-symbol:"○";
 	--wtrl-theme-auto-symbol:"◑";
 	--wtrl-theme-dark-symbol:"●";
-	}
+}
 
 :root {
 /* dark theme colors */
@@ -209,23 +209,23 @@ code.docutils.literal {
 	--wtrl-html-dark-hit-hover-bg:#243044;
 	--wtrl-html-dark-section-bg:#111827;
 	--wtrl-html-dark-section-border-color:#374151;
-	--wtrl-html-dark-section-head-color:#f9fafb;
-	--wtrl-html-dark-subsection-head-color:#e5e7eb;
+	--wtrl-html-dark-section-head-color:#ccd;
+	--wtrl-html-dark-subsection-head-color:#ccd;
 	--wtrl-html-dark-code-bg:#182218;
 	--wtrl-html-dark-key-border-color:#9ca3af;
 	--wtrl-html-dark-fallback-color:#e5e7eb;
 
 
 	/* theme symbols */
-		--wtrl-dark-theme-light-symbol:"●";
-		--wtrl-dark-theme-auto-symbol:"◐";
-		--wtrl-dark-theme-dark-symbol:"○";
-		}
+	--wtrl-dark-theme-light-symbol:"●";
+	--wtrl-dark-theme-auto-symbol:"◐";
+	--wtrl-dark-theme-dark-symbol:"○";
+}
 
-	/* Furo stores the active theme on body; render-html5 stores it on html. */
-	html[data-wtrl-theme="dark"],
-	body[data-theme="dark"],
-	body[data-wtrl-theme="dark"] {
+/* Furo stores the active theme on body; render-html5 stores it on html. */
+html[data-wtrl-theme="dark"],
+body[data-theme="dark"],
+body[data-wtrl-theme="dark"] {
 	--wtrl-attr-color:var(--wtrl-dark-attr-color);
 	--wtrl-class-color:var(--wtrl-dark-class-color);
 	--wtrl-cmd-color:var(--wtrl-dark-cmd-color);
@@ -275,12 +275,12 @@ code.docutils.literal {
 	--wtrl-theme-light-symbol:var(--wtrl-dark-theme-light-symbol);
 	--wtrl-theme-auto-symbol:var(--wtrl-dark-theme-auto-symbol);
 	--wtrl-theme-dark-symbol:var(--wtrl-dark-theme-dark-symbol);
-	}
+}
 
-	@media (prefers-color-scheme: dark) {
-		html[data-wtrl-theme="auto"],
-		body[data-theme="auto"],
-		body[data-wtrl-theme="auto"] {
+@media (prefers-color-scheme: dark) {
+	html[data-wtrl-theme="auto"],
+	body[data-theme="auto"],
+	body[data-wtrl-theme="auto"] {
 		--wtrl-attr-color:var(--wtrl-dark-attr-color);
 		--wtrl-class-color:var(--wtrl-dark-class-color);
 		--wtrl-cmd-color:var(--wtrl-dark-cmd-color);
@@ -330,5 +330,5 @@ code.docutils.literal {
 		--wtrl-theme-light-symbol:var(--wtrl-dark-theme-light-symbol);
 		--wtrl-theme-auto-symbol:var(--wtrl-dark-theme-auto-symbol);
 		--wtrl-theme-dark-symbol:var(--wtrl-dark-theme-dark-symbol);
-		}
 	}
+}

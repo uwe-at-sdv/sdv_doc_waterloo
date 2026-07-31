@@ -195,7 +195,71 @@ def _load_default_css_source() -> str:
 	return s
 
 
-def _build_examples_html_map(merged: Dict[str, Any], pygments_theme: str | None = None) -> Tuple[Dict[str, str], str]:
+_DEFAULT_PYGMENTS_THEME = "gruvbox-light"
+_DEFAULT_PYGMENTS_DARK_THEME = "gruvbox-dark"
+
+
+def _make_pygments_formatter(style_name: str) -> HtmlFormatter:
+	try:
+		return HtmlFormatter(cssclass="wtrl-code", nowrap=False, style=style_name)
+	except Exception:
+		return HtmlFormatter(cssclass="wtrl-code", nowrap=False)
+
+
+def _scope_css_rule(rule: str, prefixes: list[str]) -> str:
+	head, sep, tail = rule.partition("{")
+	if not sep:
+		return rule
+	selectors = [part.strip() for part in head.split(",") if part.strip()]
+	if not selectors:
+		return rule
+	scoped = []
+	for prefix in prefixes:
+		for selector in selectors:
+			scoped.append(f"{prefix} {selector}")
+	return ", ".join(scoped) + " {" + tail
+
+
+def _scope_pygments_css(css: str, prefixes: list[str]) -> str:
+	lines = []
+	for line in css.splitlines():
+		stripped = line.strip()
+		if not stripped or stripped.startswith("@") or "{" not in line:
+			lines.append(line)
+			continue
+		lines.append(_scope_css_rule(line, prefixes))
+	return "\n".join(lines)
+
+
+def _build_pygments_theme_css(light_theme: str, dark_theme: str) -> str:
+	light_formatter = _make_pygments_formatter(light_theme)
+	dark_formatter = _make_pygments_formatter(dark_theme)
+	light_css = _scope_pygments_css(
+		light_formatter.get_style_defs(".wtrl-code"),
+		["html[data-wtrl-theme=\"light\"]", "html[data-wtrl-theme=\"auto\"]"],
+	)
+	dark_css = _scope_pygments_css(
+		dark_formatter.get_style_defs(".wtrl-code"),
+		["html[data-wtrl-theme=\"dark\"]"],
+	)
+	auto_dark_css = _scope_pygments_css(
+		dark_formatter.get_style_defs(".wtrl-code"),
+		["html[data-wtrl-theme=\"auto\"]"],
+	)
+	return "\n".join([
+		light_css,
+		dark_css,
+		"@media (prefers-color-scheme: dark) {",
+		auto_dark_css,
+		"}",
+	])
+
+
+def _build_examples_html_map(
+	merged: Dict[str, Any],
+	pygments_theme: str | None = None,
+	pygments_dark_theme: str | None = None,
+) -> Tuple[Dict[str, str], str]:
 	"""Build HTML-rendered example code map and CSS (via pygments if available)."""
 	examples = _require_dict("examples", merged.get("examples", {}))
 	if not _HAS_PYGMENTS:
@@ -207,12 +271,10 @@ def _build_examples_html_map(merged: Dict[str, Any], pygments_theme: str | None 
 			html_map[str(ex_key)] = "<pre><code>" + html.escape(code) + "</code></pre>"
 		return html_map, ""
 
-	style_name = pygments_theme or "gruvbox-light"
-	try:
-		formatter = HtmlFormatter(cssclass="wtrl-code", nowrap=False, style=style_name)
-	except Exception:
-		formatter = HtmlFormatter(cssclass="wtrl-code", nowrap=False)
-	css = formatter.get_style_defs(".wtrl-code")
+	style_name = pygments_theme or _DEFAULT_PYGMENTS_THEME
+	dark_style_name = pygments_dark_theme or _DEFAULT_PYGMENTS_DARK_THEME
+	formatter = _make_pygments_formatter(style_name)
+	css = _build_pygments_theme_css(style_name, dark_style_name)
 	html_map = {}
 	for ex_key, ex_node in examples.items():
 		if not isinstance(ex_node, dict):
@@ -378,7 +440,12 @@ def _build_html_doc(merged: Dict[str, Any], allow_raw_object_node: bool = True) 
 	meta = _require_dict("meta", merged.get("meta"))
 	index = _build_ui_index(merged)
 	pygments_theme = merged.get("meta", {}).get("pygments_theme", None)
-	examples_html_map, pygments_css = _build_examples_html_map(merged, str(pygments_theme) if pygments_theme else None)
+	pygments_dark_theme = merged.get("meta", {}).get("pygments_dark_theme", None)
+	examples_html_map, pygments_css = _build_examples_html_map(
+		merged,
+		str(pygments_theme) if pygments_theme else None,
+		str(pygments_dark_theme) if pygments_dark_theme else None,
+	)
 
 	data_json = json.dumps(merged, ensure_ascii=False)
 	index_json = json.dumps(index, ensure_ascii=False)
@@ -573,6 +640,7 @@ def render_html5_document(
 	additional_css_path: str | None = None,
 	header_html_path: str | None = None,
 	pygments_theme: str | None = None,
+	pygments_dark_theme: str | None = None,
 	no_render_preamble: bool = False,
 	allow_raw_object_node: bool = True,
 ) -> str:
@@ -627,6 +695,8 @@ def render_html5_document(
 			The path to a custom HTML fragment to use as the header of the document. This allows for adding custom content or branding to the top of the HTML output.
 		pygments_theme:
 			The name of the Pygments theme to use for syntax highlighting in code examples. If not provided, a default theme will be used.
+		pygments_dark_theme:
+			The name of the Pygments theme to use for syntax highlighting in code examples when the rendered HTML is in dark mode.
 		no_render_preamble:
 			If set to True, the |label|`Preamble` section of the input documents will not be rendered in the output HTML.
 		allow_raw_object_node:
@@ -702,6 +772,8 @@ def render_html5_document(
 
 		if pygments_theme:
 			merged["meta"]["pygments_theme"] = pygments_theme
+		if pygments_dark_theme:
+			merged["meta"]["pygments_dark_theme"] = pygments_dark_theme
 
 		try:
 			html = _build_html_doc(merged, allow_raw_object_node=allow_raw_object_node)
@@ -750,7 +822,7 @@ def render_html5(args: argparse.Namespace) -> int:
 			* Exactly one of |attr|`out_file` or |attr|`out_dir` |must| be present and designate the HTML output target.
 			* |attr|`fail_on_warning` |must| be present, because the exit code depends on it.
 			* |attr|`out_diag` and |attr|`out_diag_json` |may| be present as optional tracer-diagnostics targets.
-			* |attr|`css_file`, |attr|`additional_css_file`, |attr|`header_html_file`, |attr|`pygments_theme`, |attr|`no_render_preamble`, and |attr|`allow_raw_object_node` |may| be present as rendering controls.
+			* |attr|`css_file`, |attr|`additional_css_file`, |attr|`header_html_file`, |attr|`pygments_theme`, |attr|`pygments_dark_theme`, |attr|`no_render_preamble`, and |attr|`allow_raw_object_node` |may| be present as rendering controls.
 			* |attr|`debug` |may| be present as a reserved global flag.
 	Returns:
 		|Must| return 0 on success, non-zero on validation or processing errors.
@@ -778,6 +850,7 @@ def render_html5(args: argparse.Namespace) -> int:
 			additional_css_path=getattr(args, "additional_css_file", None),
 			header_html_path=getattr(args, "header_html_file", None),
 			pygments_theme=getattr(args, "pygments_theme", None),
+			pygments_dark_theme=getattr(args, "pygments_dark_theme", None),
 			no_render_preamble=getattr(args, "no_render_preamble", False),
 			allow_raw_object_node=getattr(args, "allow_raw_object_node", True),
 		)
@@ -842,7 +915,8 @@ def build_parser(
 	prsr.add_argument("--css", dest="css_file", metavar="FILE", help="Primary CSS file to embed instead of the built-in default CSS.")
 	prsr.add_argument("--additional-css", dest="additional_css_file", metavar="FILE", help="Additional CSS file to append after the primary CSS.")
 	prsr.add_argument("--header-html", dest="header_html_file", metavar="FILE", help="HTML fragment file used instead of the built-in header markup.")
-	prsr.add_argument("--pygments-theme", dest="pygments_theme", default="gruvbox-light", metavar="THEME", help="Pygments style name for rendered examples (default: gruvbox-light).")
+	prsr.add_argument("--pygments-theme", dest="pygments_theme", default=_DEFAULT_PYGMENTS_THEME, metavar="THEME", help=f"Pygments style name for rendered examples in light mode (default: {_DEFAULT_PYGMENTS_THEME}).")
+	prsr.add_argument("--pygments-dark-theme", dest="pygments_dark_theme", default=_DEFAULT_PYGMENTS_DARK_THEME, metavar="THEME", help=f"Pygments style name for rendered examples in dark mode (default: {_DEFAULT_PYGMENTS_DARK_THEME}).")
 	prsr.add_argument("--no-render-preamble", dest="no_render_preamble", action="store_true", help="Do not render section 'Preamble' in HTML output.")
 	prsr.add_argument("--allow-raw-object-node", dest="allow_raw_object_node", action="store_true", default=True, help="Include collapsible section 'Raw object node' in HTML output (default).")
 	prsr.add_argument("--no-allow-raw-object-node", dest="allow_raw_object_node", action="store_false", help="Do not include section 'Raw object node' in HTML output.")

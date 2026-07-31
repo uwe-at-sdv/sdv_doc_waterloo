@@ -58,8 +58,10 @@ function setupThemeSwitcher() {
 // This is used e.g. in function resolveLocalTarget() to determine
 // whether a given QID can be linked to from the current page.
 const TARGET_TO_ANCHOR = new Map();
+const TARGET_TO_KIND = new Map();
 for (const e of WTRL_INDEX) {
 	if (e.anchor) TARGET_TO_ANCHOR.set(e.target, e.anchor);
+	if (e.target) TARGET_TO_KIND.set(e.target, String(e.kind || "obj"));
 }
 
 // The NORM_RE regex represents the complete set of normativity keywords.
@@ -508,6 +510,7 @@ function getRoleClassForLeaf(path) {
 	if (section === "Preamble" && (subsection === "profile" || subsection === "scope" || subsection === "status")) {
 		return "wtrl-value wtrl_value";
 	}
+	if (section === "Contract" && subsection === "traits") return "wtrl-value wtrl_value";
 	if (section === "Preamble" && subsection === "normative_sections") return "wtrl-label wtrl_label";
 	return "";
 }
@@ -521,6 +524,16 @@ function appendMaybeStyledText(parent, txt, roleCls) {
 	elemStyledText.className = roleCls;
 	appendInlineTokens(elemStyledText, txt);
 	parent.appendChild(elemStyledText);
+}
+
+function getRoleClassForTargetQid(targetQid) {
+	const kind = TARGET_TO_KIND.get(String(targetQid || "")) || "obj";
+	if (kind === "mod") return "wtrl-mod wtrl_mod";
+	if (kind === "cls") return "wtrl-class wtrl_class";
+	if (kind === "func" || kind === "meth") return "wtrl-func wtrl_func";
+	if (kind === "type") return "wtrl-type wtrl_type";
+	if (kind === "var" || kind === "const") return "wtrl-var wtrl_var";
+	return "";
 }
 
 function isFreeformPath(path) {
@@ -672,6 +685,16 @@ function isNormativeSectionsPath(path) {
 	);
 }
 
+function isCompactValueListPath(path) {
+	if (!Array.isArray(path) || path.length < 2) return false;
+	const section = String(path[0]);
+	const subsection = String(path[1]);
+	return (
+		(section === "Preamble" && subsection === "scope") ||
+		(section === "Contract" && subsection === "traits")
+	);
+}
+
 function renderCompactNormativeSections(container, items) {
 	const vals = items.map(v => String(v));
 	for (let i = 0; i < vals.length; i += 6) {
@@ -687,6 +710,17 @@ function renderCompactNormativeSections(container, items) {
 		}
 		container.appendChild(elemRowParagraph);
 	}
+}
+
+function renderCompactStyledValues(container, items, roleCls) {
+	const elemParagraph = document.createElement("p");
+	elemParagraph.className = "wtrl-text";
+	const vals = items.map(v => String(v)).filter(Boolean);
+	for (let i = 0; i < vals.length; i += 1) {
+		appendMaybeStyledText(elemParagraph, vals[i], roleCls);
+		if (i < vals.length - 1) elemParagraph.appendChild(document.createTextNode(", "));
+	}
+	container.appendChild(elemParagraph);
 }
 
 function _sourcePointerToQid(src) {
@@ -878,8 +912,9 @@ function appendSeeAlsoEntry(parent, entry, currentQid) {
 		appendMaybeStyledText(parent, raw, "wtrl-func wtrl_func");
 		return;
 	}
+	const roleCls = getRoleClassForTargetQid(targetQid);
 	const elemSeeAlsoLink = document.createElement("a");
-	elemSeeAlsoLink.className = "wtrl-ref wtrl_ref wtrl-func wtrl_func";
+	elemSeeAlsoLink.className = "wtrl-ref wtrl_ref" + (roleCls ? " " + roleCls : "");
 	elemSeeAlsoLink.href = "#" + anchor;
 	elemSeeAlsoLink.textContent = raw;
 	parent.appendChild(elemSeeAlsoLink);
@@ -938,14 +973,15 @@ function renderReferencedBySection(container, currentQid) {
 	for (const sourceQid of Array.from(refs).sort()) {
 		const elemRefItem = document.createElement("li");
 		const anchor = TARGET_TO_ANCHOR.get(sourceQid);
+		const roleCls = getRoleClassForTargetQid(sourceQid);
 		if (anchor) {
 			const elemRefLink = document.createElement("a");
-			elemRefLink.className = "wtrl-ref wtrl_ref wtrl-func wtrl_func";
+			elemRefLink.className = "wtrl-ref wtrl_ref" + (roleCls ? " " + roleCls : "");
 			elemRefLink.href = "#" + anchor;
 			elemRefLink.textContent = sourceQid;
 			elemRefItem.appendChild(elemRefLink);
 		} else {
-			appendMaybeStyledText(elemRefItem, sourceQid, "wtrl-func wtrl_func");
+			appendMaybeStyledText(elemRefItem, sourceQid, roleCls);
 		}
 		elemRefsList.appendChild(elemRefItem);
 	}
@@ -1135,6 +1171,11 @@ function renderValue(value, container, depth, path, currentQid) {
 			renderCompactNormativeSections(container, vals);
 			return;
 		}
+		if (isCompactValueListPath(pth)) {
+			const vals = value.split(",").map(s => s.trim()).filter(Boolean);
+			renderCompactStyledValues(container, vals, leafRoleCls);
+			return;
+		}
 		if (isFreeformPath(pth)) {
 			renderFreeformText(container, value);
 			return;
@@ -1159,6 +1200,10 @@ function renderValue(value, container, depth, path, currentQid) {
 		}
 		if (isNormativeSectionsPath(pth) && value.every(item => typeof item === "string")) {
 			renderCompactNormativeSections(container, value);
+			return;
+		}
+		if (isCompactValueListPath(pth) && value.every(item => typeof item === "string")) {
+			renderCompactStyledValues(container, value, leafRoleCls);
 			return;
 		}
 		if (isFreeformPath(pth) && value.every(item => typeof item === "string")) {

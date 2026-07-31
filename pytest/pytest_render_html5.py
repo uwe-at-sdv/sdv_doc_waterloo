@@ -11,6 +11,7 @@ from pytest_common import ROOT, run_waterlint, DIR_DOC, DIR_EXAMPLES, DIR_EXAMPL
 
 
 CSS_DIR = ROOT / "src" / "sdv" / "doc" / "waterloo" / "css"
+RENDER_HTML5_JS = ROOT / "src" / "sdv" / "doc" / "waterloo" / "js" / "waterlint_render_html5.js"
 
 
 def _strip_css_comments(txt: str) -> str:
@@ -216,6 +217,52 @@ def test_render_html5_invalid_pygments_theme_falls_back(tmp_path: Path) -> None:
 	assert res.returncode == 0, res.stderr
 	txt = out_file.read_text(encoding="utf-8")
 	assert ".wtrl-code" in txt
+
+
+def test_render_html5_scopes_pygments_themes_to_page_theme(tmp_path: Path) -> None:
+	"""Rendered example CSS contains separate light, dark, and system-dark selectors."""
+	out_file = tmp_path / "theme_aware_pygments.html"
+	res = run_waterlint(
+		"render-html5",
+		"--in",
+		DIR_EXAMPLES_JSON + "/test_docitem_method_property.wtrl.core.rfc-2119.json",
+		"--pygments-theme",
+		"default",
+		"--pygments-dark-theme",
+		"monokai",
+		"--out",
+		str(out_file),
+	)
+	assert res.returncode == 0, res.stderr
+	txt = out_file.read_text(encoding="utf-8")
+	assert 'html[data-wtrl-theme="light"] .wtrl-code' in txt
+	assert 'html[data-wtrl-theme="auto"] .wtrl-code' in txt
+	assert 'html[data-wtrl-theme="dark"] .wtrl-code' in txt
+	assert "@media (prefers-color-scheme: dark)" in txt
+
+
+def test_render_html5_renders_scope_and_traits_as_compact_value_lists() -> None:
+	"""Limited-value metadata lists should be rendered as compact CSV-like text."""
+	js = RENDER_HTML5_JS.read_text(encoding="utf-8")
+	assert "function isCompactValueListPath(path)" in js
+	assert 'section === "Preamble" && subsection === "scope"' in js
+	assert 'section === "Contract" && subsection === "traits"' in js
+	assert 'if (section === "Contract" && subsection === "traits") return "wtrl-value wtrl_value";' in js
+	assert "renderCompactStyledValues(container, value, leafRoleCls);" in js
+
+
+def test_render_html5_see_also_and_referenced_by_use_target_kind_classes() -> None:
+	"""See_also and Referenced by links should style targets by object kind."""
+	js = RENDER_HTML5_JS.read_text(encoding="utf-8")
+	assert "const TARGET_TO_KIND = new Map();" in js
+	assert "function getRoleClassForTargetQid(targetQid)" in js
+	assert 'if (kind === "mod") return "wtrl-mod wtrl_mod";' in js
+	assert 'if (kind === "cls") return "wtrl-class wtrl_class";' in js
+	assert 'if (kind === "func" || kind === "meth") return "wtrl-func wtrl_func";' in js
+	assert 'if (kind === "type") return "wtrl-type wtrl_type";' in js
+	assert 'if (kind === "var" || kind === "const") return "wtrl-var wtrl_var";' in js
+	assert "const roleCls = getRoleClassForTargetQid(targetQid);" in js
+	assert "const roleCls = getRoleClassForTargetQid(sourceQid);" in js
 
 
 def test_render_html5_can_omit_raw_object_node(tmp_path: Path) -> None:
