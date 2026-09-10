@@ -69,7 +69,8 @@ try:
 except Exception:
 	_HAS_PYGMENTS = False
 
-__version__ = "0.22.1"
+__version__ = "0.22.2"
+# - 0.22.2 [2026-09-10] Bugfix github issue #1
 # - 0.22.1 [2026-07-31] Design details and bugfixes in render-html5
 # - 0.22.0 [2026-07-30] Dark theme for render-html5 output.
 # - 0.21.0 [2026-07-28]	Option --include-qid-prefix for subcommands walk and render-json
@@ -2060,6 +2061,11 @@ parser: argparse.ArgumentParser
 class CustomHelpFormatter(argparse.HelpFormatter):
 	def __init__(self, prog : Any):
 		super().__init__(prog)
+		# Python 3.14 adds color handling and its private ``_decolor`` helper.
+		# The formatter only needs it to measure visible option lengths, so on
+		# older Python versions the identity function is the correct fallback.
+		if not hasattr(self, "_decolor"):
+			self._decolor = lambda text: text
 		self._max_help_position = 36
 		self._indent_increment = 4
 		terminal_width = shutil.get_terminal_size().columns
@@ -2072,7 +2078,6 @@ class CustomHelpFormatter(argparse.HelpFormatter):
 		help_width = max(self._width - help_position, 11)
 		action_width = help_position - self._current_indent - 2
 		action_header = self._format_action_invocation(action)
-		assert(hasattr(self,'_decolor'))
 		action_header_no_color = self._decolor(action_header)
 
 		if not action.help:

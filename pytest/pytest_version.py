@@ -16,6 +16,13 @@ def test_version_prints_plain_version_string() -> None:
 	assert "." in res.stdout.strip()
 
 
+def test_help_is_available() -> None:
+	res = run_waterlint("-h")
+	assert res.returncode == 0, res.stderr
+	assert "usage: waterlint" in res.stdout
+	assert "validate" in res.stdout
+
+
 def test_version_json_reports_all_schema_categories() -> None:
 	res = run_waterlint("version-json")
 	assert res.returncode == 0, res.stderr
