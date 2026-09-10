@@ -69,7 +69,8 @@ try:
 except Exception:
 	_HAS_PYGMENTS = False
 
-__version__ = "0.22.2"
+__version__ = "0.22.3"
+# - 0.22.3 [2026-09-10] Fixed --basedir resolution for split PEP 420 namespace packages. Waterloo no longer hides sibling namespace portions when constructing intermediate package prefixes.
 # - 0.22.2 [2026-09-10] Bugfix github issue #1
 # - 0.22.1 [2026-07-31] Design details and bugfixes in render-html5
 # - 0.22.0 [2026-07-30] Dark theme for render-html5 output.

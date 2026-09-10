@@ -243,12 +243,10 @@ def _apply_basedir(basedir: str | None, qname: str | None) -> None:
 					paths.insert(0, str(pfx_path))
 					mod.__path__ = paths
 			continue
-		spec = importlib.util.spec_from_loader(pfx, loader=None, origin="namespace")
-		if spec is None:
-			continue
-		mod = importlib.util.module_from_spec(spec)
-		mod.__path__ = [str(pfx_path)]
-		sys.modules[pfx] = mod
+		# Let Python construct PEP 420 namespace packages.  A manually created
+		# module with only pfx_path would hide sibling namespace portions, for
+		# example a shared dependency installed from a different source root.
+		importlib.import_module(pfx)
 
 def tokens_to_json_pointer(tokens: list[object]) -> str:
 	r"""
