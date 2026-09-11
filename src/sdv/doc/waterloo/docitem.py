@@ -253,7 +253,8 @@ from contextlib import contextmanager
 from sdv.doc.waterloo.docitem_docstring import *
 from sdv.doc.waterloo.docitem_validator import *
 
-__version__ = "0.12.14"
+__version__ = "0.12.15"
+# - 0.12.15 [2026-09-11] Bugfix in wtrl_mcp packaging
 # - 0.12.14 [2026-09-10] Bugfix in waterlint_common.py, name 
 # - 0.12.13 [2026-09-10] Bugfix github issue #1
 # - 0.12.12 [2026-07-26] Infrastructure of build_anchor-functions.

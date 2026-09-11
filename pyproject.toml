@@ -27,7 +27,7 @@ dependencies = [
 	"python-waterloo-lexer",
 	"docutils",
 	"wcwidth",
-	"mcp",
+	"mcp>=1,<2",
 	"tomli; python_version < '3.11'"
 	]
 
