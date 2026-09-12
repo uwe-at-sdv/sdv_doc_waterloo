@@ -18,7 +18,7 @@
   "messages": [
     {
       "role": "user",
-      "content": "Draft or refine a Waterloo docstring for a $profile object.\n\nIf a callable signature is available, use `gen_docstring` with that signature.\nIf you are revising an existing object, compare `get_signature`, `get_examples`, and `get_references` before proposing wording.\n\nPrefer normative sections over Notes when the text should state a rule.\n"
+      "content": "Draft or refine a Waterloo docstring for a $profile object.\n\nIf a callable signature is available, use `gen_docstring` with that signature.\nIf you are revising an existing object, compare `get_signature`, `get_examples`, and `get_references` before proposing wording.\n\nRecommended future workflow: first build a structured authoring-JSON object with the intended profile, contract items, and narrative sections; validate it against its schema; render it into a Waterloo docstring; then validate the actual target object with `waterlint validate`. The authoring-JSON schema and renderer are not implemented yet. Until they are available, use `gen_docstring` as the structural starting point and refine the real docstring iteratively from Waterlint diagnostics. Schema validation can only check structure; final Waterlint validation must still resolve source-specific concerns such as signatures, exception classes, references, and allowed sections.\n\nPrefer normative sections over Notes when the text should state a rule.\n"
     }
   ]
 }
