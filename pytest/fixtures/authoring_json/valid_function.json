@@ -1,0 +1,49 @@
+{
+  "$schema": "https://sci-d-vis.com/schema/wtrl-authoring-object-json-0.1.0.schema.json",
+  "$id": "urn:waterlint:wtrl-authoring-object-json:valid-function",
+  "__WTRL_CATEGORY__": "wtrl-authoring-object-json",
+  "__WTRL_VERSION__": {
+    "schema": "0.1.0"
+  },
+  "qualified_name": "demo.module.load_widget",
+  "profile": "function",
+  "signature": "(path: str) -> Widget",
+  "doc": {
+    "Preamble": {
+      "profile": "function",
+      "normative_sections": [
+        "Contract",
+        "Parameters",
+        "Returns",
+        "Raises"
+      ]
+    },
+    "Contract": {
+      "general": [
+        "|Must| load a widget from |var|`path`."
+      ],
+      "requires": [
+        "|Must| require |var|`path` to identify a readable file."
+      ]
+    },
+    "Parameters": {
+      "path": [
+        {
+          "paragraph": "The file from which to load the widget."
+        }
+      ]
+    },
+    "Returns": [
+      {
+        "paragraph": "The loaded widget."
+      }
+    ],
+    "Raises": {
+      "ValueError": [
+        {
+          "paragraph": "Raised when the file is malformed."
+        }
+      ]
+    }
+  }
+}

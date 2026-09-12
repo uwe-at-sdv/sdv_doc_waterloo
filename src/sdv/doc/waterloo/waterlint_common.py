@@ -115,6 +115,7 @@ DIAG_TARGET_STDERR: Final[str] = "@STDERR"
 WTRL_JSON_SCHEMA_VERSION = "0.1.0"
 WTRL_EXAMPLE_REFS_JSON_SCHEMA_VERSION = "0.1.1"
 WTRL_WALK_JSON_SCHEMA_VERSION = "0.0.1"
+WTRL_AUTHORING_OBJECT_JSON_SCHEMA_VERSION = "0.1.0"
 
 WTRL_SCHEMA_URI_BASE = "https://sci-d-vis.com/schema"
 #==============================================================#

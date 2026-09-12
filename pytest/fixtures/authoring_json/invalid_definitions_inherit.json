@@ -1,0 +1,31 @@
+{
+  "$schema": "https://sci-d-vis.com/schema/wtrl-authoring-object-json-0.1.0.schema.json",
+  "$id": "urn:waterlint:wtrl-authoring-object-json:invalid-definitions-inherit",
+  "__WTRL_CATEGORY__": "wtrl-authoring-object-json",
+  "__WTRL_VERSION__": {
+    "schema": "0.1.0"
+  },
+  "qualified_name": "demo.module",
+  "profile": "module",
+  "doc": {
+    "Preamble": {
+      "profile": "module",
+      "normative_sections": [
+        "Contract",
+        "Definitions"
+      ]
+    },
+    "Contract": {
+      "general": [
+        "|Must| provide a demo module."
+      ]
+    },
+    "Definitions": {
+      "_inherit": [
+        {
+          "paragraph": "This must not be representable in authoring JSON 0.1.0."
+        }
+      ]
+    }
+  }
+}

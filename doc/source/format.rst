@@ -226,6 +226,7 @@ The following list explains the mnemonic prefixes and their semantics.
 * TOOL: Error messages from :wtrl_cmd:`waterlint` (or other tools)
 * JPTR: Error messages related to JSON Pointer references in tool-generated JSON
 * JSCH: Error messages related to JSON and JSON Schema
+* JIDO: Error messages related to "JSON In Docstring Out", i.e. generating docstrings from a special authoring JSON.
 * AXMPL: Error messages related to example mapping (e.g. for :wtrl_cmd:`waterlint add-example-json`)
 * CARVE: Error messages related to carving walk input into JSON objects
 * RHTM: Error messages related to rendering HTML (e.g. for :wtrl_cmd:`waterlint render-html5`)

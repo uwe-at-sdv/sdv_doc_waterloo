@@ -1,0 +1,29 @@
+{
+  "$schema": "https://sci-d-vis.com/schema/wtrl-authoring-object-json-0.1.0.schema.json",
+  "$id": "urn:waterlint:wtrl-authoring-object-json:valid-class",
+  "__WTRL_CATEGORY__": "wtrl-authoring-object-json",
+  "__WTRL_VERSION__": {
+    "schema": "0.1.0"
+  },
+  "qualified_name": "demo.module.Widget",
+  "profile": "class",
+  "doc": {
+    "Preamble": {
+      "profile": "class",
+      "normative_sections": [
+        "Contract"
+      ]
+    },
+    "Contract": {
+      "general": [
+        "|Must| represent a widget."
+      ],
+      "constructor": [
+        "|Must| initialize a usable widget."
+      ],
+      "traits": [
+        "final"
+      ]
+    }
+  }
+}

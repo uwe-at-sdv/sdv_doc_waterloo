@@ -37,12 +37,13 @@ import sys, inspect, os, re,shutil, traceback
 from datetime import datetime
 from pathlib import Path
 from types import ModuleType
-from typing import Any, Callable, Dict, Iterable, List, Optional, Tuple, cast
+from typing import Any, Callable, Dict, Final, Iterable, List, Optional, Tuple, cast
 from sdv.doc.waterloo.waterlint_common import (
 	WTRL_DOCITEM_VERSION,
 	WTRL_JSON_SCHEMA_VERSION,
 	WTRL_EXAMPLE_REFS_JSON_SCHEMA_VERSION,
 	WTRL_WALK_JSON_SCHEMA_VERSION,
+	WTRL_AUTHORING_OBJECT_JSON_SCHEMA_VERSION,
 	WTRL_SCHEMA_URI_BASE,
 	_apply_basedir,
 	_resolve_object,
@@ -201,6 +202,22 @@ SUBCOMMANDS = (
 	"version",
 	"version-json",
 )
+
+# Categories that can be selected by the explicit __WTRL_CATEGORY__ envelope
+# field. Older formats remain detectable through their structural markers.
+KNOWN_JSON_SCHEMA_CATEGORIES: Final[frozenset[str]] = frozenset({
+	"wtrl-json",
+	"wtrl-tracer-json",
+	"wtrl-example-refs-json",
+	"wtrl-explain-section-json",
+	"wtrl-explain-subsection-json",
+	"wtrl-mcp-admin-registry-json",
+	"wtrl-mcp-auth-token-store-json",
+	"wtrl-mcp-about-json",
+	"wtrl-mcp-about-topic-json",
+	"wtrl-walk-json",
+	"wtrl-authoring-object-json",
+	})
 
 #===== Helper =================================================#
 
@@ -993,9 +1010,13 @@ def extract_command(args: argparse.Namespace) -> int:
 #===== Validate JSON ==========================================#
 
 def _infer_json_doc_category(doc: cvrt.WtrlJsonNode_t) -> str:
-	"""Infer JSON document category from structural __WTRL_*__ markers."""
+	"""Infer a known JSON category from __WTRL_CATEGORY__ or legacy structural markers."""
 	if not isinstance(doc, dict):
 		raise ValueError("Input JSON must be an object.")
+	declared_category = doc.get("__WTRL_CATEGORY__")
+	if declared_category is not None:
+		if not isinstance(declared_category, str) or declared_category not in KNOWN_JSON_SCHEMA_CATEGORIES:
+			raise ValueError("__WTRL_CATEGORY__ must name a known Waterloo JSON category.")
 	matches: list[str] = []
 	if "__WTRL_OBJECTS__" in doc and "__WTRL_SUMMARY__" in doc:
 		matches.append("wtrl-walk-json")
@@ -1005,6 +1026,12 @@ def _infer_json_doc_category(doc: cvrt.WtrlJsonNode_t) -> str:
 		matches.append("wtrl-tracer-json")
 	if "__WTRL_EXAMPLE_REFS__" in doc:
 		matches.append("wtrl-example-refs-json")
+	if declared_category is not None:
+		if len(matches) > 1:
+			raise ValueError("Ambiguous JSON category: multiple structural __WTRL_*__ marker sets detected.")
+		if matches and matches[0] != declared_category:
+			raise ValueError("__WTRL_CATEGORY__ conflicts with structural __WTRL_*__ markers.")
+		return declared_category
 	if len(matches) == 0:
 		raise ValueError("Cannot infer JSON category from structural __WTRL_*__ keys.")
 	if len(matches) > 1:
@@ -1024,7 +1051,10 @@ def _infer_schema_path_from_doc(doc: cvrt.WtrlJsonNode_t) -> tuple[Path, str]:
 	else:
 		declared_schema_fallback = doc.get("$schema")
 		if isinstance(declared_schema_fallback, str):
-			m = re.search(r"(wtrl-(?:json|walk-json|tracer-json|example-refs-json))-([0-9]+(?:\.[0-9]+)*)\.schema\.json", declared_schema_fallback)
+			category_pattern = "|".join(
+				re.escape(category) for category in sorted(KNOWN_JSON_SCHEMA_CATEGORIES, key=len, reverse=True)
+			)
+			m = re.search(rf"({category_pattern})-([0-9]+(?:\.[0-9]+)*)\.schema\.json", declared_schema_fallback)
 			if m is not None:
 				category_from_schema = m.group(1)
 				schema_version = m.group(2)
@@ -2039,6 +2069,7 @@ def version_json_command(args: argparse.Namespace) -> int:
 	doc = {
 		"waterlint": {"kind": "executable", "version": __version__},
 		"wtrl-json": {"kind": "schema", "version": WTRL_JSON_SCHEMA_VERSION},
+		"wtrl-authoring-object-json": {"kind": "schema", "version": WTRL_AUTHORING_OBJECT_JSON_SCHEMA_VERSION},
 		"wtrl-tracer-json": {"kind": "schema", "version": docitem.WTRL_TRACER_JSON_SCHEMA_VERSION},
 		"wtrl-example-refs-json": {"kind": "schema", "version": WTRL_EXAMPLE_REFS_JSON_SCHEMA_VERSION},
 		"wtrl-explain-section-json": {"kind": "schema", "version": WTRL_EXPLAIN_SECTION_JSON_SCHEMA_VERSION},

@@ -1,0 +1,545 @@
+{
+  "description": "Waterloo Authoring JSON for exactly one documentable object.",
+  "x-published": "2026-09-12",
+  "x-changelog": [
+    {
+      "version": "0.1.0",
+      "date": "2026-09-12",
+      "changes": [
+        {
+          "type": "meta",
+          "summary": "Initial schema version."
+        }
+      ]
+    }
+  ],
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sci-d-vis.com/schema/wtrl-authoring-object-json-0.1.0.schema.json",
+  "title": "Waterloo Authoring JSON object",
+  "type": "object",
+  "required": [
+    "$schema",
+    "$id",
+    "__WTRL_CATEGORY__",
+    "__WTRL_VERSION__",
+    "qualified_name",
+    "profile",
+    "doc"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {
+      "const": "https://sci-d-vis.com/schema/wtrl-authoring-object-json-0.1.0.schema.json"
+    },
+    "$id": {
+      "type": "string",
+      "pattern": "^urn:waterlint:wtrl-authoring-object-json:[^\\s]+$"
+    },
+    "__WTRL_CATEGORY__": {
+      "const": "wtrl-authoring-object-json"
+    },
+    "__WTRL_VERSION__": {
+      "type": "object",
+      "required": [
+        "schema"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "schema": {
+          "const": "0.1.0"
+        }
+      }
+    },
+    "qualified_name": {
+      "$ref": "#/$defs/qualified_identifier"
+    },
+    "profile": {
+      "$ref": "#/$defs/profile"
+    },
+    "signature": {
+      "$ref": "#/$defs/logical_text"
+    },
+    "doc": {
+      "$ref": "#/$defs/doc"
+    }
+  },
+  "oneOf": [
+    {
+      "properties": {
+        "profile": {
+          "const": "module"
+        },
+        "doc": {
+          "$ref": "#/$defs/module_doc"
+        }
+      },
+      "not": {
+        "required": [
+          "signature"
+        ]
+      }
+    },
+    {
+      "properties": {
+        "profile": {
+          "const": "class"
+        },
+        "doc": {
+          "$ref": "#/$defs/class_doc"
+        }
+      },
+      "not": {
+        "required": [
+          "signature"
+        ]
+      }
+    },
+    {
+      "properties": {
+        "profile": {
+          "const": "function"
+        },
+        "doc": {
+          "$ref": "#/$defs/function_doc"
+        }
+      },
+      "required": [
+        "signature"
+      ]
+    },
+    {
+      "properties": {
+        "profile": {
+          "const": "method"
+        },
+        "doc": {
+          "$ref": "#/$defs/method_doc"
+        }
+      },
+      "required": [
+        "signature"
+      ]
+    },
+    {
+      "properties": {
+        "profile": {
+          "const": "inherited_method"
+        },
+        "doc": {
+          "$ref": "#/$defs/inherited_method_doc"
+        }
+      },
+      "required": [
+        "signature"
+      ]
+    }
+  ],
+  "$defs": {
+    "profile": {
+      "type": "string",
+      "enum": [
+        "module",
+        "class",
+        "function",
+        "method",
+        "inherited_method"
+      ]
+    },
+    "identifier": {
+      "type": "string",
+      "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"
+    },
+    "qualified_identifier": {
+      "type": "string",
+      "pattern": "^[A-Za-z_][A-Za-z0-9_]*(?:\\.[A-Za-z_][A-Za-z0-9_]*)*$"
+    },
+    "logical_text": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^[^\\r\\n]+$"
+    },
+    "paragraph_block": {
+      "type": "object",
+      "required": [
+        "paragraph"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "paragraph": {
+          "$ref": "#/$defs/logical_text"
+        }
+      }
+    },
+    "list_item": {
+      "type": "object",
+      "required": [
+        "text"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "text": {
+          "$ref": "#/$defs/logical_text"
+        },
+        "items": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/list_item"
+          }
+        }
+      }
+    },
+    "list_block": {
+      "type": "object",
+      "required": [
+        "list"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "list": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/list_item"
+          }
+        }
+      }
+    },
+    "text_block": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/paragraph_block"
+        },
+        {
+          "$ref": "#/$defs/list_block"
+        }
+      ]
+    },
+    "text_blocks": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/text_block"
+      }
+    },
+    "contract_items": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/logical_text"
+      }
+    },
+    "identifier_text_map": {
+      "type": "object",
+      "propertyNames": {
+        "$ref": "#/$defs/identifier"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/text_blocks"
+      }
+    },
+    "qualified_identifier_text_map": {
+      "type": "object",
+      "propertyNames": {
+        "$ref": "#/$defs/qualified_identifier"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/text_blocks"
+      }
+    },
+    "free_label_text_map": {
+      "type": "object",
+      "propertyNames": {
+        "$ref": "#/$defs/logical_text"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/text_blocks"
+      }
+    },
+    "definition_text_map": {
+      "type": "object",
+      "propertyNames": {
+        "allOf": [
+          {
+            "$ref": "#/$defs/logical_text"
+          },
+          {
+            "not": {
+              "const": "_inherit"
+            }
+          }
+        ]
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/text_blocks"
+      }
+    },
+    "qualified_identifier_list": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/qualified_identifier"
+      }
+    },
+    "preamble": {
+      "type": "object",
+      "required": [
+        "profile",
+        "normative_sections"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "profile": {
+          "$ref": "#/$defs/profile"
+        },
+        "normative_sections": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/identifier"
+          }
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "experimental",
+            "stable",
+            "frozen",
+            "deprecated",
+            "draft"
+          ]
+        },
+        "scope": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "public",
+              "extension",
+              "core"
+            ]
+          }
+        }
+      }
+    },
+    "contract": {
+      "type": "object",
+      "required": [
+        "general"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "general": {
+          "$ref": "#/$defs/contract_items"
+        },
+        "constructor": {
+          "$ref": "#/$defs/contract_items"
+        },
+        "base": {
+          "$ref": "#/$defs/qualified_identifier"
+        },
+        "traits": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "abstract",
+              "final"
+            ]
+          }
+        },
+        "invariants": {
+          "$ref": "#/$defs/contract_items"
+        },
+        "requires": {
+          "$ref": "#/$defs/contract_items"
+        },
+        "ensures": {
+          "$ref": "#/$defs/contract_items"
+        }
+      }
+    },
+    "doc": {
+      "type": "object",
+      "required": [
+        "Preamble",
+        "Contract"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "Preamble": {
+          "$ref": "#/$defs/preamble"
+        },
+        "Definitions": {
+          "$ref": "#/$defs/definition_text_map"
+        },
+        "Terminology": {
+          "$ref": "#/$defs/free_label_text_map"
+        },
+        "Contract": {
+          "$ref": "#/$defs/contract"
+        },
+        "Description": {
+          "$ref": "#/$defs/text_blocks"
+        },
+        "Derived_from": {
+          "$ref": "#/$defs/qualified_identifier_list"
+        },
+        "Factory": {
+          "$ref": "#/$defs/qualified_identifier_text_map"
+        },
+        "Public_classes": {
+          "$ref": "#/$defs/qualified_identifier_list"
+        },
+        "Class_overview": {
+          "$ref": "#/$defs/identifier_text_map"
+        },
+        "Public_functions": {
+          "$ref": "#/$defs/qualified_identifier_list"
+        },
+        "Function_overview": {
+          "$ref": "#/$defs/identifier_text_map"
+        },
+        "Public_methods": {
+          "$ref": "#/$defs/qualified_identifier_list"
+        },
+        "Method_overview": {
+          "$ref": "#/$defs/identifier_text_map"
+        },
+        "Public_types": {
+          "$ref": "#/$defs/identifier_text_map"
+        },
+        "Public_variables": {
+          "$ref": "#/$defs/identifier_text_map"
+        },
+        "Public_constants": {
+          "$ref": "#/$defs/identifier_text_map"
+        },
+        "Parameters": {
+          "$ref": "#/$defs/identifier_text_map"
+        },
+        "Returns": {
+          "$ref": "#/$defs/text_blocks"
+        },
+        "Raises": {
+          "$ref": "#/$defs/qualified_identifier_text_map"
+        },
+        "Notes": {
+          "$ref": "#/$defs/free_label_text_map"
+        },
+        "See_also": {
+          "$ref": "#/$defs/qualified_identifier_list"
+        }
+      }
+    },
+    "module_doc": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/doc"
+        },
+        {
+          "properties": {
+            "Preamble": {
+              "properties": {
+                "profile": {
+                  "const": "module"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "class_doc": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/doc"
+        },
+        {
+          "properties": {
+            "Preamble": {
+              "properties": {
+                "profile": {
+                  "const": "class"
+                }
+              }
+            },
+            "Contract": {
+              "required": [
+                "constructor"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "function_doc": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/doc"
+        },
+        {
+          "required": [
+            "Parameters",
+            "Returns",
+            "Raises"
+          ],
+          "properties": {
+            "Preamble": {
+              "properties": {
+                "profile": {
+                  "const": "function"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "method_doc": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/doc"
+        },
+        {
+          "required": [
+            "Parameters",
+            "Returns",
+            "Raises"
+          ],
+          "properties": {
+            "Preamble": {
+              "properties": {
+                "profile": {
+                  "const": "method"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "inherited_method_doc": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/doc"
+        },
+        {
+          "properties": {
+            "Preamble": {
+              "properties": {
+                "profile": {
+                  "const": "inherited_method"
+                }
+              }
+            },
+            "Contract": {
+              "required": [
+                "base"
+              ]
+            }
+          }
+        }
+      ]
+    }
+  }
+}

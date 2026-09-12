@@ -31,6 +31,7 @@ def test_version_json_reports_all_schema_categories() -> None:
 	assert set(doc) == {
 		"waterlint",
 		"wtrl-json",
+		"wtrl-authoring-object-json",
 		"wtrl-tracer-json",
 		"wtrl-example-refs-json",
 		"wtrl-explain-section-json",
@@ -48,6 +49,7 @@ def test_version_json_reports_all_schema_categories() -> None:
 	assert doc["python-waterloo-lexer"] == {"kind": "package", "version": doc["python-waterloo-lexer"]["version"]}
 	for key in (
 		"wtrl-json",
+		"wtrl-authoring-object-json",
 		"wtrl-tracer-json",
 		"wtrl-example-refs-json",
 		"wtrl-explain-section-json",
@@ -82,7 +84,7 @@ def test_list_schemas_includes_versions_reported_by_version_json() -> None:
 	assert ls.returncode == 0, ls.stderr
 	txt = ls.stdout
 
-	for category in ("wtrl-json", "wtrl-tracer-json", "wtrl-example-refs-json"):
+	for category in ("wtrl-json", "wtrl-authoring-object-json", "wtrl-tracer-json", "wtrl-example-refs-json"):
 		version = ver_doc[category]["version"]
 		needle = f"{category}-{version}.schema.json"
 		assert needle in txt, f"missing schema file {needle!r} in list-schemas output"
