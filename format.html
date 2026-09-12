@@ -9,8 +9,8 @@
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5f771d8e" />
     <link rel="stylesheet" type="text/css" href="_static/basic.css?v=b08954a9" />
     <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=27fed22d" />
-    <link rel="stylesheet" type="text/css" href="_static/common_styles.css?v=b66e391a" />
-    <link rel="stylesheet" type="text/css" href="_static/waterloo_base.css?v=1910b4a6" />
+    <link rel="stylesheet" type="text/css" href="_static/common_styles.css?v=9842741a" />
+    <link rel="stylesheet" type="text/css" href="_static/waterloo_base.css?v=39be3da6" />
     <link rel="stylesheet" type="text/css" href="_static/waterloo_alabaster.css?v=5a8d1525" />
     <link rel="stylesheet" type="text/css" href="_static/wtrl_doc_custom.css" />
     <script src="_static/documentation_options.js?v=8dde47fa"></script>
@@ -200,6 +200,7 @@ The following list explains the mnemonic prefixes and their semantics.</p>
 <li><p>TOOL: Error messages from <code class="wtrl_cmd docutils literal notranslate"><span class="pre">waterlint</span></code> (or other tools)</p></li>
 <li><p>JPTR: Error messages related to JSON Pointer references in tool-generated JSON</p></li>
 <li><p>JSCH: Error messages related to JSON and JSON Schema</p></li>
+<li><p>JIDO: Error messages related to “JSON In Docstring Out”, i.e. generating docstrings from a special authoring JSON.</p></li>
 <li><p>AXMPL: Error messages related to example mapping (e.g. for <code class="wtrl_cmd docutils literal notranslate"><span class="pre">waterlint</span> <span class="pre">add-example-json</span></code>)</p></li>
 <li><p>CARVE: Error messages related to carving walk input into JSON objects</p></li>
 <li><p>RHTM: Error messages related to rendering HTML (e.g. for <code class="wtrl_cmd docutils literal notranslate"><span class="pre">waterlint</span> <span class="pre">render-html5</span></code>)</p></li>
@@ -299,10 +300,10 @@ and <span class="wtrl_dfn">SPC4</span>
 The indentation scheme <span class="wtrl_norm">must not</span> be mixed within a single docstring.</p>
 <p>The grammar of the tokenizer in Pseudo-EBNF is:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>(* Possible ways to indent *)
-spc         = &quot;\x20&quot; ;
-tab         = &quot;\x09&quot; ;
-newline     = &quot;\n&quot; | &quot;\r\n&quot; ;
-backslash   = &quot;\x5c&quot; ;
+spc         = "\x20" ;
+tab         = "\x09" ;
+newline     = "\n" | "\r\n" ;
+backslash   = "\x5c" ;
 ws_char     = spc | tab ;
 non_ws_char = ? all characters but spc and tab ? ;
 non_nl_char = ? all characters but newline ? ;
@@ -382,7 +383,7 @@ Informative: This rule serves as a catch-all for unspecified tokenizer errors.</
 </div></blockquote>
 <p>In order to describe the tokenizer state, we define the following type
 (in Python for practical reasons):</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">DocstringTree</span> <span class="o">=</span> <span class="n">List</span><span class="p">[</span> <span class="n">Union</span><span class="p">[</span> <span class="nb">str</span><span class="p">,</span> <span class="s2">&quot;DocstringTree&quot;</span><span class="p">]]</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">DocstringTree</span> <span class="o">=</span> <span class="n">List</span><span class="p">[</span> <span class="n">Union</span><span class="p">[</span> <span class="nb">str</span><span class="p">,</span> <span class="s2">"DocstringTree"</span><span class="p">]]</span>
 </pre></div>
 </div>
 <p>A <span class="wtrl_dfn">DocstringTree</span> is a value of this type.</p>

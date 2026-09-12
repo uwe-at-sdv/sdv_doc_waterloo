@@ -9,8 +9,8 @@
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5f771d8e" />
     <link rel="stylesheet" type="text/css" href="_static/basic.css?v=b08954a9" />
     <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=27fed22d" />
-    <link rel="stylesheet" type="text/css" href="_static/common_styles.css?v=b66e391a" />
-    <link rel="stylesheet" type="text/css" href="_static/waterloo_base.css?v=1910b4a6" />
+    <link rel="stylesheet" type="text/css" href="_static/common_styles.css?v=9842741a" />
+    <link rel="stylesheet" type="text/css" href="_static/waterloo_base.css?v=39be3da6" />
     <link rel="stylesheet" type="text/css" href="_static/waterloo_alabaster.css?v=5a8d1525" />
     <link rel="stylesheet" type="text/css" href="_static/wtrl_doc_custom.css" />
     <script src="_static/documentation_options.js?v=8dde47fa"></script>
@@ -429,14 +429,14 @@ sdv/doc/waterloo/waterlint_render_html5.py
 docitem_helper.py:147 # type: ignore[no-redef]
 docitem_validator.py:41 # type: ignore
 docitem_validator.py:42 # pragma: no cover - older Python
-waterlint_carve.py:313 # pragma: no cover - defensive
-waterlint.py:779 # pragma: no cover - defensive
-waterlint.py:871 # pragma: no cover - defensive
-waterlint.py:985 # pragma: no cover - defensive
-waterlint.py:1111 # pragma: no cover - defensive
-waterlint.py:1115 # pragma: no cover - defensive
-waterlint.py:1119 # pragma: no cover - defensive
-waterlint.py:1789 # pragma: no cover - defensive
+waterlint_carve.py:307 # pragma: no cover - defensive
+waterlint.py:780 # pragma: no cover - defensive
+waterlint.py:872 # pragma: no cover - defensive
+waterlint.py:982 # pragma: no cover - defensive
+waterlint.py:1108 # pragma: no cover - defensive
+waterlint.py:1112 # pragma: no cover - defensive
+waterlint.py:1116 # pragma: no cover - defensive
+waterlint.py:1804 # pragma: no cover - defensive
 waterlint_render_docker.py:28 # pragma: no cover - Python 3.10 fallback
 </pre></div>
 </div>
@@ -492,7 +492,7 @@ suitable <code class="wtrl_attr docutils literal notranslate"><span class="pre">
 <h3><span class="section-number">1.9.1. </span>Module<a class="headerlink" href="#module" title="Link to this heading">¶</a></h3>
 <p>Let us do an example: In directory <code class="wtrl_file docutils literal notranslate"><span class="pre">doc/examples</span></code> you see a file <code class="wtrl_file docutils literal notranslate"><span class="pre">test_docitem_module.py</span></code>.
 On module level this is equipped with a basic Waterloo docstring:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="sd">"""</span>
 <span class="gh">Preamble:</span>
 <span class="sd">	</span><span class="gu">profile:</span>
 <span class="sd">		</span><span class="no">module</span>
@@ -500,8 +500,8 @@ On module level this is equipped with a basic Waterloo docstring:</p>
 <span class="sd">		</span><span class="no">Contract</span>
 <span class="gh">Contract:</span>
 <span class="sd">	</span><span class="gu">general:</span>
-<span class="sd">		</span><span class="k">|Must|</span><span class="sd"> make a good impression, since it&#39;s our first example.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		</span><span class="k">|Must|</span><span class="sd"> make a good impression, since it's our first example.</span>
+<span class="sd">"""</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">MyClass</span><span class="p">:</span>
 	<span class="k">pass</span>
 </pre></div>
@@ -529,7 +529,7 @@ On module level this is equipped with a basic Waterloo docstring:</p>
 </tr>
 </tbody>
 <thead class="wtrl-box-head-module">
-<tr class="row-odd"><th class="head"><span class="wtrl-obj-kind">«Module»</span></th>
+<tr class="row-odd"><th class="head"><span class="wtrl-obj-kind">Module</span></th>
 <th class="head"><p><span class="wtrl-obj-qid">test_docitem_module</span></p></th>
 </tr>
 </thead>
@@ -566,7 +566,7 @@ and it must be declared normative.</p></li>
 <h3><span class="section-number">1.9.2. </span>Module and class<a class="headerlink" href="#module-and-class" title="Link to this heading">¶</a></h3>
 <p>In the next example we have a module and a class docstring, and we consider the class as
 part of the public API of the module:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="sd">"""</span>
 <span class="gh">Preamble:</span>
 <span class="sd">	</span><span class="gu">profile:</span>
 <span class="sd">		</span><span class="no">module</span>
@@ -580,9 +580,9 @@ part of the public API of the module:</p>
 <span class="gh">Class_overview:</span>
 <span class="sd">	</span><span class="nc">MyClass:</span>
 <span class="sd">		An empty class</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">MyClass</span><span class="p">:</span>
-<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">	</span><span class="sd">"""</span>
 <span class="gh">	Preamble:</span>
 <span class="sd">		</span><span class="gu">profile:</span>
 <span class="sd">			</span><span class="no">class</span>
@@ -593,7 +593,7 @@ part of the public API of the module:</p>
 <span class="sd">			</span><span class="k">|Must|</span><span class="sd"> provide nothing.</span>
 <span class="sd">		</span><span class="gu">constructor:</span>
 <span class="sd">			</span><span class="k">|Must|</span><span class="sd"> be default-constructible.</span>
-<span class="sd">	&quot;&quot;&quot;</span>
+<span class="sd">	"""</span>
 	<span class="k">pass</span>
 </pre></div>
 </div>
@@ -634,7 +634,7 @@ part of the public API of the module:</p>
 </tr>
 </tbody>
 <thead class="wtrl-box-head-module">
-<tr class="row-odd"><th class="head"><span class="wtrl-obj-kind">«Module»</span></th>
+<tr class="row-odd"><th class="head"><span class="wtrl-obj-kind">Module</span></th>
 <th class="head"><p><span class="wtrl-obj-qid">test_docitem_module_2</span></p></th>
 </tr>
 </thead>
@@ -661,7 +661,7 @@ part of the public API of the module:</p>
 </tr>
 </tbody>
 <thead class="wtrl-box-head-class">
-<tr class="row-odd"><th class="head"><span class="wtrl-obj-kind">«Class»</span></th>
+<tr class="row-odd"><th class="head"><span class="wtrl-obj-kind">Class</span></th>
 <th class="head"><p><span class="wtrl-obj-qid">MyClass</span><span class="wtrl_lit"> –⁠ from </span><span class="wtrl_mod">test_docitem_module_2</span></p></th>
 </tr>
 </thead>
@@ -670,7 +670,7 @@ part of the public API of the module:</p>
 <section id="module-class-and-method">
 <h3><span class="section-number">1.9.3. </span>Module, class and method<a class="headerlink" href="#module-class-and-method" title="Link to this heading">¶</a></h3>
 <p>Finally, let us add a method to the class and attach a docstring.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="sd">"""</span>
 <span class="gh">Preamble:</span>
 <span class="sd">	</span><span class="gu">profile:</span>
 <span class="sd">		</span><span class="no">module</span>
@@ -684,9 +684,9 @@ part of the public API of the module:</p>
 <span class="gh">Class_overview:</span>
 <span class="sd">	</span><span class="nc">MyClass:</span>
 <span class="sd">		A simple class</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">MyClass</span><span class="p">:</span>
-<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">	</span><span class="sd">"""</span>
 <span class="gh">	Preamble:</span>
 <span class="sd">		</span><span class="gu">profile:</span>
 <span class="sd">			</span><span class="no">class</span>
@@ -702,9 +702,9 @@ part of the public API of the module:</p>
 <span class="gh">	Method_overview:</span>
 <span class="sd">		</span><span class="nf">greeting:</span>
 <span class="sd">			Function which prints a greeting.</span>
-<span class="sd">	&quot;&quot;&quot;</span>
+<span class="sd">	"""</span>
 	<span class="k">def</span><span class="w"> </span><span class="nf">greeting</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">		</span><span class="sd">"""</span>
 <span class="gh">		Preamble:</span>
 <span class="sd">			</span><span class="gu">profile:</span>
 <span class="sd">				</span><span class="no">method</span>
@@ -717,8 +717,8 @@ part of the public API of the module:</p>
 <span class="gh">		Returns:</span>
 <span class="sd">			</span><span class="k">|Must|</span><span class="sd"> return </span><span class="kc">|None|</span>
 <span class="gh">		Raises:</span>
-<span class="sd">		&quot;&quot;&quot;</span>
-		<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Hello world!&quot;</span><span class="p">)</span>
+<span class="sd">		"""</span>
+		<span class="nb">print</span><span class="p">(</span><span class="s2">"Hello world!"</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>The module, class and method docstrings are rendered by</p>
@@ -758,7 +758,7 @@ part of the public API of the module:</p>
 </tr>
 </tbody>
 <thead class="wtrl-box-head-module">
-<tr class="row-odd"><th class="head"><span class="wtrl-obj-kind">«Module»</span></th>
+<tr class="row-odd"><th class="head"><span class="wtrl-obj-kind">Module</span></th>
 <th class="head"><p><span class="wtrl-obj-qid">test_docitem_module_3</span></p></th>
 </tr>
 </thead>
@@ -795,7 +795,7 @@ part of the public API of the module:</p>
 </tr>
 </tbody>
 <thead class="wtrl-box-head-class">
-<tr class="row-odd"><th class="head"><span class="wtrl-obj-kind">«Class»</span></th>
+<tr class="row-odd"><th class="head"><span class="wtrl-obj-kind">Class</span></th>
 <th class="head"><p><span class="wtrl-obj-qid">MyClass</span><span class="wtrl_lit"> –⁠ from </span><span class="wtrl_mod">test_docitem_module_3</span></p></th>
 </tr>
 </thead>
@@ -832,7 +832,7 @@ part of the public API of the module:</p>
 </tr>
 </tbody>
 <thead class="wtrl-box-head-method">
-<tr class="row-odd"><th class="head"><span class="wtrl-obj-kind">«Method»</span></th>
+<tr class="row-odd"><th class="head"><span class="wtrl-obj-kind">Method</span></th>
 <th class="head"><p><span class="wtrl-obj-qid">MyClass.greeting</span><span class="wtrl_lit"> –⁠ from </span><span class="wtrl_mod">test_docitem_module_3</span></p></th>
 </tr>
 </thead>

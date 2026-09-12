@@ -9,8 +9,8 @@
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5f771d8e" />
     <link rel="stylesheet" type="text/css" href="_static/basic.css?v=b08954a9" />
     <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=27fed22d" />
-    <link rel="stylesheet" type="text/css" href="_static/common_styles.css?v=b66e391a" />
-    <link rel="stylesheet" type="text/css" href="_static/waterloo_base.css?v=1910b4a6" />
+    <link rel="stylesheet" type="text/css" href="_static/common_styles.css?v=9842741a" />
+    <link rel="stylesheet" type="text/css" href="_static/waterloo_base.css?v=39be3da6" />
     <link rel="stylesheet" type="text/css" href="_static/waterloo_alabaster.css?v=5a8d1525" />
     <link rel="stylesheet" type="text/css" href="_static/wtrl_doc_custom.css" />
     <script src="_static/documentation_options.js?v=8dde47fa"></script>
@@ -118,9 +118,9 @@ We would like to create a vector in the following ways:</p>
 		<span class="k">case</span> <span class="p">(</span><span class="n">Vec2d</span><span class="p">()</span> <span class="k">as</span> <span class="n">other</span><span class="p">,):</span>
 			<span class="k">return</span> <span class="n">Vec2d</span><span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">_c</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">other</span><span class="o">.</span><span class="n">_c</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
 		<span class="k">case</span><span class="w"> </span><span class="k">_</span><span class="p">:</span>
-			<span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unsupported input: </span><span class="si">{</span><span class="n">arg</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+			<span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Unsupported input: </span><span class="si">{</span><span class="n">arg</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
 	<span class="nb">print</span><span class="p">(</span><span class="n">Vec2d</span><span class="o">.</span><span class="n">gen</span><span class="p">())</span>
 	<span class="nb">print</span><span class="p">(</span><span class="n">Vec2d</span><span class="o">.</span><span class="n">gen</span><span class="p">(</span><span class="mf">2.0</span><span class="p">,</span><span class="mf">3.0</span><span class="p">))</span>
 	<span class="nb">print</span><span class="p">(</span><span class="n">Vec2d</span><span class="o">.</span><span class="n">gen</span><span class="p">(</span><span class="n">Vec2d</span><span class="o">.</span><span class="n">gen</span><span class="p">(</span><span class="mf">5.0</span><span class="p">,</span><span class="mf">7.0</span><span class="p">)))</span>
@@ -134,7 +134,7 @@ We would like to create a vector in the following ways:</p>
 The Waterloo docstring format captures this relationship by means of a
 <span class="wtrl_label">Factory</span> section, as shown in the following excerpt:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">Vec2d</span><span class="p">:</span>
-<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">	</span><span class="sd">"""</span>
 <span class="gh">	Preamble:</span>
 <span class="sd">		</span><span class="gu">profile:</span>
 <span class="sd">			</span><span class="no">class</span>
@@ -165,7 +165,7 @@ The Waterloo docstring format captures this relationship by means of a
 <span class="gh">	Public_methods:</span>
 <span class="sd">		</span><span class="nf">from_zero</span><span class="sd">, </span><span class="nf">from_comp</span><span class="sd">, </span><span class="nf">from_vec2d</span><span class="sd">,</span>
 <span class="sd">		</span><span class="nf">gen</span>
-<span class="sd">	</span><span class="nf">&quot;&quot;&quot;</span>
+<span class="sd">	</span><span class="nf">"""</span>
 </pre></div>
 </div>
 <p>Validation ensures that each factory entry listed in this section
@@ -232,7 +232,7 @@ of the referenced objects.</p>
 </tr>
 </tbody>
 <thead class="wtrl-box-head-class">
-<tr class="row-odd"><th class="head"><span class="wtrl-obj-kind">«Class»</span></th>
+<tr class="row-odd"><th class="head"><span class="wtrl-obj-kind">Class</span></th>
 <th class="head"><p><span class="wtrl-obj-qid">Vec2d</span><span class="wtrl_lit"> –⁠ from </span><span class="wtrl_mod">test_docitem_factory_vec2d</span></p></th>
 </tr>
 </thead>
@@ -282,7 +282,7 @@ of the referenced objects.</p>
 </tr>
 </tbody>
 <thead class="wtrl-box-head-method">
-<tr class="row-odd"><th class="head"><span class="wtrl-obj-kind">«Method»</span></th>
+<tr class="row-odd"><th class="head"><span class="wtrl-obj-kind">Method</span></th>
 <th class="head"><p><span class="wtrl-obj-qid">Vec2d.gen</span><span class="wtrl_lit"> –⁠ from </span><span class="wtrl_mod">test_docitem_factory_vec2d</span></p></th>
 </tr>
 </thead>
@@ -328,7 +328,7 @@ of the referenced objects.</p>
 </tr>
 </tbody>
 <thead class="wtrl-box-head-function">
-<tr class="row-odd"><th class="head"><span class="wtrl-obj-kind">«Function»</span></th>
+<tr class="row-odd"><th class="head"><span class="wtrl-obj-kind">Function</span></th>
 <th class="head"><p><span class="wtrl-obj-qid">vec2d</span><span class="wtrl_lit"> –⁠ from </span><span class="wtrl_mod">test_docitem_factory_vec2d</span></p></th>
 </tr>
 </thead>
@@ -376,7 +376,7 @@ of the property’s behavior, while the property itself defines the public API s
 </tr>
 </tbody>
 <thead class="wtrl-box-head-class">
-<tr class="row-even"><th class="head"><span class="wtrl-obj-kind">«Class»</span></th>
+<tr class="row-even"><th class="head"><span class="wtrl-obj-kind">Class</span></th>
 <th class="head"><p><span class="wtrl-obj-qid">X</span><span class="wtrl_lit"> –⁠ from </span><span class="wtrl_mod">test_docitem_method_property</span></p></th>
 </tr>
 </thead>
@@ -415,7 +415,7 @@ of the property’s behavior, while the property itself defines the public API s
 </tr>
 </tbody>
 <thead class="wtrl-box-head-method">
-<tr class="row-odd"><th class="head"><span class="wtrl-obj-kind">«Method»</span></th>
+<tr class="row-odd"><th class="head"><span class="wtrl-obj-kind">Method</span></th>
 <th class="head"><p><span class="wtrl-obj-qid">X.value</span><span class="wtrl_lit"> –⁠ from </span><span class="wtrl_mod">test_docitem_method_property</span></p></th>
 </tr>
 </thead>
@@ -459,7 +459,7 @@ of the property’s behavior, while the property itself defines the public API s
 </tr>
 </tbody>
 <thead class="wtrl-box-head-method">
-<tr class="row-odd"><th class="head"><span class="wtrl-obj-kind">«Method»</span></th>
+<tr class="row-odd"><th class="head"><span class="wtrl-obj-kind">Method</span></th>
 <th class="head"><p><span class="wtrl-obj-qid">X.value</span><span class="wtrl_lit"> –⁠ from </span><span class="wtrl_mod">test_docitem_method_property</span></p></th>
 </tr>
 </thead>
@@ -486,7 +486,7 @@ Consider the following test snippet:</p>
 <span class="k">class</span><span class="w"> </span><span class="nc">B</span><span class="p">:</span>
 	<span class="nd">@abstractmethod</span>
 	<span class="k">def</span><span class="w"> </span><span class="nf">f_abstractmethod</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NoReturn</span><span class="p">:</span>
-<span class="w">		</span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">		</span><span class="sa">r</span><span class="sd">"""</span>
 <span class="gh">		Preamble:</span>
 <span class="sd">			</span><span class="gu">profile:</span>
 <span class="sd">				</span><span class="no">function</span>
@@ -503,18 +503,18 @@ Consider the following test snippet:</p>
 <span class="sd">			</span><span class="ne">NotImplementedError:</span>
 <span class="sd">				</span><span class="k">|Must|</span><span class="sd"> always raise. Method </span><span class="k">|must|</span><span class="sd"> be</span><span class="k">\</span>
 <span class="sd">				implemented by derived class.</span>
-<span class="sd">		&quot;&quot;&quot;</span>
+<span class="sd">		"""</span>
 		<span class="k">raise</span> <span class="ne">NotImplementedError</span>
 
 <span class="k">class</span><span class="w"> </span><span class="nc">X</span><span class="p">:</span>
 	<span class="k">def</span><span class="w"> </span><span class="nf">f_method</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">q</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-		<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">.f_method&quot;</span><span class="p">)</span>
+		<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">.f_method"</span><span class="p">)</span>
 	<span class="nd">@classmethod</span>
 	<span class="k">def</span><span class="w"> </span><span class="nf">f_classmethod</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span><span class="n">q</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-		<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">cls</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">.f_classmethod&quot;</span><span class="p">)</span>
+		<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="bp">cls</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">.f_classmethod"</span><span class="p">)</span>
 	<span class="nd">@staticmethod</span>
 	<span class="k">def</span><span class="w"> </span><span class="nf">f_staticmethod</span><span class="p">(</span><span class="n">q</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">		</span><span class="sd">"""</span>
 <span class="gh">		Preamble:</span>
 <span class="sd">			</span><span class="gu">profile:</span>
 <span class="sd">				</span><span class="no">function</span>
@@ -529,21 +529,21 @@ Consider the following test snippet:</p>
 <span class="gh">		Returns:</span>
 <span class="sd">			</span><span class="kc">|None|</span>
 <span class="gh">		Raises:</span>
-<span class="sd">		&quot;&quot;&quot;</span>
-		<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;f_staticmethod&quot;</span><span class="p">)</span>
+<span class="sd">		"""</span>
+		<span class="nb">print</span><span class="p">(</span><span class="s2">"f_staticmethod"</span><span class="p">)</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">trace</span><span class="p">(</span><span class="n">fn</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[</span><span class="o">...</span><span class="p">,</span><span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
 	<span class="nd">@functools</span><span class="o">.</span><span class="n">wraps</span><span class="p">(</span><span class="n">fn</span><span class="p">)</span>
 	<span class="k">def</span><span class="w"> </span><span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span> <span class="c1">#type: ignore[no-untyped-def]</span>
-			<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;call&quot;</span><span class="p">,</span> <span class="n">fn</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
+			<span class="nb">print</span><span class="p">(</span><span class="s2">"call"</span><span class="p">,</span> <span class="n">fn</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
 			<span class="k">return</span> <span class="n">fn</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 	<span class="k">return</span> <span class="n">wrapper</span>
 
 <span class="nd">@trace</span>
 <span class="nd">@functools</span><span class="o">.</span><span class="n">lru_cache</span><span class="p">(</span><span class="n">maxsize</span><span class="o">=</span><span class="mi">128</span><span class="p">)</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">fib</span><span class="p">(</span><span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">	</span><span class="sd">"""</span>
 <span class="gh">	Preamble:</span>
 <span class="sd">		</span><span class="gu">profile:</span>
 <span class="sd">			</span><span class="no">function</span>
@@ -555,19 +555,19 @@ Consider the following test snippet:</p>
 <span class="sd">			</span><span class="k">|Must|</span><span class="sd"> cache intermediate results.</span>
 <span class="gh">	Parameters:</span>
 <span class="sd">		</span><span class="nv">n:</span>
-<span class="sd">			The </span><span class="k">|var|</span><span class="nv">`n`</span><span class="sd"> in &quot;compute the </span><span class="k">|var|</span><span class="nv">`n`</span><span class="sd">-th Fibonacci number&quot;.</span>
+<span class="sd">			The </span><span class="k">|var|</span><span class="nv">`n`</span><span class="sd"> in "compute the </span><span class="k">|var|</span><span class="nv">`n`</span><span class="sd">-th Fibonacci number".</span>
 <span class="gh">	Returns:</span>
 <span class="sd">		The Fibonacci number</span>
 <span class="gh">	Raises:</span>
 <span class="sd">		</span><span class="ne">BaseException:</span>
 <span class="sd">			</span><span class="k">|May|</span><span class="sd"> propagate from |mod| functools.</span>
-<span class="sd">	&quot;&quot;&quot;</span>
+<span class="sd">	"""</span>
 	<span class="k">if</span> <span class="n">n</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
 		<span class="k">return</span> <span class="n">n</span>
 	<span class="k">return</span> <span class="n">cast</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span><span class="n">fib</span><span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="n">fib</span><span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">2</span><span class="p">))</span>
 
 
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
 	<span class="n">X</span><span class="p">()</span><span class="o">.</span><span class="n">f_method</span><span class="p">(</span><span class="mi">123</span><span class="p">)</span>
 	<span class="n">X</span><span class="o">.</span><span class="n">f_classmethod</span><span class="p">(</span><span class="mf">4.56</span><span class="p">)</span>
 	<span class="n">X</span><span class="o">.</span><span class="n">f_staticmethod</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
@@ -636,7 +636,7 @@ not really helpful, and we recommend to switch to the block representation.</p>
 <p>Apart from that, coroutines behave like other methods and functions in terms of documentation.
 The code segment</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">make_coffee</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">	</span><span class="sd">"""</span>
 <span class="gh">	Preamble:</span>
 <span class="sd">		</span><span class="gu">profile:</span>
 <span class="sd">			</span><span class="no">function</span>
@@ -652,11 +652,11 @@ The code segment</p>
 <span class="gh">	Raises:</span>
 <span class="sd">		</span><span class="ne">asyncio.CancelledError:</span>
 <span class="sd">			</span><span class="k">|May|</span><span class="sd"> throw if the task running the coroutine is cancelled from outside.</span>
-<span class="sd">	&quot;&quot;&quot;</span>
-	<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;  [Coffee] Coffee machine started...&quot;</span><span class="p">)</span>
+<span class="sd">	"""</span>
+	<span class="nb">print</span><span class="p">(</span><span class="s2">"  [Coffee] Coffee machine started..."</span><span class="p">)</span>
 	<span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
-	<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;  [Coffee] Coffee is ready!&quot;</span><span class="p">)</span>
-	<span class="k">return</span> <span class="s2">&quot;Hot coffee&quot;</span>
+	<span class="nb">print</span><span class="p">(</span><span class="s2">"  [Coffee] Coffee is ready!"</span><span class="p">)</span>
+	<span class="k">return</span> <span class="s2">"Hot coffee"</span>
 </pre></div>
 </div>
 <p>is rendered as:</p>
@@ -697,7 +697,7 @@ The code segment</p>
 </tr>
 </tbody>
 <thead class="wtrl-box-head-function">
-<tr class="row-odd"><th class="head"><span class="wtrl-obj-kind">«Function»</span></th>
+<tr class="row-odd"><th class="head"><span class="wtrl-obj-kind">Function</span></th>
 <th class="head"><p><span class="wtrl-obj-qid">make_coffee</span><span class="wtrl_lit"> –⁠ from </span><span class="wtrl_mod">test_docitem_coroutine</span></p></th>
 </tr>
 </thead>
@@ -710,7 +710,7 @@ The code segment</p>
 </div>
 <p>from source code:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_marmalade</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">AsyncGenerator</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span><span class="kc">None</span><span class="p">]:</span>
-<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">	</span><span class="sd">"""</span>
 <span class="gh">	Preamble:</span>
 <span class="sd">		</span><span class="gu">profile:</span>
 <span class="sd">			</span><span class="no">function</span>
@@ -727,12 +727,12 @@ The code segment</p>
 <span class="gh">	Raises:</span>
 <span class="sd">		</span><span class="ne">asyncio.CancelledError:</span>
 <span class="sd">			</span><span class="k">|May|</span><span class="sd"> be raised if the task is cancelled during an await point.</span>
-<span class="sd">	&quot;&quot;&quot;</span>
+<span class="sd">	"""</span>
 	<span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-	<span class="k">yield</span> <span class="s2">&quot;Cherry&quot;</span>
+	<span class="k">yield</span> <span class="s2">"Cherry"</span>
 	
 	<span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-	<span class="k">yield</span> <span class="s2">&quot;Strawberry&quot;</span>
+	<span class="k">yield</span> <span class="s2">"Strawberry"</span>
 </pre></div>
 </div>
 </section>
@@ -747,7 +747,7 @@ and orthographic variations of the same term. In the following example,
 we define the term <span class="wtrl_dfn">sensitive</span>, as well as the capitalized form
 <span class="wtrl_dfn">Sensitive</span> (for sentence-initial usage) and the nominalized form
 <span class="wtrl_dfn">Sensitivity</span>.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="sa">r</span><span class="sd">"""</span>
 <span class="gh">Preamble:</span>
 <span class="sd">	</span><span class="gu">profile:</span>
 <span class="sd">		</span><span class="no">module</span>
@@ -761,7 +761,7 @@ we define the term <span class="wtrl_dfn">sensitive</span>, as well as the capit
 <span class="sd">	</span><span class="ge">sensitive, Sensitive, Sensitivity:</span>
 <span class="sd">		</span><span class="k">*</span><span class="sd"> A widget is </span><span class="k">|dfn|</span><span class="ge">`sensitive`</span><span class="sd"> if and only if it responds to user input.</span>
 <span class="sd">		</span><span class="k">*</span><span class="sd"> </span><span class="k">|dfn|</span><span class="ge">`Sensitivity`</span><span class="sd"> can be set or unset via the Python API.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 </pre></div>
 </div>
 <p>The result is</p>
@@ -792,7 +792,7 @@ we define the term <span class="wtrl_dfn">sensitive</span>, as well as the capit
 </tr>
 </tbody>
 <thead class="wtrl-box-head-module">
-<tr class="row-even"><th class="head"><span class="wtrl-obj-kind">«Module»</span></th>
+<tr class="row-even"><th class="head"><span class="wtrl-obj-kind">Module</span></th>
 <th class="head"><p><span class="wtrl-obj-qid">test_docitem_definitions</span></p></th>
 </tr>
 </thead>
@@ -802,7 +802,7 @@ we define the term <span class="wtrl_dfn">sensitive</span>, as well as the capit
 <h2><span class="section-number">4.6. </span>Inherited Definitions<a class="headerlink" href="#inherited-definitions" title="Link to this heading">¶</a></h2>
 <p>The following example demonstrates how definition items can be inherited
 from module level to class or function level in order to avoid unnecessary repetition.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="sa">r</span><span class="sd">"""</span>
 <span class="gh">Preamble:</span>
 <span class="sd">	</span><span class="gu">profile:</span>
 <span class="sd">		</span><span class="no">module</span>
@@ -819,10 +819,10 @@ from module level to class or function level in order to avoid unnecessary repet
 <span class="sd">		separated by a dot.</span>
 <span class="sd">	</span><span class="ge">Term_Z:</span>
 <span class="sd">		</span><span class="k">|term|</span><span class="ge">`Term_Z`</span><span class="sd"> is another term inherited by objects in this module.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="k">class</span><span class="w"> </span><span class="nc">X</span><span class="p">:</span>
-<span class="w">	</span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">	</span><span class="sa">r</span><span class="sd">"""</span>
 <span class="gh">	Preamble:</span>
 <span class="sd">		</span><span class="gu">profile:</span>
 <span class="sd">			</span><span class="no">class</span>
@@ -838,9 +838,9 @@ from module level to class or function level in order to avoid unnecessary repet
 <span class="sd">			A </span><span class="k">|term|</span><span class="ge">`Private_Identifier`</span><span class="sd"> is an </span><span class="k">|term|</span><span class="ge">`Identifier`</span><span class="sd"> that starts with a double underscore.</span>
 <span class="sd">		</span><span class="k">_inherit:</span>
 <span class="sd">			Identifier, Term_Z</span>
-<span class="sd">	&quot;&quot;&quot;</span>
+<span class="sd">	"""</span>
 	<span class="k">def</span><span class="w"> </span><span class="nf">spam</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">		</span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">		</span><span class="sa">r</span><span class="sd">"""</span>
 <span class="gh">		Preamble:</span>
 <span class="sd">			</span><span class="gu">profile:</span>
 <span class="sd">				</span><span class="no">method</span>
@@ -856,14 +856,14 @@ from module level to class or function level in order to avoid unnecessary repet
 <span class="sd">				An </span><span class="k">|term|</span><span class="ge">`Anchor`</span><span class="sd"> is a special string computed from a </span><span class="k">|term|</span><span class="ge">`Qualified_Identifier`</span>
 <span class="sd">				in the following way: 1. The </span><span class="k">|term|</span><span class="ge">`Qualified_Identifier`</span><span class="sd"> is split into segments,</span>
 <span class="sd">				where each segment is an </span><span class="k">|term|</span><span class="ge">`Identifier`</span><span class="sd">. 2. To each segment the string</span>
-<span class="sd">				</span><span class="k">|value|</span><span class="no">`&quot;&lt;n&gt;:&quot;`</span><span class="sd"> is prepended where </span><span class="k">|var|</span><span class="nv">`&lt;n&gt;`</span><span class="sd"> stands for the length of the segment.</span>
-<span class="sd">				3. The results are concatenated with </span><span class="k">|value|</span><span class="no">`&quot;-&quot;`</span><span class="sd"> as separator.</span>
+<span class="sd">				</span><span class="k">|value|</span><span class="no">`"&lt;n&gt;:"`</span><span class="sd"> is prepended where </span><span class="k">|var|</span><span class="nv">`&lt;n&gt;`</span><span class="sd"> stands for the length of the segment.</span>
+<span class="sd">				3. The results are concatenated with </span><span class="k">|value|</span><span class="no">`"-"`</span><span class="sd"> as separator.</span>
 <span class="sd">				Example: The </span><span class="k">|term|</span><span class="ge">`Anchor`</span><span class="sd"> of </span><span class="k">|value|</span><span class="no">`AAA.BB.C`</span><span class="sd"> is </span><span class="k">|value|</span><span class="no">`3:AAA-2:BB-1:C`</span><span class="sd">.</span>
 <span class="gh">		Parameters:</span>
 <span class="gh">		Returns:</span>
 <span class="sd">			</span><span class="kc">|None|</span>
 <span class="gh">		Raises:</span>
-<span class="sd">		&quot;&quot;&quot;</span>
+<span class="sd">		"""</span>
 </pre></div>
 </div>
 <p>The module docstring is rendered as shown below. It contains commonly used
@@ -898,7 +898,7 @@ free-text sections.</p>
 </tr>
 </tbody>
 <thead class="wtrl-box-head-module">
-<tr class="row-even"><th class="head"><span class="wtrl-obj-kind">«Module»</span></th>
+<tr class="row-even"><th class="head"><span class="wtrl-obj-kind">Module</span></th>
 <th class="head"><p><span class="wtrl-obj-qid">test_docitem_definitions_inherited</span></p></th>
 </tr>
 </thead>
@@ -937,7 +937,7 @@ results in semantic highlighting in the generated HTML artifact.</p>
 </tr>
 </tbody>
 <thead class="wtrl-box-head-class">
-<tr class="row-even"><th class="head"><span class="wtrl-obj-kind">«Class»</span></th>
+<tr class="row-even"><th class="head"><span class="wtrl-obj-kind">Class</span></th>
 <th class="head"><p><span class="wtrl-obj-qid">X</span><span class="wtrl_lit"> –⁠ from </span><span class="wtrl_mod">test_docitem_definitions_inherited</span></p></th>
 </tr>
 </thead>
@@ -984,7 +984,7 @@ and uses them to define a new term <span class="wtrl_term">Anchor</span>.</p>
 </tr>
 </tbody>
 <thead class="wtrl-box-head-method">
-<tr class="row-even"><th class="head"><span class="wtrl-obj-kind">«Method»</span></th>
+<tr class="row-even"><th class="head"><span class="wtrl-obj-kind">Method</span></th>
 <th class="head"><p><span class="wtrl-obj-qid">X.spam</span><span class="wtrl_lit"> –⁠ from </span><span class="wtrl_mod">test_docitem_definitions_inherited</span></p></th>
 </tr>
 </thead>
@@ -1002,7 +1002,7 @@ The function has the following signature:</p>
 <div class="wtrl-signature-ret line"><span class="wtrl_op">)</span><span class="wtrl_op"> -&gt; </span><span class="wtrl_type">int</span></div>
 </div>
 <p>and the docstring reads:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="sa">r</span><span class="sd">"""</span>
 <span class="gh">Preamble:</span>
 <span class="sd">        </span><span class="gu">profile:</span>
 <span class="sd">                </span><span class="no">function</span>
@@ -1043,7 +1043,7 @@ The function has the following signature:</p>
 <span class="sd">                </span><span class="k">|Must|</span><span class="sd"> raise if the leading white space characters (tabs or four spaces)</span><span class="k">\</span>
 <span class="sd">                at the beginning of the line</span><span class="k">\</span>
 <span class="sd">                cannot be described by the indentation scheme passed.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 </pre></div>
 </div>
 <p>Note that we have a section here called <span class="wtrl_label">Definitions</span>, which significantly
@@ -1130,7 +1130,7 @@ as normative statements can be classified according to their contractual role.</
 </tr>
 </tbody>
 <thead class="wtrl-box-head-function">
-<tr class="row-odd"><th class="head"><span class="wtrl-obj-kind">«Function»</span></th>
+<tr class="row-odd"><th class="head"><span class="wtrl-obj-kind">Function</span></th>
 <th class="head"><p><span class="wtrl-obj-qid">normalize_identifier</span><span class="wtrl_lit"> –⁠ from </span><span class="wtrl_mod">test_docitem_invariants_requires_ensures</span></p></th>
 </tr>
 </thead>
@@ -1150,7 +1150,7 @@ both equipped with a method, can be rendered by a single command</p>
 <p>This directive recusrsively iterates over the class hierarchy and ramifies to the other
 member, like e.g. methods. The source code is:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">X</span><span class="p">:</span>
-<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">	</span><span class="sd">"""</span>
 <span class="gh">	Preamble:</span>
 <span class="sd">		</span><span class="gu">profile:</span>
 <span class="sd">			</span><span class="no">class</span>
@@ -1171,9 +1171,9 @@ member, like e.g. methods. The source code is:</p>
 <span class="gh">	Class_overview:</span>
 <span class="sd">		</span><span class="nc">Y:</span>
 <span class="sd">			A nested class for testing purposes.</span>
-<span class="sd">	&quot;&quot;&quot;</span>
+<span class="sd">	"""</span>
 	<span class="k">def</span><span class="w"> </span><span class="nf">greeting</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">		</span><span class="sd">"""</span>
 <span class="gh">		Preamble:</span>
 <span class="sd">			</span><span class="gu">profile:</span>
 <span class="sd">				</span><span class="no">method</span>
@@ -1186,10 +1186,10 @@ member, like e.g. methods. The source code is:</p>
 <span class="gh">		Returns:</span>
 <span class="sd">			</span><span class="kc">|None|</span>
 <span class="gh">		Raises:</span>
-<span class="sd">		&quot;&quot;&quot;</span>
-		<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Hello world!&quot;</span><span class="p">)</span>
+<span class="sd">		"""</span>
+		<span class="nb">print</span><span class="p">(</span><span class="s2">"Hello world!"</span><span class="p">)</span>
 	<span class="k">class</span><span class="w"> </span><span class="nc">Y</span><span class="p">:</span>
-<span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">		</span><span class="sd">"""</span>
 <span class="gh">		Preamble:</span>
 <span class="sd">			</span><span class="gu">profile:</span>
 <span class="sd">				</span><span class="no">class</span>
@@ -1202,9 +1202,9 @@ member, like e.g. methods. The source code is:</p>
 <span class="sd">				</span><span class="k">|Must|</span><span class="sd"> be default-constructible</span>
 <span class="gh">		Public_methods:</span>
 <span class="sd">			</span><span class="nf">greeting_but_in_Y</span>
-<span class="sd">		</span><span class="nf">&quot;&quot;&quot;</span>
+<span class="sd">		</span><span class="nf">"""</span>
 		<span class="k">def</span><span class="w"> </span><span class="nf">greeting_but_in_Y</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">			</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">			</span><span class="sd">"""</span>
 <span class="gh">			Preamble:</span>
 <span class="sd">				</span><span class="gu">profile:</span>
 <span class="sd">					</span><span class="no">method</span>
@@ -1217,8 +1217,8 @@ member, like e.g. methods. The source code is:</p>
 <span class="gh">			Returns:</span>
 <span class="sd">				</span><span class="kc">|None|</span>
 <span class="gh">			Raises:</span>
-<span class="sd">			&quot;&quot;&quot;</span>
-			<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Hello world from Y!&quot;</span><span class="p">)</span>
+<span class="sd">			"""</span>
+			<span class="nb">print</span><span class="p">(</span><span class="s2">"Hello world from Y!"</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>And the result is:</p>
@@ -1264,7 +1264,7 @@ member, like e.g. methods. The source code is:</p>
 </tr>
 </tbody>
 <thead class="wtrl-box-head-class">
-<tr class="row-odd"><th class="head"><span class="wtrl-obj-kind">«Class»</span></th>
+<tr class="row-odd"><th class="head"><span class="wtrl-obj-kind">Class</span></th>
 <th class="head"><p><span class="wtrl-obj-qid">X</span><span class="wtrl_lit"> –⁠ from </span><span class="wtrl_mod">test_docitem_class_class</span></p></th>
 </tr>
 </thead>
@@ -1295,7 +1295,7 @@ member, like e.g. methods. The source code is:</p>
 </tr>
 </tbody>
 <thead class="wtrl-box-head-class">
-<tr class="row-even"><th class="head"><span class="wtrl-obj-kind">«Class»</span></th>
+<tr class="row-even"><th class="head"><span class="wtrl-obj-kind">Class</span></th>
 <th class="head"><p><span class="wtrl-obj-qid">X.Y</span><span class="wtrl_lit"> –⁠ from </span><span class="wtrl_mod">test_docitem_class_class</span></p></th>
 </tr>
 </thead>
@@ -1333,7 +1333,7 @@ member, like e.g. methods. The source code is:</p>
 </tr>
 </tbody>
 <thead class="wtrl-box-head-method">
-<tr class="row-odd"><th class="head"><span class="wtrl-obj-kind">«Method»</span></th>
+<tr class="row-odd"><th class="head"><span class="wtrl-obj-kind">Method</span></th>
 <th class="head"><p><span class="wtrl-obj-qid">X.Y.greeting_but_in_Y</span><span class="wtrl_lit"> –⁠ from </span><span class="wtrl_mod">test_docitem_class_class</span></p></th>
 </tr>
 </thead>
@@ -1371,7 +1371,7 @@ member, like e.g. methods. The source code is:</p>
 </tr>
 </tbody>
 <thead class="wtrl-box-head-method">
-<tr class="row-odd"><th class="head"><span class="wtrl-obj-kind">«Method»</span></th>
+<tr class="row-odd"><th class="head"><span class="wtrl-obj-kind">Method</span></th>
 <th class="head"><p><span class="wtrl-obj-qid">X.greeting</span><span class="wtrl_lit"> –⁠ from </span><span class="wtrl_mod">test_docitem_class_class</span></p></th>
 </tr>
 </thead>
@@ -1432,7 +1432,7 @@ member, like e.g. methods. The source code is:</p>
 </tr>
 </tbody>
 <thead class="wtrl-box-head-function">
-<tr class="row-odd"><th class="head"><span class="wtrl-obj-kind">«Function»</span></th>
+<tr class="row-odd"><th class="head"><span class="wtrl-obj-kind">Function</span></th>
 <th class="head"><p><span class="wtrl-obj-qid">f</span><span class="wtrl_lit"> –⁠ from </span><span class="wtrl_mod">test_docitem_function_pipe</span></p></th>
 </tr>
 </thead>

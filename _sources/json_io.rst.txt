@@ -126,11 +126,11 @@ Any Waterloo-related JSON artifact can be validated with
 
 	:wtrl_cmd:`waterlint validate-json` :wtrl_opt:`--in` :wtrl_file:`path/to/validate.json`
 
-It attempts to infer the category of the input data
-(documentation, diagnostics, or example references) and validates it
+It attempts to infer the category of the input data and validates it
 against the corresponding schema:
 
 * :wtrl_file:`schema/wtrl-json-*.*.*.schema.json` for documentation
+* :wtrl_file:`schema/wtrl-authoring-object-json-*.*.*.schema.json` for Authoring JSON describing exactly one documentable Waterloo object
 * :wtrl_file:`schema/wtrl-explain-section-json-*.*.*.schema.json` for section explanations
 * :wtrl_file:`schema/wtrl-explain-subsection-json-*.*.*.schema.json` for subsection explanations
 * :wtrl_file:`schema/wtrl-tracer-json-*.*.*.schema.json` for diagnostics
@@ -549,6 +549,13 @@ The reference tooling emits and expects category-specific
 	:wtrl_value:`urn:<org-or-project>:<domain>:wtrl-example-refs-json:<schema-version>`
 * Output of :wtrl_cmd:`walk`:
 	:wtrl_value:`urn:waterlint:wtrl-walk-json:<waterlint-walk-version>:<timestamp>`
+* Authoring JSON:
+	:wtrl_value:`urn:waterlint:wtrl-authoring-object-json:<local-id>`
+
+Authoring JSON is an input format for creating one Waterloo docstring. It
+stores logical text blocks and list structure rather than physical line
+wrapping or indentation. Its required :wtrl_value:`__WTRL_CATEGORY__` and
+:wtrl_value:`__WTRL_VERSION__` fields identify the schema category and version.
 
 The hash digest |should| be SHA256.
 The :wtrl_attr:`$id` value |should| be globally unique for each produced document.

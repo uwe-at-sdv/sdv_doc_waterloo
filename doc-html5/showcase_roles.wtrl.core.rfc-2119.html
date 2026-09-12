@@ -1,10 +1,352 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Waterloo HTML5 Documentation</title>
-  <style>/* This style sheet defines the styles for interactive HTML5 output.
+	  <meta charset="utf-8">
+	  <meta name="viewport" content="width=device-width, initial-scale=1">
+	  <title>Waterloo HTML5 Documentation</title>
+	  <script>
+	    try {
+	      document.documentElement.dataset.wtrlTheme = localStorage.getItem("wtrl-html5-theme") || "auto";
+	    } catch (_) {
+	      document.documentElement.dataset.wtrlTheme = "auto";
+	    }
+	  </script>
+	  <style>/*
+We define common styles across languages. Ideally these coincide
+more or less with those used in markup2. This is possible because
+we are moving away from highlight and implement our own stuff.
+Although highlight is brilliant, we prefer the inhouse solution
+becaues it allows more control and has a well-known C++ API.
+
+Current state [2023-08-08]
+- glsl
+- cpp
+- minil
+- xml
+- python
+*/
+
+:root {
+    /* 1. Etwas kleinere Schrift macht die Box kompakter und hebt sie optisch an */
+    --font-size--code: 0.875em;
+
+    /* 2. Falls installiert: Furo bevorzugt eigentlich Fira Code oder JetBrains Mono.
+          Indem wir moderne Programmierschriften nach vorne stellen, nutzt Firefox 
+          bessere Schriftmetriken, falls du sie auf dem System hast. */
+    --font-stack--monospace: "JetBrains Mono", "Fira Code", "Fira Mono", "Menlo", "Consolas", monospace;
+}
+
+/* 3. Korrektur des Innenabstands (Padding) speziell fuer Firefox/Linux */
+code.docutils.literal {
+	vertical-align: 0.06em;
+	font-size:95%;
+}
+
+:root
+	{
+	--wtrl-plain-color:currentColor;
+
+/* light theme colors */
+/* begin-roles */
+	--wtrl-attr-color:#077;
+	--wtrl-class-color:#770000;
+	--wtrl-cmd-color:#996600;
+	--wtrl-dfn-color:currentColor;
+	--wtrl-file-color: #35f;
+	--wtrl-func-color:#3040ff;
+	--wtrl-key-color:currentColor;
+	--wtrl-label-color:currentColor;
+	--wtrl-lit-color:currentColor;
+	--wtrl-mod-color:#462;
+	--wtrl-norm-color:currentColor;
+	--wtrl-op-color:currentColor;
+	--wtrl-opt-color:currentColor;
+	--wtrl-pkg-color:#252;
+	--wtrl-tag-color:#900;
+	--wtrl-term-color:currentColor;
+	--wtrl-type-color:#770000;
+		--wtrl-url-color: #35f;
+	--wtrl-value-color:#004400;
+	--wtrl-var-color:#a00;
+
+	--wtrl-url-schema-color: #354;
+/* end-roles */
+
+/* font properties */
+	--wtrl-monospace-font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+/* HTML5 output layer colors */
+	--wtrl-html-page-bg:#f7f7f4;
+	--wtrl-html-page-color:#1f2428;
+	--wtrl-html-panel-bg:#fff;
+	--wtrl-html-panel-border-color:#ddd;
+	--wtrl-html-debug-bg:#efd;
+	--wtrl-html-muted-color:#57606a;
+	--wtrl-html-subtle-color:#666;
+	--wtrl-html-control-bg:#fff;
+	--wtrl-html-control-color:#334155;
+	--wtrl-html-control-border-color:#bbb;
+	--wtrl-html-control-disabled-bg:#f8fafc;
+	--wtrl-html-search-border-color:#ccc;
+	--wtrl-html-hitlist-bg:#eee;
+	--wtrl-html-hit-border-color:#eee;
+	--wtrl-html-hit-hover-bg:#f3f6fa;
+	--wtrl-html-section-bg:#eee;
+	--wtrl-html-section-border-color:#ececec;
+	--wtrl-html-section-head-color:#0f172a;
+	--wtrl-html-subsection-head-color:#1f2937;
+	--wtrl-html-code-bg:#f7fff0;
+	--wtrl-html-key-border-color:#000;
+	--wtrl-html-fallback-color:#000;
+
+	--wtrl-plain-font-weight:normal;
+	--wtrl-plain-font-style:normal;
+
+	--wtrl-attr-font-weight:normal;
+	--wtrl-attr-font-style:normal;
+
+	--wtrl-cmd-font-weight:normal;
+	--wtrl-cmd-font-style:normal;
+
+	--wtrl-class-font-weight:normal;
+	--wtrl-class-font-style:normal;
+
+	--wtrl-dfn-font-weight:normal;
+	--wtrl-dfn-font-style:italic;
+
+	--wtrl-file-font-weight: normal;
+	--wtrl-file-font-style: normal;
+
+	--wtrl-func-font-weight:normal;
+	--wtrl-func-font-style:normal;
+
+	--wtrl-key-font-weight:normal;
+	--wtrl-key-font-style:normal;
+
+	--wtrl-label-font-weight:normal;
+	--wtrl-label-font-style:oblique;
+
+	--wtrl-lit-font-weight:normal;
+	--wtrl-lit-font-style:normal;
+
+	--wtrl-mod-font-weight:normal;
+	--wtrl-mod-font-style:normal;
+
+	--wtrl-norm-font-weight:normal;
+	--wtrl-norm-font-style:italic;
+
+	--wtrl-op-font-weight:bold;
+	--wtrl-op-font-style:normal;
+
+	--wtrl-opt-font-weight:bold;
+	--wtrl-opt-font-style:normal;
+
+	--wtrl-pkg-font-weight:normal;
+	--wtrl-pkg-font-style:normal;
+
+	--wtrl-tag-font-weight:normal;
+	--wtrl-tag-font-style:normal;
+
+	--wtrl-term-font-weight:normal;
+	--wtrl-term-font-style:italic;
+
+	--wtrl-type-font-weight:normal;
+	--wtrl-type-font-style:normal;
+
+	--wtrl-url-font-weight: normal;
+	--wtrl-url-font-style: normal;
+
+	--wtrl-value-font-weight:normal;
+	--wtrl-value-font-style:normal;
+
+	--wtrl-var-font-weight:normal;
+	--wtrl-var-font-style:normal;
+
+/* future-use */
+	--wtrl-comment-color:#777;
+	--wtrl-comment-font-weight:normal;
+	--wtrl-comment-font-style:italic;
+
+	--wtrl-entity-color:#777;
+	--wtrl-entity-font-weight:bold;
+	--wtrl-entity-font-style:normal;
+
+/* theme symbols */
+	--wtrl-theme-light-symbol:"○";
+	--wtrl-theme-auto-symbol:"◑";
+	--wtrl-theme-dark-symbol:"●";
+}
+
+:root {
+/* dark theme colors */
+	--wtrl-dark-foreground-color:var(--color-foreground-primary, currentColor);
+
+	--wtrl-dark-attr-color:#099;
+	--wtrl-dark-class-color:#e66;
+	--wtrl-dark-cmd-color:#cc8800;
+	--wtrl-dark-dfn-color:var(--wtrl-dark-foreground-color);
+	--wtrl-dark-file-color: #7af;
+	--wtrl-dark-func-color:#6090ff;
+	--wtrl-dark-key-color:var(--wtrl-dark-foreground-color);
+	--wtrl-dark-label-color:var(--wtrl-dark-foreground-color);
+	--wtrl-dark-lit-color:var(--wtrl-dark-foreground-color);
+	--wtrl-dark-mod-color:#8c4;
+	--wtrl-dark-norm-color:var(--wtrl-dark-foreground-color);
+	--wtrl-dark-op-color:var(--wtrl-dark-foreground-color);
+	--wtrl-dark-opt-color:var(--wtrl-dark-foreground-color);
+	--wtrl-dark-pkg-color:#8b8;
+	--wtrl-dark-tag-color:#e44;
+	--wtrl-dark-term-color:var(--wtrl-dark-foreground-color);
+	--wtrl-dark-type-color:#e66;
+	--wtrl-dark-url-color: #7af;
+	--wtrl-dark-value-color:#8c4;
+	--wtrl-dark-var-color:#f34;
+
+	--wtrl-dark-comment-color:#777;
+	--wtrl-dark-entity-color:#777;
+
+	--wtrl-html-dark-page-bg:#111827;
+	--wtrl-html-dark-page-color:#e5e7eb;
+	--wtrl-html-dark-panel-bg:#1f2937;
+	--wtrl-html-dark-panel-border-color:#374151;
+	--wtrl-html-dark-debug-bg:#29351f;
+	--wtrl-html-dark-muted-color:#9ca3af;
+	--wtrl-html-dark-subtle-color:#a3a3a3;
+	--wtrl-html-dark-control-bg:#111827;
+	--wtrl-html-dark-control-color:#e5e7eb;
+	--wtrl-html-dark-control-border-color:#4b5563;
+	--wtrl-html-dark-control-disabled-bg:#1f2937;
+	--wtrl-html-dark-search-border-color:#4b5563;
+	--wtrl-html-dark-hitlist-bg:#111827;
+	--wtrl-html-dark-hit-border-color:#374151;
+	--wtrl-html-dark-hit-hover-bg:#243044;
+	--wtrl-html-dark-section-bg:#111827;
+	--wtrl-html-dark-section-border-color:#374151;
+	--wtrl-html-dark-section-head-color:#ccd;
+	--wtrl-html-dark-subsection-head-color:#ccd;
+	--wtrl-html-dark-code-bg:#182218;
+	--wtrl-html-dark-key-border-color:#9ca3af;
+	--wtrl-html-dark-fallback-color:#e5e7eb;
+
+
+	/* theme symbols */
+	--wtrl-dark-theme-light-symbol:"●";
+	--wtrl-dark-theme-auto-symbol:"◐";
+	--wtrl-dark-theme-dark-symbol:"○";
+}
+
+/* Furo stores the active theme on body; render-html5 stores it on html. */
+html[data-wtrl-theme="dark"],
+body[data-theme="dark"],
+body[data-wtrl-theme="dark"] {
+	--wtrl-attr-color:var(--wtrl-dark-attr-color);
+	--wtrl-class-color:var(--wtrl-dark-class-color);
+	--wtrl-cmd-color:var(--wtrl-dark-cmd-color);
+	--wtrl-file-color:var(--wtrl-dark-file-color);
+	--wtrl-func-color:var(--wtrl-dark-func-color);
+	--wtrl-key-color:var(--wtrl-dark-key-color);
+	--wtrl-label-color:var(--wtrl-dark-label-color);
+	--wtrl-lit-color:var(--wtrl-dark-lit-color);
+	--wtrl-mod-color:var(--wtrl-dark-mod-color);
+	--wtrl-norm-color:var(--wtrl-dark-norm-color);
+	--wtrl-op-color:var(--wtrl-dark-op-color);
+	--wtrl-opt-color:var(--wtrl-dark-opt-color);
+	--wtrl-pkg-color:var(--wtrl-dark-pkg-color);
+	--wtrl-tag-color:var(--wtrl-dark-tag-color);
+	--wtrl-term-color:var(--wtrl-dark-term-color);
+	--wtrl-type-color:var(--wtrl-dark-type-color);
+	--wtrl-url-color:var(--wtrl-dark-url-color);
+	--wtrl-value-color:var(--wtrl-dark-value-color);
+	--wtrl-var-color:var(--wtrl-dark-var-color);
+
+	--wtrl-comment-color:var(--wtrl-dark-comment-color);
+	--wtrl-entity-color:var(--wtrl-dark-entity-color);
+
+	--wtrl-html-page-bg:var(--wtrl-html-dark-page-bg);
+	--wtrl-html-page-color:var(--wtrl-html-dark-page-color);
+	--wtrl-html-panel-bg:var(--wtrl-html-dark-panel-bg);
+	--wtrl-html-panel-border-color:var(--wtrl-html-dark-panel-border-color);
+	--wtrl-html-debug-bg:var(--wtrl-html-dark-debug-bg);
+	--wtrl-html-muted-color:var(--wtrl-html-dark-muted-color);
+	--wtrl-html-subtle-color:var(--wtrl-html-dark-subtle-color);
+	--wtrl-html-control-bg:var(--wtrl-html-dark-control-bg);
+	--wtrl-html-control-color:var(--wtrl-html-dark-control-color);
+	--wtrl-html-control-border-color:var(--wtrl-html-dark-control-border-color);
+	--wtrl-html-control-disabled-bg:var(--wtrl-html-dark-control-disabled-bg);
+	--wtrl-html-search-border-color:var(--wtrl-html-dark-search-border-color);
+	--wtrl-html-hitlist-bg:var(--wtrl-html-dark-hitlist-bg);
+	--wtrl-html-hit-border-color:var(--wtrl-html-dark-hit-border-color);
+	--wtrl-html-hit-hover-bg:var(--wtrl-html-dark-hit-hover-bg);
+	--wtrl-html-section-bg:var(--wtrl-html-dark-section-bg);
+	--wtrl-html-section-border-color:var(--wtrl-html-dark-section-border-color);
+	--wtrl-html-section-head-color:var(--wtrl-html-dark-section-head-color);
+	--wtrl-html-subsection-head-color:var(--wtrl-html-dark-subsection-head-color);
+	--wtrl-html-code-bg:var(--wtrl-html-dark-code-bg);
+	--wtrl-html-key-border-color:var(--wtrl-html-dark-key-border-color);
+	--wtrl-html-fallback-color:var(--wtrl-html-dark-fallback-color);
+
+	--wtrl-theme-light-symbol:var(--wtrl-dark-theme-light-symbol);
+	--wtrl-theme-auto-symbol:var(--wtrl-dark-theme-auto-symbol);
+	--wtrl-theme-dark-symbol:var(--wtrl-dark-theme-dark-symbol);
+}
+
+@media (prefers-color-scheme: dark) {
+	html[data-wtrl-theme="auto"],
+	body[data-theme="auto"],
+	body[data-wtrl-theme="auto"] {
+		--wtrl-attr-color:var(--wtrl-dark-attr-color);
+		--wtrl-class-color:var(--wtrl-dark-class-color);
+		--wtrl-cmd-color:var(--wtrl-dark-cmd-color);
+		--wtrl-file-color:var(--wtrl-dark-file-color);
+		--wtrl-func-color:var(--wtrl-dark-func-color);
+		--wtrl-key-color:var(--wtrl-dark-key-color);
+		--wtrl-label-color:var(--wtrl-dark-label-color);
+		--wtrl-lit-color:var(--wtrl-dark-lit-color);
+		--wtrl-mod-color:var(--wtrl-dark-mod-color);
+		--wtrl-norm-color:var(--wtrl-dark-norm-color);
+		--wtrl-op-color:var(--wtrl-dark-op-color);
+		--wtrl-opt-color:var(--wtrl-dark-opt-color);
+		--wtrl-pkg-color:var(--wtrl-dark-pkg-color);
+		--wtrl-tag-color:var(--wtrl-dark-tag-color);
+		--wtrl-term-color:var(--wtrl-dark-term-color);
+		--wtrl-type-color:var(--wtrl-dark-type-color);
+		--wtrl-url-color:var(--wtrl-dark-url-color);
+		--wtrl-value-color:var(--wtrl-dark-value-color);
+		--wtrl-var-color:var(--wtrl-dark-var-color);
+
+		--wtrl-comment-color:var(--wtrl-dark-comment-color);
+		--wtrl-entity-color:var(--wtrl-dark-entity-color);
+
+		--wtrl-html-page-bg:var(--wtrl-html-dark-page-bg);
+		--wtrl-html-page-color:var(--wtrl-html-dark-page-color);
+		--wtrl-html-panel-bg:var(--wtrl-html-dark-panel-bg);
+		--wtrl-html-panel-border-color:var(--wtrl-html-dark-panel-border-color);
+		--wtrl-html-debug-bg:var(--wtrl-html-dark-debug-bg);
+		--wtrl-html-muted-color:var(--wtrl-html-dark-muted-color);
+		--wtrl-html-subtle-color:var(--wtrl-html-dark-subtle-color);
+		--wtrl-html-control-bg:var(--wtrl-html-dark-control-bg);
+		--wtrl-html-control-color:var(--wtrl-html-dark-control-color);
+		--wtrl-html-control-border-color:var(--wtrl-html-dark-control-border-color);
+		--wtrl-html-control-disabled-bg:var(--wtrl-html-dark-control-disabled-bg);
+		--wtrl-html-search-border-color:var(--wtrl-html-dark-search-border-color);
+		--wtrl-html-hitlist-bg:var(--wtrl-html-dark-hitlist-bg);
+		--wtrl-html-hit-border-color:var(--wtrl-html-dark-hit-border-color);
+		--wtrl-html-hit-hover-bg:var(--wtrl-html-dark-hit-hover-bg);
+		--wtrl-html-section-bg:var(--wtrl-html-dark-section-bg);
+		--wtrl-html-section-border-color:var(--wtrl-html-dark-section-border-color);
+		--wtrl-html-section-head-color:var(--wtrl-html-dark-section-head-color);
+		--wtrl-html-subsection-head-color:var(--wtrl-html-dark-subsection-head-color);
+		--wtrl-html-code-bg:var(--wtrl-html-dark-code-bg);
+		--wtrl-html-key-border-color:var(--wtrl-html-dark-key-border-color);
+		--wtrl-html-fallback-color:var(--wtrl-html-dark-fallback-color);
+
+		--wtrl-theme-light-symbol:var(--wtrl-dark-theme-light-symbol);
+		--wtrl-theme-auto-symbol:var(--wtrl-dark-theme-auto-symbol);
+		--wtrl-theme-dark-symbol:var(--wtrl-dark-theme-dark-symbol);
+	}
+}
+
+/* This style sheet defines the styles for interactive HTML5 output.
    For waterlint render-html5, additional styles can be provided
    by the caller via the --additional-css option. */
 /*----- Global styles ---------------------------------------*/
@@ -13,7 +355,9 @@ html, body {
 	padding:0;
 	height:100%;
 	overflow:hidden;
-	font-family: Helvetica, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif; background:#f7f7f4; color:#1f2428;
+	font-family: Helvetica, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+	background:var(--wtrl-html-page-bg);
+	color:var(--wtrl-html-page-color);
 	}
 .wtrl-app {
 	display:grid;
@@ -24,12 +368,13 @@ html, body {
 	box-sizing:border-box;
 	}
 .wtrl-side {
-	border:1px solid #ddd;
+	position:relative;
+	border:1px solid var(--wtrl-html-panel-border-color);
 	border-radius:.3em;
 	margin-bottom:1em;
 	margin-left:0em;
 	margin-right:0em;
-	background:#fff;
+	background:var(--wtrl-html-panel-bg);
 	padding-left:0.75em;
 	padding-right:0.75em;
 	padding-top: 0.5em;
@@ -41,7 +386,7 @@ html, body {
 #wtrl-debug-refs {
 	margin-top:0.5em;
 	margin-bottom:0.0em;
-	background-color:#efd;
+	background-color:var(--wtrl-html-debug-bg);
 	border-radius:8px;
 	}
 .wtrl-main {
@@ -58,10 +403,61 @@ html, body {
 	}
 .wtrl-meta {
 	font-size:12px;
-	color:#666;
+	color:var(--wtrl-html-subtle-color);
 	margin-bottom:0.5em;
 	}
-.wtrl-input { width:100%; box-sizing:border-box; padding:10px 12px; border:1px solid #bbb; border-radius:8px; font-size:14px; }
+
+/*----- Theme switcher --------------------------------------*/
+.wtrl-theme-switcher {
+	position:absolute;
+	top:0.5em;
+	right:0.75em;
+	display:flex;
+	gap:0.2em;
+	align-items:center;
+	}
+.wtrl-theme-button {
+	border:1px solid transparent;
+	border-radius:0.4em;
+	background:transparent;
+	color:var(--wtrl-html-control-color);
+	cursor:pointer;
+	font-size:16px;
+	line-height:1;
+	padding-left:0.2em;
+	padding-right:0.2em;
+	padding-top:0.1em;
+	padding-bottom:0.2em;
+	}
+.wtrl-theme-button::before {
+	display:inline-block;
+	min-width:1em;
+	text-align:center;
+	}
+.wtrl-theme-light::before {
+	content:var(--wtrl-theme-light-symbol, "●");
+	}
+.wtrl-theme-auto::before {
+	content:var(--wtrl-theme-auto-symbol, "◐");
+	}
+.wtrl-theme-dark::before {
+	content:var(--wtrl-theme-dark-symbol, "○");
+	}
+.wtrl-theme-button:hover,
+.wtrl-theme-button[aria-pressed="true"] {
+	border-color:var(--wtrl-html-control-border-color);
+	background:var(--wtrl-html-hit-hover-bg);
+	}
+
+
+.wtrl-input {
+	width:100%;
+	box-sizing:border-box;
+	padding:10px 12px;
+	border:1px solid var(--wtrl-html-control-border-color);
+	border-radius:8px;
+	font-size:14px;
+	}
 .wtrl-hitlist {
 	margin-left:.0em;	
 	margin-right:0em;	
@@ -72,19 +468,19 @@ html, body {
 	min-height:0;
 	flex:1 1 auto;
 	overflow:auto;
-	border:1px solid #ddd;
+	border:1px solid var(--wtrl-html-panel-border-color);
 	border-radius:8px;
-	background:#eee; }
-.wtrl-hit { display:block; width:100%; text-align:left; border:0; border-bottom:1px solid #eee; background:transparent; padding:8px 10px; font-size:13px; cursor:pointer; }
-.wtrl-hit:hover { background:#f3f6fa; }
-.wtrl-kind { color:#57606a; font-size:11px; margin-right:8px; }
+	background:var(--wtrl-html-hitlist-bg); }
+.wtrl-hit { display:block; width:100%; text-align:left; border:0; border-bottom:1px solid var(--wtrl-html-hit-border-color); background:transparent; color:var(--wtrl-html-page-color); padding:8px 10px; font-size:13px; cursor:pointer; }
+.wtrl-hit:hover { background:var(--wtrl-html-hit-hover-bg); }
+.wtrl-kind { color:var(--wtrl-html-muted-color); font-size:11px; margin-right:8px; }
 .wtrl-title { margin:0 0 10px 0; font-size:22px; }
-.wtrl-sub { margin:0 0 16px 0; color:#57606a; }
+.wtrl-sub { margin:0 0 16px 0; color:var(--wtrl-html-muted-color); }
 
 .wtrl-block {
-	border:1px solid #ddd;
+	border:1px solid var(--wtrl-html-panel-border-color);
 	border-radius:0.3em;
-	background:#fff;
+	background:var(--wtrl-html-panel-bg);
 	padding-left: .75em;
 	padding-right: .75em;
 	padding-top: 0.75em;
@@ -100,9 +496,9 @@ html, body {
 
 .wtrl-signature {
 	margin:0 0 14px 0;
-	font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+	font-family: var(--wtrl-monospace-font-family);
 	font-size:100%;
-	color:#57606a;
+	color:var(--wtrl-html-muted-color);
 	white-space:pre-wrap;
 	overflow-wrap:anywhere;
 	}
@@ -121,28 +517,36 @@ html, body {
 	grid-area:search;
 	width:100%;
 	height:30px;
-	border:1px solid #ccc;
+	border:1px solid var(--wtrl-html-search-border-color);
 	border-radius:0.3em;
+	background:var(--wtrl-html-control-bg);
+	color:var(--wtrl-html-control-color);
 	}
 #wtrl-search-clear {
 	grid-area:clear;
 	height:30px;
-	border:1px solid #ddd;
+	border:1px solid var(--wtrl-html-panel-border-color);
 	border-radius:0.5em;
+	background:var(--wtrl-html-control-bg);
+	color:var(--wtrl-html-control-color);
 	}
 #wtrl-nav-back {
 	grid-area:back;
 	width: 30px;
 	height:30px;
-	border:1px solid #ddd;
+	border:1px solid var(--wtrl-html-panel-border-color);
 	border-radius:0.5em;
+	background:var(--wtrl-html-control-bg);
+	color:var(--wtrl-html-control-color);
 	}
 #wtrl-nav-forward {
 	grid-area:fwd;
 	width: 30px;
 	height:30px;
-	border:1px solid #ddd;
+	border:1px solid var(--wtrl-html-panel-border-color);
 	border-radius:0.5em;
+	background:var(--wtrl-html-control-bg);
+	color:var(--wtrl-html-control-color);
 	}
 #wtrl-nav-history {
 	grid-area:history;
@@ -150,11 +554,24 @@ html, body {
 	min-width:0;
 	max-width:16rem;
 	height:30px;
-	border:1px solid #ddd;
+	border:1px solid var(--wtrl-html-panel-border-color);
 	border-radius:0.5em;
 	overflow:hidden;
 	text-overflow:ellipsis;
 	white-space:nowrap;
+	background:var(--wtrl-html-control-bg);
+	color:var(--wtrl-html-control-color);
+	}
+#wtrl-search-clear:hover,
+#wtrl-nav-back:hover,
+#wtrl-nav-forward:hover {
+	background:var(--wtrl-html-hit-hover-bg);
+	}
+#wtrl-nav-back:disabled,
+#wtrl-nav-forward:disabled,
+#wtrl-nav-history:disabled {
+	opacity:0.55;
+	background:var(--wtrl-html-control-disabled-bg);
 	}
 .wtrl-filter-row {
 	grid-area:filter;
@@ -173,7 +590,7 @@ html, body {
 .wtrl-filter-label {
 	flex:0 0 auto;
 	font-size:13px;
-	color:#334155;
+	color:var(--wtrl-html-control-color);
 	}
 .wtrl-kind-filter,
 .wtrl-label-mode {
@@ -181,21 +598,21 @@ html, body {
 	min-width:0;
 	box-sizing:border-box;
 	padding:0 10px;
-	border:1px solid #bbb;
+	border:1px solid var(--wtrl-html-control-border-color);
 	border-radius:0.5em;
-	background:#fff;
-	color:#334155;
+	background:var(--wtrl-html-control-bg);
+	color:var(--wtrl-html-control-color);
 	font-size:13px;
 	height:30px;
 	line-height:30px;
 	}
 .wtrl-kind-filter:disabled {
 	opacity:0.55;
-	background:#f8fafc;
+	background:var(--wtrl-html-control-disabled-bg);
 	}
 .wtrl-label-mode:disabled {
 	opacity:0.55;
-	background:#f8fafc;
+	background:var(--wtrl-html-control-disabled-bg);
 	}
 
 /*----- Section ---------------------------------------------*/
@@ -204,13 +621,13 @@ html, body {
 	margin-right: 0em;
 	margin-top: 0em;
 	margin-bottom: 0.5em;
-	border:1px solid #ececec;
+	border:1px solid var(--wtrl-html-section-border-color);
 	border-radius:.3em;
 	padding-left: .5em;
 	padding-right: .5em;
 	padding-top: 0.3em;
 	padding-bottom: 0.3em;
-	background:#eee;
+	background:var(--wtrl-html-section-bg);
 	}
 .wtrl-section-head {
 	font-weight: normal;
@@ -219,7 +636,7 @@ html, body {
 	margin-right: 0em;
 	margin-top: 0em;
 	margin-bottom: 0em;
-	color:#0f172a;
+	color:var(--wtrl-html-section-head-color);
 	}
 
 /*----- Subsection ------------------------------------------*/
@@ -237,7 +654,7 @@ html, body {
 	margin-top: 0em;
 	margin-bottom: 0em;
 	margin-left:1.5em;
-	color:#1f2937;
+	color:var(--wtrl-html-subsection-head-color);
 	}
 
 /*----- Freeform text ---------------------------------------*/
@@ -282,165 +699,275 @@ html, body {
 	margin:0;
 	white-space:pre-wrap;
 	overflow-wrap:anywhere;
-	font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+	font-family: var(--wtrl-monospace-font-family);
 	font-size:12px;
-	color:#334155;
+	color:var(--wtrl-html-control-color);
 	}
 
 /*----- Semantic roles ---------------------------------------*/
 .wtrl-attr, .wtrl_attr {
-	color:#077;
-	}
-.wtrl-cmd, .wtrl_cmd {
-	color:#996600;
-	font-weight:normal;
-	font-style:normal;
-	font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-	}
-.wtrl-dfn, .wtrl_dfn {
-	font-style:italic;
-	}
-.wtrl-file, .wtrl_file {
-	color:#35f;
-	font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-	}
-.wtrl-func, .wtrl_func {
-	color:#3040ff;
-	font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+	color:var(--wtrl-attr-color);
+	font-weight:var(--wtrl-attr-font-weight);
+	font-style:var(--wtrl-attr-font-style);
 	}
 .wtrl-class, .wtrl_class {
-	color:#770000;
-	font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+	font-family:var(--wtrl-monospace-font-family);
+
+	color:var(--wtrl-class-color);
+	font-weight:var(--wtrl-class-font-weight);
+	font-style:var(--wtrl-class-font-style);
+
+	background-color:inherit;
+	}
+.wtrl-cmd, .wtrl_cmd {
+	font-family: var(--wtrl-monospace-font-family);
+	color:var(--wtrl-cmd-color);
+	font-weight:var(--wtrl-cmd-font-weight);
+	font-style:var(--wtrl-cmd-font-style);
+	}
+.wtrl-dfn, .wtrl_dfn {
+	font-family: inherit;
+
+	color:var(--wtrl-dfn-color);
+	font-weight:var(--wtrl-dfn-font-weight);
+	font-style:var(--wtrl-dfn-font-style);
+
+	background-color:inherit;
+	}
+.wtrl-file, .wtrl_file {
+	font-family:var(--wtrl-monospace-font-family);
+
+	color:var(--wtrl-file-color);
+	font-weight:var(--wtrl-file-font-weight);
+	font-style:var(--wtrl-file-font-style);
+
+	background-color:inherit;
+	}
+.wtrl-func, .wtrl_func {
+	font-family:var(--wtrl-monospace-font-family);
+
+	color:var(--wtrl-func-color);
+	font-weight:var(--wtrl-func-font-weight);
+	font-style:var(--wtrl-func-font-style);
+
+	background-color:inherit;
 	}
 .wtrl-key, .wtrl_key {
-	color:#1f2937;
-	font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-	font-weight: normal;
-	font-size:90%;
-	border: 1px solid black;
+	font-family:var(--wtrl-monospace-font-family);
+
+	color:var(--wtrl-key-color);
+	font-weight:var(--wtrl-key-font-weight);
+	font-style:var(--wtrl-key-font-style);
+	border: 1px solid var(--wtrl-html-key-border-color);
 	border-radius:3px;
 	padding-left:3px;
 	padding-right:3px;
+
+	background-color:inherit;
 	}
 .wtrl-label, .wtrl_label {
-	color:#1f2937;
-	font-style:italic;
+	font-family:inherit;
+
+	color:var(--wtrl-label-color);
+	font-weight:var(--wtrl-label-font-weight);
+	font-style:var(--wtrl-label-font-style);
+	font-size: 100%;
+
+	background-color:inherit;
+	}
+.wtrl-lit, .wtrl_lit {
+	font-family:var(--wtrl-monospace-font-family);
+
+	color: var(--wtrl-lit-color);
+	font-weight:var(--wtrl-lit-font-weight);
+	font-style:var(--wtrl-lit-font-style);
+
+	background-color:inherit;
 	}
 .wtrl-mod, .wtrl_mod {
-	color:#462;
-	font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+	font-family:var(--wtrl-monospace-font-family);
+
+	color: var(--wtrl-mod-color);
+	font-weight:var(--wtrl-mod-font-weight);
+	font-style:var(--wtrl-mod-font-style);
+
+	background-color:inherit;
 	}
 .wtrl-norm, .wtrl_norm {
 	font-family:inherit;
 
-	color:inherit;
-	font-weight:normal;
-	font-style:italic;
+	color:var(--wtrl-norm-color);
+	font-weight:var(--wtrl-norm-font-weight);
+	font-style:var(--wtrl-norm-font-style);
 	font-size: 100%;
 
 	background-color:inherit;
 	}
 .wtrl-norm::after, .wtrl_norm::after {
 	content: " \2696";
-	font-weight:normal;
-	font-style:normal;
-	}
-	color:#b42318;
-	font-weight:700;
-	}
-.wtrl-opt, .wtrl_opt {
-	font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 	font-weight:bold;
+	font-style:normal;
 	}
 .wtrl-op, .wtrl_op {
-	color:inherit;
-	font-weight:bold;
-	font-style:normal;
+	font-family:var(--wtrl-monospace-font-family);
+
+	color:var(--wtrl-op-color);
+	font-weight:var(--wtrl-op-font-weight);
+	font-style:var(--wtrl-op-font-style);
+
+	background-color:inherit;
 	}
-.wtrl-lit, .wtrl_lit {
-	color:#1f2937;
-	font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+.wtrl-opt, .wtrl_opt {
+	font-family:var(--wtrl-monospace-font-family);
+
+	color:var(--wtrl-opt-color);
+	font-weight:var(--wtrl-opt-font-weight);
+	font-style:var(--wtrl-opt-font-style);
+
+	background-color:inherit;
 	}
 .wtrl-pkg, .wtrl_pkg {
-	color:#446622;
-	font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-	}
-.wtrl-ref, .wtrl_ref {
-	color:#005cc5;
-	text-decoration-line: underline;
-	text-decoration-style: dotted;
-	text-decoration-thickness: 1px;
-	text-underline-offset: 0.12em;
-	}
-.wtrl-value, .wtrl_value {
-	color:#040;
-	font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+	font-family:var(--wtrl-monospace-font-family);
+
+	color: var(--wtrl-pkg-color);
+	font-weight:var(--wtrl-pkg-font-weight);
+	font-style:var(--wtrl-pkg-font-style);
+
+	background-color:inherit;
 	}
 .wtrl-tag, .wtrl_tag {
-	color:#4b5563;
-	font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+	font-family:var(--wtrl-monospace-font-family);
+
+	color:var(--wtrl-tag-color);
+	font-weight:var(--wtrl-tag-font-weight);
+	font-style:var(--wtrl-tag-font-style);
+
+	background-color:inherit;
 	}
 .wtrl-term, .wtrl_term {
-	font-style:italic;
-	color:#000;
+	font-family:inherit;
+	color:var(--wtrl-term-color);
+	font-weight:var(--wtrl-term-font-weight);
+	font-style:var(--wtrl-term-font-style);
+	font-size:100%;
+
+	background-color:inherit;
 	}
 .wtrl-type, .wtrl_type
 	{
-	color:#770000;
-	font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+	font-family:var(--wtrl-monospace-font-family);
+
+	color:var(--wtrl-type-color);
+	font-weight:var(--wtrl-type-font-weight);
+	font-style:var(--wtrl-type-font-style);
+
+	background-color:inherit;
 	}
 .wtrl-url, .wtrl_url {
-	color:#35f;
-	font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+	font-family:var(--wtrl-monospace-font-family);
+
+	color:var(--wtrl-url-color);
+	font-weight:var(--wtrl-url-font-weight);
+	font-style:var(--wtrl-url-font-style);
+
+	background-color:inherit;
 	}
 .wtrl-url-schema, .wtrl_url_schema {
-	color:#354;
-	font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+	font-family: var(--wtrl-monospace-font-family);
+
+	color:var(--wtrl-url-schema-color);
+	font-weight:var(--wtrl-url-font-weight);
+	font-style:var(--wtrl-url-font-style);
+
+	background-color:inherit;
+	}
+.wtrl-value, .wtrl_value {
+	font-family: var(--wtrl-monospace-font-family);
+
+	color:var(--wtrl-value-color);
+	font-weight:var(--wtrl-value-font-weight);
+	font-style:var(--wtrl-value-font-style);
+	font-size:90%;
+
+	background-color:inherit;
 	}
 .wtrl-var, .wtrl_var {
-	color:#a00;
-	font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-	font-weight: normal;
+	font-family: var(--wtrl-monospace-font-family);
+
+	color:var(--wtrl-var-color);
+	font-weight:var(--wtrl-var-font-weight);
+	font-style:var(--wtrl-var-font-style);
+
+	background-color:inherit;
 	}
 
 
-
-.wtrl-ref.wtrl-func:visited, .wtrl_ref.wtrl_func:visited {
-	color:#3040ff;
-	}
-.wtrl-ref.wtrl-type:visited, .wtrl_ref.wtrl_type:visited {
-	color:#770000;
-	}
-.wtrl-ref.wtrl-type, .wtrl_ref.wtrl_type {
-	color:#770000;
+.wtrl-ref, .wtrl_ref {
+	color:var(--wtrl-url-color);
 	text-decoration-line: underline;
 	text-decoration-style: dotted;
 	text-decoration-thickness: 1px;
 	text-underline-offset: 0.12em;
 	}
-.wtrl-ref.wtrl-var, .wtrl_ref.wtrl_var {
-	color:#a00;
+.wtrl-ref.wtrl-mod, .wtrl_ref.wtrl_mod {
+	color:var(--wtrl-mod-color);
+	text-decoration-line: underline;
+	text-decoration-style: dotted;
+	text-decoration-thickness: 1px;
+	text-underline-offset: 0.12em;
+	}
+.wtrl-ref.wtrl-class, .wtrl_ref.wtrl_class {
+	color:var(--wtrl-class-color);
 	text-decoration-line: underline;
 	text-decoration-style: dotted;
 	text-decoration-thickness: 1px;
 	text-underline-offset: 0.12em;
 	}
 .wtrl-ref.wtrl-func, .wtrl_ref.wtrl_func {
-	color:#3040ff;
+	color:var(--wtrl-func-color);
 	text-decoration-line: underline;
 	text-decoration-style: dotted;
 	text-decoration-thickness: 1px;
 	text-underline-offset: 0.12em;
 	}
+.wtrl-ref.wtrl-type, .wtrl_ref.wtrl_type {
+	color:var(--wtrl-type-color);
+	text-decoration-line: underline;
+	text-decoration-style: dotted;
+	text-decoration-thickness: 1px;
+	text-underline-offset: 0.12em;
+	}
+.wtrl-ref.wtrl-var, .wtrl_ref.wtrl_var {
+	color:var(--wtrl-var-color);
+	text-decoration-line: underline;
+	text-decoration-style: dotted;
+	text-decoration-thickness: 1px;
+	text-underline-offset: 0.12em;
+	}
+.wtrl-ref.wtrl-mod:visited, .wtrl_ref.wtrl_mod:visited {
+	color:var(--wtrl-mod-color);
+	}
+.wtrl-ref.wtrl-class:visited, .wtrl_ref.wtrl_class:visited {
+	color:var(--wtrl-class-color);
+	}
+.wtrl-ref.wtrl-func:visited, .wtrl_ref.wtrl_func:visited {
+	color:var(--wtrl-func-color);
+	}
+.wtrl-ref.wtrl-func:visited, .wtrl_ref.wtrl_func:visited {
+	color:var(--wtrl-func-color);
+	}
+.wtrl-ref.wtrl-type:visited, .wtrl_ref.wtrl_type:visited {
+	color:var(--wtrl-type-color);
+	}
 .wtrl-ref.wtrl-var:visited, .wtrl_ref.wtrl_var:visited {
-	color:#a00;
+	color:var(--wtrl-var-color);
 	}
 
 /*----- Code segements --------------------------------------*/
 .wtrl-example-code .wtrl-code {
-	border:1px solid #ddd;
+	border:1px solid var(--wtrl-html-panel-border-color);
 	border-radius:0.3em;
-	background:#f7fff0;
+	background:var(--wtrl-html-code-bg);
 	margin-top: 0.25em;
 	margin-bottom:0em;
 	padding-left: 0.5em;
@@ -466,131 +993,322 @@ a {
    in the filter dropdown, which do not allow for styling individual options. */
 
 /*----- Hit list kinds --------------------------------------*/
+/* Each entry in the hitlist consists of two parts, a label
+   showing the kind of the object and the actual hit. The default
+   style is to render the label in a color that is associated with
+   the kind of the object, while the hit itself it is rendered
+   in a neutral color.
+   */
+
 .wtrl-hit-kind-module-label {
-	color: #446622;
+	color:var(--wtrl-mod-color);
 	font-size:100%;	
 	font-style: italic;
 }
 .wtrl-hit-kind-class-label {
-	color:#770000;
+	color:var(--wtrl-class-color);
 	font-size:100%;	
 	font-style: italic;
 	}
 .wtrl-hit-kind-callable-label {
-	color:#3040ff;
+	color:var(--wtrl-func-color);
 	font-size:100%;	
 	font-style: italic;	
 }
 .wtrl-hit-kind-assignable-label {
-	color:#666;
+	color:var(--wtrl-var-color);
 	font-size:100%;	
 	font-style: italic;
 	}
 .wtrl-hit-kind-type-label {
-	color:#666;
+	color:var(--wtrl-type-color);
 	font-size:100%;	
 	font-style: italic;
 	}
 /* Label "object" or "entry" is a fallback and is not supposed to appear. */
 .wtrl-hit-kind-object-label {
-	color:#000;
+	color:var(--wtrl-html-fallback-color);
 	font-size:100%;	
 	font-style: italic;
 	}
-
+/* The entries. Feel free to override; if a non-neutral color is used,
+   it should be consistent with the color assigned to the object kind in general. */
 .wtrl-hit-kind-module {
-	color:#000;
+	color:var(--wtrl-html-fallback-color);
 	}
 .wtrl-hit-kind-class {
-	color:#000;
+	color:var(--wtrl-html-fallback-color);
 	}
 .wtrl-hit-kind-callable {
-	color:#000;
+	color:var(--wtrl-html-fallback-color);
 	}
 .wtrl-hit-kind-assignable {
-	color:#000;
+	color:var(--wtrl-html-fallback-color);
 	}
-/* Fallback */
+.wtrl-hit-kind-type {
+	color:var(--wtrl-html-fallback-color);
+	}
+/* Fallback. Not supposed to appear */
 .wtrl-hit-kind-object {
-	color:#000;
+	color:var(--wtrl-html-fallback-color);
 	}
 
-pre { line-height: 125%; }
-td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
-span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
-td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
-span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
-.wtrl-code .hll { background-color: #3c3836 }
-.wtrl-code { background: #fbf1c7; }
-.wtrl-code .c { color: #928374; font-style: italic } /* Comment */
-.wtrl-code .err { color: #FBF1C7; background-color: #9D0006 } /* Error */
-.wtrl-code .k { color: #9D0006 } /* Keyword */
-.wtrl-code .ch { color: #928374; font-style: italic } /* Comment.Hashbang */
-.wtrl-code .cm { color: #928374; font-style: italic } /* Comment.Multiline */
-.wtrl-code .c-PreProc { color: #427B58; font-style: italic } /* Comment.PreProc */
-.wtrl-code .cp { color: #928374; font-style: italic } /* Comment.Preproc */
-.wtrl-code .cpf { color: #928374; font-style: italic } /* Comment.PreprocFile */
-.wtrl-code .c1 { color: #928374; font-style: italic } /* Comment.Single */
-.wtrl-code .cs { color: #3C3836; font-weight: bold; font-style: italic } /* Comment.Special */
-.wtrl-code .gd { color: #FBF1C7; background-color: #9D0006 } /* Generic.Deleted */
-.wtrl-code .ge { font-style: italic } /* Generic.Emph */
-.wtrl-code .gr { color: #9D0006 } /* Generic.Error */
-.wtrl-code .gh { color: #3C3836; font-weight: bold } /* Generic.Heading */
-.wtrl-code .gi { color: #FBF1C7; background-color: #79740E } /* Generic.Inserted */
-.wtrl-code .go { color: #32302F } /* Generic.Output */
-.wtrl-code .gp { color: #7C6F64 } /* Generic.Prompt */
-.wtrl-code .gs { font-weight: bold } /* Generic.Strong */
-.wtrl-code .gu { color: #3C3836; text-decoration: underline } /* Generic.Subheading */
-.wtrl-code .gt { color: #9D0006 } /* Generic.Traceback */
-.wtrl-code .kc { color: #9D0006 } /* Keyword.Constant */
-.wtrl-code .kd { color: #9D0006 } /* Keyword.Declaration */
-.wtrl-code .kn { color: #9D0006 } /* Keyword.Namespace */
-.wtrl-code .kp { color: #9D0006 } /* Keyword.Pseudo */
-.wtrl-code .kr { color: #9D0006 } /* Keyword.Reserved */
-.wtrl-code .kt { color: #9D0006 } /* Keyword.Type */
-.wtrl-code .m { color: #8F3F71 } /* Literal.Number */
-.wtrl-code .s { color: #79740E } /* Literal.String */
-.wtrl-code .na { color: #B57614 } /* Name.Attribute */
-.wtrl-code .nb { color: #AF3A03 } /* Name.Builtin */
-.wtrl-code .nc { color: #427B58 } /* Name.Class */
-.wtrl-code .no { color: #8F3F71 } /* Name.Constant */
-.wtrl-code .nd { color: #9D0006 } /* Name.Decorator */
-.wtrl-code .ne { color: #9D0006 } /* Name.Exception */
-.wtrl-code .nf { color: #427B58 } /* Name.Function */
-.wtrl-code .nn { color: #427B58 } /* Name.Namespace */
-.wtrl-code .nt { color: #427B58 } /* Name.Tag */
-.wtrl-code .nv { color: #076678 } /* Name.Variable */
-.wtrl-code .ow { color: #9D0006 } /* Operator.Word */
-.wtrl-code .mb { color: #8F3F71 } /* Literal.Number.Bin */
-.wtrl-code .mf { color: #8F3F71 } /* Literal.Number.Float */
-.wtrl-code .mh { color: #8F3F71 } /* Literal.Number.Hex */
-.wtrl-code .mi { color: #8F3F71 } /* Literal.Number.Integer */
-.wtrl-code .mo { color: #8F3F71 } /* Literal.Number.Oct */
-.wtrl-code .sa { color: #79740E } /* Literal.String.Affix */
-.wtrl-code .sb { color: #79740E } /* Literal.String.Backtick */
-.wtrl-code .sc { color: #79740E } /* Literal.String.Char */
-.wtrl-code .dl { color: #79740E } /* Literal.String.Delimiter */
-.wtrl-code .sd { color: #79740E } /* Literal.String.Doc */
-.wtrl-code .s2 { color: #79740E } /* Literal.String.Double */
-.wtrl-code .se { color: #AF3A03 } /* Literal.String.Escape */
-.wtrl-code .sh { color: #79740E } /* Literal.String.Heredoc */
-.wtrl-code .si { color: #79740E } /* Literal.String.Interpol */
-.wtrl-code .sx { color: #79740E } /* Literal.String.Other */
-.wtrl-code .sr { color: #79740E } /* Literal.String.Regex */
-.wtrl-code .s1 { color: #79740E } /* Literal.String.Single */
-.wtrl-code .ss { color: #79740E } /* Literal.String.Symbol */
-.wtrl-code .bp { color: #AF3A03 } /* Name.Builtin.Pseudo */
-.wtrl-code .fm { color: #427B58 } /* Name.Function.Magic */
-.wtrl-code .vc { color: #076678 } /* Name.Variable.Class */
-.wtrl-code .vg { color: #076678 } /* Name.Variable.Global */
-.wtrl-code .vi { color: #076678 } /* Name.Variable.Instance */
-.wtrl-code .vm { color: #076678 } /* Name.Variable.Magic */
-.wtrl-code .il { color: #8F3F71 } /* Literal.Number.Integer.Long */</style>
-</head>
-<body>
-  <div class="wtrl-app">
-    <aside class="wtrl-side">
-      <div class="wtrl-meta"><strong>Scope:</strong> <span id="wtrl-scope"></span></div>
+
+html[data-wtrl-theme="light"] pre, html[data-wtrl-theme="auto"] pre { line-height: 125%; }
+html[data-wtrl-theme="light"] td.linenos .normal, html[data-wtrl-theme="auto"] td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+html[data-wtrl-theme="light"] span.linenos, html[data-wtrl-theme="auto"] span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+html[data-wtrl-theme="light"] td.linenos .special, html[data-wtrl-theme="auto"] td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+html[data-wtrl-theme="light"] span.linenos.special, html[data-wtrl-theme="auto"] span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+html[data-wtrl-theme="light"] .wtrl-code .hll, html[data-wtrl-theme="auto"] .wtrl-code .hll { background-color: #3c3836 }
+html[data-wtrl-theme="light"] .wtrl-code, html[data-wtrl-theme="auto"] .wtrl-code { background: #fbf1c7; }
+html[data-wtrl-theme="light"] .wtrl-code .c, html[data-wtrl-theme="auto"] .wtrl-code .c { color: #928374; font-style: italic } /* Comment */
+html[data-wtrl-theme="light"] .wtrl-code .err, html[data-wtrl-theme="auto"] .wtrl-code .err { color: #FBF1C7; background-color: #9D0006 } /* Error */
+html[data-wtrl-theme="light"] .wtrl-code .k, html[data-wtrl-theme="auto"] .wtrl-code .k { color: #9D0006 } /* Keyword */
+html[data-wtrl-theme="light"] .wtrl-code .ch, html[data-wtrl-theme="auto"] .wtrl-code .ch { color: #928374; font-style: italic } /* Comment.Hashbang */
+html[data-wtrl-theme="light"] .wtrl-code .cm, html[data-wtrl-theme="auto"] .wtrl-code .cm { color: #928374; font-style: italic } /* Comment.Multiline */
+html[data-wtrl-theme="light"] .wtrl-code .c-PreProc, html[data-wtrl-theme="auto"] .wtrl-code .c-PreProc { color: #427B58; font-style: italic } /* Comment.PreProc */
+html[data-wtrl-theme="light"] .wtrl-code .cp, html[data-wtrl-theme="auto"] .wtrl-code .cp { color: #928374; font-style: italic } /* Comment.Preproc */
+html[data-wtrl-theme="light"] .wtrl-code .cpf, html[data-wtrl-theme="auto"] .wtrl-code .cpf { color: #928374; font-style: italic } /* Comment.PreprocFile */
+html[data-wtrl-theme="light"] .wtrl-code .c1, html[data-wtrl-theme="auto"] .wtrl-code .c1 { color: #928374; font-style: italic } /* Comment.Single */
+html[data-wtrl-theme="light"] .wtrl-code .cs, html[data-wtrl-theme="auto"] .wtrl-code .cs { color: #3C3836; font-weight: bold; font-style: italic } /* Comment.Special */
+html[data-wtrl-theme="light"] .wtrl-code .gd, html[data-wtrl-theme="auto"] .wtrl-code .gd { color: #FBF1C7; background-color: #9D0006 } /* Generic.Deleted */
+html[data-wtrl-theme="light"] .wtrl-code .ge, html[data-wtrl-theme="auto"] .wtrl-code .ge { font-style: italic } /* Generic.Emph */
+html[data-wtrl-theme="light"] .wtrl-code .gr, html[data-wtrl-theme="auto"] .wtrl-code .gr { color: #9D0006 } /* Generic.Error */
+html[data-wtrl-theme="light"] .wtrl-code .gh, html[data-wtrl-theme="auto"] .wtrl-code .gh { color: #3C3836; font-weight: bold } /* Generic.Heading */
+html[data-wtrl-theme="light"] .wtrl-code .gi, html[data-wtrl-theme="auto"] .wtrl-code .gi { color: #FBF1C7; background-color: #79740E } /* Generic.Inserted */
+html[data-wtrl-theme="light"] .wtrl-code .go, html[data-wtrl-theme="auto"] .wtrl-code .go { color: #32302F } /* Generic.Output */
+html[data-wtrl-theme="light"] .wtrl-code .gp, html[data-wtrl-theme="auto"] .wtrl-code .gp { color: #7C6F64 } /* Generic.Prompt */
+html[data-wtrl-theme="light"] .wtrl-code .gs, html[data-wtrl-theme="auto"] .wtrl-code .gs { font-weight: bold } /* Generic.Strong */
+html[data-wtrl-theme="light"] .wtrl-code .gu, html[data-wtrl-theme="auto"] .wtrl-code .gu { color: #3C3836; text-decoration: underline } /* Generic.Subheading */
+html[data-wtrl-theme="light"] .wtrl-code .gt, html[data-wtrl-theme="auto"] .wtrl-code .gt { color: #9D0006 } /* Generic.Traceback */
+html[data-wtrl-theme="light"] .wtrl-code .kc, html[data-wtrl-theme="auto"] .wtrl-code .kc { color: #9D0006 } /* Keyword.Constant */
+html[data-wtrl-theme="light"] .wtrl-code .kd, html[data-wtrl-theme="auto"] .wtrl-code .kd { color: #9D0006 } /* Keyword.Declaration */
+html[data-wtrl-theme="light"] .wtrl-code .kn, html[data-wtrl-theme="auto"] .wtrl-code .kn { color: #9D0006 } /* Keyword.Namespace */
+html[data-wtrl-theme="light"] .wtrl-code .kp, html[data-wtrl-theme="auto"] .wtrl-code .kp { color: #9D0006 } /* Keyword.Pseudo */
+html[data-wtrl-theme="light"] .wtrl-code .kr, html[data-wtrl-theme="auto"] .wtrl-code .kr { color: #9D0006 } /* Keyword.Reserved */
+html[data-wtrl-theme="light"] .wtrl-code .kt, html[data-wtrl-theme="auto"] .wtrl-code .kt { color: #9D0006 } /* Keyword.Type */
+html[data-wtrl-theme="light"] .wtrl-code .m, html[data-wtrl-theme="auto"] .wtrl-code .m { color: #8F3F71 } /* Literal.Number */
+html[data-wtrl-theme="light"] .wtrl-code .s, html[data-wtrl-theme="auto"] .wtrl-code .s { color: #79740E } /* Literal.String */
+html[data-wtrl-theme="light"] .wtrl-code .na, html[data-wtrl-theme="auto"] .wtrl-code .na { color: #B57614 } /* Name.Attribute */
+html[data-wtrl-theme="light"] .wtrl-code .nb, html[data-wtrl-theme="auto"] .wtrl-code .nb { color: #AF3A03 } /* Name.Builtin */
+html[data-wtrl-theme="light"] .wtrl-code .nc, html[data-wtrl-theme="auto"] .wtrl-code .nc { color: #427B58 } /* Name.Class */
+html[data-wtrl-theme="light"] .wtrl-code .no, html[data-wtrl-theme="auto"] .wtrl-code .no { color: #8F3F71 } /* Name.Constant */
+html[data-wtrl-theme="light"] .wtrl-code .nd, html[data-wtrl-theme="auto"] .wtrl-code .nd { color: #9D0006 } /* Name.Decorator */
+html[data-wtrl-theme="light"] .wtrl-code .ne, html[data-wtrl-theme="auto"] .wtrl-code .ne { color: #9D0006 } /* Name.Exception */
+html[data-wtrl-theme="light"] .wtrl-code .nf, html[data-wtrl-theme="auto"] .wtrl-code .nf { color: #427B58 } /* Name.Function */
+html[data-wtrl-theme="light"] .wtrl-code .nn, html[data-wtrl-theme="auto"] .wtrl-code .nn { color: #427B58 } /* Name.Namespace */
+html[data-wtrl-theme="light"] .wtrl-code .nt, html[data-wtrl-theme="auto"] .wtrl-code .nt { color: #427B58 } /* Name.Tag */
+html[data-wtrl-theme="light"] .wtrl-code .nv, html[data-wtrl-theme="auto"] .wtrl-code .nv { color: #076678 } /* Name.Variable */
+html[data-wtrl-theme="light"] .wtrl-code .ow, html[data-wtrl-theme="auto"] .wtrl-code .ow { color: #9D0006 } /* Operator.Word */
+html[data-wtrl-theme="light"] .wtrl-code .mb, html[data-wtrl-theme="auto"] .wtrl-code .mb { color: #8F3F71 } /* Literal.Number.Bin */
+html[data-wtrl-theme="light"] .wtrl-code .mf, html[data-wtrl-theme="auto"] .wtrl-code .mf { color: #8F3F71 } /* Literal.Number.Float */
+html[data-wtrl-theme="light"] .wtrl-code .mh, html[data-wtrl-theme="auto"] .wtrl-code .mh { color: #8F3F71 } /* Literal.Number.Hex */
+html[data-wtrl-theme="light"] .wtrl-code .mi, html[data-wtrl-theme="auto"] .wtrl-code .mi { color: #8F3F71 } /* Literal.Number.Integer */
+html[data-wtrl-theme="light"] .wtrl-code .mo, html[data-wtrl-theme="auto"] .wtrl-code .mo { color: #8F3F71 } /* Literal.Number.Oct */
+html[data-wtrl-theme="light"] .wtrl-code .sa, html[data-wtrl-theme="auto"] .wtrl-code .sa { color: #79740E } /* Literal.String.Affix */
+html[data-wtrl-theme="light"] .wtrl-code .sb, html[data-wtrl-theme="auto"] .wtrl-code .sb { color: #79740E } /* Literal.String.Backtick */
+html[data-wtrl-theme="light"] .wtrl-code .sc, html[data-wtrl-theme="auto"] .wtrl-code .sc { color: #79740E } /* Literal.String.Char */
+html[data-wtrl-theme="light"] .wtrl-code .dl, html[data-wtrl-theme="auto"] .wtrl-code .dl { color: #79740E } /* Literal.String.Delimiter */
+html[data-wtrl-theme="light"] .wtrl-code .sd, html[data-wtrl-theme="auto"] .wtrl-code .sd { color: #79740E } /* Literal.String.Doc */
+html[data-wtrl-theme="light"] .wtrl-code .s2, html[data-wtrl-theme="auto"] .wtrl-code .s2 { color: #79740E } /* Literal.String.Double */
+html[data-wtrl-theme="light"] .wtrl-code .se, html[data-wtrl-theme="auto"] .wtrl-code .se { color: #AF3A03 } /* Literal.String.Escape */
+html[data-wtrl-theme="light"] .wtrl-code .sh, html[data-wtrl-theme="auto"] .wtrl-code .sh { color: #79740E } /* Literal.String.Heredoc */
+html[data-wtrl-theme="light"] .wtrl-code .si, html[data-wtrl-theme="auto"] .wtrl-code .si { color: #79740E } /* Literal.String.Interpol */
+html[data-wtrl-theme="light"] .wtrl-code .sx, html[data-wtrl-theme="auto"] .wtrl-code .sx { color: #79740E } /* Literal.String.Other */
+html[data-wtrl-theme="light"] .wtrl-code .sr, html[data-wtrl-theme="auto"] .wtrl-code .sr { color: #79740E } /* Literal.String.Regex */
+html[data-wtrl-theme="light"] .wtrl-code .s1, html[data-wtrl-theme="auto"] .wtrl-code .s1 { color: #79740E } /* Literal.String.Single */
+html[data-wtrl-theme="light"] .wtrl-code .ss, html[data-wtrl-theme="auto"] .wtrl-code .ss { color: #79740E } /* Literal.String.Symbol */
+html[data-wtrl-theme="light"] .wtrl-code .bp, html[data-wtrl-theme="auto"] .wtrl-code .bp { color: #AF3A03 } /* Name.Builtin.Pseudo */
+html[data-wtrl-theme="light"] .wtrl-code .fm, html[data-wtrl-theme="auto"] .wtrl-code .fm { color: #427B58 } /* Name.Function.Magic */
+html[data-wtrl-theme="light"] .wtrl-code .vc, html[data-wtrl-theme="auto"] .wtrl-code .vc { color: #076678 } /* Name.Variable.Class */
+html[data-wtrl-theme="light"] .wtrl-code .vg, html[data-wtrl-theme="auto"] .wtrl-code .vg { color: #076678 } /* Name.Variable.Global */
+html[data-wtrl-theme="light"] .wtrl-code .vi, html[data-wtrl-theme="auto"] .wtrl-code .vi { color: #076678 } /* Name.Variable.Instance */
+html[data-wtrl-theme="light"] .wtrl-code .vm, html[data-wtrl-theme="auto"] .wtrl-code .vm { color: #076678 } /* Name.Variable.Magic */
+html[data-wtrl-theme="light"] .wtrl-code .il, html[data-wtrl-theme="auto"] .wtrl-code .il { color: #8F3F71 } /* Literal.Number.Integer.Long */
+html[data-wtrl-theme="dark"] pre { line-height: 125%; }
+html[data-wtrl-theme="dark"] td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+html[data-wtrl-theme="dark"] span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+html[data-wtrl-theme="dark"] td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+html[data-wtrl-theme="dark"] span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+html[data-wtrl-theme="dark"] .wtrl-code .hll { background-color: #ebdbb2 }
+html[data-wtrl-theme="dark"] .wtrl-code { background: #282828; color: #DDD }
+html[data-wtrl-theme="dark"] .wtrl-code .c { color: #928374; font-style: italic } /* Comment */
+html[data-wtrl-theme="dark"] .wtrl-code .err { color: #282828; background-color: #FB4934 } /* Error */
+html[data-wtrl-theme="dark"] .wtrl-code .esc { color: #DDD } /* Escape */
+html[data-wtrl-theme="dark"] .wtrl-code .g { color: #DDD } /* Generic */
+html[data-wtrl-theme="dark"] .wtrl-code .k { color: #FB4934 } /* Keyword */
+html[data-wtrl-theme="dark"] .wtrl-code .l { color: #DDD } /* Literal */
+html[data-wtrl-theme="dark"] .wtrl-code .n { color: #DDD } /* Name */
+html[data-wtrl-theme="dark"] .wtrl-code .o { color: #DDD } /* Operator */
+html[data-wtrl-theme="dark"] .wtrl-code .x { color: #DDD } /* Other */
+html[data-wtrl-theme="dark"] .wtrl-code .p { color: #DDD } /* Punctuation */
+html[data-wtrl-theme="dark"] .wtrl-code .ch { color: #928374; font-style: italic } /* Comment.Hashbang */
+html[data-wtrl-theme="dark"] .wtrl-code .cm { color: #928374; font-style: italic } /* Comment.Multiline */
+html[data-wtrl-theme="dark"] .wtrl-code .c-PreProc { color: #8EC07C; font-style: italic } /* Comment.PreProc */
+html[data-wtrl-theme="dark"] .wtrl-code .cp { color: #928374; font-style: italic } /* Comment.Preproc */
+html[data-wtrl-theme="dark"] .wtrl-code .cpf { color: #928374; font-style: italic } /* Comment.PreprocFile */
+html[data-wtrl-theme="dark"] .wtrl-code .c1 { color: #928374; font-style: italic } /* Comment.Single */
+html[data-wtrl-theme="dark"] .wtrl-code .cs { color: #EBDBB2; font-weight: bold; font-style: italic } /* Comment.Special */
+html[data-wtrl-theme="dark"] .wtrl-code .gd { color: #282828; background-color: #FB4934 } /* Generic.Deleted */
+html[data-wtrl-theme="dark"] .wtrl-code .ge { color: #DDD; font-style: italic } /* Generic.Emph */
+html[data-wtrl-theme="dark"] .wtrl-code .ges { color: #DDD; font-weight: bold; font-style: italic } /* Generic.EmphStrong */
+html[data-wtrl-theme="dark"] .wtrl-code .gr { color: #FB4934 } /* Generic.Error */
+html[data-wtrl-theme="dark"] .wtrl-code .gh { color: #EBDBB2; font-weight: bold } /* Generic.Heading */
+html[data-wtrl-theme="dark"] .wtrl-code .gi { color: #282828; background-color: #B8BB26 } /* Generic.Inserted */
+html[data-wtrl-theme="dark"] .wtrl-code .go { color: #F2E5BC } /* Generic.Output */
+html[data-wtrl-theme="dark"] .wtrl-code .gp { color: #A89984 } /* Generic.Prompt */
+html[data-wtrl-theme="dark"] .wtrl-code .gs { color: #DDD; font-weight: bold } /* Generic.Strong */
+html[data-wtrl-theme="dark"] .wtrl-code .gu { color: #EBDBB2; text-decoration: underline } /* Generic.Subheading */
+html[data-wtrl-theme="dark"] .wtrl-code .gt { color: #FB4934 } /* Generic.Traceback */
+html[data-wtrl-theme="dark"] .wtrl-code .kc { color: #FB4934 } /* Keyword.Constant */
+html[data-wtrl-theme="dark"] .wtrl-code .kd { color: #FB4934 } /* Keyword.Declaration */
+html[data-wtrl-theme="dark"] .wtrl-code .kn { color: #FB4934 } /* Keyword.Namespace */
+html[data-wtrl-theme="dark"] .wtrl-code .kp { color: #FB4934 } /* Keyword.Pseudo */
+html[data-wtrl-theme="dark"] .wtrl-code .kr { color: #FB4934 } /* Keyword.Reserved */
+html[data-wtrl-theme="dark"] .wtrl-code .kt { color: #FB4934 } /* Keyword.Type */
+html[data-wtrl-theme="dark"] .wtrl-code .ld { color: #DDD } /* Literal.Date */
+html[data-wtrl-theme="dark"] .wtrl-code .m { color: #D3869B } /* Literal.Number */
+html[data-wtrl-theme="dark"] .wtrl-code .s { color: #B8BB26 } /* Literal.String */
+html[data-wtrl-theme="dark"] .wtrl-code .na { color: #FABD2F } /* Name.Attribute */
+html[data-wtrl-theme="dark"] .wtrl-code .nb { color: #FE8019 } /* Name.Builtin */
+html[data-wtrl-theme="dark"] .wtrl-code .nc { color: #8EC07C } /* Name.Class */
+html[data-wtrl-theme="dark"] .wtrl-code .no { color: #D3869B } /* Name.Constant */
+html[data-wtrl-theme="dark"] .wtrl-code .nd { color: #FB4934 } /* Name.Decorator */
+html[data-wtrl-theme="dark"] .wtrl-code .ni { color: #DDD } /* Name.Entity */
+html[data-wtrl-theme="dark"] .wtrl-code .ne { color: #FB4934 } /* Name.Exception */
+html[data-wtrl-theme="dark"] .wtrl-code .nf { color: #8EC07C } /* Name.Function */
+html[data-wtrl-theme="dark"] .wtrl-code .nl { color: #DDD } /* Name.Label */
+html[data-wtrl-theme="dark"] .wtrl-code .nn { color: #8EC07C } /* Name.Namespace */
+html[data-wtrl-theme="dark"] .wtrl-code .nx { color: #DDD } /* Name.Other */
+html[data-wtrl-theme="dark"] .wtrl-code .py { color: #DDD } /* Name.Property */
+html[data-wtrl-theme="dark"] .wtrl-code .nt { color: #8EC07C } /* Name.Tag */
+html[data-wtrl-theme="dark"] .wtrl-code .nv { color: #83A598 } /* Name.Variable */
+html[data-wtrl-theme="dark"] .wtrl-code .ow { color: #FB4934 } /* Operator.Word */
+html[data-wtrl-theme="dark"] .wtrl-code .pm { color: #DDD } /* Punctuation.Marker */
+html[data-wtrl-theme="dark"] .wtrl-code .w { color: #DDD } /* Text.Whitespace */
+html[data-wtrl-theme="dark"] .wtrl-code .mb { color: #D3869B } /* Literal.Number.Bin */
+html[data-wtrl-theme="dark"] .wtrl-code .mf { color: #D3869B } /* Literal.Number.Float */
+html[data-wtrl-theme="dark"] .wtrl-code .mh { color: #D3869B } /* Literal.Number.Hex */
+html[data-wtrl-theme="dark"] .wtrl-code .mi { color: #D3869B } /* Literal.Number.Integer */
+html[data-wtrl-theme="dark"] .wtrl-code .mo { color: #D3869B } /* Literal.Number.Oct */
+html[data-wtrl-theme="dark"] .wtrl-code .sa { color: #B8BB26 } /* Literal.String.Affix */
+html[data-wtrl-theme="dark"] .wtrl-code .sb { color: #B8BB26 } /* Literal.String.Backtick */
+html[data-wtrl-theme="dark"] .wtrl-code .sc { color: #B8BB26 } /* Literal.String.Char */
+html[data-wtrl-theme="dark"] .wtrl-code .dl { color: #B8BB26 } /* Literal.String.Delimiter */
+html[data-wtrl-theme="dark"] .wtrl-code .sd { color: #B8BB26 } /* Literal.String.Doc */
+html[data-wtrl-theme="dark"] .wtrl-code .s2 { color: #B8BB26 } /* Literal.String.Double */
+html[data-wtrl-theme="dark"] .wtrl-code .se { color: #FE8019 } /* Literal.String.Escape */
+html[data-wtrl-theme="dark"] .wtrl-code .sh { color: #B8BB26 } /* Literal.String.Heredoc */
+html[data-wtrl-theme="dark"] .wtrl-code .si { color: #B8BB26 } /* Literal.String.Interpol */
+html[data-wtrl-theme="dark"] .wtrl-code .sx { color: #B8BB26 } /* Literal.String.Other */
+html[data-wtrl-theme="dark"] .wtrl-code .sr { color: #B8BB26 } /* Literal.String.Regex */
+html[data-wtrl-theme="dark"] .wtrl-code .s1 { color: #B8BB26 } /* Literal.String.Single */
+html[data-wtrl-theme="dark"] .wtrl-code .ss { color: #B8BB26 } /* Literal.String.Symbol */
+html[data-wtrl-theme="dark"] .wtrl-code .bp { color: #FE8019 } /* Name.Builtin.Pseudo */
+html[data-wtrl-theme="dark"] .wtrl-code .fm { color: #8EC07C } /* Name.Function.Magic */
+html[data-wtrl-theme="dark"] .wtrl-code .vc { color: #83A598 } /* Name.Variable.Class */
+html[data-wtrl-theme="dark"] .wtrl-code .vg { color: #83A598 } /* Name.Variable.Global */
+html[data-wtrl-theme="dark"] .wtrl-code .vi { color: #83A598 } /* Name.Variable.Instance */
+html[data-wtrl-theme="dark"] .wtrl-code .vm { color: #83A598 } /* Name.Variable.Magic */
+html[data-wtrl-theme="dark"] .wtrl-code .il { color: #D3869B } /* Literal.Number.Integer.Long */
+@media (prefers-color-scheme: dark) {
+html[data-wtrl-theme="auto"] pre { line-height: 125%; }
+html[data-wtrl-theme="auto"] td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+html[data-wtrl-theme="auto"] span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+html[data-wtrl-theme="auto"] td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+html[data-wtrl-theme="auto"] span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+html[data-wtrl-theme="auto"] .wtrl-code .hll { background-color: #ebdbb2 }
+html[data-wtrl-theme="auto"] .wtrl-code { background: #282828; color: #DDD }
+html[data-wtrl-theme="auto"] .wtrl-code .c { color: #928374; font-style: italic } /* Comment */
+html[data-wtrl-theme="auto"] .wtrl-code .err { color: #282828; background-color: #FB4934 } /* Error */
+html[data-wtrl-theme="auto"] .wtrl-code .esc { color: #DDD } /* Escape */
+html[data-wtrl-theme="auto"] .wtrl-code .g { color: #DDD } /* Generic */
+html[data-wtrl-theme="auto"] .wtrl-code .k { color: #FB4934 } /* Keyword */
+html[data-wtrl-theme="auto"] .wtrl-code .l { color: #DDD } /* Literal */
+html[data-wtrl-theme="auto"] .wtrl-code .n { color: #DDD } /* Name */
+html[data-wtrl-theme="auto"] .wtrl-code .o { color: #DDD } /* Operator */
+html[data-wtrl-theme="auto"] .wtrl-code .x { color: #DDD } /* Other */
+html[data-wtrl-theme="auto"] .wtrl-code .p { color: #DDD } /* Punctuation */
+html[data-wtrl-theme="auto"] .wtrl-code .ch { color: #928374; font-style: italic } /* Comment.Hashbang */
+html[data-wtrl-theme="auto"] .wtrl-code .cm { color: #928374; font-style: italic } /* Comment.Multiline */
+html[data-wtrl-theme="auto"] .wtrl-code .c-PreProc { color: #8EC07C; font-style: italic } /* Comment.PreProc */
+html[data-wtrl-theme="auto"] .wtrl-code .cp { color: #928374; font-style: italic } /* Comment.Preproc */
+html[data-wtrl-theme="auto"] .wtrl-code .cpf { color: #928374; font-style: italic } /* Comment.PreprocFile */
+html[data-wtrl-theme="auto"] .wtrl-code .c1 { color: #928374; font-style: italic } /* Comment.Single */
+html[data-wtrl-theme="auto"] .wtrl-code .cs { color: #EBDBB2; font-weight: bold; font-style: italic } /* Comment.Special */
+html[data-wtrl-theme="auto"] .wtrl-code .gd { color: #282828; background-color: #FB4934 } /* Generic.Deleted */
+html[data-wtrl-theme="auto"] .wtrl-code .ge { color: #DDD; font-style: italic } /* Generic.Emph */
+html[data-wtrl-theme="auto"] .wtrl-code .ges { color: #DDD; font-weight: bold; font-style: italic } /* Generic.EmphStrong */
+html[data-wtrl-theme="auto"] .wtrl-code .gr { color: #FB4934 } /* Generic.Error */
+html[data-wtrl-theme="auto"] .wtrl-code .gh { color: #EBDBB2; font-weight: bold } /* Generic.Heading */
+html[data-wtrl-theme="auto"] .wtrl-code .gi { color: #282828; background-color: #B8BB26 } /* Generic.Inserted */
+html[data-wtrl-theme="auto"] .wtrl-code .go { color: #F2E5BC } /* Generic.Output */
+html[data-wtrl-theme="auto"] .wtrl-code .gp { color: #A89984 } /* Generic.Prompt */
+html[data-wtrl-theme="auto"] .wtrl-code .gs { color: #DDD; font-weight: bold } /* Generic.Strong */
+html[data-wtrl-theme="auto"] .wtrl-code .gu { color: #EBDBB2; text-decoration: underline } /* Generic.Subheading */
+html[data-wtrl-theme="auto"] .wtrl-code .gt { color: #FB4934 } /* Generic.Traceback */
+html[data-wtrl-theme="auto"] .wtrl-code .kc { color: #FB4934 } /* Keyword.Constant */
+html[data-wtrl-theme="auto"] .wtrl-code .kd { color: #FB4934 } /* Keyword.Declaration */
+html[data-wtrl-theme="auto"] .wtrl-code .kn { color: #FB4934 } /* Keyword.Namespace */
+html[data-wtrl-theme="auto"] .wtrl-code .kp { color: #FB4934 } /* Keyword.Pseudo */
+html[data-wtrl-theme="auto"] .wtrl-code .kr { color: #FB4934 } /* Keyword.Reserved */
+html[data-wtrl-theme="auto"] .wtrl-code .kt { color: #FB4934 } /* Keyword.Type */
+html[data-wtrl-theme="auto"] .wtrl-code .ld { color: #DDD } /* Literal.Date */
+html[data-wtrl-theme="auto"] .wtrl-code .m { color: #D3869B } /* Literal.Number */
+html[data-wtrl-theme="auto"] .wtrl-code .s { color: #B8BB26 } /* Literal.String */
+html[data-wtrl-theme="auto"] .wtrl-code .na { color: #FABD2F } /* Name.Attribute */
+html[data-wtrl-theme="auto"] .wtrl-code .nb { color: #FE8019 } /* Name.Builtin */
+html[data-wtrl-theme="auto"] .wtrl-code .nc { color: #8EC07C } /* Name.Class */
+html[data-wtrl-theme="auto"] .wtrl-code .no { color: #D3869B } /* Name.Constant */
+html[data-wtrl-theme="auto"] .wtrl-code .nd { color: #FB4934 } /* Name.Decorator */
+html[data-wtrl-theme="auto"] .wtrl-code .ni { color: #DDD } /* Name.Entity */
+html[data-wtrl-theme="auto"] .wtrl-code .ne { color: #FB4934 } /* Name.Exception */
+html[data-wtrl-theme="auto"] .wtrl-code .nf { color: #8EC07C } /* Name.Function */
+html[data-wtrl-theme="auto"] .wtrl-code .nl { color: #DDD } /* Name.Label */
+html[data-wtrl-theme="auto"] .wtrl-code .nn { color: #8EC07C } /* Name.Namespace */
+html[data-wtrl-theme="auto"] .wtrl-code .nx { color: #DDD } /* Name.Other */
+html[data-wtrl-theme="auto"] .wtrl-code .py { color: #DDD } /* Name.Property */
+html[data-wtrl-theme="auto"] .wtrl-code .nt { color: #8EC07C } /* Name.Tag */
+html[data-wtrl-theme="auto"] .wtrl-code .nv { color: #83A598 } /* Name.Variable */
+html[data-wtrl-theme="auto"] .wtrl-code .ow { color: #FB4934 } /* Operator.Word */
+html[data-wtrl-theme="auto"] .wtrl-code .pm { color: #DDD } /* Punctuation.Marker */
+html[data-wtrl-theme="auto"] .wtrl-code .w { color: #DDD } /* Text.Whitespace */
+html[data-wtrl-theme="auto"] .wtrl-code .mb { color: #D3869B } /* Literal.Number.Bin */
+html[data-wtrl-theme="auto"] .wtrl-code .mf { color: #D3869B } /* Literal.Number.Float */
+html[data-wtrl-theme="auto"] .wtrl-code .mh { color: #D3869B } /* Literal.Number.Hex */
+html[data-wtrl-theme="auto"] .wtrl-code .mi { color: #D3869B } /* Literal.Number.Integer */
+html[data-wtrl-theme="auto"] .wtrl-code .mo { color: #D3869B } /* Literal.Number.Oct */
+html[data-wtrl-theme="auto"] .wtrl-code .sa { color: #B8BB26 } /* Literal.String.Affix */
+html[data-wtrl-theme="auto"] .wtrl-code .sb { color: #B8BB26 } /* Literal.String.Backtick */
+html[data-wtrl-theme="auto"] .wtrl-code .sc { color: #B8BB26 } /* Literal.String.Char */
+html[data-wtrl-theme="auto"] .wtrl-code .dl { color: #B8BB26 } /* Literal.String.Delimiter */
+html[data-wtrl-theme="auto"] .wtrl-code .sd { color: #B8BB26 } /* Literal.String.Doc */
+html[data-wtrl-theme="auto"] .wtrl-code .s2 { color: #B8BB26 } /* Literal.String.Double */
+html[data-wtrl-theme="auto"] .wtrl-code .se { color: #FE8019 } /* Literal.String.Escape */
+html[data-wtrl-theme="auto"] .wtrl-code .sh { color: #B8BB26 } /* Literal.String.Heredoc */
+html[data-wtrl-theme="auto"] .wtrl-code .si { color: #B8BB26 } /* Literal.String.Interpol */
+html[data-wtrl-theme="auto"] .wtrl-code .sx { color: #B8BB26 } /* Literal.String.Other */
+html[data-wtrl-theme="auto"] .wtrl-code .sr { color: #B8BB26 } /* Literal.String.Regex */
+html[data-wtrl-theme="auto"] .wtrl-code .s1 { color: #B8BB26 } /* Literal.String.Single */
+html[data-wtrl-theme="auto"] .wtrl-code .ss { color: #B8BB26 } /* Literal.String.Symbol */
+html[data-wtrl-theme="auto"] .wtrl-code .bp { color: #FE8019 } /* Name.Builtin.Pseudo */
+html[data-wtrl-theme="auto"] .wtrl-code .fm { color: #8EC07C } /* Name.Function.Magic */
+html[data-wtrl-theme="auto"] .wtrl-code .vc { color: #83A598 } /* Name.Variable.Class */
+html[data-wtrl-theme="auto"] .wtrl-code .vg { color: #83A598 } /* Name.Variable.Global */
+html[data-wtrl-theme="auto"] .wtrl-code .vi { color: #83A598 } /* Name.Variable.Instance */
+html[data-wtrl-theme="auto"] .wtrl-code .vm { color: #83A598 } /* Name.Variable.Magic */
+html[data-wtrl-theme="auto"] .wtrl-code .il { color: #D3869B } /* Literal.Number.Integer.Long */
+}</style>
+	</head>
+	<body>
+	  <div class="wtrl-app">
+	    <aside class="wtrl-side">
+	      <div class="wtrl-theme-switcher" aria-label="Theme">
+	        <button id="wtrl-theme-light" class="wtrl-theme-button wtrl-theme-light" type="button" title="Use light theme" aria-label="Use light theme"></button>
+	        <button id="wtrl-theme-auto" class="wtrl-theme-button wtrl-theme-auto" type="button" title="Use system theme" aria-label="Use system theme"></button>
+	        <button id="wtrl-theme-dark" class="wtrl-theme-button wtrl-theme-dark" type="button" title="Use dark theme" aria-label="Use dark theme"></button>
+	      </div>
+	      <div class="wtrl-meta"><strong>Scope:</strong> <span id="wtrl-scope"></span></div>
       <div class="wtrl-meta"><strong>Flavour:</strong> <span id="wtrl-flavour"></span></div>
       <div class="wtrl-meta"><strong>Modules:</strong> <span id="wtrl-modules"></span></div>
       <div class="wtrl-meta"><strong>Classes:</strong> <span id="wtrl-num-classes"></span></div>
@@ -652,7 +1370,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
     </main>
   </div>
   <script>
-const WTRL_DATA = {"meta": {"scope": "core", "flavour": "rfc-2119", "schema": "0.1.0", "modules": ["showcase_roles"], "css_primary": "/* This style sheet defines the styles for interactive HTML5 output.\n   For waterlint render-html5, additional styles can be provided\n   by the caller via the --additional-css option. */\n/*----- Global styles ---------------------------------------*/\nhtml, body {\n\tmargin:0;\n\tpadding:0;\n\theight:100%;\n\toverflow:hidden;\n\tfont-family: Helvetica, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif; background:#f7f7f4; color:#1f2428;\n\t}\n.wtrl-app {\n\tdisplay:grid;\n\tgrid-template-columns: 420px 1fr;\n\theight:100vh;\n\tpadding:0.5em;\n\tgap:0.5em;\n\tbox-sizing:border-box;\n\t}\n.wtrl-side {\n\tborder:1px solid #ddd;\n\tborder-radius:.3em;\n\tmargin-bottom:1em;\n\tmargin-left:0em;\n\tmargin-right:0em;\n\tbackground:#fff;\n\tpadding-left:0.75em;\n\tpadding-right:0.75em;\n\tpadding-top: 0.5em;\n\tpadding-bottom: 1em;\n\tdisplay:flex;\n\tflex-direction:column;\n\tmin-height:0;\n\t}\n#wtrl-debug-refs {\n\tmargin-top:0.5em;\n\tmargin-bottom:0.0em;\n\tbackground-color:#efd;\n\tborder-radius:8px;\n\t}\n.wtrl-main {\n\tpadding-left:0.5em;\n\tpadding-right:0em;\n\tpadding-top: 0em;\n\tpadding-bottom: 1em;\n\tmargin-left: 0em;\n\tmin-width:0;\n\tmin-height:0;\n\tdisplay:flex;\n\tflex-direction:column;\n\toverflow:hidden;\n\t}\n.wtrl-meta {\n\tfont-size:12px;\n\tcolor:#666;\n\tmargin-bottom:0.5em;\n\t}\n.wtrl-input { width:100%; box-sizing:border-box; padding:10px 12px; border:1px solid #bbb; border-radius:8px; font-size:14px; }\n.wtrl-hitlist {\n\tmargin-left:.0em;\t\n\tmargin-right:0em;\t\n\tmargin-top:12px;\n\tpadding-left: 0em;\n\tpadding-right: 0em;\n\tmax-height:none;\n\tmin-height:0;\n\tflex:1 1 auto;\n\toverflow:auto;\n\tborder:1px solid #ddd;\n\tborder-radius:8px;\n\tbackground:#eee; }\n.wtrl-hit { display:block; width:100%; text-align:left; border:0; border-bottom:1px solid #eee; background:transparent; padding:8px 10px; font-size:13px; cursor:pointer; }\n.wtrl-hit:hover { background:#f3f6fa; }\n.wtrl-kind { color:#57606a; font-size:11px; margin-right:8px; }\n.wtrl-title { margin:0 0 10px 0; font-size:22px; }\n.wtrl-sub { margin:0 0 16px 0; color:#57606a; }\n\n.wtrl-block {\n\tborder:1px solid #ddd;\n\tborder-radius:0.3em;\n\tbackground:#fff;\n\tpadding-left: .75em;\n\tpadding-right: .75em;\n\tpadding-top: 0.75em;\n\tpadding-bottom: 0.75em;\n\tbox-sizing:border-box;\n\tflex:1 1 auto;\n\tmin-height:0;\n\twidth:100%;\n\tmax-width:100%;\n\tmax-height:none;\n\toverflow:auto;\n\t}\n\n.wtrl-signature {\n\tmargin:0 0 14px 0;\n\tfont-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;\n\tfont-size:100%;\n\tcolor:#57606a;\n\twhite-space:pre-wrap;\n\toverflow-wrap:anywhere;\n\t}\n.wtrl-search-row {\n\tdisplay:grid;\n\tgrid-template-columns:auto 1fr minmax(9rem, 16rem) auto auto;\n\tgrid-template-areas:\n\t\t\"search search search  search search\"\n\t\t\"clear  .      history back   fwd\"\n\t\t\"filter filter filter  filter filter\";\n\tgap:0.4em 0.5em;\n\talign-items:center;\n\tmin-width:0;\n\t}\n#wtrl-search {\n\tgrid-area:search;\n\twidth:100%;\n\theight:30px;\n\tborder:1px solid #ccc;\n\tborder-radius:0.3em;\n\t}\n#wtrl-search-clear {\n\tgrid-area:clear;\n\theight:30px;\n\tborder:1px solid #ddd;\n\tborder-radius:0.5em;\n\t}\n#wtrl-nav-back {\n\tgrid-area:back;\n\twidth: 30px;\n\theight:30px;\n\tborder:1px solid #ddd;\n\tborder-radius:0.5em;\n\t}\n#wtrl-nav-forward {\n\tgrid-area:fwd;\n\twidth: 30px;\n\theight:30px;\n\tborder:1px solid #ddd;\n\tborder-radius:0.5em;\n\t}\n#wtrl-nav-history {\n\tgrid-area:history;\n\twidth:100%;\n\tmin-width:0;\n\tmax-width:16rem;\n\theight:30px;\n\tborder:1px solid #ddd;\n\tborder-radius:0.5em;\n\toverflow:hidden;\n\ttext-overflow:ellipsis;\n\twhite-space:nowrap;\n\t}\n.wtrl-filter-row {\n\tgrid-area:filter;\n\tdisplay:grid;\n\tgrid-template-columns:minmax(0, 1fr) minmax(0, 1fr);\n\tgap:0.5em;\n\talign-items:center;\n\tmin-width:0;\n\t}\n.wtrl-filter-pair {\n\tdisplay:flex;\n\tgap:0.5em;\n\talign-items:center;\n\tmin-width:0;\n\t}\n.wtrl-filter-label {\n\tflex:0 0 auto;\n\tfont-size:13px;\n\tcolor:#334155;\n\t}\n.wtrl-kind-filter,\n.wtrl-label-mode {\n\tflex:1 1 auto;\n\tmin-width:0;\n\tbox-sizing:border-box;\n\tpadding:0 10px;\n\tborder:1px solid #bbb;\n\tborder-radius:0.5em;\n\tbackground:#fff;\n\tcolor:#334155;\n\tfont-size:13px;\n\theight:30px;\n\tline-height:30px;\n\t}\n.wtrl-kind-filter:disabled {\n\topacity:0.55;\n\tbackground:#f8fafc;\n\t}\n.wtrl-label-mode:disabled {\n\topacity:0.55;\n\tbackground:#f8fafc;\n\t}\n\n/*----- Section ---------------------------------------------*/\n.wtrl-section {\n\tmargin-left: 0em;\n\tmargin-right: 0em;\n\tmargin-top: 0em;\n\tmargin-bottom: 0.5em;\n\tborder:1px solid #ececec;\n\tborder-radius:.3em;\n\tpadding-left: .5em;\n\tpadding-right: .5em;\n\tpadding-top: 0.3em;\n\tpadding-bottom: 0.3em;\n\tbackground:#eee;\n\t}\n.wtrl-section-head {\n\tfont-weight: normal;\n\tfont-style: italic;\n\tmargin-left: 0em;\n\tmargin-right: 0em;\n\tmargin-top: 0em;\n\tmargin-bottom: 0em;\n\tcolor:#0f172a;\n\t}\n\n/*----- Subsection ------------------------------------------*/\n.wtrl-subsection {\n\tmargin-left: 0em;\n\tmargin-right: 0em;\n\tmargin-top: 0em;\n\tmargin-bottom: 0.5em;\n\t}\n.wtrl-subsection-head {\n\tfont-weight:normal;\n\tfont-style: italic;\n\tmargin-left: 0em;\n\tmargin-right: 0em;\n\tmargin-top: 0em;\n\tmargin-bottom: 0em;\n\tmargin-left:1.5em;\n\tcolor:#1f2937;\n\t}\n\n/*----- Freeform text ---------------------------------------*/\n.wtrl-section .wtrl-text {\n\tmargin-left:1.5em;\n\tmargin-right: 0.0em;\n\tmargin-top: 0.2em;\n\tmargin-bottom: 0.3em;\n\twhite-space:pre-wrap;\n\toverflow-wrap:anywhere;\n\t}\n.wtrl-section .wtrl-subsection .wtrl-text {\n\tmargin-left:3.0em;\n\tmargin-right: 0.0em;\n\tmargin-top: 0.2em;\n\tmargin-bottom: 0.3em;\n\twhite-space:pre-wrap;\n\toverflow-wrap:anywhere;\n\t}\n.wtrl-text {\n\twhite-space:pre-wrap;\n\toverflow-wrap:anywhere;\n\t}\n/*----- Lists with text -------------------------------------*/\n.wtrl-section .wtrl-list {\n\tmargin-left: 0.0em;\n\tmargin-right: 0.0em;\n\tmargin-top: 0.5em;\n\tmargin-bottom: 0.5em;\n\t}\n.wtrl-section .wtrl-subsection .wtrl-list {\n\tmargin-left: 1.5em;\n\tmargin-right: 0.0em;\n\tmargin-top: 0.5em;\n\tmargin-bottom: 0.5em;\n\t}\n.wtrl-list li {\n\toverflow-wrap:anywhere;\n\t}\n\n.wtrl-obj {\n\tmargin:0;\n\twhite-space:pre-wrap;\n\toverflow-wrap:anywhere;\n\tfont-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;\n\tfont-size:12px;\n\tcolor:#334155;\n\t}\n\n/*----- Semantic roles ---------------------------------------*/\n.wtrl-attr, .wtrl_attr {\n\tcolor:#077;\n\t}\n.wtrl-cmd, .wtrl_cmd {\n\tcolor:#996600;\n\tfont-weight:normal;\n\tfont-style:normal;\n\tfont-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;\n\t}\n.wtrl-dfn, .wtrl_dfn {\n\tfont-style:italic;\n\t}\n.wtrl-file, .wtrl_file {\n\tcolor:#35f;\n\tfont-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;\n\t}\n.wtrl-func, .wtrl_func {\n\tcolor:#3040ff;\n\tfont-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;\n\t}\n.wtrl-class, .wtrl_class {\n\tcolor:#770000;\n\tfont-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;\n\t}\n.wtrl-key, .wtrl_key {\n\tcolor:#1f2937;\n\tfont-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;\n\tfont-weight: normal;\n\tfont-size:90%;\n\tborder: 1px solid black;\n\tborder-radius:3px;\n\tpadding-left:3px;\n\tpadding-right:3px;\n\t}\n.wtrl-label, .wtrl_label {\n\tcolor:#1f2937;\n\tfont-style:italic;\n\t}\n.wtrl-mod, .wtrl_mod {\n\tcolor:#462;\n\tfont-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;\n\t}\n.wtrl-norm, .wtrl_norm {\n\tfont-family:inherit;\n\n\tcolor:inherit;\n\tfont-weight:normal;\n\tfont-style:italic;\n\tfont-size: 100%;\n\n\tbackground-color:inherit;\n\t}\n.wtrl-norm::after, .wtrl_norm::after {\n\tcontent: \" \\2696\";\n\tfont-weight:normal;\n\tfont-style:normal;\n\t}\n\tcolor:#b42318;\n\tfont-weight:700;\n\t}\n.wtrl-opt, .wtrl_opt {\n\tfont-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;\n\tfont-weight:bold;\n\t}\n.wtrl-op, .wtrl_op {\n\tcolor:inherit;\n\tfont-weight:bold;\n\tfont-style:normal;\n\t}\n.wtrl-lit, .wtrl_lit {\n\tcolor:#1f2937;\n\tfont-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;\n\t}\n.wtrl-pkg, .wtrl_pkg {\n\tcolor:#446622;\n\tfont-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;\n\t}\n.wtrl-ref, .wtrl_ref {\n\tcolor:#005cc5;\n\ttext-decoration-line: underline;\n\ttext-decoration-style: dotted;\n\ttext-decoration-thickness: 1px;\n\ttext-underline-offset: 0.12em;\n\t}\n.wtrl-value, .wtrl_value {\n\tcolor:#040;\n\tfont-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;\n\t}\n.wtrl-tag, .wtrl_tag {\n\tcolor:#4b5563;\n\tfont-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;\n\t}\n.wtrl-term, .wtrl_term {\n\tfont-style:italic;\n\tcolor:#000;\n\t}\n.wtrl-type, .wtrl_type\n\t{\n\tcolor:#770000;\n\tfont-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;\n\t}\n.wtrl-url, .wtrl_url {\n\tcolor:#35f;\n\tfont-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;\n\t}\n.wtrl-url-schema, .wtrl_url_schema {\n\tcolor:#354;\n\tfont-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;\n\t}\n.wtrl-var, .wtrl_var {\n\tcolor:#a00;\n\tfont-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;\n\tfont-weight: normal;\n\t}\n\n\n\n.wtrl-ref.wtrl-func:visited, .wtrl_ref.wtrl_func:visited {\n\tcolor:#3040ff;\n\t}\n.wtrl-ref.wtrl-type:visited, .wtrl_ref.wtrl_type:visited {\n\tcolor:#770000;\n\t}\n.wtrl-ref.wtrl-type, .wtrl_ref.wtrl_type {\n\tcolor:#770000;\n\ttext-decoration-line: underline;\n\ttext-decoration-style: dotted;\n\ttext-decoration-thickness: 1px;\n\ttext-underline-offset: 0.12em;\n\t}\n.wtrl-ref.wtrl-var, .wtrl_ref.wtrl_var {\n\tcolor:#a00;\n\ttext-decoration-line: underline;\n\ttext-decoration-style: dotted;\n\ttext-decoration-thickness: 1px;\n\ttext-underline-offset: 0.12em;\n\t}\n.wtrl-ref.wtrl-func, .wtrl_ref.wtrl_func {\n\tcolor:#3040ff;\n\ttext-decoration-line: underline;\n\ttext-decoration-style: dotted;\n\ttext-decoration-thickness: 1px;\n\ttext-underline-offset: 0.12em;\n\t}\n.wtrl-ref.wtrl-var:visited, .wtrl_ref.wtrl_var:visited {\n\tcolor:#a00;\n\t}\n\n/*----- Code segements --------------------------------------*/\n.wtrl-example-code .wtrl-code {\n\tborder:1px solid #ddd;\n\tborder-radius:0.3em;\n\tbackground:#f7fff0;\n\tmargin-top: 0.25em;\n\tmargin-bottom:0em;\n\tpadding-left: 0.5em;\n\tpadding-right: 0.5em;\n\tpadding-top: 0.5em;\n\tpadding-bottom: 0.5em;\n\tbox-sizing:border-box;\n\twhite-space:pre-wrap;\n\toverflow-wrap:anywhere;\n\t}\n.wtrl-example-code .wtrl-code pre {\n/* control margins and padding by .wtrl-example-code .wtrl-code, not here. */\n\tmargin: 0em;\n\tpadding: 0em;\n}\n\n/*----- Links -----------------------------------------------*/\na {\n\ttext-decoration: none;\n\t}\n/*----- Kind filter -----------------------------------------*/\n/* Currently not possible because of the use of <option> elements\n   in the filter dropdown, which do not allow for styling individual options. */\n\n/*----- Hit list kinds --------------------------------------*/\n.wtrl-hit-kind-module-label {\n\tcolor: #446622;\n\tfont-size:100%;\t\n\tfont-style: italic;\n}\n.wtrl-hit-kind-class-label {\n\tcolor:#770000;\n\tfont-size:100%;\t\n\tfont-style: italic;\n\t}\n.wtrl-hit-kind-callable-label {\n\tcolor:#3040ff;\n\tfont-size:100%;\t\n\tfont-style: italic;\t\n}\n.wtrl-hit-kind-assignable-label {\n\tcolor:#666;\n\tfont-size:100%;\t\n\tfont-style: italic;\n\t}\n.wtrl-hit-kind-type-label {\n\tcolor:#666;\n\tfont-size:100%;\t\n\tfont-style: italic;\n\t}\n/* Label \"object\" or \"entry\" is a fallback and is not supposed to appear. */\n.wtrl-hit-kind-object-label {\n\tcolor:#000;\n\tfont-size:100%;\t\n\tfont-style: italic;\n\t}\n\n.wtrl-hit-kind-module {\n\tcolor:#000;\n\t}\n.wtrl-hit-kind-class {\n\tcolor:#000;\n\t}\n.wtrl-hit-kind-callable {\n\tcolor:#000;\n\t}\n.wtrl-hit-kind-assignable {\n\tcolor:#000;\n\t}\n/* Fallback */\n.wtrl-hit-kind-object {\n\tcolor:#000;\n\t}\n", "css_append": "", "pygments_theme": "gruvbox-light"}, "roles": {"attr": "Attribute name", "cmd": "Shell or CLI command", "class": "Class name", "dfn": "Definition of a term", "file": "File or path", "func": "Function or callable", "key": "Key on the keyboard", "label": "Section/Subsection label", "lit": "Literal text or code", "mod": "Module name", "norm": "Normativity keyword used as metadata", "op": "Operator symbol", "opt": "Command-line option or flag", "pkg": "Package name", "url": "URL", "tag": "Tag or marker", "term": "Domain-specific term", "type": "Type name or annotation", "value": "Concrete value", "var": "Variable name", "var_type": "Variable and type, like 'var:type'"}, "scopes": {"public": {"value": 10, "description": ""}, "extension": {"value": 20, "description": ""}, "core": {"value": 30, "description": ""}}, "toc_modules": {"showcase_roles": "/__WTRL_OBJECTS__/showcase_roles"}, "toc_classes": {"showcase_roles.X": "/__WTRL_OBJECTS__/showcase_roles.X"}, "toc_callables": {}, "toc_types": {}, "toc_variables": {}, "toc_constants": {}, "examples": {}, "objects": {"showcase_roles": {"doc": {"Preamble": {"profile": "module", "scope": ["core"], "normative_sections": ["Contract", "Definitions"]}, "Definitions": {"ABC": {"variations": [], "text": ["A term |dfn|`ABC` we reference by role |lit|`|term|`."]}}, "Contract": {"general": ["MUST do — \"|\" + |lit|`Must` + \"|\"", "MUST do — \"|\" + |lit|`must` + \"|\"", "MUST NOT do — \"|\" + |lit|`Must_not` + \"|\"", "MUST NOT do — \"|\" + |lit|`must_not` + \"|\"", "SHOULD do — \"|\" + |lit|`Should` + \"|\"", "SHOULD do — \"|\" + |lit|`should` + \"|\"", "SHOULD NOT do — \"|\" + |lit|`Should_not` + \"|\"", "SHOULD NOT do — \"|\" + |lit|`should_not` + \"|\"", "MAY do — \"|\" + |lit|`May` + \"|\"", "MAY do — \"|\" + |lit|`may` + \"|\""]}, "Notes": {"Flavour": ["Normativity keywords are rendered in flavour |value|`rfc-2119` in this showcase, i.e. capitalized."], "Roles": ["* |attr|`ABC` — |lit|`|attr|`, for attributes in XML, keys in JSON...", "* |class|`ABC` — |lit|`|class|`, classes", "* |cmd|`ABC` — |lit|`|cmd|`, commands and subcommand with CLI", "* |dfn|`ABC` — |lit|`|dfn|`, a term being defined", "* |file|`/path/to/ABC` — |lit|`|file|`, files but also URLs", "* |func|`ABC` — |lit|`|func|`, functions", "* |key|`CTRL` — |lit|`|label|`, keys on the keyboard", "* |label|`ABC` — |lit|`|label|`, titles, labels", "* |lit|`ABC` — |lit|`|lit|`, catch-all for literal text", "* |mod|`ABC` — |lit|`|mod|`, modules", "* |norm|`should` — |lit|`|norm|`, normativity keywords (meta, when talking about keywords)", "* |op|`>>` — |lit|`|op|`, operators", "* |opt|`--abc` — |lit|`|opt|`, options for CLI commands", "* |pkg|`sdv.tty` — |lit|`|pkg|`, packages", "* |tag|`ABC` — |lit|`|tag|`, enum values, symbolic values", "* |term|`ABC` — |lit|`|term|`, referencing a term defined in |label|`Definitions`", "* |type|`float` — |lit|`|type|`, types in programming or markup languages", "* |url|`https://pypi.org/project/sdv-doc-waterloo/` — |lit|`|url|`, for URLs (currently pretty simple)", "* |value|`12345` — |lit|`|value|`, R-values, unnamed values", "* |var|`xyz` — |lit|`|var|`, variables, but also named constants", "* |var_type|`xyz:float` — |lit|`|var_type|`, variable and type with colon."], "Values": ["* |Self| — |lit|`|Self|`", "* |None| — |lit|`|None|`", "* |True| — |lit|`|True|`", "* |False| — |lit|`|False|`"], "Todo at 2026-06-25": ["Styles for pkg and url required."]}}}, "showcase_roles.X": {"signature": {"text": "object.__init__(self, /, *args, **kwargs)", "parameters": [{"name": "args", "kind": "VAR_POSITIONAL", "annotation": null, "default": null}, {"name": "kwargs", "kind": "VAR_KEYWORD", "annotation": null, "default": null}], "returns": null}, "doc": {"Preamble": {"profile": "class", "normative_sections": ["Contract", "Definitions"]}, "Contract": {"general": ["MUST demonstrate the use of |lit|`|term|` in a class."], "constructor": []}, "definitions_inherited_from_module": {"source": "/__WTRL_OBJECTS__/showcase_roles", "terms": ["ABC"]}, "Definitions": {}, "Notes": {"Roles": ["* |term|`ABC` — |lit|`|term|`, referencing a term defined in |label|`Definitions`"], "Compound examples": ["|cmd|`waterlint validate` |opt|`--basedir` |file|`/path/to/dir` |opt|`--obj` |mod|`mymod`"]}}}}};
+const WTRL_DATA = {"meta": {"scope": "core", "flavour": "rfc-2119", "schema": "0.1.0", "modules": ["showcase_roles"], "css_primary": "/*\nWe define common styles across languages. Ideally these coincide\nmore or less with those used in markup2. This is possible because\nwe are moving away from highlight and implement our own stuff.\nAlthough highlight is brilliant, we prefer the inhouse solution\nbecaues it allows more control and has a well-known C++ API.\n\nCurrent state [2023-08-08]\n- glsl\n- cpp\n- minil\n- xml\n- python\n*/\n\n:root {\n    /* 1. Etwas kleinere Schrift macht die Box kompakter und hebt sie optisch an */\n    --font-size--code: 0.875em;\n\n    /* 2. Falls installiert: Furo bevorzugt eigentlich Fira Code oder JetBrains Mono.\n          Indem wir moderne Programmierschriften nach vorne stellen, nutzt Firefox \n          bessere Schriftmetriken, falls du sie auf dem System hast. */\n    --font-stack--monospace: \"JetBrains Mono\", \"Fira Code\", \"Fira Mono\", \"Menlo\", \"Consolas\", monospace;\n}\n\n/* 3. Korrektur des Innenabstands (Padding) speziell fuer Firefox/Linux */\ncode.docutils.literal {\n\tvertical-align: 0.06em;\n\tfont-size:95%;\n}\n\n:root\n\t{\n\t--wtrl-plain-color:currentColor;\n\n/* light theme colors */\n/* begin-roles */\n\t--wtrl-attr-color:#077;\n\t--wtrl-class-color:#770000;\n\t--wtrl-cmd-color:#996600;\n\t--wtrl-dfn-color:currentColor;\n\t--wtrl-file-color: #35f;\n\t--wtrl-func-color:#3040ff;\n\t--wtrl-key-color:currentColor;\n\t--wtrl-label-color:currentColor;\n\t--wtrl-lit-color:currentColor;\n\t--wtrl-mod-color:#462;\n\t--wtrl-norm-color:currentColor;\n\t--wtrl-op-color:currentColor;\n\t--wtrl-opt-color:currentColor;\n\t--wtrl-pkg-color:#252;\n\t--wtrl-tag-color:#900;\n\t--wtrl-term-color:currentColor;\n\t--wtrl-type-color:#770000;\n\t\t--wtrl-url-color: #35f;\n\t--wtrl-value-color:#004400;\n\t--wtrl-var-color:#a00;\n\n\t--wtrl-url-schema-color: #354;\n/* end-roles */\n\n/* font properties */\n\t--wtrl-monospace-font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;\n\n/* HTML5 output layer colors */\n\t--wtrl-html-page-bg:#f7f7f4;\n\t--wtrl-html-page-color:#1f2428;\n\t--wtrl-html-panel-bg:#fff;\n\t--wtrl-html-panel-border-color:#ddd;\n\t--wtrl-html-debug-bg:#efd;\n\t--wtrl-html-muted-color:#57606a;\n\t--wtrl-html-subtle-color:#666;\n\t--wtrl-html-control-bg:#fff;\n\t--wtrl-html-control-color:#334155;\n\t--wtrl-html-control-border-color:#bbb;\n\t--wtrl-html-control-disabled-bg:#f8fafc;\n\t--wtrl-html-search-border-color:#ccc;\n\t--wtrl-html-hitlist-bg:#eee;\n\t--wtrl-html-hit-border-color:#eee;\n\t--wtrl-html-hit-hover-bg:#f3f6fa;\n\t--wtrl-html-section-bg:#eee;\n\t--wtrl-html-section-border-color:#ececec;\n\t--wtrl-html-section-head-color:#0f172a;\n\t--wtrl-html-subsection-head-color:#1f2937;\n\t--wtrl-html-code-bg:#f7fff0;\n\t--wtrl-html-key-border-color:#000;\n\t--wtrl-html-fallback-color:#000;\n\n\t--wtrl-plain-font-weight:normal;\n\t--wtrl-plain-font-style:normal;\n\n\t--wtrl-attr-font-weight:normal;\n\t--wtrl-attr-font-style:normal;\n\n\t--wtrl-cmd-font-weight:normal;\n\t--wtrl-cmd-font-style:normal;\n\n\t--wtrl-class-font-weight:normal;\n\t--wtrl-class-font-style:normal;\n\n\t--wtrl-dfn-font-weight:normal;\n\t--wtrl-dfn-font-style:italic;\n\n\t--wtrl-file-font-weight: normal;\n\t--wtrl-file-font-style: normal;\n\n\t--wtrl-func-font-weight:normal;\n\t--wtrl-func-font-style:normal;\n\n\t--wtrl-key-font-weight:normal;\n\t--wtrl-key-font-style:normal;\n\n\t--wtrl-label-font-weight:normal;\n\t--wtrl-label-font-style:oblique;\n\n\t--wtrl-lit-font-weight:normal;\n\t--wtrl-lit-font-style:normal;\n\n\t--wtrl-mod-font-weight:normal;\n\t--wtrl-mod-font-style:normal;\n\n\t--wtrl-norm-font-weight:normal;\n\t--wtrl-norm-font-style:italic;\n\n\t--wtrl-op-font-weight:bold;\n\t--wtrl-op-font-style:normal;\n\n\t--wtrl-opt-font-weight:bold;\n\t--wtrl-opt-font-style:normal;\n\n\t--wtrl-pkg-font-weight:normal;\n\t--wtrl-pkg-font-style:normal;\n\n\t--wtrl-tag-font-weight:normal;\n\t--wtrl-tag-font-style:normal;\n\n\t--wtrl-term-font-weight:normal;\n\t--wtrl-term-font-style:italic;\n\n\t--wtrl-type-font-weight:normal;\n\t--wtrl-type-font-style:normal;\n\n\t--wtrl-url-font-weight: normal;\n\t--wtrl-url-font-style: normal;\n\n\t--wtrl-value-font-weight:normal;\n\t--wtrl-value-font-style:normal;\n\n\t--wtrl-var-font-weight:normal;\n\t--wtrl-var-font-style:normal;\n\n/* future-use */\n\t--wtrl-comment-color:#777;\n\t--wtrl-comment-font-weight:normal;\n\t--wtrl-comment-font-style:italic;\n\n\t--wtrl-entity-color:#777;\n\t--wtrl-entity-font-weight:bold;\n\t--wtrl-entity-font-style:normal;\n\n/* theme symbols */\n\t--wtrl-theme-light-symbol:\"○\";\n\t--wtrl-theme-auto-symbol:\"◑\";\n\t--wtrl-theme-dark-symbol:\"●\";\n}\n\n:root {\n/* dark theme colors */\n\t--wtrl-dark-foreground-color:var(--color-foreground-primary, currentColor);\n\n\t--wtrl-dark-attr-color:#099;\n\t--wtrl-dark-class-color:#e66;\n\t--wtrl-dark-cmd-color:#cc8800;\n\t--wtrl-dark-dfn-color:var(--wtrl-dark-foreground-color);\n\t--wtrl-dark-file-color: #7af;\n\t--wtrl-dark-func-color:#6090ff;\n\t--wtrl-dark-key-color:var(--wtrl-dark-foreground-color);\n\t--wtrl-dark-label-color:var(--wtrl-dark-foreground-color);\n\t--wtrl-dark-lit-color:var(--wtrl-dark-foreground-color);\n\t--wtrl-dark-mod-color:#8c4;\n\t--wtrl-dark-norm-color:var(--wtrl-dark-foreground-color);\n\t--wtrl-dark-op-color:var(--wtrl-dark-foreground-color);\n\t--wtrl-dark-opt-color:var(--wtrl-dark-foreground-color);\n\t--wtrl-dark-pkg-color:#8b8;\n\t--wtrl-dark-tag-color:#e44;\n\t--wtrl-dark-term-color:var(--wtrl-dark-foreground-color);\n\t--wtrl-dark-type-color:#e66;\n\t--wtrl-dark-url-color: #7af;\n\t--wtrl-dark-value-color:#8c4;\n\t--wtrl-dark-var-color:#f34;\n\n\t--wtrl-dark-comment-color:#777;\n\t--wtrl-dark-entity-color:#777;\n\n\t--wtrl-html-dark-page-bg:#111827;\n\t--wtrl-html-dark-page-color:#e5e7eb;\n\t--wtrl-html-dark-panel-bg:#1f2937;\n\t--wtrl-html-dark-panel-border-color:#374151;\n\t--wtrl-html-dark-debug-bg:#29351f;\n\t--wtrl-html-dark-muted-color:#9ca3af;\n\t--wtrl-html-dark-subtle-color:#a3a3a3;\n\t--wtrl-html-dark-control-bg:#111827;\n\t--wtrl-html-dark-control-color:#e5e7eb;\n\t--wtrl-html-dark-control-border-color:#4b5563;\n\t--wtrl-html-dark-control-disabled-bg:#1f2937;\n\t--wtrl-html-dark-search-border-color:#4b5563;\n\t--wtrl-html-dark-hitlist-bg:#111827;\n\t--wtrl-html-dark-hit-border-color:#374151;\n\t--wtrl-html-dark-hit-hover-bg:#243044;\n\t--wtrl-html-dark-section-bg:#111827;\n\t--wtrl-html-dark-section-border-color:#374151;\n\t--wtrl-html-dark-section-head-color:#ccd;\n\t--wtrl-html-dark-subsection-head-color:#ccd;\n\t--wtrl-html-dark-code-bg:#182218;\n\t--wtrl-html-dark-key-border-color:#9ca3af;\n\t--wtrl-html-dark-fallback-color:#e5e7eb;\n\n\n\t/* theme symbols */\n\t--wtrl-dark-theme-light-symbol:\"●\";\n\t--wtrl-dark-theme-auto-symbol:\"◐\";\n\t--wtrl-dark-theme-dark-symbol:\"○\";\n}\n\n/* Furo stores the active theme on body; render-html5 stores it on html. */\nhtml[data-wtrl-theme=\"dark\"],\nbody[data-theme=\"dark\"],\nbody[data-wtrl-theme=\"dark\"] {\n\t--wtrl-attr-color:var(--wtrl-dark-attr-color);\n\t--wtrl-class-color:var(--wtrl-dark-class-color);\n\t--wtrl-cmd-color:var(--wtrl-dark-cmd-color);\n\t--wtrl-file-color:var(--wtrl-dark-file-color);\n\t--wtrl-func-color:var(--wtrl-dark-func-color);\n\t--wtrl-key-color:var(--wtrl-dark-key-color);\n\t--wtrl-label-color:var(--wtrl-dark-label-color);\n\t--wtrl-lit-color:var(--wtrl-dark-lit-color);\n\t--wtrl-mod-color:var(--wtrl-dark-mod-color);\n\t--wtrl-norm-color:var(--wtrl-dark-norm-color);\n\t--wtrl-op-color:var(--wtrl-dark-op-color);\n\t--wtrl-opt-color:var(--wtrl-dark-opt-color);\n\t--wtrl-pkg-color:var(--wtrl-dark-pkg-color);\n\t--wtrl-tag-color:var(--wtrl-dark-tag-color);\n\t--wtrl-term-color:var(--wtrl-dark-term-color);\n\t--wtrl-type-color:var(--wtrl-dark-type-color);\n\t--wtrl-url-color:var(--wtrl-dark-url-color);\n\t--wtrl-value-color:var(--wtrl-dark-value-color);\n\t--wtrl-var-color:var(--wtrl-dark-var-color);\n\n\t--wtrl-comment-color:var(--wtrl-dark-comment-color);\n\t--wtrl-entity-color:var(--wtrl-dark-entity-color);\n\n\t--wtrl-html-page-bg:var(--wtrl-html-dark-page-bg);\n\t--wtrl-html-page-color:var(--wtrl-html-dark-page-color);\n\t--wtrl-html-panel-bg:var(--wtrl-html-dark-panel-bg);\n\t--wtrl-html-panel-border-color:var(--wtrl-html-dark-panel-border-color);\n\t--wtrl-html-debug-bg:var(--wtrl-html-dark-debug-bg);\n\t--wtrl-html-muted-color:var(--wtrl-html-dark-muted-color);\n\t--wtrl-html-subtle-color:var(--wtrl-html-dark-subtle-color);\n\t--wtrl-html-control-bg:var(--wtrl-html-dark-control-bg);\n\t--wtrl-html-control-color:var(--wtrl-html-dark-control-color);\n\t--wtrl-html-control-border-color:var(--wtrl-html-dark-control-border-color);\n\t--wtrl-html-control-disabled-bg:var(--wtrl-html-dark-control-disabled-bg);\n\t--wtrl-html-search-border-color:var(--wtrl-html-dark-search-border-color);\n\t--wtrl-html-hitlist-bg:var(--wtrl-html-dark-hitlist-bg);\n\t--wtrl-html-hit-border-color:var(--wtrl-html-dark-hit-border-color);\n\t--wtrl-html-hit-hover-bg:var(--wtrl-html-dark-hit-hover-bg);\n\t--wtrl-html-section-bg:var(--wtrl-html-dark-section-bg);\n\t--wtrl-html-section-border-color:var(--wtrl-html-dark-section-border-color);\n\t--wtrl-html-section-head-color:var(--wtrl-html-dark-section-head-color);\n\t--wtrl-html-subsection-head-color:var(--wtrl-html-dark-subsection-head-color);\n\t--wtrl-html-code-bg:var(--wtrl-html-dark-code-bg);\n\t--wtrl-html-key-border-color:var(--wtrl-html-dark-key-border-color);\n\t--wtrl-html-fallback-color:var(--wtrl-html-dark-fallback-color);\n\n\t--wtrl-theme-light-symbol:var(--wtrl-dark-theme-light-symbol);\n\t--wtrl-theme-auto-symbol:var(--wtrl-dark-theme-auto-symbol);\n\t--wtrl-theme-dark-symbol:var(--wtrl-dark-theme-dark-symbol);\n}\n\n@media (prefers-color-scheme: dark) {\n\thtml[data-wtrl-theme=\"auto\"],\n\tbody[data-theme=\"auto\"],\n\tbody[data-wtrl-theme=\"auto\"] {\n\t\t--wtrl-attr-color:var(--wtrl-dark-attr-color);\n\t\t--wtrl-class-color:var(--wtrl-dark-class-color);\n\t\t--wtrl-cmd-color:var(--wtrl-dark-cmd-color);\n\t\t--wtrl-file-color:var(--wtrl-dark-file-color);\n\t\t--wtrl-func-color:var(--wtrl-dark-func-color);\n\t\t--wtrl-key-color:var(--wtrl-dark-key-color);\n\t\t--wtrl-label-color:var(--wtrl-dark-label-color);\n\t\t--wtrl-lit-color:var(--wtrl-dark-lit-color);\n\t\t--wtrl-mod-color:var(--wtrl-dark-mod-color);\n\t\t--wtrl-norm-color:var(--wtrl-dark-norm-color);\n\t\t--wtrl-op-color:var(--wtrl-dark-op-color);\n\t\t--wtrl-opt-color:var(--wtrl-dark-opt-color);\n\t\t--wtrl-pkg-color:var(--wtrl-dark-pkg-color);\n\t\t--wtrl-tag-color:var(--wtrl-dark-tag-color);\n\t\t--wtrl-term-color:var(--wtrl-dark-term-color);\n\t\t--wtrl-type-color:var(--wtrl-dark-type-color);\n\t\t--wtrl-url-color:var(--wtrl-dark-url-color);\n\t\t--wtrl-value-color:var(--wtrl-dark-value-color);\n\t\t--wtrl-var-color:var(--wtrl-dark-var-color);\n\n\t\t--wtrl-comment-color:var(--wtrl-dark-comment-color);\n\t\t--wtrl-entity-color:var(--wtrl-dark-entity-color);\n\n\t\t--wtrl-html-page-bg:var(--wtrl-html-dark-page-bg);\n\t\t--wtrl-html-page-color:var(--wtrl-html-dark-page-color);\n\t\t--wtrl-html-panel-bg:var(--wtrl-html-dark-panel-bg);\n\t\t--wtrl-html-panel-border-color:var(--wtrl-html-dark-panel-border-color);\n\t\t--wtrl-html-debug-bg:var(--wtrl-html-dark-debug-bg);\n\t\t--wtrl-html-muted-color:var(--wtrl-html-dark-muted-color);\n\t\t--wtrl-html-subtle-color:var(--wtrl-html-dark-subtle-color);\n\t\t--wtrl-html-control-bg:var(--wtrl-html-dark-control-bg);\n\t\t--wtrl-html-control-color:var(--wtrl-html-dark-control-color);\n\t\t--wtrl-html-control-border-color:var(--wtrl-html-dark-control-border-color);\n\t\t--wtrl-html-control-disabled-bg:var(--wtrl-html-dark-control-disabled-bg);\n\t\t--wtrl-html-search-border-color:var(--wtrl-html-dark-search-border-color);\n\t\t--wtrl-html-hitlist-bg:var(--wtrl-html-dark-hitlist-bg);\n\t\t--wtrl-html-hit-border-color:var(--wtrl-html-dark-hit-border-color);\n\t\t--wtrl-html-hit-hover-bg:var(--wtrl-html-dark-hit-hover-bg);\n\t\t--wtrl-html-section-bg:var(--wtrl-html-dark-section-bg);\n\t\t--wtrl-html-section-border-color:var(--wtrl-html-dark-section-border-color);\n\t\t--wtrl-html-section-head-color:var(--wtrl-html-dark-section-head-color);\n\t\t--wtrl-html-subsection-head-color:var(--wtrl-html-dark-subsection-head-color);\n\t\t--wtrl-html-code-bg:var(--wtrl-html-dark-code-bg);\n\t\t--wtrl-html-key-border-color:var(--wtrl-html-dark-key-border-color);\n\t\t--wtrl-html-fallback-color:var(--wtrl-html-dark-fallback-color);\n\n\t\t--wtrl-theme-light-symbol:var(--wtrl-dark-theme-light-symbol);\n\t\t--wtrl-theme-auto-symbol:var(--wtrl-dark-theme-auto-symbol);\n\t\t--wtrl-theme-dark-symbol:var(--wtrl-dark-theme-dark-symbol);\n\t}\n}\n\n/* This style sheet defines the styles for interactive HTML5 output.\n   For waterlint render-html5, additional styles can be provided\n   by the caller via the --additional-css option. */\n/*----- Global styles ---------------------------------------*/\nhtml, body {\n\tmargin:0;\n\tpadding:0;\n\theight:100%;\n\toverflow:hidden;\n\tfont-family: Helvetica, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;\n\tbackground:var(--wtrl-html-page-bg);\n\tcolor:var(--wtrl-html-page-color);\n\t}\n.wtrl-app {\n\tdisplay:grid;\n\tgrid-template-columns: 420px 1fr;\n\theight:100vh;\n\tpadding:0.5em;\n\tgap:0.5em;\n\tbox-sizing:border-box;\n\t}\n.wtrl-side {\n\tposition:relative;\n\tborder:1px solid var(--wtrl-html-panel-border-color);\n\tborder-radius:.3em;\n\tmargin-bottom:1em;\n\tmargin-left:0em;\n\tmargin-right:0em;\n\tbackground:var(--wtrl-html-panel-bg);\n\tpadding-left:0.75em;\n\tpadding-right:0.75em;\n\tpadding-top: 0.5em;\n\tpadding-bottom: 1em;\n\tdisplay:flex;\n\tflex-direction:column;\n\tmin-height:0;\n\t}\n#wtrl-debug-refs {\n\tmargin-top:0.5em;\n\tmargin-bottom:0.0em;\n\tbackground-color:var(--wtrl-html-debug-bg);\n\tborder-radius:8px;\n\t}\n.wtrl-main {\n\tpadding-left:0.5em;\n\tpadding-right:0em;\n\tpadding-top: 0em;\n\tpadding-bottom: 1em;\n\tmargin-left: 0em;\n\tmin-width:0;\n\tmin-height:0;\n\tdisplay:flex;\n\tflex-direction:column;\n\toverflow:hidden;\n\t}\n.wtrl-meta {\n\tfont-size:12px;\n\tcolor:var(--wtrl-html-subtle-color);\n\tmargin-bottom:0.5em;\n\t}\n\n/*----- Theme switcher --------------------------------------*/\n.wtrl-theme-switcher {\n\tposition:absolute;\n\ttop:0.5em;\n\tright:0.75em;\n\tdisplay:flex;\n\tgap:0.2em;\n\talign-items:center;\n\t}\n.wtrl-theme-button {\n\tborder:1px solid transparent;\n\tborder-radius:0.4em;\n\tbackground:transparent;\n\tcolor:var(--wtrl-html-control-color);\n\tcursor:pointer;\n\tfont-size:16px;\n\tline-height:1;\n\tpadding-left:0.2em;\n\tpadding-right:0.2em;\n\tpadding-top:0.1em;\n\tpadding-bottom:0.2em;\n\t}\n.wtrl-theme-button::before {\n\tdisplay:inline-block;\n\tmin-width:1em;\n\ttext-align:center;\n\t}\n.wtrl-theme-light::before {\n\tcontent:var(--wtrl-theme-light-symbol, \"●\");\n\t}\n.wtrl-theme-auto::before {\n\tcontent:var(--wtrl-theme-auto-symbol, \"◐\");\n\t}\n.wtrl-theme-dark::before {\n\tcontent:var(--wtrl-theme-dark-symbol, \"○\");\n\t}\n.wtrl-theme-button:hover,\n.wtrl-theme-button[aria-pressed=\"true\"] {\n\tborder-color:var(--wtrl-html-control-border-color);\n\tbackground:var(--wtrl-html-hit-hover-bg);\n\t}\n\n\n.wtrl-input {\n\twidth:100%;\n\tbox-sizing:border-box;\n\tpadding:10px 12px;\n\tborder:1px solid var(--wtrl-html-control-border-color);\n\tborder-radius:8px;\n\tfont-size:14px;\n\t}\n.wtrl-hitlist {\n\tmargin-left:.0em;\t\n\tmargin-right:0em;\t\n\tmargin-top:12px;\n\tpadding-left: 0em;\n\tpadding-right: 0em;\n\tmax-height:none;\n\tmin-height:0;\n\tflex:1 1 auto;\n\toverflow:auto;\n\tborder:1px solid var(--wtrl-html-panel-border-color);\n\tborder-radius:8px;\n\tbackground:var(--wtrl-html-hitlist-bg); }\n.wtrl-hit { display:block; width:100%; text-align:left; border:0; border-bottom:1px solid var(--wtrl-html-hit-border-color); background:transparent; color:var(--wtrl-html-page-color); padding:8px 10px; font-size:13px; cursor:pointer; }\n.wtrl-hit:hover { background:var(--wtrl-html-hit-hover-bg); }\n.wtrl-kind { color:var(--wtrl-html-muted-color); font-size:11px; margin-right:8px; }\n.wtrl-title { margin:0 0 10px 0; font-size:22px; }\n.wtrl-sub { margin:0 0 16px 0; color:var(--wtrl-html-muted-color); }\n\n.wtrl-block {\n\tborder:1px solid var(--wtrl-html-panel-border-color);\n\tborder-radius:0.3em;\n\tbackground:var(--wtrl-html-panel-bg);\n\tpadding-left: .75em;\n\tpadding-right: .75em;\n\tpadding-top: 0.75em;\n\tpadding-bottom: 0.75em;\n\tbox-sizing:border-box;\n\tflex:1 1 auto;\n\tmin-height:0;\n\twidth:100%;\n\tmax-width:100%;\n\tmax-height:none;\n\toverflow:auto;\n\t}\n\n.wtrl-signature {\n\tmargin:0 0 14px 0;\n\tfont-family: var(--wtrl-monospace-font-family);\n\tfont-size:100%;\n\tcolor:var(--wtrl-html-muted-color);\n\twhite-space:pre-wrap;\n\toverflow-wrap:anywhere;\n\t}\n.wtrl-search-row {\n\tdisplay:grid;\n\tgrid-template-columns:auto 1fr minmax(9rem, 16rem) auto auto;\n\tgrid-template-areas:\n\t\t\"search search search  search search\"\n\t\t\"clear  .      history back   fwd\"\n\t\t\"filter filter filter  filter filter\";\n\tgap:0.4em 0.5em;\n\talign-items:center;\n\tmin-width:0;\n\t}\n#wtrl-search {\n\tgrid-area:search;\n\twidth:100%;\n\theight:30px;\n\tborder:1px solid var(--wtrl-html-search-border-color);\n\tborder-radius:0.3em;\n\tbackground:var(--wtrl-html-control-bg);\n\tcolor:var(--wtrl-html-control-color);\n\t}\n#wtrl-search-clear {\n\tgrid-area:clear;\n\theight:30px;\n\tborder:1px solid var(--wtrl-html-panel-border-color);\n\tborder-radius:0.5em;\n\tbackground:var(--wtrl-html-control-bg);\n\tcolor:var(--wtrl-html-control-color);\n\t}\n#wtrl-nav-back {\n\tgrid-area:back;\n\twidth: 30px;\n\theight:30px;\n\tborder:1px solid var(--wtrl-html-panel-border-color);\n\tborder-radius:0.5em;\n\tbackground:var(--wtrl-html-control-bg);\n\tcolor:var(--wtrl-html-control-color);\n\t}\n#wtrl-nav-forward {\n\tgrid-area:fwd;\n\twidth: 30px;\n\theight:30px;\n\tborder:1px solid var(--wtrl-html-panel-border-color);\n\tborder-radius:0.5em;\n\tbackground:var(--wtrl-html-control-bg);\n\tcolor:var(--wtrl-html-control-color);\n\t}\n#wtrl-nav-history {\n\tgrid-area:history;\n\twidth:100%;\n\tmin-width:0;\n\tmax-width:16rem;\n\theight:30px;\n\tborder:1px solid var(--wtrl-html-panel-border-color);\n\tborder-radius:0.5em;\n\toverflow:hidden;\n\ttext-overflow:ellipsis;\n\twhite-space:nowrap;\n\tbackground:var(--wtrl-html-control-bg);\n\tcolor:var(--wtrl-html-control-color);\n\t}\n#wtrl-search-clear:hover,\n#wtrl-nav-back:hover,\n#wtrl-nav-forward:hover {\n\tbackground:var(--wtrl-html-hit-hover-bg);\n\t}\n#wtrl-nav-back:disabled,\n#wtrl-nav-forward:disabled,\n#wtrl-nav-history:disabled {\n\topacity:0.55;\n\tbackground:var(--wtrl-html-control-disabled-bg);\n\t}\n.wtrl-filter-row {\n\tgrid-area:filter;\n\tdisplay:grid;\n\tgrid-template-columns:minmax(0, 1fr) minmax(0, 1fr);\n\tgap:0.5em;\n\talign-items:center;\n\tmin-width:0;\n\t}\n.wtrl-filter-pair {\n\tdisplay:flex;\n\tgap:0.5em;\n\talign-items:center;\n\tmin-width:0;\n\t}\n.wtrl-filter-label {\n\tflex:0 0 auto;\n\tfont-size:13px;\n\tcolor:var(--wtrl-html-control-color);\n\t}\n.wtrl-kind-filter,\n.wtrl-label-mode {\n\tflex:1 1 auto;\n\tmin-width:0;\n\tbox-sizing:border-box;\n\tpadding:0 10px;\n\tborder:1px solid var(--wtrl-html-control-border-color);\n\tborder-radius:0.5em;\n\tbackground:var(--wtrl-html-control-bg);\n\tcolor:var(--wtrl-html-control-color);\n\tfont-size:13px;\n\theight:30px;\n\tline-height:30px;\n\t}\n.wtrl-kind-filter:disabled {\n\topacity:0.55;\n\tbackground:var(--wtrl-html-control-disabled-bg);\n\t}\n.wtrl-label-mode:disabled {\n\topacity:0.55;\n\tbackground:var(--wtrl-html-control-disabled-bg);\n\t}\n\n/*----- Section ---------------------------------------------*/\n.wtrl-section {\n\tmargin-left: 0em;\n\tmargin-right: 0em;\n\tmargin-top: 0em;\n\tmargin-bottom: 0.5em;\n\tborder:1px solid var(--wtrl-html-section-border-color);\n\tborder-radius:.3em;\n\tpadding-left: .5em;\n\tpadding-right: .5em;\n\tpadding-top: 0.3em;\n\tpadding-bottom: 0.3em;\n\tbackground:var(--wtrl-html-section-bg);\n\t}\n.wtrl-section-head {\n\tfont-weight: normal;\n\tfont-style: italic;\n\tmargin-left: 0em;\n\tmargin-right: 0em;\n\tmargin-top: 0em;\n\tmargin-bottom: 0em;\n\tcolor:var(--wtrl-html-section-head-color);\n\t}\n\n/*----- Subsection ------------------------------------------*/\n.wtrl-subsection {\n\tmargin-left: 0em;\n\tmargin-right: 0em;\n\tmargin-top: 0em;\n\tmargin-bottom: 0.5em;\n\t}\n.wtrl-subsection-head {\n\tfont-weight:normal;\n\tfont-style: italic;\n\tmargin-left: 0em;\n\tmargin-right: 0em;\n\tmargin-top: 0em;\n\tmargin-bottom: 0em;\n\tmargin-left:1.5em;\n\tcolor:var(--wtrl-html-subsection-head-color);\n\t}\n\n/*----- Freeform text ---------------------------------------*/\n.wtrl-section .wtrl-text {\n\tmargin-left:1.5em;\n\tmargin-right: 0.0em;\n\tmargin-top: 0.2em;\n\tmargin-bottom: 0.3em;\n\twhite-space:pre-wrap;\n\toverflow-wrap:anywhere;\n\t}\n.wtrl-section .wtrl-subsection .wtrl-text {\n\tmargin-left:3.0em;\n\tmargin-right: 0.0em;\n\tmargin-top: 0.2em;\n\tmargin-bottom: 0.3em;\n\twhite-space:pre-wrap;\n\toverflow-wrap:anywhere;\n\t}\n.wtrl-text {\n\twhite-space:pre-wrap;\n\toverflow-wrap:anywhere;\n\t}\n/*----- Lists with text -------------------------------------*/\n.wtrl-section .wtrl-list {\n\tmargin-left: 0.0em;\n\tmargin-right: 0.0em;\n\tmargin-top: 0.5em;\n\tmargin-bottom: 0.5em;\n\t}\n.wtrl-section .wtrl-subsection .wtrl-list {\n\tmargin-left: 1.5em;\n\tmargin-right: 0.0em;\n\tmargin-top: 0.5em;\n\tmargin-bottom: 0.5em;\n\t}\n.wtrl-list li {\n\toverflow-wrap:anywhere;\n\t}\n\n.wtrl-obj {\n\tmargin:0;\n\twhite-space:pre-wrap;\n\toverflow-wrap:anywhere;\n\tfont-family: var(--wtrl-monospace-font-family);\n\tfont-size:12px;\n\tcolor:var(--wtrl-html-control-color);\n\t}\n\n/*----- Semantic roles ---------------------------------------*/\n.wtrl-attr, .wtrl_attr {\n\tcolor:var(--wtrl-attr-color);\n\tfont-weight:var(--wtrl-attr-font-weight);\n\tfont-style:var(--wtrl-attr-font-style);\n\t}\n.wtrl-class, .wtrl_class {\n\tfont-family:var(--wtrl-monospace-font-family);\n\n\tcolor:var(--wtrl-class-color);\n\tfont-weight:var(--wtrl-class-font-weight);\n\tfont-style:var(--wtrl-class-font-style);\n\n\tbackground-color:inherit;\n\t}\n.wtrl-cmd, .wtrl_cmd {\n\tfont-family: var(--wtrl-monospace-font-family);\n\tcolor:var(--wtrl-cmd-color);\n\tfont-weight:var(--wtrl-cmd-font-weight);\n\tfont-style:var(--wtrl-cmd-font-style);\n\t}\n.wtrl-dfn, .wtrl_dfn {\n\tfont-family: inherit;\n\n\tcolor:var(--wtrl-dfn-color);\n\tfont-weight:var(--wtrl-dfn-font-weight);\n\tfont-style:var(--wtrl-dfn-font-style);\n\n\tbackground-color:inherit;\n\t}\n.wtrl-file, .wtrl_file {\n\tfont-family:var(--wtrl-monospace-font-family);\n\n\tcolor:var(--wtrl-file-color);\n\tfont-weight:var(--wtrl-file-font-weight);\n\tfont-style:var(--wtrl-file-font-style);\n\n\tbackground-color:inherit;\n\t}\n.wtrl-func, .wtrl_func {\n\tfont-family:var(--wtrl-monospace-font-family);\n\n\tcolor:var(--wtrl-func-color);\n\tfont-weight:var(--wtrl-func-font-weight);\n\tfont-style:var(--wtrl-func-font-style);\n\n\tbackground-color:inherit;\n\t}\n.wtrl-key, .wtrl_key {\n\tfont-family:var(--wtrl-monospace-font-family);\n\n\tcolor:var(--wtrl-key-color);\n\tfont-weight:var(--wtrl-key-font-weight);\n\tfont-style:var(--wtrl-key-font-style);\n\tborder: 1px solid var(--wtrl-html-key-border-color);\n\tborder-radius:3px;\n\tpadding-left:3px;\n\tpadding-right:3px;\n\n\tbackground-color:inherit;\n\t}\n.wtrl-label, .wtrl_label {\n\tfont-family:inherit;\n\n\tcolor:var(--wtrl-label-color);\n\tfont-weight:var(--wtrl-label-font-weight);\n\tfont-style:var(--wtrl-label-font-style);\n\tfont-size: 100%;\n\n\tbackground-color:inherit;\n\t}\n.wtrl-lit, .wtrl_lit {\n\tfont-family:var(--wtrl-monospace-font-family);\n\n\tcolor: var(--wtrl-lit-color);\n\tfont-weight:var(--wtrl-lit-font-weight);\n\tfont-style:var(--wtrl-lit-font-style);\n\n\tbackground-color:inherit;\n\t}\n.wtrl-mod, .wtrl_mod {\n\tfont-family:var(--wtrl-monospace-font-family);\n\n\tcolor: var(--wtrl-mod-color);\n\tfont-weight:var(--wtrl-mod-font-weight);\n\tfont-style:var(--wtrl-mod-font-style);\n\n\tbackground-color:inherit;\n\t}\n.wtrl-norm, .wtrl_norm {\n\tfont-family:inherit;\n\n\tcolor:var(--wtrl-norm-color);\n\tfont-weight:var(--wtrl-norm-font-weight);\n\tfont-style:var(--wtrl-norm-font-style);\n\tfont-size: 100%;\n\n\tbackground-color:inherit;\n\t}\n.wtrl-norm::after, .wtrl_norm::after {\n\tcontent: \" \\2696\";\n\tfont-weight:bold;\n\tfont-style:normal;\n\t}\n.wtrl-op, .wtrl_op {\n\tfont-family:var(--wtrl-monospace-font-family);\n\n\tcolor:var(--wtrl-op-color);\n\tfont-weight:var(--wtrl-op-font-weight);\n\tfont-style:var(--wtrl-op-font-style);\n\n\tbackground-color:inherit;\n\t}\n.wtrl-opt, .wtrl_opt {\n\tfont-family:var(--wtrl-monospace-font-family);\n\n\tcolor:var(--wtrl-opt-color);\n\tfont-weight:var(--wtrl-opt-font-weight);\n\tfont-style:var(--wtrl-opt-font-style);\n\n\tbackground-color:inherit;\n\t}\n.wtrl-pkg, .wtrl_pkg {\n\tfont-family:var(--wtrl-monospace-font-family);\n\n\tcolor: var(--wtrl-pkg-color);\n\tfont-weight:var(--wtrl-pkg-font-weight);\n\tfont-style:var(--wtrl-pkg-font-style);\n\n\tbackground-color:inherit;\n\t}\n.wtrl-tag, .wtrl_tag {\n\tfont-family:var(--wtrl-monospace-font-family);\n\n\tcolor:var(--wtrl-tag-color);\n\tfont-weight:var(--wtrl-tag-font-weight);\n\tfont-style:var(--wtrl-tag-font-style);\n\n\tbackground-color:inherit;\n\t}\n.wtrl-term, .wtrl_term {\n\tfont-family:inherit;\n\tcolor:var(--wtrl-term-color);\n\tfont-weight:var(--wtrl-term-font-weight);\n\tfont-style:var(--wtrl-term-font-style);\n\tfont-size:100%;\n\n\tbackground-color:inherit;\n\t}\n.wtrl-type, .wtrl_type\n\t{\n\tfont-family:var(--wtrl-monospace-font-family);\n\n\tcolor:var(--wtrl-type-color);\n\tfont-weight:var(--wtrl-type-font-weight);\n\tfont-style:var(--wtrl-type-font-style);\n\n\tbackground-color:inherit;\n\t}\n.wtrl-url, .wtrl_url {\n\tfont-family:var(--wtrl-monospace-font-family);\n\n\tcolor:var(--wtrl-url-color);\n\tfont-weight:var(--wtrl-url-font-weight);\n\tfont-style:var(--wtrl-url-font-style);\n\n\tbackground-color:inherit;\n\t}\n.wtrl-url-schema, .wtrl_url_schema {\n\tfont-family: var(--wtrl-monospace-font-family);\n\n\tcolor:var(--wtrl-url-schema-color);\n\tfont-weight:var(--wtrl-url-font-weight);\n\tfont-style:var(--wtrl-url-font-style);\n\n\tbackground-color:inherit;\n\t}\n.wtrl-value, .wtrl_value {\n\tfont-family: var(--wtrl-monospace-font-family);\n\n\tcolor:var(--wtrl-value-color);\n\tfont-weight:var(--wtrl-value-font-weight);\n\tfont-style:var(--wtrl-value-font-style);\n\tfont-size:90%;\n\n\tbackground-color:inherit;\n\t}\n.wtrl-var, .wtrl_var {\n\tfont-family: var(--wtrl-monospace-font-family);\n\n\tcolor:var(--wtrl-var-color);\n\tfont-weight:var(--wtrl-var-font-weight);\n\tfont-style:var(--wtrl-var-font-style);\n\n\tbackground-color:inherit;\n\t}\n\n\n.wtrl-ref, .wtrl_ref {\n\tcolor:var(--wtrl-url-color);\n\ttext-decoration-line: underline;\n\ttext-decoration-style: dotted;\n\ttext-decoration-thickness: 1px;\n\ttext-underline-offset: 0.12em;\n\t}\n.wtrl-ref.wtrl-mod, .wtrl_ref.wtrl_mod {\n\tcolor:var(--wtrl-mod-color);\n\ttext-decoration-line: underline;\n\ttext-decoration-style: dotted;\n\ttext-decoration-thickness: 1px;\n\ttext-underline-offset: 0.12em;\n\t}\n.wtrl-ref.wtrl-class, .wtrl_ref.wtrl_class {\n\tcolor:var(--wtrl-class-color);\n\ttext-decoration-line: underline;\n\ttext-decoration-style: dotted;\n\ttext-decoration-thickness: 1px;\n\ttext-underline-offset: 0.12em;\n\t}\n.wtrl-ref.wtrl-func, .wtrl_ref.wtrl_func {\n\tcolor:var(--wtrl-func-color);\n\ttext-decoration-line: underline;\n\ttext-decoration-style: dotted;\n\ttext-decoration-thickness: 1px;\n\ttext-underline-offset: 0.12em;\n\t}\n.wtrl-ref.wtrl-type, .wtrl_ref.wtrl_type {\n\tcolor:var(--wtrl-type-color);\n\ttext-decoration-line: underline;\n\ttext-decoration-style: dotted;\n\ttext-decoration-thickness: 1px;\n\ttext-underline-offset: 0.12em;\n\t}\n.wtrl-ref.wtrl-var, .wtrl_ref.wtrl_var {\n\tcolor:var(--wtrl-var-color);\n\ttext-decoration-line: underline;\n\ttext-decoration-style: dotted;\n\ttext-decoration-thickness: 1px;\n\ttext-underline-offset: 0.12em;\n\t}\n.wtrl-ref.wtrl-mod:visited, .wtrl_ref.wtrl_mod:visited {\n\tcolor:var(--wtrl-mod-color);\n\t}\n.wtrl-ref.wtrl-class:visited, .wtrl_ref.wtrl_class:visited {\n\tcolor:var(--wtrl-class-color);\n\t}\n.wtrl-ref.wtrl-func:visited, .wtrl_ref.wtrl_func:visited {\n\tcolor:var(--wtrl-func-color);\n\t}\n.wtrl-ref.wtrl-func:visited, .wtrl_ref.wtrl_func:visited {\n\tcolor:var(--wtrl-func-color);\n\t}\n.wtrl-ref.wtrl-type:visited, .wtrl_ref.wtrl_type:visited {\n\tcolor:var(--wtrl-type-color);\n\t}\n.wtrl-ref.wtrl-var:visited, .wtrl_ref.wtrl_var:visited {\n\tcolor:var(--wtrl-var-color);\n\t}\n\n/*----- Code segements --------------------------------------*/\n.wtrl-example-code .wtrl-code {\n\tborder:1px solid var(--wtrl-html-panel-border-color);\n\tborder-radius:0.3em;\n\tbackground:var(--wtrl-html-code-bg);\n\tmargin-top: 0.25em;\n\tmargin-bottom:0em;\n\tpadding-left: 0.5em;\n\tpadding-right: 0.5em;\n\tpadding-top: 0.5em;\n\tpadding-bottom: 0.5em;\n\tbox-sizing:border-box;\n\twhite-space:pre-wrap;\n\toverflow-wrap:anywhere;\n\t}\n.wtrl-example-code .wtrl-code pre {\n/* control margins and padding by .wtrl-example-code .wtrl-code, not here. */\n\tmargin: 0em;\n\tpadding: 0em;\n}\n\n/*----- Links -----------------------------------------------*/\na {\n\ttext-decoration: none;\n\t}\n/*----- Kind filter -----------------------------------------*/\n/* Currently not possible because of the use of <option> elements\n   in the filter dropdown, which do not allow for styling individual options. */\n\n/*----- Hit list kinds --------------------------------------*/\n/* Each entry in the hitlist consists of two parts, a label\n   showing the kind of the object and the actual hit. The default\n   style is to render the label in a color that is associated with\n   the kind of the object, while the hit itself it is rendered\n   in a neutral color.\n   */\n\n.wtrl-hit-kind-module-label {\n\tcolor:var(--wtrl-mod-color);\n\tfont-size:100%;\t\n\tfont-style: italic;\n}\n.wtrl-hit-kind-class-label {\n\tcolor:var(--wtrl-class-color);\n\tfont-size:100%;\t\n\tfont-style: italic;\n\t}\n.wtrl-hit-kind-callable-label {\n\tcolor:var(--wtrl-func-color);\n\tfont-size:100%;\t\n\tfont-style: italic;\t\n}\n.wtrl-hit-kind-assignable-label {\n\tcolor:var(--wtrl-var-color);\n\tfont-size:100%;\t\n\tfont-style: italic;\n\t}\n.wtrl-hit-kind-type-label {\n\tcolor:var(--wtrl-type-color);\n\tfont-size:100%;\t\n\tfont-style: italic;\n\t}\n/* Label \"object\" or \"entry\" is a fallback and is not supposed to appear. */\n.wtrl-hit-kind-object-label {\n\tcolor:var(--wtrl-html-fallback-color);\n\tfont-size:100%;\t\n\tfont-style: italic;\n\t}\n/* The entries. Feel free to override; if a non-neutral color is used,\n   it should be consistent with the color assigned to the object kind in general. */\n.wtrl-hit-kind-module {\n\tcolor:var(--wtrl-html-fallback-color);\n\t}\n.wtrl-hit-kind-class {\n\tcolor:var(--wtrl-html-fallback-color);\n\t}\n.wtrl-hit-kind-callable {\n\tcolor:var(--wtrl-html-fallback-color);\n\t}\n.wtrl-hit-kind-assignable {\n\tcolor:var(--wtrl-html-fallback-color);\n\t}\n.wtrl-hit-kind-type {\n\tcolor:var(--wtrl-html-fallback-color);\n\t}\n/* Fallback. Not supposed to appear */\n.wtrl-hit-kind-object {\n\tcolor:var(--wtrl-html-fallback-color);\n\t}\n\n", "css_append": "", "pygments_theme": "gruvbox-light", "pygments_dark_theme": "gruvbox-dark"}, "roles": {"attr": "Attribute name", "cmd": "Shell or CLI command", "class": "Class name", "dfn": "Definition of a term", "file": "File or path", "func": "Function or callable", "key": "Key on the keyboard", "label": "Section/Subsection label", "lit": "Literal text or code", "mod": "Module name", "norm": "Normativity keyword used as metadata", "op": "Operator symbol", "opt": "Command-line option or flag", "pkg": "Package name", "url": "URL", "tag": "Tag or marker", "term": "Domain-specific term", "type": "Type name or annotation", "value": "Concrete value", "var": "Variable name", "var_type": "Variable and type, like 'var:type'"}, "scopes": {"public": {"value": 10, "description": ""}, "extension": {"value": 20, "description": ""}, "core": {"value": 30, "description": ""}}, "toc_modules": {"showcase_roles": "/__WTRL_OBJECTS__/showcase_roles"}, "toc_classes": {"showcase_roles.X": "/__WTRL_OBJECTS__/showcase_roles.X"}, "toc_callables": {}, "toc_types": {}, "toc_variables": {}, "toc_constants": {}, "examples": {}, "objects": {"showcase_roles": {"doc": {"Preamble": {"profile": "module", "scope": ["core"], "normative_sections": ["Contract", "Definitions"]}, "Definitions": {"ABC": {"variations": [], "text": ["A term |dfn|`ABC` we reference by role |lit|`|term|`."]}}, "Contract": {"general": ["MUST do — \"|\" + |lit|`Must` + \"|\"", "MUST do — \"|\" + |lit|`must` + \"|\"", "MUST NOT do — \"|\" + |lit|`Must_not` + \"|\"", "MUST NOT do — \"|\" + |lit|`must_not` + \"|\"", "SHOULD do — \"|\" + |lit|`Should` + \"|\"", "SHOULD do — \"|\" + |lit|`should` + \"|\"", "SHOULD NOT do — \"|\" + |lit|`Should_not` + \"|\"", "SHOULD NOT do — \"|\" + |lit|`should_not` + \"|\"", "MAY do — \"|\" + |lit|`May` + \"|\"", "MAY do — \"|\" + |lit|`may` + \"|\""]}, "Notes": {"Flavour": ["Normativity keywords are rendered in flavour |value|`rfc-2119` in this showcase, i.e. capitalized."], "Roles": ["* |attr|`ABC` — |lit|`|attr|`, for attributes in XML, keys in JSON...", "* |class|`ABC` — |lit|`|class|`, classes", "* |cmd|`ABC` — |lit|`|cmd|`, commands and subcommand with CLI", "* |dfn|`ABC` — |lit|`|dfn|`, a term being defined", "* |file|`/path/to/ABC` — |lit|`|file|`, files but also URLs", "* |func|`ABC` — |lit|`|func|`, functions", "* |key|`CTRL` — |lit|`|label|`, keys on the keyboard", "* |label|`ABC` — |lit|`|label|`, titles, labels", "* |lit|`ABC` — |lit|`|lit|`, catch-all for literal text", "* |mod|`ABC` — |lit|`|mod|`, modules", "* |norm|`should` — |lit|`|norm|`, normativity keywords (meta, when talking about keywords)", "* |op|`>>` — |lit|`|op|`, operators", "* |opt|`--abc` — |lit|`|opt|`, options for CLI commands", "* |pkg|`sdv.tty` — |lit|`|pkg|`, packages", "* |tag|`ABC` — |lit|`|tag|`, enum values, symbolic values", "* |term|`ABC` — |lit|`|term|`, referencing a term defined in |label|`Definitions`", "* |type|`float` — |lit|`|type|`, types in programming or markup languages", "* |url|`https://pypi.org/project/sdv-doc-waterloo/` — |lit|`|url|`, for URLs (currently pretty simple)", "* |value|`12345` — |lit|`|value|`, R-values, unnamed values", "* |var|`xyz` — |lit|`|var|`, variables, but also named constants", "* |var_type|`xyz:float` — |lit|`|var_type|`, variable and type with colon."], "Values": ["* |Self| — |lit|`|Self|`", "* |None| — |lit|`|None|`", "* |True| — |lit|`|True|`", "* |False| — |lit|`|False|`"], "Todo at 2026-06-25": ["Styles for pkg and url required."]}}}, "showcase_roles.X": {"signature": {"text": "object.__init__(self, /, *args, **kwargs)", "parameters": [{"name": "args", "kind": "VAR_POSITIONAL", "annotation": null, "default": null}, {"name": "kwargs", "kind": "VAR_KEYWORD", "annotation": null, "default": null}], "returns": null}, "doc": {"Preamble": {"profile": "class", "normative_sections": ["Contract", "Definitions"]}, "Contract": {"general": ["MUST demonstrate the use of |lit|`|term|` in a class."], "constructor": []}, "definitions_inherited_from_module": {"source": "/__WTRL_OBJECTS__/showcase_roles", "terms": ["ABC"]}, "Definitions": {}, "Notes": {"Roles": ["* |term|`ABC` — |lit|`|term|`, referencing a term defined in |label|`Definitions`"], "Compound examples": ["|cmd|`waterlint validate` |opt|`--basedir` |file|`/path/to/dir` |opt|`--obj` |mod|`mymod`"]}}}}};
 const WTRL_INDEX = [{"label": "showcase_roles", "target": "showcase_roles", "kind": "mod", "anchor": "wtrl-mod-14:showcase_roles"}, {"label": "showcase_roles.X", "target": "showcase_roles.X", "kind": "cls", "anchor": "wtrl-cls-14:showcase_roles-1:X"}];
 const WTRL_EXAMPLES_HTML = {};
 // The above variables are injected by waterlint_render_html5.py, the script
@@ -665,12 +1383,57 @@ function setTextIfPresent(id, text) {
 	if (elem) elem.textContent = text;
 }
 
+const THEME_STORAGE_KEY = "wtrl-html5-theme";
+const THEME_VALUES = new Set(["light", "auto", "dark"]);
+
+function normalizeThemeValue(value) {
+	const theme = String(value || "").trim();
+	return THEME_VALUES.has(theme) ? theme : "auto";
+}
+
+function loadStoredTheme() {
+	try {
+		return normalizeThemeValue(window.localStorage.getItem(THEME_STORAGE_KEY));
+	} catch (_) {
+		return "auto";
+	}
+}
+
+function storeTheme(theme) {
+	try {
+		window.localStorage.setItem(THEME_STORAGE_KEY, theme);
+	} catch (_) {
+		// Static files may be viewed in environments where localStorage is unavailable.
+	}
+}
+
+function setTheme(theme, persist) {
+	const normalized = normalizeThemeValue(theme);
+	document.documentElement.dataset.wtrlTheme = normalized;
+	if (persist) storeTheme(normalized);
+	for (const name of THEME_VALUES) {
+		const elemButton = byId(`wtrl-theme-${name}`);
+		if (elemButton) elemButton.setAttribute("aria-pressed", name === normalized ? "true" : "false");
+	}
+}
+
+function setupThemeSwitcher() {
+	setTheme(loadStoredTheme(), false);
+	for (const name of THEME_VALUES) {
+		const elemButton = byId(`wtrl-theme-${name}`);
+		if (!elemButton) continue;
+		elemButton.addEventListener("click", () => { setTheme(name, true); });
+	}
+}
+
 // Map fully qualified identifiers to renderable anchor ids.
 // This is used e.g. in function resolveLocalTarget() to determine
 // whether a given QID can be linked to from the current page.
 const TARGET_TO_ANCHOR = new Map();
+const TARGET_TO_KIND = new Map();
 for (const e of WTRL_INDEX) {
 	if (e.anchor) TARGET_TO_ANCHOR.set(e.target, e.anchor);
+	if (e.target) TARGET_TO_KIND.set(e.target, String(e.kind || "obj"));
 }
 
 // The NORM_RE regex represents the complete set of normativity keywords.
@@ -1119,6 +1882,7 @@ function getRoleClassForLeaf(path) {
 	if (section === "Preamble" && (subsection === "profile" || subsection === "scope" || subsection === "status")) {
 		return "wtrl-value wtrl_value";
 	}
+	if (section === "Contract" && subsection === "traits") return "wtrl-value wtrl_value";
 	if (section === "Preamble" && subsection === "normative_sections") return "wtrl-label wtrl_label";
 	return "";
 }
@@ -1132,6 +1896,16 @@ function appendMaybeStyledText(parent, txt, roleCls) {
 	elemStyledText.className = roleCls;
 	appendInlineTokens(elemStyledText, txt);
 	parent.appendChild(elemStyledText);
+}
+
+function getRoleClassForTargetQid(targetQid) {
+	const kind = TARGET_TO_KIND.get(String(targetQid || "")) || "obj";
+	if (kind === "mod") return "wtrl-mod wtrl_mod";
+	if (kind === "cls") return "wtrl-class wtrl_class";
+	if (kind === "func" || kind === "meth") return "wtrl-func wtrl_func";
+	if (kind === "type") return "wtrl-type wtrl_type";
+	if (kind === "var" || kind === "const") return "wtrl-var wtrl_var";
+	return "";
 }
 
 function isFreeformPath(path) {
@@ -1283,6 +2057,16 @@ function isNormativeSectionsPath(path) {
 	);
 }
 
+function isCompactValueListPath(path) {
+	if (!Array.isArray(path) || path.length < 2) return false;
+	const section = String(path[0]);
+	const subsection = String(path[1]);
+	return (
+		(section === "Preamble" && subsection === "scope") ||
+		(section === "Contract" && subsection === "traits")
+	);
+}
+
 function renderCompactNormativeSections(container, items) {
 	const vals = items.map(v => String(v));
 	for (let i = 0; i < vals.length; i += 6) {
@@ -1298,6 +2082,17 @@ function renderCompactNormativeSections(container, items) {
 		}
 		container.appendChild(elemRowParagraph);
 	}
+}
+
+function renderCompactStyledValues(container, items, roleCls) {
+	const elemParagraph = document.createElement("p");
+	elemParagraph.className = "wtrl-text";
+	const vals = items.map(v => String(v)).filter(Boolean);
+	for (let i = 0; i < vals.length; i += 1) {
+		appendMaybeStyledText(elemParagraph, vals[i], roleCls);
+		if (i < vals.length - 1) elemParagraph.appendChild(document.createTextNode(", "));
+	}
+	container.appendChild(elemParagraph);
 }
 
 function _sourcePointerToQid(src) {
@@ -1489,8 +2284,9 @@ function appendSeeAlsoEntry(parent, entry, currentQid) {
 		appendMaybeStyledText(parent, raw, "wtrl-func wtrl_func");
 		return;
 	}
+	const roleCls = getRoleClassForTargetQid(targetQid);
 	const elemSeeAlsoLink = document.createElement("a");
-	elemSeeAlsoLink.className = "wtrl-ref wtrl_ref wtrl-func wtrl_func";
+	elemSeeAlsoLink.className = "wtrl-ref wtrl_ref" + (roleCls ? " " + roleCls : "");
 	elemSeeAlsoLink.href = "#" + anchor;
 	elemSeeAlsoLink.textContent = raw;
 	parent.appendChild(elemSeeAlsoLink);
@@ -1549,14 +2345,15 @@ function renderReferencedBySection(container, currentQid) {
 	for (const sourceQid of Array.from(refs).sort()) {
 		const elemRefItem = document.createElement("li");
 		const anchor = TARGET_TO_ANCHOR.get(sourceQid);
+		const roleCls = getRoleClassForTargetQid(sourceQid);
 		if (anchor) {
 			const elemRefLink = document.createElement("a");
-			elemRefLink.className = "wtrl-ref wtrl_ref wtrl-func wtrl_func";
+			elemRefLink.className = "wtrl-ref wtrl_ref" + (roleCls ? " " + roleCls : "");
 			elemRefLink.href = "#" + anchor;
 			elemRefLink.textContent = sourceQid;
 			elemRefItem.appendChild(elemRefLink);
 		} else {
-			appendMaybeStyledText(elemRefItem, sourceQid, "wtrl-func wtrl_func");
+			appendMaybeStyledText(elemRefItem, sourceQid, roleCls);
 		}
 		elemRefsList.appendChild(elemRefItem);
 	}
@@ -1746,6 +2543,11 @@ function renderValue(value, container, depth, path, currentQid) {
 			renderCompactNormativeSections(container, vals);
 			return;
 		}
+		if (isCompactValueListPath(pth)) {
+			const vals = value.split(",").map(s => s.trim()).filter(Boolean);
+			renderCompactStyledValues(container, vals, leafRoleCls);
+			return;
+		}
 		if (isFreeformPath(pth)) {
 			renderFreeformText(container, value);
 			return;
@@ -1770,6 +2572,10 @@ function renderValue(value, container, depth, path, currentQid) {
 		}
 		if (isNormativeSectionsPath(pth) && value.every(item => typeof item === "string")) {
 			renderCompactNormativeSections(container, value);
+			return;
+		}
+		if (isCompactValueListPath(pth) && value.every(item => typeof item === "string")) {
+			renderCompactStyledValues(container, value, leafRoleCls);
 			return;
 		}
 		if (isFreeformPath(pth) && value.every(item => typeof item === "string")) {
@@ -2334,6 +3140,7 @@ function setupSearch() {
 window.addEventListener("hashchange", () => { handlerHashNavigation(); });
 window.addEventListener("DOMContentLoaded", () => {
 	if (DEBUG_REFS_ENABLED) pushDebugRefEvent("debug-enabled", { query: window.location.search || "" });
+	setupThemeSwitcher();
 	byId("wtrl-scope").textContent = String((WTRL_DATA.meta || {}).scope || "");
 	byId("wtrl-flavour").textContent = String((WTRL_DATA.meta || {}).flavour || "");
 	byId("wtrl-modules").textContent = ((WTRL_DATA.meta || {}).modules || []).join(", ");

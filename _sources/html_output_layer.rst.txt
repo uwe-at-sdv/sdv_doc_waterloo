@@ -47,6 +47,7 @@ The following options are particularly relevant:
 	:wtrl_opt:`--css` :wtrl_file:`path/to/custom.css`
 	:wtrl_opt:`--additional-css` :wtrl_file:`path/to/additional.css`
 	:wtrl_opt:`--pygments-theme` :wtrl_value:`theme-name`
+	:wtrl_opt:`--pygments-dark-theme` :wtrl_value:`theme-name`
 	:wtrl_opt:`--no-render-preamble`
 
 Option :wtrl_opt:`--css` replaces the built-in default stylesheet with a custom CSS file.
@@ -59,7 +60,10 @@ If :wtrl_opt:`--css` is not given, the built-in default stylesheet acts as the p
 This is useful if a shared base stylesheet should be adapted to a project-specific visual style.
 
 Option :wtrl_opt:`--pygments-theme` selects the syntax-highlighting theme used for
-embedded code examples.
+embedded code examples in light mode.
+Option :wtrl_opt:`--pygments-dark-theme` selects the corresponding theme for dark mode.
+When the page theme is set to :wtrl_value:`auto`, the generated CSS follows the
+system color-scheme preference.
 
 Option :wtrl_opt:`--no-render-preamble` suppresses the section :wtrl_label:`Preamble:`
 in the generated HTML output.

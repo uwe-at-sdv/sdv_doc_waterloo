@@ -9,8 +9,8 @@
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5f771d8e" />
     <link rel="stylesheet" type="text/css" href="_static/basic.css?v=b08954a9" />
     <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=27fed22d" />
-    <link rel="stylesheet" type="text/css" href="_static/common_styles.css?v=b66e391a" />
-    <link rel="stylesheet" type="text/css" href="_static/waterloo_base.css?v=1910b4a6" />
+    <link rel="stylesheet" type="text/css" href="_static/common_styles.css?v=9842741a" />
+    <link rel="stylesheet" type="text/css" href="_static/waterloo_base.css?v=39be3da6" />
     <link rel="stylesheet" type="text/css" href="_static/waterloo_alabaster.css?v=5a8d1525" />
     <link rel="stylesheet" type="text/css" href="_static/wtrl_doc_custom.css" />
     <script src="_static/documentation_options.js?v=8dde47fa"></script>
@@ -87,6 +87,7 @@ in particular the scope and flavour stored in the JSON document.</p>
 <div><p><code class="wtrl_opt docutils literal notranslate"><span class="pre">--css</span></code> <code class="wtrl_file docutils literal notranslate"><span class="pre">path/to/custom.css</span></code>
 <code class="wtrl_opt docutils literal notranslate"><span class="pre">--additional-css</span></code> <code class="wtrl_file docutils literal notranslate"><span class="pre">path/to/additional.css</span></code>
 <code class="wtrl_opt docutils literal notranslate"><span class="pre">--pygments-theme</span></code> <code class="wtrl_value docutils literal notranslate"><span class="pre">theme-name</span></code>
+<code class="wtrl_opt docutils literal notranslate"><span class="pre">--pygments-dark-theme</span></code> <code class="wtrl_value docutils literal notranslate"><span class="pre">theme-name</span></code>
 <code class="wtrl_opt docutils literal notranslate"><span class="pre">--no-render-preamble</span></code></p>
 </div></blockquote>
 <p>Option <code class="wtrl_opt docutils literal notranslate"><span class="pre">--css</span></code> replaces the built-in default stylesheet with a custom CSS file.
@@ -97,7 +98,10 @@ after the CSS provided via <code class="wtrl_opt docutils literal notranslate"><
 If <code class="wtrl_opt docutils literal notranslate"><span class="pre">--css</span></code> is not given, the built-in default stylesheet acts as the primary stylesheet.
 This is useful if a shared base stylesheet should be adapted to a project-specific visual style.</p>
 <p>Option <code class="wtrl_opt docutils literal notranslate"><span class="pre">--pygments-theme</span></code> selects the syntax-highlighting theme used for
-embedded code examples.</p>
+embedded code examples in light mode.
+Option <code class="wtrl_opt docutils literal notranslate"><span class="pre">--pygments-dark-theme</span></code> selects the corresponding theme for dark mode.
+When the page theme is set to <code class="wtrl_value docutils literal notranslate"><span class="pre">auto</span></code>, the generated CSS follows the
+system color-scheme preference.</p>
 <p>Option <code class="wtrl_opt docutils literal notranslate"><span class="pre">--no-render-preamble</span></code> suppresses the section <span class="wtrl_label">Preamble:</span>
 in the generated HTML output.
 This can be useful when the output is intended primarily for human readers who do not
@@ -164,9 +168,9 @@ currently selected object.
 An element with ID <code class="wtrl_value docutils literal notranslate"><span class="pre">wtrl-sub</span></code> is optional and, if present, is used
 for a subtitle.</p>
 <p>For example:</p>
-<div class="highlight-html notranslate"><div class="highlight"><pre><span></span><span class="p">&lt;</span><span class="nt">div</span> <span class="na">id</span><span class="o">=</span><span class="s">&quot;wtrl-header&quot;</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;wtrl-header&quot;</span><span class="p">&gt;</span>
-  <span class="p">&lt;</span><span class="nt">h1</span> <span class="na">id</span><span class="o">=</span><span class="s">&quot;wtrl-title&quot;</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;wtrl-title&quot;</span><span class="p">&gt;&lt;/</span><span class="nt">h1</span><span class="p">&gt;</span>
-  <span class="p">&lt;</span><span class="nt">p</span> <span class="na">id</span><span class="o">=</span><span class="s">&quot;wtrl-sub&quot;</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;wtrl-sub&quot;</span><span class="p">&gt;&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+<div class="highlight-html notranslate"><div class="highlight"><pre><span></span><span class="p">&lt;</span><span class="nt">div</span> <span class="na">id</span><span class="o">=</span><span class="s">"wtrl-header"</span> <span class="na">class</span><span class="o">=</span><span class="s">"wtrl-header"</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">h1</span> <span class="na">id</span><span class="o">=</span><span class="s">"wtrl-title"</span> <span class="na">class</span><span class="o">=</span><span class="s">"wtrl-title"</span><span class="p">&gt;&lt;/</span><span class="nt">h1</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">p</span> <span class="na">id</span><span class="o">=</span><span class="s">"wtrl-sub"</span> <span class="na">class</span><span class="o">=</span><span class="s">"wtrl-sub"</span><span class="p">&gt;&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
 <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
 </pre></div>
 </div>
@@ -199,21 +203,21 @@ documentation self-contained and usable offline.</p>
 </dl>
 </div></blockquote>
 <p>Header fragment:</p>
-<div class="highlight-html notranslate"><div class="highlight"><pre><span></span><span class="p">&lt;</span><span class="nt">div</span> <span class="na">id</span><span class="o">=</span><span class="s">&quot;wtrl-header&quot;</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;wtrl-header-card&quot;</span><span class="p">&gt;</span>
-  <span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;wtrl-header-brand&quot;</span><span class="p">&gt;</span>
+<div class="highlight-html notranslate"><div class="highlight"><pre><span></span><span class="p">&lt;</span><span class="nt">div</span> <span class="na">id</span><span class="o">=</span><span class="s">"wtrl-header"</span> <span class="na">class</span><span class="o">=</span><span class="s">"wtrl-header-card"</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">"wtrl-header-brand"</span><span class="p">&gt;</span>
     <span class="p">&lt;</span><span class="nt">img</span>
-      <span class="na">class</span><span class="o">=</span><span class="s">&quot;wtrl-header-logo&quot;</span>
-      <span class="na">alt</span><span class="o">=</span><span class="s">&quot;Waterloo Docstrings Logo&quot;</span>
-      <span class="na">src</span><span class="o">=</span><span class="s">&quot;data:image/svg+xml;utf8,&lt;svg xmlns=&#39;http://www.w3.org/2000/svg&#39; viewBox=&#39;0 0 96 96&#39;&gt;&lt;rect width=&#39;96&#39; height=&#39;96&#39; rx=&#39;20&#39; fill=&#39;%230f766e&#39;/&gt;&lt;circle cx=&#39;48&#39; cy=&#39;48&#39; r=&#39;28&#39; fill=&#39;%23ffffff&#39; opacity=&#39;0.14&#39;/&gt;&lt;path d=&#39;M28 58c8-18 15-28 20-28 6 0 10 9 20 28&#39; fill=&#39;none&#39; stroke=&#39;%23ffffff&#39; stroke-width=&#39;8&#39; stroke-linecap=&#39;round&#39;/&gt;&lt;path d=&#39;M34 38h28&#39; fill=&#39;none&#39; stroke=&#39;%23ffffff&#39; stroke-width=&#39;8&#39; stroke-linecap=&#39;round&#39;/&gt;&lt;/svg&gt;&quot;</span>
+      <span class="na">class</span><span class="o">=</span><span class="s">"wtrl-header-logo"</span>
+      <span class="na">alt</span><span class="o">=</span><span class="s">"Waterloo Docstrings Logo"</span>
+      <span class="na">src</span><span class="o">=</span><span class="s">"data:image/svg+xml;utf8,&lt;svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 96'&gt;&lt;rect width='96' height='96' rx='20' fill='%230f766e'/&gt;&lt;circle cx='48' cy='48' r='28' fill='%23ffffff' opacity='0.14'/&gt;&lt;path d='M28 58c8-18 15-28 20-28 6 0 10 9 20 28' fill='none' stroke='%23ffffff' stroke-width='8' stroke-linecap='round'/&gt;&lt;path d='M34 38h28' fill='none' stroke='%23ffffff' stroke-width='8' stroke-linecap='round'/&gt;&lt;/svg&gt;"</span>
     <span class="p">&gt;</span>
-    <span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;wtrl-header-copy&quot;</span><span class="p">&gt;</span>
-      <span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;wtrl-header-kicker&quot;</span><span class="p">&gt;</span>Interactive API documentation<span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
-      <span class="p">&lt;</span><span class="nt">h1</span> <span class="na">id</span><span class="o">=</span><span class="s">&quot;wtrl-title&quot;</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;wtrl-title&quot;</span><span class="p">&gt;&lt;/</span><span class="nt">h1</span><span class="p">&gt;</span>
-      <span class="p">&lt;</span><span class="nt">p</span> <span class="na">id</span><span class="o">=</span><span class="s">&quot;wtrl-sub&quot;</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;wtrl-sub&quot;</span><span class="p">&gt;&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">"wtrl-header-copy"</span><span class="p">&gt;</span>
+      <span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">"wtrl-header-kicker"</span><span class="p">&gt;</span>Interactive API documentation<span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+      <span class="p">&lt;</span><span class="nt">h1</span> <span class="na">id</span><span class="o">=</span><span class="s">"wtrl-title"</span> <span class="na">class</span><span class="o">=</span><span class="s">"wtrl-title"</span><span class="p">&gt;&lt;/</span><span class="nt">h1</span><span class="p">&gt;</span>
+      <span class="p">&lt;</span><span class="nt">p</span> <span class="na">id</span><span class="o">=</span><span class="s">"wtrl-sub"</span> <span class="na">class</span><span class="o">=</span><span class="s">"wtrl-sub"</span><span class="p">&gt;&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
     <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
   <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
-  <span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;wtrl-header-meta&quot;</span><span class="p">&gt;</span>
-    <span class="p">&lt;</span><span class="nt">a</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;wtrl-header-link&quot;</span> <span class="na">href</span><span class="o">=</span><span class="s">&quot;https://github.com/uwe-at-sdv/sdv_doc_waterloo&quot;</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">"wtrl-header-meta"</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">a</span> <span class="na">class</span><span class="o">=</span><span class="s">"wtrl-header-link"</span> <span class="na">href</span><span class="o">=</span><span class="s">"https://github.com/uwe-at-sdv/sdv_doc_waterloo"</span><span class="p">&gt;</span>
       Waterloo Docstrings on GitHub
     <span class="p">&lt;/</span><span class="nt">a</span><span class="p">&gt;</span>
   <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>

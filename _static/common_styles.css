@@ -32,6 +32,7 @@ code.docutils.literal {
 :root
 	{
 	--wtrl-plain-color:currentColor;
+	--wtrl-monospace-font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 
 /* light theme colors */
 /* begin-roles */

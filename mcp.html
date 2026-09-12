@@ -9,8 +9,8 @@
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5f771d8e" />
     <link rel="stylesheet" type="text/css" href="_static/basic.css?v=b08954a9" />
     <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=27fed22d" />
-    <link rel="stylesheet" type="text/css" href="_static/common_styles.css?v=b66e391a" />
-    <link rel="stylesheet" type="text/css" href="_static/waterloo_base.css?v=1910b4a6" />
+    <link rel="stylesheet" type="text/css" href="_static/common_styles.css?v=9842741a" />
+    <link rel="stylesheet" type="text/css" href="_static/waterloo_base.css?v=39be3da6" />
     <link rel="stylesheet" type="text/css" href="_static/waterloo_alabaster.css?v=5a8d1525" />
     <link rel="stylesheet" type="text/css" href="_static/wtrl_doc_custom.css" />
     <script src="_static/documentation_options.js?v=8dde47fa"></script>
@@ -257,8 +257,8 @@ jump directly to the relevant <code class="wtrl_cmd docutils literal notranslate
 down to a canonical target, and then inspect the exact Waterloo text that
 describes the object.</p>
 </section>
-<section id="using-the-mcp-server-in-vscode">
-<h2><span class="section-number">10.5. </span>Using the MCP-server in VS Code<a class="headerlink" href="#using-the-mcp-server-in-vscode" title="Link to this heading">¶</a></h2>
+<section id="using-the-mcp-server-in-vs-code">
+<h2><span class="section-number">10.5. </span>Using the MCP-server in VS Code<a class="headerlink" href="#using-the-mcp-server-in-vs-code" title="Link to this heading">¶</a></h2>
 <p class="rubric">HTTP transport</p>
 <p>[Last tested with VS Code 1.115.0 on 2026-05-31]</p>
 <p>With transport <code class="wtrl_lit docutils literal notranslate"><span class="pre">streamable-http</span></code>, the MCP-server is added to VS Code by:</p>
@@ -267,10 +267,10 @@ describes the object.</p>
 </div></blockquote>
 <p>The code to be added should look like</p>
 <div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;servers&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="nt">&quot;waterloo-docs&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;http&quot;</span><span class="p">,</span>
-<span class="w">                </span><span class="nt">&quot;url&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;http://127.0.0.1:13316/mcp&quot;</span>
+<span class="w">    </span><span class="nt">"servers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">"waterloo-docs"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http"</span><span class="p">,</span>
+<span class="w">                </span><span class="nt">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://127.0.0.1:13316/mcp"</span>
 <span class="w">        </span><span class="p">}</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="p">}</span>
@@ -367,7 +367,7 @@ including commands for running the container as a daemon.</p>
 The overall workflow is illustrated in the following diagram:</p>
 <img alt="Workflow for waterlint's Docker output" class="align-center" src="_images/waterlint_pipeline_docker.svg" />
 <p>The package installation directory relevant for the following examples can be obtained using:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import importlib.resources as r; print(r.files(&#39;sdv.doc.waterloo&#39;))&quot;</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">"import importlib.resources as r; print(r.files('sdv.doc.waterloo'))"</span>
 </pre></div>
 </div>
 <p>We refer to this path as <code class="wtrl_file docutils literal notranslate"><span class="pre">${ROOT}</span></code>.</p>
@@ -491,16 +491,16 @@ the server answers its admin status request.</p>
 </div>
 <p>The server may respond with a JSON object such as</p>
 <div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;client&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;vscode&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;created_at&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2026-07-07T14:28:09Z&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;expires_at&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;location&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;notebook&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;notes&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;revoked_at&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;token&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;rGd3Gjts4zgRnqBELoCY7xuIQ_74P7Gm4OFmIXT0qgk&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;token_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;alice-vscode-notebook&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;token_sha256&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;b89321eda7bbdd9d7cdc2e2829aa6fe433d1c108205d7db647e7224d4c84984c&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;user&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;alice&quot;</span>
+<span class="w">  </span><span class="nt">"client"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vscode"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2026-07-07T14:28:09Z"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"expires_at"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"location"</span><span class="p">:</span><span class="w"> </span><span class="s2">"notebook"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"notes"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"revoked_at"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"token"</span><span class="p">:</span><span class="w"> </span><span class="s2">"rGd3Gjts4zgRnqBELoCY7xuIQ_74P7Gm4OFmIXT0qgk"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"token_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"alice-vscode-notebook"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"token_sha256"</span><span class="p">:</span><span class="w"> </span><span class="s2">"b89321eda7bbdd9d7cdc2e2829aa6fe433d1c108205d7db647e7224d4c84984c"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"user"</span><span class="p">:</span><span class="w"> </span><span class="s2">"alice"</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -515,10 +515,10 @@ against the MCP server.</p></li>
 <h3><span class="section-number">10.8.1. </span>Configuring the token in Codex<a class="headerlink" href="#configuring-the-token-in-codex" title="Link to this heading">¶</a></h3>
 <p>Codex can send the bearer token directly in the MCP server configuration.</p>
 <div class="highlight-toml notranslate"><div class="highlight"><pre><span></span><span class="k">[mcp_servers.my_smart_server]</span>
-<span class="n">url</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;http://&lt;my_host&gt;:&lt;my_port&gt;/mcp&quot;</span>
+<span class="n">url</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"http://&lt;my_host&gt;:&lt;my_port&gt;/mcp"</span>
 <span class="n">http_headers</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="n">Accept</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s2">&quot;application/json, text/event-stream&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="n">Authorization</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s2">&quot;Bearer rGd3Gjts4zgRnqBELoCY7xuIQ_74P7Gm4OFmIXT0qgk&quot;</span>
+<span class="w">        </span><span class="n">Accept</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s2">"application/json, text/event-stream"</span><span class="p">,</span>
+<span class="w">        </span><span class="n">Authorization</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s2">"Bearer rGd3Gjts4zgRnqBELoCY7xuIQ_74P7Gm4OFmIXT0qgk"</span>
 <span class="w">        </span><span class="p">}</span>
 </pre></div>
 </div>
@@ -530,12 +530,12 @@ that outgoing requests include an <code class="wtrl_lit docutils literal notrans
 header. The exact file or dialog depends on the Claude integration version,
 but the token value itself is the same.</p>
 <div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;mcpServers&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;my_smart_server&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;http&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;url&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;http://&lt;my_host&gt;:&lt;my_port&gt;/mcp&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;headers&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="nt">&quot;Authorization&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Bearer rGd3Gjts4zgRnqBELoCY7xuIQ_74P7Gm4OFmIXT0qgk&quot;</span>
+<span class="w">  </span><span class="nt">"mcpServers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"my_smart_server"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://&lt;my_host&gt;:&lt;my_port&gt;/mcp"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">"Authorization"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Bearer rGd3Gjts4zgRnqBELoCY7xuIQ_74P7Gm4OFmIXT0qgk"</span>
 <span class="w">      </span><span class="p">}</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">}</span>
@@ -550,16 +550,16 @@ supports custom HTTP headers. Add an <code class="wtrl_lit docutils literal notr
 header to the server configuration and point the client at the MCP URL.
 The following pattern has been tested successfully with VS Code version 1.115.0:</p>
 <div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;servers&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;my_smart_server&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">&quot;url&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;http://&lt;my_host&gt;:&lt;my_port&gt;/mcp&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;http&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;headers&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="nt">&quot;Authorization&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Bearer rGd3Gjts4zgRnqBELoCY7xuIQ_74P7Gm4OFmIXT0qgk&quot;</span>
+<span class="w">  </span><span class="nt">"servers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"my_smart_server"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://&lt;my_host&gt;:&lt;my_port&gt;/mcp"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">"Authorization"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Bearer rGd3Gjts4zgRnqBELoCY7xuIQ_74P7Gm4OFmIXT0qgk"</span>
 <span class="w">      </span><span class="p">}</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">},</span>
-<span class="nt">&quot;inputs&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span>
+<span class="nt">"inputs"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -620,7 +620,7 @@ The following pattern has been tested successfully with VS Code version 1.115.0:
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#tools">10.3. Tools</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#typical-agent-workflow">10.4. Typical agent workflow</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#using-the-mcp-server-in-vscode">10.5. Using the MCP-server in VS Code</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#using-the-mcp-server-in-vs-code">10.5. Using the MCP-server in VS Code</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#server-error-messages">10.6. Server error messages</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#running-the-mcp-server-in-a-docker-container">10.7. Running the MCP Server in a Docker Container</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#bake-mode-bake-roots-default">10.7.1. Bake Mode (<code class="wtrl_opt docutils literal notranslate"><span class="pre">--bake-roots</span></code>, default)</a></li>
