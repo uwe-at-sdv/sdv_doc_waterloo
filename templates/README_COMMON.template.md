@@ -2,10 +2,11 @@
 
 Waterloo is under active development. Recent milestones include:
 
+* MCP-Service with bearer-token authentication
+
 Current work focuses on the MCP server:
 
-* Bearer-token authentication
-* Docker deployment
+* Authorizing JSON - generating docstring from special JSON data, for LLMs.
 * Administration tooling
 
 ### Quick tutorials
