@@ -32,7 +32,7 @@ PATH_VSCODE =		PATH_IDE_PLUGINS / "vscode"
 # on PATH setup.
 WATERLINT = (sys.executable, "-m", "sdv.doc.waterloo.waterlint")
 
-def run_waterlint(*args: str) -> subprocess.CompletedProcess[str]:
+def run_waterlint(*args: str, input_text: str | None = None) -> subprocess.CompletedProcess[str]:
 	"""Run waterlint with project-local PYTHONPATH and return completed process."""
 	env = os.environ.copy()
 	env["PYTHONPATH"] = os.pathsep.join([str(ROOT / "src"), env.get("PYTHONPATH", "")])
@@ -43,6 +43,7 @@ def run_waterlint(*args: str) -> subprocess.CompletedProcess[str]:
 		cmd,
 		stdout=subprocess.PIPE,
 		stderr=subprocess.PIPE,
+		input=input_text,
 		text=True,
 		check=False,
 		env=env,

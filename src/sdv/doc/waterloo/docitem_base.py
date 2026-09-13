@@ -31,22 +31,6 @@ from sdv.doc.waterloo.docitem_diagnostics import (
 )
 
 #===== Keywords ===============================================#
-# By Sequence we make sure that nothing can be appended
-# or removed. With List this would not be guaranteed.
-# Another interesting variant would be frozenset.
-KEYWORDS_OF_NORMATIVITY: Final[Sequence[str]] = (
-	"|must|",
-	"|Must|",
-	"|must_not|",
-	"|Must_not|",
-	"|should|",
-	"|Should|",
-	"|should_not|",
-	"|Should_not|",
-	"|may|",
-	"|May|",
-	)
-
 RE_PARTIAL_NORMATIVITY_PATTERN_A_COMPILED: Final[Sequence[re.Pattern[str]]] = (
 	re.compile(r"\|[Mm]ust\|\s+not\b"),
 	re.compile(r"\|[Ss]hould\|\s+not\b"),

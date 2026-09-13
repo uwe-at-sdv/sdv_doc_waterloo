@@ -51,6 +51,8 @@ Public_constants:
 		Regular expression for qualified identifiers. Undocumented: RE_QUALIFIED_IDENTIFIER_COMPILED, the precompiled version for performance.
 	RE_CSV_IDENTIFIERS:
 		Regular expression for comma-separated identifiers. Undocumented: RE_CSV_IDENTIFIERS_COMPILED, the precompiled version for performance.
+	KEYWORDS_OF_NORMATIVITY:
+		Canonical Waterloo tokens that make a statement normative.
 	WTRL_MARKUP_ROLES:
 		Regular expression for Waterloo markup roles in backtick markup.
 	RE_WTRL_MARKUP_BACKTICK:
@@ -333,6 +335,21 @@ RE_QUALIFIED_IDENTIFIER_COMPILED : Final[re.Pattern[str]] = re.compile(RE_QUALIF
 # Required for Definitions
 RE_CSV_IDENTIFIERS = r"[A-Za-z_][A-Za-z0-9_]*(\s*[,]\s*[A-Za-z_][A-Za-z0-9_]*)*"
 RE_CSV_IDENTIFIERS_COMPILED = re.compile(RE_CSV_IDENTIFIERS)
+
+# Keep the canonical tokens in the helper layer: parsing, validation, and
+# Authoring JSON all need the same definition of an explicit normative claim.
+KEYWORDS_OF_NORMATIVITY: Final[tuple[str, ...]] = (
+	"|must|",
+	"|Must|",
+	"|must_not|",
+	"|Must_not|",
+	"|should|",
+	"|Should|",
+	"|should_not|",
+	"|Should_not|",
+	"|may|",
+	"|May|",
+)
 
 # ANSI SGR escape sequences, e.g. "\x1b[31m"
 RE_ANSI_SGR: Final[str] = r"\x1b\[[0-9;]*m"

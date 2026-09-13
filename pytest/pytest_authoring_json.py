@@ -35,6 +35,11 @@ def test_authoring_schema_is_a_valid_draft_2020_12_schema() -> None:
 		"valid_function.json",
 		"valid_method.json",
 		"valid_inherited_method.json",
+		"maximal_module.json",
+		"maximal_class.json",
+		"maximal_function.json",
+		"maximal_method.json",
+		"maximal_inherited_method.json",
 	],
 )
 def test_authoring_json_valid_profiles_are_auto_detected(name: str) -> None:
@@ -51,6 +56,7 @@ def test_authoring_json_valid_profiles_are_auto_detected(name: str) -> None:
 		("invalid_physical_line.json", "JSCH-005"),
 		("invalid_list_item.json", "JSCH-005"),
 		("invalid_definitions_inherit.json", "JSCH-005"),
+		("invalid_definition_label.json", "JSCH-005"),
 		("invalid_unknown_category.json", "JSCH-003"),
 	],
 )

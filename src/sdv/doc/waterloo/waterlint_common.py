@@ -17,7 +17,7 @@ Public_functions:
 	recompute_walk_summary, build_tracer_json_doc, open_output_target,
 	write_text_output, write_json_output, emit_tracer
 Public_constants:
-	DIAG_TARGET_STDOUT, DIAG_TARGET_STDERR
+	INPUT_TARGET_STDIN, DIAG_TARGET_STDOUT, DIAG_TARGET_STDERR
 Function_overview:
 	tokens_to_json_pointer:
 		Convert a list of tokens to a JSON Pointer string according to RFC 6901.
@@ -69,7 +69,7 @@ from sdv.doc.waterloo.docitem_helper import (
 	tracer,
 	)
 
-#===== Typeng =================================================#
+#===== Typing =================================================#
 WtrlJsonNode_t: TypeAlias = Dict[str, "WtrlJsonNode_t"] | List["WtrlJsonNode_t"] | str | int | float | bool | None
 Origin_t: TypeAlias = Literal["parsing", "validation", "tool", "extension"]
 
@@ -108,6 +108,7 @@ class ParserParts_t(TypedDict):
 
 #===== Constants ==============================================#
 WTRL_DOCITEM_VERSION = docitem.__version__
+INPUT_TARGET_STDIN: Final[str] = "@STDIN"
 DIAG_TARGET_STDOUT: Final[str] = "@STDOUT"
 DIAG_TARGET_STDERR: Final[str] = "@STDERR"
 
@@ -292,10 +293,10 @@ def load_json(path: str | None) -> WtrlJsonNode_t:
 			extension
 	Contract:
 		general:
-			|Must| load JSON data from the specified file path or from standard input if the path is |None|.
+			|Must| load JSON data from the specified file path or from standard input if |var|`path` is |None| or |lit|`@STDIN`.
 	Parameters:
 		path:
-			|Must| be a string representing the path to the JSON file. If |None|, JSON is read from standard input.
+			|Must| be a string representing the path to the JSON file, |lit|`@STDIN`, or |None|. The latter two values select standard input.
 	Returns:
 		|Must| return the loaded JSON object.
 	Raises:
@@ -305,9 +306,10 @@ def load_json(path: str | None) -> WtrlJsonNode_t:
 			|May| raise if the specified file does not exist.
 	Notes:
 		General note:
-			If |var|`path` is |None|, the JSON is read from standard input.
+			|lit|`@STDIN` is the explicit, portable spelling for standard input.
+			|var|`None` remains the implicit spelling used by command options whose input defaults to standard input.
 	"""
-	if path:
+	if path and path != INPUT_TARGET_STDIN:
 		with open(path, "r", encoding="utf-8") as fh:
 			return cast(WtrlJsonNode_t, json.load(fh))
 	return cast(WtrlJsonNode_t, json.load(sys.stdin))

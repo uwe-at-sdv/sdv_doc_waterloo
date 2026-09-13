@@ -1,0 +1,21 @@
+{
+  "$schema": "https://sci-d-vis.com/schema/wtrl-authoring-object-json-0.1.0.schema.json",
+  "$id": "urn:waterlint:wtrl-authoring-object-json:maximal-method",
+  "__WTRL_CATEGORY__": "wtrl-authoring-object-json",
+  "__WTRL_VERSION__": {"schema": "0.1.0"},
+  "qualified_name": "demo.maximum_module.Widget.set_name",
+  "profile": "method",
+  "signature": "(self, name: str, strict: bool = True) -> None",
+  "doc": {
+    "Preamble": {"profile": "method", "normative_sections": ["Definitions", "Contract", "Description", "Parameters", "Returns", "Raises", "See_also"], "status": "experimental", "scope": ["extension"]},
+    "Definitions": {"Widget_name": [{"paragraph": "The current name stored by a Widget."}]},
+    "Terminology": {"strict update": [{"paragraph": "An update that rejects an empty name."}]},
+    "Contract": {"general": ["|Must| update the widget name."], "invariants": ["|Must| preserve widget identity."], "requires": ["|Must| require a valid |var|`name`."], "ensures": ["|Must| store |var|`name` as the current name."]},
+    "Description": [{"paragraph": "|Must| exercise all method-level Authoring JSON sections."}],
+    "Parameters": {"name": [{"paragraph": "The new name."}], "strict": [{"paragraph": "Whether an empty name is rejected."}]},
+    "Returns": [{"paragraph": "|None|."}],
+    "Raises": {"ValueError": [{"paragraph": "Raised for an invalid name."}]},
+    "Notes": {"Implementation": [{"paragraph": "The method fixture uses the extension scope."}]},
+    "See_also": ["demo.maximum_module.Widget"]
+  }
+}

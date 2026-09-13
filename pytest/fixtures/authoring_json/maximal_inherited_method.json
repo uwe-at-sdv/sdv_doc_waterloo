@@ -1,0 +1,18 @@
+{
+  "$schema": "https://sci-d-vis.com/schema/wtrl-authoring-object-json-0.1.0.schema.json",
+  "$id": "urn:waterlint:wtrl-authoring-object-json:maximal-inherited-method",
+  "__WTRL_CATEGORY__": "wtrl-authoring-object-json",
+  "__WTRL_VERSION__": {"schema": "0.1.0"},
+  "qualified_name": "demo.maximum_module.SpecialWidget.set_name",
+  "profile": "inherited_method",
+  "signature": "(self, name: str, strict: bool = True) -> None",
+  "doc": {
+    "Preamble": {"profile": "inherited_method", "normative_sections": ["Definitions", "Contract", "Description", "See_also"], "scope": ["public"]},
+    "Definitions": {"Widget_name": [{"paragraph": "The inherited current-name concept."}]},
+    "Terminology": {"special widget": [{"paragraph": "A Widget with specialized behavior."}]},
+    "Contract": {"general": ["|Must| preserve the inherited name-update behavior."], "base": "demo.maximum_module.Widget.set_name"},
+    "Description": [{"paragraph": "|Must| exercise all inherited-method Authoring JSON sections."}],
+    "Notes": {"Inheritance": [{"paragraph": "The base reference is checked later against Python context."}]},
+    "See_also": ["demo.maximum_module.Widget.set_name"]
+  }
+}

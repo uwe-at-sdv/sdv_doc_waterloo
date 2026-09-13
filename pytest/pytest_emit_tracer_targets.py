@@ -8,12 +8,27 @@ import json
 import sys
 
 from sdv.doc.waterloo.docitem_helper import tracer
-from sdv.doc.waterloo.waterlint_common import DIAG_TARGET_STDERR, DIAG_TARGET_STDOUT, emit_tracer
+from sdv.doc.waterloo.waterlint_common import (
+	DIAG_TARGET_STDERR,
+	DIAG_TARGET_STDOUT,
+	INPUT_TARGET_STDIN,
+	emit_tracer,
+	load_json,
+)
 
 
 class _TTYStringIO(io.StringIO):
 	def isatty(self) -> bool:
 		return True
+
+
+def test_load_json_supports_explicit_and_implicit_stdin(monkeypatch) -> None:
+	"""Both public spellings for JSON standard input must remain equivalent."""
+	monkeypatch.setattr(sys, "stdin", io.StringIO('{"source": "explicit"}'))
+	assert load_json(INPUT_TARGET_STDIN) == {"source": "explicit"}
+
+	monkeypatch.setattr(sys, "stdin", io.StringIO('{"source": "implicit"}'))
+	assert load_json(None) == {"source": "implicit"}
 
 
 def test_emit_tracer_supports_special_stream_targets(monkeypatch) -> None:

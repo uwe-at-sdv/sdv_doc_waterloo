@@ -153,6 +153,10 @@
       "type": "string",
       "pattern": "^[A-Za-z_][A-Za-z0-9_]*(?:\\.[A-Za-z_][A-Za-z0-9_]*)*$"
     },
+    "csv_identifiers": {
+      "type": "string",
+      "pattern": "^[A-Za-z_][A-Za-z0-9_]*(?:\\s*,\\s*[A-Za-z_][A-Za-z0-9_]*)*$"
+    },
     "logical_text": {
       "type": "string",
       "minLength": 1,
@@ -261,7 +265,7 @@
       "propertyNames": {
         "allOf": [
           {
-            "$ref": "#/$defs/logical_text"
+            "$ref": "#/$defs/csv_identifiers"
           },
           {
             "not": {

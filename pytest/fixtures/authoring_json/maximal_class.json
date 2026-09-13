@@ -1,0 +1,26 @@
+{
+  "$schema": "https://sci-d-vis.com/schema/wtrl-authoring-object-json-0.1.0.schema.json",
+  "$id": "urn:waterlint:wtrl-authoring-object-json:maximal-class",
+  "__WTRL_CATEGORY__": "wtrl-authoring-object-json",
+  "__WTRL_VERSION__": {"schema": "0.1.0"},
+  "qualified_name": "demo.maximum_module.Widget",
+  "profile": "class",
+  "doc": {
+    "Preamble": {"profile": "class", "normative_sections": ["Definitions", "Contract", "Description", "Derived_from", "Factory", "Public_classes", "Public_methods", "Public_types", "Public_variables", "Public_constants", "See_also"], "scope": ["public"]},
+    "Definitions": {"Widget": [{"paragraph": "A mutable demonstration object."}]},
+    "Terminology": {"mode": [{"paragraph": "A widget operating mode."}]},
+    "Contract": {"general": ["|Must| represent a maximum demonstration widget."], "constructor": ["|Must| create a usable widget."], "traits": ["final"]},
+    "Description": [{"paragraph": "|Must| expose every class-level Authoring JSON section."}],
+    "Derived_from": ["demo.base.BaseWidget"],
+    "Factory": {"demo.maximum_module.make_widget": [{"paragraph": "Create a Widget."}]},
+    "Public_classes": ["demo.maximum_module.Widget.Helper"],
+    "Class_overview": {"Helper": [{"paragraph": "A nested helper class."}]},
+    "Public_methods": ["demo.maximum_module.Widget.reset"],
+    "Method_overview": {"reset": [{"paragraph": "Reset the widget state."}]},
+    "Public_types": {"Mode": [{"paragraph": "The available widget modes."}]},
+    "Public_variables": {"name": [{"paragraph": "The current widget name."}]},
+    "Public_constants": {"DEFAULT_NAME": [{"paragraph": "The default widget name."}]},
+    "Notes": {"Implementation": [{"paragraph": "This fixture is intentionally comprehensive."}]},
+    "See_also": ["demo.maximum_module.make_widget"]
+  }
+}

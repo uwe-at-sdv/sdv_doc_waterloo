@@ -1,0 +1,24 @@
+{
+  "$schema": "https://sci-d-vis.com/schema/wtrl-authoring-object-json-0.1.0.schema.json",
+  "$id": "urn:waterlint:wtrl-authoring-object-json:maximal-module",
+  "__WTRL_CATEGORY__": "wtrl-authoring-object-json",
+  "__WTRL_VERSION__": {"schema": "0.1.0"},
+  "qualified_name": "demo.maximum_module",
+  "profile": "module",
+  "doc": {
+    "Preamble": {"profile": "module", "normative_sections": ["Definitions", "Contract", "Description", "Public_classes", "Public_functions", "Public_types", "Public_variables", "Public_constants", "See_also"], "scope": ["public"]},
+    "Definitions": {"Widget": [{"paragraph": "A demonstration widget."}]},
+    "Terminology": {"consumer": [{"paragraph": "A caller of this module."}]},
+    "Contract": {"general": ["|Must| provide the maximum module demonstration."]},
+    "Description": [{"paragraph": "|Must| expose all module-level Authoring JSON sections."}, {"list": [{"text": "A top-level item.", "items": [{"text": "A nested item."}]}]}],
+    "Public_classes": ["demo.maximum_module.Widget"],
+    "Class_overview": {"Widget": [{"paragraph": "The public demonstration class."}]},
+    "Public_functions": ["demo.maximum_module.load_widget"],
+    "Function_overview": {"load_widget": [{"paragraph": "Load one widget."}]},
+    "Public_types": {"WidgetMode": [{"paragraph": "A mode used by Widget."}]},
+    "Public_variables": {"default_mode": [{"paragraph": "The default widget mode."}]},
+    "Public_constants": {"MAX_WIDGETS": [{"paragraph": "The maximum number of widgets."}]},
+    "Notes": {"Usage": [{"paragraph": "This fixture deliberately exercises every module section."}]},
+    "See_also": ["demo.maximum_module.Widget"]
+  }
+}

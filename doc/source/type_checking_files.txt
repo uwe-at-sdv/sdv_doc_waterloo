@@ -13,6 +13,7 @@ sdv/doc/waterloo/mcp/sdv_tty_util_table.py
 sdv/doc/waterloo/waterlint_explain_section.py
 sdv/doc/waterloo/docitem_preamble.py
 sdv/doc/waterloo/docitem_docstring.py
+sdv/doc/waterloo/waterlint_authoring.py
 sdv/doc/waterloo/waterlint_gen_example_template_json.py
 sdv/doc/waterloo/docitem_validator.py
 sdv/doc/waterloo/waterlint_common.py

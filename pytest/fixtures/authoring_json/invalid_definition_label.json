@@ -1,0 +1,13 @@
+{
+  "$schema": "https://sci-d-vis.com/schema/wtrl-authoring-object-json-0.1.0.schema.json",
+  "$id": "urn:waterlint:wtrl-authoring-object-json:invalid-definition-label",
+  "__WTRL_CATEGORY__": "wtrl-authoring-object-json",
+  "__WTRL_VERSION__": {"schema": "0.1.0"},
+  "qualified_name": "demo.module",
+  "profile": "module",
+  "doc": {
+    "Preamble": {"profile": "module", "normative_sections": ["Definitions", "Contract"]},
+    "Definitions": {"not a definition label": [{"paragraph": "Invalid."}]},
+    "Contract": {"general": ["|Must| reject an invalid definition label."]}
+  }
+}

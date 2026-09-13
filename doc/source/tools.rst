@@ -69,6 +69,13 @@ commands report argument and lookup failures through the tracer and honor
 * [JSCH-700] -- Unspecified error during JSON rendering.
 * [JSCH-800] -- Unspecified JSON schema exception.
 
+.. rubric:: Authoring JSON rendering (render-docstring)
+
+* [JIDO-000] -- Unspecified catch-all error while rendering an Authoring JSON document.
+* [JIDO-001] -- The Authoring JSON document is schema-valid but violates source-independent Waterloo semantics.
+* [JIDO-002] -- The input JSON document is not an Authoring JSON document.
+* [JIDO-003] -- The Authoring JSON document cannot be read or rendered, or the rendered docstring cannot be written.
+
 .. rubric:: JSON TOC pointer consistency
 
 * [JPTR-001] -- A pointer in :wtrl_attr:`__WTRL_TOC_MODULES__` is invalid or does not resolve.

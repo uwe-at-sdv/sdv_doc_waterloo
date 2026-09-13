@@ -1,0 +1,21 @@
+{
+  "$schema": "https://sci-d-vis.com/schema/wtrl-authoring-object-json-0.1.0.schema.json",
+  "$id": "urn:waterlint:wtrl-authoring-object-json:maximal-function",
+  "__WTRL_CATEGORY__": "wtrl-authoring-object-json",
+  "__WTRL_VERSION__": {"schema": "0.1.0"},
+  "qualified_name": "demo.maximum_module.load_widget",
+  "profile": "function",
+  "signature": "(path: str, strict: bool = True) -> Widget",
+  "doc": {
+    "Preamble": {"profile": "function", "normative_sections": ["Definitions", "Contract", "Description", "Parameters", "Returns", "Raises", "See_also"], "status": "stable", "scope": ["public"]},
+    "Definitions": {"Widget": [{"paragraph": "The loaded demonstration object."}]},
+    "Terminology": {"strict mode": [{"paragraph": "A mode that rejects incomplete input."}]},
+    "Contract": {"general": ["|Must| load one widget."], "invariants": ["|Must| preserve the input file."], "requires": ["|Must| require |var|`path` to name a readable file."], "ensures": ["|Must| return a usable Widget instance."]},
+    "Description": [{"paragraph": "|Must| exercise all function-level Authoring JSON sections."}],
+    "Parameters": {"path": [{"paragraph": "The source file path."}], "strict": [{"list": [{"text": "Whether malformed content is rejected."}]}]},
+    "Returns": [{"paragraph": "The loaded widget."}],
+    "Raises": {"ValueError": [{"paragraph": "Raised for malformed input."}], "OSError": [{"paragraph": "Raised when the source cannot be read."}]},
+    "Notes": {"Usage": [{"paragraph": "The signature is informative at this stage."}]},
+    "See_also": ["demo.maximum_module.Widget"]
+  }
+}

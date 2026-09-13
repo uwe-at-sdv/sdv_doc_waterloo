@@ -18,6 +18,7 @@ Public_functions:
 	coverage_command,
 	extract_command,
 	validate_json_command,
+	render_docstring_command,
 	render_json_command,
 	version_command,
 	version_json_command
@@ -70,7 +71,8 @@ try:
 except Exception:
 	_HAS_PYGMENTS = False
 
-__version__ = "0.22.3"
+__version__ = "0.23.0"
+# - 0.23.0 [2026-09-13] Subcommand 'render-docstring' - render a docstring from Authoring JSON.
 # - 0.22.3 [2026-09-10] Fixed --basedir resolution for split PEP 420 namespace packages. Waterloo no longer hides sibling namespace portions when constructing intermediate package prefixes.
 # - 0.22.2 [2026-09-10] Bugfix github issue #1
 # - 0.22.1 [2026-07-31] Design details and bugfixes in render-html5
@@ -152,6 +154,7 @@ with contextlib.redirect_stdout(sys.stderr):
 	import sdv.doc.waterloo.docitem_convert as cvrt
 	import sdv.doc.waterloo.waterlint_carve as carve
 	import sdv.doc.waterloo.waterlint_common as wl_common
+	import sdv.doc.waterloo.waterlint_authoring as authoring
 	import sdv.doc.waterloo.waterlint_gen_full as gfull
 	import sdv.doc.waterloo.waterlint_gen_minimal as gmin
 	import sdv.doc.waterloo.waterlint_gen_example_template_json as gext
@@ -1148,6 +1151,102 @@ def validate_json_command(args: argparse.Namespace) -> int:
 		return 1
 	except Exception as exc:  # pragma: no cover - defensive
 		tr.add_error("JSCH-000", "tool", "[" + docitem.get_obj_fully_qualified_name(exc) + "] " + str(exc))
+		_emit_tracer(tr, out_diag, out_diag_json)
+		return 1
+
+	_emit_tracer(tr, out_diag, out_diag_json)
+	return _final_exit_code(0, tr, args.fail_on_warning)
+
+#===== Render docstring ======================================#
+
+def render_docstring_command(args: argparse.Namespace) -> int:
+	r"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+		scope:
+			extension
+	Contract:
+		general:
+			|Must| validate and render exactly one Waterloo Authoring JSON document as a raw Waterloo docstring.
+			|Must_not| resolve Python objects or modify source files.
+	Parameters:
+		args:
+			Parsed render-docstring command line options.
+			|Must| provide |attr|`input_file`, |attr|`out_file`, |attr|`indent_unit`, |attr|`indentation`, and |attr|`width`.
+			|Must| provide global tracer options |attr|`out_diag`, |attr|`out_diag_json`, and |attr|`fail_on_warning`.
+	Returns:
+		|Must| return zero after successful rendering, otherwise a non-zero exit status.
+	Raises:
+		|Must_not| raise expected input, schema, semantic, or rendering errors; those |Must| be reported through the tracer.
+	"""
+	tr = tracer()
+	out_diag = getattr(args, "out_diag", None)
+	out_diag_json = getattr(args, "out_diag_json", None)
+	input_file = getattr(args, "input_file", wl_common.INPUT_TARGET_STDIN)
+	input_label = input_file if isinstance(input_file, str) and input_file else wl_common.INPUT_TARGET_STDIN
+
+	try:
+		with traced_section(tr, input_label):
+			tr.add_info(f"rendering docstring from '{input_label}'")
+			raw_document = _load_json(input_file)
+			if not isinstance(raw_document, dict):
+				tr.add_error("JSCH-003", "tool", "Authoring JSON input must be an object.")
+				_emit_tracer(tr, out_diag, out_diag_json)
+				return 1
+
+			try:
+				schema_path, category = _infer_schema_path_from_doc(raw_document)
+			except Exception as exc:
+				tr.add_error("JSCH-003", "tool", f"Cannot infer Authoring JSON schema: {exc}")
+				_emit_tracer(tr, out_diag, out_diag_json)
+				return 1
+			if category != "wtrl-authoring-object-json":
+				tr.add_error(
+					"JIDO-002", "tool",
+					f"Input JSON category '{category}' is not 'wtrl-authoring-object-json'.",
+				)
+				_emit_tracer(tr, out_diag, out_diag_json)
+				return 1
+
+			_validate_json_against_schema(tr, raw_document, str(schema_path))
+			if tr.has_errors():
+				_emit_tracer(tr, out_diag, out_diag_json)
+				return 1
+
+			document = authoring.load_authoring_document(cast(dict[str, object], raw_document))
+			for issue in authoring.validate_authoring_document(document):
+				tr.add_error(
+					"JIDO-001", "tool", issue.message,
+					{"path": issue.path, "issue": issue.code},
+				)
+			if tr.has_errors():
+				_emit_tracer(tr, out_diag, out_diag_json)
+				return 1
+
+			rendered = authoring.render_authoring_document(
+				document,
+				indent_unit=cast(typing.Literal["TAB", "SPC4"], args.indent_unit),
+				indentation=args.indentation,
+				width=args.width,
+			)
+			wl_common.write_text_output(rendered, args.out_file)
+	except json.decoder.JSONDecodeError as exc:
+		tr.add_error("JSCH-004", "tool", f"Input is not valid JSON: {exc}")
+		_emit_tracer(tr, out_diag, out_diag_json)
+		return 1
+	except OSError as exc:
+		tr.add_error("JIDO-003", "tool", f"Cannot read Authoring JSON or write rendered docstring: {exc}")
+		_emit_tracer(tr, out_diag, out_diag_json)
+		return 1
+	except ValueError as exc:
+		tr.add_error("JIDO-003", "tool", str(exc))
+		_emit_tracer(tr, out_diag, out_diag_json)
+		return 1
+	except Exception as exc:  # pragma: no cover - defensive
+		tr.add_error("JIDO-000", "tool", f"[{docitem.get_obj_fully_qualified_name(exc)}] {exc}")
 		_emit_tracer(tr, out_diag, out_diag_json)
 		return 1
 
@@ -2296,6 +2395,25 @@ def _build_parser() -> argparse.ArgumentParser:
 	aex_out.add_argument("--out-dir", dest="out_dir", metavar="DIR", help="Write updated JSON to DIR using input filename.")
 	add_example_json.add_argument("--debug", action="store_true", help="Emit debugging data to stderr (reserved)")
 
+#----- render-docstring ---------------------------------------#
+	render_docstring = subparsers.add_parser(
+		"render-docstring",
+		help="Render a raw Waterloo docstring from one Authoring JSON document.",
+		parents=[global_opts],
+		formatter_class=parser.formatter_class)
+	render_docstring.add_argument(
+		"--in",
+		dest="input_file",
+		metavar="FILE|@STDIN",
+		default=wl_common.INPUT_TARGET_STDIN,
+		help="Read Authoring JSON from FILE or @STDIN (default: @STDIN).",
+	)
+	render_docstring.add_argument("--out", dest="out_file", metavar="FILE", help="Write raw docstring to FILE instead of stdout.")
+	render_docstring.add_argument("--indent-unit", choices=["TAB", "SPC4"], default="TAB", help="Indentation unit for rendered lines (default: TAB).")
+	render_docstring.add_argument("--indentation", type=int, default=0, metavar="N", help="Leading indentation units for every rendered line (default: 0).")
+	render_docstring.add_argument("--width", type=int, default=88, metavar="N", help="Maximum rendered physical line width (default: 88).")
+	render_docstring.add_argument("--debug", action="store_true", help="Emit debugging data to stderr (reserved)")
+
 #----- render-json --------------------------------------------#
 	render_json = subparsers.add_parser(
 		"render-json",
@@ -2428,6 +2546,8 @@ def main(argv: Optional[list[str]] = None) -> int:
 		return extract_command(args)
 	if args.command == "validate-json":
 		return validate_json_command(args)
+	if args.command == "render-docstring":
+		return render_docstring_command(args)
 	if args.command == "add-example-json":
 		return add_example_json_command(args)
 	if args.command == "gen-example-template-json":
