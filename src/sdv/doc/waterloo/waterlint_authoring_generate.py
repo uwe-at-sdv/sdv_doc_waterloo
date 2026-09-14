@@ -46,7 +46,7 @@ def _build_tracer_json_doc(tr: tracer, waterlint_version: str) -> dict[str, Any]
 	return wl_common.build_tracer_json_doc(
 		tr,
 		schema_version=docitem.WTRL_TRACER_JSON_SCHEMA_VERSION,
-		waterloo_version=wl_common.WTRL_DOCITEM_VERSION,
+		waterloo_version=wl_common.WTRL_WATERLOO_VERSION,
 		id_prefix=f"urn:waterlint:wtrl-tracer-json:{waterlint_version}",
 	)
 

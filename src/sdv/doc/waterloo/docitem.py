@@ -250,61 +250,10 @@ import typing
 from types import FunctionType, ModuleType
 from contextlib import contextmanager
 
+# Kept for compatibility. The shared package version is defined in version.py.
+from sdv.doc.waterloo.version import __version__
 from sdv.doc.waterloo.docitem_docstring import *
 from sdv.doc.waterloo.docitem_validator import *
-
-__version__ = "0.13.1"
-# - 0.13.1 [2026-09-14] Authoring-JSON complete
-# - 0.13.0 [2026-09-13] waterlint render-docstring
-# - 0.12.16 [2026-09-12] Concept for Authoring-JSON
-# - 0.12.15 [2026-09-11] Bugfix in wtrl_mcp packaging
-# - 0.12.14 [2026-09-10] Bugfix in waterlint_common.py, name 
-# - 0.12.13 [2026-09-10] Bugfix github issue #1
-# - 0.12.12 [2026-07-26] Infrastructure of build_anchor-functions.
-# - 0.12.11 [2026-07-25] Added a function build_anchor_from_fully_qualified_name which helps in creating referentiable objects
-# - 0.12.10 [2026-07-22] Bugfix: docitem_helper.py: Caching now over IDs, not over objects.
-# - 0.12.9 [2026-07-21] Packaging details
-# - 0.12.8 [2026-07-20] PyPI packaging now per github workflow.
-# - 0.12.7 [2026-07-19] Bugfix RE_WTRL_ANGLE_WTRL_REF in docitem_helper.py.
-# - 0.12.6 [2026-07-18] Version bump: Sphinx extension moved to branch "sphinx".
-# - 0.12.5 [2026-07-17] Diagnostics improved for sections ..._overview, Public_...
-# - 0.12.4 [2026-07-10] Version bump for bugfix in wtrl_mcp_admin
-# - 0.12.3 [2026-07-09] Version bump for wtrl_mcp_admin: standardized diagnostics.
-# - 0.12.2 [2026-07-07] Version bump for MCP server: unique server identity
-# - 0.12.1 [2026-07-07] Fix in dependencies
-# - 0.12.0 [2026-07-07] Version Bump for MCP server: Bearer token authentication and tooling
-# - 0.11.1 [2026-07-04] Rule PNB-004 exceptions for quotes words: single, double, backtick.
-# - 0.11.0 [2026-07-03] Rule PNB-004 and pytests for PNB.
-# - 0.10.8 [2026-06-30] Added missing resources for PyPI.
-# - 0.10.7 [2026-06-30] Better handling for importlib errors
-# - 0.10.6 [2026-06-29]	Bugfix: CPVAR-005 and MPVAR-005 now allow annotated but uninstantiated variables, e.g. `x: int` without `x = 0`.
-# - 0.10.5 [2026-06-28] Refactoring for detailed parsing and validation messages complete
-# - 0.10.4 [2026-06-27] Removing Github workflow
-# - 0.10.3 [2026-06-27] Testing Github workflow
-# - 0.10.2 [2026-06-26] Upload-PyPI-Test
-# - 0.10.1 [2026-06-26] Upload-PyPI-Test
-# - 0.10.0 [2026-06-24]	Added DocSession for caching and other session data during docstring parsing and validation.
-#			A DocSession object is now required for parse_indent_docstring and validate_docstring.
-# - 0.9.0 [2026-06-21]	Lots of minor changes and improvements, especially in docitem_validator.py, but also in docitem_helper.py. See commit history for details.
-# - 0.8.1 [2026-05-22]	Bugfix: Enforce LQID-002 in a tolerant way, new rule LQID-006.
-# - 0.8.0 [2026-05-08]	read AST in order to extract docstrings since __doc__ has become unusable as of Python 3.13.
-# - 0.7.0 [2026-05-08]	Rules DER-010 to DER-013 and implementation in docitem_validator.py "Derived_from"
-# - 0.6.1 [2026-04-02]	Semantic role 'key' for keyboard
-# - 0.6.0 [2026-03-25]	Definitions now Term plus Variations.
-# - 0.5.6 [2026-03-20]	Rule SEE-006 restricted to documentable objects.
-# - 0.5.5 [2026-03-03]	Clickable nodes in Sphinx output.
-# - 0.5.4 [2026-02-25]	Doctests; Documentation review
-# - 0.5.3 [2026-02-24]	Doctests; Documentation review
-# - 0.5.2 [2026-02-22]	Sections "Definitions" and "Terminology": Rules tightened
-# - 0.5.1 [2026-02-22]	Subsection "_inherited" in "Definitions": JSON rendering implemented.
-# - 0.5.0 [2026-02-21]	Subsection "_inherited" in "Definitions"; Specification, Sphinx, examples.
-# - 0.4.1 [2026-02-20]	Improved rendering of "Factory" in sphinx extension; Tests for matching profile vs object, e.g. PRE-019.
-# - 0.4.0 [2026-02-19]	Major changes in class tracer: Debugging, detailed error records.
-# - 0.3.0 [2026-02-18]	Partial Normativity Detection (PNB-rules)
-# - 0.2.0 [2026-02-15]	Sphinx: Clickable references in Public_*, *_overview, See_also, and Derived_from;
-#			JSON: trait `generator`.
-# - 0.1.2 [2026-02-14]	Moved Waterloo specific stuff away from docitem_sphinx.py
-# - 0.1.1 [2026-02-13]	Commented versioning starts
 
 if __name__ == "__main__":
 	tr = tracer()

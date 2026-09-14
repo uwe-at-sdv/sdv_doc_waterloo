@@ -83,7 +83,7 @@ def _make_tree_walk_json(tmp_path: Path) -> Path:
 	doc = {
 		"$schema": "https://sci-d-vis.com/schema/wtrl-walk-json-0.0.1.schema.json",
 		"$id": "urn:waterlint:tree:test",
-		"__WTRL_VERSION__": {"waterloo": wl_common.WTRL_DOCITEM_VERSION, "schema": "0.0.1"},
+		"__WTRL_VERSION__": {"waterloo": wl_common.WTRL_WATERLOO_VERSION, "schema": "0.0.1"},
 		"__WTRL_META__": {
 			"generated_at": "2026-05-25T00:00:00+02:00",
 			"generator": "test",

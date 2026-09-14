@@ -10,8 +10,8 @@ from pathlib import Path
 import re
 import sys
 
-docitem = Path(sys.argv[1]) / "src" / "sdv" / "doc" / "waterloo" / "docitem.py"
-match = re.search(r'^__version__\s*=\s*"([^"]+)"', docitem.read_text(), re.M)
+version_file = Path(sys.argv[1]) / "src" / "sdv" / "doc" / "waterloo" / "version.py"
+match = re.search(r'^__version__\s*=\s*"([^"]+)"', version_file.read_text(), re.M)
 if not match:
 	raise SystemExit("Could not determine sdv-doc-waterloo version.")
 print(match.group(1))

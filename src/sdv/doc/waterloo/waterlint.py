@@ -40,7 +40,7 @@ from pathlib import Path
 from types import ModuleType
 from typing import Any, Callable, Dict, Final, Iterable, List, Optional, Tuple, cast
 from sdv.doc.waterloo.waterlint_common import (
-	WTRL_DOCITEM_VERSION,
+	WTRL_WATERLOO_VERSION,
 	WTRL_JSON_SCHEMA_VERSION,
 	WTRL_EXAMPLE_REFS_JSON_SCHEMA_VERSION,
 	WTRL_WALK_JSON_SCHEMA_VERSION,
@@ -52,6 +52,8 @@ from sdv.doc.waterloo.waterlint_common import (
 	)
 import sdv.doc.waterloo.mcp
 from sdv.doc.waterloo.docitem import traced_section
+# Kept for compatibility. The shared package version is defined in version.py.
+from sdv.doc.waterloo.version import __version__
 from python_waterloo_lexer import __version__ as WTRL_PYTHON_WATERLOO_LEXER_VERSION
 
 
@@ -70,79 +72,6 @@ try:
 	_HAS_PYGMENTS = True
 except Exception:
 	_HAS_PYGMENTS = False
-
-__version__ = "0.23.1"
-# - 0.23.1 [2026-09-14] Authoring JSON: documentation, mcp-prompt, commands gen-[full|miniml]-authoring-json.
-# - 0.23.0 [2026-09-13] Subcommand 'render-docstring' - render a docstring from Authoring JSON.
-# - 0.22.3 [2026-09-10] Fixed --basedir resolution for split PEP 420 namespace packages. Waterloo no longer hides sibling namespace portions when constructing intermediate package prefixes.
-# - 0.22.2 [2026-09-10] Bugfix github issue #1
-# - 0.22.1 [2026-07-31] Design details and bugfixes in render-html5
-# - 0.22.0 [2026-07-30] Dark theme for render-html5 output.
-# - 0.21.0 [2026-07-28]	Option --include-qid-prefix for subcommands walk and render-json
-# - 0.20.6 [2026-07-27]	Improved resolution for linked objects.
-# - 0.20.5 [2026-07-27]	Factory items now clickable.
-# - 0.20.4 [2026-07-05]	Bugfixes in render-docker.
-# - 0.20.3 [2026-07-04]	render-json: legend updated.
-# - 0.20.2 [2026-07-04]	More styles and inline markup for render-html5.
-# - 0.20.1 [2026-07-04]	BNP-004 narrowed.
-# - 0.20.0 [2026-07-03]	New rule BNP-004
-# - 0.19.3 [2026-06-29]	Bugfix: CPVAR-005 and MPVAR-005 now allow annotated but uninstantiated variables, e.g. `x: int` without `x = 0`.
-# - 0.19.2 [2026-06-28] Refactoring for detailed parsing and validation messages complete
-# - 0.19.1 [2026-06-26] Add docstrings for version-commands; added wtrl_mcp-Version to version-json output.
-# - 0.19.0 [2026-06-25] Subcommand 'extract' now with syntaax highlighting in terminal output; option --syntax-hl-style to select a Pygments style.
-# - 0.18.0 [2026-06-25] Subcommand 'render-json': Validation and propagation of errors as standardized warning;
-#			Option --ignore (as in validate and coverage) to ignore certain warning codes.
-# - 0.17.0 [2026-06-22] Enhanced JSON output for types, constants, variables;
-#			Improved html5-rendering for these categories.
-# - 0.16.3 [2026-06-18] Bugfix which caused a missing error message in case of non-existing path for --basedir.
-# - 0.16.2 [2026-06-15]	More details in error message (complete);bugfixes in validation.
-# - 0.16.1 [2026-06-11]	More details in error message (in progress)
-# - 0.16.0 [2026-06-10]	More details in error message (in progress)
-# - 0.15.0 [2026-06-05]	Subcommand 'render-docker'
-# - 0.14.1 [2026-05-26]	Subcommand 'render-html5': Entries in Public_* and *_overview sections are now links.
-# - 0.14.0 [2026-05-25]	Subcommand `carve` now final, including exhaustive pytests.
-# - 0.13.3 [2026-05-24]	Subcommands `gen-full` and `gen-minimal` moved to waterlint_generate_common.py, waterlint_gen_minimal.py and waterlint_gen_full.py.
-#			Documentation in waterlint_gen_full.py and waterlint_gen_minimal.py
-#			Updated waterlint_render_html5.py.
-# - 0.13.2 [2026-05-23]	Subcommand `walk` moved to waterlint_walk.py; more functions in waterlint_common.py
-# - 0.13.1 [2026-05-22]	Moved common functions from waterlint.py and waterlint_carve.py to waterlint_common.py;
-#			bugfix in docitem.py.
-#			documentation in waterlint_carve.py and waterlint_render_html5.py
-# - 0.13.0 [2026-05-21]	Subcommand 'carve': Options --in, --out, --out-diag, --out-diag-json, --simplify,.--recompute
-# - 0.12.0 [2026-05-20]	Subcommand 'render-json': Option --in.
-# - 0.11.2 [2026-05-19]	Subcommand 'walk': Option --sort.
-# - 0.11.1 [2026-05-18]	Pretty format for help text.
-# - 0.11.0 [2026-05-18]	Subcommand 'walk' MVP
-# - 0.10.0 [2026-05-15]	Major refactoring in docitem_helper.
-# - 0.9.2 [2026-05-10]	Minor fixes/changes in subcommand render-html5.
-# - 0.9.1 [2026-05-01]	Minor changes in static typing
-# - 0.9.0 [2026-04-25]	Refactoring render-html5: freeform sections
-# - 0.8.3 [2026-04-24]	Subcommand render-html5: --css and --additional-css are now independent options.
-#			Subcommand extract: diagnostics now aligned with other subcommands.
-# - 0.8.2 [2026-04-22]	Options --header-html und --additional-css for subcommand render-html5.
-# - 0.8.1 [2026-04-18]	Unique $id in add-example-json; MD5 replaced by SHA256 in JSON-artifacts.
-# - 0.8.0 [2026-04-17]	JSON Schema for example references: this affects
-#			waterlint add-example-json
-#			waterlint validate-json
-#			Automatic JSON Schema inference
-# - 0.7.1 [2026-04-17]	Public_types/constants/variables are now rendered as free-form text.
-# - 0.7.0 [2026-04-14]	Anchors for Definition Terms in render-html5.
-# - 0.6.5 [2026-03-26]	Navigation buttons in render-html5
-# - 0.6.4 [2026-03-20]	Analyze --ignore parameter upfront, no commas allowed.
-# - 0.6.3 [2026-03-19]	Subcommand render-html5: Option --no-render-preamble
-# - 0.6.2 [2026-03-19]	Subcommand render-html5: Types, Constants, Variables
-# - 0.6.1 [2026-03-19]	Subcommand render-html5: JS-code separated and moved to special directory.
-# - 0.6.0 [2026-03-18]	Subcommand add-example-json
-# - 0.5.0 [2026-03-05]	__WTRL_SCOPES__ in JSON which allows future customization of scopes.
-# - 0.4.0 [2026-02-22]	Subcommand render-json: Node "definition_inherited_from_module", see also sdv.doc.waterloo.docitem_convert.
-# - 0.3.0 [2026-02-19]	Several refactorings concerning error handling, raw and JSON.
-# - 0.2.4 [2026-02-12]	Subcommand render-json: traits, decorators, default output filename.
-# - 0.9.1 [2026-04-27]	Subcommand version-json now prints JSON with all schema categories.
-# - 0.2.3 [2026-02-12]	Subcommand version-json: prints only the JSON-schema version string.
-# - 0.2.2 [2026-02-12]	Subcommand version: prints only the waterlint version string.
-# - 0.2.1 [2026-02-12]	Subcommand validate-json: --schema is now optional; automatic detection applies.
-# - 0.2.0 [2026-02-12]	Subcommand list-schemas
-# - 0.1.0 [2026-02-12]	Versioning starts. Subcommands are "validate", "coverage", "extract", "validate-json", "render-json"
 
 _debug = False
 
@@ -235,7 +164,7 @@ def _build_tracer_json_doc(tr: tracer) -> dict[str, Any]:
 	return wl_common.build_tracer_json_doc(
 		tr,
 		schema_version=docitem.WTRL_TRACER_JSON_SCHEMA_VERSION,
-		waterloo_version=WTRL_DOCITEM_VERSION,
+		waterloo_version=WTRL_WATERLOO_VERSION,
 		id_prefix=f"urn:waterlint:wtrl-tracer-json:{__version__}",
 		include_debug=_debug,
 	)
@@ -1522,7 +1451,7 @@ def render_json_command(args: argparse.Namespace) -> int:
 		
 #..... VERSION ................................................#
 		tree_full["__WTRL_VERSION__"] = {
-			"waterloo": WTRL_DOCITEM_VERSION,
+			"waterloo": WTRL_WATERLOO_VERSION,
 			"schema": WTRL_JSON_SCHEMA_VERSION,
 			}
 #..... META ...................................................#

@@ -94,7 +94,7 @@ def _emit_tracer(tr: tracer, out_path: str | None, out_json_path: str | None = N
 		callback_build_json_doc=lambda tr_: wl_common.build_tracer_json_doc(
 			tr_,
 			schema_version=WTRL_TRACER_JSON_SCHEMA_VERSION,
-			waterloo_version=wl_common.WTRL_DOCITEM_VERSION,
+			waterloo_version=wl_common.WTRL_WATERLOO_VERSION,
 			id_prefix="urn:waterlint:wtrl-tracer-json:render-docker",
 			include_debug=False,
 		),

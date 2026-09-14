@@ -64,7 +64,7 @@ include = ["sdv*"]
 namespaces = true
 
 [tool.setuptools.dynamic]
-version = { attr = "sdv.doc.waterloo.docitem.__version__" }
+version = { attr = "sdv.doc.waterloo.version.__version__" }
 
 # After installation with pip, these go to site-packages/sdv/doc/waterloo/.
 # Include the PEP 561 marker file. The presence of py.typed tells type

@@ -61,6 +61,7 @@ import jsonschema.exceptions
 from jsonschema import Draft202012Validator
 
 import sdv.doc.waterloo.docitem as docitem
+from sdv.doc.waterloo.version import __version__ as WTRL_WATERLOO_VERSION
 
 from sdv.doc.waterloo.docitem_helper import (
 	RE_ANSI_SGR_COMPILED,
@@ -107,7 +108,6 @@ class ParserParts_t(TypedDict):
 #==============================================================#
 
 #===== Constants ==============================================#
-WTRL_DOCITEM_VERSION = docitem.__version__
 INPUT_TARGET_STDIN: Final[str] = "@STDIN"
 DIAG_TARGET_STDOUT: Final[str] = "@STDOUT"
 DIAG_TARGET_STDERR: Final[str] = "@STDERR"

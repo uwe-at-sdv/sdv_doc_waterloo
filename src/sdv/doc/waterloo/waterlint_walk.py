@@ -29,7 +29,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any, cast, Dict, List, Literal, Tuple, TypeAlias
 from sdv.doc.waterloo.waterlint_common import (
-	WTRL_DOCITEM_VERSION,
+	WTRL_WATERLOO_VERSION,
 	WTRL_JSON_SCHEMA_VERSION,
 	WTRL_EXAMPLE_REFS_JSON_SCHEMA_VERSION,
 	WTRL_WALK_JSON_SCHEMA_VERSION,
@@ -71,7 +71,7 @@ def _build_tracer_json_doc(tr: tracer, include_debug: bool = False) -> dict[str,
 	return wl_common.build_tracer_json_doc(
 		tr,
 		schema_version=docitem.WTRL_TRACER_JSON_SCHEMA_VERSION,
-		waterloo_version=WTRL_DOCITEM_VERSION,
+		waterloo_version=WTRL_WATERLOO_VERSION,
 		id_prefix=f"urn:waterlint:wtrl-tracer-json:{__version__}",
 		include_debug=include_debug,
 	)
@@ -284,7 +284,7 @@ def _walk_build_json_doc(
 		"$schema": f"{WTRL_SCHEMA_URI_BASE}/wtrl-walk-json-{WTRL_WALK_JSON_SCHEMA_VERSION}.schema.json",
 		"$id": f"urn:waterlint:wtrl-walk-json:{__version__}:{datetime.now().strftime('%Y%m%d%H%M%S')}",
 		"__WTRL_VERSION__": {
-			"waterloo": WTRL_DOCITEM_VERSION,
+			"waterloo": WTRL_WATERLOO_VERSION,
 			"schema": WTRL_WALK_JSON_SCHEMA_VERSION,
 		},
 		"__WTRL_META__": {

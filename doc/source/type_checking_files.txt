@@ -22,6 +22,7 @@ sdv/doc/waterloo/docitem_contract.py
 sdv/doc/waterloo/docitem_tokenizer.py
 sdv/doc/waterloo/waterlint_gen_full.py
 sdv/doc/waterloo/docitem_helper.py
+sdv/doc/waterloo/version.py
 sdv/doc/waterloo/docitem_sections.py
 sdv/doc/waterloo/docitem.py
 sdv/doc/waterloo/waterlint.py

@@ -1323,7 +1323,7 @@ def _build_explain_tracer_json_doc(tr: Any, include_debug: bool = False) -> dict
 	return wl_common.build_tracer_json_doc(
 		tr,
 		schema_version=docitem.WTRL_TRACER_JSON_SCHEMA_VERSION,
-		waterloo_version=wl_common.WTRL_DOCITEM_VERSION,
+		waterloo_version=wl_common.WTRL_WATERLOO_VERSION,
 		id_prefix="urn:waterlint:wtrl-tracer-json:explain",
 		include_debug=include_debug,
 	)

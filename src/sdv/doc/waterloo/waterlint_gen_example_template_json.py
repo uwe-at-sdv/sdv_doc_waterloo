@@ -42,7 +42,7 @@ def _build_tracer_json_doc(tr: tracer, waterlint_version: str, include_debug: bo
 	return wl_common.build_tracer_json_doc(
 		tr,
 		schema_version=docitem.WTRL_TRACER_JSON_SCHEMA_VERSION,
-		waterloo_version=wl_common.WTRL_DOCITEM_VERSION,
+		waterloo_version=wl_common.WTRL_WATERLOO_VERSION,
 		id_prefix=f"urn:waterlint:wtrl-tracer-json:{waterlint_version}",
 		include_debug=include_debug,
 	)
@@ -78,7 +78,7 @@ def _render_example_refs_template(org_or_project: str = "none", domain: str = "l
 	nodes["$schema"] = f"{wl_common.WTRL_SCHEMA_URI_BASE}/wtrl-example-refs-json-{wl_common.WTRL_EXAMPLE_REFS_JSON_SCHEMA_VERSION}.schema.json"
 	nodes["$id"] = f"urn:{org_or_project}:{domain}:wtrl-example-refs-json:{wl_common.WTRL_EXAMPLE_REFS_JSON_SCHEMA_VERSION}"
 	nodes["__WTRL_VERSION__"] = {
-		"waterloo": wl_common.WTRL_DOCITEM_VERSION,
+		"waterloo": wl_common.WTRL_WATERLOO_VERSION,
 		"waterlint_min": __version__,
 		"schema": wl_common.WTRL_EXAMPLE_REFS_JSON_SCHEMA_VERSION,
 	}

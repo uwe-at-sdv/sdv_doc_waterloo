@@ -5,6 +5,8 @@ from __future__ import annotations
 
 import json
 
+from sdv.doc.waterloo import docitem, waterlint
+from sdv.doc.waterloo.version import __version__ as WATERLOO_VERSION
 from pytest_common import run_waterlint
 
 
@@ -12,8 +14,12 @@ def test_version_prints_plain_version_string() -> None:
 	res = run_waterlint("version")
 	assert res.returncode == 0, res.stderr
 	assert res.stderr == ""
-	assert res.stdout.strip()
-	assert "." in res.stdout.strip()
+	assert res.stdout.strip() == WATERLOO_VERSION
+
+
+def test_docitem_and_waterlint_versions_are_shared_package_aliases() -> None:
+	assert docitem.__version__ == WATERLOO_VERSION
+	assert waterlint.__version__ == WATERLOO_VERSION
 
 
 def test_help_is_available() -> None:
