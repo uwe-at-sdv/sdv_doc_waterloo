@@ -17,6 +17,7 @@ sdv/doc/waterloo/waterlint_authoring.py
 sdv/doc/waterloo/waterlint_gen_example_template_json.py
 sdv/doc/waterloo/docitem_validator.py
 sdv/doc/waterloo/waterlint_common.py
+sdv/doc/waterloo/waterlint_authoring_generate.py
 sdv/doc/waterloo/docitem_contract.py
 sdv/doc/waterloo/docitem_tokenizer.py
 sdv/doc/waterloo/waterlint_gen_full.py

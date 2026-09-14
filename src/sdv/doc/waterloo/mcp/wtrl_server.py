@@ -1208,7 +1208,7 @@ def load_prompts() -> list[Prompt]:
 	Notes:
 		Bundled prompts:
 			- `docstring_sphinx_guidelines`: Best practices for writing Sphinx-compatible Waterloo docstrings.
-			- `draft_docstring`: Draft or refine a Waterloo docstring from a callable signature or an existing object.
+			- `draft_docstring`: Draft or refine a Waterloo docstring from a callable signature or an existing source object.
 			- `inspect_object`: Inspect one Waterloo object together with its signature, examples, and reverse references.
 			- `inspect_root`: Get a compact structural overview of one Waterloo root before drilling into objects or searches.
 		Storage:

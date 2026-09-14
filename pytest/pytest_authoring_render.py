@@ -55,6 +55,17 @@ def test_renderer_keeps_inline_role_bodies_intact_when_wrapping() -> None:
 	make_docitem_tree(tracer(), rendered)
 
 
+def test_renderer_keeps_punctuation_attached_to_inline_roles() -> None:
+	"""Sentence punctuation after a role must not acquire an artificial space."""
+	data = _load_data("valid_function.json")
+	contract = data["doc"]["Contract"]
+	assert isinstance(contract, dict)
+	contract["general"] = ["|Must| return an |class|`AuthoringSemanticIssue`."]
+	rendered = render_authoring_document(load_authoring_document(data))
+	assert "|class|`AuthoringSemanticIssue`." in rendered
+	assert "|class|`AuthoringSemanticIssue` ." not in rendered
+
+
 def test_renderer_uses_configured_indentation_unit() -> None:
 	"""SPC4 indentation applies to every generated physical line."""
 	document = load_authoring_document(_load_data("valid_module.json"))

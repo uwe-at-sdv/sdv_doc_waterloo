@@ -71,7 +71,8 @@ try:
 except Exception:
 	_HAS_PYGMENTS = False
 
-__version__ = "0.23.0"
+__version__ = "0.23.1"
+# - 0.23.1 [2026-09-14] Authoring JSON: documentation, mcp-prompt, commands gen-[full|miniml]-authoring-json.
 # - 0.23.0 [2026-09-13] Subcommand 'render-docstring' - render a docstring from Authoring JSON.
 # - 0.22.3 [2026-09-10] Fixed --basedir resolution for split PEP 420 namespace packages. Waterloo no longer hides sibling namespace portions when constructing intermediate package prefixes.
 # - 0.22.2 [2026-09-10] Bugfix github issue #1
@@ -155,6 +156,7 @@ with contextlib.redirect_stdout(sys.stderr):
 	import sdv.doc.waterloo.waterlint_carve as carve
 	import sdv.doc.waterloo.waterlint_common as wl_common
 	import sdv.doc.waterloo.waterlint_authoring as authoring
+	import sdv.doc.waterloo.waterlint_authoring_generate as authoring_gen
 	import sdv.doc.waterloo.waterlint_gen_full as gfull
 	import sdv.doc.waterloo.waterlint_gen_minimal as gmin
 	import sdv.doc.waterloo.waterlint_gen_example_template_json as gext
@@ -200,6 +202,8 @@ SUBCOMMANDS = (
 	"walk",
 	"gen-minimal",
 	"gen-full",
+	"gen-minimal-authoring-json",
+	"gen-full-authoring-json",
 	"render-docker",
 	"list-schemas",
 	"version",
@@ -2488,6 +2492,10 @@ def _build_parser() -> argparse.ArgumentParser:
 #----- gen-full -----------------------------------------------#
 	gfull.build_parser(subparsers, parser_parts)
 
+#----- gen-*-authoring-json -----------------------------------#
+	authoring_gen.build_parser(subparsers, parser_parts, "gen-minimal-authoring-json")
+	authoring_gen.build_parser(subparsers, parser_parts, "gen-full-authoring-json")
+
 #----- gen-example-template-json ------------------------------#
 	gext.build_parser(subparsers, parser_parts)
 
@@ -2570,6 +2578,10 @@ def main(argv: Optional[list[str]] = None) -> int:
 		return gmin.gen_minimal_command(args, __version__)
 	if args.command == "gen-full":
 		return gfull.gen_full_command(args, __version__)
+	if args.command == "gen-minimal-authoring-json":
+		return authoring_gen.gen_minimal_authoring_json_command(args, __version__)
+	if args.command == "gen-full-authoring-json":
+		return authoring_gen.gen_full_authoring_json_command(args, __version__)
 	if args.command == "list-schemas":
 		return _list_schemas_command(args)
 	if args.command == "version":

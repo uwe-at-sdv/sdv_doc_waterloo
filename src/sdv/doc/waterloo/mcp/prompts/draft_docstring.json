@@ -2,7 +2,7 @@
   "version": 1,
   "name": "draft_docstring",
   "title": "Draft a Waterloo docstring",
-  "description": "Draft or refine a Waterloo docstring from a callable signature or an existing object.",
+  "description": "Draft or refine a Waterloo docstring from a callable signature or an existing source object.",
   "arguments": [
     {
       "name": "profile",
@@ -18,7 +18,7 @@
   "messages": [
     {
       "role": "user",
-      "content": "Draft or refine a Waterloo docstring for a $profile object.\n\nIf a callable signature is available, use `gen_docstring` with that signature.\nIf you are revising an existing object, compare `get_signature`, `get_examples`, and `get_references` before proposing wording.\n\nRecommended future workflow: first build a structured authoring-JSON object with the intended profile, contract items, and narrative sections; validate it against its schema; render it into a Waterloo docstring; then validate the actual target object with `waterlint validate`. The authoring-JSON schema and renderer are not implemented yet. Until they are available, use `gen_docstring` as the structural starting point and refine the real docstring iteratively from Waterlint diagnostics. Schema validation can only check structure; final Waterlint validation must still resolve source-specific concerns such as signatures, exception classes, references, and allowed sections.\n\nPrefer normative sections over Notes when the text should state a rule.\n"
+      "content": "Draft or refine a Waterloo docstring for a $profile object.\n\nFor a new callable known only by its signature, use `gen_docstring` with that signature as the structural starting point.\n\nFor an existing local object, first compare `get_signature`, `get_examples`, and `get_references` before proposing wording. Then use the Authoring JSON workflow:\n\n1. Generate an editable starting document:\n   `waterlint gen-full-authoring-json --basedir <basedir> --obj <qualified-name> --out <authoring.json>`\n2. Edit the JSON's `doc` object. Write complete logical text, use Waterloo pipe notation such as |Must| and |func|`some_name`, and do not add physical indentation, line wrapping, Python quote delimiters, or backslash continuations.\n3. Render it deterministically:\n   `waterlint render-docstring --in <authoring.json> --out <docstring.txt>`\n4. Insert the rendered content as the target object's Python docstring.\n5. Validate the real object:\n   `waterlint validate --basedir <basedir> --obj <qualified-name>`\n\nUse the resulting Waterlint diagnostics to improve the Authoring JSON, then repeat rendering and validation. Authoring JSON validation checks its structure and source-independent Waterloo semantics. Final validation remains necessary for source-specific concerns such as signatures, exception classes, references, scopes, and allowed sections.\n\nPrefer normative sections over Notes when the text should state a rule.\n"
     }
   ]
 }

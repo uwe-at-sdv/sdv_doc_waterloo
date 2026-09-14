@@ -16,6 +16,13 @@ Public_classes:
 	AuthoringDocument, AuthoringSemanticIssue
 Public_functions:
 	load_authoring_document, validate_authoring_document, render_authoring_document
+Public_types:
+	AuthoringScalar_t:
+		The scalar string value used by Authoring JSON fields.
+	AuthoringTextBlock_t:
+		A paragraph or nested list block in free-form Authoring JSON content.
+	AuthoringSectionValue_t:
+		The normalized in-memory value of one Authoring JSON section.
 """
 
 from __future__ import annotations
@@ -135,7 +142,9 @@ class AuthoringSemanticIssue:
 _PREAMBLE_SECTION: Final[str] = "Preamble"
 _CONTRACT_SECTION: Final[str] = "Contract"
 _LIST_MARKERS: Final[tuple[str, ...]] = ("*", "+", "-", "#")
-_RE_UNBREAKABLE_INLINE: Final[re.Pattern[str]] = re.compile(r"\|[A-Za-z_]+\|`[^`]*`|https?://\S+")
+_RE_UNBREAKABLE_INLINE: Final[re.Pattern[str]] = re.compile(
+	r"\|[A-Za-z_]+\|`[^`]*`(?:[.,;:!?\)\]\}]+)?|https?://\S+"
+)
 
 
 def _expect_mapping(value: object, path: str) -> Mapping[str, object]:
@@ -228,11 +237,34 @@ def _load_section_value(label: str, value: object, path: str) -> AuthoringSectio
 
 
 def load_authoring_document(source: Mapping[str, object]) -> AuthoringDocument:
-	"""Load a schema-valid Authoring JSON object into an immutable typed model.
-
-	The loader intentionally does not validate the JSON Schema. Callers validate
-	the envelope before loading; this function then normalizes the block language
-	and retains only data needed by source-independent semantics and rendering.
+	r"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+		scope:
+			extension
+	Contract:
+		general:
+			|Must| normalize one schema-valid Authoring JSON mapping into an immutable\
+			|class|`AuthoringDocument`.
+			|Must| retain only data required by source-independent semantic validation and\
+			rendering.
+			|Must_not| validate the JSON Schema or source-independent Waterloo semantics.
+	Parameters:
+		source:
+			A schema-valid raw Authoring JSON mapping.
+	Returns:
+		The normalized immutable |class|`AuthoringDocument`.
+	Raises:
+		ValueError:
+			|May| be raised if a programmatic caller provides a source mapping that does not have
+			the schema-required shape.
+	Notes:
+		Caller responsibility:
+			Validate the JSON Schema before calling this function and use
+			|func|`validate_authoring_document` for source-independent Waterloo semantics.
 	"""
 	profile = _expect_string(source.get("profile"), "profile")
 	if profile not in {"module", "class", "function", "method", "inherited_method"}:
@@ -320,12 +352,29 @@ def _has_normativity_keyword(value: AuthoringSectionValue_t) -> bool:
 
 
 def validate_authoring_document(document: AuthoringDocument) -> list[AuthoringSemanticIssue]:
-	"""Validate local Waterloo semantics without resolving a Python object.
-
-	Checks profile-dependent section availability, required sections, and the
-	Preamble.normative_sections relation. Context-dependent checks such as
-	parameter names, exception classes, references, scopes, and annotations are
-	deliberately deferred to |cmd|`waterlint validate` on the target object.
+	r"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+		scope:
+			extension
+	Contract:
+		general:
+			|Must| validate source-independent Waterloo semantics of an Authoring document.
+			|Must| return every detected inconsistency as an |class|`AuthoringSemanticIssue`.
+			|Must_not| resolve Python objects, inspect source files, or mutate the document.
+	Parameters:
+		document:
+			A schema-shaped Authoring document normalized by |func|`load_authoring_document`.
+	Returns:
+		A list of all detected source-independent semantic issues.
+	Raises:
+	Notes:
+		Deferred checks:
+			Checks requiring resolved Python objects, such as references, annotations, and scopes,
+			are deferred to |cmd|`waterlint validate`.
 	"""
 	issues: list[AuthoringSemanticIssue] = []
 	labels = set(document.sections)
@@ -583,11 +632,47 @@ def render_authoring_document(
 	indentation: int = 0,
 	width: int = 88,
 ) -> str:
-	"""Render a semantically validated Authoring document as a raw Waterloo docstring.
-
-	The output deliberately contains neither Python quote delimiters nor source
-	updates. It uses canonical section order, writes logical contract items with
-	backslash continuations when needed, and retains Waterloo roles verbatim.
+	r"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+	Contract:
+		general:
+			|Must| render a semantically validated |class|`AuthoringDocument` as Waterloo\
+			docstring content.
+			|Must| preserve the document's canonical section order and the semantic content of\
+			its sections.
+			|Must| return raw docstring content without Python string delimiters or source-file\
+			updates.
+			|Must| terminate the returned content with exactly one newline character.
+			|May| wrap logical text lines using Waterloo continuation backslashes when necessary\
+			to respect |var|`width`.
+	Description:
+		This renderer is the final content-only step of the Authoring JSON workflow. It assumes
+		that schema and semantic validation have already completed successfully.
+	Parameters:
+		document:
+			The semantically validated Authoring document to render.
+		indent_unit:
+			The Waterloo indentation unit: |lit|`TAB` for tab characters or |lit|`SPC4` for groups
+			of four spaces.
+		indentation:
+			The number of |var|`indent_unit` levels placed before every rendered top-level
+			section.
+		width:
+			The maximum preferred physical-line width used while wrapping logical text.
+	Returns:
+		Waterloo docstring content ready to be placed between Python string delimiters.
+	Raises:
+		ValueError:
+			|May| be raised if |var|`indentation` is negative, |var|`width` is too small, or the
+			requested width leaves no room below the section indentation.
+	Notes:
+		Whitespace:
+			The returned content uses only the selected indentation unit. Callers that embed it in
+			Python source remain responsible for surrounding quote delimiters.
 	"""
 	if indentation < 0:
 		raise ValueError("Indentation must not be negative.")
