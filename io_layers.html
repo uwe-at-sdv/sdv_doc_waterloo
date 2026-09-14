@@ -102,6 +102,64 @@ schema shape, but may simplify, filter, and recompute derived summary data.</p>
 as illustrated in the following diagram.</p>
 <img alt="Walk, carve, and render" class="align-center" src="_images/waterlint_pipeline_carve.svg" />
 </section>
+<section id="authoring-json">
+<h2><span class="section-number">7.3. </span>Authoring JSON<a class="headerlink" href="#authoring-json" title="Link to this heading">¶</a></h2>
+<p>Early experience with the Waterloo Docstring format showed that LLMs can find
+some syntactic rules difficult to control reliably. In particular, contract
+items such as <span class="wtrl_label">Contract.general</span>,
+<span class="wtrl_label">Contract.constructor</span>, <span class="wtrl_label">Contract.requires</span>, and
+<span class="wtrl_label">Contract.ensures</span> express one logical statement across one or
+more physical lines. Free-form sections have a related issue: paragraphs are
+separated with the Waterloo <code class="docutils literal notranslate"><span class="pre">|</span></code> marker, whereas LLMs commonly introduce a
+blank physical line.</p>
+<p>For these reasons, <code class="wtrl_cmd docutils literal notranslate"><span class="pre">waterlint</span></code> 0.23.0 introduces Authoring JSON and
+its accompanying schema. The format represents the semantic structure of one
+Waterloo docstring as a strictly validated JSON object. A deterministic
+renderer subsequently translates that object into the final Waterloo
+Docstring format. Each Authoring JSON document describes exactly one Python
+object, such as a module, class, function, or method.</p>
+<p>The fixed JSON structure prevents many purely structural mistakes before a
+docstring is rendered. It does not replace the final validation cycle: only
+the real Python object supplies source-specific facts such as its signature,
+exception classes, references, scopes, and allowed sections.</p>
+<p>The Authoring JSON format is validated by the distributed schema file</p>
+<blockquote>
+<div><p><code class="wtrl_file docutils literal notranslate"><span class="pre">wtrl-authoring-object-json-*.*.*.schema.json</span></code></p>
+</div></blockquote>
+<p>The following <code class="wtrl_cmd docutils literal notranslate"><span class="pre">waterlint</span></code> subcommands work with Authoring JSON:</p>
+<ul class="simple">
+<li><p><code class="wtrl_cmd docutils literal notranslate"><span class="pre">validate-json</span></code> validates Authoring JSON as well as the other
+supported JSON artifact formats.</p></li>
+<li><p><code class="wtrl_cmd docutils literal notranslate"><span class="pre">gen-minimal-authoring-json</span></code> generates the required initial
+structure for one Python object.</p></li>
+<li><p><code class="wtrl_cmd docutils literal notranslate"><span class="pre">gen-full-authoring-json</span></code> generates all profile-allowed structure
+that can be derived without inventing list entries or other identifiers.</p></li>
+<li><p><code class="wtrl_cmd docutils literal notranslate"><span class="pre">render-docstring</span></code> renders Authoring JSON as raw Waterloo
+docstring content.</p></li>
+</ul>
+<p>In practice, an LLM authors a docstring as follows:</p>
+<ul class="simple">
+<li><p>Start from a Python object identified by <code class="wtrl_opt docutils literal notranslate"><span class="pre">--basedir</span></code> and
+<code class="wtrl_opt docutils literal notranslate"><span class="pre">--obj</span></code>.</p></li>
+<li><p>Generate a complete editable starting point with
+<code class="wtrl_cmd docutils literal notranslate"><span class="pre">waterlint</span> <span class="pre">gen-full-authoring-json</span></code>. Edit its <code class="docutils literal notranslate"><span class="pre">doc</span></code> object and
+use <code class="wtrl_cmd docutils literal notranslate"><span class="pre">waterlint</span> <span class="pre">validate-json</span></code> when an explicit JSON validation
+step is useful.</p></li>
+<li><p>Render the document with <code class="wtrl_cmd docutils literal notranslate"><span class="pre">waterlint</span> <span class="pre">render-docstring</span></code>. The
+renderer turns paragraphs, lists, indentation, physical lines, and
+continuation backslashes into their canonical Waterloo representation.</p></li>
+<li><p>Insert the rendered content as the Python docstring and validate the real
+target with <code class="wtrl_cmd docutils literal notranslate"><span class="pre">waterlint</span> <span class="pre">validate</span></code>.</p></li>
+<li><p>If validation reports a problem, correct the Authoring JSON and repeat the
+rendering and target-validation steps. Keeping corrections in the Authoring
+JSON prevents the source docstring and its editable representation from
+drifting apart.</p></li>
+</ul>
+<p>The <code class="wtrl_lit docutils literal notranslate"><span class="pre">draft_docstring</span></code> MCP prompt (“Draft a Waterloo docstring”)
+recommends this workflow to LLM clients. The following diagram shows the
+successful path without validation failures:</p>
+<img alt="Authoring JSON workflow from a Python module to a validated Waterloo docstring" class="align-center" src="_images/waterlint_pipeline_authoring.svg" />
+</section>
 </section>
 
 
@@ -146,6 +204,7 @@ as illustrated in the following diagram.</p>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">7. Overview: I/O Layers</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#from-source-to-html">7.1. From source to HTML</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#walk-and-carve">7.2. Walk and carve</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#authoring-json">7.3. Authoring JSON</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="json_io.html">8. The JSON I/O Layer</a></li>

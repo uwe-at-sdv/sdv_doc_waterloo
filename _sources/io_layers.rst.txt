@@ -78,3 +78,68 @@ as illustrated in the following diagram.
 .. image:: ../img/waterlint_pipeline_carve.svg
 	:alt: Walk, carve, and render
 	:align: center
+
+Authoring JSON
+--------------
+
+Early experience with the Waterloo Docstring format showed that LLMs can find
+some syntactic rules difficult to control reliably. In particular, contract
+items such as :wtrl_label:`Contract.general`,
+:wtrl_label:`Contract.constructor`, :wtrl_label:`Contract.requires`, and
+:wtrl_label:`Contract.ensures` express one logical statement across one or
+more physical lines. Free-form sections have a related issue: paragraphs are
+separated with the Waterloo ``|`` marker, whereas LLMs commonly introduce a
+blank physical line.
+
+For these reasons, :wtrl_cmd:`waterlint` 0.23.0 introduces Authoring JSON and
+its accompanying schema. The format represents the semantic structure of one
+Waterloo docstring as a strictly validated JSON object. A deterministic
+renderer subsequently translates that object into the final Waterloo
+Docstring format. Each Authoring JSON document describes exactly one Python
+object, such as a module, class, function, or method.
+
+The fixed JSON structure prevents many purely structural mistakes before a
+docstring is rendered. It does not replace the final validation cycle: only
+the real Python object supplies source-specific facts such as its signature,
+exception classes, references, scopes, and allowed sections.
+
+The Authoring JSON format is validated by the distributed schema file
+
+	:wtrl_file:`wtrl-authoring-object-json-*.*.*.schema.json`
+
+The following :wtrl_cmd:`waterlint` subcommands work with Authoring JSON:
+
+* :wtrl_cmd:`validate-json` validates Authoring JSON as well as the other
+  supported JSON artifact formats.
+* :wtrl_cmd:`gen-minimal-authoring-json` generates the required initial
+  structure for one Python object.
+* :wtrl_cmd:`gen-full-authoring-json` generates all profile-allowed structure
+  that can be derived without inventing list entries or other identifiers.
+* :wtrl_cmd:`render-docstring` renders Authoring JSON as raw Waterloo
+  docstring content.
+
+In practice, an LLM authors a docstring as follows:
+
+* Start from a Python object identified by :wtrl_opt:`--basedir` and
+  :wtrl_opt:`--obj`.
+* Generate a complete editable starting point with
+  :wtrl_cmd:`waterlint gen-full-authoring-json`. Edit its ``doc`` object and
+  use :wtrl_cmd:`waterlint validate-json` when an explicit JSON validation
+  step is useful.
+* Render the document with :wtrl_cmd:`waterlint render-docstring`. The
+  renderer turns paragraphs, lists, indentation, physical lines, and
+  continuation backslashes into their canonical Waterloo representation.
+* Insert the rendered content as the Python docstring and validate the real
+  target with :wtrl_cmd:`waterlint validate`.
+* If validation reports a problem, correct the Authoring JSON and repeat the
+  rendering and target-validation steps. Keeping corrections in the Authoring
+  JSON prevents the source docstring and its editable representation from
+  drifting apart.
+
+The :wtrl_lit:`draft_docstring` MCP prompt ("Draft a Waterloo docstring")
+recommends this workflow to LLM clients. The following diagram shows the
+successful path without validation failures:
+
+.. image:: ../img/waterlint_pipeline_authoring.svg
+	:alt: Authoring JSON workflow from a Python module to a validated Waterloo docstring
+	:align: center

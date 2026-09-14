@@ -1,12 +1,12 @@
 {
     "$schema": "https://sci-d-vis.com/schema/wtrl-json-0.1.0.schema.json",
-    "$id": "urn:waterlint:wtrl-json:0.22.3:core:rfc-2119:26ec6bd1810715a4d75f3fa1a3755db3675f43a7be34b1537195d01d94df186c",
+    "$id": "urn:waterlint:wtrl-json:0.23.0:core:rfc-2119:ec2792243f4ba3b1c34de7e07652866812157950a45586e6d4875cb308111cf1",
     "__WTRL_VERSION__": {
-        "waterloo": "0.12.16",
+        "waterloo": "0.13.0",
         "schema": "0.1.0"
     },
     "__WTRL_META__": {
-        "generated_at": "2026-09-12T13:38:57+02:00",
+        "generated_at": "2026-09-14T08:16:51+02:00",
         "generator": "waterlint",
         "scope": "core",
         "flavour": "rfc-2119"
@@ -125,6 +125,7 @@
         "sdv.doc.waterloo.docitem_helper.RE_IDENTIFIER": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.RE_IDENTIFIER",
         "sdv.doc.waterloo.docitem_helper.RE_QUALIFIED_IDENTIFIER": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.RE_QUALIFIED_IDENTIFIER",
         "sdv.doc.waterloo.docitem_helper.RE_CSV_IDENTIFIERS": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.RE_CSV_IDENTIFIERS",
+        "sdv.doc.waterloo.docitem_helper.KEYWORDS_OF_NORMATIVITY": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.KEYWORDS_OF_NORMATIVITY",
         "sdv.doc.waterloo.docitem_helper.WTRL_MARKUP_ROLES": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.WTRL_MARKUP_ROLES",
         "sdv.doc.waterloo.docitem_helper.RE_WTRL_MARKUP_BACKTICK": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.RE_WTRL_MARKUP_BACKTICK",
         "sdv.doc.waterloo.docitem_helper.RE_WTRL_ANGLE_HTTPS_REF": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.RE_WTRL_ANGLE_HTTPS_REF",
@@ -312,6 +313,14 @@
             "examples": [
                 "/__WTRL_EXAMPLES__/sha256_6d6be44016303793d2d91cde29e1a0a9dead9555b84f9616bf215b1c33aff749"
             ]
+        },
+        "sdv.doc.waterloo.docitem_helper.KEYWORDS_OF_NORMATIVITY": {
+            "doc": {},
+            "doc_lines": [
+                "Canonical Waterloo tokens that make a statement normative."
+            ],
+            "annotation": "Final[tuple[str, ...]]",
+            "doc_lines_kind": "constant"
         },
         "sdv.doc.waterloo.docitem_helper.WTRL_MARKUP_ROLES": {
             "doc": {},
@@ -548,6 +557,9 @@
                     ],
                     "RE_CSV_IDENTIFIERS": [
                         "Regular expression for comma-separated identifiers. Undocumented: RE_CSV_IDENTIFIERS_COMPILED, the precompiled version for performance."
+                    ],
+                    "KEYWORDS_OF_NORMATIVITY": [
+                        "Canonical Waterloo tokens that make a statement normative."
                     ],
                     "WTRL_MARKUP_ROLES": [
                         "Regular expression for Waterloo markup roles in backtick markup."
