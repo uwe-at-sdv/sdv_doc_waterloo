@@ -253,7 +253,8 @@ from contextlib import contextmanager
 from sdv.doc.waterloo.docitem_docstring import *
 from sdv.doc.waterloo.docitem_validator import *
 
-__version__ = "0.13.0"
+__version__ = "0.13.1"
+# - 0.13.1 [2026-09-14] Authoring-JSON complete
 # - 0.13.0 [2026-09-13] waterlint render-docstring
 # - 0.12.16 [2026-09-12] Concept for Authoring-JSON
 # - 0.12.15 [2026-09-11] Bugfix in wtrl_mcp packaging
