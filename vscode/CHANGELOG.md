@@ -4,6 +4,7 @@ Format:
 
 - VERSION [YYYY-MM-DD]: Summary.
 
+- 0.3.4 [2026-09-16]:	Trying buxfix for object resolution in validate.
 - 0.3.3 [2026-07-29]:	Bugfix TextMate: "Description" in Contract.normative_sections
 - 0.3.2 [2026-07-23]:	Update MCP-Server prompts
 - 0.3.1 [2026-07-17]:	Version bump following main repo
