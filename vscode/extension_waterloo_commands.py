@@ -59,10 +59,31 @@ def _gen_qis_and_nodes(nd_parent: ast.AST, prefix: str) -> Generator[tuple[str, 
 	for nd in ast.iter_child_nodes(nd_parent):
 		yield from _gen_qis_and_nodes(nd, qi)
 
-def _qualify_documented_object(module_filename: str, name: str, line: int) -> str:
+def _find_import_context(source_file: str) -> tuple[str, str]:
+	"""Return the import base directory and module qualified identifier for a source file."""
+	source_path = Path(source_file).resolve()
+	for project_dir in source_path.parents:
+		if not any((project_dir / marker).is_file() for marker in ("pyproject.toml", "setup.py", "setup.cfg")):
+			continue
+		for import_root in (project_dir / "src", project_dir):
+			if not import_root.is_dir():
+				continue
+			try:
+				relative_path = source_path.relative_to(import_root)
+			except ValueError:
+				continue
+			if relative_path.suffix != ".py":
+				continue
+			module_qi = ".".join(relative_path.with_suffix("").parts)
+			return str(import_root), module_qi
+
+# A standalone module has no project layout from which to infer a package name.
+	return str(source_path.parent), source_path.stem
+
+
+def _qualify_documented_object(module_filename: str, module_qi: str, name: str, line: int) -> str:
 	tree = _parse_file_to_ast(module_filename)
-	module_name = Path(module_filename).stem
-	for qi,nd in _gen_qis_and_nodes(tree,module_name):
+	for qi,nd in _gen_qis_and_nodes(tree,module_qi):
 #			print(qi,"<->",name)
 		if qi.split(".")[-1] != name:
 			continue
@@ -199,13 +220,13 @@ def _handle_validate(
 	if tr.has_errors():
 		raise RuntimeError()
 
+	module_dir, module_qi = _find_import_context(source_file)
 	qi = ""
 	context["kind"] = kind
 	context["source_file"] = source_file
 	context["ignore"] = list(ignore)
 	if kind == "module":
-# The qualified identifier -module name- is the filename without ".py".
-		qi = Path(source_file).stem
+		qi = module_qi
 	else:
 # Parse source fragment
 		node = _validate_source_fragment(tr,kind, source_fragment)
@@ -217,7 +238,7 @@ def _handle_validate(
 # Parse complete module and qualify the selected object.
 		try:
 # In ast, line numbers are one-based, hence +1.
-			qi = _qualify_documented_object(source_file,node.name,line + 1)
+			qi = _qualify_documented_object(source_file,module_qi,node.name,line + 1)
 		except _NoDocstringError as e:
 			tr.add_error("XTNSN-013","extension","The selected object has no docstring.",{"source_file":source_file,"line":f"{line}"})
 			raise RuntimeError(str(e)) from e
@@ -228,8 +249,8 @@ def _handle_validate(
 		if not qi:
 			tr.add_error("XTNSN-012","extension","Could not qualify documented object.",{"source_file":source_file,"line":f"{line}"})
 			raise RuntimeError("Could not qualify documented object.")
-# Make sure the module is found.
-	module_dir = str(Path(source_file).parent)
+	# Add the import root, not the directory containing the module itself.
+	# This supports src layouts and namespace packages such as sdv.sec.fluffy.
 	context["qualified_identifier"] = qi
 	context["module_dir"] = module_dir
 	sys.path.insert(0,module_dir)
