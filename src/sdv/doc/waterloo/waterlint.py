@@ -695,10 +695,7 @@ def validate_command(args: argparse.Namespace) -> int:
 
 # Structural check only: parse docstring; semantic validation needs --obj.
 			di_node : docitem.docitem_base = docitem.make_docitem_tree(tr,doc_txt)
-			print(
-				"Note: no --obj provided, performed structural parse only.",
-				file=sys.stderr,
-			)
+			tr.add_info("no --obj provided; performed structural parse only.")
 # Check these first, otherwise RuntimeError will shadow some of them.
 	except SOURCE_CODE_ERRORS:
 # Implementation error
@@ -734,7 +731,7 @@ def validate_command(args: argparse.Namespace) -> int:
 		_emit_tracer(tr, out_diag, out_diag_json)
 		return 1
 	except Exception as exc:  # pragma: no cover - defensive
-		print(f"Error: {exc}", file=sys.stderr)
+		tr.add_error("TOOL-800", "tool", f"{type(exc).__name__}: {exc}")
 		_emit_tracer(tr, out_diag, out_diag_json)
 		return 1
 

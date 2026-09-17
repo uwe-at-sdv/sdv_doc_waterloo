@@ -127,6 +127,7 @@ def _validate_structural_only(tmp_path: Path, generated_docstring_literal: str) 
 		f"waterlint validate --in failed\nstdout:\n{res.stdout}\nstderr:\n{res.stderr}\n"
 		f"doc:\n{doc_for_validate}"
 	)
+	assert "no --obj provided; performed structural parse only." in res.stderr
 
 
 @pytest.mark.parametrize(

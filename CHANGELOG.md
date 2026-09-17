@@ -2,6 +2,8 @@
 
 ## Current release history
 
+- 0.24.1 [2026-09-17]:
+  - Replaced two raw messages in waterlint by tracer diagnostics.
 - 0.24.0 [2026-09-14]:
   - Unify the docitem and waterlint release versions as the sdv.doc.waterloo package version.
   - Move the release source of truth to `sdv.doc.waterloo.version`.
