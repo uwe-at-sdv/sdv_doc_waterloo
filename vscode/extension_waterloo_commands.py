@@ -74,7 +74,10 @@ def _find_import_context(source_file: str) -> tuple[str, str]:
 				continue
 			if relative_path.suffix != ".py":
 				continue
-			module_qi = ".".join(relative_path.with_suffix("").parts)
+			module_parts = relative_path.with_suffix("").parts
+			if not all(part.isidentifier() for part in module_parts):
+				continue
+			module_qi = ".".join(module_parts)
 			return str(import_root), module_qi
 
 # A standalone module has no project layout from which to infer a package name.
@@ -207,6 +210,8 @@ def _handle_validate(
 		tr.add_error("XTNSN-005","extension","Source fragment must be a string")
 	if not isinstance(source_file, str) or not source_file.strip():
 		tr.add_error("XTNSN-010","extension","Source file must be a non-empty string.")
+	if not isinstance(line, int):
+		tr.add_error("XTNSN-011","extension","Line must be an integer.")
 	if not isinstance(ignore, list) or not all(isinstance(item, str) for item in ignore):
 		tr.add_error("XTNSN-014","extension","Ignore list must be a list of strings.")
 	if tr.has_errors():

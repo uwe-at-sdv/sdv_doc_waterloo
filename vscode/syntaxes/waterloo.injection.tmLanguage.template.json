@@ -67,7 +67,7 @@
     },
     "section-notes": {
       "begin": "^(\\s*)(Notes:)\\s*$",
-      "end": "^(?=(?:\\1(?:Preamble|Definitions|Terminology|Contract|Description|Derived_from|Factory|Public_classes|Public_functions|Public_methods|Public_types|Public_variables|Public_constants|Class_overview|Method_overview|Function_overview|Parameters|Returns|Raises|Notes|See_also):|\\s*(?:\\\"\\\"\\\"|''')))",
+      "end": "{{WTRL_TOP_LEVEL_SECTION_END}}",
       "beginCaptures": {
         "2": {
           "name": "markup.heading.section.waterloo markup.italic.section.waterloo"
@@ -81,7 +81,7 @@
     },
     "section-preamble": {
       "begin": "^(\\s*)(Preamble:)\\s*$",
-      "end": "^(?=(?:\\1(?:Preamble|Definitions|Terminology|Contract|Description|Derived_from|Factory|Public_classes|Public_functions|Public_methods|Public_types|Public_variables|Public_constants|Class_overview|Method_overview|Function_overview|Parameters|Returns|Raises|Notes|See_also):|\\s*(?:\\\"\\\"\\\"|''')))",
+      "end": "{{WTRL_TOP_LEVEL_SECTION_END}}",
       "beginCaptures": {
         "2": {
           "name": "markup.heading.section.waterloo markup.italic.section.waterloo"
@@ -90,7 +90,7 @@
       "patterns": [
         {
           "begin": "^([ \\\t]+)((?:profile):)\\s*$",
-          "end": "^(?=(?:[ \\\t]*[A-Za-z_][A-Za-z0-9_]*:|\\s*(?:\\\"\\\"\\\"|''')))",
+          "end": "^(?=(?:[ \\\t]*{{WTRL_PY_IDENTIFIER}}:|{{WTRL_DOCSTRING_END}}))",
           "beginCaptures": {
             "2": {
               "name": "entity.name.label.waterloo markup.italic.section.waterloo"
@@ -112,8 +112,8 @@
           "include": "#subsection-preamble-status"
         },
         {
-          "begin": "^([ \\\t]+)([A-Za-z_][A-Za-z0-9_]*:)\\s*$",
-          "end": "^(?=(?:[ \\\t]*[A-Za-z_][A-Za-z0-9_]*:|\\s*(?:\\\"\\\"\\\"|''')))",
+          "begin": "^([ \\\t]+)({{WTRL_PY_IDENTIFIER}}:)\\s*$",
+          "end": "^(?=(?:[ \\\t]*{{WTRL_PY_IDENTIFIER}}:|{{WTRL_DOCSTRING_END}}))",
           "beginCaptures": {
             "2": {
               "name": "invalid.illegal.section.waterloo markup.error markup.bold"
@@ -129,7 +129,7 @@
     },
     "section-contract": {
       "begin": "^(\\s*)(Contract:)\\s*$",
-      "end": "^(?=(?:\\1(?:Preamble|Definitions|Terminology|Contract|Description|Derived_from|Factory|Public_classes|Public_functions|Public_methods|Public_types|Public_variables|Public_constants|Class_overview|Method_overview|Function_overview|Parameters|Returns|Raises|Notes|See_also):|\\s*(?:\\\"\\\"\\\"|''')))",
+      "end": "{{WTRL_TOP_LEVEL_SECTION_END}}",
       "beginCaptures": {
         "2": {
           "name": "markup.heading.section.waterloo markup.italic.section.waterloo"
@@ -138,7 +138,7 @@
       "patterns": [
         {
           "begin": "^([ \\\t]+)((?:general|constructor|invariants|requires|ensures):)\\s*$",
-          "end": "^(?=(?:[ \\\t]*[A-Za-z_][A-Za-z0-9_]*:|\\s*(?:\\\"\\\"\\\"|''')))",
+          "end": "^(?=(?:[ \\\t]*{{WTRL_PY_IDENTIFIER}}:|{{WTRL_DOCSTRING_END}}))",
           "beginCaptures": {
             "2": {
               "name": "entity.name.label.waterloo markup.italic.section.waterloo"
@@ -157,8 +157,8 @@
           "include": "#subsection-contract-base"
         },
         {
-          "begin": "^([ \\\t]+)([A-Za-z_][A-Za-z0-9_]*:)\\s*$",
-          "end": "^(?=(?:[ \\\t]*[A-Za-z_][A-Za-z0-9_]*:|\\s*(?:\\\"\\\"\\\"|''')))",
+          "begin": "^([ \\\t]+)({{WTRL_PY_IDENTIFIER}}:)\\s*$",
+          "end": "^(?=(?:[ \\\t]*{{WTRL_PY_IDENTIFIER}}:|{{WTRL_DOCSTRING_END}}))",
           "beginCaptures": {
             "2": {
               "name": "invalid.illegal.section.waterloo markup.error markup.bold"
@@ -177,7 +177,7 @@
     },
     "section-derived-from": {
       "begin": "^(\\s*)(Derived_from:)\\s*$",
-      "end": "^(?=(?:\\1(?:Preamble|Definitions|Terminology|Contract|Description|Derived_from|Factory|Public_classes|Public_functions|Public_methods|Public_types|Public_variables|Public_constants|Class_overview|Method_overview|Function_overview|Parameters|Returns|Raises|Notes|See_also):|\\s*(?:\\\"\\\"\\\"|''')))",
+      "end": "{{WTRL_TOP_LEVEL_SECTION_END}}",
       "beginCaptures": {
         "2": {
           "name": "markup.heading.section.waterloo markup.italic.section.waterloo"
@@ -191,7 +191,7 @@
     },
     "section-factory": {
       "begin": "^(\\s*)(Factory:)\\s*$",
-      "end": "^(?=(?:\\1(?:Preamble|Definitions|Terminology|Contract|Description|Derived_from|Factory|Public_classes|Public_functions|Public_methods|Public_types|Public_variables|Public_constants|Class_overview|Method_overview|Function_overview|Parameters|Returns|Raises|Notes|See_also):|\\s*(?:\\\"\\\"\\\"|''')))",
+      "end": "{{WTRL_TOP_LEVEL_SECTION_END}}",
       "beginCaptures": {
         "2": {
           "name": "markup.heading.section.waterloo markup.italic.section.waterloo"
@@ -205,7 +205,7 @@
     },
     "section-public-classes": {
       "begin": "^(\\s*)(Public_classes:)\\s*$",
-      "end": "^(?=(?:\\1(?:Preamble|Definitions|Terminology|Contract|Description|Derived_from|Factory|Public_classes|Public_functions|Public_methods|Public_types|Public_variables|Public_constants|Class_overview|Method_overview|Function_overview|Parameters|Returns|Raises|Notes|See_also):|\\s*(?:\\\"\\\"\\\"|''')))",
+      "end": "{{WTRL_TOP_LEVEL_SECTION_END}}",
       "beginCaptures": {
         "2": {
           "name": "markup.heading.section.waterloo markup.italic.section.waterloo"
@@ -219,7 +219,7 @@
     },
     "section-public-functions-methods": {
       "begin": "^(\\s*)(Public_(functions|methods):)\\s*$",
-      "end": "^(?=(?:\\1(?:Preamble|Definitions|Terminology|Contract|Description|Derived_from|Factory|Public_classes|Public_functions|Public_methods|Public_types|Public_variables|Public_constants|Class_overview|Method_overview|Function_overview|Parameters|Returns|Raises|Notes|See_also):|\\s*(?:\\\"\\\"\\\"|''')))",
+      "end": "{{WTRL_TOP_LEVEL_SECTION_END}}",
       "beginCaptures": {
         "2": {
           "name": "markup.heading.section.waterloo markup.italic.section.waterloo"
@@ -233,7 +233,7 @@
     },
     "section-public-types": {
       "begin": "^(\\s*)(Public_types:)\\s*$",
-      "end": "^(?=(?:\\1(?:Preamble|Definitions|Terminology|Contract|Description|Derived_from|Factory|Public_classes|Public_functions|Public_methods|Public_types|Public_variables|Public_constants|Class_overview|Method_overview|Function_overview|Parameters|Returns|Raises|Notes|See_also):|\\s*(?:\\\"\\\"\\\"|''')))",
+      "end": "{{WTRL_TOP_LEVEL_SECTION_END}}",
       "beginCaptures": {
         "2": {
           "name": "markup.heading.section.waterloo markup.italic.section.waterloo"
@@ -247,7 +247,7 @@
     },
     "section-public-constants-variables": {
       "begin": "^(\\s*)(Public_(constants|variables):)\\s*$",
-      "end": "^(?=(?:\\1(?:Preamble|Definitions|Terminology|Contract|Description|Derived_from|Factory|Public_classes|Public_functions|Public_methods|Public_types|Public_variables|Public_constants|Class_overview|Method_overview|Function_overview|Parameters|Returns|Raises|Notes|See_also):|\\s*(?:\\\"\\\"\\\"|''')))",
+      "end": "{{WTRL_TOP_LEVEL_SECTION_END}}",
       "beginCaptures": {
         "2": {
           "name": "markup.heading.section.waterloo markup.italic.section.waterloo"
@@ -261,7 +261,7 @@
     },
     "section-class-overview": {
       "begin": "^(\\s*)(Class_overview:)\\s*$",
-      "end": "^(?=(?:\\1(?:Preamble|Definitions|Terminology|Contract|Description|Derived_from|Factory|Public_classes|Public_functions|Public_methods|Public_types|Public_variables|Public_constants|Class_overview|Method_overview|Function_overview|Parameters|Returns|Raises|Notes|See_also):|\\s*(?:\\\"\\\"\\\"|''')))",
+      "end": "{{WTRL_TOP_LEVEL_SECTION_END}}",
       "beginCaptures": {
         "2": {
           "name": "markup.heading.section.waterloo markup.italic.section.waterloo"
@@ -275,7 +275,7 @@
     },
     "section-function-method-overview": {
       "begin": "^(\\s*)((Function|Method)_overview:)\\s*$",
-      "end": "^(?=(?:\\1(?:Preamble|Definitions|Terminology|Contract|Description|Derived_from|Factory|Public_classes|Public_functions|Public_methods|Public_types|Public_variables|Public_constants|Class_overview|Method_overview|Function_overview|Parameters|Returns|Raises|Notes|See_also):|\\s*(?:\\\"\\\"\\\"|''')))",
+      "end": "{{WTRL_TOP_LEVEL_SECTION_END}}",
       "beginCaptures": {
         "2": {
           "name": "markup.heading.section.waterloo markup.italic.section.waterloo"
@@ -289,7 +289,7 @@
     },
     "section-see-also": {
       "begin": "^(\\s*)(See_also:)\\s*$",
-      "end": "^(?=(?:\\1(?:Preamble|Definitions|Terminology|Contract|Description|Derived_from|Factory|Public_classes|Public_functions|Public_methods|Public_types|Public_variables|Public_constants|Class_overview|Method_overview|Function_overview|Parameters|Returns|Raises|Notes|See_also):|\\s*(?:\\\"\\\"\\\"|''')))",
+      "end": "{{WTRL_TOP_LEVEL_SECTION_END}}",
       "beginCaptures": {
         "2": {
           "name": "markup.heading.section.waterloo markup.italic.section.waterloo"
@@ -297,14 +297,14 @@
       },
       "patterns": [
         {
-          "match": "([A-Za-z_][A-Za-z0-9_]*)",
+          "match": "({{WTRL_PY_IDENTIFIER}})",
           "name": "markup.inline.raw.waterloo"
         }
       ]
     },
     "section-description": {
       "begin": "^(\\s*)(Description:)\\s*$",
-      "end": "^(?=(?:\\1(?:Preamble|Definitions|Terminology|Contract|Description|Derived_from|Factory|Public_classes|Public_functions|Public_methods|Public_types|Public_variables|Public_constants|Class_overview|Method_overview|Function_overview|Parameters|Returns|Raises|Notes|See_also):|\\s*(?:\\\"\\\"\\\"|''')))",
+      "end": "{{WTRL_TOP_LEVEL_SECTION_END}}",
       "beginCaptures": {
         "2": {
           "name": "markup.heading.section.waterloo markup.italic.section.waterloo"
@@ -318,7 +318,7 @@
     },
     "section-definitions": {
       "begin": "^(\\s*)(Definitions:)\\s*$",
-      "end": "^(?=(?:\\1(?:Preamble|Definitions|Terminology|Contract|Description|Derived_from|Factory|Public_classes|Public_functions|Public_methods|Public_types|Public_variables|Public_constants|Class_overview|Method_overview|Function_overview|Parameters|Returns|Raises|Notes|See_also):|\\s*(?:\\\"\\\"\\\"|''')))",
+      "end": "{{WTRL_TOP_LEVEL_SECTION_END}}",
       "beginCaptures": {
         "2": {
           "name": "markup.heading.section.waterloo markup.italic.section.waterloo"
@@ -335,7 +335,7 @@
     },
     "section-parameters": {
       "begin": "^(\\s*)(Parameters:)\\s*$",
-      "end": "^(?=(?:\\1(?:Preamble|Definitions|Terminology|Contract|Description|Derived_from|Factory|Public_classes|Public_functions|Public_methods|Public_types|Public_variables|Public_constants|Class_overview|Method_overview|Function_overview|Parameters|Returns|Raises|Notes|See_also):|\\s*(?:\\\"\\\"\\\"|''')))",
+      "end": "{{WTRL_TOP_LEVEL_SECTION_END}}",
       "beginCaptures": {
         "2": {
           "name": "markup.heading.section.waterloo markup.italic.section.waterloo"
@@ -343,8 +343,8 @@
       },
       "patterns": [
         {
-          "begin": "^([ \\\t]+)([A-Za-z_][A-Za-z0-9_]*:)\\s*$",
-          "end": "^(?=(?:[ \\\t]*[A-Za-z_][A-Za-z0-9_]*:|\\s*(?:\\\"\\\"\\\"|''')))",
+          "begin": "^([ \\\t]+)({{WTRL_PY_IDENTIFIER}}:)\\s*$",
+          "end": "^(?=(?:[ \\\t]*{{WTRL_PY_IDENTIFIER}}:|{{WTRL_DOCSTRING_END}}))",
           "beginCaptures": {
             "2": {
               "name": "variable.parameter.python"
@@ -363,7 +363,7 @@
     },
     "section-raises": {
       "begin": "^(\\s*)(Raises:)\\s*$",
-      "end": "^(?=(?:\\1(?:Preamble|Definitions|Terminology|Contract|Description|Derived_from|Factory|Public_classes|Public_functions|Public_methods|Public_types|Public_variables|Public_constants|Class_overview|Method_overview|Function_overview|Parameters|Returns|Raises|Notes|See_also):|\\s*(?:\\\"\\\"\\\"|''')))",
+      "end": "{{WTRL_TOP_LEVEL_SECTION_END}}",
       "beginCaptures": {
         "2": {
           "name": "markup.heading.section.waterloo markup.italic.section.waterloo"
@@ -372,7 +372,7 @@
       "patterns": [
         {
           "begin": "^([ \\\t]+)((ArithmeticError|AssertionError|AttributeError|BaseException|BlockingIOError|BrokenPipeError|BufferError|ChildProcessError|ConnectionAbortedError|ConnectionError|ConnectionRefusedError|ConnectionResetError|EOFError|EnvironmentError|Exception|FileExistsError|FileNotFoundError|FloatingPointError|GeneratorExit|IOError|ImportError|IndentationError|IndexError|InterruptedError|IsADirectoryError|KeyError|KeyboardInterrupt|LookupError|MemoryError|ModuleNotFoundError|NameError|NotADirectoryError|NotImplementedError|OSError|OverflowError|PermissionError|ProcessLookupError|RecursionError|ReferenceError|RuntimeError|StopAsyncIteration|StopIteration|SyntaxError|SystemError|SystemExit|TabError|TimeoutError|TypeError|UnboundLocalError|UnicodeDecodeError|UnicodeEncodeError|UnicodeError|UnicodeTranslateError|ValueError|ZeroDivisionError):)\\s*$",
-          "end": "^(?=(?:[ \\\t]*[A-Za-z_][A-Za-z0-9_]*:|\\s*(?:\\\"\\\"\\\"|''')))",
+          "end": "^(?=(?:[ \\\t]*{{WTRL_PY_IDENTIFIER}}:|{{WTRL_DOCSTRING_END}}))",
           "beginCaptures": {
             "2": {
               "name": "entity.name.type.exception.python markup.italic.type.waterloo"
@@ -385,8 +385,8 @@
           ]
         },
         {
-          "begin": "^([ \\\t]+)([A-Za-z_][A-Za-z0-9_]*(?:\\.[A-Za-z_][A-Za-z0-9_]*)*:)\\s*$",
-          "end": "^(?=(?:[ \\\t]*[A-Za-z_][A-Za-z0-9_]*:|\\s*(?:\\\"\\\"\\\"|''')))",
+          "begin": "^([ \\\t]+)({{WTRL_PY_IDENTIFIER}}(?:\\.{{WTRL_PY_IDENTIFIER}})*:)\\s*$",
+          "end": "^(?=(?:[ \\\t]*{{WTRL_PY_IDENTIFIER}}:|{{WTRL_DOCSTRING_END}}))",
           "beginCaptures": {
             "2": {
               "name": "entity.name.type.exception.python"
@@ -402,7 +402,7 @@
     },
     "section-terminology": {
       "begin": "^(\\s*)(Terminology:)\\s*$",
-      "end": "^(?=(?:\\1(?:Preamble|Definitions|Terminology|Contract|Description|Derived_from|Factory|Public_classes|Public_functions|Public_methods|Public_types|Public_variables|Public_constants|Class_overview|Method_overview|Function_overview|Parameters|Returns|Raises|Notes|See_also):|\\s*(?:\\\"\\\"\\\"|''')))",
+      "end": "{{WTRL_TOP_LEVEL_SECTION_END}}",
       "beginCaptures": {
         "2": {
           "name": "markup.heading.section.waterloo markup.italic.section.waterloo"
@@ -416,7 +416,7 @@
     },
     "section-returns": {
       "begin": "^(\\s*)(Returns:)\\s*$",
-      "end": "^(?=(?:\\1(?:Preamble|Definitions|Terminology|Contract|Description|Derived_from|Factory|Public_classes|Public_functions|Public_methods|Public_types|Public_variables|Public_constants|Class_overview|Method_overview|Function_overview|Parameters|Returns|Raises|Notes|See_also):|\\s*(?:\\\"\\\"\\\"|''')))",
+      "end": "{{WTRL_TOP_LEVEL_SECTION_END}}",
       "beginCaptures": {
         "2": {
           "name": "markup.heading.section.waterloo markup.italic.section.waterloo"
@@ -430,7 +430,7 @@
     },
     "subsection-preamble-normative-sections": {
       "begin": "^([ \\t]+)(normative_sections:)\\s*$",
-      "end": "^(?=(?:[ \\t]*[A-Za-z_][A-Za-z0-9_]*:|\\s*(?:\\\"\\\"\\\"|''')))",
+      "end": "^(?=(?:[ \\t]*{{WTRL_PY_IDENTIFIER}}:|{{WTRL_DOCSTRING_END}}))",
       "beginCaptures": {
         "2": {
           "name": "entity.name.label.waterloo markup.italic.section.waterloo"
@@ -442,7 +442,7 @@
           "name": "markup.inline.raw.waterloo markup.italic.literal.waterloo"
         },
         {
-          "match": "\\b([A-Za-z_][A-Za-z0-9_]*)\\b",
+          "match": "\\b({{WTRL_PY_IDENTIFIER}})\\b",
           "name": "invalid.illegal.section.waterloo markup.error markup.bold"
         },
         {
@@ -452,7 +452,7 @@
     },
     "subsection-preamble-scope": {
       "begin": "^([ \\\t]+)(scope:)\\s*$",
-      "end": "^(?=(?:[ \\\t]*[A-Za-z_][A-Za-z0-9_]*:|\\s*(?:\\\"\\\"\\\"|''')))",
+      "end": "^(?=(?:[ \\\t]*{{WTRL_PY_IDENTIFIER}}:|{{WTRL_DOCSTRING_END}}))",
       "beginCaptures": {
         "2": {
           "name": "entity.name.label.waterloo markup.italic.section.waterloo"
@@ -464,14 +464,14 @@
           "name": "markup.inline.raw.waterloo markup.italic.literal.waterloo"
         },
         {
-          "match": "(?:[A-Za-z_][A-Za-z0-9_]*)\\b",
+          "match": "(?:{{WTRL_PY_IDENTIFIER}})\\b",
           "name": "markup.inline.raw.waterloo"
         }
       ]
     },
     "subsection-preamble-status": {
       "begin": "^([ \\\t]+)(status:)\\s*$",
-      "end": "^(?=(?:[ \\\t]*[A-Za-z_][A-Za-z0-9_]*:|\\s*(?:\\\"\\\"\\\"|''')))",
+      "end": "^(?=(?:[ \\\t]*{{WTRL_PY_IDENTIFIER}}:|{{WTRL_DOCSTRING_END}}))",
       "beginCaptures": {
         "2": {
           "name": "entity.name.label.waterloo markup.italic.section.waterloo"
@@ -486,7 +486,7 @@
     },
     "subsection-contract-traits": {
       "begin": "^([ \\\t]+)(traits:)\\s*$",
-      "end": "^(?=(?:[ \\\t]*[A-Za-z_][A-Za-z0-9_]*:|\\s*(?:\\\"\\\"\\\"|''')))",
+      "end": "^(?=(?:[ \\\t]*{{WTRL_PY_IDENTIFIER}}:|{{WTRL_DOCSTRING_END}}))",
       "beginCaptures": {
         "2": {
           "name": "entity.name.label.waterloo markup.italic.section.waterloo"
@@ -501,7 +501,7 @@
     },
     "subsection-contract-base": {
       "begin": "^([ \\\t]+)(base:)\\s*$",
-      "end": "^(?=(?:[ \\\t]*[A-Za-z_][A-Za-z0-9_]*:|\\s*(?:\\\"\\\"\\\"|''')))",
+      "end": "^(?=(?:[ \\\t]*{{WTRL_PY_IDENTIFIER}}:|{{WTRL_DOCSTRING_END}}))",
       "beginCaptures": {
         "2": {
           "name": "entity.name.label.waterloo markup.italic.section.waterloo"
@@ -524,7 +524,7 @@
     },
     "map-from-anything-to-freeform": {
       "begin": "^([ \\t]+)([^`\\n:]+:)\\s*$",
-      "end": "^(?=(?:\\1[^`\\n:]+:|\\s*(?:\\\"\\\"\\\"|''')))",
+      "end": "^(?=(?:\\1[^`\\n:]+:|{{WTRL_DOCSTRING_END}}))",
       "beginCaptures": {
         "2": {
           "name": "entity.name.label.waterloo"
@@ -539,7 +539,7 @@
     "list-of-qualified-identifiers": {
       "patterns": [
         {
-          "match": "([A-Za-z_][A-Za-z0-9_]*(?:\\.[A-Za-z_][A-Za-z0-9_]*)*)",
+          "match": "({{WTRL_PY_IDENTIFIER}}(?:\\.{{WTRL_PY_IDENTIFIER}})*)",
           "name": "markup.inline.raw.waterloo"
         }
       ]
@@ -547,7 +547,7 @@
     "list-of-type-qualified-identifiers": {
       "patterns": [
         {
-          "match": "([A-Za-z_][A-Za-z0-9_]*(?:\\.[A-Za-z_][A-Za-z0-9_]*)*)",
+          "match": "({{WTRL_PY_IDENTIFIER}}(?:\\.{{WTRL_PY_IDENTIFIER}})*)",
           "name": "entity.name.type.waterloo"
         }
       ]
@@ -555,7 +555,7 @@
     "list-of-func-qualified-identifiers": {
       "patterns": [
         {
-          "match": "([A-Za-z_][A-Za-z0-9_]*(?:\\.[A-Za-z_][A-Za-z0-9_]*)*)",
+          "match": "({{WTRL_PY_IDENTIFIER}}(?:\\.{{WTRL_PY_IDENTIFIER}})*)",
           "name": "entity.name.function.waterloo"
         }
       ]
@@ -563,14 +563,14 @@
     "list-of-literals": {
       "patterns": [
         {
-          "match": "([A-Za-z_][A-Za-z0-9_]*(?:\\.[A-Za-z_][A-Za-z0-9_]*)*)",
+          "match": "({{WTRL_PY_IDENTIFIER}}(?:\\.{{WTRL_PY_IDENTIFIER}})*)",
           "name": "markup.inline.raw.waterloo markup.italic.literal.waterloo"
         }
       ]
     },
     "map-from-identifier-to-freeform": {
-      "begin": "^([ \t]+)([A-Za-z_][A-Za-z0-9_]*:)\\s*$",
-      "end": "^(?=(?:[ \t]*[A-Za-z_][A-Za-z0-9_]*:|\\s*(?:\\\"\\\"\\\"|''')))",
+      "begin": "^([ \t]+)({{WTRL_PY_IDENTIFIER}}:)\\s*$",
+      "end": "^(?=(?:[ \t]*{{WTRL_PY_IDENTIFIER}}:|{{WTRL_DOCSTRING_END}}))",
       "beginCaptures": {
         "2": {
           "name": "entity.name.label.waterloo"
@@ -583,8 +583,8 @@
       ]
     },
     "map-from-csv-identifiers-to-freeform": {
-      "begin": "^([ \\t]+)(?!_inherit\\b)([A-Za-z_][A-Za-z0-9_]*)(\\s*,\\s*[A-Za-z_][A-Za-z0-9_]*(?:\\s*,\\s*[A-Za-z_][A-Za-z0-9_]*)*)?(:)\\s*$",
-      "end": "^(?=(?:[ \t]*(?:_inherit|[A-Za-z_][A-Za-z0-9_]*(?:\\s*,\\s*[A-Za-z_][A-Za-z0-9_]*)*):|\\s*(?:\\\"\\\"\\\"|''')))",
+      "begin": "^([ \\t]+)(?!_inherit\\b)({{WTRL_PY_IDENTIFIER}})(\\s*,\\s*{{WTRL_PY_IDENTIFIER}}(?:\\s*,\\s*{{WTRL_PY_IDENTIFIER}})*)?(:)\\s*$",
+      "end": "^(?=(?:[ \t]*(?:_inherit|{{WTRL_PY_IDENTIFIER}}(?:\\s*,\\s*{{WTRL_PY_IDENTIFIER}})*):|{{WTRL_DOCSTRING_END}}))",
       "beginCaptures": {
         "2": {
           "name": "entity.name.label.waterloo markup.italic.section.waterloo markup.underline.section.waterloo"
@@ -600,8 +600,8 @@
       ]
     },
     "map-from-type-identifier-to-freeform": {
-      "begin": "^([ \\t]+)([A-Za-z_][A-Za-z0-9_]*:)\\s*$",
-      "end": "^(?=(?:[ \\t]*[A-Za-z_][A-Za-z0-9_]*:|\\s*(?:\\\"\\\"\\\"|''')))",
+      "begin": "^([ \\t]+)({{WTRL_PY_IDENTIFIER}}:)\\s*$",
+      "end": "^(?=(?:[ \\t]*{{WTRL_PY_IDENTIFIER}}:|{{WTRL_DOCSTRING_END}}))",
       "beginCaptures": {
         "2": {
           "name": "entity.name.type.waterloo"
@@ -614,8 +614,8 @@
       ]
     },
     "map-from-func-identifier-to-freeform": {
-      "begin": "^([ \\t]+)([A-Za-z_][A-Za-z0-9_]*:)\\s*$",
-      "end": "^(?=(?:[ \\t]*[A-Za-z_][A-Za-z0-9_]*:|\\s*(?:\\\"\\\"\\\"|''')))",
+      "begin": "^([ \\t]+)({{WTRL_PY_IDENTIFIER}}:)\\s*$",
+      "end": "^(?=(?:[ \\t]*{{WTRL_PY_IDENTIFIER}}:|{{WTRL_DOCSTRING_END}}))",
       "beginCaptures": {
         "2": {
           "name": "entity.name.function.waterloo"
@@ -628,8 +628,8 @@
       ]
     },
     "map-from-func-qualified-identifier-to-freeform": {
-      "begin": "^([ \\t]+)([A-Za-z_][A-Za-z0-9_]*(?:\\.[A-Za-z_][A-Za-z0-9_]*)*:)\\s*$",
-      "end": "^(?=(?:[ \\t]*[A-Za-z_][A-Za-z0-9_]*:|\\s*(?:\\\"\\\"\\\"|''')))",
+      "begin": "^([ \\t]+)({{WTRL_PY_IDENTIFIER}}(?:\\.{{WTRL_PY_IDENTIFIER}})*:)\\s*$",
+      "end": "^(?=(?:[ \\t]*{{WTRL_PY_IDENTIFIER}}:|{{WTRL_DOCSTRING_END}}))",
       "beginCaptures": {
         "2": {
           "name": "entity.name.function.waterloo"
@@ -642,8 +642,8 @@
       ]
     },
     "map-from-var-identifier-to-freeform": {
-      "begin": "^([ \\t]+)([A-Za-z_][A-Za-z0-9_]*:)\\s*$",
-      "end": "^(?=(?:[ \\t]*[A-Za-z_][A-Za-z0-9_]*:|\\s*(?:\\\"\\\"\\\"|''')))",
+      "begin": "^([ \\t]+)({{WTRL_PY_IDENTIFIER}}:)\\s*$",
+      "end": "^(?=(?:[ \\t]*{{WTRL_PY_IDENTIFIER}}:|{{WTRL_DOCSTRING_END}}))",
       "beginCaptures": {
         "2": {
           "name": "variable.other.python.waterloo"
@@ -656,8 +656,8 @@
       ]
     },
     "map-from-qualified-identifier-to-freeform": {
-      "begin": "^([ \\t]+)([A-Za-z_][A-Za-z0-9_]*(?:\\.[A-Za-z_][A-Za-z0-9_]*)*:)\\s*$",
-      "end": "^(?=(?:[ \\t]*[A-Za-z_][A-Za-z0-9_]*:|\\s*(?:\\\"\\\"\\\"|''')))",
+      "begin": "^([ \\t]+)({{WTRL_PY_IDENTIFIER}}(?:\\.{{WTRL_PY_IDENTIFIER}})*:)\\s*$",
+      "end": "^(?=(?:[ \\t]*{{WTRL_PY_IDENTIFIER}}:|{{WTRL_DOCSTRING_END}}))",
       "beginCaptures": {
         "2": {
           "name": "entity.name.label.waterloo"
@@ -1116,7 +1116,7 @@
         },
         {
           "name": "meta.inline.role.waterloo",
-          "match": "(\\|(?!lit\\||ref\\||var\\||type\\||mod\\||value\\||op\\||func\\||label\\||attr\\||file\\||dfn\\||term\\||cmd\\||opt\\||tag\\||norm\\||var_type\\||class\\||pkg\\||url\\||[A-Za-z_][A-Za-z0-9_]*_)[A-Za-z_][A-Za-z0-9_]*\\|)(`)([^`]*)(`)",
+          "match": "(\\|(?!lit\\||ref\\||var\\||type\\||mod\\||value\\||op\\||func\\||label\\||attr\\||file\\||dfn\\||term\\||cmd\\||opt\\||tag\\||norm\\||var_type\\||class\\||pkg\\||url\\||{{WTRL_PY_IDENTIFIER}}_){{WTRL_PY_IDENTIFIER}}\\|)(`)([^`]*)(`)",
           "captures": {
             "1": {
               "name": "support.function.role.waterloo"

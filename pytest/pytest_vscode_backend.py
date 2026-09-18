@@ -18,7 +18,9 @@ PATH_IDE_PLUGINS = Path(__file__).resolve().parents[1]
 PATH_BACKEND = PATH_IDE_PLUGINS / "vscode" / "extension_waterloo_commands.py"
 PATH_PACKAGE_JSON = PATH_IDE_PLUGINS / "vscode" / "package.json"
 PATH_EXTENSION_JS = PATH_IDE_PLUGINS / "vscode" / "extension.js"
+PATH_TEXTMATE_GENERATOR = PATH_IDE_PLUGINS / "tools" / "sdv_wtrl_generate_textmate_grammar.py"
 PATH_DOCITEM_HELPER = Path(docitem_helper.__file__).resolve()
+PATH_DOCITEM_HELPER_IMPORT_ROOT = PATH_DOCITEM_HELPER.parents[3]
 
 
 def _run_backend(payload: dict[str, Any]) -> dict[str, Any]:
@@ -43,6 +45,7 @@ def _assert_successful_backend_validation(response: dict[str, Any], *, command: 
 	assert response["command"] == command
 	assert response["data"]["kind"] == kind
 	assert response["data"]["qualified_identifier"] == qid
+	assert response["data"]["module_dir"] == str(PATH_DOCITEM_HELPER_IMPORT_ROOT)
 	assert response["diagnostics_summary"]["warning"] == 0
 	assert response["diagnostics_summary"]["error"] == 0
 
@@ -76,17 +79,17 @@ def _docitem_helper_tracer_class_payload(command: str) -> dict[str, Any]:
 
 def test_backend_validates_docitem_helper_docstring() -> None:
 	response = _run_backend(_docitem_helper_module_payload("validate_docstring"))
-	_assert_successful_backend_validation(response, command="validate_docstring", kind="module", qid="docitem_helper")
+	_assert_successful_backend_validation(response, command="validate_docstring", kind="module", qid="sdv.doc.waterloo.docitem_helper")
 
 
 def test_backend_validates_docitem_helper_coverage() -> None:
 	response = _run_backend(_docitem_helper_module_payload("validate_coverage_of_docstring"))
-	_assert_successful_backend_validation(response, command="validate_coverage_of_docstring", kind="module", qid="docitem_helper")
+	_assert_successful_backend_validation(response, command="validate_coverage_of_docstring", kind="module", qid="sdv.doc.waterloo.docitem_helper")
 
 
 def test_backend_validates_docitem_helper_tracer_coverage() -> None:
 	response = _run_backend(_docitem_helper_tracer_class_payload("validate_coverage_of_docstring"))
-	_assert_successful_backend_validation(response, command="validate_coverage_of_docstring", kind="class", qid="docitem_helper.tracer")
+	_assert_successful_backend_validation(response, command="validate_coverage_of_docstring", kind="class", qid="sdv.doc.waterloo.docitem_helper.tracer")
 
 
 def test_package_json_commands_are_registered_in_extension_js() -> None:
@@ -115,3 +118,40 @@ def test_package_json_menu_commands_are_contributed() -> None:
 		if isinstance(entry, dict) and isinstance(entry.get("command"), str)
 	}
 	assert menu_commands <= contributed
+
+
+def test_textmate_generator_expands_recursively_and_creates_backup(tmp_path: Path) -> None:
+	template = tmp_path / "waterloo.injection.tmLanguage.template.json"
+	output = tmp_path / "waterloo.injection.tmLanguage.json"
+	template.write_text(
+		'{"end": "{{WTRL_TOP_LEVEL_SECTION_END}}", "identifier": "{{WTRL_PY_IDENTIFIER}}", '
+		'"docstring_end": "{{WTRL_DOCSTRING_END}}"}\n',
+		encoding="utf-8",
+	)
+	output.write_text('{"end": "old"}\n', encoding="utf-8")
+
+	result = subprocess.run(
+		[sys.executable, str(PATH_TEXTMATE_GENERATOR), "--template", str(template), "--out", str(output)],
+		text=True,
+		capture_output=True,
+		check=False,
+	)
+	assert result.returncode == 0, result.stderr
+	generated = json.loads(output.read_text(encoding="utf-8"))
+	assert "Public_types" in generated["end"]
+	assert generated["identifier"] == "[A-Za-z_][A-Za-z0-9_]*"
+	assert generated["docstring_end"].startswith(r"\s*(?:")
+	assert generated["docstring_end"].endswith("|''')")
+	backups = list(tmp_path.glob("waterloo.injection.tmLanguage.*Z.json"))
+	assert len(backups) == 1
+	assert json.loads(backups[0].read_text(encoding="utf-8")) == {"end": "old"}
+
+	second_result = subprocess.run(
+		[sys.executable, str(PATH_TEXTMATE_GENERATOR), "--template", str(template), "--out", str(output)],
+		text=True,
+		capture_output=True,
+		check=False,
+	)
+	assert second_result.returncode == 0, second_result.stderr
+	assert "up to date" in second_result.stdout
+	assert len(list(tmp_path.glob("waterloo.injection.tmLanguage.*Z.json"))) == 1
