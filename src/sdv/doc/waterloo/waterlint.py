@@ -99,8 +99,11 @@ with contextlib.redirect_stdout(sys.stderr):
 		tracer,
 		Documentable,
 		get_obj_name,
-		get_obj_fully_qualified_name,
-		get_obj_path,
+	get_obj_fully_qualified_name,
+	get_obj_path,
+	is_obj_class,
+	is_obj_function,
+	is_obj_module,
 		RE_ANSI_SGR_COMPILED,
 		RE_WTRL_JSON_SCHEMA_NAME_COMPILED,
 		ResolveObjectError,
@@ -1294,11 +1297,11 @@ def render_json_command(args: argparse.Namespace) -> int:
 		if tr.should_ignore_rule("TOOL-009"):
 			return
 		kind = "unknown"
-		if cvrt.is_obj_module(o):
+		if is_obj_module(o):
 			kind = "module"
-		elif cvrt.is_obj_class(o):
+		elif is_obj_class(o):
 			kind = "class"
-		elif cvrt.is_obj_function(o):
+		elif is_obj_function(o):
 			kind = "callable"
 		phase_text = "parse" if phase == "parse" else "validation" if phase == "validation" else phase
 		tr.add_warning(
@@ -1330,7 +1333,7 @@ def render_json_command(args: argparse.Namespace) -> int:
 				return 2
 	try:
 		flavour_str = args.flavour
-		flavour = cvrt.flavour_tag_map.get(flavour_str)
+		flavour = docitem.FLAVOUR_TAG_MAP.get(flavour_str)
 		if flavour is None:
 			flavour = cvrt.Flavour.RFC_2119
 		input_walk_doc: dict[str, Any] | None = None
@@ -1511,11 +1514,11 @@ def render_json_command(args: argparse.Namespace) -> int:
 			if not doc_txt or not str(doc_txt).strip():
 # No docstring or empty docstring. Count safely.
 				if name_key not in objects_counted:
-					if cvrt.is_obj_module(o):
+					if is_obj_module(o):
 						num_modules_skipped_no_doc += 1
-					elif cvrt.is_obj_class(o):
+					elif is_obj_class(o):
 						num_classes_skipped_no_doc += 1
-					elif cvrt.is_obj_function(o):
+					elif is_obj_function(o):
 						num_callables_skipped_no_doc += 1
 					else:
 						num_unknown_skipped_no_doc += 1
@@ -1534,11 +1537,11 @@ def render_json_command(args: argparse.Namespace) -> int:
 				except docitem.ParseError:
 # Invalid docstring -> skip. Count safely.
 					if name_key not in objects_counted:
-						if cvrt.is_obj_module(o):
+						if is_obj_module(o):
 							num_modules_skipped_invalid += 1
-						elif cvrt.is_obj_class(o):
+						elif is_obj_class(o):
 							num_classes_skipped_invalid += 1
-						elif cvrt.is_obj_function(o):
+						elif is_obj_function(o):
 							num_callables_skipped_invalid += 1
 						else:
 							num_unknown_skipped_invalid += 1
@@ -1550,11 +1553,11 @@ def render_json_command(args: argparse.Namespace) -> int:
 				except docitem.ValidationError:
 # Invalid Waterloo docstring -> skip. Count safely.
 					if name_key not in objects_counted:
-						if cvrt.is_obj_module(o):
+						if is_obj_module(o):
 							num_modules_skipped_invalid += 1
-						elif cvrt.is_obj_class(o):
+						elif is_obj_class(o):
 							num_classes_skipped_invalid += 1
-						elif cvrt.is_obj_function(o):
+						elif is_obj_function(o):
 							num_callables_skipped_invalid += 1
 						else:
 							num_unknown_skipped_invalid += 1
@@ -1667,7 +1670,7 @@ def render_json_command(args: argparse.Namespace) -> int:
 			tree_traits: list[cvrt.WtrlJsonNode_t] = []
 			tree_decorators: list[cvrt.WtrlJsonNode_t] = []
 # Regular cases for the object from traversal
-			if cvrt.is_obj_module(o):
+			if is_obj_module(o):
 				modules_used.add(docitem.get_obj_name(o))
 				tree_full["__WTRL_TOC_MODULES__"][qname] = f"/__WTRL_OBJECTS__/{qname}"
 # Store path if we allow this (security issue b/c local file system structure is unveiled).
@@ -1678,7 +1681,7 @@ def render_json_command(args: argparse.Namespace) -> int:
 				if qname not in objects_counted:
 					num_modules_rendered += 1
 					objects_counted.add(qname)
-			elif cvrt.is_obj_class(o):
+			elif is_obj_class(o):
 				tree_full["__WTRL_TOC_CLASSES__"][qname] = f"/__WTRL_OBJECTS__/{qname}"
 				ctor = getattr(o, "__init__", None)
 				if callable(ctor):
@@ -1691,7 +1694,7 @@ def render_json_command(args: argparse.Namespace) -> int:
 				if qname not in objects_counted:
 					num_classes_rendered += 1
 					objects_counted.add(qname)
-			elif cvrt.is_obj_function(o):
+			elif is_obj_function(o):
 				tree_full["__WTRL_TOC_CALLABLES__"][qname] = f"/__WTRL_OBJECTS__/{qname}"
 				tree_sig = cvrt.to_node_signature_json(o)
 # Traits

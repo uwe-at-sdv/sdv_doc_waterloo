@@ -64,11 +64,11 @@ import sdv.doc.waterloo.docitem as docitem
 from sdv.doc.waterloo.version import __version__ as WTRL_WATERLOO_VERSION
 
 from sdv.doc.waterloo.docitem_helper import (
-	RE_ANSI_SGR_COMPILED,
 	get_obj_fully_qualified_name,
 	ResolveObjectError,
 	tracer,
-	)
+)
+from sdv.doc.waterloo.docitem_types import RE_ANSI_SGR_COMPILED
 
 #===== Typing =================================================#
 WtrlJsonNode_t: TypeAlias = Dict[str, "WtrlJsonNode_t"] | List["WtrlJsonNode_t"] | str | int | float | bool | None

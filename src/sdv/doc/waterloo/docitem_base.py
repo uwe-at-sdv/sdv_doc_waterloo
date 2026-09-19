@@ -20,7 +20,25 @@ from types import FunctionType, ModuleType
 from typing import Any, Callable, Dict, Final, get_type_hints, get_origin, get_args, Generator, Iterable, Iterator, List, NewType, NoReturn, Sequence, Set, Tuple, Type, TypeAlias, TypeGuard, Union, cast
 from enum import IntEnum
 
-from sdv.doc.waterloo.docitem_helper import *
+from sdv.doc.waterloo.docitem_types import (
+	KEYWORDS_OF_NORMATIVITY,
+	DocstringSubtree,
+	Details,
+	RE_IDENTIFIER_COMPILED,
+	RE_QUALIFIED_IDENTIFIER_COMPILED,
+	)
+from sdv.doc.waterloo.docitem_exceptions import (
+	ParseError
+	)
+from sdv.doc.waterloo.docitem_tracer import (
+	tracer,
+	traced_section
+	)
+from sdv.doc.waterloo.docitem_helper import (
+	is_list_of_str,
+	raise_parsing_error,
+	warn_parsing,
+	)
 from sdv.doc.waterloo.docitem_diagnostics import (
 	render_identifier_lines,
 	render_expected_identifier,
@@ -29,6 +47,8 @@ from sdv.doc.waterloo.docitem_diagnostics import (
 	render_deduplicated_identifiers,
 	explain_try_self_for_subsection,
 )
+
+import re
 
 #===== Keywords ===============================================#
 RE_PARTIAL_NORMATIVITY_PATTERN_A_COMPILED: Final[Sequence[re.Pattern[str]]] = (
@@ -201,7 +221,7 @@ Method_overview:
 	def detect_partial_normativity(self,tr: tracer) -> bool:
 		raise NotImplementedError
 
-class docitem_list_base(docitem_base):
+class docitem_list_of_strings_base(docitem_base):
 	"""
 Preamble:
 	profile:
@@ -402,7 +422,7 @@ Raises:
 	def __str__(self) -> str:
 		return " {" + ",".join(self._items) + "}"
 
-class docitem_list_of_symbols_base(docitem_list_base):
+class docitem_list_of_symbols_base(docitem_list_of_strings_base):
 	"""
 	Preamble:
 		profile:
@@ -563,7 +583,7 @@ class docitem_list_of_symbols_base(docitem_list_base):
 	def __str__(self) -> str:
 		return " {" + ",".join(self._items) + "}"
 
-class docitem_free_text_entry_base(docitem_list_base):
+class docitem_free_text_entry_base(docitem_list_of_strings_base):
 	"""
 Preamble:
 	profile:
@@ -578,7 +598,7 @@ Contract:
 	traits:
 		abstract
 Derived_from:
-	docitem_list_base
+	docitem_list_of_strings_base
 Public_methods:
 	parse
 Method_overview:

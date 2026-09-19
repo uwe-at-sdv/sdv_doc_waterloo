@@ -2,7 +2,28 @@ from __future__ import annotations
 from types import FunctionType, ModuleType
 from typing import Any, Callable, Dict, Final, get_type_hints, get_origin, get_args, Generator, Iterable, Iterator, List, NewType, NoReturn, Sequence, Set, Tuple, Type, TypeAlias, TypeGuard, Union, cast
 
-from sdv.doc.waterloo.docitem_helper import *
+from sdv.doc.waterloo.docitem_types import (
+	Details,
+	DocstringSubtree,
+	DocstringTree,
+	RE_CSV_IDENTIFIERS_COMPILED,
+	RE_IDENTIFIER_COMPILED,
+	RE_QUALIFIED_IDENTIFIER_COMPILED,
+	Scope,
+	Scopes,
+	scope_tag_map,
+	)
+from sdv.doc.waterloo.docitem_tracer import rule_on_fail, tracer
+from sdv.doc.waterloo.docitem_helper import (
+	DocSession,
+	is_list_of_str,
+	NoContentError,
+	raise_parsing_error,
+	raise_parsing_error_expected_but_got,
+	SectionNotFoundError,
+	SubsectionNotFoundError,
+	warn_parsing,
+	)
 from sdv.doc.waterloo.docitem_diagnostics import render_found_label, render_suggestion
 
 #===== Tokenizer ==============================================#

@@ -2,14 +2,41 @@ from __future__ import annotations
 from types import FunctionType, ModuleType
 from typing import Any, Callable, Dict, Final, get_type_hints, get_origin, get_args, Generator, Iterable, Iterator, List, NewType, NoReturn, Sequence, Set, Tuple, Type, TypeAlias, TypeGuard, Union, cast
 
-from sdv.doc.waterloo.docitem_tokenizer import *
-from sdv.doc.waterloo.docitem_base import *
+from sdv.doc.waterloo.docitem_types import (
+	Details,
+	DocstringSubtree,
+	)
+from sdv.doc.waterloo.docitem_tracer import (
+	rule_on_fail,
+	traced_section,
+	tracer,
+	)
+from sdv.doc.waterloo.docitem_helper import (
+	is_list_of_str,
+	raise_parsing_error,
+	raise_parsing_error_expected_but_got,
+	)
+from sdv.doc.waterloo.docitem_tokenizer import (
+	expect_label,
+	expect_label_csv_identifiers,
+	expect_label_identifier,
+	expect_label_qualified_identifier,
+	expect_list,
+	to_string_tree,
+	)
+from sdv.doc.waterloo.docitem_base import (
+	docitem_base,
+	docitem_free_text_entry_base,
+	docitem_list_of_strings_base,
+	docitem_list_of_symbols_base,
+	docitem_map_base,
+	)
 from sdv.doc.waterloo.docitem_diagnostics import (
 	explain_try_self_for_section,
 	explain_try_self_for_subsection,
 	render_found_label,
 	render_suggestion,
-)
+	)
 
 #===== begin section Derived_from =============================#
 
@@ -882,7 +909,7 @@ Method_overview:
 
 #----- docitem class returns ----------------------------------#
 
-class docitem_returns(docitem_list_base):
+class docitem_returns(docitem_list_of_strings_base):
 	"""
 Preamble:
 	profile:

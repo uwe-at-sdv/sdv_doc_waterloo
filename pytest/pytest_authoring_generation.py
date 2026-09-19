@@ -49,14 +49,14 @@ def test_gen_minimal_authoring_json_function_golden_output() -> None:
 
 def test_gen_full_authoring_json_class_golden_output() -> None:
 	"""Full generation adds every safely representable class-level structure."""
-	result = _generate("gen-full-authoring-json", "docitem_helper.tracer")
+	result = _generate("gen-full-authoring-json", "docitem_tracer.tracer")
 	assert result.returncode == 0, result.stderr
 	expected = {
 		"$schema": "https://sci-d-vis.com/schema/wtrl-authoring-object-json-0.1.0.schema.json",
-		"$id": "urn:waterlint:wtrl-authoring-object-json:docitem_helper.tracer",
+		"$id": "urn:waterlint:wtrl-authoring-object-json:docitem_tracer.tracer",
 		"__WTRL_CATEGORY__": "wtrl-authoring-object-json",
 		"__WTRL_VERSION__": {"schema": "0.1.0"},
-		"qualified_name": "docitem_helper.tracer",
+		"qualified_name": "docitem_tracer.tracer",
 		"profile": "class",
 		"doc": {
 			"Preamble": {

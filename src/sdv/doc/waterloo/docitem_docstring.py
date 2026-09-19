@@ -1,21 +1,89 @@
 from __future__ import annotations
 from typing import Dict, Type
 
-from sdv.doc.waterloo.docitem_tokenizer import *
+from sdv.doc.waterloo.docitem_types import (
+	Details,
+	DocstringSubtree,
+	DocstringTree,
+	RE_IDENTIFIER_COMPILED,
+	Scope,
+	Scopes,
+	)
+from sdv.doc.waterloo.docitem_exceptions import (
+	ParseError,
+	)
+from sdv.doc.waterloo.docitem_tracer import (
+	rule_on_fail,
+	tracer
+	)
+from sdv.doc.waterloo.docitem_helper import (
+	CANONICAL_ORDER_OF_PROFILES,
+	DocSession,
+	SCOPE_TAG_MAP,
+	get_obj_docstring,
+	get_obj_name,
+	is_obj_class,
+	is_obj_method_like,
+	is_obj_module,
+	NoContentError,
+	raise_parsing_error,
+	raise_validation_error,
+	SectionNotFoundError,
+	SubsectionNotFoundError,
+	)
 from sdv.doc.waterloo.docitem_diagnostics import (
 	explain_try_self_for_section,
 	render_allowed_identifier,
+	render_allowed_labels,
 	render_expected_identifier,
 	render_found_label,
 	render_identifier_lines,
 	render_profile_mismatch_details,
-)
+	render_suggestion,
+	)
+
+from sdv.doc.waterloo.docitem_base import (
+	docitem_base,
+	docitem_map_base,
+	)
 
 # Import section modules
-from sdv.doc.waterloo.docitem_sections import *
-from sdv.doc.waterloo.docitem_preamble import *
-from sdv.doc.waterloo.docitem_contract import *
-
+from sdv.doc.waterloo.docitem_sections import (
+	docitem_class_overview,
+	docitem_definitions,
+	docitem_derived_from,
+	docitem_description,
+	docitem_factory,
+	docitem_function_overview,
+	docitem_method_overview,
+	docitem_notes,
+	docitem_parameters,
+	docitem_public_classes,
+	docitem_public_constants,
+	docitem_public_functions,
+	docitem_public_methods,
+	docitem_public_types,
+	docitem_public_variables,
+	docitem_raises,
+	docitem_returns,
+	docitem_see_also,
+	docitem_terminology,
+	)
+from sdv.doc.waterloo.docitem_preamble import (
+	docitem_preamble,
+	)
+from sdv.doc.waterloo.docitem_contract import (
+	docitem_contract_class,
+	docitem_contract_inherited_method,
+	docitem_contract_method,
+	docitem_contract_module,
+	)
+from sdv.doc.waterloo.docitem_tokenizer import (
+	expect_label_identifier,
+	expect_list,
+	get_profile_of_tree,
+	parse_indent_docstring,
+	)
 
 #===== begin Docstring ========================================#
 

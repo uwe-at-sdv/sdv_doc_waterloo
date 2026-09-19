@@ -272,7 +272,7 @@ describes the object.
 
 
 Using the MCP-server in VS Code
-------------------------------
+-------------------------------
 
 .. rubric:: HTTP transport
 

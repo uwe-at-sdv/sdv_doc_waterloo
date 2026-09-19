@@ -12,11 +12,13 @@ sdv/doc/waterloo/mcp/wtrl_logging.py
 sdv/doc/waterloo/mcp/sdv_tty_util_table.py
 sdv/doc/waterloo/waterlint_explain_section.py
 sdv/doc/waterloo/docitem_preamble.py
+sdv/doc/waterloo/docitem_types.py
 sdv/doc/waterloo/docitem_docstring.py
 sdv/doc/waterloo/waterlint_authoring.py
 sdv/doc/waterloo/waterlint_gen_example_template_json.py
 sdv/doc/waterloo/docitem_validator.py
 sdv/doc/waterloo/waterlint_common.py
+sdv/doc/waterloo/docitem_exceptions.py
 sdv/doc/waterloo/waterlint_authoring_generate.py
 sdv/doc/waterloo/docitem_contract.py
 sdv/doc/waterloo/docitem_tokenizer.py
@@ -36,3 +38,4 @@ sdv/doc/waterloo/waterlint_explain_subsection.py
 sdv/doc/waterloo/docitem_convert.py
 sdv/doc/waterloo/docitem_genutil.py
 sdv/doc/waterloo/waterlint_render_html5.py
+sdv/doc/waterloo/docitem_tracer.py

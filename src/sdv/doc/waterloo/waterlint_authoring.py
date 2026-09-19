@@ -33,11 +33,10 @@ from typing import Final, Literal, Mapping, TypeAlias, cast
 
 from sdv.doc.waterloo.docitem_helper import (
 	CANONICAL_ORDER_OF_SECTIONS,
-	KEYWORDS_OF_NORMATIVITY,
 	SECTION_PROPERTIES,
-	Profile_t,
 	get_allowed_sections_for_profile,
 )
+from sdv.doc.waterloo.docitem_types import KEYWORDS_OF_NORMATIVITY, Profile_t
 
 
 AuthoringScalar_t: TypeAlias = str

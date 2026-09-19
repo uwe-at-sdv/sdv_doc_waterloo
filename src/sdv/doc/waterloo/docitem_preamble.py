@@ -2,9 +2,32 @@ from __future__ import annotations
 from types import FunctionType, ModuleType
 from typing import Any, Callable, Dict, Final, get_type_hints, get_origin, get_args, Generator, Iterable, Iterator, List, NewType, NoReturn, Sequence, Set, Tuple, Type, TypeAlias, TypeGuard, Union, cast
 
-from sdv.doc.waterloo.docitem_tokenizer import *
-from sdv.doc.waterloo.docitem_base import *
-from sdv.doc.waterloo.docitem_diagnostics import explain_try_self_for_section, explain_try_self_for_subsection, render_allowed_labels, render_found_label, render_identifier_lines, render_suggestion
+from sdv.doc.waterloo.docitem_types import (
+	Details,
+	DocstringSubtree,
+	)
+from sdv.doc.waterloo.docitem_tracer import (
+	rule_on_fail,
+	tracer,
+	)
+from sdv.doc.waterloo.docitem_helper import (
+	is_list_of_str,
+	raise_parsing_error,
+	)
+from sdv.doc.waterloo.docitem_tokenizer import expect_label_identifier, expect_list
+from sdv.doc.waterloo.docitem_base import (
+	docitem_base,
+	docitem_list_of_symbols_base,
+	docitem_map_base,
+	)
+from sdv.doc.waterloo.docitem_diagnostics import (
+	explain_try_self_for_section,
+	explain_try_self_for_subsection,
+	render_allowed_labels,
+	render_found_label,
+	render_identifier_lines,
+	render_suggestion,
+	)
 
 #===== begin section Preamble =================================#
 

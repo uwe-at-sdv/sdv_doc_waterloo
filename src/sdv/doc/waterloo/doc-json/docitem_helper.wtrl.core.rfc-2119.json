@@ -1,12 +1,12 @@
 {
     "$schema": "https://sci-d-vis.com/schema/wtrl-json-0.1.0.schema.json",
-    "$id": "urn:waterlint:wtrl-json:0.23.0:core:rfc-2119:80dbcfe1546ebb5c26a260a0926d4a7b072974cb99a63f25bbe3b4b6abee984c",
+    "$id": "urn:waterlint:wtrl-json:0.24.1:core:rfc-2119:fe8b5f181a3539c5138e9fb808b2f36da231c230e1a9b5415dadaeba78bb4095",
     "__WTRL_VERSION__": {
-        "waterloo": "0.13.0",
+        "waterloo": "0.24.1",
         "schema": "0.1.0"
     },
     "__WTRL_META__": {
-        "generated_at": "2026-09-14T08:16:51+02:00",
+        "generated_at": "2026-09-19T11:05:23+02:00",
         "generator": "waterlint",
         "scope": "core",
         "flavour": "rfc-2119"
@@ -49,22 +49,28 @@
         }
     },
     "__WTRL_TOC_MODULES__": {
-        "sdv.doc.waterloo.docitem_helper": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper"
+        "sdv.doc.waterloo.docitem_helper": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper",
+        "sdv.doc.waterloo.docitem_types": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_types",
+        "sdv.doc.waterloo.docitem_tracer": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_tracer"
     },
     "__WTRL_TOC_CLASSES__": {
+        "sdv.doc.waterloo.docitem_types.Scope": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_types.Scope",
+        "sdv.doc.waterloo.docitem_types.Flavour": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_types.Flavour",
+        "sdv.doc.waterloo.docitem_types.Format": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_types.Format",
+        "sdv.doc.waterloo.docitem_types.Status": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_types.Status",
+        "sdv.doc.waterloo.docitem_types.Trait": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_types.Trait",
+        "sdv.doc.waterloo.docitem_tracer.tracer": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_tracer.tracer",
+        "sdv.doc.waterloo.docitem_tracer.tracer.Severity": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_tracer.tracer.Severity",
         "sdv.doc.waterloo.docitem_helper.WhitelistReason": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.WhitelistReason",
-        "sdv.doc.waterloo.docitem_helper.Trait": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.Trait",
-        "sdv.doc.waterloo.docitem_helper.Scope": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.Scope",
-        "sdv.doc.waterloo.docitem_helper.Flavour": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.Flavour",
-        "sdv.doc.waterloo.docitem_helper.Format": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.Format",
-        "sdv.doc.waterloo.docitem_helper.Status": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.Status",
         "sdv.doc.waterloo.docitem_helper.ConfigTraversal": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.ConfigTraversal",
-        "sdv.doc.waterloo.docitem_helper.tracer": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.tracer",
-        "sdv.doc.waterloo.docitem_helper.tracer.Severity": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.tracer.Severity",
         "sdv.doc.waterloo.docitem_helper.DocSession": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.DocSession",
         "sdv.doc.waterloo.docitem_helper.ResolveObjectError": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.ResolveObjectError"
     },
     "__WTRL_TOC_CALLABLES__": {
+        "sdv.doc.waterloo.docitem_tracer.rule_on_fail": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_tracer.rule_on_fail",
+        "sdv.doc.waterloo.docitem_tracer.traced_section": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_tracer.traced_section",
+        "sdv.doc.waterloo.docitem_tracer.tracer.str_by_severity": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_tracer.tracer.str_by_severity",
+        "sdv.doc.waterloo.docitem_tracer.tracer.build_json": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_tracer.tracer.build_json",
         "sdv.doc.waterloo.docitem_helper.get_source_docstring": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.get_source_docstring",
         "sdv.doc.waterloo.docitem_helper.is_obj_annotatable": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.is_obj_annotatable",
         "sdv.doc.waterloo.docitem_helper.is_attr_annotated": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.is_attr_annotated",
@@ -86,10 +92,6 @@
         "sdv.doc.waterloo.docitem_helper.get_obj_annotations": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.get_obj_annotations",
         "sdv.doc.waterloo.docitem_helper.get_obj_decorators": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.get_obj_decorators",
         "sdv.doc.waterloo.docitem_helper.gen_documentable_objects": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.gen_documentable_objects",
-        "sdv.doc.waterloo.docitem_helper.tracer.str_by_severity": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.tracer.str_by_severity",
-        "sdv.doc.waterloo.docitem_helper.tracer.build_json": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.tracer.build_json",
-        "sdv.doc.waterloo.docitem_helper.traced_section": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.traced_section",
-        "sdv.doc.waterloo.docitem_helper.rule_on_fail": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.rule_on_fail",
         "sdv.doc.waterloo.docitem_helper.raise_has_no_docstring": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.raise_has_no_docstring",
         "sdv.doc.waterloo.docitem_helper.raise_parsing_error": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.raise_parsing_error",
         "sdv.doc.waterloo.docitem_helper.raise_parsing_error_expected_but_got": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.raise_parsing_error_expected_but_got",
@@ -112,7 +114,7 @@
         "sdv.doc.waterloo.docitem_helper.Documentable": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.Documentable",
         "sdv.doc.waterloo.docitem_helper.AstDocNode": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.AstDocNode",
         "sdv.doc.waterloo.docitem_helper.AnchorKind_t": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.AnchorKind_t",
-        "sdv.doc.waterloo.docitem_helper.tracer.Context": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.tracer.Context",
+        "sdv.doc.waterloo.docitem_tracer.tracer.Context": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_tracer.tracer.Context",
         "sdv.doc.waterloo.docitem_helper.DocSession.Seen": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.DocSession.Seen",
         "sdv.doc.waterloo.docitem_helper.DocSession.Validated": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.DocSession.Validated"
     },
@@ -140,6 +142,21 @@
         "sdv.doc.waterloo.docitem_helper.FORMAT_TAG_MAP": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.FORMAT_TAG_MAP",
         "sdv.doc.waterloo.docitem_helper.STATUS_TAG_MAP": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.STATUS_TAG_MAP",
         "sdv.doc.waterloo.docitem_helper.SECTION_PROPERTIES": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.SECTION_PROPERTIES",
+        "sdv.doc.waterloo.docitem_types.Scope.PUBLIC": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_types.Scope.PUBLIC",
+        "sdv.doc.waterloo.docitem_types.Scope.EXTENSION": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_types.Scope.EXTENSION",
+        "sdv.doc.waterloo.docitem_types.Scope.CORE": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_types.Scope.CORE",
+        "sdv.doc.waterloo.docitem_types.Flavour.RAW": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_types.Flavour.RAW",
+        "sdv.doc.waterloo.docitem_types.Flavour.RFC_2119": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_types.Flavour.RFC_2119",
+        "sdv.doc.waterloo.docitem_types.Flavour.MARKDOWN": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_types.Flavour.MARKDOWN",
+        "sdv.doc.waterloo.docitem_types.Format.JSON": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_types.Format.JSON",
+        "sdv.doc.waterloo.docitem_types.Format.MD": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_types.Format.MD",
+        "sdv.doc.waterloo.docitem_types.Status.EXPERIMENTAL": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_types.Status.EXPERIMENTAL",
+        "sdv.doc.waterloo.docitem_types.Status.STABLE": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_types.Status.STABLE",
+        "sdv.doc.waterloo.docitem_types.Status.FROZEN": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_types.Status.FROZEN",
+        "sdv.doc.waterloo.docitem_types.Status.DEPRECATED": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_types.Status.DEPRECATED",
+        "sdv.doc.waterloo.docitem_types.Status.DRAFT": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_types.Status.DRAFT",
+        "sdv.doc.waterloo.docitem_types.Trait.ABSTRACT": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_types.Trait.ABSTRACT",
+        "sdv.doc.waterloo.docitem_types.Trait.FINAL": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_types.Trait.FINAL",
         "sdv.doc.waterloo.docitem_helper.WhitelistReason.UNSPECIFIED_RULE": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.WhitelistReason.UNSPECIFIED_RULE",
         "sdv.doc.waterloo.docitem_helper.WhitelistReason.MAY_EXIST_RULE": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.WhitelistReason.MAY_EXIST_RULE",
         "sdv.doc.waterloo.docitem_helper.WhitelistReason.STRUCTURE_RULE": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.WhitelistReason.STRUCTURE_RULE",
@@ -149,22 +166,7 @@
         "sdv.doc.waterloo.docitem_helper.WhitelistReason.FALLBACK_RULE": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.WhitelistReason.FALLBACK_RULE",
         "sdv.doc.waterloo.docitem_helper.WhitelistReason.RELAY_RULE": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.WhitelistReason.RELAY_RULE",
         "sdv.doc.waterloo.docitem_helper.WhitelistReason.BAD_IMPLEMENTATION_RULE": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.WhitelistReason.BAD_IMPLEMENTATION_RULE",
-        "sdv.doc.waterloo.docitem_helper.WhitelistReason.EXISTS_AS_COMMENT_RULE": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.WhitelistReason.EXISTS_AS_COMMENT_RULE",
-        "sdv.doc.waterloo.docitem_helper.Trait.ABSTRACT": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.Trait.ABSTRACT",
-        "sdv.doc.waterloo.docitem_helper.Trait.FINAL": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.Trait.FINAL",
-        "sdv.doc.waterloo.docitem_helper.Scope.PUBLIC": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.Scope.PUBLIC",
-        "sdv.doc.waterloo.docitem_helper.Scope.EXTENSION": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.Scope.EXTENSION",
-        "sdv.doc.waterloo.docitem_helper.Scope.CORE": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.Scope.CORE",
-        "sdv.doc.waterloo.docitem_helper.Flavour.RAW": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.Flavour.RAW",
-        "sdv.doc.waterloo.docitem_helper.Flavour.RFC_2119": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.Flavour.RFC_2119",
-        "sdv.doc.waterloo.docitem_helper.Flavour.MARKDOWN": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.Flavour.MARKDOWN",
-        "sdv.doc.waterloo.docitem_helper.Format.JSON": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.Format.JSON",
-        "sdv.doc.waterloo.docitem_helper.Format.MD": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.Format.MD",
-        "sdv.doc.waterloo.docitem_helper.Status.EXPERIMENTAL": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.Status.EXPERIMENTAL",
-        "sdv.doc.waterloo.docitem_helper.Status.STABLE": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.Status.STABLE",
-        "sdv.doc.waterloo.docitem_helper.Status.FROZEN": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.Status.FROZEN",
-        "sdv.doc.waterloo.docitem_helper.Status.DEPRECATED": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.Status.DEPRECATED",
-        "sdv.doc.waterloo.docitem_helper.Status.DRAFT": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.Status.DRAFT"
+        "sdv.doc.waterloo.docitem_helper.WhitelistReason.EXISTS_AS_COMMENT_RULE": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.WhitelistReason.EXISTS_AS_COMMENT_RULE"
     },
     "__WTRL_OBJECTS__": {
         "sdv.doc.waterloo.docitem_helper.Profile": {
@@ -172,7 +174,6 @@
             "doc_lines": [
                 "Supported profile labels for the helper layer."
             ],
-            "annotation": "Literal['module', 'class', 'function', 'method', 'inherited_method']",
             "doc_lines_kind": "type"
         },
         "sdv.doc.waterloo.docitem_helper.DocstringSubtree": {
@@ -180,7 +181,6 @@
             "doc_lines": [
                 "Recursive docstring tree node type."
             ],
-            "annotation": "str | List[ForwardRef('DocstringSubtree')]",
             "doc_lines_kind": "type"
         },
         "sdv.doc.waterloo.docitem_helper.DocstringTree": {
@@ -188,7 +188,6 @@
             "doc_lines": [
                 "A full docstring tree represented as a list of subtree values."
             ],
-            "annotation": "List[str | List[ForwardRef('DocstringSubtree')]]",
             "doc_lines_kind": "type"
         },
         "sdv.doc.waterloo.docitem_helper.AnnotatableObject": {
@@ -196,7 +195,6 @@
             "doc_lines": [
                 "Objects that can be annotated by the helper layer."
             ],
-            "annotation": "type | module | function | method",
             "doc_lines_kind": "type"
         },
         "sdv.doc.waterloo.docitem_helper.RuleId": {
@@ -212,7 +210,6 @@
             "doc_lines": [
                 "Tracer origin labels."
             ],
-            "annotation": "Literal['parsing', 'validation', 'tool', 'extension']",
             "doc_lines_kind": "type"
         },
         "sdv.doc.waterloo.docitem_helper.Details": {
@@ -220,7 +217,6 @@
             "doc_lines": [
                 "Tracer details payload."
             ],
-            "annotation": "Dict[str, str | list[str]]",
             "doc_lines_kind": "type"
         },
         "sdv.doc.waterloo.docitem_helper.Scopes": {
@@ -228,7 +224,6 @@
             "doc_lines": [
                 "A set of scope values."
             ],
-            "annotation": "Set[sdv.doc.waterloo.docitem_helper.Scope]",
             "doc_lines_kind": "type"
         },
         "sdv.doc.waterloo.docitem_helper.Documentable": {
@@ -236,7 +231,6 @@
             "doc_lines": [
                 "Objects that can be traversed by the helper functions."
             ],
-            "annotation": "module | type[object] | Callable[..., Any]",
             "doc_lines_kind": "type"
         },
         "sdv.doc.waterloo.docitem_helper.AstDocNode": {
@@ -276,7 +270,6 @@
             "doc_lines": [
                 "Regular expression for rule IDs. Undocumented: RE_RULE_ID_COMPILED, the precompiled version for performance."
             ],
-            "annotation": "Final[str]",
             "doc_lines_kind": "constant"
         },
         "sdv.doc.waterloo.docitem_helper.RE_IDENTIFIER": {
@@ -284,7 +277,6 @@
             "doc_lines": [
                 "Regular expression for identifiers. Undocumented: RE_IDENTIFIER_COMPILED, the precompiled version for performance."
             ],
-            "annotation": "Final[str]",
             "doc_lines_kind": "constant"
         },
         "sdv.doc.waterloo.docitem_helper.RE_QUALIFIED_IDENTIFIER": {
@@ -292,7 +284,6 @@
             "doc_lines": [
                 "Regular expression for qualified identifiers. Undocumented: RE_QUALIFIED_IDENTIFIER_COMPILED, the precompiled version for performance."
             ],
-            "annotation": "Final[str]",
             "doc_lines_kind": "constant"
         },
         "sdv.doc.waterloo.docitem_helper.RE_CSV_IDENTIFIERS": {
@@ -307,7 +298,6 @@
             "doc_lines": [
                 "Canonical Waterloo tokens that make a statement normative."
             ],
-            "annotation": "Final[tuple[str, ...]]",
             "doc_lines_kind": "constant"
         },
         "sdv.doc.waterloo.docitem_helper.WTRL_MARKUP_ROLES": {
@@ -315,7 +305,6 @@
             "doc_lines": [
                 "Regular expression for Waterloo markup roles in backtick markup."
             ],
-            "annotation": "Final[str]",
             "doc_lines_kind": "constant"
         },
         "sdv.doc.waterloo.docitem_helper.RE_WTRL_MARKUP_BACKTICK": {
@@ -323,7 +312,6 @@
             "doc_lines": [
                 "Regular expression for matching Waterloo backtick markup with roles. Undocumented: RE_WTRL_MARKUP_BACKTICK_COMPILED, the precompiled version for performance."
             ],
-            "annotation": "Final[str]",
             "doc_lines_kind": "constant"
         },
         "sdv.doc.waterloo.docitem_helper.RE_WTRL_ANGLE_HTTPS_REF": {
@@ -332,7 +320,6 @@
                 "Regular expression for matching Waterloo angle bracket HTTPS references. Undocumented: RE_WTRL_ANGLE_HTTPS_REF_COMPILED, the precompiled version for performance.",
                 "References consist of two parts: clear text and <link>, optionally separated by whitespace."
             ],
-            "annotation": "Final[str]",
             "doc_lines_kind": "constant"
         },
         "sdv.doc.waterloo.docitem_helper.RE_WTRL_ANGLE_WTRL_REF": {
@@ -341,7 +328,6 @@
                 "Regular expression for matching Waterloo angle bracket wtrl references. Undocumented: RE_WTRL_ANGLE_WTRL_REF_COMPILED, the precompiled version for performance.",
                 "References consist of two parts: clear text and <link>, optionally separated by whitespace."
             ],
-            "annotation": "Final[str]",
             "doc_lines_kind": "constant"
         },
         "sdv.doc.waterloo.docitem_helper.RE_WTRL_JSON_SCHEMA_NAME": {
@@ -349,7 +335,6 @@
             "doc_lines": [
                 "Regular expression for matching Waterloo JSON Schema filenames. Undocumented: RE_WTRL_JSON_SCHEMA_NAME_COMPILED, the precompiled version for performance."
             ],
-            "annotation": "Final[str]",
             "doc_lines_kind": "constant"
         },
         "sdv.doc.waterloo.docitem_helper.RULE_ID_WHITELIST": {
@@ -395,7 +380,6 @@
             "doc_lines": [
                 "Flavour tag mapping for normativity keyword rendering."
             ],
-            "annotation": "Final[Mapping[str, Flavour]]",
             "doc_lines_kind": "constant"
         },
         "sdv.doc.waterloo.docitem_helper.FORMAT_TAG_MAP": {
@@ -403,7 +387,6 @@
             "doc_lines": [
                 "Output format tag mapping for string-related output."
             ],
-            "annotation": "Final[Mapping[str, Format]]",
             "doc_lines_kind": "constant"
         },
         "sdv.doc.waterloo.docitem_helper.STATUS_TAG_MAP": {
@@ -638,6 +621,798 @@
                 }
             }
         },
+        "sdv.doc.waterloo.docitem_types.Scope.PUBLIC": {
+            "doc": {},
+            "doc_lines": [
+                "Selects the public API."
+            ],
+            "doc_lines_kind": "constant"
+        },
+        "sdv.doc.waterloo.docitem_types.Scope.EXTENSION": {
+            "doc": {},
+            "doc_lines": [
+                "Selects the API for developers of plugin and extensions."
+            ],
+            "doc_lines_kind": "constant"
+        },
+        "sdv.doc.waterloo.docitem_types.Scope.CORE": {
+            "doc": {},
+            "doc_lines": [
+                "Selects the API for core developers."
+            ],
+            "doc_lines_kind": "constant"
+        },
+        "sdv.doc.waterloo.docitem_types.Scope": {
+            "signature": {
+                "text": "object.__init__(self, /, *args, **kwargs)",
+                "parameters": [
+                    {
+                        "name": "args",
+                        "kind": "VAR_POSITIONAL",
+                        "annotation": null,
+                        "default": null
+                    },
+                    {
+                        "name": "kwargs",
+                        "kind": "VAR_KEYWORD",
+                        "annotation": null,
+                        "default": null
+                    }
+                ],
+                "returns": null
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "class",
+                    "normative_sections": [
+                        "Contract",
+                        "Public_constants",
+                        "Derived_from"
+                    ],
+                    "scope": [
+                        "public"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST provide constants representing available scopes.",
+                        "MUST provide a time-stable partial order for the constants."
+                    ],
+                    "constructor": [
+                        "Inherit from |type|`int`."
+                    ]
+                },
+                "Derived_from": [
+                    "IntEnum"
+                ],
+                "Public_constants": {
+                    "PUBLIC": [
+                        "Selects the public API."
+                    ],
+                    "EXTENSION": [
+                        "Selects the API for developers of plugin and extensions."
+                    ],
+                    "CORE": [
+                        "Selects the API for core developers."
+                    ]
+                },
+                "Notes": {
+                    "Purpose": [
+                        "The scope is an optional parameter for rendering functions. It allows to restrict the set of rendered objects to a well-defined audience."
+                    ],
+                    "Values": [
+                        "The class only ensures the partial order but does not ensure particular values for the constants."
+                    ]
+                }
+            }
+        },
+        "sdv.doc.waterloo.docitem_types": {
+            "doc": {}
+        },
+        "sdv.doc.waterloo.docitem_types.Flavour.RAW": {
+            "doc": {},
+            "doc_lines": [
+                "Example: | + Must + |"
+            ],
+            "doc_lines_kind": "constant"
+        },
+        "sdv.doc.waterloo.docitem_types.Flavour.RFC_2119": {
+            "doc": {},
+            "doc_lines": [
+                "Example: |lit|`MUST`"
+            ],
+            "doc_lines_kind": "constant"
+        },
+        "sdv.doc.waterloo.docitem_types.Flavour.MARKDOWN": {
+            "doc": {},
+            "doc_lines": [
+                "Example: |lit|`**MUST**`"
+            ],
+            "doc_lines_kind": "constant"
+        },
+        "sdv.doc.waterloo.docitem_types.Flavour": {
+            "signature": {
+                "text": "object.__init__(self, /, *args, **kwargs)",
+                "parameters": [
+                    {
+                        "name": "args",
+                        "kind": "VAR_POSITIONAL",
+                        "annotation": null,
+                        "default": null
+                    },
+                    {
+                        "name": "kwargs",
+                        "kind": "VAR_KEYWORD",
+                        "annotation": null,
+                        "default": null
+                    }
+                ],
+                "returns": null
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "class",
+                    "normative_sections": [
+                        "Contract",
+                        "Public_constants",
+                        "Derived_from"
+                    ],
+                    "scope": [
+                        "public"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST provide constants representing available flavours for rendering Normativity Keywords."
+                    ],
+                    "constructor": [
+                        "Inherit from |type|`int`."
+                    ]
+                },
+                "Derived_from": [
+                    "IntEnum"
+                ],
+                "Public_constants": {
+                    "RAW": [
+                        "Example: | + Must + |"
+                    ],
+                    "RFC_2119": [
+                        "Example: |lit|`MUST`"
+                    ],
+                    "MARKDOWN": [
+                        "Example: |lit|`**MUST**`"
+                    ]
+                }
+            }
+        },
+        "sdv.doc.waterloo.docitem_types.Format.JSON": {
+            "doc": {},
+            "doc_lines": [
+                "Javascript Object Notation"
+            ],
+            "doc_lines_kind": "constant"
+        },
+        "sdv.doc.waterloo.docitem_types.Format.MD": {
+            "doc": {},
+            "doc_lines": [
+                "Markdown."
+            ],
+            "doc_lines_kind": "constant"
+        },
+        "sdv.doc.waterloo.docitem_types.Format": {
+            "signature": {
+                "text": "object.__init__(self, /, *args, **kwargs)",
+                "parameters": [
+                    {
+                        "name": "args",
+                        "kind": "VAR_POSITIONAL",
+                        "annotation": null,
+                        "default": null
+                    },
+                    {
+                        "name": "kwargs",
+                        "kind": "VAR_KEYWORD",
+                        "annotation": null,
+                        "default": null
+                    }
+                ],
+                "returns": null
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "class",
+                    "normative_sections": [
+                        "Contract",
+                        "Public_constants",
+                        "Derived_from"
+                    ],
+                    "scope": [
+                        "public"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST provide constants representing available output formats for string rendering."
+                    ],
+                    "constructor": [
+                        "Inherit from |type|`int`."
+                    ]
+                },
+                "Derived_from": [
+                    "IntEnum"
+                ],
+                "Public_constants": {
+                    "JSON": [
+                        "Javascript Object Notation"
+                    ],
+                    "MD": [
+                        "Markdown."
+                    ]
+                }
+            }
+        },
+        "sdv.doc.waterloo.docitem_types.Status.EXPERIMENTAL": {
+            "doc": {},
+            "doc_lines": [
+                "See rule |ref|`STA-004 <section_function_pramble>`."
+            ],
+            "doc_lines_kind": "constant"
+        },
+        "sdv.doc.waterloo.docitem_types.Status.STABLE": {
+            "doc": {},
+            "doc_lines": [
+                "See rule |ref|`STA-004 <section_function_pramble>`."
+            ],
+            "doc_lines_kind": "constant"
+        },
+        "sdv.doc.waterloo.docitem_types.Status.FROZEN": {
+            "doc": {},
+            "doc_lines": [
+                "See rule |ref|`STA-004 <section_function_pramble>`."
+            ],
+            "doc_lines_kind": "constant"
+        },
+        "sdv.doc.waterloo.docitem_types.Status.DEPRECATED": {
+            "doc": {},
+            "doc_lines": [
+                "See rule |ref|`STA-004 <section_function_pramble>`."
+            ],
+            "doc_lines_kind": "constant"
+        },
+        "sdv.doc.waterloo.docitem_types.Status.DRAFT": {
+            "doc": {},
+            "doc_lines": [
+                "See rule |ref|`STA-004 <section_function_pramble>`."
+            ],
+            "doc_lines_kind": "constant"
+        },
+        "sdv.doc.waterloo.docitem_types.Status": {
+            "signature": {
+                "text": "object.__init__(self, /, *args, **kwargs)",
+                "parameters": [
+                    {
+                        "name": "args",
+                        "kind": "VAR_POSITIONAL",
+                        "annotation": null,
+                        "default": null
+                    },
+                    {
+                        "name": "kwargs",
+                        "kind": "VAR_KEYWORD",
+                        "annotation": null,
+                        "default": null
+                    }
+                ],
+                "returns": null
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "class",
+                    "normative_sections": [
+                        "Contract",
+                        "Public_constants",
+                        "Derived_from"
+                    ],
+                    "scope": [
+                        "public"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST provide constants representing the values of subsection |label|`Preamble.status`."
+                    ],
+                    "constructor": [
+                        "Inherit from |type|`StrEnum`."
+                    ]
+                },
+                "Derived_from": [
+                    "StrEnum"
+                ],
+                "Public_constants": {
+                    "EXPERIMENTAL": [
+                        "See rule |ref|`STA-004 <section_function_pramble>`."
+                    ],
+                    "STABLE": [
+                        "See rule |ref|`STA-004 <section_function_pramble>`."
+                    ],
+                    "FROZEN": [
+                        "See rule |ref|`STA-004 <section_function_pramble>`."
+                    ],
+                    "DEPRECATED": [
+                        "See rule |ref|`STA-004 <section_function_pramble>`."
+                    ],
+                    "DRAFT": [
+                        "See rule |ref|`STA-004 <section_function_pramble>`."
+                    ]
+                },
+                "Notes": {
+                    "LoII": [
+                        "This docstring violates LoII in order to preserve SSoT,",
+                        "see |label|`Public_constants`."
+                    ]
+                }
+            }
+        },
+        "sdv.doc.waterloo.docitem_types.Trait.ABSTRACT": {
+            "doc": {},
+            "doc_lines": [
+                "The class is abstract, i.e. it cannot be instantiated directly and is not a complete specification of the concept."
+            ],
+            "doc_lines_kind": "constant"
+        },
+        "sdv.doc.waterloo.docitem_types.Trait.FINAL": {
+            "doc": {},
+            "doc_lines": [
+                "The class is final, i.e. it cannot be subclassed and is a complete specification of the concept."
+            ],
+            "doc_lines_kind": "constant"
+        },
+        "sdv.doc.waterloo.docitem_types.Trait": {
+            "signature": {
+                "text": "object.__init__(self, /, *args, **kwargs)",
+                "parameters": [
+                    {
+                        "name": "args",
+                        "kind": "VAR_POSITIONAL",
+                        "annotation": null,
+                        "default": null
+                    },
+                    {
+                        "name": "kwargs",
+                        "kind": "VAR_KEYWORD",
+                        "annotation": null,
+                        "default": null
+                    }
+                ],
+                "returns": null
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "class",
+                    "normative_sections": [
+                        "Contract",
+                        "Public_constants",
+                        "Derived_from"
+                    ],
+                    "scope": [
+                        "public"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST provide constants representing the traits of a class."
+                    ],
+                    "constructor": [
+                        "Inherit from |type|`StrEnum`."
+                    ]
+                },
+                "Derived_from": [
+                    "StrEnum"
+                ],
+                "Public_constants": {
+                    "ABSTRACT": [
+                        "The class is abstract, i.e. it cannot be instantiated directly and is not a complete specification of the concept."
+                    ],
+                    "FINAL": [
+                        "The class is final, i.e. it cannot be subclassed and is a complete specification of the concept."
+                    ]
+                }
+            }
+        },
+        "sdv.doc.waterloo.docitem_tracer.rule_on_fail": {
+            "signature": {
+                "text": "rule_on_fail(tr: 'tracer', rule_id: 'RuleId') -> 'Generator[None, None, None]'",
+                "parameters": [
+                    {
+                        "name": "tr",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "tracer",
+                        "default": null
+                    },
+                    {
+                        "name": "rule_id",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "RuleId",
+                        "default": null
+                    }
+                ],
+                "returns": "Generator[None, None, None]"
+            },
+            "decorators": [
+                "@contextmanager"
+            ],
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ],
+                    "scope": [
+                        "public"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST temporarily push the given rule identifier onto the tracer's rule-on-fail stack."
+                    ]
+                },
+                "Parameters": {
+                    "tr": [
+                        "The tracer whose failure-rule stack should be managed."
+                    ],
+                    "rule_id": [
+                        "The rule identifier to push for the duration of the context."
+                    ]
+                },
+                "Returns": [
+                    "A context manager yielding nothing."
+                ],
+                "Raises": {}
+            }
+        },
+        "sdv.doc.waterloo.docitem_tracer": {
+            "doc": {}
+        },
+        "sdv.doc.waterloo.docitem_tracer.traced_section": {
+            "signature": {
+                "text": "traced_section(tr: 'tracer', name: 'str') -> 'Generator[None, None, None]'",
+                "parameters": [
+                    {
+                        "name": "tr",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "tracer",
+                        "default": null
+                    },
+                    {
+                        "name": "name",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    }
+                ],
+                "returns": "Generator[None, None, None]"
+            },
+            "decorators": [
+                "@contextmanager"
+            ],
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ],
+                    "scope": [
+                        "public"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST temporarily push |var|`name` onto the tracer context unless it is already on top."
+                    ]
+                },
+                "Parameters": {
+                    "tr": [
+                        "The tracer whose context stack should be managed."
+                    ],
+                    "name": [
+                        "The context name to push."
+                    ]
+                },
+                "Returns": [
+                    "A context manager yielding nothing."
+                ],
+                "Raises": {}
+            }
+        },
+        "sdv.doc.waterloo.docitem_tracer.tracer.Context": {
+            "doc": {},
+            "doc_lines": [
+                "A list of strings built per context manager during parsing and validation. Entries can be module, class or function names, or labels."
+            ],
+            "annotation": "List[str]",
+            "doc_lines_kind": "type"
+        },
+        "sdv.doc.waterloo.docitem_tracer.tracer": {
+            "signature": {
+                "text": "tracer.__init__(self) -> 'None'",
+                "parameters": [],
+                "returns": "None"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "class",
+                    "normative_sections": [
+                        "Contract",
+                        "Public_types",
+                        "Public_classes",
+                        "Public_methods"
+                    ]
+                },
+                "Terminology": {
+                    "rules on fail": [
+                        "Low-level functions may find a parsing or validation warning or error,",
+                        "but have no clue which rule has been violated. The |dfn|`rules on fail`",
+                        "mechanism allows the caller to pass the set of rules in question.",
+                        "The tracer provides a stack and api for these rule sets."
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST provide a string-valued stack API for storing context data, like \"which object/section/subsection are we in?\".",
+                        "MUST provide a to-string method for rendering the context.",
+                        "MUST maintain a list of infos, where each entry is a tuple consisting of context, origin, and a free-form message.",
+                        "MUST provide a method for adding such a info entry.",
+                        "MUST allow to query if infos have been added.",
+                        "MUST provide a method for clearing the list of infos.",
+                        "MUST provide a method for rendering the list of infos as a string.",
+                        "MUST provide a generator which allows iterating over the list of infos.",
+                        "MUST maintain a list of warnings, where each entry is a tuple consisting of context, one Rule-ID, origin, a free-form message, and optional details.",
+                        "MUST provide a method for adding such a warning entry.",
+                        "MUST allow to query if warnings have been added.",
+                        "MUST provide a method for clearing the list of warnings.",
+                        "MUST provide a method for rendering the list of warnings as a string.",
+                        "MUST provide a generator which allows iterating over the list of warnings.",
+                        "MUST maintain a list of errors, where each entry is a tuple consisting of context, one Rule-ID, origin, a free-form message, and optional details.",
+                        "MUST provide a method for adding such a error entry.",
+                        "MUST allow to query if errors have been added.",
+                        "MUST provide a method for clearing the list of errors.",
+                        "MUST provide a method for rendering the list of errors as a string.",
+                        "MUST provide a generator which allows iterating over the list of errors.",
+                        "MUST manage a set of ignore-rule instructions",
+                        "MUST provide a stack containing the current |dfn|`rule on fail` being validated against.",
+                        "MUST provide an api like |func|`push...`, |func|`pop...`, |func|`get...` for the |dfn|`rule on fail` stack.",
+                        "MUST provide a stack containing the current set of |dfn|`scopes` being validated against.",
+                        "MUST provide an api like |func|`push...`, |func|`pop...`, |func|`get...` for the |dfn|`scopes` stack."
+                    ],
+                    "constructor": [
+                        "MUST be default-constructible."
+                    ]
+                },
+                "Public_types": {
+                    "Context": [
+                        "A list of strings built per context manager during parsing and validation. Entries can be module, class or function names, or labels."
+                    ]
+                },
+                "Public_classes": [
+                    "Severity"
+                ],
+                "Class_overview": {
+                    "Severity": [
+                        "An enum with values DEBUG, INFO, WARNING, ERROR for filtering the output of the tracer."
+                    ]
+                },
+                "Public_methods": [
+                    "build_json",
+                    "str_by_severity"
+                ],
+                "Method_overview": {
+                    "build_json": [
+                        "Build a JSON-serializable |type|`dict` containing the",
+                        "information in the tracer, filtered by severity and optionally enriched by metadata."
+                    ]
+                },
+                "Notes": {
+                    "Last review": [
+                        "2026-06-21"
+                    ],
+                    "Parameter 'details'": [
+                        "The details payload is important for the MCP server, because it gives the LLM enough debugging context to interpret tracer output and decide how to react to it.",
+                        "It usually is a dict with keys \"found\", \"expected\", and \"hint\"; \"hint\" typically contains a waterlint call for retrieving more information about the affected section or subsection."
+                    ]
+                }
+            }
+        },
+        "sdv.doc.waterloo.docitem_tracer.tracer.Severity": {
+            "signature": {
+                "text": "object.__init__(self, /, *args, **kwargs)",
+                "parameters": [
+                    {
+                        "name": "args",
+                        "kind": "VAR_POSITIONAL",
+                        "annotation": null,
+                        "default": null
+                    },
+                    {
+                        "name": "kwargs",
+                        "kind": "VAR_KEYWORD",
+                        "annotation": null,
+                        "default": null
+                    }
+                ],
+                "returns": null
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "class",
+                    "normative_sections": [
+                        "Contract",
+                        "Derived_from"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST define the following severity levels for filtering the tracer's output:",
+                        "|value|`DEBUG`: for debugging notes, not relevant for end-users.",
+                        "|value|`INFO`: for informational messages that are relevant for end-users but do not indicate any problems.",
+                        "|value|`WARNING`: for potential issues that should be looked at but do not necessarily indicate a failure.",
+                        "|value|`ERROR`: for definite problems that indicate a failure to meet a requirement or rule.",
+                        "MUST assign integer values to these levels in increasing order of severity, starting with 0 for DEBUG."
+                    ],
+                    "constructor": [
+                        "MUST inherit from |type|`IntEnum`."
+                    ]
+                },
+                "Derived_from": [
+                    "IntEnum"
+                ]
+            }
+        },
+        "sdv.doc.waterloo.docitem_tracer.tracer.str_by_severity": {
+            "signature": {
+                "text": "tracer.str_by_severity(self, severity: 'Severity') -> 'str'",
+                "parameters": [
+                    {
+                        "name": "severity",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "Severity",
+                        "default": null
+                    }
+                ],
+                "returns": "str"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "method",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST render the tracer's content as a human-readable string, filtered by severity level.",
+                        "MUST include entries with severity level equal to or higher than the specified level.",
+                        "MUST format entries with clear labels and context for easy understanding."
+                    ]
+                },
+                "Parameters": {
+                    "severity": [
+                        "Only include entries with this severity level or higher.",
+                        "Levels are ordered as DEBUG < INFO < WARNING < ERROR."
+                    ]
+                },
+                "Returns": [
+                    "A string representation of the tracer's content, including entries",
+                    "up to the specified severity level, formatted for human readability."
+                ],
+                "Raises": {},
+                "Notes": {
+                    "Called by": [
+                        "This method is invoked by the __str__ method, which defaults to showing all entries (DEBUG level),",
+                        "so generally you simply call |func|`str`(tracer_instance) to get the full content",
+                        "or |func|`print`(tracer_instance) to display it."
+                    ]
+                }
+            }
+        },
+        "sdv.doc.waterloo.docitem_tracer.tracer.build_json": {
+            "signature": {
+                "text": "tracer.build_json(self, severity: 'Severity', *, schema_version: 'str | None' = None, waterloo_version: 'str | None' = None, id_prefix: 'str | None' = None, include_debug: 'bool' = True) -> 'dict[str, Any]'",
+                "parameters": [
+                    {
+                        "name": "severity",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "Severity",
+                        "default": null
+                    },
+                    {
+                        "name": "schema_version",
+                        "kind": "KEYWORD_ONLY",
+                        "annotation": "str | None",
+                        "default": "None"
+                    },
+                    {
+                        "name": "waterloo_version",
+                        "kind": "KEYWORD_ONLY",
+                        "annotation": "str | None",
+                        "default": "None"
+                    },
+                    {
+                        "name": "id_prefix",
+                        "kind": "KEYWORD_ONLY",
+                        "annotation": "str | None",
+                        "default": "None"
+                    },
+                    {
+                        "name": "include_debug",
+                        "kind": "KEYWORD_ONLY",
+                        "annotation": "bool",
+                        "default": "True"
+                    }
+                ],
+                "returns": "dict[str, Any]"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "method",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST build a JSON-serializable |type|`dict` containing the tracer's data, following the WTRL Tracer JSON Schema.",
+                        "MUST include entries up to the specified severity level.",
+                        "MUST allow including debug notes optionally, as they may contain sensitive or verbose information.",
+                        "MUST include schema version and optionally Waterloo version in the metadata section."
+                    ]
+                },
+                "Parameters": {
+                    "severity": [
+                        "Only include entries with this severity level or higher.",
+                        "Levels are ordered as DEBUG < INFO < WARNING < ERROR."
+                    ],
+                    "schema_version": [
+                        "Specify the WTRL Tracer JSON Schema version to declare in the output. Defaults to the current version if not provided.",
+                        "This does not affect the structure of the output, which always follows the current schema.",
+                        "Including the schema version allows consumers to validate against the correct schema and maintain compatibility as the schema evolves.",
+                        "* MUST be a string in the format |lit|`X.Y.Z` where X, Y, and Z are non-negative integers.",
+                        "* MUST default to the current schema version if not provided.",
+                        "* MUST be included in the output under the `__WTRL_VERSION__` metadata section.",
+                        "* MUST NOT affect the actual structure of the output, which always follows the current schema."
+                    ],
+                    "waterloo_version": [
+                        "Optionally include the version of the Waterloo tool that generated the tracer data.",
+                        "* MUST be a string in the format |lit|`X.Y.Z` where X, Y, and Z are non-negative integers."
+                    ],
+                    "id_prefix": [
+                        "Optionally include a prefix for the `$id` field in the output JSON.",
+                        "* MUST be a string if provided.",
+                        "* MAY be omitted, in which case the `$id` field will not include a prefix."
+                    ],
+                    "include_debug": [
+                        "Optionally include debug notes in the output JSON."
+                    ]
+                },
+                "Returns": [
+                    "A JSON-serializable |type|`dict` containing the tracer's data structured according to the WTRL Tracer JSON Schema,",
+                    "including entries up to the specified severity level and metadata about the schema and optionally the Waterloo version.",
+                    "The return value MUST conform to JSON Schema :file:`wtrl-tracer-json-X.Y.Z.schema.json` where X.Y.Z is the declared schema version."
+                ],
+                "Raises": {}
+            }
+        },
         "sdv.doc.waterloo.docitem_helper.WhitelistReason.UNSPECIFIED_RULE": {
             "doc": {},
             "doc_lines": [
@@ -777,401 +1552,6 @@
                     ],
                     "EXISTS_AS_COMMENT_RULE": [
                         "The rule exists only as a comment-level trace."
-                    ]
-                }
-            }
-        },
-        "sdv.doc.waterloo.docitem_helper.Trait.ABSTRACT": {
-            "doc": {},
-            "doc_lines": [
-                "The class is abstract, i.e. it cannot be instantiated directly and is not a complete specification of the concept."
-            ],
-            "doc_lines_kind": "constant"
-        },
-        "sdv.doc.waterloo.docitem_helper.Trait.FINAL": {
-            "doc": {},
-            "doc_lines": [
-                "The class is final, i.e. it cannot be subclassed and is a complete specification of the concept."
-            ],
-            "doc_lines_kind": "constant"
-        },
-        "sdv.doc.waterloo.docitem_helper.Trait": {
-            "signature": {
-                "text": "object.__init__(self, /, *args, **kwargs)",
-                "parameters": [
-                    {
-                        "name": "args",
-                        "kind": "VAR_POSITIONAL",
-                        "annotation": null,
-                        "default": null
-                    },
-                    {
-                        "name": "kwargs",
-                        "kind": "VAR_KEYWORD",
-                        "annotation": null,
-                        "default": null
-                    }
-                ],
-                "returns": null
-            },
-            "doc": {
-                "Preamble": {
-                    "profile": "class",
-                    "normative_sections": [
-                        "Contract",
-                        "Public_constants",
-                        "Derived_from"
-                    ],
-                    "scope": [
-                        "public"
-                    ]
-                },
-                "Contract": {
-                    "general": [
-                        "MUST provide constants representing the traits of a class."
-                    ],
-                    "constructor": [
-                        "Inherit from |type|`StrEnum`."
-                    ]
-                },
-                "Derived_from": [
-                    "StrEnum"
-                ],
-                "Public_constants": {
-                    "ABSTRACT": [
-                        "The class is abstract, i.e. it cannot be instantiated directly and is not a complete specification of the concept."
-                    ],
-                    "FINAL": [
-                        "The class is final, i.e. it cannot be subclassed and is a complete specification of the concept."
-                    ]
-                }
-            }
-        },
-        "sdv.doc.waterloo.docitem_helper.Scope.PUBLIC": {
-            "doc": {},
-            "doc_lines": [
-                "Selects the public API."
-            ],
-            "doc_lines_kind": "constant"
-        },
-        "sdv.doc.waterloo.docitem_helper.Scope.EXTENSION": {
-            "doc": {},
-            "doc_lines": [
-                "Selects the API for developers of plugin and extensions."
-            ],
-            "doc_lines_kind": "constant"
-        },
-        "sdv.doc.waterloo.docitem_helper.Scope.CORE": {
-            "doc": {},
-            "doc_lines": [
-                "Selects the API for core developers."
-            ],
-            "doc_lines_kind": "constant"
-        },
-        "sdv.doc.waterloo.docitem_helper.Scope": {
-            "signature": {
-                "text": "object.__init__(self, /, *args, **kwargs)",
-                "parameters": [
-                    {
-                        "name": "args",
-                        "kind": "VAR_POSITIONAL",
-                        "annotation": null,
-                        "default": null
-                    },
-                    {
-                        "name": "kwargs",
-                        "kind": "VAR_KEYWORD",
-                        "annotation": null,
-                        "default": null
-                    }
-                ],
-                "returns": null
-            },
-            "doc": {
-                "Preamble": {
-                    "profile": "class",
-                    "normative_sections": [
-                        "Contract",
-                        "Public_constants",
-                        "Derived_from"
-                    ],
-                    "scope": [
-                        "public"
-                    ]
-                },
-                "Contract": {
-                    "general": [
-                        "MUST provide constants representing available scopes.",
-                        "MUST provide a time-stable partial order for the constants."
-                    ],
-                    "constructor": [
-                        "Inherit from |type|`int`."
-                    ]
-                },
-                "Derived_from": [
-                    "IntEnum"
-                ],
-                "Public_constants": {
-                    "PUBLIC": [
-                        "Selects the public API."
-                    ],
-                    "EXTENSION": [
-                        "Selects the API for developers of plugin and extensions."
-                    ],
-                    "CORE": [
-                        "Selects the API for core developers."
-                    ]
-                },
-                "Notes": {
-                    "Purpose": [
-                        "The scope is an optional parameter for rendering functions. It allows to restrict the set of rendered objects to a well-defined audience."
-                    ],
-                    "Values": [
-                        "The class only ensures the partial order but does not ensure particular values for the constants."
-                    ]
-                }
-            }
-        },
-        "sdv.doc.waterloo.docitem_helper.Flavour.RAW": {
-            "doc": {},
-            "doc_lines": [
-                "Example: | + Must + |"
-            ],
-            "doc_lines_kind": "constant"
-        },
-        "sdv.doc.waterloo.docitem_helper.Flavour.RFC_2119": {
-            "doc": {},
-            "doc_lines": [
-                "Example: |lit|`MUST`"
-            ],
-            "doc_lines_kind": "constant"
-        },
-        "sdv.doc.waterloo.docitem_helper.Flavour.MARKDOWN": {
-            "doc": {},
-            "doc_lines": [
-                "Example: |lit|`**MUST**`"
-            ],
-            "doc_lines_kind": "constant"
-        },
-        "sdv.doc.waterloo.docitem_helper.Flavour": {
-            "signature": {
-                "text": "object.__init__(self, /, *args, **kwargs)",
-                "parameters": [
-                    {
-                        "name": "args",
-                        "kind": "VAR_POSITIONAL",
-                        "annotation": null,
-                        "default": null
-                    },
-                    {
-                        "name": "kwargs",
-                        "kind": "VAR_KEYWORD",
-                        "annotation": null,
-                        "default": null
-                    }
-                ],
-                "returns": null
-            },
-            "doc": {
-                "Preamble": {
-                    "profile": "class",
-                    "normative_sections": [
-                        "Contract",
-                        "Public_constants",
-                        "Derived_from"
-                    ],
-                    "scope": [
-                        "public"
-                    ]
-                },
-                "Contract": {
-                    "general": [
-                        "MUST provide constants representing available flavours for rendering Normativity Keywords."
-                    ],
-                    "constructor": [
-                        "Inherit from |type|`int`."
-                    ]
-                },
-                "Derived_from": [
-                    "IntEnum"
-                ],
-                "Public_constants": {
-                    "RAW": [
-                        "Example: | + Must + |"
-                    ],
-                    "RFC_2119": [
-                        "Example: |lit|`MUST`"
-                    ],
-                    "MARKDOWN": [
-                        "Example: |lit|`**MUST**`"
-                    ]
-                }
-            }
-        },
-        "sdv.doc.waterloo.docitem_helper.Format.JSON": {
-            "doc": {},
-            "doc_lines": [
-                "Javascript Object Notation"
-            ],
-            "doc_lines_kind": "constant"
-        },
-        "sdv.doc.waterloo.docitem_helper.Format.MD": {
-            "doc": {},
-            "doc_lines": [
-                "Markdown."
-            ],
-            "doc_lines_kind": "constant"
-        },
-        "sdv.doc.waterloo.docitem_helper.Format": {
-            "signature": {
-                "text": "object.__init__(self, /, *args, **kwargs)",
-                "parameters": [
-                    {
-                        "name": "args",
-                        "kind": "VAR_POSITIONAL",
-                        "annotation": null,
-                        "default": null
-                    },
-                    {
-                        "name": "kwargs",
-                        "kind": "VAR_KEYWORD",
-                        "annotation": null,
-                        "default": null
-                    }
-                ],
-                "returns": null
-            },
-            "doc": {
-                "Preamble": {
-                    "profile": "class",
-                    "normative_sections": [
-                        "Contract",
-                        "Public_constants",
-                        "Derived_from"
-                    ],
-                    "scope": [
-                        "public"
-                    ]
-                },
-                "Contract": {
-                    "general": [
-                        "MUST provide constants representing available output formats for string rendering."
-                    ],
-                    "constructor": [
-                        "Inherit from |type|`int`."
-                    ]
-                },
-                "Derived_from": [
-                    "IntEnum"
-                ],
-                "Public_constants": {
-                    "JSON": [
-                        "Javascript Object Notation"
-                    ],
-                    "MD": [
-                        "Markdown."
-                    ]
-                }
-            }
-        },
-        "sdv.doc.waterloo.docitem_helper.Status.EXPERIMENTAL": {
-            "doc": {},
-            "doc_lines": [
-                "See rule |ref|`STA-004 <section_function_pramble>`."
-            ],
-            "doc_lines_kind": "constant"
-        },
-        "sdv.doc.waterloo.docitem_helper.Status.STABLE": {
-            "doc": {},
-            "doc_lines": [
-                "See rule |ref|`STA-004 <section_function_pramble>`."
-            ],
-            "doc_lines_kind": "constant"
-        },
-        "sdv.doc.waterloo.docitem_helper.Status.FROZEN": {
-            "doc": {},
-            "doc_lines": [
-                "See rule |ref|`STA-004 <section_function_pramble>`."
-            ],
-            "doc_lines_kind": "constant"
-        },
-        "sdv.doc.waterloo.docitem_helper.Status.DEPRECATED": {
-            "doc": {},
-            "doc_lines": [
-                "See rule |ref|`STA-004 <section_function_pramble>`."
-            ],
-            "doc_lines_kind": "constant"
-        },
-        "sdv.doc.waterloo.docitem_helper.Status.DRAFT": {
-            "doc": {},
-            "doc_lines": [
-                "See rule |ref|`STA-004 <section_function_pramble>`."
-            ],
-            "doc_lines_kind": "constant"
-        },
-        "sdv.doc.waterloo.docitem_helper.Status": {
-            "signature": {
-                "text": "object.__init__(self, /, *args, **kwargs)",
-                "parameters": [
-                    {
-                        "name": "args",
-                        "kind": "VAR_POSITIONAL",
-                        "annotation": null,
-                        "default": null
-                    },
-                    {
-                        "name": "kwargs",
-                        "kind": "VAR_KEYWORD",
-                        "annotation": null,
-                        "default": null
-                    }
-                ],
-                "returns": null
-            },
-            "doc": {
-                "Preamble": {
-                    "profile": "class",
-                    "normative_sections": [
-                        "Contract",
-                        "Public_constants",
-                        "Derived_from"
-                    ],
-                    "scope": [
-                        "public"
-                    ]
-                },
-                "Contract": {
-                    "general": [
-                        "MUST provide constants representing the values of subsection |label|`Preamble.status`."
-                    ],
-                    "constructor": [
-                        "Inherit from |type|`StrEnum`."
-                    ]
-                },
-                "Derived_from": [
-                    "StrEnum"
-                ],
-                "Public_constants": {
-                    "EXPERIMENTAL": [
-                        "See rule |ref|`STA-004 <section_function_pramble>`."
-                    ],
-                    "STABLE": [
-                        "See rule |ref|`STA-004 <section_function_pramble>`."
-                    ],
-                    "FROZEN": [
-                        "See rule |ref|`STA-004 <section_function_pramble>`."
-                    ],
-                    "DEPRECATED": [
-                        "See rule |ref|`STA-004 <section_function_pramble>`."
-                    ],
-                    "DRAFT": [
-                        "See rule |ref|`STA-004 <section_function_pramble>`."
-                    ]
-                },
-                "Notes": {
-                    "LoII": [
-                        "This docstring violates LoII in order to preserve SSoT,",
-                        "see |label|`Public_constants`."
                     ]
                 }
             }
@@ -2338,397 +2718,6 @@
                 },
                 "Returns": [
                     "MUST return a Generator which yields objects from tree traversal of |var|`obj`"
-                ],
-                "Raises": {}
-            }
-        },
-        "sdv.doc.waterloo.docitem_helper.tracer.Context": {
-            "doc": {},
-            "doc_lines": [
-                "A list of strings built per context manager during parsing and validation. Entries can be module, class or function names, or labels."
-            ],
-            "annotation": "List[str]",
-            "doc_lines_kind": "type"
-        },
-        "sdv.doc.waterloo.docitem_helper.tracer": {
-            "signature": {
-                "text": "tracer.__init__(self) -> 'None'",
-                "parameters": [],
-                "returns": "None"
-            },
-            "doc": {
-                "Preamble": {
-                    "profile": "class",
-                    "normative_sections": [
-                        "Contract",
-                        "Public_types",
-                        "Public_classes",
-                        "Public_methods"
-                    ]
-                },
-                "Terminology": {
-                    "rules on fail": [
-                        "Low-level functions may find a parsing or validation warning or error,",
-                        "but have no clue which rule has been violated. The |dfn|`rules on fail`",
-                        "mechanism allows the caller to pass the set of rules in question.",
-                        "The tracer provides a stack and api for these rule sets."
-                    ]
-                },
-                "Contract": {
-                    "general": [
-                        "MUST provide a string-valued stack API for storing context data, like \"which object/section/subsection are we in?\".",
-                        "MUST provide a to-string method for rendering the context.",
-                        "MUST maintain a list of infos, where each entry is a tuple consisting of context, origin, and a free-form message.",
-                        "MUST provide a method for adding such a info entry.",
-                        "MUST allow to query if infos have been added.",
-                        "MUST provide a method for clearing the list of infos.",
-                        "MUST provide a method for rendering the list of infos as a string.",
-                        "MUST provide a generator which allows iterating over the list of infos.",
-                        "MUST maintain a list of warnings, where each entry is a tuple consisting of context, one Rule-ID, origin, a free-form message, and optional details.",
-                        "MUST provide a method for adding such a warning entry.",
-                        "MUST allow to query if warnings have been added.",
-                        "MUST provide a method for clearing the list of warnings.",
-                        "MUST provide a method for rendering the list of warnings as a string.",
-                        "MUST provide a generator which allows iterating over the list of warnings.",
-                        "MUST maintain a list of errors, where each entry is a tuple consisting of context, one Rule-ID, origin, a free-form message, and optional details.",
-                        "MUST provide a method for adding such a error entry.",
-                        "MUST allow to query if errors have been added.",
-                        "MUST provide a method for clearing the list of errors.",
-                        "MUST provide a method for rendering the list of errors as a string.",
-                        "MUST provide a generator which allows iterating over the list of errors.",
-                        "MUST manage a set of ignore-rule instructions",
-                        "MUST provide a stack containing the current |dfn|`rule on fail` being validated against.",
-                        "MUST provide an api like |func|`push...`, |func|`pop...`, |func|`get...` for the |dfn|`rule on fail` stack.",
-                        "MUST provide a stack containing the current set of |dfn|`scopes` being validated against.",
-                        "MUST provide an api like |func|`push...`, |func|`pop...`, |func|`get...` for the |dfn|`scopes` stack."
-                    ],
-                    "constructor": [
-                        "MUST be default-constructible."
-                    ]
-                },
-                "Public_types": {
-                    "Context": [
-                        "A list of strings built per context manager during parsing and validation. Entries can be module, class or function names, or labels."
-                    ]
-                },
-                "Public_classes": [
-                    "Severity"
-                ],
-                "Class_overview": {
-                    "Severity": [
-                        "An enum with values DEBUG, INFO, WARNING, ERROR for filtering the output of the tracer."
-                    ]
-                },
-                "Public_methods": [
-                    "build_json",
-                    "str_by_severity"
-                ],
-                "Method_overview": {
-                    "build_json": [
-                        "Build a JSON-serializable |type|`dict` containing the",
-                        "information in the tracer, filtered by severity and optionally enriched by metadata."
-                    ]
-                },
-                "Notes": {
-                    "Last review": [
-                        "2026-06-21"
-                    ],
-                    "Parameter 'details'": [
-                        "The details payload is important for the MCP server, because it gives the LLM enough debugging context to interpret tracer output and decide how to react to it.",
-                        "It usually is a dict with keys \"found\", \"expected\", and \"hint\"; \"hint\" typically contains a waterlint call for retrieving more information about the affected section or subsection."
-                    ]
-                }
-            }
-        },
-        "sdv.doc.waterloo.docitem_helper.tracer.Severity": {
-            "signature": {
-                "text": "object.__init__(self, /, *args, **kwargs)",
-                "parameters": [
-                    {
-                        "name": "args",
-                        "kind": "VAR_POSITIONAL",
-                        "annotation": null,
-                        "default": null
-                    },
-                    {
-                        "name": "kwargs",
-                        "kind": "VAR_KEYWORD",
-                        "annotation": null,
-                        "default": null
-                    }
-                ],
-                "returns": null
-            },
-            "doc": {
-                "Preamble": {
-                    "profile": "class",
-                    "normative_sections": [
-                        "Contract",
-                        "Derived_from"
-                    ]
-                },
-                "Contract": {
-                    "general": [
-                        "MUST define the following severity levels for filtering the tracer's output:",
-                        "|value|`DEBUG`: for debugging notes, not relevant for end-users.",
-                        "|value|`INFO`: for informational messages that are relevant for end-users but do not indicate any problems.",
-                        "|value|`WARNING`: for potential issues that should be looked at but do not necessarily indicate a failure.",
-                        "|value|`ERROR`: for definite problems that indicate a failure to meet a requirement or rule.",
-                        "MUST assign integer values to these levels in increasing order of severity, starting with 0 for DEBUG."
-                    ],
-                    "constructor": [
-                        "MUST inherit from |type|`IntEnum`."
-                    ]
-                },
-                "Derived_from": [
-                    "IntEnum"
-                ]
-            }
-        },
-        "sdv.doc.waterloo.docitem_helper.tracer.str_by_severity": {
-            "signature": {
-                "text": "tracer.str_by_severity(self, severity: 'Severity') -> 'str'",
-                "parameters": [
-                    {
-                        "name": "severity",
-                        "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "Severity",
-                        "default": null
-                    }
-                ],
-                "returns": "str"
-            },
-            "doc": {
-                "Preamble": {
-                    "profile": "method",
-                    "normative_sections": [
-                        "Contract",
-                        "Parameters",
-                        "Returns",
-                        "Raises"
-                    ]
-                },
-                "Contract": {
-                    "general": [
-                        "MUST render the tracer's content as a human-readable string, filtered by severity level.",
-                        "MUST include entries with severity level equal to or higher than the specified level.",
-                        "MUST format entries with clear labels and context for easy understanding."
-                    ]
-                },
-                "Parameters": {
-                    "severity": [
-                        "Only include entries with this severity level or higher.",
-                        "Levels are ordered as DEBUG < INFO < WARNING < ERROR."
-                    ]
-                },
-                "Returns": [
-                    "A string representation of the tracer's content, including entries",
-                    "up to the specified severity level, formatted for human readability."
-                ],
-                "Raises": {},
-                "Notes": {
-                    "Called by": [
-                        "This method is invoked by the __str__ method, which defaults to showing all entries (DEBUG level),",
-                        "so generally you simply call |func|`str`(tracer_instance) to get the full content",
-                        "or |func|`print`(tracer_instance) to display it."
-                    ]
-                }
-            }
-        },
-        "sdv.doc.waterloo.docitem_helper.tracer.build_json": {
-            "signature": {
-                "text": "tracer.build_json(self, severity: 'Severity', *, schema_version: 'str | None' = None, waterloo_version: 'str | None' = None, id_prefix: 'str | None' = None, include_debug: 'bool' = True) -> 'dict[str, Any]'",
-                "parameters": [
-                    {
-                        "name": "severity",
-                        "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "Severity",
-                        "default": null
-                    },
-                    {
-                        "name": "schema_version",
-                        "kind": "KEYWORD_ONLY",
-                        "annotation": "str | None",
-                        "default": "None"
-                    },
-                    {
-                        "name": "waterloo_version",
-                        "kind": "KEYWORD_ONLY",
-                        "annotation": "str | None",
-                        "default": "None"
-                    },
-                    {
-                        "name": "id_prefix",
-                        "kind": "KEYWORD_ONLY",
-                        "annotation": "str | None",
-                        "default": "None"
-                    },
-                    {
-                        "name": "include_debug",
-                        "kind": "KEYWORD_ONLY",
-                        "annotation": "bool",
-                        "default": "True"
-                    }
-                ],
-                "returns": "dict[str, Any]"
-            },
-            "doc": {
-                "Preamble": {
-                    "profile": "method",
-                    "normative_sections": [
-                        "Contract",
-                        "Parameters",
-                        "Returns",
-                        "Raises"
-                    ]
-                },
-                "Contract": {
-                    "general": [
-                        "MUST build a JSON-serializable |type|`dict` containing the tracer's data, following the WTRL Tracer JSON Schema.",
-                        "MUST include entries up to the specified severity level.",
-                        "MUST allow including debug notes optionally, as they may contain sensitive or verbose information.",
-                        "MUST include schema version and optionally Waterloo version in the metadata section."
-                    ]
-                },
-                "Parameters": {
-                    "severity": [
-                        "Only include entries with this severity level or higher.",
-                        "Levels are ordered as DEBUG < INFO < WARNING < ERROR."
-                    ],
-                    "schema_version": [
-                        "Specify the WTRL Tracer JSON Schema version to declare in the output. Defaults to the current version if not provided.",
-                        "This does not affect the structure of the output, which always follows the current schema.",
-                        "Including the schema version allows consumers to validate against the correct schema and maintain compatibility as the schema evolves.",
-                        "* MUST be a string in the format |lit|`X.Y.Z` where X, Y, and Z are non-negative integers.",
-                        "* MUST default to the current schema version if not provided.",
-                        "* MUST be included in the output under the `__WTRL_VERSION__` metadata section.",
-                        "* MUST NOT affect the actual structure of the output, which always follows the current schema."
-                    ],
-                    "waterloo_version": [
-                        "Optionally include the version of the Waterloo tool that generated the tracer data.",
-                        "* MUST be a string in the format |lit|`X.Y.Z` where X, Y, and Z are non-negative integers."
-                    ],
-                    "id_prefix": [
-                        "Optionally include a prefix for the `$id` field in the output JSON.",
-                        "* MUST be a string if provided.",
-                        "* MAY be omitted, in which case the `$id` field will not include a prefix."
-                    ],
-                    "include_debug": [
-                        "Optionally include debug notes in the output JSON."
-                    ]
-                },
-                "Returns": [
-                    "A JSON-serializable |type|`dict` containing the tracer's data structured according to the WTRL Tracer JSON Schema,",
-                    "including entries up to the specified severity level and metadata about the schema and optionally the Waterloo version.",
-                    "The return value MUST conform to JSON Schema :file:`wtrl-tracer-json-X.Y.Z.schema.json` where X.Y.Z is the declared schema version."
-                ],
-                "Raises": {}
-            }
-        },
-        "sdv.doc.waterloo.docitem_helper.traced_section": {
-            "signature": {
-                "text": "traced_section(tr: 'tracer', name: 'str') -> 'Generator[None, None, None]'",
-                "parameters": [
-                    {
-                        "name": "tr",
-                        "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "tracer",
-                        "default": null
-                    },
-                    {
-                        "name": "name",
-                        "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "str",
-                        "default": null
-                    }
-                ],
-                "returns": "Generator[None, None, None]"
-            },
-            "decorators": [
-                "@contextmanager"
-            ],
-            "doc": {
-                "Preamble": {
-                    "profile": "function",
-                    "normative_sections": [
-                        "Contract",
-                        "Parameters",
-                        "Returns",
-                        "Raises"
-                    ],
-                    "scope": [
-                        "public"
-                    ]
-                },
-                "Contract": {
-                    "general": [
-                        "MUST temporarily push |var|`name` onto the tracer context unless it is already on top."
-                    ]
-                },
-                "Parameters": {
-                    "tr": [
-                        "The tracer whose context stack should be managed."
-                    ],
-                    "name": [
-                        "The context name to push."
-                    ]
-                },
-                "Returns": [
-                    "A context manager yielding nothing."
-                ],
-                "Raises": {}
-            }
-        },
-        "sdv.doc.waterloo.docitem_helper.rule_on_fail": {
-            "signature": {
-                "text": "rule_on_fail(tr: 'tracer', rule_id: 'RuleId') -> 'Generator[None, None, None]'",
-                "parameters": [
-                    {
-                        "name": "tr",
-                        "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "tracer",
-                        "default": null
-                    },
-                    {
-                        "name": "rule_id",
-                        "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "RuleId",
-                        "default": null
-                    }
-                ],
-                "returns": "Generator[None, None, None]"
-            },
-            "decorators": [
-                "@contextmanager"
-            ],
-            "doc": {
-                "Preamble": {
-                    "profile": "function",
-                    "normative_sections": [
-                        "Contract",
-                        "Parameters",
-                        "Returns",
-                        "Raises"
-                    ],
-                    "scope": [
-                        "public"
-                    ]
-                },
-                "Contract": {
-                    "general": [
-                        "MUST temporarily push the given rule identifier onto the tracer's rule-on-fail stack."
-                    ]
-                },
-                "Parameters": {
-                    "tr": [
-                        "The tracer whose failure-rule stack should be managed."
-                    ],
-                    "rule_id": [
-                        "The rule identifier to push for the duration of the context."
-                    ]
-                },
-                "Returns": [
-                    "A context manager yielding nothing."
                 ],
                 "Raises": {}
             }

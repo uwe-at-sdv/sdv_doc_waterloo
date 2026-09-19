@@ -131,6 +131,65 @@ from types import FunctionType, MappingProxyType, MethodType, ModuleType
 from typing_extensions import Self, TypeIs
 from typing import Any, Callable, Dict, Final, Mapping, TYPE_CHECKING, get_type_hints, get_origin, get_args, Generator, Iterable, Iterator, List, Literal, NewType, NoReturn, Sequence, Set, Tuple, Type, TypeAlias, TypedDict, TypeGuard, Union, cast
 
+from sdv.doc.waterloo.docitem_types import (
+	DocstringSubtree,
+	DocstringTree,
+	AnnotatableObject,
+	Origin,
+	Details,
+	Scope,
+	Scopes,
+	scope_tag_map,
+	Documentable,
+	KEYWORDS_OF_NORMATIVITY,
+	RE_IDENTIFIER,
+	RE_QUALIFIED_IDENTIFIER,
+	RE_ANSI_SGR_COMPILED,
+	RE_WTRL_JSON_SCHEMA_NAME_COMPILED,
+	RE_CSV_IDENTIFIERS,
+	RE_WTRL_MARKUP_BACKTICK,
+	RE_WTRL_ANGLE_HTTPS_REF,
+	RE_WTRL_ANGLE_WTRL_REF,
+	RE_WTRL_JSON_SCHEMA_NAME,
+	WTRL_MARKUP_ROLES,
+	AnchorKind_t,
+	Flavour,
+	FLAVOUR_TAG_MAP,
+	Format,
+	FORMAT_TAG_MAP,
+	LabelKind_t,
+	MustExist_t,
+	Normativity_t,
+	Profile,
+	Profile_t,
+	RE_RULE_ID,
+	SectionBodyCategory_t,
+	SectionProperty_t,
+	Status,
+	STATUS_TAG_MAP,
+	Trait,
+	TRAIT_TAG_MAP,
+	flavour_tag_map,
+	format_tag_map,
+	status_tag_map,
+	trait_tag_map,
+	)
+from sdv.doc.waterloo.docitem_types import RuleId as RuleId_
+RuleId: TypeAlias = RuleId_
+
+from sdv.doc.waterloo.docitem_exceptions import (
+	ParseError,
+	ValidationError,
+	SectionNotFoundError,
+	SubsectionNotFoundError,
+	NoContentError,
+	)
+from sdv.doc.waterloo.docitem_tracer import (
+	rule_on_fail,
+	traced_section,
+	tracer
+	)
+
 import sys,re,os,copy
 import pkgutil,inspect,importlib
 import ast
@@ -138,16 +197,9 @@ import textwrap
 import builtins
 from datetime import datetime
 from weakref import WeakKeyDictionary
-from contextlib import contextmanager
 
 if TYPE_CHECKING:
 	from sdv.doc.waterloo.docitem_docstring import docitem_docstring_base
-
-try:
-	from enum import StrEnum # type: ignore[attr-defined]
-except:
-	class StrEnum(str, Enum): # type: ignore[no-redef]
-		pass
 
 #===== Rule-ID Whitelist ======================================#
 # Valid whitelist reasons in tokenized form:
@@ -319,267 +371,7 @@ RULE_ID_WHITELIST: Final[Dict[str, WhitelistReason]] = {
 	"TOOL-800":	WhitelistReason.UNRELATED_RULE,
 	}
 
-#===== Constants ==============================================#
-
-WTRL_TRACER_JSON_SCHEMA_VERSION = "0.1.0"
-
-RE_RULE_ID : Final[str] = r"[A-Z][A-Z][A-Z]+-[0-9][0-9][0-9]+"
-RE_RULE_ID_COMPILED : Final[re.Pattern[str]] = re.compile(RE_RULE_ID)
-
-RE_IDENTIFIER : Final[str] = r"[A-Za-z_][A-Za-z0-9_]*"
-RE_IDENTIFIER_COMPILED : Final[re.Pattern[str]] = re.compile(RE_IDENTIFIER)
-
-RE_QUALIFIED_IDENTIFIER : Final[str] = r"[A-Za-z_][A-Za-z0-9_]*([.][A-Za-z_][A-Za-z0-9_]*)*"
-RE_QUALIFIED_IDENTIFIER_COMPILED : Final[re.Pattern[str]] = re.compile(RE_QUALIFIED_IDENTIFIER)
-
-# Required for Definitions
-RE_CSV_IDENTIFIERS = r"[A-Za-z_][A-Za-z0-9_]*(\s*[,]\s*[A-Za-z_][A-Za-z0-9_]*)*"
-RE_CSV_IDENTIFIERS_COMPILED = re.compile(RE_CSV_IDENTIFIERS)
-
-# Keep the canonical tokens in the helper layer: parsing, validation, and
-# Authoring JSON all need the same definition of an explicit normative claim.
-KEYWORDS_OF_NORMATIVITY: Final[tuple[str, ...]] = (
-	"|must|",
-	"|Must|",
-	"|must_not|",
-	"|Must_not|",
-	"|should|",
-	"|Should|",
-	"|should_not|",
-	"|Should_not|",
-	"|may|",
-	"|May|",
-)
-
-# ANSI SGR escape sequences, e.g. "\x1b[31m"
-RE_ANSI_SGR: Final[str] = r"\x1b\[[0-9;]*m"
-RE_ANSI_SGR_COMPILED: Final[re.Pattern[str]] = re.compile(RE_ANSI_SGR)
-
-# Markup tokens for Waterloo roles, e.g. |type|`int` -> :wtrl_type:`int`
-# Single Source of Truth is the documentation standard.
-WTRL_MARKUP_ROLES: Final[str] = r"(attr|cmd|class|dfn|file|func|key|label|lit|mod|norm|op|opt|pkg|ref|tag|term|type|url|value|var|var_type)"
-RE_WTRL_MARKUP_BACKTICK: Final[str] = rf"\|{WTRL_MARKUP_ROLES}\|`([^`]+)`"
-RE_WTRL_MARKUP_BACKTICK_COMPILED: Final[re.Pattern[str]] = re.compile(RE_WTRL_MARKUP_BACKTICK)
-
-# References consist of two parts: clear text and <link>.
-RE_WTRL_ANGLE_HTTPS_REF: Final[str] = r"^\s*([^<>`]+?)\s*<\s*(https?://[^>\s]+)\s*>\s*$"
-RE_WTRL_ANGLE_HTTPS_REF_COMPILED: Final[re.Pattern[str]] = re.compile(RE_WTRL_ANGLE_HTTPS_REF)
-
-RE_WTRL_ANGLE_WTRL_REF: Final[str] = r"^\s*([^<>`]+?)\s*<\s*(wtrl://[^>\s]+)\s*>\s*$"
-RE_WTRL_ANGLE_WTRL_REF_COMPILED: Final[re.Pattern[str]] = re.compile(RE_WTRL_ANGLE_WTRL_REF)
-
-#RE_SUSPICIOUS_MARKUP_BACKTICK: Final[str] = rf"\|[a-zA-Z0-9_]+\|`"
-#RE_SUSPICIOUS_MARKUP_BACKTICK_COMPILED: Final[re.Pattern[str]] = re.compile(RE_SUSPICIOUS_MARKUP_BACKTICK)
-
-RE_WTRL_JSON_SCHEMA_NAME: Final[str] = r"^wtrl-[a-zA-Z\-_]*-[0-9+]\.[0-9+]\.[0-9+]\.schema\.json$"
-RE_WTRL_JSON_SCHEMA_NAME_COMPILED: Final[re.Pattern[str]] = re.compile(RE_WTRL_JSON_SCHEMA_NAME)
-
-#CSV_SECTIONS = frozenset(["normative_sections", "scopes", "Public_classes", "Public_methods", "Public_functions", "See_also"])
-SINGLE_STRING_SECTIONS = frozenset(["profile","status"])
-
-class Trait(StrEnum):
-	"""
-	Preamble:
-		profile:
-			class
-		normative_sections:
-			Contract, Public_constants, Derived_from
-		scope:
-			public
-	Contract:
-		general:
-			|Must| provide constants representing the traits of a class.
-		constructor:
-			Inherit from |type|`StrEnum`.
-	Derived_from:
-		StrEnum
-	Public_constants:
-		ABSTRACT:
-			The class is abstract, i.e. it cannot be instantiated directly and is not a complete specification of the concept.
-		FINAL:
-			The class is final, i.e. it cannot be subclassed and is a complete specification of the concept.
-	"""
-	ABSTRACT = "abstract"
-	FINAL = "final"
-
-trait_tag_map = {
-	"abstract": Trait.ABSTRACT,
-	"final": Trait.FINAL
-	}
-TRAIT_TAG_MAP = MappingProxyType(trait_tag_map)
-
-# Valid profiles
-Profile: TypeAlias = Literal["module", "class", "function", "method", "inherited_method"]
-
-# Infixes for anchors
-AnchorKind_t = Literal["mod", "cls", "func", "obj"]
-
-# Scope values
-class Scope(IntEnum):
-	r"""
-	Preamble:
-		profile:
-			class
-		normative_sections:
-			Contract, Public_constants, Derived_from
-		scope:
-			public
-	Contract:
-		general:
-			|Must| provide constants representing available scopes.
-			|Must| provide a time-stable partial order for the constants.
-		constructor:
-			Inherit from |type|`int`.
-	Derived_from:
-		IntEnum
-	Public_constants:
-		PUBLIC:
-			Selects the public API.
-		EXTENSION:
-			Selects the API for developers of plugin and extensions.
-		CORE:
-			Selects the API for core developers.
-	Notes:
-		Purpose:
-			The scope is an optional parameter for rendering functions.\
-			It allows to restrict the set of rendered objects to a\
-			well-defined audience.
-		Values:
-			The class only ensures the partial order but does not\
-			ensure particular values for the constants.
-	"""
-	PUBLIC		= 10
-	EXTENSION	= 20
-	CORE		= 30
-
-# Keys |must| be lower-case.
-scope_tag_map = {
-	"public": Scope.PUBLIC,
-	"extension": Scope.EXTENSION,
-	"core": Scope.CORE,
-	}
-scope_to_string = {
-	Scope.PUBLIC: "public",
-	Scope.EXTENSION: "extension",
-	Scope.CORE: "core"
-}
-
 SCOPE_TAG_MAP = MappingProxyType(scope_tag_map)	
-
-# Flavour for string output
-class Flavour(IntEnum):
-	"""
-	Preamble:
-		profile:
-			class
-		normative_sections:
-			Contract, Public_constants, Derived_from
-		scope:
-			public
-	Contract:
-		general:
-			|Must| provide constants representing available flavours for rendering Normativity Keywords.
-		constructor:
-			Inherit from |type|`int`.
-	Derived_from:
-		IntEnum
-	Public_constants:
-		RAW:
-			Example: | + Must + |
-		RFC_2119:
-			Example: |lit|`MUST`
-		MARKDOWN:
-			Example: |lit|`**MUST**`
-	"""
-	RAW		= 0
-	RFC_2119	= 1
-	MARKDOWN	= 2
-
-flavour_tag_map = {
-	"raw":		Flavour.RAW,
-	"rfc-2119":	Flavour.RFC_2119,
-	"markdown":	Flavour.MARKDOWN,
-	}
-FLAVOUR_TAG_MAP: Final[Mapping[str, Flavour]] = MappingProxyType(flavour_tag_map)	
-
-# Format for string-related output
-class Format(IntEnum):
-	"""
-	Preamble:
-		profile:
-			class
-		normative_sections:
-			Contract, Public_constants, Derived_from
-		scope:
-			public
-	Contract:
-		general:
-			|Must| provide constants representing available output formats for string rendering.
-		constructor:
-			Inherit from |type|`int`.
-	Derived_from:
-		IntEnum
-	Public_constants:
-		JSON:
-			Javascript Object Notation
-		MD:
-			Markdown.
-	"""
-	JSON		= 0
-	MD		= 1
-
-format_tag_map = {
-	"json":		Format.JSON,
-	"md":		Format.MD
-	}
-FORMAT_TAG_MAP: Final[Mapping[str, Format]] = MappingProxyType(format_tag_map)	
-
-class Status(StrEnum):
-	"""
-	Preamble:
-		profile:
-			class
-		normative_sections:
-			Contract, Public_constants, Derived_from
-		scope:
-			public
-	Contract:
-		general:
-			|Must| provide constants representing the values of subsection |label|`Preamble.status`.
-		constructor:
-			Inherit from |type|`StrEnum`.
-	Derived_from:
-		StrEnum
-	Public_constants:
-		EXPERIMENTAL:
-			See rule |ref|`STA-004 <section_function_pramble>`.
-		STABLE:
-			See rule |ref|`STA-004 <section_function_pramble>`.
-		FROZEN:
-			See rule |ref|`STA-004 <section_function_pramble>`.
-		DEPRECATED:
-			See rule |ref|`STA-004 <section_function_pramble>`.
-		DRAFT:
-			See rule |ref|`STA-004 <section_function_pramble>`.
-	Notes:
-		LoII:
-			This docstring violates LoII in order to preserve SSoT,
-			see |label|`Public_constants`.
-	"""
-	EXPERIMENTAL	= "experimental"
-	STABLE		= "stable"
-	FROZEN		= "frozen"
-	DEPRECATED	= "deprecated"
-	DRAFT		= "draft"
-
-status_tag_map = {
-	"experimental":	Status.EXPERIMENTAL,
-	"stable":	Status.STABLE,
-	"frozen":	Status.FROZEN,
-	"deprecated":	Status.DEPRECATED,
-	"draft":	Status.DRAFT
-	}
-STATUS_TAG_MAP = MappingProxyType(status_tag_map)	
 
 #===== begin section and subsection properties ===============#
 
@@ -590,13 +382,6 @@ STATUS_TAG_MAP = MappingProxyType(status_tag_map)
 #
 # Normative SSoT is the documentation in format.rst. If this block and format.rst
 # ever diverge, format.rst is authoritative and this block must be updated.
-
-# These axes describe semantic status and applicability in the documentation rules.
-
-Profile_t = Literal["module", "class", "function", "method", "inherited_method"]
-Normativity_t = Literal["not_applicable", "normative", "informative", "can_be_both"]
-MustExist_t = Literal["yes", "no", "depends_on_context"]
-LabelKind_t = Literal["FIXED", "IDENTIFIER", "QUALIFIED_IDENTIFIER", "LIST_OF_IDENTIFIERS", "ANY_STRING"]
 
 CANONICAL_ORDER_OF_SECTIONS : Final[Dict[str,None | Sequence[str]]] = {
 	"Preamble"		: ("profile","normative_sections","status","scope"),
@@ -623,24 +408,6 @@ CANONICAL_ORDER_OF_SECTIONS : Final[Dict[str,None | Sequence[str]]] = {
 	}
 
 CANONICAL_ORDER_OF_PROFILES: Final[list[Profile_t]] = ["module", "class", "function", "method", "inherited_method"]
-
-SectionBodyCategory_t = Literal[
-	"STRUCTURE",
-	"IDENTIFIER",
-	"QUALIFIED_IDENTIFIER",
-	"LIST_OF_IDENTIFIERS",
-	"LIST_OF_QUALIFIED_IDENTIFIERS",
-	"ITEMIZED_TEXT",
-	"FREEFORM_TEXT",
-]
-
-class SectionProperty_t(TypedDict):
-	category: SectionBodyCategory_t
-	normativity: Normativity_t
-	label_kind: LabelKind_t
-	profile: list[Profile_t]
-	must_exist: MustExist_t
-	hint: str
 
 # Shared section catalog consumed by validator and explain tooling.
 # Keep this mapping synchronized with format.rst, which remains the normative SSoT.
@@ -1090,22 +857,6 @@ class ConfigTraversal:
 		return self.include_imported() or self.is_member_in_module(obj_parent,member)
 
 #===== Typechecking ===========================================#
-
-# A single string can be a docstring subtree.
-DocstringSubtree: TypeAlias = Union[str, List["DocstringSubtree"]]
-
-# A docstring tree is always a list.
-DocstringTree: TypeAlias = List[DocstringSubtree]
-
-AnnotatableObject: TypeAlias = Union[type, ModuleType, FunctionType, MethodType]
-
-RuleId: TypeAlias = str
-Origin: TypeAlias = Literal["parsing", "validation", "tool", "extension"]
-Details: TypeAlias = Dict[str,str | list[str]]
-
-Scopes: TypeAlias = Set[Scope]
-
-Documentable: TypeAlias = ModuleType | type[object] | Callable[..., Any]
 
 def is_obj_annotatable(obj: Any) -> TypeGuard[AnnotatableObject]:
 	"""
@@ -1946,495 +1697,6 @@ Raises:
 			return
 	yield from _iter(obj,_seen)
   
-#===== Tracing ================================================#
-class tracer:
-	r"""
-	Preamble:
-		profile:
-			class
-		normative_sections:
-			Contract, Public_types, Public_classes, Public_methods
-	Terminology:
-		rules on fail:
-			Low-level functions may find a parsing or validation warning or error,
-			but have no clue which rule has been violated. The |dfn|`rules on fail`
-			mechanism allows the caller to pass the set of rules in question.
-			The tracer provides a stack and api for these rule sets.
-	Contract:
-		general:
-			|Must| provide a string-valued stack API for storing context data, like "which object/section/subsection are we in?".
-			|Must| provide a to-string method for rendering the context.
-
-			|Must| maintain a list of infos, where each entry is a tuple consisting of context, origin, and a free-form message.
-			|Must| provide a method for adding such a info entry.
-			|Must| allow to query if infos have been added.
-			|Must| provide a method for clearing the list of infos.
-			|Must| provide a method for rendering the list of infos as a string.
-			|Must| provide a generator which allows iterating over the list of infos.
-
-			|Must| maintain a list of warnings, where each entry is a tuple consisting of context, one Rule-ID, origin, a free-form message, and optional details.
-			|Must| provide a method for adding such a warning entry.
-			|Must| allow to query if warnings have been added.
-			|Must| provide a method for clearing the list of warnings.
-			|Must| provide a method for rendering the list of warnings as a string.
-			|Must| provide a generator which allows iterating over the list of warnings.
-
-			|Must| maintain a list of errors, where each entry is a tuple consisting of context, one Rule-ID, origin, a free-form message, and optional details.
-			|Must| provide a method for adding such a error entry.
-			|Must| allow to query if errors have been added.
-			|Must| provide a method for clearing the list of errors.
-			|Must| provide a method for rendering the list of errors as a string.
-			|Must| provide a generator which allows iterating over the list of errors.
-
-			|Must| manage a set of ignore-rule instructions
-
-			|Must| provide a stack containing the current |dfn|`rule on fail` being validated against.
-			|Must| provide an api like |func|`push...`, |func|`pop...`, |func|`get...` for the |dfn|`rule on fail` stack.
-
-			|Must| provide a stack containing the current set of |dfn|`scopes` being validated against.
-			|Must| provide an api like |func|`push...`, |func|`pop...`, |func|`get...` for the |dfn|`scopes` stack.
-		constructor:
-			|Must| be default-constructible.
-	Public_types:
-		Context:
-			A list of strings built per context manager during parsing and validation.\
-			Entries can be module, class or function names, or labels.
-	Public_classes:
-		Severity
-	Class_overview:
-		Severity:
-			An enum with values DEBUG, INFO, WARNING, ERROR for filtering the output of the tracer.
-	Public_methods:
-		build_json, str_by_severity
-	Method_overview:
-		build_json:
-			Build a JSON-serializable |type|`dict` containing the
-			information in the tracer, filtered by severity and optionally enriched by metadata.
-	Notes:
-		Last review:
-			2026-06-21
-		Parameter 'details':
-			The details payload is important for the MCP server, because it gives the LLM enough debugging context to interpret tracer output and decide how to react to it.
-			It usually is a dict with keys "found", "expected", and "hint"; "hint" typically contains a waterlint call for retrieving more information about the affected section or subsection.
-	"""
-	Context: TypeAlias = List[str]
-	class Severity(IntEnum):
-		r"""
-		Preamble:
-			profile:
-				class
-			normative_sections:
-				Contract, Derived_from
-		Contract:
-			general:
-				|Must| define the following severity levels for filtering the tracer's output:
-				|value|`DEBUG`: for debugging notes, not relevant for end-users.
-				|value|`INFO`: for informational messages that are relevant for end-users but do not indicate any problems.
-				|value|`WARNING`: for potential issues that should be looked at but do not necessarily indicate a failure.
-				|value|`ERROR`: for definite problems that indicate a failure to meet a requirement or rule.
-				|Must| assign integer values to these levels in increasing order of severity, starting with 0 for DEBUG.
-			constructor:
-				|Must| inherit from |type|`IntEnum`.
-		Derived_from:
-			IntEnum
-		"""
-		DEBUG		= 0,
-		INFO		= 1,
-		WARNING		= 2
-		ERROR		= 3
-
-	RE_ANSI_ESCAPE_SEQUENCE = re.compile(r"\x1b\[[0-9;?]*[ -/]*[@-~]")
-
-	@classmethod
-	def strip_ansi_escape_sequences(cls,s: str) -> str:
-		return cls.RE_ANSI_ESCAPE_SEQUENCE.sub("", s)
-
-	def __init__(self) -> None:
-		self._names : List[str] = []
-# Debugging notes
-		self._debug : List[Tuple[tracer.Context,Origin,str]] = []
-# Infos
-		self._infos : List[Tuple[tracer.Context,Origin,str]] = []
-# This is a list of warnings, where each entry consists of a RuleID and a free-form text.
-		self._warnings : List[Tuple[tracer.Context,RuleId,Origin,str,Details]] = []
-		self._errors : List[Tuple[tracer.Context,RuleId,Origin,str,Details]] = []
-# Rules to ignore
-		self._ignrules : Set[str] = set()
-# Rule in case a low-level function fails. We make sure there is always a rule
-# so nothing will crash, but of course we don't want to see this one.
-		self._rule_on_fail : List[RuleId] = ["YYY-999"]
-# The scopes for validation. Successful validation requires that rules
-# SCP-### are fulfilled. The default is a set with a single element CORE
-		self._scopes : List[Scopes] = [set([Scope.CORE])]
-
-	def __str__(self) -> str:
-		return self.str_by_severity(self.Severity.DEBUG)
-	def _format_diagnostic_details(self, details: Details) -> str:
-		lines: list[str] = []
-		label_color = "\x1b[38;2;119;119;119m"
-		label_reset = "\x1b[0m"
-		for key in ("found", "expected"):
-			value = details.get(key)
-			if isinstance(value, list) and value:
-				lines.append(f"\t{label_color}{key}:{label_reset}")
-				for line in value:
-					if isinstance(line, str):
-						lines.append(f"\t\t{line}")
-			elif isinstance(value, str) and value:
-				lines.append(f"\t{label_color}{key}:{label_reset}")
-				lines.append(f"\t\t{value}")
-		hint = details.get("hint")
-		if isinstance(hint, str) and hint:
-			lines.append(f"\t{label_color}hint:{label_reset}")
-			lines.append(f"\t\t{hint}")
-		elif isinstance(hint, list) and hint:
-			lines.append(f"\t{label_color}hint:{label_reset}")
-			for line in hint:
-				if isinstance(line, str) and line:
-					lines.append(f"\t\t{line}")
-		return "".join(f"{line}\n" for line in lines)
-	def _format_diagnostic_line(self, kind: str, origin: Origin, context: tracer.Context, rule_id: RuleId | None, msg: str, details: Details | None = None) -> str:
-		color_map = {
-			"Debug": "\x1b[35m",
-			"Info": "\x1b[32m",
-			"Warning": "\x1b[33m",
-			"Error": "\x1b[31m",
-		}
-		color = color_map.get(kind, "\x1b[0m")
-		head = f"- {color}{kind}\x1b[0m [{origin}] - [{'->'.join(context)}]"
-		if rule_id is not None:
-			head += f" [Rule {rule_id}]"
-		head += f" {msg}\n"
-		if isinstance(details, dict) and details:
-			head += self._format_diagnostic_details(details)
-		return head
-# Refcopy debug, infos, warnings from tr to self.
-# Refcopy errors from tr to self as warnings.
-# We use this e.g. in waterlint render-json.
-	def append_and_defuse(self,tr: tracer) -> None:
-		for msg_dbg in tr._debug:
-			self._debug.append(msg_dbg)
-		for msg_inf in tr._infos:
-			self._infos.append(msg_inf)
-		for msg_wrn in tr._warnings:
-			if self.should_ignore_rule(msg_wrn[1]):
-				continue
-			self._warnings.append(msg_wrn)
-# Defusing: errors in tr become warnings in self.
-		for msg_err in tr._errors:
-			if self.should_ignore_rule(msg_err[1]):
-				continue
-			self._warnings.append(msg_err)
-# For humans
-	def str_by_severity(self,severity: Severity) -> str:
-		r"""
-		Preamble:
-			profile:
-				method
-			normative_sections:
-				Contract, Parameters, Returns, Raises
-		Contract:
-			general:
-				|Must| render the tracer's content as a human-readable string, filtered by severity level.
-				|Must| include entries with severity level equal to or higher than the specified level.
-				|Must| format entries with clear labels and context for easy understanding.
-		Parameters:
-			severity:
-				Only include entries with this severity level or higher.
-				Levels are ordered as DEBUG < INFO < WARNING < ERROR.
-		Returns:
-			A string representation of the tracer's content, including entries
-			up to the specified severity level, formatted for human readability.
-		Raises:
-		Notes:
-			Called by:
-				This method is invoked by the __str__ method, which defaults to showing all entries (DEBUG level),
-				so generally you simply call |func|`str`(tracer_instance) to get the full content
-				or |func|`print`(tracer_instance) to display it. 
-		"""
-		t = ""
-		t += "----- Tracer-----8<---------------------------------------------\n"
-		if severity <= self.Severity.DEBUG:
-			t += self.to_string_debug_notes()
-		if severity <= self.Severity.INFO:
-			t += self.to_string_infos()
-		if severity <= self.Severity.WARNING:
-			t += self.to_string_warnings()
-		if severity <= self.Severity.ERROR:
-			t += self.to_string_errors()
-		t += "----- Tracer----->8---------------------------------------------\n"
-		return t
-	def build_json(
-		self,
-		severity: Severity,
-		*,
-		schema_version: str | None = None,
-		waterloo_version: str | None = None,
-		id_prefix: str | None = None,
-		include_debug: bool = True,
-	) -> dict[str, Any]:
-		r"""
-		Preamble:
-			profile:
-				method
-			normative_sections:
-				Contract, Parameters, Returns, Raises
-		Contract:
-			general:
-				|Must| build a JSON-serializable |type|`dict` containing the tracer's data, following the WTRL Tracer JSON Schema.
-				|Must| include entries up to the specified severity level.
-				|Must| allow including debug notes optionally, as they may contain sensitive or verbose information.
-				|Must| include schema version and optionally Waterloo version in the metadata section.
-		Parameters:
-			severity:
-				Only include entries with this severity level or higher.
-				Levels are ordered as DEBUG < INFO < WARNING < ERROR.
-			schema_version:
-				Specify the WTRL Tracer JSON Schema version to declare in the output. Defaults to the current version if not provided.
-				This does not affect the structure of the output, which always follows the current schema.
-				Including the schema version allows consumers to validate against the correct schema and maintain compatibility as the schema evolves.
-				* |Must| be a string in the format |lit|`X.Y.Z` where X, Y, and Z are non-negative integers.
-				* |Must| default to the current schema version if not provided.
-				* |Must| be included in the output under the `__WTRL_VERSION__` metadata section.
-				* |Must_not| affect the actual structure of the output, which always follows the current schema.
-			waterloo_version:
-				Optionally include the version of the Waterloo tool that generated the tracer data.
-				* |Must| be a string in the format |lit|`X.Y.Z` where X, Y, and Z are non-negative integers.
-			id_prefix:
-				Optionally include a prefix for the `$id` field in the output JSON.
-				* |Must| be a string if provided.
-				* |May| be omitted, in which case the `$id` field will not include a prefix.
-			include_debug:
-				Optionally include debug notes in the output JSON.
-		Returns:
-			A JSON-serializable |type|`dict` containing the tracer's data structured according to the WTRL Tracer JSON Schema,
-			including entries up to the specified severity level and metadata about the schema and optionally the Waterloo version.
-			The return value |must| conform to JSON Schema :file:`wtrl-tracer-json-X.Y.Z.schema.json` where X.Y.Z is the declared schema version.
-		Raises:
-		"""
-		def _lift_diagnostic_fields(entry: dict[str, Any], details: Details | None = None) -> Details:
-			if not isinstance(details, dict):
-				return {}
-			details_payload = dict(details)
-			for key in ("expected", "found", "hint"):
-				if key in details_payload:
-					entry[key] = details_payload.pop(key)
-			return details_payload
-		schema_version = WTRL_TRACER_JSON_SCHEMA_VERSION if schema_version is None else schema_version
-		doc: dict[str, Any] = {
-			"$schema": f"https://sci-d-vis.com/schema/wtrl-tracer-json-{schema_version}.schema.json",
-			"__WTRL_VERSION__": {
-				"schema": schema_version,
-			},
-			"__WTRL_INFO__": [],
-			"__WTRL_WARNING__": [],
-			"__WTRL_ERROR__": [],
-		}
-		if waterloo_version is not None:
-			cast(dict[str, Any], doc["__WTRL_VERSION__"])["waterloo"] = waterloo_version
-		if id_prefix is not None:
-			doc["$id"] = f"{id_prefix}:{datetime.now().strftime('%Y%m%d%H%M%S')}"
-		if include_debug and severity <= self.Severity.DEBUG:
-			doc["__WTRL_DEBUG__"] = []
-#----- Debug notes --------------------------------------------#
-		if include_debug and severity <= self.Severity.DEBUG:
-			for context,origin,msg in self.gen_debug_notes():
-				dentry: dict[str, Any] = {"kind": "debug", "origin": origin, "msg": msg}
-				dentry["context"] = context
-				cast(list[dict[str, Any]], doc["__WTRL_DEBUG__"]).append(dentry)
-#----- Infos --------------------------------------------------#
-		if severity <= self.Severity.INFO:
-			for context,origin,msg in self.gen_infos():
-				entry: dict[str, Any] = {"kind": "info", "origin": origin, "msg": msg}
-				entry["context"] = context
-				cast(list[dict[str, Any]], doc["__WTRL_INFO__"]).append(entry)
-#----- Warnings -----------------------------------------------#
-		if severity <= self.Severity.WARNING:
-			for context,rule_id,origin,msg,details in self.gen_warnings():
-				entry = {"kind": "warning", "origin": origin, "rule-id": rule_id, "msg": msg}
-				entry["context"] = context
-				entry["details"] = _lift_diagnostic_fields(entry, details)
-				cast(list[dict[str, Any]], doc["__WTRL_WARNING__"]).append(entry)
-#----- Errors -------------------------------------------------#
-		if severity <= self.Severity.ERROR:
-			for context,rule_id,origin,msg,details in self.gen_errors():
-				entry = {"kind": "error", "origin": origin, "rule-id": rule_id, "msg": msg}
-				entry["context"] = context
-				entry["details"] = _lift_diagnostic_fields(entry, details)
-				cast(list[dict[str, Any]], doc["__WTRL_ERROR__"]).append(entry)
-		return doc
-
-#----- Context ------------------------------------------------#
-	def push(self,name : str) -> None:
-		self._names.append(name)
-	def pop(self) -> str:
-		name = self._names[-1]
-		del self._names[-1]
-		return name
-	def has_top(self,name : str) -> bool:
-		return self._names[-1] == name if len(self._names) > 0 else False
-	def to_string(self) -> str:
-		return "->".join(self._names)
-#----- Debug --------------------------------------------------#
-	def clear_debug_notes(self) -> None:
-		self._debug = []
-	def has_debug_notes(self) -> bool:
-		return len(self._debug) > 0
-	def add_debug_note(self,msg : str,origin: Origin = "tool") -> None:
-		self._debug.append((copy.copy(self._names),origin,msg))
-	def to_string_debug_notes(self) -> str:
-		return "".join([self._format_diagnostic_line("Debug", origin, context, None, msg) for context,origin,msg in self._debug])
-# Implement your own pretty printing.
-	def gen_debug_notes(self) -> Generator[Tuple[tracer.Context,Origin,str],None,None]:
-		for context,origin,msg in self._debug:
-			yield context,origin,msg
-#----- Infos --------------------------------------------------#
-	def clear_infos(self) -> None:
-		self._infos = []
-	def has_infos(self) -> bool:
-		return len(self._infos) > 0
-	def add_info(self,msg : str,origin: Origin = "tool") -> None:
-		self._infos.append((copy.copy(self._names),origin,msg))
-	def to_string_infos(self) -> str:
-		return "".join([self._format_diagnostic_line("Info", origin, context, None, msg) for context,origin,msg in self._infos])
-# Implement your own pretty printing.
-	def gen_infos(self) -> Generator[Tuple[tracer.Context,Origin,str],None,None]:
-		for context,origin,msg in self._infos:
-			yield context,origin,msg
-#----- Warnings -----------------------------------------------#
-	def clear_warnings(self) -> None:
-		self._warnings = []
-	def has_warnings(self) -> bool:
-		return len(self._warnings) > 0
-	def add_warning(self,rule_id : RuleId, origin: Origin, msg : str,/,details: Details | None = None) -> None:
-		self._warnings.append((copy.copy(self._names),rule_id,origin,msg,details or {}))
-	def to_string_warnings(self) -> str:
-		return "".join([self._format_diagnostic_line("Warning", origin, context, rid, msg, details) for context,rid,origin,msg,details in self._warnings])
-# Implement your own pretty printing.
-	def gen_warnings(self) -> Generator[Tuple[tracer.Context,RuleId,Origin,str,Details],None,None]:
-		for context,rid,origin,msg,details in self._warnings:
-			yield context,rid,origin,msg,details
-#----- Errors -------------------------------------------------#
-	def clear_errors(self) -> None:
-		self._errors = []
-	def has_errors(self) -> bool:
-		return len(self._errors) > 0
-	def add_error(self,rule_id : RuleId, origin: Origin, msg : str,/,details: Details | None = None) -> None:
-		self._errors.append((copy.copy(self._names),rule_id,origin,msg,details or {}))
-	def to_string_errors(self) -> str:
-		return "".join([self._format_diagnostic_line("Error", origin, context, rid, msg, details) for context,rid,origin,msg,details in self._errors])
-# Implement your own pretty printing.
-	def gen_errors(self) -> Generator[Tuple[tracer.Context,RuleId,Origin,str,Details],None,None]:
-		for context,rid,origin,msg,details in self._errors:
-			yield context,rid,origin,msg,details
-#----- Ignores ------------------------------------------------#
-	def clear_ignored(self) -> None:
-		self._ignrules = set()
-	def add_ignore_rule(self,rule : str) -> None:
-		if not RE_RULE_ID_COMPILED.fullmatch(rule):
-			raise RuntimeError(f"Bad rule specifier: expected 'ABC[D...]-123[4..]', got '{rule}'.")
-		self._ignrules.add(rule)
-	def should_ignore_rule(self,rule : str) -> bool:
-		return rule in self._ignrules
-	def gen_ignore_rules(self) -> Generator[str,None,None]:
-		for rule in self._ignrules:
-			yield rule
-#----- Rules on fail ------------------------------------------#
-	def clear_rule_on_fail(self) -> None:
-		self._rule_on_fail = ["YYY-999"]
-	def push_rule_on_fail(self,rule_id : RuleId) -> None:
-		self._rule_on_fail.append(rule_id)
-	def pop_rule_on_fail(self) -> None:
-		del self._rule_on_fail[-1]
-	def get_rule_on_fail(self) -> RuleId:
-		return self._rule_on_fail[-1]
-#----- Scopes -------------------------------------------------#
-	def clear_scopes(self) -> None:
-		self._scopes = []
-	def push_scopes(self,scopes : Scopes) -> None:
-		self._scopes.append(scopes)
-	def pop_scopes(self) -> None:
-		del self._scopes[-1]
-	def get_scopes(self) -> Scopes:
-		return self._scopes[-1]
-
-@contextmanager
-def traced_section(tr: tracer, name: str) -> Generator[None, None, None]:
-	"""
-	Preamble:
-		profile:
-			function
-		normative_sections:
-			Contract, Parameters, Returns, Raises
-		scope:
-			public
-	Contract:
-		general:
-			|Must| temporarily push |var|`name` onto the tracer context unless it is already on top.
-	Parameters:
-		tr:
-			The tracer whose context stack should be managed.
-		name:
-			The context name to push.
-	Returns:
-		A context manager yielding nothing.
-	Raises:
-	"""
-	something_pushed = False
-	if not tr.has_top(name):
-		tr.push(name)
-		something_pushed = True
-	try:
-		yield
-	finally:
-		if something_pushed:
-			tr.pop()
-@contextmanager
-def rule_on_fail(tr: tracer, rule_id: RuleId) -> Generator[None, None, None]:
-	"""
-	Preamble:
-		profile:
-			function
-		normative_sections:
-			Contract, Parameters, Returns, Raises
-		scope:
-			public
-	Contract:
-		general:
-			|Must| temporarily push the given rule identifier onto the tracer's rule-on-fail stack.
-	Parameters:
-		tr:
-			The tracer whose failure-rule stack should be managed.
-		rule_id:
-			The rule identifier to push for the duration of the context.
-	Returns:
-		A context manager yielding nothing.
-	Raises:
-	"""
-	tr.push_rule_on_fail(rule_id)
-	try:
-		yield
-	finally:
-		tr.pop_rule_on_fail()
-
-#===== Exceptions =============================================#
-
-class ParseError(RuntimeError):
-	def __init__(self,msg : str) -> None:
-		super().__init__(msg)
-class ValidationError(RuntimeError):
-	def __init__(self,msg : str) -> None:
-		super().__init__(msg)
-class SectionNotFoundError(RuntimeError):
-	def __init__(self,msg : str) -> None:
-		super().__init__(msg)
-class SubsectionNotFoundError(RuntimeError):
-	def __init__(self,msg : str) -> None:
-		super().__init__(msg)
-class NoContentError(RuntimeError):
-	def __init__(self,msg : str) -> None:
-		super().__init__(msg)
-
 class DocSession:
 	"""
 	Preamble:

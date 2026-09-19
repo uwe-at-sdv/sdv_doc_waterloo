@@ -46,9 +46,8 @@ from __future__ import annotations
 from typing import Any, Iterable, Literal
 from sdv.doc.waterloo.docitem_helper import (
 	CANONICAL_ORDER_OF_SECTIONS,
-	Scopes,
-	scope_to_string
 )
+from sdv.doc.waterloo.docitem_types import Scopes, scope_to_string
 
 
 #===== begin render functions for verbose diagnostics ========#

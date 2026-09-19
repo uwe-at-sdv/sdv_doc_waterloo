@@ -43,8 +43,8 @@ from sdv.doc.waterloo import docitem
 from sdv.doc.waterloo.docitem_helper import (
 	tracer,
 	get_obj_fully_qualified_name,
-	WTRL_TRACER_JSON_SCHEMA_VERSION,
 )
+from sdv.doc.waterloo.docitem_types import WTRL_TRACER_JSON_SCHEMA_VERSION
 from sdv.doc.waterloo import waterlint_common as wl_common
 
 # Not relevant yet, but in case we set up a plugin concept,

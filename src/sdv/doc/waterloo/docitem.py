@@ -95,7 +95,7 @@ Function_overview:
 		Generate a docitem tree from a docstring.
 Public_classes:
 	tracer,
-	docitem_base, docitem_list_base, docitem_map_base, docitem_free_text_entry_base,
+	docitem_base, docitem_list_of_strings_base, docitem_map_base, docitem_free_text_entry_base,
 	docitem_list_of_symbols_base, docitem_profile, docitem_normative_sections, docitem_status,
 	docitem_preamble, docitem_constructor, docitem_general, docitem_invariants, docitem_requires,
 	docitem_ensures, docitem_base_to_inherit_from, docitem_traits, docitem_contract_module,
@@ -114,7 +114,7 @@ Class_overview:
 		Context and helper for exceptions and warnings.
 	docitem_base:
 		The base class for all docitem classes which form the docstring tree.
-	docitem_list_base:
+	docitem_list_of_strings_base:
 		The base class for docitem classes managing a list of strings.
 	docitem_map_base:
 		The base class for docitem classes managing a map from strings to docitem nodes
@@ -254,6 +254,104 @@ from contextlib import contextmanager
 from sdv.doc.waterloo.version import __version__
 from sdv.doc.waterloo.docitem_docstring import *
 from sdv.doc.waterloo.docitem_validator import *
+from sdv.doc.waterloo.docitem_validator import resolve_object
+
+# Explicit facade exports keep this public module statically discoverable.
+from sdv.doc.waterloo.docitem_types import (
+	Documentable,
+	Flavour,
+	FLAVOUR_TAG_MAP,
+	Format,
+	FORMAT_TAG_MAP,
+	KEYWORDS_OF_NORMATIVITY,
+	Profile,
+	RE_IDENTIFIER,
+	RE_QUALIFIED_IDENTIFIER,
+	RE_WTRL_ANGLE_HTTPS_REF_COMPILED,
+	RE_WTRL_ANGLE_WTRL_REF_COMPILED,
+	Scope,
+	scope_to_string,
+	Status,
+	Trait,
+	WTRL_TRACER_JSON_SCHEMA_VERSION,
+	)
+from sdv.doc.waterloo.docitem_tracer import (
+	traced_section,
+	tracer
+	)
+from sdv.doc.waterloo.docitem_helper import (
+	build_anchor,
+	build_anchor_from_fully_qualified_name,
+	get_obj_anchor_kind,
+	CANONICAL_ORDER_OF_SECTIONS,
+	ConfigTraversal,
+	DocSession,
+	ParseError,
+	ValidationError,
+	gen_documentable_objects,
+	get_obj_annotations,
+	get_obj_decorators,
+	get_obj_docstring,
+	get_obj_fully_qualified_name,
+	get_obj_name,
+	get_obj_path,
+	is_obj_class,
+	is_obj_documentable,
+	is_obj_function,
+	is_obj_method_like,
+	is_obj_module,
+	)
+from sdv.doc.waterloo.docitem_base import (
+	docitem_base,
+	docitem_list_of_symbols_base,
+	docitem_free_text_entry_base,
+	)
+from sdv.doc.waterloo.docitem_docstring import (
+	make_docitem_tree,
+	make_docitem_tree_from_docstring_tree
+	)
+from sdv.doc.waterloo.docitem_preamble import (
+	docitem_normative_sections,
+	docitem_normative_sections,
+	docitem_scope,
+	docitem_status,
+	)
+from sdv.doc.waterloo.docitem_contract import (
+	docitem_traits,
+	docitem_constructor,
+	docitem_general,
+	docitem_ensures,
+	docitem_requires,
+	docitem_invariants,
+	)
+from sdv.doc.waterloo.docitem_sections import (
+	docitem_factory_functions,
+	docitem_class_overview_entry,
+	docitem_public_types_entry,
+	docitem_public_assignables_entry,
+	docitem_method_overview_entry,
+	docitem_parameters_entry,
+	docitem_raises_entry,
+	docitem_public_assignables_base,
+	docitem_definitions_entry,
+	docitem_function_overview_entry,
+	docitem_inherited_defitems,
+	docitem_terminology_entry,
+	docitem_notes_entry,
+	)
+from sdv.doc.waterloo.docitem_tokenizer import (
+	parse_indent_docstring,
+	get_num_indent,
+	get_tree_of_section,
+	get_tree_of_subsection,
+	get_scopes_of_tree,
+	to_string_tree,
+	)
+from sdv.doc.waterloo.docitem_validator import (
+	validate_class_coverage,
+	validate_docstring,
+	validate_module_coverage
+	)
 
 if __name__ == "__main__":
 	tr = tracer()

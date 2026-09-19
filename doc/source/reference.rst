@@ -450,10 +450,10 @@ Base classes
 
 .. wtrl_autodoc_class_full:: docitem_base
 
-:wtrl_type:`docitem_list_base`
-..............................
+:wtrl_type:`docitem_list_of_strings_base`
+.........................................
 
-.. wtrl_autodoc_class_full:: docitem_list_base
+.. wtrl_autodoc_class_full:: docitem_list_of_strings_base
 
 :wtrl_type:`docitem_map_base`
 .............................

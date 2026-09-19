@@ -29,13 +29,13 @@ from sdv.doc.waterloo import docitem_genutil as genutil
 from sdv.doc.waterloo import waterlint_authoring as authoring
 from sdv.doc.waterloo import waterlint_common as wl_common
 from sdv.doc.waterloo.docitem_helper import (
-	Profile_t,
 	ResolveObjectError,
 	SECTION_PROPERTIES,
 	get_allowed_sections_for_profile,
 	get_obj_fully_qualified_name,
 	tracer,
 )
+from sdv.doc.waterloo.docitem_types import Profile_t
 
 
 AuthoringMode_t = Literal["minimal", "full"]

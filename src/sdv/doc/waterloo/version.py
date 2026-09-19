@@ -11,4 +11,4 @@ Contract:
 		|Must| define the single release version shared by the |pkg|`sdv.doc.waterloo` package.
 """
 
-__version__ = "0.24.1"
+__version__ = "0.24.2"

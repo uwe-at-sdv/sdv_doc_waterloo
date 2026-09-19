@@ -1,7 +1,7 @@
-docitem_helper.py:147 # type: ignore[attr-defined]
-docitem_helper.py:149 # type: ignore[no-redef]
-docitem_validator.py:41 # type: ignore
-docitem_validator.py:42 # pragma: no cover - older Python
+docitem_types.py:9 # type: ignore[attr-defined]
+docitem_types.py:11 # type: ignore[no-redef]
+docitem_validator.py:108 # type: ignore
+docitem_validator.py:109 # pragma: no cover - older Python
 waterlint.py:736 # pragma: no cover - defensive
 waterlint.py:828 # pragma: no cover - defensive
 waterlint.py:938 # pragma: no cover - defensive

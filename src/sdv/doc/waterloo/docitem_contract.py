@@ -2,25 +2,43 @@ from __future__ import annotations
 from types import FunctionType, ModuleType
 from typing import Any, Callable, Dict, Final, get_type_hints, get_origin, get_args, Generator, Iterable, Iterator, List, NewType, NoReturn, Sequence, Set, Tuple, Type, TypeAlias, TypeGuard, Union, cast
 
-from sdv.doc.waterloo.docitem_tokenizer import *
-from sdv.doc.waterloo.docitem_base import *
+from sdv.doc.waterloo.docitem_types import (
+	Details,
+	DocstringSubtree,
+	)
+from sdv.doc.waterloo.docitem_tracer import (
+	rule_on_fail,
+	traced_section,
+	tracer,
+	)
+from sdv.doc.waterloo.docitem_helper import (
+	raise_parsing_error,
+	raise_parsing_error_expected_but_got,
+	)
+from sdv.doc.waterloo.docitem_tokenizer import expect_label, expect_list, expect_text
+from sdv.doc.waterloo.docitem_base import (
+	docitem_base,
+	docitem_list_of_strings_base,
+	docitem_list_of_symbols_base,
+	docitem_map_base,
+	)
 from sdv.doc.waterloo.docitem_diagnostics import (
+	explain_try_self_for_section,
+	explain_try_self_for_subsection,
 	render_allowed_identifier,
 	render_allowed_labels,
-	render_source_snippet,
 	render_expected_snippet,
 	render_found_label,
 	render_identifier_lines,
+	render_source_snippet,
 	render_suggestion,
-	explain_try_self_for_section,
-	explain_try_self_for_subsection,
-)
+	)
 
 #===== begin section Contract =================================#
 
 #----- docitem class constructor ------------------------------#
 
-class docitem_constructor(docitem_list_base):
+class docitem_constructor(docitem_list_of_strings_base):
 	"""
 Preamble:
 	profile:
@@ -34,7 +52,7 @@ Contract:
 	constructor:
 		|Must| be default-constructible.
 Derived_from:
-	docitem_list_base
+	docitem_list_of_strings_base
 Public_methods:
 	parse
 Method_overview:
@@ -78,7 +96,7 @@ Raises:
 
 #----- docitem class general ----------------------------------#
 
-class docitem_general(docitem_list_base):
+class docitem_general(docitem_list_of_strings_base):
 	"""
 Preamble:
 	profile:
@@ -92,7 +110,7 @@ Contract:
 	constructor:
 		|Must| be default-constructible.
 Derived_from:
-	docitem_list_base
+	docitem_list_of_strings_base
 Public_methods:
 	parse
 Method_overview:
@@ -135,7 +153,7 @@ Raises:
 
 #----- docitem class invariants -------------------------------#
 
-class docitem_invariants(docitem_list_base):
+class docitem_invariants(docitem_list_of_strings_base):
 	"""
 Preamble:
 	profile:
@@ -149,7 +167,7 @@ Contract:
 	constructor:
 		|Must| be default-constructible.
 Derived_from:
-	docitem_list_base
+	docitem_list_of_strings_base
 Public_methods:
 	parse
 Method_overview:
@@ -192,7 +210,7 @@ Raises:
 
 #----- docitem class requires -------------------------------#
 
-class docitem_requires(docitem_list_base):
+class docitem_requires(docitem_list_of_strings_base):
 	"""
 Preamble:
 	profile:
@@ -210,7 +228,7 @@ Contract:
 	constructor:
 		|Must| be default-constructible.
 Derived_from:
-	docitem_list_base
+	docitem_list_of_strings_base
 Public_methods:
 	parse
 Method_overview:
@@ -253,7 +271,7 @@ Raises:
 
 #----- docitem class ensures -------------------------------#
 
-class docitem_ensures(docitem_list_base):
+class docitem_ensures(docitem_list_of_strings_base):
 	"""
 Preamble:
 	profile:
@@ -271,7 +289,7 @@ Contract:
 	constructor:
 		|Must| be default-constructible.
 Derived_from:
-	docitem_list_base
+	docitem_list_of_strings_base
 Public_methods:
 	parse
 Method_overview:

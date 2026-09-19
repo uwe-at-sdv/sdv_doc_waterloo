@@ -23,9 +23,35 @@ Public_types:
 from __future__ import annotations
 from types import FunctionType, ModuleType
 from typing import Any, Callable, Dict, Final, Optional, get_type_hints, get_origin, get_args, Generator, Iterable, Iterator, List, NewType, NoReturn, Sequence, Set, Tuple, Type, TypeAlias, TypeGuard, Union, cast
+
+from sdv.doc.waterloo.docitem_types import (
+	DocstringTree,
+	Flavour,
+	Format,
+	SINGLE_STRING_SECTIONS,
+	)
+from sdv.doc.waterloo.docitem_exceptions import (
+	ParseError,
+	)
+from sdv.doc.waterloo.docitem_tracer import (
+	tracer,
+	)
+from sdv.doc.waterloo.docitem_helper import get_obj_name
+from sdv.doc.waterloo.docitem_base import (
+	docitem_base,
+	docitem_list_of_strings_base,
+	docitem_map_base,
+	)
+from sdv.doc.waterloo.docitem_sections import (
+	docitem_definitions,
+	)
+from sdv.doc.waterloo.docitem_docstring import (
+	docitem_docstring_base,
+	make_docitem_tree_from_docstring_tree,
+	)
+
 import re,inspect
 
-from sdv.doc.waterloo.docitem import *
 
 #===== Constants ==============================================#
 MAP_NORM_KEYWORD_BY_FLAVOUR: Final[Dict[str,str]] = {
@@ -192,7 +218,7 @@ def build_node_section_json(label : str,node: docitem_base, flavour: Flavour) ->
 		m = {}
 		for label in node.items():
 			m[label] = build_node_section_json(label,node.item(label),flavour)
-	elif isinstance(node,docitem_list_base):
+	elif isinstance(node,docitem_list_of_strings_base):
 		if label in SINGLE_STRING_SECTIONS:
 			m = _render_token(node.item_by_index(0),flavour)
 		else:
@@ -300,7 +326,7 @@ def to_node_docstring_tree_json(tree: DocstringTree, flavour: Flavour) -> WtrlJs
 			|May| propagate from |func|`make_docitem_tree_from_docstring_tree`.
 			|May| propagate from nested function calls.
 	See_also:
-		sdv.doc.waterloo.docitem.Flavour, sdv.doc.waterloo.docitem.Format
+		sdv.doc.waterloo.docitem_types.Flavour, sdv.doc.waterloo.docitem_types.Format
 	"""
 	tr = tracer()
 	node_docstring = make_docitem_tree_from_docstring_tree(tr,tree)
@@ -363,7 +389,7 @@ def to_string_md(tree: DocstringTree, flavour: Flavour = Flavour.MARKDOWN, headi
 			|Must| raise if |var|`tree` is not a sequence made only of strings and lists, or\
 			if |var|`flavour` is not a |type|`Flavour`.
 	See_also:
-		sdv.doc.waterloo.docitem.Flavour, sdv.doc.waterloo.docitem.Format
+		sdv.doc.waterloo.docitem_types.Flavour, sdv.doc.waterloo.docitem_types.Format
 	"""
 	node = to_node_docstring_tree_json(tree, flavour)
 

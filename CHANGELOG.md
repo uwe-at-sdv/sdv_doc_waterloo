@@ -2,6 +2,9 @@
 
 ## Current release history
 
+- 0.24.2 [2026-09-18]:
+  - Extract types and tracer from docitem_helper
+  - Remove asterisk-imports
 - 0.24.1 [2026-09-17]:
   - Replaced two raw messages in waterlint by tracer diagnostics.
 - 0.24.0 [2026-09-14]:

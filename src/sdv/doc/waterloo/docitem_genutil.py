@@ -42,7 +42,13 @@ import ast
 from types import ModuleType
 from typing import Any, Callable, Literal
 
-from sdv.doc.waterloo.docitem_helper import *
+from sdv.doc.waterloo.docitem_types import Profile
+from sdv.doc.waterloo.docitem_helper import (
+	is_obj_class,
+	is_obj_function,
+	is_obj_method_like,
+	is_obj_module,
+	)
 
 def parse_source_fragment(profile: Profile, source_fragment: str) -> ast.AST | None:
 	r"""

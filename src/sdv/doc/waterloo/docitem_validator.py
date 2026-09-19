@@ -4,9 +4,48 @@ from __future__ import annotations
 from types import FunctionType, ModuleType
 from typing import Any, Callable, Dict, Final, get_type_hints, get_origin, get_args, Generator, Iterable, Iterator, List, NewType, NoReturn, Sequence, Set, Tuple, Type, TypeAlias, TypeGuard, Union, cast
 
+from sdv.doc.waterloo.docitem_types import (
+	AnnotatableObject,
+	DocstringSubtree,
+	RE_IDENTIFIER_COMPILED,
+	RE_QUALIFIED_IDENTIFIER_COMPILED,
+	STATUS_TAG_MAP,
+	TRAIT_TAG_MAP,
+	)
+from sdv.doc.waterloo.docitem_tracer import (
+	traced_section,
+	tracer,
+	)
+from sdv.doc.waterloo.docitem_helper import (
+	DocSession,
+	SCOPE_TAG_MAP,
+	get_allowed_sections_for_profile,
+	get_func_obj_from_callable,
+	get_obj_annotations,
+	get_obj_direct_module,
+	get_obj_docstring,
+	get_obj_fully_qualified_name,
+	get_obj_name,
+	is_attr_annotated,
+	is_attr_final,
+	is_obj_class,
+	is_obj_documentable,
+	is_obj_function,
+	is_obj_module,
+	is_obj_named_value,
+	ParseError,
+	raise_has_no_docstring,
+	raise_validation_error,
+	raise_validation_error_invalid_normative_section,
+	SectionNotFoundError,
+	SubsectionNotFoundError,
+	ValidationError,
+	warn_validation,
+	)
 from sdv.doc.waterloo.docitem_diagnostics import (
 	explain_try_self_for_section,
 	explain_try_self_for_subsection,
+	render_allowed_identifier,
 	render_allowed_identifiers,
 	render_allowed_labels,
 	render_constant_reference_details,
@@ -20,21 +59,49 @@ from sdv.doc.waterloo.docitem_diagnostics import (
 	render_inherited_definition_details,
 	render_listed_object_missing_details,
 	render_missing_entry_details,
-	render_name_object_consistency_details,
 	render_named_value_reference_details,
+	render_name_object_consistency_details,
 	render_normative_section_details,
 	render_normativity_keyword_details,
 	render_overview_missing_member_details,
 	render_overview_requires_section_details,
 	render_parameter_signature_details,
-	render_see_also_reference_details,
 	render_scope_relation_details,
+	render_see_also_reference_details,
 	render_source_snippet,
 	render_suggestion,
 	render_type_reference_details
-)	
-from sdv.doc.waterloo.docitem_helper import get_allowed_sections_for_profile, raise_validation_error_invalid_normative_section
-from sdv.doc.waterloo.docitem_docstring import *
+	)
+from sdv.doc.waterloo.docitem_base import (
+	docitem_base,
+	docitem_list_of_strings_base,
+	docitem_map_base,
+	)
+from sdv.doc.waterloo.docitem_docstring import (
+	check_profile_matches_object,
+	docitem_docstring_base,
+	docitem_docstring_class,
+	docitem_docstring_inherited_method,
+	docitem_docstring_method,
+	docitem_docstring_module,
+	make_docitem_tree_from_object,
+	)
+from sdv.doc.waterloo.docitem_sections import (
+	docitem_definitions,
+	docitem_public_classes,
+	docitem_public_functions,
+	docitem_public_methods,
+	docitem_public_variables,
+	docitem_raises,
+	)
+from sdv.doc.waterloo.docitem_preamble import docitem_profile
+from sdv.doc.waterloo.docitem_contract import docitem_base_to_inherit_from
+from sdv.doc.waterloo.docitem_tokenizer import (
+	get_scopes_of_tree_var,
+	parse_indent_docstring,
+	)
+
+import re,builtins,inspect,importlib
 
 #===== Typechecking ===========================================#
 try:
@@ -282,7 +349,7 @@ Raises:
 		f"Could not resolve reference '{ref}' from context '{_qualified_object_name(current_obj)}'.{import_hint}"
 	)
 
-def validate_docstring_module(tr : tracer, obj: object, top : docitem_docstring_module,node_contract : docitem_map_base,node_normative_sections : docitem_list_base, session: DocSession) -> None:
+def validate_docstring_module(tr : tracer, obj: object, top : docitem_docstring_module,node_contract : docitem_map_base,node_normative_sections : docitem_list_of_strings_base, session: DocSession) -> None:
 	"""
 Preamble:
 	profile:
@@ -591,7 +658,7 @@ Notes:
 				details = render_scope_relation_details("module", top_scopes, top_scope_explicit, "function", scopes, ref_scope_explicit, "Public_functions", ref_name, "<reconsider the scopes of the module and the referenced function>", "module")
 				raise_validation_error(tr, obj, "SCP-005", f"Reconsider the scopes of the module and the referenced function '{ref_name}'.", details)
 
-def validate_docstring_class(tr : tracer, obj: object, top : docitem_docstring_class,node_contract : docitem_map_base,node_normative_sections : docitem_list_base, session: DocSession) -> None:
+def validate_docstring_class(tr : tracer, obj: object, top : docitem_docstring_class,node_contract : docitem_map_base,node_normative_sections : docitem_list_of_strings_base, session: DocSession) -> None:
 	"""
 Preamble:
 	profile:
@@ -1046,7 +1113,7 @@ Notes:
 				details = render_normative_section_details("Factory", node_normative_sections.items(), profile, action="add")
 				raise_validation_error(tr,obj,"FAC-009",f"Section 'Factory' is not listed as normative.", details)
 
-def validate_docstring_method(tr : tracer, obj: Callable[..., Any], top : docitem_docstring_method,node_contract : docitem_map_base,node_normative_sections : docitem_list_base, session: DocSession) -> None:
+def validate_docstring_method(tr : tracer, obj: Callable[..., Any], top : docitem_docstring_method,node_contract : docitem_map_base,node_normative_sections : docitem_list_of_strings_base, session: DocSession) -> None:
 	"""
 Preamble:
 	profile:
@@ -1178,7 +1245,7 @@ Notes:
 			node_returns = top.item("Returns")
 #----- Must be list of strings --------------------------------#
 # Not likely to trigger since this is captured somewhere else. We leave this here for completenes.
-			if not isinstance(node_returns,docitem_list_base):
+			if not isinstance(node_returns,docitem_list_of_strings_base):
 				details = {
 					"found": render_source_snippet("Returns", node_returns.items()),
 					"expected": [],
@@ -1245,7 +1312,7 @@ Notes:
 					details = render_exception_reference_details(exc_name, profile, expected_kind="subclass of BaseException")
 					raise_validation_error(tr,obj,"RAI-007", f"Exception '{exc_name}' is not a subclass of BaseException.", details)
 
-def validate_docstring_inherited_method(tr : tracer, obj: object, top : docitem_docstring_inherited_method,node_contract : docitem_map_base,node_normative_sections : docitem_list_base, session: DocSession) -> None:
+def validate_docstring_inherited_method(tr : tracer, obj: object, top : docitem_docstring_inherited_method,node_contract : docitem_map_base,node_normative_sections : docitem_list_of_strings_base, session: DocSession) -> None:
 	"""
 Preamble:
 	profile:
@@ -1497,7 +1564,7 @@ def _qualified_object_name(obj: object) -> str:
 #		public = set(node.items().keys())
 #	return public
 
-def _get_public_section_entries2(top: docitem_docstring_base, section_label: str, expected_node_type: Type[docitem_list_base]) -> set[str]:
+def _get_public_section_entries2(top: docitem_docstring_base, section_label: str, expected_node_type: Type[docitem_list_of_strings_base]) -> set[str]:
 	public: set[str] = set()
 	if section_label in top.items():
 		node = top._items[section_label]
@@ -1510,7 +1577,7 @@ Collect all occurrences of tokens of the form |term|`Identifier` in a docitem tr
 """
 def _collect_term_refs(node: docitem_base) -> set[str]:
 	refs: set[str] = set()
-	if isinstance(node, docitem_list_base):
+	if isinstance(node, docitem_list_of_strings_base):
 		for item in node.items():
 			for m in re.finditer(r"\|term\|\`([A-Za-z_][A-Za-z0-9_]*)\`", item):
 				refs.add(m.group(1))
@@ -1622,7 +1689,7 @@ See_also:
 # Here we know it exists.
 				node_profile = node_preamble.item("profile")
 				with traced_section(tr, "profile"):
-					assert isinstance(node_profile,docitem_list_base)
+					assert isinstance(node_profile,docitem_list_of_strings_base)
 					if len(node_profile.items()) == 0:
 						details = render_exactly_one_identifier_details("Preamble.profile", node_profile.items(), profile)
 						raise_validation_error(tr,obj,"PRE-004","Section 'profile' must have exactly one item.", details)
@@ -1658,9 +1725,9 @@ See_also:
 					}
 					raise_validation_error(tr,obj,"PRE-006","Section 'normative_sections' does not exist.", details)
 # Here we know it exists.
-				node_normative_sections: docitem_list_base = cast(docitem_list_base, node_preamble.item("normative_sections"))
-# Chill mypy. We know it's a docitem_list_base.
-				assert isinstance(node_normative_sections,docitem_list_base)
+				node_normative_sections: docitem_list_of_strings_base = cast(docitem_list_of_strings_base, node_preamble.item("normative_sections"))
+# Chill mypy. We know it's a docitem_list_of_strings_base.
+				assert isinstance(node_normative_sections,docitem_list_of_strings_base)
 				normative_sections = list(node_normative_sections.items())
 		seen = set()
 		for sec in node_normative_sections.items():

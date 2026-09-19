@@ -54,6 +54,8 @@ from sdv.doc.waterloo import waterlint_common as wl_common
 
 from sdv.doc.waterloo.docitem_helper import (
 	SECTION_PROPERTIES, WTRL_MARKUP_ROLES, CANONICAL_ORDER_OF_PROFILES,
+	)
+from sdv.doc.waterloo.docitem_types import (
 	Profile_t, Normativity_t, MustExist_t, LabelKind_t,
 	SectionBodyCategory_t,
 )

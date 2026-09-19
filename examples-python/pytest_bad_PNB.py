@@ -9,7 +9,7 @@ Contract:
         Must provoke a warning for non-tokenized normativity keyword.
 """
 
-from typing import Self
+from typing_extensions import Self
 
 class X:
     r"""

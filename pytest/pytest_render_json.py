@@ -307,14 +307,6 @@ def test_render_json_includes_annotations_for_public_variables(tmp_path: Path) -
 	assert node["doc_lines_kind"] == "variable"
 	assert node["annotation"] == "Dict[int, str]"
 
-	alias_qid = next(key for key in objects if key.endswith("AnnotatableObject"))
-	alias_node = objects[alias_qid]
-	assert alias_node["annotation"] == "type | module | function | method"
-
-	const_qid = next(key for key in objects if key.endswith("FLAVOUR_TAG_MAP"))
-	const_node = objects[const_qid]
-	assert "annotation" in const_node or const_node["annotation"] in (None, "")
-
 
 def test_render_json_out_dir_single_obj_generates_good_practice_name(tmp_path: Path) -> None:
 	res = _run_render_json_cli(
