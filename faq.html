@@ -10,8 +10,8 @@
     <link rel="stylesheet" type="text/css" href="_static/basic.css?v=b08954a9" />
     <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=27fed22d" />
     <link rel="stylesheet" type="text/css" href="_static/common_styles.css?v=9842741a" />
-    <link rel="stylesheet" type="text/css" href="_static/waterloo_base.css?v=39be3da6" />
-    <link rel="stylesheet" type="text/css" href="_static/waterloo_alabaster.css?v=5a8d1525" />
+    <link rel="stylesheet" type="text/css" href="_static/waterloo_base.css?v=f14269ff" />
+    <link rel="stylesheet" type="text/css" href="_static/waterloo_alabaster.css?v=87a04ed2" />
     <link rel="stylesheet" type="text/css" href="_static/wtrl_doc_custom.css" />
     <script src="_static/documentation_options.js?v=8dde47fa"></script>
     <script src="_static/doctools.js?v=fd6eb6e6"></script>
@@ -148,6 +148,37 @@ resides there, introducing additional overview sections would separate closely
 related information without providing the benefits described in RFR-0002.</p>
 </dd>
 </dl>
+<p class="rubric" id="rfr-0004">[RFR-0004] – On section <span class="wtrl_label">Raises</span></p>
+<p>Why was the content of a <span class="wtrl_label">Raises.&lt;Exception&gt;</span> subsection originally
+restricted to a flat sequence of text lines, similarly to
+<span class="wtrl_label">Contract.general</span>, and why are Waterloo table blocks now permitted?</p>
+<dl>
+<dt><span class="wtrl_label">Status</span>:</dt><dd><p>resolved</p>
+</dd>
+<dt><span class="wtrl_label">Created</span>:</dt><dd><p>2026-09-26</p>
+</dd>
+<dt><span class="wtrl_label">Related rules</span>:</dt><dd><p>RAI-005, RAI-006, TBL-001</p>
+</dd>
+<dt><span class="wtrl_label">Rationale</span>:</dt><dd><p>The label of a <span class="wtrl_label">Raises.&lt;Exception&gt;</span> entry denotes a resolvable
+exception class. A callable may raise one exception class for several distinct
+reasons. For example, <code class="wtrl_class docutils literal notranslate"><span class="pre">RuntimeError</span></code> can cover many failure modes
+when the implementation does not expose more specific derived exception
+classes.</p>
+<p>Waterloo therefore encourages authors to state the individual circumstances
+under which an exception may be raised. The original deliberately flat
+representation made these circumstances visible as separate logical lines and
+discouraged presentation-oriented structures that can obscure the exceptional
+control-flow contract.</p>
+</dd>
+<dt><span class="wtrl_label">Consequences</span>:</dt><dd><p>The original restriction proved unnecessarily strong. A table can make many
+related failure modes, such as error codes carried by one exception class,
+more compact and easier to scan without weakening the contract. Consequently,
+RAI-005 permits Waterloo table blocks as defined in TBL-001.</p>
+<p>Nested subsections and arbitrary nested itemisation remain disallowed. Authors
+must use text lines and, where useful, table rows to express the circumstances
+required by RAI-006 clearly and completely.</p>
+</dd>
+</dl>
 </section>
 
 
@@ -196,9 +227,10 @@ related information without providing the benefits described in RFR-0002.</p>
 <li class="toctree-l1"><a class="reference internal" href="reference.html">11. Reference - Rendering Showcase</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">12. Requests for Rationales</a></li>
 <li class="toctree-l1"><a class="reference internal" href="_test_freeform.html">13. Test: Flow control in freeform sections</a></li>
-<li class="toctree-l1"><a class="reference internal" href="_test_scope.html">14. Test: Scopes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="_test_tables.html">14. Test: Tables in freeform and itemized content</a></li>
 <li class="toctree-l1"><a class="reference internal" href="test_pygments_lexer.html">15. Test: Inline markup</a></li>
-<li class="toctree-l1"><a class="reference internal" href="legal.html">16. Legal Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="_test_scope.html">16. Test: Scopes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="legal.html">17. Legal Notes</a></li>
 </ul>
 
 <div class="relations">

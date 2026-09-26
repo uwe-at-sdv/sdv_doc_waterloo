@@ -10,8 +10,8 @@
     <link rel="stylesheet" type="text/css" href="_static/basic.css?v=b08954a9" />
     <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=27fed22d" />
     <link rel="stylesheet" type="text/css" href="_static/common_styles.css?v=9842741a" />
-    <link rel="stylesheet" type="text/css" href="_static/waterloo_base.css?v=39be3da6" />
-    <link rel="stylesheet" type="text/css" href="_static/waterloo_alabaster.css?v=5a8d1525" />
+    <link rel="stylesheet" type="text/css" href="_static/waterloo_base.css?v=f14269ff" />
+    <link rel="stylesheet" type="text/css" href="_static/waterloo_alabaster.css?v=87a04ed2" />
     <link rel="stylesheet" type="text/css" href="_static/wtrl_doc_custom.css" />
     <script src="_static/documentation_options.js?v=8dde47fa"></script>
     <script src="_static/doctools.js?v=fd6eb6e6"></script>
@@ -196,6 +196,13 @@
 <li class="toctree-l2"><a class="reference internal" href="html_output_layer.html#rendering-html5-documentation">9.2. Rendering HTML5 Documentation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="html_output_layer.html#adding-a-custom-header">9.3. Adding a custom header</a></li>
 <li class="toctree-l2"><a class="reference internal" href="html_output_layer.html#implementation-notes">9.4. Implementation Notes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="html_output_layer.html#css-reference">9.5. CSS Reference</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="html_output_layer.html#theme-selection">9.5.1. Theme selection</a></li>
+<li class="toctree-l3"><a class="reference internal" href="html_output_layer.html#custom-property-naming">9.5.2. Custom property naming</a></li>
+<li class="toctree-l3"><a class="reference internal" href="html_output_layer.html#structural-class-hooks">9.5.3. Structural class hooks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="html_output_layer.html#visual-reference">9.5.4. Visual reference</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="mcp.html">10. Model Context Protocol</a><ul>
@@ -437,23 +444,24 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="faq.html">12. Requests for Rationales</a></li>
 <li class="toctree-l1"><a class="reference internal" href="_test_freeform.html">13. Test: Flow control in freeform sections</a></li>
-<li class="toctree-l1"><a class="reference internal" href="_test_scope.html">14. Test: Scopes</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="_test_scope.html#scope-public">14.1. Scope: Public</a></li>
-<li class="toctree-l2"><a class="reference internal" href="_test_scope.html#scope-extension">14.2. Scope: Extension</a></li>
-<li class="toctree-l2"><a class="reference internal" href="_test_scope.html#scope-core">14.3. Scope: Core</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="_test_tables.html">14. Test: Tables in freeform and itemized content</a></li>
 <li class="toctree-l1"><a class="reference internal" href="test_pygments_lexer.html">15. Test: Inline markup</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="test_pygments_lexer.html#pygments">15.1. Pygments</a></li>
 <li class="toctree-l2"><a class="reference internal" href="test_pygments_lexer.html#sphinx">15.2. Sphinx</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="legal.html">16. Legal Notes</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="legal.html#docker">16.1. Docker</a></li>
-<li class="toctree-l2"><a class="reference internal" href="legal.html#linux">16.2. Linux</a></li>
-<li class="toctree-l2"><a class="reference internal" href="legal.html#windows">16.3. Windows</a></li>
-<li class="toctree-l2"><a class="reference internal" href="legal.html#apple-and-macos">16.4. Apple and macOS</a></li>
-<li class="toctree-l2"><a class="reference internal" href="legal.html#other-names">16.5. Other Names</a></li>
+<li class="toctree-l1"><a class="reference internal" href="_test_scope.html">16. Test: Scopes</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="_test_scope.html#scope-public">16.1. Scope: Public</a></li>
+<li class="toctree-l2"><a class="reference internal" href="_test_scope.html#scope-extension">16.2. Scope: Extension</a></li>
+<li class="toctree-l2"><a class="reference internal" href="_test_scope.html#scope-core">16.3. Scope: Core</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="legal.html">17. Legal Notes</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="legal.html#docker">17.1. Docker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="legal.html#linux">17.2. Linux</a></li>
+<li class="toctree-l2"><a class="reference internal" href="legal.html#windows">17.3. Windows</a></li>
+<li class="toctree-l2"><a class="reference internal" href="legal.html#apple-and-macos">17.4. Apple and macOS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="legal.html#other-names">17.5. Other Names</a></li>
 </ul>
 </li>
 </ul>
@@ -514,9 +522,10 @@
 <li class="toctree-l1"><a class="reference internal" href="reference.html">11. Reference - Rendering Showcase</a></li>
 <li class="toctree-l1"><a class="reference internal" href="faq.html">12. Requests for Rationales</a></li>
 <li class="toctree-l1"><a class="reference internal" href="_test_freeform.html">13. Test: Flow control in freeform sections</a></li>
-<li class="toctree-l1"><a class="reference internal" href="_test_scope.html">14. Test: Scopes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="_test_tables.html">14. Test: Tables in freeform and itemized content</a></li>
 <li class="toctree-l1"><a class="reference internal" href="test_pygments_lexer.html">15. Test: Inline markup</a></li>
-<li class="toctree-l1"><a class="reference internal" href="legal.html">16. Legal Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="_test_scope.html">16. Test: Scopes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="legal.html">17. Legal Notes</a></li>
 </ul>
 
 <div class="relations">

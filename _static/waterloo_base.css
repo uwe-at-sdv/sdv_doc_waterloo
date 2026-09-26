@@ -388,3 +388,47 @@ figure p.caption, figure figcaption {
     font-size: 0.9rem;
     color: #6c757d;
 }
+
+/*----- Tables in Content ------------------------------------*/
+
+table.wtrl-box > tbody > tr > td:nth-child(2) table.wtrl-content-table {
+	border-collapse:collapse;
+	table-layout:auto;
+	width:calc(100% - 1.5em);
+	box-shadow:none;
+	}
+table.wtrl-box > tbody > tr > td:nth-child(2) table.wtrl-content-table > thead > tr {
+	background-color: inherit;
+	}
+table.wtrl-box > tbody > tr > td:nth-child(2) table.wtrl-content-table > tbody > tr {
+	background-color: inherit;
+	}
+table.wtrl-box > tbody > tr > td:nth-child(2) table.wtrl-content-table > thead > tr > th {
+	background-color: inherit;
+	}
+table.wtrl-box > tbody > tr > td:nth-child(2) table.wtrl-content-table > tbody > tr > td {
+	background-color: inherit;
+	}
+table.wtrl-box > tbody > tr > td:nth-child(2) table.wtrl-content-table th,
+table.wtrl-box > tbody > tr > td:nth-child(2) table.wtrl-content-table td {
+/*	padding:0.25em 0.5em; */
+	text-align:left;
+	vertical-align:top;
+	border-right:1px solid #b6b6b6;
+	border-bottom:1px solid #b6b6b6;
+/*	overflow-wrap:anywhere;*/
+	}
+table.wtrl-box > tbody > tr > td:nth-child(2) table.wtrl-content-table th:last-child,
+table.wtrl-box > tbody > tr > td:nth-child(2) table.wtrl-content-table td:last-child {
+	border-right:0;
+	}
+
+/* The outer docstring box permits breaking long inline literals anywhere.
+   Restore normal intrinsic sizing inside content tables so short values such
+   as CRITICAL do not receive an unnecessarily narrow column. */
+table.wtrl-box > tbody > tr > td:nth-child(2) table.wtrl-content-table span.pre,
+table.wtrl-box > tbody > tr > td:nth-child(2) table.wtrl-content-table code.literal {
+	white-space:normal;
+	overflow-wrap:break-word;
+	word-break:normal;
+	}

@@ -10,8 +10,8 @@
     <link rel="stylesheet" type="text/css" href="_static/basic.css?v=b08954a9" />
     <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=27fed22d" />
     <link rel="stylesheet" type="text/css" href="_static/common_styles.css?v=9842741a" />
-    <link rel="stylesheet" type="text/css" href="_static/waterloo_base.css?v=39be3da6" />
-    <link rel="stylesheet" type="text/css" href="_static/waterloo_alabaster.css?v=5a8d1525" />
+    <link rel="stylesheet" type="text/css" href="_static/waterloo_base.css?v=f14269ff" />
+    <link rel="stylesheet" type="text/css" href="_static/waterloo_alabaster.css?v=87a04ed2" />
     <link rel="stylesheet" type="text/css" href="_static/wtrl_doc_custom.css" />
     <script src="_static/documentation_options.js?v=8dde47fa"></script>
     <script src="_static/doctools.js?v=fd6eb6e6"></script>
@@ -397,6 +397,7 @@ sdv/doc/waterloo/waterlint.py
 sdv/doc/waterloo/waterlint_render_docker.py
 sdv/doc/waterloo/docitem_diagnostics.py
 sdv/doc/waterloo/docitem_base.py
+sdv/doc/waterloo/docitem_tables.py
 sdv/doc/waterloo/waterlint_walk.py
 sdv/doc/waterloo/waterlint_generate_common.py
 sdv/doc/waterloo/waterlint_carve.py
@@ -408,7 +409,7 @@ sdv/doc/waterloo/docitem_tracer.py
 </pre></div>
 </div>
 <p>are validated on a regular basis. The current status is</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Success: no issues found in 41 source files
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Success: no issues found in 42 source files
 </pre></div>
 </div>
 <p>Our <code class="wtrl_lit docutils literal notranslate"><span class="pre">mypy</span></code>-configuration is:</p>
@@ -435,8 +436,6 @@ sdv/doc/waterloo/docitem_tracer.py
 docitem_types.py:11 # type: ignore[no-redef]
 docitem_validator.py:108 # type: ignore
 docitem_validator.py:109 # pragma: no cover - older Python
-waterlint_authoring_generate.py:214 # pragma: no cover - defensive
-waterlint_carve.py:307 # pragma: no cover - defensive
 waterlint.py:736 # pragma: no cover - defensive
 waterlint.py:828 # pragma: no cover - defensive
 waterlint.py:938 # pragma: no cover - defensive
@@ -445,6 +444,8 @@ waterlint.py:1081 # pragma: no cover - defensive
 waterlint.py:1085 # pragma: no cover - defensive
 waterlint.py:1181 # pragma: no cover - defensive
 waterlint.py:1869 # pragma: no cover - defensive
+waterlint_authoring_generate.py:214 # pragma: no cover - defensive
+waterlint_carve.py:307 # pragma: no cover - defensive
 waterlint_render_docker.py:28 # pragma: no cover - Python 3.10 fallback
 </pre></div>
 </div>
@@ -981,9 +982,10 @@ Nevertheless, the historical reference is not entirely inappropriate.</p>
 <li class="toctree-l1"><a class="reference internal" href="reference.html">11. Reference - Rendering Showcase</a></li>
 <li class="toctree-l1"><a class="reference internal" href="faq.html">12. Requests for Rationales</a></li>
 <li class="toctree-l1"><a class="reference internal" href="_test_freeform.html">13. Test: Flow control in freeform sections</a></li>
-<li class="toctree-l1"><a class="reference internal" href="_test_scope.html">14. Test: Scopes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="_test_tables.html">14. Test: Tables in freeform and itemized content</a></li>
 <li class="toctree-l1"><a class="reference internal" href="test_pygments_lexer.html">15. Test: Inline markup</a></li>
-<li class="toctree-l1"><a class="reference internal" href="legal.html">16. Legal Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="_test_scope.html">16. Test: Scopes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="legal.html">17. Legal Notes</a></li>
 </ul>
 
 <div class="relations">

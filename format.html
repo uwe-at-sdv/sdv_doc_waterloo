@@ -10,8 +10,8 @@
     <link rel="stylesheet" type="text/css" href="_static/basic.css?v=b08954a9" />
     <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=27fed22d" />
     <link rel="stylesheet" type="text/css" href="_static/common_styles.css?v=9842741a" />
-    <link rel="stylesheet" type="text/css" href="_static/waterloo_base.css?v=39be3da6" />
-    <link rel="stylesheet" type="text/css" href="_static/waterloo_alabaster.css?v=5a8d1525" />
+    <link rel="stylesheet" type="text/css" href="_static/waterloo_base.css?v=f14269ff" />
+    <link rel="stylesheet" type="text/css" href="_static/waterloo_alabaster.css?v=87a04ed2" />
     <link rel="stylesheet" type="text/css" href="_static/wtrl_doc_custom.css" />
     <script src="_static/documentation_options.js?v=8dde47fa"></script>
     <script src="_static/doctools.js?v=fd6eb6e6"></script>
@@ -194,6 +194,10 @@ The following list explains the mnemonic prefixes and their semantics.</p>
 <li><p>SEE: All profiles: Section <span class="wtrl_label">See_also</span></p></li>
 <li><p>STA: All profiles: Subsection <span class="wtrl_label">status</span></p></li>
 <li><p>TERM: All profiles: Section <span class="wtrl_label">Terminology</span></p></li>
+</ul>
+<p class="rubric">Special block elements</p>
+<ul class="simple">
+<li><p>TBL: Table related rules</p></li>
 </ul>
 <p class="rubric">Tools and extensions</p>
 <ul class="simple">
@@ -616,6 +620,7 @@ the document containing the reference.</p>
 <section id="rules-not-bound-to-a-particular-section">
 <h2><span class="section-number">5.10. </span>Rules not bound to a particular section<a class="headerlink" href="#rules-not-bound-to-a-particular-section" title="Link to this heading">¶</a></h2>
 <p>This section is normative.</p>
+<p class="rubric">General structure</p>
 <ul class="simple">
 <li><p>[DOC-001] – Each module, class, function, or method object subject to validation <span class="wtrl_norm">must</span> have a docstring.</p></li>
 <li><p>[DOC-007] – The docstring <span class="wtrl_norm">must not</span> be empty after whitespace-stripping.</p></li>
@@ -629,6 +634,7 @@ the document containing the reference.</p>
 <li><p>[PRSR-007] – Any section label <span class="wtrl_norm">must not</span> occur more than once on a docstring.</p></li>
 <li><p>[PRSR-008] – Any subsection label <span class="wtrl_norm">must not</span> occur more than once inside its parent section.</p></li>
 </ul>
+<p class="rubric">Identifier lists</p>
 <p>The following set of rules applies to both lists of Identifiers and lists of
 Qualified Identifiers.
 Whenever rule LQID-001 is referenced, the surrounding context <span class="wtrl_norm">must</span> explicitly
@@ -642,6 +648,47 @@ state whether it applies to Identifiers or to Qualified Identifiers.
 <li><p>[LQID-005] – Tools <span class="wtrl_norm">must</span> treat the result as a flat list of [Qualified] Identifiers, without preserving line structure or grouping.</p></li>
 <li><p>[LQID-006] – If a CSV list is wrapped across multiple physical lines, every non-final physical line <span class="wtrl_norm">must</span> end with a comma.</p></li>
 </ul>
+<p class="rubric">Table blocks</p>
+<p>For the following rules, we define:</p>
+<dl class="simple">
+<dt><span class="wtrl_dfn">Table block</span></dt><dd><p>A contiguous sequence of logical lines in a docstring that is parsed
+according to rules TBL-001 through TBL-008.</p>
+</dd>
+<dt><span class="wtrl_dfn">Control line</span></dt><dd><p>A logical line which, after whitespace stripping, contains exactly one of
+<code class="wtrl_lit docutils literal notranslate"><span class="pre">|begin_table|</span></code>, <code class="wtrl_lit docutils literal notranslate"><span class="pre">|end_table|</span></code>,
+<code class="wtrl_lit docutils literal notranslate"><span class="pre">|title|</span></code>, <code class="wtrl_lit docutils literal notranslate"><span class="pre">|columns|</span></code>, or <code class="wtrl_lit docutils literal notranslate"><span class="pre">|rows|</span></code>.</p>
+</dd>
+<dt><span class="wtrl_dfn">Table title</span></dt><dd><p>A <code class="wtrl_lit docutils literal notranslate"><span class="pre">|title|</span></code> <span class="wtrl_term">Control line</span> followed by zero or more
+non-control logical lines before the following <code class="wtrl_lit docutils literal notranslate"><span class="pre">|columns|</span></code>
+<span class="wtrl_term">Control line</span>. The non-control lines are its title text.</p>
+</dd>
+<dt><span class="wtrl_dfn">Ordinary table row</span></dt><dd><p>A logical line used as a header or data row. The token
+<code class="wtrl_lit docutils literal notranslate"><span class="pre">|tab|</span></code> splits an <span class="wtrl_term">Ordinary table row</span> into <span class="wtrl_dfn">Table cells</span>.
+A row without that token consists of one cell. Empty cells are permitted.</p>
+</dd>
+<dt><span class="wtrl_dfn">Table header</span></dt><dd><p>A <code class="wtrl_lit docutils literal notranslate"><span class="pre">|columns|</span></code> <span class="wtrl_term">Control line</span> followed by one <span class="wtrl_term">Ordinary table row</span>, called its
+<span class="wtrl_dfn">Header row</span>.</p>
+</dd>
+<dt><span class="wtrl_dfn">Table body</span></dt><dd><p>A <code class="wtrl_lit docutils literal notranslate"><span class="pre">|rows|</span></code> <span class="wtrl_term">Control line</span> followed by zero or more <span class="wtrl_term">Ordinary table rows</span>,
+called <span class="wtrl_dfn">Data rows</span>.</p>
+</dd>
+<dt><span class="wtrl_dfn">Table group</span></dt><dd><p>An optional <span class="wtrl_term">Table title</span>, a <span class="wtrl_term">Table header</span>, and a <span class="wtrl_term">Table body</span>, in that order.</p>
+</dd>
+</dl>
+<p>The following rules apply to Waterloo <span class="wtrl_term">Table blocks</span>. Wherever
+rule TBL-001 is referenced, <span class="wtrl_term">Table blocks</span> are permitted in addition to the
+free-form text allowed by the surrounding section or subsection.</p>
+<ul class="simple">
+<li><p>[TBL-001] – A <span class="wtrl_term">Table block</span> <span class="wtrl_norm">must</span> obey rules TBL-002 through TBL-008.</p></li>
+<li><p>[TBL-002] – A <span class="wtrl_term">Table block</span> <span class="wtrl_norm">must</span> begin with a <span class="wtrl_term">Control line</span> containing <code class="wtrl_lit docutils literal notranslate"><span class="pre">|begin_table|</span></code> and end with a later <span class="wtrl_term">Control line</span> containing <code class="wtrl_lit docutils literal notranslate"><span class="pre">|end_table|</span></code>.</p></li>
+<li><p>[TBL-003] – A <span class="wtrl_term">Table block</span> <span class="wtrl_norm">must</span> contain one or more <span class="wtrl_term">Table groups</span>.</p></li>
+<li><p>[TBL-004] – Each <span class="wtrl_term">Table group</span> <span class="wtrl_norm">must</span> consist of an optional <span class="wtrl_term">Table title</span>, a <span class="wtrl_term">Table header</span>, and a <span class="wtrl_term">Table body</span>, in that order.</p></li>
+<li><p>[TBL-005] – The <span class="wtrl_term">Header row</span> of the first <span class="wtrl_term">Table group</span> establishes the number of columns of the <span class="wtrl_term">Table block</span>.</p></li>
+<li><p>[TBL-006] – Every later <span class="wtrl_term">Header row</span> and every <span class="wtrl_term">Data row</span> <span class="wtrl_norm">must</span> contain the established number of <span class="wtrl_term">Table cells</span>.</p></li>
+<li><p>[TBL-007] – A cell separator token <code class="wtrl_lit docutils literal notranslate"><span class="pre">|tab|</span></code> <span class="wtrl_norm">must</span> be interpreted as a cell separator within <span class="wtrl_term">Header rows</span> and <span class="wtrl_term">Data rows</span>. It <span class="wtrl_norm">must not</span> be interpreted as a cell separator elsewhere.</p></li>
+<li><p>[TBL-008] – A <span class="wtrl_term">Control line</span> <span class="wtrl_norm">must</span> occur at a position permitted by the <span class="wtrl_term">Table block</span> grammar. It <span class="wtrl_norm">must not</span> occur elsewhere.</p></li>
+</ul>
+<p class="rubric">Locality principle</p>
 <p>The following warning rule applies when a section appears in a docstring but violates the LoII principle.
 This happens, for example, when definitions are imported from a module docstring into a class, function, or method docstring.
 Since definitions are normative, that import introduces non-locality.</p>
@@ -729,7 +776,7 @@ the preamble and serves as metadata.</p>
 <td><p>Implied by content kind</p></td>
 </tr>
 <tr class="row-even"><td><p><span class="wtrl_label">Definitions.&lt;item&gt;</span></p></td>
-<td><p>free-form text</p></td>
+<td><p>free-form text and table blocks</p></td>
 <td><p>Normative</p></td>
 <td><p>Needs paragraph-capable text</p></td>
 </tr>
@@ -739,7 +786,7 @@ the preamble and serves as metadata.</p>
 <td><p>Implied by content kind</p></td>
 </tr>
 <tr class="row-even"><td><p><span class="wtrl_label">Terminology.&lt;item&gt;</span></p></td>
-<td><p>free-form text</p></td>
+<td><p>free-form text and table blocks</p></td>
 <td><p>Non-normative</p></td>
 <td><p>Needs paragraph-capable text</p></td>
 </tr>
@@ -779,7 +826,7 @@ the preamble and serves as metadata.</p>
 <td><p>Line-by-line contract</p></td>
 </tr>
 <tr class="row-even"><td><p><span class="wtrl_label">Description</span></p></td>
-<td><p>free-form text</p></td>
+<td><p>free-form text and table blocks</p></td>
 <td><p>Can be both</p></td>
 <td><p>Needs paragraph-capable text</p></td>
 </tr>
@@ -789,7 +836,7 @@ the preamble and serves as metadata.</p>
 <td><p>Implied by content kind</p></td>
 </tr>
 <tr class="row-even"><td><p><span class="wtrl_label">Factory.&lt;item&gt;</span></p></td>
-<td><p>itemized text</p></td>
+<td><p>itemized text and table blocks</p></td>
 <td><p>Normative</p></td>
 <td><p>Line-by-line contract</p></td>
 </tr>
@@ -809,52 +856,52 @@ the preamble and serves as metadata.</p>
 <td><p>Implied by content kind</p></td>
 </tr>
 <tr class="row-even"><td><p><span class="wtrl_label">Class_overview.&lt;item&gt;</span></p></td>
-<td><p>free-form text</p></td>
+<td><p>free-form text and table blocks</p></td>
 <td><p>Non-normative</p></td>
 <td><p>Descriptive text preferred</p></td>
 </tr>
 <tr class="row-odd"><td><p><span class="wtrl_label">Method_overview.&lt;item&gt;</span></p></td>
-<td><p>free-form text</p></td>
+<td><p>free-form text and table blocks</p></td>
 <td><p>Non-normative</p></td>
 <td><p>Descriptive text preferred</p></td>
 </tr>
 <tr class="row-even"><td><p><span class="wtrl_label">Function_overview.&lt;item&gt;</span></p></td>
-<td><p>free-form text</p></td>
+<td><p>free-form text and table blocks</p></td>
 <td><p>Non-normative</p></td>
 <td><p>Descriptive text preferred</p></td>
 </tr>
 <tr class="row-odd"><td><p><span class="wtrl_label">Public_types.&lt;item&gt;</span></p></td>
-<td><p>free-form text</p></td>
+<td><p>free-form text and table blocks</p></td>
 <td><p>Normative</p></td>
 <td><p>Needs paragraph-capable text</p></td>
 </tr>
 <tr class="row-even"><td><p><span class="wtrl_label">Public_variables.&lt;item&gt;</span></p></td>
-<td><p>free-form text</p></td>
+<td><p>free-form text and table blocks</p></td>
 <td><p>Normative</p></td>
 <td><p>Needs paragraph-capable text</p></td>
 </tr>
 <tr class="row-odd"><td><p><span class="wtrl_label">Public_constants.&lt;item&gt;</span></p></td>
-<td><p>free-form text</p></td>
+<td><p>free-form text and table blocks</p></td>
 <td><p>Normative</p></td>
 <td><p>Needs paragraph-capable text</p></td>
 </tr>
 <tr class="row-even"><td><p><span class="wtrl_label">Parameters.&lt;item&gt;</span></p></td>
-<td><p>free-form text</p></td>
+<td><p>free-form text and table blocks</p></td>
 <td><p>Normative</p></td>
 <td><p>Needs paragraph-capable text</p></td>
 </tr>
 <tr class="row-odd"><td><p><span class="wtrl_label">Returns</span></p></td>
-<td><p>free-form text</p></td>
+<td><p>free-form text and table blocks</p></td>
 <td><p>Normative</p></td>
 <td><p>Needs paragraph-capable text</p></td>
 </tr>
 <tr class="row-even"><td><p><span class="wtrl_label">Raises.&lt;item&gt;</span></p></td>
-<td><p>itemized text</p></td>
+<td><p>itemized text and table blocks</p></td>
 <td><p>Normative</p></td>
 <td><p>Line-by-line contract</p></td>
 </tr>
 <tr class="row-odd"><td><p><span class="wtrl_label">Notes.&lt;item&gt;</span></p></td>
-<td><p>free-form text</p></td>
+<td><p>free-form text and table blocks</p></td>
 <td><p>Non-normative</p></td>
 <td><p>Needs paragraph-capable text</p></td>
 </tr>
@@ -990,7 +1037,7 @@ a Waterloo-documented object. Any scope-compatibility violation in this case
 <li><p>[DEF-020] – Any number of subsections <span class="wtrl_norm">may</span> exist.</p></li>
 <li><p>[DEF-004] – <span class="wtrl_label">&lt;DefItem&gt;</span> <span class="wtrl_norm">must</span> match <cite>&lt;Identifier&gt; ( “,” &lt;Identifier&gt; )*</cite> with optional whitespace around commas.</p></li>
 <li><p>[DEF-005] – In <span class="wtrl_label">&lt;DefItem&gt;</span>, the first identifier denotes the <span class="wtrl_term">Term</span>; each following identifier denotes a <span class="wtrl_term">Variation</span> of that term.</p></li>
-<li><p>[DEF-006] – The subsection content <span class="wtrl_norm">must</span> be free-form text.</p></li>
+<li><p>[DEF-006] – The subsection content <span class="wtrl_norm">must</span> consist of free-form text and table blocks as defined in TBL-001.</p></li>
 <li><p>[DEF-009] – The subsection content <span class="wtrl_norm">should</span> not be empty.</p></li>
 <li><p>[DEF-010] – <span class="wtrl_label">&lt;DefItem&gt;</span> <span class="wtrl_norm">must not</span> be <span class="wtrl_label">_inherit</span>.</p></li>
 </ul>
@@ -1048,7 +1095,7 @@ provides the human-readable explanation.</p></li>
 <li><p>[TERM-009] – Any number of subsections <span class="wtrl_norm">may</span> exist</p></li>
 <li><p>[TERM-005] – <span class="wtrl_label">&lt;Term&gt;</span> <span class="wtrl_norm">must</span> be a non-empty human-readable string.</p></li>
 <li><p>[TERM-006] – <span class="wtrl_label">&lt;Term&gt;</span> stands for the term to be explained informatively.</p></li>
-<li><p>[TERM-007] – The subsection content <span class="wtrl_norm">must</span> be free-form text.</p></li>
+<li><p>[TERM-007] – The subsection content <span class="wtrl_norm">must</span> consist of free-form text and table blocks as defined in TBL-001.</p></li>
 <li><p>[TERM-008] – The subsection content <span class="wtrl_norm">should</span> not be empty.</p></li>
 </ul>
 </dd>
@@ -1067,7 +1114,7 @@ allows arbitrary human-readable labels and is intended solely for explanatory pu
 <dt><span class="wtrl_label">Description:</span></dt><dd><ul class="simple">
 <li><p>[DESC-001] – The section <span class="wtrl_norm">may</span> exist.</p></li>
 <li><p>[DESC-002] – The section <span class="wtrl_norm">may</span> be listed as normative in <span class="wtrl_label">Preamble.normative_sections</span>.</p></li>
-<li><p>[DESC-004] – The content <span class="wtrl_norm">may</span> consist of any number of free-form lines.</p></li>
+<li><p>[DESC-004] – The content <span class="wtrl_norm">may</span> consist of any number of free-form lines and table blocks as defined in TBL-001.</p></li>
 <li><dl class="simple">
 <dt><strong>Obsolete rules</strong>:</dt><dd><ul>
 <li><p>DESC-003 – Obsolete since 0.5.1; superseded by PRE-013.</p></li>
@@ -1091,7 +1138,7 @@ allows arbitrary human-readable labels and is intended solely for explanatory pu
 <dt><span class="wtrl_label">&lt;Note&gt;:</span></dt><dd><ul>
 <li><p>[NOTE-008] – Any number of subsections <span class="wtrl_norm">may</span> exist</p></li>
 <li><p>[NOTE-006] – <span class="wtrl_label">&lt;Note&gt;</span> <span class="wtrl_norm">must</span> be a non-empty human-readable string.</p></li>
-<li><p>[NOTE-007] – The subsection content <span class="wtrl_norm">must</span> be free-form text.</p></li>
+<li><p>[NOTE-007] – The subsection content <span class="wtrl_norm">must</span> consist of free-form text and table blocks as defined in TBL-001.</p></li>
 <li><p>[NOTE-009] – The subsection content <span class="wtrl_norm">should</span> not be empty.</p></li>
 </ul>
 </dd>
@@ -1193,7 +1240,7 @@ whether the module is applicable to a given use case.</p></li>
 <li><dl class="simple">
 <dt><span class="wtrl_label">&lt;Class&gt;:</span></dt><dd><ul>
 <li><p>[MCLO-005] – <span class="wtrl_label">&lt;Class&gt;</span> <span class="wtrl_norm">must</span> match the pattern of an Identifier.</p></li>
-<li><p>[MCLO-006] – The subsection content <span class="wtrl_norm">must</span> be free-form text.</p></li>
+<li><p>[MCLO-006] – The subsection content <span class="wtrl_norm">must</span> consist of free-form text and table blocks as defined in TBL-001.</p></li>
 <li><p>[MCLO-007] – The subsection content is informative and <span class="wtrl_norm">must not</span> contain any Normativity Keyword.</p></li>
 <li><p>[MCLO-008] – <span class="wtrl_label">&lt;Class&gt;</span> <span class="wtrl_norm">must</span> be resolvable relative to the documented module.</p></li>
 <li><p>[MCLO-009] – <span class="wtrl_label">&lt;Class&gt;</span> <span class="wtrl_norm">must</span> refer to a class object.</p></li>
@@ -1231,7 +1278,7 @@ whether the module is applicable to a given use case.</p></li>
 <li><dl class="simple">
 <dt><span class="wtrl_label">&lt;Function&gt;:</span></dt><dd><ul>
 <li><p>[MFNO-005] – <span class="wtrl_label">&lt;Function&gt;</span> <span class="wtrl_norm">must</span> match the pattern of an Identifier.</p></li>
-<li><p>[MFNO-006] – The subsection content <span class="wtrl_norm">must</span> be free-form text.</p></li>
+<li><p>[MFNO-006] – The subsection content <span class="wtrl_norm">must</span> consist of free-form text and table blocks as defined in TBL-001.</p></li>
 <li><p>[MFNO-007] – The content is informative and <span class="wtrl_norm">must not</span> contain any Normativity Keyword.</p></li>
 <li><p>[MFNO-008] – <span class="wtrl_label">&lt;Function&gt;</span> <span class="wtrl_norm">must</span> be resolvable relative to the documented module.</p></li>
 <li><p>[MFNO-009] – <span class="wtrl_label">&lt;Function&gt;</span> <span class="wtrl_norm">must</span> refer to a function object.</p></li>
@@ -1254,7 +1301,7 @@ whether the module is applicable to a given use case.</p></li>
 <li><dl class="simple">
 <dt><span class="wtrl_label">&lt;Type&gt;:</span></dt><dd><ul>
 <li><p>[MPTYP-004] – <span class="wtrl_label">&lt;Type&gt;</span> <span class="wtrl_norm">must</span> match the pattern of an Identifier.</p></li>
-<li><p>[MPTYP-006] – The subsection content <span class="wtrl_norm">must</span> be free-form text.</p></li>
+<li><p>[MPTYP-006] – The subsection content <span class="wtrl_norm">must</span> consist of free-form text and table blocks as defined in TBL-001.</p></li>
 <li><p>[MPTYP-005] – <span class="wtrl_label">&lt;Type&gt;</span> <span class="wtrl_norm">must</span> be resolvable relative to the documented module.</p></li>
 <li><p>[MPTYP-008] – <span class="wtrl_label">&lt;Type&gt;</span> <span class="wtrl_norm">must</span> refer to a TypeAlias or NewType.</p></li>
 </ul>
@@ -1281,7 +1328,7 @@ whether the module is applicable to a given use case.</p></li>
 <li><dl class="simple">
 <dt><span class="wtrl_label">&lt;Assignable&gt;:</span></dt><dd><ul>
 <li><p>[MPVAR-004] – <span class="wtrl_label">&lt;Assignable&gt;</span> <span class="wtrl_norm">must</span> match the pattern of an Identifier.</p></li>
-<li><p>[MPVAR-006] – The subsection content <span class="wtrl_norm">must</span> be free-form text.</p></li>
+<li><p>[MPVAR-006] – The subsection content <span class="wtrl_norm">must</span> consist of free-form text and table blocks as defined in TBL-001.</p></li>
 <li><p>[MPVAR-005] – <span class="wtrl_label">&lt;Assignable&gt;</span> <span class="wtrl_norm">must</span> be resolvable relative to the documented module, either as a runtime attribute or as an annotated variable.</p></li>
 <li><p>[MPVAR-008] – <span class="wtrl_label">&lt;Assignable&gt;</span> <span class="wtrl_norm">must</span> refer to a Named Value.</p></li>
 <li><p>[MPVAR-009] – If the object referenced by <span class="wtrl_label">&lt;Assignable&gt;</span> is annotated, the annotation <span class="wtrl_norm">must not</span> be wtrl_type:<cite>Final</cite>.</p></li>
@@ -1309,7 +1356,7 @@ whether the module is applicable to a given use case.</p></li>
 <li><dl class="simple">
 <dt><span class="wtrl_label">&lt;Assignable&gt;:</span></dt><dd><ul>
 <li><p>[MPCON-004] – <span class="wtrl_label">&lt;Assignable&gt;</span> <span class="wtrl_norm">must</span> match the pattern of an Identifier.</p></li>
-<li><p>[MPCON-007] – The subsection content <span class="wtrl_norm">must</span> be free-form text.</p></li>
+<li><p>[MPCON-007] – The subsection content <span class="wtrl_norm">must</span> consist of free-form text and table blocks as defined in TBL-001.</p></li>
 <li><p>[MPCON-005] – <span class="wtrl_label">&lt;Assignable&gt;</span> <span class="wtrl_norm">must</span> be resolvable relative to the documented module.</p></li>
 <li><p>[MPCON-009] – <span class="wtrl_label">&lt;Assignable&gt;</span> <span class="wtrl_norm">must</span> refer to a Named Value.</p></li>
 <li><p>[MPCON-006] – If the object referenced by <span class="wtrl_label">&lt;Assignable&gt;</span> is annotated, the annotation  <span class="wtrl_norm">must</span> be <code class="wtrl_type docutils literal notranslate"><span class="pre">Final</span></code>.</p></li>
@@ -1454,7 +1501,7 @@ whether the class is applicable to a given use case.</p></li>
 <li><dl class="simple">
 <dt><span class="wtrl_label">&lt;Class&gt;:</span></dt><dd><ul>
 <li><p>[CCLO-005] – <span class="wtrl_label">&lt;Class&gt;</span> <span class="wtrl_norm">must</span> match the pattern of an Identifier.</p></li>
-<li><p>[CCLO-006] – The subsection content <span class="wtrl_norm">must</span> be free-form text.</p></li>
+<li><p>[CCLO-006] – The subsection content <span class="wtrl_norm">must</span> consist of free-form text and table blocks as defined in TBL-001.</p></li>
 <li><p>[CCLO-007] – The subsection content is informative and <span class="wtrl_norm">must not</span> contain any Normativity Keyword.</p></li>
 <li><p>[CCLO-008] – <span class="wtrl_label">&lt;Class&gt;</span> <span class="wtrl_norm">must</span> be resolvable relative to the documented class.</p></li>
 <li><p>[CCLO-009] – <span class="wtrl_label">&lt;Class&gt;</span> <span class="wtrl_norm">must</span> refer to a class object.</p></li>
@@ -1492,7 +1539,7 @@ whether the class is applicable to a given use case.</p></li>
 <li><dl class="simple">
 <dt><span class="wtrl_label">&lt;Method&gt;:</span></dt><dd><ul>
 <li><p>[CMTO-005] – <span class="wtrl_label">&lt;Method&gt;</span> <span class="wtrl_norm">must</span> match the pattern of an Identifier.</p></li>
-<li><p>[CMTO-006] – The subsection content <span class="wtrl_norm">must</span> be free-form text.</p></li>
+<li><p>[CMTO-006] – The subsection content <span class="wtrl_norm">must</span> consist of free-form text and table blocks as defined in TBL-001.</p></li>
 <li><p>[CMTO-007] – The subsection content is informative and <span class="wtrl_norm">must not</span> contain any Normativity Keyword.</p></li>
 <li><p>[CMTO-008] – <span class="wtrl_label">&lt;Method&gt;</span> <span class="wtrl_norm">must</span> be resolvable relative to the documented class.</p></li>
 <li><p>[CMTO-009] – <span class="wtrl_label">&lt;Method&gt;</span> <span class="wtrl_norm">must</span> refer to a method.</p></li>
@@ -1515,7 +1562,7 @@ whether the class is applicable to a given use case.</p></li>
 <li><dl class="simple">
 <dt><span class="wtrl_label">&lt;Type&gt;:</span></dt><dd><ul>
 <li><p>[CPTYP-004] – <span class="wtrl_label">&lt;Type&gt;</span> <span class="wtrl_norm">must</span> match the pattern of an Identifier.</p></li>
-<li><p>[CPTYP-006] – The subsection content <span class="wtrl_norm">must</span> be free-form text.</p></li>
+<li><p>[CPTYP-006] – The subsection content <span class="wtrl_norm">must</span> consist of free-form text and table blocks as defined in TBL-001.</p></li>
 <li><p>[CPTYP-005] – <span class="wtrl_label">&lt;Type&gt;</span> <span class="wtrl_norm">must</span> be resolvable relative to the documented class.</p></li>
 <li><p>[CPTYP-008] – <span class="wtrl_label">&lt;Type&gt;</span> <span class="wtrl_norm">must</span> refer to a TypeAlias or NewType.</p></li>
 </ul>
@@ -1542,7 +1589,7 @@ whether the class is applicable to a given use case.</p></li>
 <li><dl class="simple">
 <dt><span class="wtrl_label">&lt;Assignable&gt;:</span></dt><dd><ul>
 <li><p>[CPVAR-004] – <span class="wtrl_label">&lt;Assignable&gt;</span> <span class="wtrl_norm">must</span> match the pattern of an Identifier.</p></li>
-<li><p>[CPVAR-006] – The subsection content <span class="wtrl_norm">must</span> be free-form text.</p></li>
+<li><p>[CPVAR-006] – The subsection content <span class="wtrl_norm">must</span> consist of free-form text and table blocks as defined in TBL-001.</p></li>
 <li><p>[CPVAR-005] – <span class="wtrl_label">&lt;Assignable&gt;</span> <span class="wtrl_norm">must</span> be resolvable relative to the documented class, either as a runtime attribute or as an annotated field.</p></li>
 <li><p>[CPVAR-008] – <span class="wtrl_label">&lt;Assignable&gt;</span> <span class="wtrl_norm">must</span> refer to a Named Value.</p></li>
 <li><p>[CPVAR-009] – If the object referenced by <span class="wtrl_label">&lt;Assignable&gt;</span> is annotated, the annotation <span class="wtrl_norm">must not</span> be wtrl_type:<cite>Final</cite>.</p></li>
@@ -1570,7 +1617,7 @@ whether the class is applicable to a given use case.</p></li>
 <li><dl class="simple">
 <dt><span class="wtrl_label">&lt;Assignable&gt;:</span></dt><dd><ul>
 <li><p>[CPCON-004] – <span class="wtrl_label">&lt;Assignable&gt;</span> <span class="wtrl_norm">must</span> match the pattern of an Identifier.</p></li>
-<li><p>[CPCON-007] – The subsection content <span class="wtrl_norm">must</span> be free-form text.</p></li>
+<li><p>[CPCON-007] – The subsection content <span class="wtrl_norm">must</span> consist of free-form text and table blocks as defined in TBL-001.</p></li>
 <li><p>[CPCON-005] – <span class="wtrl_label">&lt;Assignable&gt;</span> <span class="wtrl_norm">must</span> be resolvable relative to the documented class.</p></li>
 <li><p>[CPCON-009] – <span class="wtrl_label">&lt;Assignable&gt;</span> <span class="wtrl_norm">must</span> refer to a Named Value.</p></li>
 <li><p>[CPCON-006] – If the object referenced by <span class="wtrl_label">&lt;Assignable&gt;</span> is annotated, the annotation  <span class="wtrl_norm">must</span> be <code class="wtrl_type docutils literal notranslate"><span class="pre">Final</span></code>.</p></li>
@@ -1600,7 +1647,7 @@ whether the class is applicable to a given use case.</p></li>
 <li><p>[FAC-005] – <span class="wtrl_label">&lt;Function&gt;</span> <span class="wtrl_norm">must</span> match the pattern of a Qualified Identifier.</p></li>
 <li><p>[FAC-008] – Each <span class="wtrl_label">&lt;Function&gt;</span> <span class="wtrl_norm">must</span> occur at most once within its enclosing <span class="wtrl_label">Factory</span> section.</p></li>
 <li><p>[FAC-006] – <span class="wtrl_label">&lt;Function&gt;</span> <span class="wtrl_norm">must</span> resolve to an existing function.</p></li>
-<li><p>[FAC-007] – The content of <span class="wtrl_label">&lt;Function&gt;</span> <span class="wtrl_norm">must</span> be interpreted as free-form text.</p></li>
+<li><p>[FAC-007] – The content of <span class="wtrl_label">&lt;Function&gt;</span> <span class="wtrl_norm">must</span> consist of free-form text and table blocks as defined in TBL-001.</p></li>
 </ul>
 </dd>
 </dl>
@@ -1726,7 +1773,7 @@ whether the function is applicable to a given use case.</p></li>
 <li><dl class="simple">
 <dt><span class="wtrl_label">&lt;Par&gt;:</span></dt><dd><ul>
 <li><p>[PAR-006] – <span class="wtrl_label">&lt;Par&gt;</span> <span class="wtrl_norm">must</span> be an Identifier.</p></li>
-<li><p>[PAR-007] – The subsection content <span class="wtrl_norm">must</span> be free-form text.</p></li>
+<li><p>[PAR-007] – The subsection content <span class="wtrl_norm">must</span> consist of free-form text and table blocks as defined in TBL-001.</p></li>
 <li><p>[PAR-004] – Each parameter in the function’s signature <span class="wtrl_norm">must</span> be documented by a corresponding <span class="wtrl_label">&lt;Par&gt;</span> entry.</p></li>
 <li><p>[PAR-005] – Each <span class="wtrl_label">&lt;Par&gt;</span> entry <span class="wtrl_norm">must</span> correspond to a parameter in the function’s signature.</p></li>
 </ul>
@@ -1757,6 +1804,7 @@ is annotated to return <code class="wtrl_value docutils literal notranslate"><sp
 is annotated to return <code class="wtrl_type docutils literal notranslate"><span class="pre">Self</span></code> and the section contains <code class="docutils literal notranslate"><span class="pre">self</span></code> or <code class="docutils literal notranslate"><span class="pre">Self</span></code> in non-tokenised form.</p></li>
 <li><p>[RET-010] – Violations of rules RET-004, RET-006, and RET-007
 <span class="wtrl_norm">must</span> be reported as warnings and <span class="wtrl_norm">must not</span> be reported as errors.</p></li>
+<li><p>[RET-011] – The content <span class="wtrl_norm">may</span> contain table blocks as defined in TBL-001.</p></li>
 <li><p><strong>Last review</strong>: 2026-02-25</p></li>
 </ul>
 </dd>
@@ -1772,7 +1820,7 @@ is annotated to return <code class="wtrl_type docutils literal notranslate"><spa
 <dt><span class="wtrl_label">&lt;Exception&gt;:</span></dt><dd><ul>
 <li><p>[RAI-008] – <span class="wtrl_label">&lt;Exception&gt;</span> <span class="wtrl_norm">must</span> be a Qualified Identifier.</p></li>
 <li><p>[RAI-004] – <span class="wtrl_label">&lt;Exception&gt;</span> <span class="wtrl_norm">must</span> resolve to an existing (exception) class.</p></li>
-<li><p>[RAI-005] – The subsection content <span class="wtrl_norm">must</span> be free-form text.</p></li>
+<li><p>[RAI-005] – The subsection content <span class="wtrl_norm">must</span> consist of free-form text and table blocks as defined in TBL-001.</p></li>
 <li><p>[RAI-006] – The content <span class="wtrl_norm">must</span> explain the circumstances which must or may lead to raising the exception addressed by <span class="wtrl_label">&lt;Exception&gt;</span>.</p></li>
 <li><p>[RAI-007] – Each entry listed <span class="wtrl_norm">must</span> represent a subclass of <code class="wtrl_type docutils literal notranslate"><span class="pre">BaseException</span></code>.</p></li>
 </ul>
@@ -2248,9 +2296,10 @@ for automated testing, such as idempotence, non-mutation of inputs, or round-tri
 <li class="toctree-l1"><a class="reference internal" href="reference.html">11. Reference - Rendering Showcase</a></li>
 <li class="toctree-l1"><a class="reference internal" href="faq.html">12. Requests for Rationales</a></li>
 <li class="toctree-l1"><a class="reference internal" href="_test_freeform.html">13. Test: Flow control in freeform sections</a></li>
-<li class="toctree-l1"><a class="reference internal" href="_test_scope.html">14. Test: Scopes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="_test_tables.html">14. Test: Tables in freeform and itemized content</a></li>
 <li class="toctree-l1"><a class="reference internal" href="test_pygments_lexer.html">15. Test: Inline markup</a></li>
-<li class="toctree-l1"><a class="reference internal" href="legal.html">16. Legal Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="_test_scope.html">16. Test: Scopes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="legal.html">17. Legal Notes</a></li>
 </ul>
 
 <div class="relations">
