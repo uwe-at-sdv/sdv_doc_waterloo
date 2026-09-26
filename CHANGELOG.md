@@ -2,6 +2,8 @@
 
 ## Current release history
 
+- 0.25.0 [2026-09-26]:
+  - Tables in docstring boxes: Pygments, VS Code, HTML, Sphinx
 - 0.24.2 [2026-09-18]:
   - Extract types and tracer from docitem_helper
   - Remove asterisk-imports
