@@ -94,65 +94,43 @@ RE_LIST_MARKER = re.compile(
 	r"^([ \t]*)([-+*#])(\s+)(.*)$"
 )
 
-# 1: Normativity keywords
-# 2: Special values
-# 3,4: |ref| and argument
-# 5,6: |lit| and argument
-# 7,8: |var| and argument
-# 9,10: |type| and argument
-# 11,12: |mod| and argument
-# 13,14: |value| and argument
-# 15,16: |op| and argument
-# 17,18: |func| and argument
-# 19,20: |label| and argument
-# 21,22: |attr| and argument
-# 23,24: |file| and argument
-# 25,26: |dfn| and argument
-# 27,28: |term| and argument
-# 29,30: |cmd| and argument
-# 31,32: |opt| and argument
-# 33,34: |tag| and argument
-# 35,36: |norm| and argument
-# 37,38: |key| and argument
-# 39,40: |var_type| and argument
-# 41,42: |class| and argument
-# 43,44: |pkg| and argument
-# 45,46: |url| and argument
-# 47,48: Generic role and argument
-# 49: Line connector
-# Todo: Sort roles alphabetically by role name.
-# A. Normativity keywords
-# B. Special values
-# C. Roles with arguments
-# D. Generic role
-# E. Line connector.
+# Each entry maps one known Waterloo role to the Pygments token class used for
+# its backtick body. ``None`` selects the dedicated reference-body renderer.
+_INLINE_ROLE_ARGUMENT_TOKENS = (
+	("|ref|", None),
+	("|lit|", Literal),
+	("|var|", Name.Variable),
+	("|type|", Name.Class),
+	("|mod|", Name.Namespace),
+	("|value|", Name.Constant),
+	("|op|", Operator),
+	("|func|", Name.Function),
+	("|label|", Generic.Subheading),
+	("|attr|", Name.Attribute),
+	("|file|", String.Other),
+	("|dfn|", Generic.Emph),
+	("|term|", Generic.Emph),
+	("|cmd|", Name.Builtin),
+	("|opt|", Name.Variable),
+	("|tag|", Name.Tag),
+	("|norm|", Keyword),
+	("|key|", Name.Constant),
+	("|var_type|", Name.Class),
+	("|class|", Name.Class),
+	("|pkg|", Name.Namespace),
+	("|url|", String.Other),
+)
+_INLINE_ROLE_TOKEN_BY_NAME = dict(_INLINE_ROLE_ARGUMENT_TOKENS)
+_INLINE_ROLE_NAMES = "|".join(re.escape(role) for role, _ in _INLINE_ROLE_ARGUMENT_TOKENS)
+
 RE_INLINE = re.compile(
-	r"(\|(?:Must|must|Must_not|must_not|Should|should|Should_not|should_not|May|may)\|)"
-	r"|(\|(?:Self|None|True|False)\|)"
-	r"|(\|ref\|)(`[^`]+`)"
-	r"|(\|lit\|)(`[^`]+`)"
-	r"|(\|var\|)(`[^`]+`)"
-	r"|(\|type\|)(`[^`]+`)"
-	r"|(\|mod\|)(`[^`]+`)"
-	r"|(\|value\|)(`[^`]+`)"
-	r"|(\|op\|)(`[^`]+`)"
-	r"|(\|func\|)(`[^`]+`)"
-	r"|(\|label\|)(`[^`]+`)"
-	r"|(\|attr\|)(`[^`]+`)"
-	r"|(\|file\|)(`[^`]+`)"
-	r"|(\|dfn\|)(`[^`]+`)"
-	r"|(\|term\|)(`[^`]+`)"
-	r"|(\|cmd\|)(`[^`]+`)"
-	r"|(\|opt\|)(`[^`]+`)"
-	r"|(\|tag\|)(`[^`]+`)"
-	r"|(\|norm\|)(`[^`]+`)"
-	r"|(\|key\|)(`[^`]+`)"
-	r"|(\|var_type\|)(`[^`]+`)"
-	r"|(\|class\|)(`[^`]+`)"
-	r"|(\|pkg\|)(`[^`]+`)"
-	r"|(\|url\|)(`[^`]+`)"
-	r"|(\|[A-Za-z_][A-Za-z0-9_]*\|)(`[^`]+`)"
-	r"|(\\)(?=\s*(?:\n)?$)"
+	r"(?P<normativity>\|(?:Must|must|Must_not|must_not|Should|should|Should_not|should_not|May|may)\|)"
+	r"|(?P<special_value>\|(?:Self|None|True|False)\|)"
+	rf"|(?P<role>{_INLINE_ROLE_NAMES})(?P<role_argument>`[^`]+`)"
+	r"|(?P<table_control>\|(?:begin_table|end_table|title|columns|rows)\|)(?P<table_whitespace>\s*$)"
+	r"|(?P<table_separator>\|tab\|)(?P<table_separator_body>.)"
+	r"|(?P<generic_role>\|[A-Za-z_][A-Za-z0-9_]*\|)(?P<generic_argument>`[^`]+`)"
+	r"|(?P<line_connector>\\)(?=\s*(?:\n)?$)"
 )
 RE_REF_ARG = re.compile(r"^(.*?)\s*<([^<>]+)>\s*$")
 
@@ -520,82 +498,34 @@ class PythonWaterlooLexer(PythonLexer):
 				yield base + cur, String.Doc, line[cur : m.start()]
 
 			token_txt = m.group(0)
-			if m.group(1) is not None:
-				yield base + m.start(), Keyword, m.group(1)
-			elif m.group(2) is not None:
-				yield base + m.start(), Keyword.Constant, m.group(2)
-			elif m.group(3) is not None and m.group(4) is not None:
-				yield base + m.start(), Keyword, m.group(3)
-				arg_start = base + m.start() + len(m.group(3))
-				yield from self._emit_ref_arg(arg_start, m.group(4))
-			elif m.group(5) is not None and m.group(6) is not None:   # lit
-				yield base + m.start(), Keyword, m.group(5)
-				yield base + m.start() + len(m.group(5)), Literal, m.group(6)
-			elif m.group(7) is not None and m.group(8) is not None:   # var
-				yield base + m.start(), Keyword, m.group(7)
-				yield base + m.start() + len(m.group(7)), Name.Variable, m.group(8)
-			elif m.group(9) is not None and m.group(10) is not None:  # type
-				yield base + m.start(), Keyword, m.group(9)
-				yield base + m.start() + len(m.group(9)), Name.Class, m.group(10)
-			elif m.group(11) is not None and m.group(12) is not None: # mod
-				yield base + m.start(), Keyword, m.group(11)
-				yield base + m.start() + len(m.group(11)), Name.Namespace, m.group(12)
-			elif m.group(13) is not None and m.group(14) is not None: # value
-				yield base + m.start(), Keyword, m.group(13)
-				yield base + m.start() + len(m.group(13)), Name.Constant, m.group(14)
-			elif m.group(15) is not None and m.group(16) is not None: # op
-				yield base + m.start(), Keyword, m.group(15)
-				yield base + m.start() + len(m.group(15)), Operator, m.group(16)
-			elif m.group(17) is not None and m.group(18) is not None: # func
-				yield base + m.start(), Keyword, m.group(17)
-				yield base + m.start() + len(m.group(17)), Name.Function, m.group(18)
-			elif m.group(19) is not None and m.group(20) is not None: # label
-				yield base + m.start(), Keyword, m.group(19)
-				yield base + m.start() + len(m.group(19)), Generic.Subheading, m.group(20)
-			elif m.group(21) is not None and m.group(22) is not None: # attr
-				yield base + m.start(), Keyword, m.group(21)
-				yield base + m.start() + len(m.group(21)), Name.Attribute, m.group(22)
-			elif m.group(23) is not None and m.group(24) is not None: # file
-				yield base + m.start(), Keyword, m.group(23)
-				yield base + m.start() + len(m.group(23)), String.Other, m.group(24)
-			elif m.group(25) is not None and m.group(26) is not None: # dfn
-				yield base + m.start(), Keyword, m.group(25)
-				yield base + m.start() + len(m.group(25)), Generic.Emph, m.group(26)
-			elif m.group(27) is not None and m.group(28) is not None: # term
-				yield base + m.start(), Keyword, m.group(27)
-				yield base + m.start() + len(m.group(27)), Generic.Emph, m.group(28)
-			elif m.group(29) is not None and m.group(30) is not None: # cmd
-				yield base + m.start(), Keyword, m.group(29)
-				yield base + m.start() + len(m.group(29)), Name.Builtin, m.group(30)
-			elif m.group(31) is not None and m.group(32) is not None: # opt
-				yield base + m.start(), Keyword, m.group(31)
-				yield base + m.start() + len(m.group(31)), Name.Variable, m.group(32)
-			elif m.group(33) is not None and m.group(34) is not None: # tag
-				yield base + m.start(), Keyword, m.group(33)
-				yield base + m.start() + len(m.group(33)), Name.Tag, m.group(34)
-			elif m.group(35) is not None and m.group(36) is not None: # norm
-				yield base + m.start(), Keyword, m.group(35)
-				yield base + m.start() + len(m.group(35)), Keyword, m.group(36)
-			elif m.group(37) is not None and m.group(38) is not None: # key
-				yield base + m.start(), Keyword, m.group(37)
-				yield base + m.start() + len(m.group(37)), Name.Constant, m.group(38)
-			elif m.group(39) is not None and m.group(40) is not None: # var_type
-				yield base + m.start(), Keyword, m.group(39)
-				yield base + m.start() + len(m.group(39)), Name.Class, m.group(40)
-			elif m.group(41) is not None and m.group(42) is not None: # class
-				yield base + m.start(), Keyword, m.group(41)
-				yield base + m.start() + len(m.group(41)), Name.Class, m.group(42)
-			elif m.group(43) is not None and m.group(44) is not None: # pkg
-				yield base + m.start(), Keyword, m.group(43)
-				yield base + m.start() + len(m.group(43)), Name.Namespace, m.group(44)
-			elif m.group(45) is not None and m.group(46) is not None: # url
-				yield base + m.start(), Keyword, m.group(45)
-				yield base + m.start() + len(m.group(45)), String.Other, m.group(46)
-			elif m.group(47) is not None and m.group(48) is not None: # generic role
-				yield base + m.start(), String.Doc, m.group(47)
-				yield base + m.start() + len(m.group(47)), String.Doc, m.group(48)
-			elif m.group(49) is not None:
-				yield base + m.start(), Keyword, m.group(49)
+			normativity = m.group("normativity")
+			special_value = m.group("special_value")
+			role = m.group("role")
+			if normativity is not None:
+				yield base + m.start(), Keyword, normativity
+			elif special_value is not None:
+				yield base + m.start(), Keyword.Constant, special_value
+			elif role is not None:
+				argument = m.group("role_argument")
+				assert argument is not None
+				yield base + m.start(), Keyword, role
+				argument_start = base + m.start() + len(role)
+				argument_token = _INLINE_ROLE_TOKEN_BY_NAME[role]
+				if argument_token is None:
+					yield from self._emit_ref_arg(argument_start, argument)
+				else:
+					yield argument_start, argument_token, argument
+			elif (table_control := m.group("table_control")) is not None:
+				yield base + m.start(), Keyword, table_control
+				yield base + m.start() + len(table_control), String.Doc, m.group("table_whitespace")
+			elif (table_separator := m.group("table_separator")) is not None:
+				yield base + m.start(), Name.Comment, table_separator
+				yield base + m.start() + len(table_separator), String.Doc, m.group("table_separator_body")
+			elif (generic_role := m.group("generic_role")) is not None:
+				yield base + m.start(), String.Doc, generic_role
+				yield base + m.start() + len(generic_role), String.Doc, m.group("generic_argument")
+			elif (line_connector := m.group("line_connector")) is not None:
+				yield base + m.start(), Keyword, line_connector
 			else:
 				yield base + m.start(), Name.Constant, token_txt
 			cur = m.end()

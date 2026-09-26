@@ -5,6 +5,8 @@ Format:
 - VERSION [YYYY-MM-DD]: Summary.
 
 #----- extend here --------------------------------------------#
+- 0.7.0 [2026-09-24]:
+	* Highlighting for tables
 - 0.6.2 [2026-07-20]:
 	* Upload to PyPI now as workflow.
 - 0.6.1 [2026-07-04]:

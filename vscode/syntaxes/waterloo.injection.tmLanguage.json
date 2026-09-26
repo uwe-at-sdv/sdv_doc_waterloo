@@ -686,6 +686,19 @@
           "include": "#inline-roles"
         },
         {
+          "name": "keyword.control.table.waterloo",
+          "match": "^([ \\t]*)(\\|(?:begin_table|end_table|title|columns|rows)\\|)(\\s*)$",
+          "captures": {
+            "2": {
+              "name": "keyword.control.table.waterloo"
+            }
+          }
+        },
+        {
+          "name": "comment.line.table-separator.waterloo",
+          "match": "\\|tab\\|"
+        },
+        {
           "name": "keyword.operator.textflow.waterloo",
           "match": "^\\s*\\|\\s*$"
         },
