@@ -69,6 +69,63 @@ def _load_json_doc(path: Path) -> dict[str, object]:
 		return json.load(fh)
 
 
+def _render_table_fixture() -> dict[str, object]:
+	result = _run_render_json("pytest_good_tables", include_imported=False)
+	assert result.returncode == 0, result.stderr
+	return json.loads(result.stdout)
+
+
+def test_render_json_preserves_mixed_content_blocks_for_tables() -> None:
+	document = _render_table_fixture()
+	description = document["__WTRL_OBJECTS__"]["pytest_good_tables"]["doc"]["Description"]
+	assert description == [
+		"Text before the table.",
+		{
+			"table": {
+				"groups": [
+					{
+						"header": ["Name", "Type", "Meaning"],
+						"rows": [["alpha", "|type|`str`", "First value."]],
+					},
+					{
+						"title": ["Output values"],
+						"header": ["Name", "Type", "Meaning"],
+						"rows": [["beta", "|type|`int`", "Second value."]],
+					},
+				],
+			}
+		},
+		"Text after the table.",
+	]
+
+
+def test_validate_json_accepts_rendered_table_blocks(tmp_path: Path) -> None:
+	document = _render_table_fixture()
+	path = tmp_path / "tables.wtrl.core.rfc-2119.json"
+	path.write_text(json.dumps(document), encoding="utf-8")
+	result = _run_waterlint_validate_json(str(path))
+	assert result.returncode == 0, result.stderr
+
+
+def test_validate_json_rejects_table_block_without_header(tmp_path: Path) -> None:
+	document = _render_table_fixture()
+	description = document["__WTRL_OBJECTS__"]["pytest_good_tables"]["doc"]["Description"]
+	assert isinstance(description, list)
+	table_block = description[1]
+	assert isinstance(table_block, dict)
+	groups = table_block["table"]["groups"]
+	assert isinstance(groups, list)
+	assert isinstance(groups[0], dict)
+	del groups[0]["header"]
+
+	path = tmp_path / "tables-invalid.wtrl.core.rfc-2119.json"
+	path.write_text(json.dumps(document), encoding="utf-8")
+	result = _run_waterlint_validate_json(str(path))
+	assert result.returncode == 1, result.stderr
+	assert "JSCH-005" in result.stderr
+	assert "header" in result.stderr
+
+
 def test_render_json_out_stdout_special_target() -> None:
 	res = _run_render_json_cli([
 		"--scope", "core",
@@ -306,6 +363,30 @@ def test_render_json_includes_annotations_for_public_variables(tmp_path: Path) -
 	node = objects[qid]
 	assert node["doc_lines_kind"] == "variable"
 	assert node["annotation"] == "Dict[int, str]"
+
+
+def test_render_json_preserves_tables_in_public_member_nodes(tmp_path: Path) -> None:
+	"""Standalone Public_* member nodes retain structured table blocks."""
+	out_file = tmp_path / "test_tables.wtrl.core.rfc-2119.json"
+	res = run_waterlint(
+		"render-json",
+		"--basedir",
+		DIR_DOC_EXAMPLES,
+		"--obj",
+		"test_tables",
+		"--out",
+		str(out_file),
+		"--ignore",
+		"TOOL-009",
+	)
+	assert res.returncode == 0, res.stderr
+	doc = _load_json_doc(out_file)
+	assert doc["__WTRL_VERSION__"]["schema"] == "0.3.0"
+	objects = doc["__WTRL_OBJECTS__"]
+	for suffix in (".RemoteAccess_t", ".location"):
+		node = next(value for key, value in objects.items() if key.endswith(suffix))
+		assert isinstance(node["doc_blocks"], list)
+		assert "table" in node["doc_blocks"][-1]
 
 
 def test_render_json_out_dir_single_obj_generates_good_practice_name(tmp_path: Path) -> None:

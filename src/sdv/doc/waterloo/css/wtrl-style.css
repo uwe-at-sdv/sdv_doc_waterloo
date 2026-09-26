@@ -330,6 +330,44 @@ html, body {
 	white-space:pre-wrap;
 	overflow-wrap:anywhere;
 	}
+/*----- Tables ----------------------------------------------*/
+.wtrl-table {
+	width:calc(100% - 1.5em);
+	margin-left:1.5em;
+	margin-right:0;
+	margin-top:0.5em;
+	margin-bottom:0.75em;
+	border-collapse:collapse;
+	table-layout:auto;
+	}
+.wtrl-section .wtrl-subsection .wtrl-table {
+	width:calc(100% - 3em);
+	margin-left:3em;
+	}
+.wtrl-table th,
+.wtrl-table td {
+	padding:0.25em 0.5em;
+	text-align:left;
+	vertical-align:top;
+	border-right:1px solid var(--wtrl-html-grid-border-color);
+	border-bottom:1px solid var(--wtrl-html-grid-border-color);
+	overflow-wrap:anywhere;
+	}
+
+.wtrl-table th:last-child,
+.wtrl-table td:last-child {
+	border-right:0;
+	}
+.wtrl-table-group-title th {
+	text-align: center;
+	font-style:italic;
+	font-weight:normal;
+	color:var(--wtrl-html-subsection-head-color);
+	}
+.wtrl-table-header th {
+	font-weight:bold;
+	color:var(--wtrl-html-section-head-color);
+	}
 /*----- Lists with text -------------------------------------*/
 .wtrl-section .wtrl-list {
 	margin-left: 0.0em;

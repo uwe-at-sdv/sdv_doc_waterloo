@@ -251,6 +251,20 @@ def test_render_html5_renders_scope_and_traits_as_compact_value_lists() -> None:
 	assert "renderCompactStyledValues(container, value, leafRoleCls);" in js
 
 
+def test_render_html5_treats_structured_entries_as_content_blocks() -> None:
+	"""Structured entries preserve statement lists where their contract requires them."""
+	js = RENDER_HTML5_JS.read_text(encoding="utf-8")
+	assert 'section === "Factory" ||' in js
+	assert 'section === "Parameters" ||' in js
+	assert 'section === "Raises"' in js
+	assert "function isStatementListPath(path)" in js
+	assert 'return section === "Factory" || section === "Raises";' in js
+	assert "function renderStatementList(container, lines)" in js
+	assert "renderContentBlocks(container, value, renderTextLines);" in js
+	assert "const blocks = Array.isArray(node.doc_blocks) ? node.doc_blocks : null;" in js
+	assert "renderContentBlocks(elemSection, blocks);" in js
+
+
 def test_render_html5_see_also_and_referenced_by_use_target_kind_classes() -> None:
 	"""See_also and Referenced by links should style targets by object kind."""
 	js = RENDER_HTML5_JS.read_text(encoding="utf-8")

@@ -1,0 +1,79 @@
+{
+    "$schema": "https://sci-d-vis.com/schema/wtrl-authoring-object-json-0.2.0.schema.json",
+    "$id": "urn:waterlint:wtrl-authoring-object-json:waterloo_authoring_showcase.describe_level",
+    "__WTRL_CATEGORY__": "wtrl-authoring-object-json",
+    "__WTRL_VERSION__": {"schema": "0.2.0"},
+    "qualified_name": "waterloo_authoring_showcase.describe_level",
+    "profile": "function",
+    "signature": "(level: str, verbose: bool = False) -> str",
+    "doc": {
+        "Preamble": {
+            "profile": "function",
+            "normative_sections": ["Definitions", "Contract", "Description", "Parameters", "Returns", "Raises"],
+            "scope": ["public"]
+        },
+        "Definitions": {
+            "Level": [{"paragraph": "One supported level of detail."}]
+        },
+        "Terminology": {
+            "verbose": [{"paragraph": "A mode that includes explanatory detail in the returned text."}]
+        },
+        "Contract": {
+            "general": ["|Must| return a description for the requested level."],
+            "requires": ["|Must| receive a supported |var|`level` value."],
+            "ensures": ["|Must| return a non-empty |type|`str`." ]
+        },
+        "Description": [
+            {"paragraph": "|Must| use the following structured data to explain the level."},
+            {"list": [
+                {"text": "The normal mode returns a concise description."},
+                {"text": "Verbose mode adds details.", "items": [
+                    {"text": "Nested list entries remain available in Authoring JSON."}
+                ]}
+            ]},
+            {"table": {"groups": [{
+                "title": ["Level behavior"],
+                "columns": [{"key": "level", "header": "Level"}, {"key": "result", "header": "Result"}],
+                "rows": [
+                    {"cells": {"level": "basic", "result": "Concise text."}},
+                    {"cells": {"level": "detailed", "result": "Expanded text."}}
+                ]
+            }]}}
+        ],
+        "Parameters": {
+            "level": [
+                {"paragraph": "The requested level."},
+                {"table": {"groups": [{
+                    "columns": [{"key": "value", "header": "Value"}, {"key": "meaning", "header": "Meaning"}],
+                    "rows": [
+                        {"cells": {"value": "basic", "meaning": "Select concise output."}},
+                        {"cells": {"value": "detailed", "meaning": "Select expanded output."}}
+                    ]
+                }]}}
+            ],
+            "verbose": [{"paragraph": "Whether the returned description includes additional detail."}]
+        },
+        "Returns": [
+            {"paragraph": "A description matching |var|`level`."},
+            {"table": {"groups": [{
+                "columns": [{"key": "condition", "header": "Condition"}, {"key": "content", "header": "Returned content"}],
+                "rows": [
+                    {"cells": {"condition": "verbose is false", "content": "Concise description."}},
+                    {"cells": {"condition": "verbose is true", "content": "Expanded description."}}
+                ]
+            }]}}
+        ],
+        "Raises": {
+            "ValueError": [
+                {"paragraph": "Raised if |var|`level` is unsupported."},
+                {"table": {"groups": [{
+                    "columns": [{"key": "input", "header": "Input"}, {"key": "reason", "header": "Reason"}],
+                    "rows": [{"cells": {"input": "unknown", "reason": "No matching level exists."}}]
+                }]}}
+            ]
+        },
+        "Notes": {
+            "Workflow": [{"paragraph": "Edit this document, validate it, and render it as a raw Waterloo docstring."}]
+        }
+    }
+}

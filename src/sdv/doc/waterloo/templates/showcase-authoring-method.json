@@ -1,0 +1,41 @@
+{
+    "$schema": "https://sci-d-vis.com/schema/wtrl-authoring-object-json-0.2.0.schema.json",
+    "$id": "urn:waterlint:wtrl-authoring-object-json:waterloo_authoring_showcase.Example.describe",
+    "__WTRL_CATEGORY__": "wtrl-authoring-object-json",
+    "__WTRL_VERSION__": {"schema": "0.2.0"},
+    "qualified_name": "waterloo_authoring_showcase.Example.describe",
+    "profile": "method",
+    "signature": "(self, detail: bool = False) -> str",
+    "doc": {
+        "Preamble": {
+            "profile": "method",
+            "normative_sections": ["Definitions", "Contract", "Parameters", "Returns", "Raises"],
+            "scope": ["public"]
+        },
+        "Definitions": {
+            "Detail": [{"paragraph": "The amount of information included in a description."}]
+        },
+        "Contract": {
+            "general": ["|Must| return a description of this instance."],
+            "ensures": ["|Must| not modify the instance state."]
+        },
+        "Description": [
+            {"paragraph": "Methods use the same text-block structures as functions."},
+            {"table": {"groups": [{
+                "columns": [{"key": "detail", "header": "detail"}, {"key": "result", "header": "Result"}],
+                "rows": [
+                    {"cells": {"detail": "false", "result": "A concise description."}},
+                    {"cells": {"detail": "true", "result": "An expanded description."}}
+                ]
+            }]}}
+        ],
+        "Parameters": {
+            "detail": [{"paragraph": "Whether to include additional details."}]
+        },
+        "Returns": [{"paragraph": "A |type|`str` describing this instance."}],
+        "Raises": {},
+        "Notes": {
+            "Receiver": [{"paragraph": "The receiver parameter is represented by the method profile and normally needs no Parameters entry."}]
+        }
+    }
+}

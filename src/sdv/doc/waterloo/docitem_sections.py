@@ -26,11 +26,11 @@ from sdv.doc.waterloo.docitem_tokenizer import (
 	)
 from sdv.doc.waterloo.docitem_base import (
 	docitem_base,
-	docitem_free_text_entry_base,
 	docitem_list_of_strings_base,
 	docitem_list_of_symbols_base,
 	docitem_map_base,
 	)
+from sdv.doc.waterloo.docitem_tables import docitem_table_content_entry_base
 from sdv.doc.waterloo.docitem_diagnostics import (
 	explain_try_self_for_section,
 	explain_try_self_for_subsection,
@@ -298,7 +298,7 @@ Method_overview:
 
 #----- docitem class factory ----------------------------------#
 
-class docitem_factory_functions(docitem_free_text_entry_base):
+class docitem_factory_functions(docitem_table_content_entry_base):
 	"""
 Preamble:
 	profile:
@@ -308,16 +308,16 @@ Preamble:
 Contract:
 	general:
 		|Must| represent the content of an entry in section |label|`Factory`.
-		|Must| be able to hold a list of strings.
+		|Must| be able to hold free-form text and Waterloo table blocks.
 	constructor:
 		|Must| be default-constructible.
 Derived_from:
-	docitem_free_text_entry_base
+	docitem_table_content_entry_base
 Public_methods:
 	parse
 Method_overview:
 	parse:
-		Parse a list of text lines describing the factory function.
+		Parse free-form text and Waterloo table blocks describing the factory function.
 	"""
 	def __init__(self) -> None:
 		super().__init__()
@@ -398,7 +398,7 @@ Raises:
 # An entry for a function in section Public classes is only a brief
 # description that the class is good for. Classes must be explained
 # in details outside the module documentation block.
-class docitem_class_overview_entry(docitem_free_text_entry_base):
+class docitem_class_overview_entry(docitem_table_content_entry_base):
 	"""
 Preamble:
 	profile:
@@ -408,11 +408,11 @@ Preamble:
 Contract:
 	general:
 		|Must| represent the content of an entry in section |label|`Class_overview`.
-		|Must| be able to hold a list of strings.
+		|Must| be able to hold free-form text and table blocks.
 	constructor:
 		|Must| be default-constructible.
 Derived_from:
-	docitem_free_text_entry_base
+	docitem_table_content_entry_base
 Public_methods:
 	parse
 Method_overview:
@@ -499,14 +499,13 @@ Method_overview:
 
 #----- docitem class public_types ----------------------------#
 
-# An entry for a function in section Public types is only a brief
-# description that the class is good for. types must be explained
-# in details outside the module documentation block.
+# An entry in Public_types documents one named type declared by the enclosing
+# module or class.
 # Update: In order to maintain LoIO the description is not so
 # brief! Public_types is normative, and we provide various means
 # that allow a detailed normative descritption, e.g. itemization
 # and (future) the special role |expand|.
-class docitem_public_types_entry(docitem_free_text_entry_base):
+class docitem_public_types_entry(docitem_table_content_entry_base):
 	"""
 Preamble:
 	profile:
@@ -516,16 +515,16 @@ Preamble:
 Contract:
 	general:
 		|Must| represent the content of an entry in section |label|`Public_types`.
-		|Must| be able to hold a list of strings.
+		|Must| be able to hold free-form text and Waterloo table blocks.
 	constructor:
 		|Must| be default-constructible.
 Derived_from:
-	docitem_free_text_entry_base
+	docitem_table_content_entry_base
 Public_methods:
 	parse
 Method_overview:
 	parse:
-		Parse a list of text lines describing the public type.
+		Parse free-form text and Waterloo table blocks describing the public type.
 	"""
 	def __init__(self) -> None:
 		super().__init__()
@@ -605,10 +604,9 @@ Raises:
 
 #----- docitem class public_constants ----------------------------#
 
-# An entry for a function in section Public assignables is only a brief
-# description that the class is good for. assignables must be explained
-# in details outside the module documentation block.
-class docitem_public_assignables_entry(docitem_free_text_entry_base):
+# An entry in Public_variables or Public_constants documents one named value
+# declared by the enclosing module or class.
+class docitem_public_assignables_entry(docitem_table_content_entry_base):
 	"""
 Preamble:
 	profile:
@@ -618,16 +616,16 @@ Preamble:
 Contract:
 	general:
 		|Must| represent the content of an entry in section |label|`Public_assignables`.
-		|Must| be able to hold a list of strings.
+		|Must| be able to hold free-form text and Waterloo table blocks.
 	constructor:
 		|Must| be default-constructible.
 Derived_from:
-	docitem_free_text_entry_base
+	docitem_table_content_entry_base
 Public_methods:
 	parse
 Method_overview:
 	parse:
-		Parse a list of text lines describing the public assignable.
+		Parse free-form text and Waterloo table blocks describing the public assignable.
 	"""
 	def __init__(self) -> None:
 		super().__init__()
@@ -731,7 +729,7 @@ class docitem_public_variables(docitem_public_assignables_base):
 # An entry for a function in section Public methods is only a brief
 # description what the function is good for. Functions must be explained
 # in details outside the class documentation block.
-class docitem_method_overview_entry(docitem_free_text_entry_base):
+class docitem_method_overview_entry(docitem_table_content_entry_base):
 	"""
 Preamble:
 	profile:
@@ -741,11 +739,11 @@ Preamble:
 Contract:
 	general:
 		|Must| represent the content of an entry in section |label|`Method_overview`.
-		|Must| be able to hold a list of strings.
+		|Must| be able to hold free-form text and table blocks.
 	constructor:
 		|Must| be default-constructible.
 Derived_from:
-	docitem_free_text_entry_base
+	docitem_table_content_entry_base
 Public_methods:
 	parse
 Method_overview:
@@ -818,7 +816,7 @@ Raises:
 
 #----- docitem class function_overview ---------------------------#
 
-class docitem_function_overview_entry(docitem_free_text_entry_base):
+class docitem_function_overview_entry(docitem_table_content_entry_base):
 	"""
 Preamble:
 	profile:
@@ -828,11 +826,11 @@ Preamble:
 Contract:
 	general:
 		|Must| represent the content of an entry in section |label|`Function_overview`.
-		|Must| be able to hold a list of strings.
+		|Must| be able to hold free-form text and table blocks.
 	constructor:
 		|Must| be default-constructible.
 Derived_from:
-	docitem_free_text_entry_base
+	docitem_table_content_entry_base
 Public_methods:
 	parse
 Method_overview:
@@ -909,23 +907,25 @@ Method_overview:
 
 #----- docitem class returns ----------------------------------#
 
-class docitem_returns(docitem_list_of_strings_base):
+class docitem_returns(docitem_table_content_entry_base):
 	"""
 Preamble:
 	profile:
 		class
 	normative_sections:
-		Contract, Public_methods
+		Contract, Derived_from, Public_methods
 Contract:
 	general:
-		|Must| store the list of return value descriptions for a callable's docstring.
+		|Must| store free-form return descriptions and Waterloo table blocks for a callable's docstring.
 	constructor:
 		|Must| be default-constructible.
+Derived_from:
+	docitem_table_content_entry_base
 Public_methods:
 	parse
 Method_overview:
 	parse:
-		Parse a list of return descriptions.
+		Parse free-form return descriptions and Waterloo table blocks.
 	"""
 	def __init__(self) -> None:
 		super().__init__()
@@ -940,8 +940,8 @@ Preamble:
 		Contract, Parameters, Returns, Raises
 Contract:
 	general:
-		|Must| accept a list of return descriptions.
-		|Must| raise if the input is not a list of strings.
+		|Must| accept free-form return descriptions and Waterloo table blocks.
+		|Must| raise if the input does not have the required line structure.
 Parameters:
 	tr:
 		The tracer for collecting diagnostics.
@@ -953,16 +953,8 @@ Raises:
 	RuntimeError:
 		|Must| raise if validation fails.
 		"""
-		# Expect list of strings
-		if not is_list_of_str(lines):
-			found = ["Returns:"] + [f"\t{line}" for line in to_string_tree(lines).splitlines()]
-			details = {
-				"found": found,
-				"expected": ["<do not add subsections in section Returns>"],
-				"hint": "waterlint explain-section --label Returns --profile function",
-			}
-			raise_parsing_error_expected_but_got(tr,"RET-005","list of strings",f"{lines}", details)
-		self.set_items(lines)
+		with rule_on_fail(tr, "RET-005"):
+			super().parse(tr, lines)
 
 #===== end section Returns ====================================#
 
@@ -973,7 +965,7 @@ Raises:
 # A dscription may contain several lines. The standard rendering
 # will be to concatenate them to one paragraph, the lines are
 # an editing and parsing artefact.
-class docitem_description(docitem_free_text_entry_base):
+class docitem_description(docitem_table_content_entry_base):
 	"""
 Preamble:
 	profile:
@@ -982,20 +974,20 @@ Preamble:
 		Contract, Derived_from, Public_methods
 Contract:
 	general:
-		|Must| hold free-form descriptive text lines from a docstring section |label|`Description`.
-		|Must| accept and store a list of strings.
+		|Must| hold free-form descriptive text and Waterloo table blocks from a docstring section |label|`Description`.
+		|Must| accept and store content blocks.
 	constructor:
 		|Must| be default-constructible.
 Description:
 	A free-form section which informatively describes the purpose
 	of a module, class or callable.
 Derived_from:
-	docitem_free_text_entry_base
+	docitem_table_content_entry_base
 Public_methods:
 	parse
 Method_overview:
 	parse:
-		Parse a list of description lines.
+		Parse free-form description text and Waterloo table blocks.
 	"""
 	def __init__(self) -> None:
 		super().__init__()
@@ -1010,8 +1002,8 @@ Preamble:
 		Contract, Parameters, Returns, Raises
 Contract:
 	general:
-		|Must| accept a list of description lines.
-		|Must| raise if the input is not a list of strings.
+		|Must| accept free-form description text and Waterloo table blocks.
+		|Must| raise if the input does not have the required line structure.
 Parameters:
 	tr:
 		The tracer for collecting diagnostics.
@@ -1023,16 +1015,8 @@ Raises:
 	RuntimeError:
 		|Must| raise if validation fails.
 		"""
-		# Expect list of strings
-		if not is_list_of_str(lines):
-			found = ["Description:"] + [f"\t{line}" for line in to_string_tree(lines).splitlines()]
-			details = {
-				"found": found,
-				"expected": ["<do not add subsections in section Description>"],
-				"hint": "waterlint explain-section --label Description --profile PROFILE",
-			}
-			raise_parsing_error_expected_but_got(tr,"DESC-004","list of strings",f"{lines}", details)
-		self._items = lines
+		with rule_on_fail(tr, "DESC-004"):
+			super().parse(tr, lines)
 
 #===== end section Description ================================#
 
@@ -1040,7 +1024,7 @@ Raises:
 
 #----- docitem class Parameters -------------------------------#
 
-class docitem_parameters_entry(docitem_free_text_entry_base):
+class docitem_parameters_entry(docitem_table_content_entry_base):
 	"""
 Preamble:
 	profile:
@@ -1050,16 +1034,16 @@ Preamble:
 Contract:
 	general:
 		|Must| represent an parameter entry in the |label|`Parameters` section.
-		|Must| accept and store a list of strings.
+		|Must| accept and store free-form text and Waterloo table blocks.
 	constructor:
 		|Must| be default-constructible.
 Derived_from:
-	docitem_free_text_entry_base
+	docitem_table_content_entry_base
 Public_methods:
 	parse
 Method_overview:
 	parse:
-		Parse the content of a parameter entry.
+		Parse free-form text and Waterloo table blocks of a parameter entry.
 	"""
 	def __init__(self) -> None:
 		super().__init__()
@@ -1130,7 +1114,7 @@ Raises:
 
 #----- docitem class Raises -----------------------------------#
 
-class docitem_raises_entry(docitem_free_text_entry_base):
+class docitem_raises_entry(docitem_table_content_entry_base):
 	"""
 Preamble:
 	profile:
@@ -1140,16 +1124,16 @@ Preamble:
 Contract:
 	general:
 		|Must| represent an exception entry in the |label|`Raises` section.
-		|Must| accept and store a list of strings.
+		|Must| accept and store free-form text and Waterloo table blocks.
 	constructor:
 		|Must| be default-constructible.
 Derived_from:
-	docitem_free_text_entry_base
+	docitem_table_content_entry_base
 Public_methods:
 	parse
 Method_overview:
 	parse:
-		Parse the content of an exception entry.
+		Parse free-form text and Waterloo table blocks of an exception entry.
 	"""
 	def __init__(self) -> None:
 		super().__init__()
@@ -1223,7 +1207,7 @@ Raises:
 
 #----- docitem class Definitions ------------------------------#
 
-class docitem_definitions_entry(docitem_free_text_entry_base):
+class docitem_definitions_entry(docitem_table_content_entry_base):
 	"""
 Preamble:
 	profile:
@@ -1237,12 +1221,12 @@ Contract:
 	constructor:
 		|Must| be default-constructible.
 Derived_from:
-	docitem_free_text_entry_base
+	docitem_table_content_entry_base
 Public_methods:
 	parse
 Method_overview:
 	parse:
-		Parse the content of an definition entry.
+		Parse the content of a definition entry, including Waterloo table blocks.
 	"""
 	def __init__(self) -> None:
 		super().__init__()
@@ -1363,7 +1347,7 @@ Raises:
 
 #----- docitem class Terminology ------------------------------#
 
-class docitem_terminology_entry(docitem_free_text_entry_base):
+class docitem_terminology_entry(docitem_table_content_entry_base):
 	"""
 Preamble:
 	profile:
@@ -1372,21 +1356,21 @@ Preamble:
 		Contract, Derived_from, Public_methods
 Terminology:
 	Terminology entry:
-		Describes a docstring subtree consisting of a string valued qualified identifier
-		and a list of free-form description lines: |type|`str, List[str]`
+		Describes a docstring subtree consisting of a human-readable label and
+		free-form text or Waterloo table blocks.
 Contract:
 	general:
 		|Must| represent an entry in the |label|`Terminology` section.
-		|Must| accept and store a list of strings.
+		|Must| accept and store free-form text and Waterloo table blocks.
 	constructor:
 		|Must| be default-constructible.
 Derived_from:
-	docitem_free_text_entry_base
+	docitem_table_content_entry_base
 Public_methods:
 	parse
 Method_overview:
 	parse:
-		Parse the content of an terminology entry.
+		Parse the content of a terminology entry, including Waterloo table blocks.
 	"""
 	def __init__(self) -> None:
 		super().__init__()
@@ -1456,7 +1440,7 @@ Raises:
 
 #----- docitem class notes -----------------------------------#
 
-class docitem_notes_entry(docitem_free_text_entry_base):
+class docitem_notes_entry(docitem_table_content_entry_base):
 	"""
 Preamble:
 	profile:
@@ -1466,16 +1450,16 @@ Preamble:
 Contract:
 	general:
 		|Must| represent the content of an entry in section |label|`Notes`.
-		|Must| be able to hold a list of strings.
+		|Must| be able to hold free-form text and Waterloo table blocks.
 	constructor:
 		|Must| be default-constructible.
 Derived_from:
-	docitem_free_text_entry_base
+	docitem_table_content_entry_base
 Public_methods:
 	parse
 Method_overview:
 	parse:
-		Parse a list of text lines of the note.
+		Parse free-form text and Waterloo table blocks of the note.
 	"""
 	def __init__(self) -> None:
 		super().__init__()

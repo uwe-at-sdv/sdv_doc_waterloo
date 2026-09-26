@@ -1,12 +1,12 @@
 {
-    "$schema": "https://sci-d-vis.com/schema/wtrl-json-0.1.0.schema.json",
-    "$id": "urn:waterlint:wtrl-json:0.24.1:core:rfc-2119:dc567221661c59c1b69d5c7aa94df71c0b97cefc358e25853d08be65f7f26bed",
+    "$schema": "https://sci-d-vis.com/schema/wtrl-json-0.3.0.schema.json",
+    "$id": "urn:waterlint:wtrl-json:0.24.2:core:rfc-2119:dc567221661c59c1b69d5c7aa94df71c0b97cefc358e25853d08be65f7f26bed",
     "__WTRL_VERSION__": {
-        "waterloo": "0.24.1",
-        "schema": "0.1.0"
+        "waterloo": "0.24.2",
+        "schema": "0.3.0"
     },
     "__WTRL_META__": {
-        "generated_at": "2026-09-19T11:05:26+02:00",
+        "generated_at": "2026-09-26T20:12:22+02:00",
         "generator": "waterlint",
         "scope": "core",
         "flavour": "rfc-2119"
@@ -82,6 +82,18 @@
                 "* An item",
                 "# Numbered item"
             ],
+            "doc_blocks": [
+                "|label|`Public_types` is normative. The content",
+                "is a sequence of paragraphs.",
+                "This is the second paragraph. A single pipe character \"|\" separates paragraphs",
+                "within the freeform text.",
+                "|",
+                "Itemizations and enumerations are possible:",
+                "# Numbered item",
+                "* An item",
+                "* An item",
+                "# Numbered item"
+            ],
             "annotation": "Tuple[int, float]",
             "doc_lines_kind": "type"
         },
@@ -99,12 +111,38 @@
                 "* An item",
                 "# Numbered item"
             ],
+            "doc_blocks": [
+                "|label|`Public_variables` is normative. The content",
+                "is a sequence of paragraphs.",
+                "This is the second paragraph. A single pipe character \"|\" separates paragraphs",
+                "within the freeform text.",
+                "|",
+                "Itemizations and enumerations are possible:",
+                "# Numbered item",
+                "* An item",
+                "* An item",
+                "# Numbered item"
+            ],
             "annotation": "str",
             "doc_lines_kind": "variable"
         },
         "test_flow_control.my_constant": {
             "doc": {},
             "doc_lines": [
+                "|label|`Public_constants` is normative. The content",
+                "is a sequence of paragraphs.",
+                "This is the second paragraph. A single pipe character \"|\" separates paragraphs",
+                "within the freeform text.",
+                "|",
+                "Itemizations and enumerations are possible:",
+                "* An item",
+                "+ A subitem",
+                "- A subsubitem",
+                "- A subsubitem",
+                "+ A subitem",
+                "* An item"
+            ],
+            "doc_blocks": [
                 "|label|`Public_constants` is normative. The content",
                 "is a sequence of paragraphs.",
                 "This is the second paragraph. A single pipe character \"|\" separates paragraphs",

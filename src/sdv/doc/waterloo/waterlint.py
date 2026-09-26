@@ -86,6 +86,7 @@ with contextlib.redirect_stdout(sys.stderr):
 	import sdv.doc.waterloo.waterlint_common as wl_common
 	import sdv.doc.waterloo.waterlint_authoring as authoring
 	import sdv.doc.waterloo.waterlint_authoring_generate as authoring_gen
+	import sdv.doc.waterloo.waterlint_gen_showcase_authoring_json as gshowcase_authoring
 	import sdv.doc.waterloo.waterlint_gen_full as gfull
 	import sdv.doc.waterloo.waterlint_gen_minimal as gmin
 	import sdv.doc.waterloo.waterlint_gen_example_template_json as gext
@@ -136,6 +137,7 @@ SUBCOMMANDS = (
 	"gen-full",
 	"gen-minimal-authoring-json",
 	"gen-full-authoring-json",
+	"gen-showcase-authoring-json",
 	"render-docker",
 	"list-schemas",
 	"version",
@@ -214,6 +216,16 @@ def _load_walk_input(tr: tracer, path: str) -> dict[str, Any] | None:
 def _render_json_doc_lines(lines: list[str], flavour: cvrt.Flavour) -> list[str]:
 	"""Render logical docstring lines for JSON output in the requested flavour."""
 	return [cvrt._render_token(line, flavour) for line in lines]
+
+
+def _render_json_public_member_documentation(
+	node: docitem.docitem_base, flavour: cvrt.Flavour,
+) -> tuple[list[str], cvrt.WtrlJsonNode_t | None]:
+	"""Render legacy lines and, where available, structured Public_* content blocks."""
+	lines = _render_json_doc_lines(list(node.items()), flavour)
+	if isinstance(node, docitem.docitem_list_of_content_blocks_base):
+		return lines, cvrt._render_content_blocks_json(node, flavour)
+	return lines, None
 
 
 def _safe_module_docstring(modname: str) -> str | None:
@@ -1583,11 +1595,13 @@ def render_json_command(args: argparse.Namespace) -> int:
 						if mem_qname not in objects_counted:
 							num_nonaggregate_rendered[toc_label] += 1
 							objects_counted.add(mem_qname)
-# The docstring subsection of a type is an array of logical lines. We render them as a list in JSON.
-							mem_doc = _render_json_doc_lines(list(tree.item(sec_label).item(mem_name).items()), flavour)
+							member_node = tree.item(sec_label).item(mem_name)
+							mem_doc, mem_blocks = _render_json_public_member_documentation(member_node, flavour)
 						mem_entry = cast(dict[str, Any], tree_full["__WTRL_OBJECTS__"].setdefault(mem_qname, {"doc": {}}))
 						mem_entry["doc"] = {}
 						mem_entry["doc_lines"] = mem_doc
+						if mem_blocks is not None:
+							mem_entry["doc_blocks"] = mem_blocks
 						ann = _member_annotation_text(o, mem_name, obj_annotations.get(mem_name))
 						if ann:
 							mem_entry["annotation"] = ann
@@ -1796,11 +1810,13 @@ def render_json_command(args: argparse.Namespace) -> int:
 									if mem_qname not in objects_counted:
 										num_nonaggregate_rendered[toc_label] += 1
 										objects_counted.add(mem_qname)
-# The docstring subsection of a type is an array of logical lines. We render them as a list in JSON.
-										mem_doc = _render_json_doc_lines(list(mod_tree.item(sec_label).item(mem_name).items()), flavour)
+										member_node = mod_tree.item(sec_label).item(mem_name)
+										mem_doc, mem_blocks = _render_json_public_member_documentation(member_node, flavour)
 									mem_entry = cast(dict[str, Any], tree_full["__WTRL_OBJECTS__"].setdefault(mem_qname, {"doc": {}}))
 									mem_entry["doc"] = {}
 									mem_entry["doc_lines"] = mem_doc
+									if mem_blocks is not None:
+										mem_entry["doc_blocks"] = mem_blocks
 									ann = _member_annotation_text(mod_obj, mem_name, mod_annotations.get(mem_name))
 									if ann:
 										mem_entry["annotation"] = ann
@@ -1926,6 +1942,9 @@ def _help_version_json() -> None:
 
 def _help_topic_command(args: argparse.Namespace) -> int:
 	global parser
+	if args.topic is None:
+		parser.print_help()
+		return 0
 	assert parser._subparsers is not None
 	for action in parser._subparsers._actions:
 		if isinstance(action, argparse._SubParsersAction):
@@ -2424,6 +2443,7 @@ def _build_parser() -> argparse.ArgumentParser:
 #----- gen-*-authoring-json -----------------------------------#
 	authoring_gen.build_parser(subparsers, parser_parts, "gen-minimal-authoring-json")
 	authoring_gen.build_parser(subparsers, parser_parts, "gen-full-authoring-json")
+	gshowcase_authoring.build_parser(subparsers, parser_parts)
 
 #----- gen-example-template-json ------------------------------#
 	gext.build_parser(subparsers, parser_parts)
@@ -2511,6 +2531,8 @@ def main(argv: Optional[list[str]] = None) -> int:
 		return authoring_gen.gen_minimal_authoring_json_command(args, __version__)
 	if args.command == "gen-full-authoring-json":
 		return authoring_gen.gen_full_authoring_json_command(args, __version__)
+	if args.command == "gen-showcase-authoring-json":
+		return gshowcase_authoring.gen_showcase_authoring_json_command(args, __version__)
 	if args.command == "list-schemas":
 		return _list_schemas_command(args)
 	if args.command == "version":

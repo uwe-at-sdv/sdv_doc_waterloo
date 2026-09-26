@@ -13,7 +13,7 @@ from pytest_common import DIR_SCHEMA, run_waterlint
 
 
 FIXTURE_DIR = Path(__file__).parent / "fixtures" / "authoring_json"
-SCHEMA_PATH = Path(DIR_SCHEMA) / "wtrl-authoring-object-json-0.1.0.schema.json"
+SCHEMA_PATH = Path(DIR_SCHEMA) / "wtrl-authoring-object-json-0.2.0.schema.json"
 
 
 def _validate_fixture(name: str):
@@ -25,6 +25,38 @@ def test_authoring_schema_is_a_valid_draft_2020_12_schema() -> None:
 	"""Keep schema syntax and self-references valid before testing document fixtures."""
 	schema = json.loads(SCHEMA_PATH.read_text(encoding="utf-8"))
 	Draft202012Validator.check_schema(schema)
+
+
+def test_authoring_schema_accepts_keyed_table_blocks(tmp_path: Path) -> None:
+	"""Schema 0.2 accepts tables only through a free-form text-block position."""
+	document = {
+		"$schema": "https://sci-d-vis.com/schema/wtrl-authoring-object-json-0.2.0.schema.json",
+		"$id": "urn:waterlint:wtrl-authoring-object-json:demo.table",
+		"__WTRL_CATEGORY__": "wtrl-authoring-object-json",
+		"__WTRL_VERSION__": {"schema": "0.2.0"},
+		"qualified_name": "demo.table",
+		"profile": "module",
+		"doc": {
+			"Preamble": {"profile": "module", "normative_sections": ["Contract"]},
+			"Contract": {"general": ["|Must| provide a table."]},
+			"Description": [{"table": {"groups": [{
+				"title": ["Result values"],
+				"columns": [{"key": "code", "header": "Code"}, {"key": "meaning", "header": "Meaning"}],
+				"rows": [{"cells": {"code": "0", "meaning": "success"}}, {"cells": {"code": "1", "meaning": ""}}],
+			}]}}],
+		},
+	}
+	path = tmp_path / "table-authoring.json"
+	path.write_text(json.dumps(document), encoding="utf-8")
+	result = run_waterlint("validate-json", "--in", str(path))
+	assert result.returncode == 0, result.stderr
+
+	# Contract remains a list of logical text items, not a free-form block sequence.
+	document["doc"]["Contract"]["general"] = document["doc"]["Description"]
+	path.write_text(json.dumps(document), encoding="utf-8")
+	result = run_waterlint("validate-json", "--in", str(path))
+	assert result.returncode == 1, result.stderr
+	assert "JSCH-005" in result.stderr, result.stderr
 
 
 @pytest.mark.parametrize(

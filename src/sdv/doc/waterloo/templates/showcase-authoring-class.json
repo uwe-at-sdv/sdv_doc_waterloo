@@ -1,0 +1,63 @@
+{
+    "$schema": "https://sci-d-vis.com/schema/wtrl-authoring-object-json-0.2.0.schema.json",
+    "$id": "urn:waterlint:wtrl-authoring-object-json:waterloo_authoring_showcase.Example",
+    "__WTRL_CATEGORY__": "wtrl-authoring-object-json",
+    "__WTRL_VERSION__": {"schema": "0.2.0"},
+    "qualified_name": "waterloo_authoring_showcase.Example",
+    "profile": "class",
+    "doc": {
+        "Preamble": {
+            "profile": "class",
+            "normative_sections": ["Definitions", "Contract", "Derived_from", "Factory", "Public_classes", "Public_methods", "Public_types", "Public_variables", "Public_constants"],
+            "scope": ["public"]
+        },
+        "Definitions": {
+            "Example": [{"paragraph": "A class used to demonstrate class-specific Authoring JSON sections."}]
+        },
+        "Contract": {
+            "general": ["|Must| represent one configurable demonstration object."],
+            "constructor": ["|Must| accept one |var|`mode` value."],
+            "traits": ["final"]
+        },
+        "Description": [
+            {"paragraph": "Class descriptions can combine prose with structured tables."},
+            {"table": {"groups": [{
+                "columns": [{"key": "mode", "header": "Mode"}, {"key": "effect", "header": "Effect"}],
+                "rows": [
+                    {"cells": {"mode": "simple", "effect": "Use the compact demonstration."}},
+                    {"cells": {"mode": "full", "effect": "Enable every optional feature."}}
+                ]
+            }]}}
+        ],
+        "Derived_from": ["waterloo_authoring_showcase.BaseExample"],
+        "Factory": {
+            "waterloo_authoring_showcase.Example.from_config": [
+                {"paragraph": "Create an Example from configuration values."},
+                {"table": {"groups": [{
+                    "columns": [{"key": "key", "header": "Key"}, {"key": "meaning", "header": "Meaning"}],
+                    "rows": [{"cells": {"key": "mode", "meaning": "Selected demonstration mode."}}]
+                }]}}
+            ]
+        },
+        "Public_classes": ["waterloo_authoring_showcase.Example.Nested"],
+        "Class_overview": {
+            "Nested": [{"paragraph": "A nested supporting class."}]
+        },
+        "Public_methods": ["waterloo_authoring_showcase.Example.describe"],
+        "Method_overview": {
+            "describe": [{"paragraph": "Return a human-readable description."}]
+        },
+        "Public_types": {
+            "State_t": [{"paragraph": "A type alias for Example state values."}]
+        },
+        "Public_variables": {
+            "mode": [{"paragraph": "The active demonstration mode."}]
+        },
+        "Public_constants": {
+            "DEFAULT_MODE": [{"paragraph": "The mode selected when configuration omits one."}]
+        },
+        "Notes": {
+            "Factory": [{"paragraph": "Factory entries are class-specific and use qualified function identifiers as keys."}]
+        }
+    }
+}

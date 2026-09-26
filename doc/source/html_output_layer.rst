@@ -179,3 +179,180 @@ The CSS layer defines the visual presentation.
 This separation is intentional.
 It keeps the current implementation maintainable and also makes a later transition
 toward a more explicit plugin or renderer architecture easier.
+
+CSS Reference
+-------------
+
+This informative section reflects the implementation as of 2026-09-24.
+
+This section defines the supported CSS customization surface of the bundled
+HTML5 output. It documents CSS custom properties and selected structural
+classes that are intended as extension hooks. Other selectors in the bundled
+stylesheets are implementation details and may change when the renderer evolves.
+
+The built-in stylesheet is split into a common set of semantic variables in
+:wtrl_file:`css/common_styles.css` and HTML5-specific layout rules in
+:wtrl_file:`css/wtrl-style.css`. An additional stylesheet passed through
+:wtrl_opt:`--additional-css` is the recommended way to override these values.
+
+Theme selection
+~~~~~~~~~~~~~~~
+
+The generated document records the selected theme on its root HTML element:
+
+* :wtrl_value:`html[data-wtrl-theme="light"]` selects the light palette.
+* :wtrl_value:`html[data-wtrl-theme="dark"]` selects the dark palette.
+* :wtrl_value:`html[data-wtrl-theme="auto"]` follows the browser's
+  :wtrl_value:`prefers-color-scheme` setting.
+
+Light-mode variables are the active variables used by the layout rules. Dark
+mode rebinds these active variables to corresponding dark values. This allows
+a customization stylesheet to either replace a palette value globally or to
+override an active value only for a selected theme.
+
+Custom property naming
+~~~~~~~~~~~~~~~~~~~~~~
+
+Semantic inline roles use the following family:
+
+.. code-block:: css
+
+	--wtrl-<role>-color
+	--wtrl-<role>-font-weight
+	--wtrl-<role>-font-style
+	--wtrl-dark-<role>-color
+
+The role names currently are :wtrl_value:`plain`, :wtrl_value:`attr`,
+:wtrl_value:`class`, :wtrl_value:`cmd`, :wtrl_value:`dfn`, :wtrl_value:`file`,
+:wtrl_value:`func`, :wtrl_value:`key`, :wtrl_value:`label`, :wtrl_value:`lit`,
+:wtrl_value:`mod`, :wtrl_value:`norm`, :wtrl_value:`op`, :wtrl_value:`opt`,
+:wtrl_value:`pkg`, :wtrl_value:`tag`, :wtrl_value:`term`, :wtrl_value:`type`,
+:wtrl_value:`url`, :wtrl_value:`url-schema`, :wtrl_value:`value`, and
+:wtrl_value:`var`. The special :wtrl_value:`url-schema` role currently has a
+color variable only.
+
+For semantic roles with a dark palette entry, the light color
+:wtrl_value:`--wtrl-<role>-color` is active by default. Dark-mode selectors
+replace it with :wtrl_value:`--wtrl-dark-<role>-color`. Font weights and styles
+are currently shared by both themes. The generic :wtrl_value:`plain` role uses
+:wtrl_value:`currentColor` and has no dark counterpart.
+
+HTML5-specific variables use a closely related, but intentionally distinct,
+naming convention:
+
+.. code-block:: css
+
+	--wtrl-html-<name>
+	--wtrl-html-dark-<name>
+
+The active light-mode names and their purposes are listed below. Each has a
+dark counterpart formed by inserting :wtrl_value:`dark-` after
+:wtrl_value:`html-`.
+
+.. list-table:: HTML5 color custom properties
+	:widths: 42 58
+	:header-rows: 1
+
+	* - Light-mode property
+	  - Purpose
+	* - :wtrl_value:`--wtrl-html-page-bg`
+	  - Page background.
+	* - :wtrl_value:`--wtrl-html-page-color`
+	  - Default foreground text color.
+	* - :wtrl_value:`--wtrl-html-panel-bg`
+	  - Sidebar and main-panel background.
+	* - :wtrl_value:`--wtrl-html-panel-border-color`
+	  - Sidebar, panel, and code-block borders.
+	* - :wtrl_value:`--wtrl-html-debug-bg`
+	  - Debug reference area background.
+	* - :wtrl_value:`--wtrl-html-muted-color`
+	  - De-emphasized text such as metadata.
+	* - :wtrl_value:`--wtrl-html-subtle-color`
+	  - Secondary metadata text.
+	* - :wtrl_value:`--wtrl-html-control-bg`
+	  - Input and button background.
+	* - :wtrl_value:`--wtrl-html-control-color`
+	  - Input and button foreground.
+	* - :wtrl_value:`--wtrl-html-control-border-color`
+	  - Input and button borders.
+	* - :wtrl_value:`--wtrl-html-control-disabled-bg`
+	  - Disabled control background.
+	* - :wtrl_value:`--wtrl-html-search-border-color`
+	  - Search field border.
+	* - :wtrl_value:`--wtrl-html-hitlist-bg`
+	  - Search-result list background.
+	* - :wtrl_value:`--wtrl-html-hit-border-color`
+	  - Search-result separators.
+	* - :wtrl_value:`--wtrl-html-hit-hover-bg`
+	  - Hovered search result and theme-control background.
+	* - :wtrl_value:`--wtrl-html-section-bg`
+	  - Section background.
+	* - :wtrl_value:`--wtrl-html-section-border-color`
+	  - Section borders.
+	* - :wtrl_value:`--wtrl-html-section-head-color`
+	  - Section heading color.
+	* - :wtrl_value:`--wtrl-html-subsection-head-color`
+	  - Subsection heading and table-group-title color.
+	* - :wtrl_value:`--wtrl-html-code-bg`
+	  - Embedded example-code background.
+	* - :wtrl_value:`--wtrl-html-key-border-color`
+	  - Border for rendered keyboard keys.
+	* - :wtrl_value:`--wtrl-html-grid-border-color`
+	  - Table cell grid lines.
+	* - :wtrl_value:`--wtrl-html-fallback-color`
+	  - Fallback color for objects without a more specific kind.
+
+The common stylesheet also provides
+:wtrl_value:`--wtrl-monospace-font-family` for code-like text and the three
+theme-symbol variables :wtrl_value:`--wtrl-theme-light-symbol`,
+:wtrl_value:`--wtrl-theme-auto-symbol`, and :wtrl_value:`--wtrl-theme-dark-symbol`.
+Their dark-mode counterparts are named :wtrl_value:`--wtrl-dark-theme-<mode>-symbol`.
+
+.. rubric:: Minimal customization example
+
+The following stylesheet adjusts only the panel and table-grid palette while
+leaving all layout rules intact:
+
+.. code-block:: css
+
+	:root {
+		--wtrl-html-panel-bg: #fcfcf8;
+		--wtrl-html-grid-border-color: #c8c8bb;
+	}
+
+	html[data-wtrl-theme="dark"] {
+		--wtrl-html-panel-bg: #20231f;
+		--wtrl-html-grid-border-color: #536050;
+	}
+
+Structural class hooks
+~~~~~~~~~~~~~~~~~~~~~~
+
+The following classes are intended for project-specific layout adjustments:
+
+* :wtrl_value:`.wtrl-app`, :wtrl_value:`.wtrl-side`, :wtrl_value:`.wtrl-main`,
+  and :wtrl_value:`.wtrl-block` identify the overall application layout.
+* :wtrl_value:`.wtrl-section`, :wtrl_value:`.wtrl-section-head`,
+  :wtrl_value:`.wtrl-subsection`, and :wtrl_value:`.wtrl-subsection-head`
+  identify generated documentation structure.
+* :wtrl_value:`.wtrl-text` and :wtrl_value:`.wtrl-list` identify free-form
+  textual content and generated lists.
+* :wtrl_value:`.wtrl-table`, :wtrl_value:`.wtrl-table-group-title`,
+  :wtrl_value:`.wtrl-table-header`, and :wtrl_value:`.wtrl-table-row`
+  identify Waterloo table blocks.
+
+The renderer also attaches semantic role classes such as
+:wtrl_value:`.wtrl-func`, :wtrl_value:`.wtrl-type`, and :wtrl_value:`.wtrl-var`
+to inline markup. Prefer the custom properties above for global role styling;
+use role classes only when a local selector is required.
+
+Visual reference
+~~~~~~~~~~~~~~~~
+
+.. todo::
+
+	Screenshots are useful as examples of the intended visual result, especially
+	for comparing light and dark themes or documenting a project-specific
+	stylesheet. They are not normative and do not replace the custom-property and
+	class contracts above. A small, annotated set of screenshots is preferable to
+	trying to catalogue every renderer state.

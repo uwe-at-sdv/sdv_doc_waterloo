@@ -92,3 +92,25 @@ def test_renderer_writes_contract_traits_as_csv() -> None:
 	rendered = render_authoring_document(load_authoring_document(data))
 	assert "\ttraits:\n\t\tabstract, final\n" in rendered
 	make_docitem_tree(tracer(), rendered)
+
+
+def test_renderer_writes_keyed_table_blocks_in_declared_column_order() -> None:
+	"""Authoring tables render as Waterloo table blocks without exposing JSON keys."""
+	data = _load_data("valid_module.json")
+	data["doc"]["Description"] = [{"table": {"groups": [{
+		"title": ["Result values"],
+		"columns": [{"key": "code", "header": "Code"}, {"key": "meaning", "header": "Meaning"}],
+		"rows": [{"cells": {"meaning": "success", "code": "0"}}],
+	}]}}]
+	rendered = render_authoring_document(load_authoring_document(data))
+	assert (
+		"\t|begin_table|\n"
+		"\t|title|\n"
+		"\tResult values\n"
+		"\t|columns|\n"
+		"\tCode |tab| Meaning\n"
+		"\t|rows|\n"
+		"\t0 |tab| success\n"
+		"\t|end_table|\n"
+	) in rendered
+	make_docitem_tree(tracer(), rendered)

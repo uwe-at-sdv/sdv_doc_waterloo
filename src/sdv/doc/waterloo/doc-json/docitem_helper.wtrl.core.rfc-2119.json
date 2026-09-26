@@ -1,12 +1,12 @@
 {
-    "$schema": "https://sci-d-vis.com/schema/wtrl-json-0.1.0.schema.json",
-    "$id": "urn:waterlint:wtrl-json:0.24.1:core:rfc-2119:fe8b5f181a3539c5138e9fb808b2f36da231c230e1a9b5415dadaeba78bb4095",
+    "$schema": "https://sci-d-vis.com/schema/wtrl-json-0.3.0.schema.json",
+    "$id": "urn:waterlint:wtrl-json:0.24.2:core:rfc-2119:fe8b5f181a3539c5138e9fb808b2f36da231c230e1a9b5415dadaeba78bb4095",
     "__WTRL_VERSION__": {
-        "waterloo": "0.24.1",
-        "schema": "0.1.0"
+        "waterloo": "0.24.2",
+        "schema": "0.3.0"
     },
     "__WTRL_META__": {
-        "generated_at": "2026-09-19T11:05:23+02:00",
+        "generated_at": "2026-09-26T20:12:19+02:00",
         "generator": "waterlint",
         "scope": "core",
         "flavour": "rfc-2119"
@@ -174,11 +174,17 @@
             "doc_lines": [
                 "Supported profile labels for the helper layer."
             ],
+            "doc_blocks": [
+                "Supported profile labels for the helper layer."
+            ],
             "doc_lines_kind": "type"
         },
         "sdv.doc.waterloo.docitem_helper.DocstringSubtree": {
             "doc": {},
             "doc_lines": [
+                "Recursive docstring tree node type."
+            ],
+            "doc_blocks": [
                 "Recursive docstring tree node type."
             ],
             "doc_lines_kind": "type"
@@ -188,6 +194,9 @@
             "doc_lines": [
                 "A full docstring tree represented as a list of subtree values."
             ],
+            "doc_blocks": [
+                "A full docstring tree represented as a list of subtree values."
+            ],
             "doc_lines_kind": "type"
         },
         "sdv.doc.waterloo.docitem_helper.AnnotatableObject": {
@@ -195,11 +204,17 @@
             "doc_lines": [
                 "Objects that can be annotated by the helper layer."
             ],
+            "doc_blocks": [
+                "Objects that can be annotated by the helper layer."
+            ],
             "doc_lines_kind": "type"
         },
         "sdv.doc.waterloo.docitem_helper.RuleId": {
             "doc": {},
             "doc_lines": [
+                "Rule identifier type alias."
+            ],
+            "doc_blocks": [
                 "Rule identifier type alias."
             ],
             "annotation": "str",
@@ -210,11 +225,17 @@
             "doc_lines": [
                 "Tracer origin labels."
             ],
+            "doc_blocks": [
+                "Tracer origin labels."
+            ],
             "doc_lines_kind": "type"
         },
         "sdv.doc.waterloo.docitem_helper.Details": {
             "doc": {},
             "doc_lines": [
+                "Tracer details payload."
+            ],
+            "doc_blocks": [
                 "Tracer details payload."
             ],
             "doc_lines_kind": "type"
@@ -224,6 +245,9 @@
             "doc_lines": [
                 "A set of scope values."
             ],
+            "doc_blocks": [
+                "A set of scope values."
+            ],
             "doc_lines_kind": "type"
         },
         "sdv.doc.waterloo.docitem_helper.Documentable": {
@@ -231,11 +255,17 @@
             "doc_lines": [
                 "Objects that can be traversed by the helper functions."
             ],
+            "doc_blocks": [
+                "Objects that can be traversed by the helper functions."
+            ],
             "doc_lines_kind": "type"
         },
         "sdv.doc.waterloo.docitem_helper.AstDocNode": {
             "doc": {},
             "doc_lines": [
+                "An AST node type relevant for docstring extraction."
+            ],
+            "doc_blocks": [
                 "An AST node type relevant for docstring extraction."
             ],
             "annotation": "ast.ClassDef | ast.FunctionDef | ast.AsyncFunctionDef",
@@ -246,11 +276,17 @@
             "doc_lines": [
                 "Infixes for building anchors, like \"mod\" in \"wtrl-mod-4:spam-4:eggs\"."
             ],
+            "doc_blocks": [
+                "Infixes for building anchors, like \"mod\" in \"wtrl-mod-4:spam-4:eggs\"."
+            ],
             "doc_lines_kind": "type"
         },
         "sdv.doc.waterloo.docitem_helper.SOURCE_DOCSTRING_CACHE": {
             "doc": {},
             "doc_lines": [
+                "A cache for storing source docstrings of objects to avoid redundant retrievals."
+            ],
+            "doc_blocks": [
                 "A cache for storing source docstrings of objects to avoid redundant retrievals."
             ],
             "annotation": "Dict[int, str]",
@@ -262,12 +298,19 @@
                 "A cache for storing resolved docstring text by object identity.",
                 "This cache is intentionally public so callers may inspect, clear, or replace it during a process lifetime."
             ],
+            "doc_blocks": [
+                "A cache for storing resolved docstring text by object identity.",
+                "This cache is intentionally public so callers may inspect, clear, or replace it during a process lifetime."
+            ],
             "annotation": "Dict[int, str]",
             "doc_lines_kind": "variable"
         },
         "sdv.doc.waterloo.docitem_helper.RE_RULE_ID": {
             "doc": {},
             "doc_lines": [
+                "Regular expression for rule IDs. Undocumented: RE_RULE_ID_COMPILED, the precompiled version for performance."
+            ],
+            "doc_blocks": [
                 "Regular expression for rule IDs. Undocumented: RE_RULE_ID_COMPILED, the precompiled version for performance."
             ],
             "doc_lines_kind": "constant"
@@ -277,11 +320,17 @@
             "doc_lines": [
                 "Regular expression for identifiers. Undocumented: RE_IDENTIFIER_COMPILED, the precompiled version for performance."
             ],
+            "doc_blocks": [
+                "Regular expression for identifiers. Undocumented: RE_IDENTIFIER_COMPILED, the precompiled version for performance."
+            ],
             "doc_lines_kind": "constant"
         },
         "sdv.doc.waterloo.docitem_helper.RE_QUALIFIED_IDENTIFIER": {
             "doc": {},
             "doc_lines": [
+                "Regular expression for qualified identifiers. Undocumented: RE_QUALIFIED_IDENTIFIER_COMPILED, the precompiled version for performance."
+            ],
+            "doc_blocks": [
                 "Regular expression for qualified identifiers. Undocumented: RE_QUALIFIED_IDENTIFIER_COMPILED, the precompiled version for performance."
             ],
             "doc_lines_kind": "constant"
@@ -291,11 +340,17 @@
             "doc_lines": [
                 "Regular expression for comma-separated identifiers. Undocumented: RE_CSV_IDENTIFIERS_COMPILED, the precompiled version for performance."
             ],
+            "doc_blocks": [
+                "Regular expression for comma-separated identifiers. Undocumented: RE_CSV_IDENTIFIERS_COMPILED, the precompiled version for performance."
+            ],
             "doc_lines_kind": "constant"
         },
         "sdv.doc.waterloo.docitem_helper.KEYWORDS_OF_NORMATIVITY": {
             "doc": {},
             "doc_lines": [
+                "Canonical Waterloo tokens that make a statement normative."
+            ],
+            "doc_blocks": [
                 "Canonical Waterloo tokens that make a statement normative."
             ],
             "doc_lines_kind": "constant"
@@ -305,6 +360,9 @@
             "doc_lines": [
                 "Regular expression for Waterloo markup roles in backtick markup."
             ],
+            "doc_blocks": [
+                "Regular expression for Waterloo markup roles in backtick markup."
+            ],
             "doc_lines_kind": "constant"
         },
         "sdv.doc.waterloo.docitem_helper.RE_WTRL_MARKUP_BACKTICK": {
@@ -312,11 +370,18 @@
             "doc_lines": [
                 "Regular expression for matching Waterloo backtick markup with roles. Undocumented: RE_WTRL_MARKUP_BACKTICK_COMPILED, the precompiled version for performance."
             ],
+            "doc_blocks": [
+                "Regular expression for matching Waterloo backtick markup with roles. Undocumented: RE_WTRL_MARKUP_BACKTICK_COMPILED, the precompiled version for performance."
+            ],
             "doc_lines_kind": "constant"
         },
         "sdv.doc.waterloo.docitem_helper.RE_WTRL_ANGLE_HTTPS_REF": {
             "doc": {},
             "doc_lines": [
+                "Regular expression for matching Waterloo angle bracket HTTPS references. Undocumented: RE_WTRL_ANGLE_HTTPS_REF_COMPILED, the precompiled version for performance.",
+                "References consist of two parts: clear text and <link>, optionally separated by whitespace."
+            ],
+            "doc_blocks": [
                 "Regular expression for matching Waterloo angle bracket HTTPS references. Undocumented: RE_WTRL_ANGLE_HTTPS_REF_COMPILED, the precompiled version for performance.",
                 "References consist of two parts: clear text and <link>, optionally separated by whitespace."
             ],
@@ -328,6 +393,10 @@
                 "Regular expression for matching Waterloo angle bracket wtrl references. Undocumented: RE_WTRL_ANGLE_WTRL_REF_COMPILED, the precompiled version for performance.",
                 "References consist of two parts: clear text and <link>, optionally separated by whitespace."
             ],
+            "doc_blocks": [
+                "Regular expression for matching Waterloo angle bracket wtrl references. Undocumented: RE_WTRL_ANGLE_WTRL_REF_COMPILED, the precompiled version for performance.",
+                "References consist of two parts: clear text and <link>, optionally separated by whitespace."
+            ],
             "doc_lines_kind": "constant"
         },
         "sdv.doc.waterloo.docitem_helper.RE_WTRL_JSON_SCHEMA_NAME": {
@@ -335,11 +404,17 @@
             "doc_lines": [
                 "Regular expression for matching Waterloo JSON Schema filenames. Undocumented: RE_WTRL_JSON_SCHEMA_NAME_COMPILED, the precompiled version for performance."
             ],
+            "doc_blocks": [
+                "Regular expression for matching Waterloo JSON Schema filenames. Undocumented: RE_WTRL_JSON_SCHEMA_NAME_COMPILED, the precompiled version for performance."
+            ],
             "doc_lines_kind": "constant"
         },
         "sdv.doc.waterloo.docitem_helper.RULE_ID_WHITELIST": {
             "doc": {},
             "doc_lines": [
+                "Whitelist reasons for legacy rule identifiers used by the helper layer."
+            ],
+            "doc_blocks": [
                 "Whitelist reasons for legacy rule identifiers used by the helper layer."
             ],
             "annotation": "Final[Dict[str, WhitelistReason]]",
@@ -350,12 +425,18 @@
             "doc_lines": [
                 "Canonical subsection ordering for section snippets and expected snippets."
             ],
+            "doc_blocks": [
+                "Canonical subsection ordering for section snippets and expected snippets."
+            ],
             "annotation": "Final[Dict[str, None | Sequence[str]]]",
             "doc_lines_kind": "constant"
         },
         "sdv.doc.waterloo.docitem_helper.CANONICAL_ORDER_OF_PROFILES": {
             "doc": {},
             "doc_lines": [
+                "Canonical profile ordering for CLI help and documentation."
+            ],
+            "doc_blocks": [
                 "Canonical profile ordering for CLI help and documentation."
             ],
             "annotation": "Final[list[Profile_t]]",
@@ -366,11 +447,17 @@
             "doc_lines": [
                 "Trait tag mapping for trait labels."
             ],
+            "doc_blocks": [
+                "Trait tag mapping for trait labels."
+            ],
             "doc_lines_kind": "constant"
         },
         "sdv.doc.waterloo.docitem_helper.SCOPE_TAG_MAP": {
             "doc": {},
             "doc_lines": [
+                "Scope tag mapping for visibility selection."
+            ],
+            "doc_blocks": [
                 "Scope tag mapping for visibility selection."
             ],
             "doc_lines_kind": "constant"
@@ -380,11 +467,17 @@
             "doc_lines": [
                 "Flavour tag mapping for normativity keyword rendering."
             ],
+            "doc_blocks": [
+                "Flavour tag mapping for normativity keyword rendering."
+            ],
             "doc_lines_kind": "constant"
         },
         "sdv.doc.waterloo.docitem_helper.FORMAT_TAG_MAP": {
             "doc": {},
             "doc_lines": [
+                "Output format tag mapping for string-related output."
+            ],
+            "doc_blocks": [
                 "Output format tag mapping for string-related output."
             ],
             "doc_lines_kind": "constant"
@@ -394,11 +487,20 @@
             "doc_lines": [
                 "Status tag mapping for Preamble.status."
             ],
+            "doc_blocks": [
+                "Status tag mapping for Preamble.status."
+            ],
             "doc_lines_kind": "constant"
         },
         "sdv.doc.waterloo.docitem_helper.SECTION_PROPERTIES": {
             "doc": {},
             "doc_lines": [
+                "MUST be a mapping from section and subsection labels to their properties relevant for explanation and validation,",
+                "for example body category, normativity, and profile applicability.",
+                "Informative: This is a carefully distilled machine-readable representation of the relevant rules",
+                "from the documentation standard, but the documentation remains the Single Source of Truth for the standard."
+            ],
+            "doc_blocks": [
                 "MUST be a mapping from section and subsection labels to their properties relevant for explanation and validation,",
                 "for example body category, normativity, and profile applicability.",
                 "Informative: This is a carefully distilled machine-readable representation of the relevant rules",
@@ -626,6 +728,9 @@
             "doc_lines": [
                 "Selects the public API."
             ],
+            "doc_blocks": [
+                "Selects the public API."
+            ],
             "doc_lines_kind": "constant"
         },
         "sdv.doc.waterloo.docitem_types.Scope.EXTENSION": {
@@ -633,11 +738,17 @@
             "doc_lines": [
                 "Selects the API for developers of plugin and extensions."
             ],
+            "doc_blocks": [
+                "Selects the API for developers of plugin and extensions."
+            ],
             "doc_lines_kind": "constant"
         },
         "sdv.doc.waterloo.docitem_types.Scope.CORE": {
             "doc": {},
             "doc_lines": [
+                "Selects the API for core developers."
+            ],
+            "doc_blocks": [
                 "Selects the API for core developers."
             ],
             "doc_lines_kind": "constant"
@@ -714,6 +825,9 @@
             "doc_lines": [
                 "Example: | + Must + |"
             ],
+            "doc_blocks": [
+                "Example: | + Must + |"
+            ],
             "doc_lines_kind": "constant"
         },
         "sdv.doc.waterloo.docitem_types.Flavour.RFC_2119": {
@@ -721,11 +835,17 @@
             "doc_lines": [
                 "Example: |lit|`MUST`"
             ],
+            "doc_blocks": [
+                "Example: |lit|`MUST`"
+            ],
             "doc_lines_kind": "constant"
         },
         "sdv.doc.waterloo.docitem_types.Flavour.MARKDOWN": {
             "doc": {},
             "doc_lines": [
+                "Example: |lit|`**MUST**`"
+            ],
+            "doc_blocks": [
                 "Example: |lit|`**MUST**`"
             ],
             "doc_lines_kind": "constant"
@@ -790,11 +910,17 @@
             "doc_lines": [
                 "Javascript Object Notation"
             ],
+            "doc_blocks": [
+                "Javascript Object Notation"
+            ],
             "doc_lines_kind": "constant"
         },
         "sdv.doc.waterloo.docitem_types.Format.MD": {
             "doc": {},
             "doc_lines": [
+                "Markdown."
+            ],
+            "doc_blocks": [
                 "Markdown."
             ],
             "doc_lines_kind": "constant"
@@ -856,11 +982,17 @@
             "doc_lines": [
                 "See rule |ref|`STA-004 <section_function_pramble>`."
             ],
+            "doc_blocks": [
+                "See rule |ref|`STA-004 <section_function_pramble>`."
+            ],
             "doc_lines_kind": "constant"
         },
         "sdv.doc.waterloo.docitem_types.Status.STABLE": {
             "doc": {},
             "doc_lines": [
+                "See rule |ref|`STA-004 <section_function_pramble>`."
+            ],
+            "doc_blocks": [
                 "See rule |ref|`STA-004 <section_function_pramble>`."
             ],
             "doc_lines_kind": "constant"
@@ -870,6 +1002,9 @@
             "doc_lines": [
                 "See rule |ref|`STA-004 <section_function_pramble>`."
             ],
+            "doc_blocks": [
+                "See rule |ref|`STA-004 <section_function_pramble>`."
+            ],
             "doc_lines_kind": "constant"
         },
         "sdv.doc.waterloo.docitem_types.Status.DEPRECATED": {
@@ -877,11 +1012,17 @@
             "doc_lines": [
                 "See rule |ref|`STA-004 <section_function_pramble>`."
             ],
+            "doc_blocks": [
+                "See rule |ref|`STA-004 <section_function_pramble>`."
+            ],
             "doc_lines_kind": "constant"
         },
         "sdv.doc.waterloo.docitem_types.Status.DRAFT": {
             "doc": {},
             "doc_lines": [
+                "See rule |ref|`STA-004 <section_function_pramble>`."
+            ],
+            "doc_blocks": [
                 "See rule |ref|`STA-004 <section_function_pramble>`."
             ],
             "doc_lines_kind": "constant"
@@ -958,11 +1099,17 @@
             "doc_lines": [
                 "The class is abstract, i.e. it cannot be instantiated directly and is not a complete specification of the concept."
             ],
+            "doc_blocks": [
+                "The class is abstract, i.e. it cannot be instantiated directly and is not a complete specification of the concept."
+            ],
             "doc_lines_kind": "constant"
         },
         "sdv.doc.waterloo.docitem_types.Trait.FINAL": {
             "doc": {},
             "doc_lines": [
+                "The class is final, i.e. it cannot be subclassed and is a complete specification of the concept."
+            ],
+            "doc_blocks": [
                 "The class is final, i.e. it cannot be subclassed and is a complete specification of the concept."
             ],
             "doc_lines_kind": "constant"
@@ -1133,6 +1280,9 @@
         "sdv.doc.waterloo.docitem_tracer.tracer.Context": {
             "doc": {},
             "doc_lines": [
+                "A list of strings built per context manager during parsing and validation. Entries can be module, class or function names, or labels."
+            ],
+            "doc_blocks": [
                 "A list of strings built per context manager during parsing and validation. Entries can be module, class or function names, or labels."
             ],
             "annotation": "List[str]",
@@ -1418,11 +1568,17 @@
             "doc_lines": [
                 "No explicit reason was recorded."
             ],
+            "doc_blocks": [
+                "No explicit reason was recorded."
+            ],
             "doc_lines_kind": "constant"
         },
         "sdv.doc.waterloo.docitem_helper.WhitelistReason.MAY_EXIST_RULE": {
             "doc": {},
             "doc_lines": [
+                "The rule may exist in the corpus."
+            ],
+            "doc_blocks": [
                 "The rule may exist in the corpus."
             ],
             "doc_lines_kind": "constant"
@@ -1432,11 +1588,17 @@
             "doc_lines": [
                 "The rule is a structural rule."
             ],
+            "doc_blocks": [
+                "The rule is a structural rule."
+            ],
             "doc_lines_kind": "constant"
         },
         "sdv.doc.waterloo.docitem_helper.WhitelistReason.SEMANTIC_RULE": {
             "doc": {},
             "doc_lines": [
+                "The rule is a semantic rule."
+            ],
+            "doc_blocks": [
                 "The rule is a semantic rule."
             ],
             "doc_lines_kind": "constant"
@@ -1446,11 +1608,17 @@
             "doc_lines": [
                 "The rule is unrelated to the current module."
             ],
+            "doc_blocks": [
+                "The rule is unrelated to the current module."
+            ],
             "doc_lines_kind": "constant"
         },
         "sdv.doc.waterloo.docitem_helper.WhitelistReason.ANTICIPATED_RULE": {
             "doc": {},
             "doc_lines": [
+                "The rule is expected to appear later."
+            ],
+            "doc_blocks": [
                 "The rule is expected to appear later."
             ],
             "doc_lines_kind": "constant"
@@ -1460,11 +1628,17 @@
             "doc_lines": [
                 "The rule acts as a fallback."
             ],
+            "doc_blocks": [
+                "The rule acts as a fallback."
+            ],
             "doc_lines_kind": "constant"
         },
         "sdv.doc.waterloo.docitem_helper.WhitelistReason.RELAY_RULE": {
             "doc": {},
             "doc_lines": [
+                "The rule is relayed to another rule."
+            ],
+            "doc_blocks": [
                 "The rule is relayed to another rule."
             ],
             "doc_lines_kind": "constant"
@@ -1474,11 +1648,17 @@
             "doc_lines": [
                 "The rule is a placeholder for a bad implementation case."
             ],
+            "doc_blocks": [
+                "The rule is a placeholder for a bad implementation case."
+            ],
             "doc_lines_kind": "constant"
         },
         "sdv.doc.waterloo.docitem_helper.WhitelistReason.EXISTS_AS_COMMENT_RULE": {
             "doc": {},
             "doc_lines": [
+                "The rule exists only as a comment-level trace."
+            ],
+            "doc_blocks": [
                 "The rule exists only as a comment-level trace."
             ],
             "doc_lines_kind": "constant"
@@ -2727,12 +2907,18 @@
             "doc_lines": [
                 "Objects already processed in the current run, keyed by |func|`id`."
             ],
+            "doc_blocks": [
+                "Objects already processed in the current run, keyed by |func|`id`."
+            ],
             "annotation": "dict[int, Any]",
             "doc_lines_kind": "type"
         },
         "sdv.doc.waterloo.docitem_helper.DocSession.Validated": {
             "doc": {},
             "doc_lines": [
+                "Objects successfully validated in the current run, keyed by |func|`id`."
+            ],
+            "doc_blocks": [
                 "Objects successfully validated in the current run, keyed by |func|`id`."
             ],
             "annotation": "dict[int, Any]",

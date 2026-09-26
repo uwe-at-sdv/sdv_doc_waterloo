@@ -136,3 +136,43 @@ sections :wtrl_label:`{Variable|Constant|Type}_overview`}?
 	for variables, constants, and types. Since the normative documentation already
 	resides there, introducing additional overview sections would separate closely
 	related information without providing the benefits described in RFR-0002.
+
+.. _rfr_0004:
+
+.. rubric:: [RFR-0004] -- On section :wtrl_label:`Raises`
+
+Why was the content of a :wtrl_label:`Raises.<Exception>` subsection originally
+restricted to a flat sequence of text lines, similarly to
+:wtrl_label:`Contract.general`, and why are Waterloo table blocks now permitted?
+
+:wtrl_label:`Status`:
+	resolved
+
+:wtrl_label:`Created`:
+	2026-09-26
+
+:wtrl_label:`Related rules`:
+	RAI-005, RAI-006, TBL-001
+
+:wtrl_label:`Rationale`:
+	The label of a :wtrl_label:`Raises.<Exception>` entry denotes a resolvable
+	exception class. A callable may raise one exception class for several distinct
+	reasons. For example, :wtrl_class:`RuntimeError` can cover many failure modes
+	when the implementation does not expose more specific derived exception
+	classes.
+
+	Waterloo therefore encourages authors to state the individual circumstances
+	under which an exception may be raised. The original deliberately flat
+	representation made these circumstances visible as separate logical lines and
+	discouraged presentation-oriented structures that can obscure the exceptional
+	control-flow contract.
+
+:wtrl_label:`Consequences`:
+	The original restriction proved unnecessarily strong. A table can make many
+	related failure modes, such as error codes carried by one exception class,
+	more compact and easier to scan without weakening the contract. Consequently,
+	RAI-005 permits Waterloo table blocks as defined in TBL-001.
+
+	Nested subsections and arbitrary nested itemisation remain disallowed. Authors
+	must use text lines and, where useful, table rows to express the circumstances
+	required by RAI-006 clearly and completely.

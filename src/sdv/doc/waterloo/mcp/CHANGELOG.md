@@ -4,6 +4,7 @@ Format:
 
 - VERSION [YYYY-MM-DD]: Summary.
 
+- 0.7.4 [2026-09-11]: Update for prompt "draft_docstring": LLM, call `waterlint gen-showcase-authoring-json` for authoring.
 - 0.7.3 [2026-09-11]: Packaging: Dependency of module mcp limited to < 2, after compatibility bug.
 - 0.7.2 [2026-07-23]: Prompt for enhancing Sphinx compatibility (avoid non-waterloo pipe expressions)
 - 0.7.1 [2026-07-10]: Bugfixing session. Inside a container we need to determine what "local host" means, for bearer-token administration.

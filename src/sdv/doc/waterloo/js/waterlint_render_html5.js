@@ -564,13 +564,23 @@ function isFreeformPath(path) {
 			section === "Public_types" ||
 			section === "Public_variables" ||
 			section === "Public_constants" ||
-			section === "Parameters"
+			section === "Factory" ||
+			section === "Parameters" ||
+			section === "Raises"
 		)
 	) {
 		return true;
 	}
 
 	return false;
+}
+
+// Factory and Raises entries are normative statement sequences. Their text
+// keeps the established list rendering, while tables remain separate blocks.
+function isStatementListPath(path) {
+	if (!Array.isArray(path) || path.length < 2) return false;
+	const section = String(path[0]);
+	return section === "Factory" || section === "Raises";
 }
 
 // Render a Waterloo freeform text block.
@@ -674,6 +684,102 @@ function renderFreeformText(container, txt) {
 		i += 1;
 	}
 	flushParagraph(paragraphParts);
+}
+
+function renderFreeformTextLines(container, lines) {
+	renderFreeformText(container, lines.join("\n"));
+}
+
+function renderStatementList(container, lines) {
+	const elemList = document.createElement("ul");
+	elemList.className = "wtrl-list";
+
+	for (const raw of lines) {
+		const text = String(raw).trim();
+		if (!text) continue;
+		const elemItem = document.createElement("li");
+		appendInlineTokens(elemItem, text);
+		elemList.appendChild(elemItem);
+	}
+
+	if (elemList.childElementCount > 0) container.appendChild(elemList);
+}
+
+function isTableBlock(value) {
+	if (!value || typeof value !== "object" || Array.isArray(value)) return false;
+	const table = value.table;
+	return Boolean(table && typeof table === "object" && !Array.isArray(table) && Array.isArray(table.groups));
+}
+
+function renderTableBlock(container, block) {
+	const tableNode = block.table;
+	const groups = Array.isArray(tableNode.groups) ? tableNode.groups : [];
+	const elemTable = document.createElement("table");
+	elemTable.className = "wtrl-table";
+
+	for (const group of groups) {
+		if (!group || typeof group !== "object" || Array.isArray(group)) continue;
+		const header = Array.isArray(group.header) ? group.header : [];
+		const rows = Array.isArray(group.rows) ? group.rows : [];
+		const elemBody = document.createElement("tbody");
+		const title = Array.isArray(group.title) ? group.title : null;
+
+		if (title !== null) {
+			const elemTitleRow = document.createElement("tr");
+			elemTitleRow.className = "wtrl-table-group-title";
+			const elemTitleCell = document.createElement("th");
+			elemTitleCell.scope = "colgroup";
+			elemTitleCell.colSpan = Math.max(1, header.length);
+			appendInlineTokens(elemTitleCell, title.map(item => String(item)).join(" "));
+			elemTitleRow.appendChild(elemTitleCell);
+			elemBody.appendChild(elemTitleRow);
+		}
+
+		const elemHeaderRow = document.createElement("tr");
+		elemHeaderRow.className = "wtrl-table-header";
+		for (const cell of header) {
+			const elemHeaderCell = document.createElement("th");
+			elemHeaderCell.scope = "col";
+			appendInlineTokens(elemHeaderCell, String(cell));
+			elemHeaderRow.appendChild(elemHeaderCell);
+		}
+		elemBody.appendChild(elemHeaderRow);
+
+		for (const row of rows) {
+			if (!Array.isArray(row)) continue;
+			const elemRow = document.createElement("tr");
+			elemRow.className = "wtrl-table-row";
+			for (const cell of row) {
+				const elemCell = document.createElement("td");
+				appendInlineTokens(elemCell, String(cell));
+				elemRow.appendChild(elemCell);
+			}
+			elemBody.appendChild(elemRow);
+		}
+		elemTable.appendChild(elemBody);
+	}
+	container.appendChild(elemTable);
+}
+
+function renderContentBlocks(container, blocks, renderTextLines = renderFreeformTextLines) {
+	let textLines = [];
+	function flushTextLines() {
+		if (textLines.length === 0) return;
+		renderTextLines(container, textLines);
+		textLines = [];
+	}
+
+	for (const block of blocks) {
+		if (typeof block === "string") {
+			textLines.push(block);
+			continue;
+		}
+		if (isTableBlock(block)) {
+			flushTextLines();
+			renderTableBlock(container, block);
+		}
+	}
+	flushTextLines();
 }
 
 function isNormativeSectionsPath(path) {
@@ -1177,7 +1283,11 @@ function renderValue(value, container, depth, path, currentQid) {
 			return;
 		}
 		if (isFreeformPath(pth)) {
-			renderFreeformText(container, value);
+			if (isStatementListPath(pth)) {
+				renderStatementList(container, [value]);
+			} else {
+				renderFreeformText(container, value);
+			}
 			return;
 		}
 		const elemTextParagraph = document.createElement("p");
@@ -1206,8 +1316,11 @@ function renderValue(value, container, depth, path, currentQid) {
 			renderCompactStyledValues(container, value, leafRoleCls);
 			return;
 		}
-		if (isFreeformPath(pth) && value.every(item => typeof item === "string")) {
-			renderFreeformText(container, value.join("\n"));
+		if (isFreeformPath(pth) && value.every(item => typeof item === "string" || isTableBlock(item))) {
+			const renderTextLines = isStatementListPath(pth)
+				? renderStatementList
+				: renderFreeformTextLines;
+			renderContentBlocks(container, value, renderTextLines);
 			return;
 		}
 		const elemGenericList = document.createElement("ul");
@@ -1297,7 +1410,7 @@ function renderValue(value, container, depth, path, currentQid) {
 				}
 				elemDefBlock.appendChild(elemDefHead);
 
-				renderFreeformText(elemDefBlock, vv.text.join("\n"));
+				renderContentBlocks(elemDefBlock, vv.text);
 				container.appendChild(elemDefBlock);
 				continue;
 			}
@@ -1480,7 +1593,8 @@ function inferDocLinesKind(targetQid) {
 
 function renderDocLines(node, targetQid, elemHost) {
 	const lines = Array.isArray(node.doc_lines) ? node.doc_lines : [];
-	if (lines.length === 0) return false;
+	const blocks = Array.isArray(node.doc_blocks) ? node.doc_blocks : null;
+	if (lines.length === 0 && blocks === null) return false;
 
 	const kind = String((node && node.doc_lines_kind) || inferDocLinesKind(targetQid) || "");
 	const annotation = (node && typeof node.annotation === "string" && node.annotation.trim())
@@ -1518,9 +1632,13 @@ function renderDocLines(node, targetQid, elemHost) {
 	}
 	elemSection.appendChild(elemSectionHead);
 
-	// Render doc_lines as true freeform text so explicit list markers
-	// (*, +, -, #) are interpreted the same way as in other freeform sections.
-	renderFreeformText(elemSection, lines.map(line => String(line)).join("\n"));
+	// Prefer structured public-member content. Fall back to the flattened legacy
+	// line array so existing JSON artifacts continue to render unchanged.
+	if (blocks !== null) {
+		renderContentBlocks(elemSection, blocks);
+	} else {
+		renderFreeformText(elemSection, lines.map(line => String(line)).join("\n"));
+	}
 	elemHost.appendChild(elemSection);
 	return true;
 }

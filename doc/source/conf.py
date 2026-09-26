@@ -50,9 +50,11 @@ release = '0'
 # ones.
 extensions = [
 	"sphinx_sitemap",
+	'sphinx.ext.todo',
 #	"sdv.doc.waterloo.docitem_sphinx",
 	"sphinxcontrib.waterloo_docstrings",
 	]
+todo_include_todos = True
 
 # For sitemap:
 html_baseurl = 'https://uwe-at-sdv.github.io/sdv_doc_waterloo/'

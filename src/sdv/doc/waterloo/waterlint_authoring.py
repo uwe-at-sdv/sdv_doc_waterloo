@@ -12,7 +12,8 @@ Contract:
 		|Must| provide the typed in-memory representation and source-independent semantic checks for Waterloo Authoring JSON.
 		|Must_not| resolve Python objects, inspect source files, or render physical docstring lines.
 Public_classes:
-	AuthoringParagraph, AuthoringListItem, AuthoringListBlock, AuthoringSection,
+	AuthoringParagraph, AuthoringListItem, AuthoringListBlock, AuthoringTableColumn,
+	AuthoringTableRow, AuthoringTableGroup, AuthoringTableBlock, AuthoringSection,
 	AuthoringDocument, AuthoringSemanticIssue
 Public_functions:
 	load_authoring_document, validate_authoring_document, render_authoring_document
@@ -20,7 +21,7 @@ Public_types:
 	AuthoringScalar_t:
 		The scalar string value used by Authoring JSON fields.
 	AuthoringTextBlock_t:
-		A paragraph or nested list block in free-form Authoring JSON content.
+		A paragraph, nested list block, or table block in free-form Authoring JSON content.
 	AuthoringSectionValue_t:
 		The normalized in-memory value of one Authoring JSON section.
 """
@@ -72,7 +73,38 @@ class AuthoringListBlock:
 	items: tuple[AuthoringListItem, ...]
 
 
-AuthoringTextBlock_t: TypeAlias = AuthoringParagraph | AuthoringListBlock
+@dataclass(frozen=True)
+class AuthoringTableColumn:
+	"""One stable key and display header of an Authoring JSON table column."""
+
+	key: str
+	header: str
+
+
+@dataclass(frozen=True)
+class AuthoringTableRow:
+	"""One keyed Authoring JSON table row."""
+
+	cells: Mapping[str, str]
+
+
+@dataclass(frozen=True)
+class AuthoringTableGroup:
+	"""One optional-title table group with a shared column definition."""
+
+	title: tuple[str, ...] | None
+	columns: tuple[AuthoringTableColumn, ...]
+	rows: tuple[AuthoringTableRow, ...]
+
+
+@dataclass(frozen=True)
+class AuthoringTableBlock:
+	"""One Authoring JSON table block containing one or more groups."""
+
+	groups: tuple[AuthoringTableGroup, ...]
+
+
+AuthoringTextBlock_t: TypeAlias = AuthoringParagraph | AuthoringListBlock | AuthoringTableBlock
 
 
 @dataclass(frozen=True)
@@ -133,6 +165,8 @@ class AuthoringSemanticIssue:
 		"normative-informative-section",
 		"normative-required-section",
 		"normative-keyword-missing-section",
+		"table-duplicate-column-key",
+		"table-row-cells",
 	]
 	path: str
 	message: str
@@ -175,6 +209,39 @@ def _load_list_item(value: object, path: str) -> AuthoringListItem:
 	return AuthoringListItem(text=text, items=items)
 
 
+def _load_table_block(value: object, path: str) -> AuthoringTableBlock:
+	table = _expect_mapping(value, path)
+	groups: list[AuthoringTableGroup] = []
+	for group_index, raw_group in enumerate(_expect_list(table.get("groups"), f"{path}.groups")):
+		group_path = f"{path}.groups[{group_index}]"
+		group = _expect_mapping(raw_group, group_path)
+		title = None
+		if "title" in group:
+			title = tuple(
+				_expect_string(item, f"{group_path}.title[{index}]")
+				for index, item in enumerate(_expect_list(group["title"], f"{group_path}.title"))
+			)
+		columns = tuple(
+			AuthoringTableColumn(
+				key=_expect_string(_expect_mapping(raw_column, f"{group_path}.columns[{index}]").get("key"), f"{group_path}.columns[{index}].key"),
+				header=_expect_string(_expect_mapping(raw_column, f"{group_path}.columns[{index}]").get("header"), f"{group_path}.columns[{index}].header"),
+			)
+			for index, raw_column in enumerate(_expect_list(group.get("columns"), f"{group_path}.columns"))
+		)
+		rows = tuple(
+			AuthoringTableRow({
+				key: _expect_string(cell, f"{group_path}.rows[{row_index}].cells.{key}")
+				for key, cell in _expect_mapping(
+					_expect_mapping(raw_row, f"{group_path}.rows[{row_index}]").get("cells"),
+					f"{group_path}.rows[{row_index}].cells",
+				).items()
+			})
+			for row_index, raw_row in enumerate(_expect_list(group.get("rows"), f"{group_path}.rows"))
+		)
+		groups.append(AuthoringTableGroup(title=title, columns=columns, rows=rows))
+	return AuthoringTableBlock(tuple(groups))
+
+
 def _load_text_blocks(value: object, path: str) -> tuple[AuthoringTextBlock_t, ...]:
 	blocks: list[AuthoringTextBlock_t] = []
 	for index, raw_block in enumerate(_expect_list(value, path)):
@@ -190,7 +257,10 @@ def _load_text_blocks(value: object, path: str) -> tuple[AuthoringTextBlock_t, .
 			)
 			blocks.append(AuthoringListBlock(items))
 			continue
-		raise ValueError(f"Expected paragraph or list block at '{block_path}'.")
+		if "table" in block:
+			blocks.append(_load_table_block(block["table"], f"{block_path}.table"))
+			continue
+		raise ValueError(f"Expected paragraph, list, or table block at '{block_path}'.")
 	return tuple(blocks)
 
 
@@ -333,6 +403,16 @@ def _iter_texts(value: AuthoringSectionValue_t) -> tuple[str, ...]:
 def _iter_block_texts(block: AuthoringTextBlock_t) -> tuple[str, ...]:
 	if isinstance(block, AuthoringParagraph):
 		return (block.text,)
+	if isinstance(block, AuthoringTableBlock):
+		return tuple(
+			text
+			for group in block.groups
+			for text in (
+				*(group.title or ()),
+				*(column.header for column in group.columns),
+				*(cell for row in group.rows for cell in row.cells.values()),
+			)
+		)
 	texts: list[str] = []
 	for item in block.items:
 		texts.extend(_iter_list_item_texts(item))
@@ -348,6 +428,40 @@ def _iter_list_item_texts(item: AuthoringListItem) -> tuple[str, ...]:
 
 def _has_normativity_keyword(value: AuthoringSectionValue_t) -> bool:
 	return any(keyword in text for text in _iter_texts(value) for keyword in KEYWORDS_OF_NORMATIVITY)
+
+
+def _validate_tables(document: AuthoringDocument) -> list[AuthoringSemanticIssue]:
+	issues: list[AuthoringSemanticIssue] = []
+	for section_label, section in document.sections.items():
+		value = section.value
+		block_groups: tuple[tuple[str | None, tuple[AuthoringTextBlock_t, ...]], ...]
+		if isinstance(value, Mapping):
+			block_groups = tuple((key, blocks) for key, blocks in value.items())
+		elif isinstance(value, tuple) and not all(isinstance(item, str) for item in value):
+			block_groups = ((None, cast(tuple[AuthoringTextBlock_t, ...], value)),)
+		else:
+			continue
+		for item_label, blocks in block_groups:
+			path_prefix = f"doc.{section_label}" if item_label is None else f"doc.{section_label}.{item_label}"
+			for block_index, block in enumerate(blocks):
+				if not isinstance(block, AuthoringTableBlock):
+					continue
+				for group_index, group in enumerate(block.groups):
+					group_path = f"{path_prefix}[{block_index}].table.groups[{group_index}]"
+					keys = tuple(column.key for column in group.columns)
+					if len(keys) != len(set(keys)):
+						issues.append(AuthoringSemanticIssue(
+							"table-duplicate-column-key", group_path,
+							"Table column keys must be unique within one group.",
+						))
+					expected = set(keys)
+					for row_index, row in enumerate(group.rows):
+						if set(row.cells) != expected:
+							issues.append(AuthoringSemanticIssue(
+								"table-row-cells", f"{group_path}.rows[{row_index}].cells",
+								"Table row cells must contain exactly the keys declared by its group columns.",
+							))
+	return issues
 
 
 def validate_authoring_document(document: AuthoringDocument) -> list[AuthoringSemanticIssue]:
@@ -455,6 +569,7 @@ def validate_authoring_document(document: AuthoringDocument) -> list[AuthoringSe
 				f"Section '{label}' contains a normativity keyword but is not listed in Preamble.normative_sections.",
 			))
 
+	issues.extend(_validate_tables(document))
 	return issues
 
 
@@ -551,12 +666,40 @@ def _append_text_blocks(
 			_append_logical_text(
 				lines, block.text, indent_unit=indent_unit, indentation=indentation, width=width,
 			)
-		else:
+		elif isinstance(block, AuthoringListBlock):
 			for item in block.items:
 				_append_list_item(
 					lines, item, depth=0, indent_unit=indent_unit,
 					indentation=indentation, width=width,
 				)
+		else:
+			_append_table_block(
+				lines, block, indent_unit=indent_unit, indentation=indentation, width=width,
+			)
+
+
+def _append_table_block(
+	lines: list[str],
+	block: AuthoringTableBlock,
+	*,
+	indent_unit: str,
+	indentation: int,
+	width: int,
+) -> None:
+	prefix = indent_unit * indentation
+	lines.append(f"{prefix}|begin_table|")
+	for group_index, group in enumerate(block.groups):
+		if group_index:
+			lines.append(f"{prefix}|")
+		if group.title is not None:
+			lines.append(f"{prefix}|title|")
+			lines.extend(f"{prefix}{title_line}" for title_line in group.title)
+		lines.append(f"{prefix}|columns|")
+		lines.append(f"{prefix}{' |tab| '.join(column.header for column in group.columns)}")
+		lines.append(f"{prefix}|rows|")
+		for row in group.rows:
+			lines.append(f"{prefix}{' |tab| '.join(row.cells[column.key] for column in group.columns)}")
+	lines.append(f"{prefix}|end_table|")
 
 
 def _append_text_map(

@@ -29,6 +29,15 @@ def test_help_is_available() -> None:
 	assert "validate" in res.stdout
 
 
+def test_help_subcommand_matches_top_level_help() -> None:
+	"""The convenient help subcommand exposes the complete command inventory."""
+	top_level = run_waterlint("-h")
+	help_command = run_waterlint("help")
+	assert top_level.returncode == 0, top_level.stderr
+	assert help_command.returncode == 0, help_command.stderr
+	assert help_command.stdout == top_level.stdout
+
+
 def test_version_json_reports_all_schema_categories() -> None:
 	res = run_waterlint("version-json")
 	assert res.returncode == 0, res.stderr

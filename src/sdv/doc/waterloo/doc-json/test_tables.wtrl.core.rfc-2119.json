@@ -1,0 +1,780 @@
+{
+    "$schema": "https://sci-d-vis.com/schema/wtrl-json-0.3.0.schema.json",
+    "$id": "urn:waterlint:wtrl-json:0.24.2:core:rfc-2119:db5bcf82b5971d72fd3f6c0828b7036959f0d109ec70652af9df203e447e72a2",
+    "__WTRL_VERSION__": {
+        "waterloo": "0.24.2",
+        "schema": "0.3.0"
+    },
+    "__WTRL_META__": {
+        "generated_at": "2026-09-26T20:12:22+02:00",
+        "generator": "waterlint",
+        "scope": "core",
+        "flavour": "rfc-2119"
+    },
+    "__WTRL_ROLES__": {
+        "attr": "Attribute name",
+        "cmd": "Shell or CLI command",
+        "class": "Class name",
+        "dfn": "Definition of a term",
+        "file": "File or path",
+        "func": "Function or callable",
+        "key": "Key on the keyboard",
+        "label": "Section/Subsection label",
+        "lit": "Literal text or code",
+        "mod": "Module name",
+        "norm": "Normativity keyword used as metadata",
+        "op": "Operator symbol",
+        "opt": "Command-line option or flag",
+        "pkg": "Package name",
+        "url": "URL",
+        "tag": "Tag or marker",
+        "term": "Domain-specific term",
+        "type": "Type name or annotation",
+        "value": "Concrete value",
+        "var": "Variable name",
+        "var_type": "Variable and type, like 'var:type'"
+    },
+    "__WTRL_SCOPES__": {
+        "public": {
+            "value": 10,
+            "description": ""
+        },
+        "extension": {
+            "value": 20,
+            "description": ""
+        },
+        "core": {
+            "value": 30,
+            "description": ""
+        }
+    },
+    "__WTRL_TOC_MODULES__": {
+        "test_tables": "/__WTRL_OBJECTS__/test_tables"
+    },
+    "__WTRL_TOC_CLASSES__": {
+        "test_tables.X": "/__WTRL_OBJECTS__/test_tables.X"
+    },
+    "__WTRL_TOC_CALLABLES__": {
+        "test_tables.log": "/__WTRL_OBJECTS__/test_tables.log",
+        "test_tables.init_nothrow": "/__WTRL_OBJECTS__/test_tables.init_nothrow",
+        "test_tables.init": "/__WTRL_OBJECTS__/test_tables.init"
+    },
+    "__WTRL_TOC_TYPES__": {
+        "test_tables.RemoteAccess_t": "/__WTRL_OBJECTS__/test_tables.RemoteAccess_t"
+    },
+    "__WTRL_TOC_VARIABLES__": {
+        "test_tables.location": "/__WTRL_OBJECTS__/test_tables.location"
+    },
+    "__WTRL_TOC_CONSTANTS__": {},
+    "__WTRL_OBJECTS__": {
+        "test_tables.RemoteAccess_t": {
+            "doc": {},
+            "doc_lines": [
+                "Symbols which describe access to remote files",
+                "Symbol",
+                "Semantics",
+                "|value|`\"SSH\"`",
+                "Access remote files through ssh, sftp, scp. Requires public key on remote host.",
+                "|value|`\"HTTPS\"`",
+                "Access remote files through https. Requires token from remote host."
+            ],
+            "doc_blocks": [
+                {
+                    "table": {
+                        "groups": [
+                            {
+                                "header": [
+                                    "Symbol",
+                                    "Semantics"
+                                ],
+                                "rows": [
+                                    [
+                                        "|value|`\"SSH\"`",
+                                        "Access remote files through ssh, sftp, scp. Requires public key on remote host."
+                                    ],
+                                    [
+                                        "|value|`\"HTTPS\"`",
+                                        "Access remote files through https. Requires token from remote host."
+                                    ]
+                                ],
+                                "title": [
+                                    "Symbols which describe access to remote files"
+                                ]
+                            }
+                        ]
+                    }
+                }
+            ],
+            "annotation": "Literal['SSH', 'HTTPS']",
+            "doc_lines_kind": "type"
+        },
+        "test_tables.location": {
+            "doc": {},
+            "doc_lines": [
+                "Location for expensive computations",
+                "Symbol",
+                "Semantics",
+                "|value|`LOCAL`",
+                "Do computations on localhost",
+                "|value|`REMOTE`",
+                "Do computations on remote host"
+            ],
+            "doc_blocks": [
+                {
+                    "table": {
+                        "groups": [
+                            {
+                                "header": [
+                                    "Symbol",
+                                    "Semantics"
+                                ],
+                                "rows": [
+                                    [
+                                        "|value|`LOCAL`",
+                                        "Do computations on localhost"
+                                    ],
+                                    [
+                                        "|value|`REMOTE`",
+                                        "Do computations on remote host"
+                                    ]
+                                ],
+                                "title": [
+                                    "Location for expensive computations"
+                                ]
+                            }
+                        ]
+                    }
+                }
+            ],
+            "annotation": "Location",
+            "doc_lines_kind": "variable"
+        },
+        "test_tables": {
+            "doc": {
+                "Preamble": {
+                    "profile": "module",
+                    "normative_sections": [
+                        "Contract",
+                        "Public_classes",
+                        "Public_variables",
+                        "Public_types"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST demonstrate the HTML rendering of tables"
+                    ]
+                },
+                "Description": [
+                    "This module demonstrates the rendering of tables in the Sphinx extension",
+                    "and the pipeline JSON -> HTML5.",
+                    "|",
+                    "Tables can be used in the following sections:",
+                    "* |label|`Description`",
+                    "* |label|`Definitions.<item>`",
+                    "* |label|`Terminology.<item>`",
+                    "* |label|`Notes.<item>`",
+                    "* |label|`Factory.<item>`",
+                    "* |label|`Class_overview.<item>`",
+                    "* |label|`Function_overview.<item>`",
+                    "* |label|`Method_overview.<item>`",
+                    "* |label|`Returns`",
+                    "* |label|`Parameters.<item>`",
+                    "* |label|`Raises.<item>` (allowed although item-like)",
+                    "|",
+                    "They are not allowed in lists of strings:",
+                    "* |label|`Preamble.*`",
+                    "* |label|`Derived_from`",
+                    "|",
+                    "They are not allowed in item-like (sub)sections like:",
+                    "* |label|`Contract.general`",
+                    "* |label|`Contract.constructor`",
+                    "* |label|`Contract.requires`",
+                    "* |label|`Contract.ensures`",
+                    "* |label|`Contract.invariants`"
+                ],
+                "Notes": {
+                    "Application": [
+                        "The following table shows where tables are allowed:",
+                        {
+                            "table": {
+                                "groups": [
+                                    {
+                                        "header": [
+                                            "Sections in canonical order",
+                                            "Allowed / Applicable"
+                                        ],
+                                        "rows": [
+                                            [
+                                                "|label|`Preamble.*`",
+                                                "no"
+                                            ],
+                                            [
+                                                "|label|`Definitions.<item>`",
+                                                "yes"
+                                            ],
+                                            [
+                                                "|label|`Terminology.<item>`",
+                                                "yes"
+                                            ],
+                                            [
+                                                "|label|`Contract.*`",
+                                                "no"
+                                            ],
+                                            [
+                                                "|label|`Description`",
+                                                "yes"
+                                            ],
+                                            [
+                                                "|label|`Derived_from`",
+                                                "no"
+                                            ],
+                                            [
+                                                "|label|`Factory.<item>`",
+                                                "yes"
+                                            ],
+                                            [
+                                                "|label|`Public_classes`",
+                                                "no"
+                                            ],
+                                            [
+                                                "|label|`Class_overview`",
+                                                "yes"
+                                            ],
+                                            [
+                                                "|label|`Public_functions`",
+                                                "no"
+                                            ],
+                                            [
+                                                "|label|`Function_overview`",
+                                                "yes"
+                                            ],
+                                            [
+                                                "|label|`Public_methods`",
+                                                "no"
+                                            ],
+                                            [
+                                                "|label|`Method_overview`",
+                                                "yes"
+                                            ],
+                                            [
+                                                "|label|`Public_types`",
+                                                "yes"
+                                            ],
+                                            [
+                                                "|label|`Public_variables`",
+                                                "yes"
+                                            ],
+                                            [
+                                                "|label|`Public_constants`",
+                                                "yes"
+                                            ],
+                                            [
+                                                "|label|`Parameters.<item>`",
+                                                "yes"
+                                            ],
+                                            [
+                                                "|label|`Returns`",
+                                                "yes"
+                                            ],
+                                            [
+                                                "|label|`Raises.<item>`",
+                                                "yes"
+                                            ],
+                                            [
+                                                "|label|`Notes.<item>`",
+                                                "yes"
+                                            ],
+                                            [
+                                                "|label|`See_also`",
+                                                "no"
+                                            ]
+                                        ]
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                },
+                "Public_classes": [
+                    "X"
+                ],
+                "Class_overview": {
+                    "X": [
+                        "The plugin controller. Plugins are initialized according to the following table:",
+                        {
+                            "table": {
+                                "groups": [
+                                    {
+                                        "header": [
+                                            "Name",
+                                            "Initialization"
+                                        ],
+                                        "rows": [
+                                            [
+                                                "fancy_plugin_a",
+                                                "|value|`LAZY`"
+                                            ],
+                                            [
+                                                "fancy_plugin_b",
+                                                "|value|`LOAD`"
+                                            ]
+                                        ]
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                },
+                "Public_variables": {
+                    "location": [
+                        {
+                            "table": {
+                                "groups": [
+                                    {
+                                        "header": [
+                                            "Symbol",
+                                            "Semantics"
+                                        ],
+                                        "rows": [
+                                            [
+                                                "|value|`LOCAL`",
+                                                "Do computations on localhost"
+                                            ],
+                                            [
+                                                "|value|`REMOTE`",
+                                                "Do computations on remote host"
+                                            ]
+                                        ],
+                                        "title": [
+                                            "Location for expensive computations"
+                                        ]
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                },
+                "Public_types": {
+                    "RemoteAccess_t": [
+                        {
+                            "table": {
+                                "groups": [
+                                    {
+                                        "header": [
+                                            "Symbol",
+                                            "Semantics"
+                                        ],
+                                        "rows": [
+                                            [
+                                                "|value|`\"SSH\"`",
+                                                "Access remote files through ssh, sftp, scp. Requires public key on remote host."
+                                            ],
+                                            [
+                                                "|value|`\"HTTPS\"`",
+                                                "Access remote files through https. Requires token from remote host."
+                                            ]
+                                        ],
+                                        "title": [
+                                            "Symbols which describe access to remote files"
+                                        ]
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            }
+        },
+        "test_tables.log": {
+            "signature": {
+                "text": "log(level: \"Literal['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL']\", msg: 'str') -> 'None'",
+                "parameters": [
+                    {
+                        "name": "level",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "Literal['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL']",
+                        "default": null
+                    },
+                    {
+                        "name": "msg",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "str",
+                        "default": null
+                    }
+                ],
+                "returns": "None"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Raises",
+                        "Returns"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST demonstrate tables in subsection |label|`Parameters.<item>`."
+                    ],
+                    "requires": [
+                        "|var|`msg` MUST NOT be empty"
+                    ],
+                    "ensures": [
+                        "MUST NOT change the state of the module."
+                    ]
+                },
+                "Parameters": {
+                    "level": [
+                        "A string indicating the minimum severeness of messages to be logged.",
+                        {
+                            "table": {
+                                "groups": [
+                                    {
+                                        "header": [
+                                            "Symbol",
+                                            "Semantics"
+                                        ],
+                                        "rows": [
+                                            [
+                                                "|value|`\"DEBUG\"`",
+                                                "Rich debugging output, not recommended in productive environment"
+                                            ],
+                                            [
+                                                "|value|`\"INFO\"`",
+                                                "Normal behaviour"
+                                            ],
+                                            [
+                                                "|value|`\"WARNING\"`",
+                                                "Requires attention but most likely the system remains operational"
+                                            ],
+                                            [
+                                                "|value|`\"ERROR\"`",
+                                                "Administrative action is required"
+                                            ],
+                                            [
+                                                "|value|`\"CRITICAL\"`",
+                                                "System has become unusable"
+                                            ]
+                                        ]
+                                    }
+                                ]
+                            }
+                        }
+                    ],
+                    "msg": [
+                        "The message to be logged"
+                    ]
+                },
+                "Raises": {
+                    "ValueError": [
+                        "MUST raise if |var|`msg` is empty."
+                    ]
+                },
+                "Returns": [
+                    "|None|"
+                ]
+            }
+        },
+        "test_tables.init_nothrow": {
+            "signature": {
+                "text": "init_nothrow() -> 'int'",
+                "parameters": [],
+                "returns": "int"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Raises",
+                        "Returns"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST demonstrate tables in sections |label|`Description` and |label|`Returns`."
+                    ]
+                },
+                "Description": [
+                    "This function initializes the module. Relevant files are",
+                    {
+                        "table": {
+                            "groups": [
+                                {
+                                    "header": [
+                                        "Path",
+                                        "Purpose"
+                                    ],
+                                    "rows": [
+                                        [
+                                            "|file|`/etc/fancy.conf`",
+                                            "Configuration"
+                                        ],
+                                        [
+                                            "|file|`/var/log/fancy.log`",
+                                            "General log"
+                                        ],
+                                        [
+                                            "|file|`/var/log/fancy.auth.log`",
+                                            "Log for authentication problems"
+                                        ]
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                ],
+                "Parameters": {},
+                "Raises": {},
+                "Returns": [
+                    "MUST return one of the following values:",
+                    {
+                        "table": {
+                            "groups": [
+                                {
+                                    "header": [
+                                        "Status",
+                                        "String representation",
+                                        "Semantics"
+                                    ],
+                                    "rows": [
+                                        [
+                                            "0",
+                                            "|value|`ok`",
+                                            "No error"
+                                        ],
+                                        [
+                                            "1",
+                                            "|value|`general_error`",
+                                            "General error"
+                                        ],
+                                        [
+                                            "2",
+                                            "|value|`io_error`",
+                                            "Error accessing file system"
+                                        ],
+                                        [
+                                            "3",
+                                            "|value|`bad_config`",
+                                            "Invalid configuration"
+                                        ]
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        "test_tables.init": {
+            "signature": {
+                "text": "init() -> 'None'",
+                "parameters": [],
+                "returns": "None"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Raises",
+                        "Returns"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST demonstrate tables in sections |label|`Raises`."
+                    ]
+                },
+                "Parameters": {},
+                "Raises": {
+                    "MyException": [
+                        "MUST raise in case of an error in the controller",
+                        "MUST provide an error codes according to the following scheme:",
+                        {
+                            "table": {
+                                "groups": [
+                                    {
+                                        "header": [
+                                            "Value",
+                                            "String representation",
+                                            "Semantics"
+                                        ],
+                                        "rows": [
+                                            [
+                                                "1",
+                                                "|value|`general_error`",
+                                                "General error"
+                                            ],
+                                            [
+                                                "2",
+                                                "|value|`io_error`",
+                                                "Error accessing file system"
+                                            ],
+                                            [
+                                                "3",
+                                                "|value|`bad_config`",
+                                                "Invalid configuration"
+                                            ]
+                                        ]
+                                    }
+                                ]
+                            }
+                        },
+                        "MUST raise if initialization of any of the plugins fails."
+                    ],
+                    "NotImplementedError": [
+                        "MAY raise if implementation in any of the plugins is incomplete.",
+                        "MAY raise if implementation in any of the plugin registry classes is incomplete."
+                    ]
+                },
+                "Returns": [
+                    "|None|"
+                ]
+            }
+        },
+        "test_tables.X": {
+            "signature": {
+                "text": "object.__init__(self, /, *args, **kwargs)",
+                "parameters": [
+                    {
+                        "name": "args",
+                        "kind": "VAR_POSITIONAL",
+                        "annotation": null,
+                        "default": null
+                    },
+                    {
+                        "name": "kwargs",
+                        "kind": "VAR_KEYWORD",
+                        "annotation": null,
+                        "default": null
+                    }
+                ],
+                "returns": null
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "class",
+                    "normative_sections": [
+                        "Contract",
+                        "Factory"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST demonstrate a table with multiple groups"
+                    ],
+                    "constructor": []
+                },
+                "Factory": {
+                    "make_X_minimal": [
+                        "MUST create a minimal instance of |class|`X`."
+                    ],
+                    "make_X_complete": [
+                        "MUST create a complete instance of |class|`X`."
+                    ],
+                    "make_X_by_config": [
+                        "MUST create an instance of |class|`X` based on the configuration passed.",
+                        "MUST accept a single parameter |var_type|`config:Dict[str,Any]`.",
+                        "Parameter |var|`config` is map of key-value pairs:",
+                        {
+                            "table": {
+                                "groups": [
+                                    {
+                                        "header": [
+                                            "Key",
+                                            "Type",
+                                            "Requirements"
+                                        ],
+                                        "rows": [
+                                            [
+                                                "|var|`base_prime`",
+                                                "|type|`int`",
+                                                "Prime used for encryption."
+                                            ]
+                                        ],
+                                        "title": [
+                                            "Required"
+                                        ]
+                                    },
+                                    {
+                                        "header": [
+                                            "Key",
+                                            "Type",
+                                            "Default"
+                                        ],
+                                        "rows": [
+                                            [
+                                                "|var|`path_to_log`",
+                                                "|type|`str`",
+                                                "|file|`/var/log/fancy.log`."
+                                            ]
+                                        ],
+                                        "title": [
+                                            "Optional"
+                                        ]
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                },
+                "Notes": {
+                    "Test": [
+                        "The |label|`Notes` section allows tables. The following is a table",
+                        "with two distinct groups, each have a title row.",
+                        {
+                            "table": {
+                                "groups": [
+                                    {
+                                        "header": [
+                                            "Name",
+                                            "Type"
+                                        ],
+                                        "rows": [
+                                            [
+                                                "in_host",
+                                                "|type|`string`"
+                                            ],
+                                            [
+                                                "in_port",
+                                                "|type|`int`"
+                                            ]
+                                        ],
+                                        "title": [
+                                            "Input Variables"
+                                        ]
+                                    },
+                                    {
+                                        "header": [
+                                            "Name",
+                                            "Type"
+                                        ],
+                                        "rows": [
+                                            [
+                                                "out_length",
+                                                "|type|`int`"
+                                            ],
+                                            [
+                                                "out_payload",
+                                                "|type|`bytes`"
+                                            ]
+                                        ],
+                                        "title": [
+                                            "Output Variables"
+                                        ]
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+    }
+}

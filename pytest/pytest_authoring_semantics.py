@@ -9,7 +9,17 @@ from pathlib import Path
 import pytest
 
 from sdv.doc.waterloo.docitem_helper import get_allowed_sections_for_profile
-from sdv.doc.waterloo.waterlint_authoring import load_authoring_document, validate_authoring_document
+from sdv.doc.waterloo.waterlint_authoring import (
+	AuthoringDocument,
+	AuthoringParagraph,
+	AuthoringSection,
+	AuthoringTableBlock,
+	AuthoringTableColumn,
+	AuthoringTableGroup,
+	AuthoringTableRow,
+	load_authoring_document,
+	validate_authoring_document,
+)
 
 
 FIXTURE_DIR = Path(__file__).parent / "fixtures" / "authoring_json"
@@ -114,3 +124,27 @@ def test_authoring_semantics_checks_redundant_preamble_profile() -> None:
 	assert "preamble-profile-mismatch" in {
 		issue.code for issue in validate_authoring_document(load_authoring_document(data))
 	}
+
+
+def test_authoring_semantics_checks_keyed_table_rows() -> None:
+	"""Table column keys and row cell keys require checks beyond JSON Schema."""
+	base = _load("valid_module.json")
+	table = AuthoringTableBlock((AuthoringTableGroup(
+		title=None,
+		columns=(
+			AuthoringTableColumn("code", "Code"),
+			AuthoringTableColumn("code", "Meaning"),
+		),
+		rows=(AuthoringTableRow({"code": "0", "unexpected": "failure"}),),
+	),))
+	document = AuthoringDocument(
+		qualified_name=base.qualified_name,
+		profile=base.profile,
+		signature=base.signature,
+		sections={
+			**base.sections,
+			"Description": AuthoringSection("Description", (AuthoringParagraph("Overview."), table)),
+		},
+	)
+	codes = {issue.code for issue in validate_authoring_document(document)}
+	assert codes >= {"table-duplicate-column-key", "table-row-cells"}

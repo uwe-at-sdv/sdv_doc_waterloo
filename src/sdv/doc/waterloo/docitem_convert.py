@@ -39,8 +39,10 @@ from sdv.doc.waterloo.docitem_tracer import (
 from sdv.doc.waterloo.docitem_helper import get_obj_name
 from sdv.doc.waterloo.docitem_base import (
 	docitem_base,
+	docitem_list_of_content_blocks_base,
 	docitem_list_of_strings_base,
 	docitem_map_base,
+	docitem_table,
 	)
 from sdv.doc.waterloo.docitem_sections import (
 	docitem_definitions,
@@ -212,12 +214,44 @@ def to_node_signature_json(obj: object) -> dict[str, WtrlJsonNode_t]:
 		}
 	return signature_data
 
+def _render_content_blocks_json(node: docitem_list_of_content_blocks_base, flavour: Flavour) -> WtrlJsonNode_t:
+	"""Render text and table content blocks without flattening table structure."""
+	blocks: list[WtrlJsonNode_t] = []
+	for block in node.content_blocks():
+		if isinstance(block, str):
+			blocks.append(_render_token(block, flavour))
+			continue
+		if not isinstance(block, docitem_table):
+			raise NotImplementedError(f"Unsupported content block: {type(block).__name__}")
+
+		groups: list[WtrlJsonNode_t] = []
+		for group in block.groups():
+			group_json: dict[str, WtrlJsonNode_t] = {
+				"header": [_render_token(cell, flavour) for cell in group.header()],
+				"rows": [
+					[_render_token(cell, flavour) for cell in row]
+					for row in group.rows()
+				],
+			}
+			title = group.title()
+			if title is not None:
+				group_json["title"] = [_render_token(line, flavour) for line in title]
+			groups.append(group_json)
+		blocks.append({"table": {"groups": groups}})
+	return blocks
+
+
 def build_node_section_json(label : str,node: docitem_base, flavour: Flavour) -> WtrlJsonNode_t:
 	m : WtrlJsonNode_t
 	if isinstance(node,docitem_map_base):
 		m = {}
 		for label in node.items():
 			m[label] = build_node_section_json(label,node.item(label),flavour)
+	elif isinstance(node,docitem_list_of_content_blocks_base):
+		if label in SINGLE_STRING_SECTIONS:
+			m = _render_token(node.item_by_index(0),flavour)
+		else:
+			m = _render_content_blocks_json(node, flavour)
 	elif isinstance(node,docitem_list_of_strings_base):
 		if label in SINGLE_STRING_SECTIONS:
 			m = _render_token(node.item_by_index(0),flavour)

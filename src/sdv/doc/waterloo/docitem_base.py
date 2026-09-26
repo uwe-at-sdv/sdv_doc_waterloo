@@ -318,7 +318,7 @@ Description:
 		ok &= self._detect_untokenized_normativity(tr)
 		return ok
 	def __str__(self) -> str:
-		return " {'" + "','".join(self._items) + "'}"
+		return " {'" + "','".join(self.items()) + "'}"
 
 class docitem_map_base(docitem_base):
 	"""
@@ -583,7 +583,204 @@ class docitem_list_of_symbols_base(docitem_list_of_strings_base):
 	def __str__(self) -> str:
 		return " {" + ",".join(self._items) + "}"
 
-class docitem_free_text_entry_base(docitem_list_of_strings_base):
+
+class docitem_table_group(docitem_base):
+	"""
+Preamble:
+	profile:
+		class
+	normative_sections:
+		Contract, Derived_from
+Contract:
+	general:
+		|Must| represent one optional title, one header row, and zero or more data rows of a table.
+	constructor:
+		|Must| be default-constructible.
+Derived_from:
+	docitem_base
+"""
+	def __init__(self) -> None:
+		super().__init__()
+		self._title: list[str] | None = None
+		self._header: list[str] = []
+		self._rows: list[list[str]] = []
+
+	def set_title(self, title: list[str] | None) -> None:
+		self._title = title
+
+	def set_header(self, header: list[str]) -> None:
+		self._header = header
+
+	def set_rows(self, rows: list[list[str]]) -> None:
+		self._rows = rows
+
+	def title(self) -> list[str] | None:
+		return self._title
+
+	def header(self) -> list[str]:
+		return self._header
+
+	def rows(self) -> list[list[str]]:
+		return self._rows
+
+	def items_gen(self) -> Iterable[str]:
+		if self._title is not None:
+			yield from self._title
+		yield from self._header
+		for row in self._rows:
+			yield from row
+# The sphinx extension invokes len() at some point, so we need a container.
+# We should check where exaclty that is and find a better solution.
+	def items(self) -> List[str]:
+		return [item for item in self.items_gen()]
+
+	def item_by_index(self, index: int) -> str:
+		return list(self.items())[index]
+
+	def has_item(self, name: str) -> bool:
+		return name in self.items()
+
+	def empty(self) -> bool:
+		return not self._header and not self._rows and self._title is None
+
+	def has_norm_keywords(self) -> bool:
+		return any(keyword in item for keyword in KEYWORDS_OF_NORMATIVITY for item in self.items())
+
+	def has_token(self, token: str) -> bool:
+		return any(token in item for item in self.items())
+
+	def detect_partial_normativity(self, tr: tracer) -> bool:
+		text_node = docitem_list_of_strings_base()
+		text_node.set_items(list(self.items()))
+		return text_node.detect_partial_normativity(tr)
+
+
+class docitem_table(docitem_base):
+	"""
+Preamble:
+	profile:
+		class
+	normative_sections:
+		Contract, Derived_from
+Contract:
+	general:
+		|Must| represent a structured table consisting of one or more groups.
+	constructor:
+		|Must| be default-constructible.
+Derived_from:
+	docitem_base
+"""
+	def __init__(self) -> None:
+		super().__init__()
+		self._groups: list[docitem_table_group] = []
+
+	def set_groups(self, groups: list[docitem_table_group]) -> None:
+		self._groups = groups
+		for group in groups:
+			group.set_parent(self)
+
+	def groups(self) -> list[docitem_table_group]:
+		return self._groups
+
+	def items_gen(self) -> Iterable[str]:
+		for group in self._groups:
+			yield from group.items()
+# The sphinx extension invokes len() at some point, so we need a container.
+	def items(self) -> List[str]:
+		return [item for item in self.items_gen()]
+
+	def item_by_index(self, index: int) -> str:
+		return list(self.items())[index]
+
+	def has_item(self, name: str) -> bool:
+		return name in self.items()
+
+	def empty(self) -> bool:
+		return not self._groups
+
+	def has_norm_keywords(self) -> bool:
+		return any(group.has_norm_keywords() for group in self._groups)
+
+	def has_token(self, token: str) -> bool:
+		return any(group.has_token(token) for group in self._groups)
+
+	def detect_partial_normativity(self, tr: tracer) -> bool:
+		ok = True
+		for group in self._groups:
+			ok &= group.detect_partial_normativity(tr)
+		return ok
+
+
+DocstringContentBlock: TypeAlias = str | docitem_table
+
+
+class docitem_list_of_content_blocks_base(docitem_list_of_strings_base):
+	"""
+Preamble:
+	profile:
+		class
+	normative_sections:
+		Contract, Derived_from
+Contract:
+	general:
+		|Must| manage free-text lines and structured table blocks.
+		|Must| preserve a flattened text-line view for existing consumers.
+	constructor:
+		|Must| be default-constructible.
+Derived_from:
+	docitem_list_of_strings_base
+"""
+	def __init__(self) -> None:
+		super().__init__()
+		self._content_blocks: list[DocstringContentBlock] = []
+
+	def set_content_blocks(self, items: Sequence[DocstringContentBlock]) -> None:
+		self._content_blocks = list(items)
+		for item in self._content_blocks:
+			if isinstance(item, docitem_table):
+				item.set_parent(self)
+		super().set_items([
+			text
+			for item in self._content_blocks
+			for text in ([item] if isinstance(item, str) else item.items())
+		])
+
+	def set_items(self, items: List[str]) -> None:
+		self.set_content_blocks(items)
+
+	def content_blocks(self) -> list[DocstringContentBlock]:
+		"""Return the structured text and table blocks in source order."""
+		return self._content_blocks
+
+	def has_item(self, name: str) -> bool:
+		return any(item == name for item in self._content_blocks if isinstance(item, str))
+
+	def empty(self) -> bool:
+		return not self._content_blocks
+
+	def has_norm_keywords(self) -> bool:
+		return any(
+			keyword in item if isinstance(item, str) else item.has_norm_keywords()
+			for keyword in KEYWORDS_OF_NORMATIVITY
+			for item in self._content_blocks
+		)
+
+	def has_token(self, token: str) -> bool:
+		return any(token in item if isinstance(item, str) else item.has_token(token) for item in self._content_blocks)
+
+	def detect_partial_normativity(self, tr: tracer) -> bool:
+		ok = True
+		for item in self._content_blocks:
+			if isinstance(item, str):
+				text_node = docitem_list_of_strings_base()
+				text_node.set_items([item])
+				ok &= text_node.detect_partial_normativity(tr)
+			else:
+				ok &= item.detect_partial_normativity(tr)
+		return ok
+
+
+class docitem_free_text_entry_base(docitem_list_of_content_blocks_base):
 	"""
 Preamble:
 	profile:
@@ -598,7 +795,7 @@ Contract:
 	traits:
 		abstract
 Derived_from:
-	docitem_list_of_strings_base
+	docitem_list_of_content_blocks_base
 Public_methods:
 	parse
 Method_overview:
@@ -638,6 +835,6 @@ Raises:
 # No restrictions. The content is a list of free-form text lines.
 		self.set_items(lines)
 	def __str__(self) -> str:
-		return " {'" + "','".join(self._items) + "'}"
+		return " {'" + "','".join(self.items()) + "'}"
 
 #===== end base classes =======================================#

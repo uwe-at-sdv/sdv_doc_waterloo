@@ -1,12 +1,12 @@
 {
-    "$schema": "https://sci-d-vis.com/schema/wtrl-json-0.1.0.schema.json",
-    "$id": "urn:waterlint:wtrl-json:0.24.1:core:rfc-2119:758e05a04a485a3bc29c9387630c64b625dcdd218baf6d2ce696293a3a58f1c7",
+    "$schema": "https://sci-d-vis.com/schema/wtrl-json-0.3.0.schema.json",
+    "$id": "urn:waterlint:wtrl-json:0.24.2:core:rfc-2119:0c626c6928754f0e7d7c66cfca047386f3827e3ae79012ef64d3ea18155dfb70",
     "__WTRL_VERSION__": {
-        "waterloo": "0.24.1",
-        "schema": "0.1.0"
+        "waterloo": "0.24.2",
+        "schema": "0.3.0"
     },
     "__WTRL_META__": {
-        "generated_at": "2026-09-19T11:05:21+02:00",
+        "generated_at": "2026-09-26T20:12:16+02:00",
         "generator": "waterlint",
         "scope": "core",
         "flavour": "rfc-2119"
@@ -105,31 +105,34 @@
         "sdv.doc.waterloo.docitem_types.Status": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_types.Status",
         "sdv.doc.waterloo.docitem_types.Trait": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_types.Trait",
         "sdv.doc.waterloo.docitem_helper.ConfigTraversal": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_helper.ConfigTraversal",
+        "sdv.doc.waterloo.docitem_base.docitem_list_of_content_blocks_base": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_base.docitem_list_of_content_blocks_base",
         "sdv.doc.waterloo.docitem_base.docitem_list_of_symbols_base": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_base.docitem_list_of_symbols_base",
         "sdv.doc.waterloo.docitem_base.docitem_list_of_symbols_base.ValuePattern": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_base.docitem_list_of_symbols_base.ValuePattern",
+        "sdv.doc.waterloo.docitem_base.docitem_table": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_base.docitem_table",
+        "sdv.doc.waterloo.docitem_base.docitem_table_group": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_base.docitem_table_group",
         "sdv.doc.waterloo.docitem_base.docitem_free_text_entry_base": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_base.docitem_free_text_entry_base",
         "sdv.doc.waterloo.docitem_preamble.docitem_normative_sections": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_preamble.docitem_normative_sections",
         "sdv.doc.waterloo.docitem_preamble.docitem_scope": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_preamble.docitem_scope",
         "sdv.doc.waterloo.docitem_preamble.docitem_status": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_preamble.docitem_status",
-        "sdv.doc.waterloo.docitem_contract.docitem_traits": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_contract.docitem_traits",
         "sdv.doc.waterloo.docitem_contract.docitem_constructor": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_contract.docitem_constructor",
-        "sdv.doc.waterloo.docitem_contract.docitem_general": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_contract.docitem_general",
         "sdv.doc.waterloo.docitem_contract.docitem_ensures": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_contract.docitem_ensures",
-        "sdv.doc.waterloo.docitem_contract.docitem_requires": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_contract.docitem_requires",
+        "sdv.doc.waterloo.docitem_contract.docitem_general": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_contract.docitem_general",
         "sdv.doc.waterloo.docitem_contract.docitem_invariants": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_contract.docitem_invariants",
-        "sdv.doc.waterloo.docitem_sections.docitem_factory_functions": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_sections.docitem_factory_functions",
+        "sdv.doc.waterloo.docitem_contract.docitem_requires": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_contract.docitem_requires",
+        "sdv.doc.waterloo.docitem_contract.docitem_traits": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_contract.docitem_traits",
         "sdv.doc.waterloo.docitem_sections.docitem_class_overview_entry": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_sections.docitem_class_overview_entry",
-        "sdv.doc.waterloo.docitem_sections.docitem_public_types_entry": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_sections.docitem_public_types_entry",
-        "sdv.doc.waterloo.docitem_sections.docitem_public_assignables_entry": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_sections.docitem_public_assignables_entry",
-        "sdv.doc.waterloo.docitem_sections.docitem_method_overview_entry": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_sections.docitem_method_overview_entry",
-        "sdv.doc.waterloo.docitem_sections.docitem_parameters_entry": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_sections.docitem_parameters_entry",
-        "sdv.doc.waterloo.docitem_sections.docitem_raises_entry": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_sections.docitem_raises_entry",
-        "sdv.doc.waterloo.docitem_sections.docitem_public_assignables_base": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_sections.docitem_public_assignables_base",
         "sdv.doc.waterloo.docitem_sections.docitem_definitions_entry": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_sections.docitem_definitions_entry",
+        "sdv.doc.waterloo.docitem_sections.docitem_factory_functions": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_sections.docitem_factory_functions",
         "sdv.doc.waterloo.docitem_sections.docitem_function_overview_entry": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_sections.docitem_function_overview_entry",
         "sdv.doc.waterloo.docitem_sections.docitem_inherited_defitems": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_sections.docitem_inherited_defitems",
-        "sdv.doc.waterloo.docitem_sections.docitem_terminology_entry": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_sections.docitem_terminology_entry",
-        "sdv.doc.waterloo.docitem_sections.docitem_notes_entry": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_sections.docitem_notes_entry"
+        "sdv.doc.waterloo.docitem_sections.docitem_method_overview_entry": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_sections.docitem_method_overview_entry",
+        "sdv.doc.waterloo.docitem_sections.docitem_notes_entry": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_sections.docitem_notes_entry",
+        "sdv.doc.waterloo.docitem_sections.docitem_parameters_entry": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_sections.docitem_parameters_entry",
+        "sdv.doc.waterloo.docitem_sections.docitem_public_assignables_base": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_sections.docitem_public_assignables_base",
+        "sdv.doc.waterloo.docitem_sections.docitem_public_assignables_entry": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_sections.docitem_public_assignables_entry",
+        "sdv.doc.waterloo.docitem_sections.docitem_public_types_entry": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_sections.docitem_public_types_entry",
+        "sdv.doc.waterloo.docitem_sections.docitem_raises_entry": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_sections.docitem_raises_entry",
+        "sdv.doc.waterloo.docitem_sections.docitem_terminology_entry": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_sections.docitem_terminology_entry"
     },
     "__WTRL_TOC_CALLABLES__": {
         "sdv.doc.waterloo.docitem_tracer.rule_on_fail": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_tracer.rule_on_fail",
@@ -256,17 +259,17 @@
         "sdv.doc.waterloo.docitem_preamble.docitem_normative_sections.parse": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_preamble.docitem_normative_sections.parse",
         "sdv.doc.waterloo.docitem_preamble.docitem_scope.parse": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_preamble.docitem_scope.parse",
         "sdv.doc.waterloo.docitem_preamble.docitem_status.parse": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_preamble.docitem_status.parse",
-        "sdv.doc.waterloo.docitem_contract.docitem_traits.parse": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_contract.docitem_traits.parse",
         "sdv.doc.waterloo.docitem_contract.docitem_constructor.parse": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_contract.docitem_constructor.parse",
-        "sdv.doc.waterloo.docitem_contract.docitem_general.parse": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_contract.docitem_general.parse",
         "sdv.doc.waterloo.docitem_contract.docitem_ensures.parse": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_contract.docitem_ensures.parse",
-        "sdv.doc.waterloo.docitem_contract.docitem_requires.parse": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_contract.docitem_requires.parse",
+        "sdv.doc.waterloo.docitem_contract.docitem_general.parse": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_contract.docitem_general.parse",
         "sdv.doc.waterloo.docitem_contract.docitem_invariants.parse": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_contract.docitem_invariants.parse",
+        "sdv.doc.waterloo.docitem_contract.docitem_requires.parse": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_contract.docitem_requires.parse",
+        "sdv.doc.waterloo.docitem_contract.docitem_traits.parse": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_contract.docitem_traits.parse",
         "sdv.doc.waterloo.docitem_sections.docitem_public_assignables_base.parse": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_sections.docitem_public_assignables_base.parse",
         "sdv.doc.waterloo.docitem_tokenizer.get_num_indent": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_tokenizer.get_num_indent",
+        "sdv.doc.waterloo.docitem_tokenizer.get_scopes_of_tree": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_tokenizer.get_scopes_of_tree",
         "sdv.doc.waterloo.docitem_tokenizer.get_tree_of_section": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_tokenizer.get_tree_of_section",
         "sdv.doc.waterloo.docitem_tokenizer.get_tree_of_subsection": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_tokenizer.get_tree_of_subsection",
-        "sdv.doc.waterloo.docitem_tokenizer.get_scopes_of_tree": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_tokenizer.get_scopes_of_tree",
         "sdv.doc.waterloo.docitem_tokenizer.to_string_tree": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_tokenizer.to_string_tree",
         "sdv.doc.waterloo.docitem_convert.to_node_signature_json": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_convert.to_node_signature_json",
         "sdv.doc.waterloo.docitem_convert.build_node_json": "/__WTRL_OBJECTS__/sdv.doc.waterloo.docitem_convert.build_node_json",
@@ -351,11 +354,17 @@
             "doc_lines": [
                 "The type alias for docstring trees."
             ],
+            "doc_blocks": [
+                "The type alias for docstring trees."
+            ],
             "doc_lines_kind": "type"
         },
         "sdv.doc.waterloo.docitem.Documentable": {
             "doc": {},
             "doc_lines": [
+                "Type for objects that can have a docstring."
+            ],
+            "doc_blocks": [
                 "Type for objects that can have a docstring."
             ],
             "doc_lines_kind": "type"
@@ -365,11 +374,17 @@
             "doc_lines": [
                 "The string literals representing values in the |label|`Preamble.profile` subsection."
             ],
+            "doc_blocks": [
+                "The string literals representing values in the |label|`Preamble.profile` subsection."
+            ],
             "doc_lines_kind": "type"
         },
         "sdv.doc.waterloo.docitem.Scopes": {
             "doc": {},
             "doc_lines": [
+                "Type alias for a set of scopes."
+            ],
+            "doc_blocks": [
                 "Type alias for a set of scopes."
             ],
             "doc_lines_kind": "type"
@@ -379,11 +394,17 @@
             "doc_lines": [
                 "Regular expression for identifiers: |value|`[A-Za-z_][A-Za-z0-9_]*`"
             ],
+            "doc_blocks": [
+                "Regular expression for identifiers: |value|`[A-Za-z_][A-Za-z0-9_]*`"
+            ],
             "doc_lines_kind": "constant"
         },
         "sdv.doc.waterloo.docitem.RE_QUALIFIED_IDENTIFIER": {
             "doc": {},
             "doc_lines": [
+                "Regular expression for qualified identifiers: |value|`[A-Za-z_][A-Za-z0-9_]*([.][A-Za-z_][A-Za-z0-9_]*)*`"
+            ],
+            "doc_blocks": [
                 "Regular expression for qualified identifiers: |value|`[A-Za-z_][A-Za-z0-9_]*([.][A-Za-z_][A-Za-z0-9_]*)*`"
             ],
             "doc_lines_kind": "constant"
@@ -393,11 +414,17 @@
             "doc_lines": [
                 "The set of normative keywords."
             ],
+            "doc_blocks": [
+                "The set of normative keywords."
+            ],
             "doc_lines_kind": "constant"
         },
         "sdv.doc.waterloo.docitem.CANONICAL_ORDER_OF_SECTIONS": {
             "doc": {},
             "doc_lines": [
+                "A canonical order for sections and subsection in order to reduce permutative noise for LLMs."
+            ],
+            "doc_blocks": [
                 "A canonical order for sections and subsection in order to reduce permutative noise for LLMs."
             ],
             "doc_lines_kind": "constant"
@@ -407,11 +434,17 @@
             "doc_lines": [
                 "Map string representations of scopes to symbolic/numeric values."
             ],
+            "doc_blocks": [
+                "Map string representations of scopes to symbolic/numeric values."
+            ],
             "doc_lines_kind": "constant"
         },
         "sdv.doc.waterloo.docitem.FLAVOUR_TAG_MAP": {
             "doc": {},
             "doc_lines": [
+                "Map string representations of flavours to symbolic/numeric values."
+            ],
+            "doc_blocks": [
                 "Map string representations of flavours to symbolic/numeric values."
             ],
             "doc_lines_kind": "constant"
@@ -421,11 +454,17 @@
             "doc_lines": [
                 "Map string representations of output formats to symbolic/numeric values."
             ],
+            "doc_blocks": [
+                "Map string representations of output formats to symbolic/numeric values."
+            ],
             "doc_lines_kind": "constant"
         },
         "sdv.doc.waterloo.docitem.STATUS_TAG_MAP": {
             "doc": {},
             "doc_lines": [
+                "Map string representations of |label|`Contract.status` values to symbolic values."
+            ],
+            "doc_blocks": [
                 "Map string representations of |label|`Contract.status` values to symbolic values."
             ],
             "doc_lines_kind": "constant"
@@ -598,6 +637,9 @@
                     "tracer",
                     "docitem_base",
                     "docitem_list_of_strings_base",
+                    "docitem_list_of_content_blocks_base",
+                    "docitem_table_group",
+                    "docitem_table",
                     "docitem_map_base",
                     "docitem_free_text_entry_base",
                     "docitem_list_of_symbols_base",
@@ -661,6 +703,15 @@
                     ],
                     "docitem_list_of_strings_base": [
                         "The base class for docitem classes managing a list of strings."
+                    ],
+                    "docitem_list_of_content_blocks_base": [
+                        "The base class for docitem classes managing text lines and structured table blocks."
+                    ],
+                    "docitem_table_group": [
+                        "An optional table title, a header row, and zero or more data rows."
+                    ],
+                    "docitem_table": [
+                        "A structured table consisting of one or more table groups."
                     ],
                     "docitem_map_base": [
                         "The base class for docitem classes managing a map from strings to docitem nodes"
@@ -857,6 +908,9 @@
             "doc_lines": [
                 "Selects the public API."
             ],
+            "doc_blocks": [
+                "Selects the public API."
+            ],
             "doc_lines_kind": "constant"
         },
         "sdv.doc.waterloo.docitem_types.Scope.EXTENSION": {
@@ -864,11 +918,17 @@
             "doc_lines": [
                 "Selects the API for developers of plugin and extensions."
             ],
+            "doc_blocks": [
+                "Selects the API for developers of plugin and extensions."
+            ],
             "doc_lines_kind": "constant"
         },
         "sdv.doc.waterloo.docitem_types.Scope.CORE": {
             "doc": {},
             "doc_lines": [
+                "Selects the API for core developers."
+            ],
+            "doc_blocks": [
                 "Selects the API for core developers."
             ],
             "doc_lines_kind": "constant"
@@ -1000,6 +1060,9 @@
         "sdv.doc.waterloo.docitem_tracer.tracer.Context": {
             "doc": {},
             "doc_lines": [
+                "A list of strings built per context manager during parsing and validation. Entries can be module, class or function names, or labels."
+            ],
+            "doc_blocks": [
                 "A list of strings built per context manager during parsing and validation. Entries can be module, class or function names, or labels."
             ],
             "annotation": "List[str]",
@@ -1285,12 +1348,18 @@
             "doc_lines": [
                 "Objects already processed in the current run, keyed by |func|`id`."
             ],
+            "doc_blocks": [
+                "Objects already processed in the current run, keyed by |func|`id`."
+            ],
             "annotation": "dict[int, Any]",
             "doc_lines_kind": "type"
         },
         "sdv.doc.waterloo.docitem_helper.DocSession.Validated": {
             "doc": {},
             "doc_lines": [
+                "Objects successfully validated in the current run, keyed by |func|`id`."
+            ],
+            "doc_blocks": [
                 "Objects successfully validated in the current run, keyed by |func|`id`."
             ],
             "annotation": "dict[int, Any]",
@@ -2934,8 +3003,8 @@
                 },
                 "Contract": {
                     "general": [
-                        "MUST hold free-form descriptive text lines from a docstring section |label|`Description`.",
-                        "MUST accept and store a list of strings."
+                        "MUST hold free-form descriptive text and Waterloo table blocks from a docstring section |label|`Description`.",
+                        "MUST accept and store content blocks."
                     ],
                     "constructor": [
                         "MUST be default-constructible."
@@ -2946,14 +3015,14 @@
                     "of a module, class or callable."
                 ],
                 "Derived_from": [
-                    "docitem_free_text_entry_base"
+                    "docitem_table_content_entry_base"
                 ],
                 "Public_methods": [
                     "parse"
                 ],
                 "Method_overview": {
                     "parse": [
-                        "Parse a list of description lines."
+                        "Parse free-form description text and Waterloo table blocks."
                     ]
                 }
             }
@@ -2989,8 +3058,8 @@
                 },
                 "Contract": {
                     "general": [
-                        "MUST accept a list of description lines.",
-                        "MUST raise if the input is not a list of strings."
+                        "MUST accept free-form description text and Waterloo table blocks.",
+                        "MUST raise if the input does not have the required line structure."
                     ]
                 },
                 "Parameters": {
@@ -3904,23 +3973,27 @@
                     "profile": "class",
                     "normative_sections": [
                         "Contract",
+                        "Derived_from",
                         "Public_methods"
                     ]
                 },
                 "Contract": {
                     "general": [
-                        "MUST store the list of return value descriptions for a callable's docstring."
+                        "MUST store free-form return descriptions and Waterloo table blocks for a callable's docstring."
                     ],
                     "constructor": [
                         "MUST be default-constructible."
                     ]
                 },
+                "Derived_from": [
+                    "docitem_table_content_entry_base"
+                ],
                 "Public_methods": [
                     "parse"
                 ],
                 "Method_overview": {
                     "parse": [
-                        "Parse a list of return descriptions."
+                        "Parse free-form return descriptions and Waterloo table blocks."
                     ]
                 }
             }
@@ -3956,8 +4029,8 @@
                 },
                 "Contract": {
                     "general": [
-                        "MUST accept a list of return descriptions.",
-                        "MUST raise if the input is not a list of strings."
+                        "MUST accept free-form return descriptions and Waterloo table blocks.",
+                        "MUST raise if the input does not have the required line structure."
                     ]
                 },
                 "Parameters": {
@@ -9503,6 +9576,9 @@
             "doc_lines": [
                 "Example: | + Must + |"
             ],
+            "doc_blocks": [
+                "Example: | + Must + |"
+            ],
             "doc_lines_kind": "constant"
         },
         "sdv.doc.waterloo.docitem_types.Flavour.RFC_2119": {
@@ -9510,11 +9586,17 @@
             "doc_lines": [
                 "Example: |lit|`MUST`"
             ],
+            "doc_blocks": [
+                "Example: |lit|`MUST`"
+            ],
             "doc_lines_kind": "constant"
         },
         "sdv.doc.waterloo.docitem_types.Flavour.MARKDOWN": {
             "doc": {},
             "doc_lines": [
+                "Example: |lit|`**MUST**`"
+            ],
+            "doc_blocks": [
                 "Example: |lit|`**MUST**`"
             ],
             "doc_lines_kind": "constant"
@@ -9579,11 +9661,17 @@
             "doc_lines": [
                 "Javascript Object Notation"
             ],
+            "doc_blocks": [
+                "Javascript Object Notation"
+            ],
             "doc_lines_kind": "constant"
         },
         "sdv.doc.waterloo.docitem_types.Format.MD": {
             "doc": {},
             "doc_lines": [
+                "Markdown."
+            ],
+            "doc_blocks": [
                 "Markdown."
             ],
             "doc_lines_kind": "constant"
@@ -9645,11 +9733,17 @@
             "doc_lines": [
                 "See rule |ref|`STA-004 <section_function_pramble>`."
             ],
+            "doc_blocks": [
+                "See rule |ref|`STA-004 <section_function_pramble>`."
+            ],
             "doc_lines_kind": "constant"
         },
         "sdv.doc.waterloo.docitem_types.Status.STABLE": {
             "doc": {},
             "doc_lines": [
+                "See rule |ref|`STA-004 <section_function_pramble>`."
+            ],
+            "doc_blocks": [
                 "See rule |ref|`STA-004 <section_function_pramble>`."
             ],
             "doc_lines_kind": "constant"
@@ -9659,6 +9753,9 @@
             "doc_lines": [
                 "See rule |ref|`STA-004 <section_function_pramble>`."
             ],
+            "doc_blocks": [
+                "See rule |ref|`STA-004 <section_function_pramble>`."
+            ],
             "doc_lines_kind": "constant"
         },
         "sdv.doc.waterloo.docitem_types.Status.DEPRECATED": {
@@ -9666,11 +9763,17 @@
             "doc_lines": [
                 "See rule |ref|`STA-004 <section_function_pramble>`."
             ],
+            "doc_blocks": [
+                "See rule |ref|`STA-004 <section_function_pramble>`."
+            ],
             "doc_lines_kind": "constant"
         },
         "sdv.doc.waterloo.docitem_types.Status.DRAFT": {
             "doc": {},
             "doc_lines": [
+                "See rule |ref|`STA-004 <section_function_pramble>`."
+            ],
+            "doc_blocks": [
                 "See rule |ref|`STA-004 <section_function_pramble>`."
             ],
             "doc_lines_kind": "constant"
@@ -9747,11 +9850,17 @@
             "doc_lines": [
                 "The class is abstract, i.e. it cannot be instantiated directly and is not a complete specification of the concept."
             ],
+            "doc_blocks": [
+                "The class is abstract, i.e. it cannot be instantiated directly and is not a complete specification of the concept."
+            ],
             "doc_lines_kind": "constant"
         },
         "sdv.doc.waterloo.docitem_types.Trait.FINAL": {
             "doc": {},
             "doc_lines": [
+                "The class is final, i.e. it cannot be subclassed and is a complete specification of the concept."
+            ],
+            "doc_blocks": [
                 "The class is final, i.e. it cannot be subclassed and is a complete specification of the concept."
             ],
             "doc_lines_kind": "constant"
@@ -10063,6 +10172,34 @@
                 }
             }
         },
+        "sdv.doc.waterloo.docitem_base.docitem_list_of_content_blocks_base": {
+            "signature": {
+                "text": "docitem_list_of_content_blocks_base.__init__(self) -> 'None'",
+                "parameters": [],
+                "returns": "None"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "class",
+                    "normative_sections": [
+                        "Contract",
+                        "Derived_from"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST manage free-text lines and structured table blocks.",
+                        "MUST preserve a flattened text-line view for existing consumers."
+                    ],
+                    "constructor": [
+                        "MUST be default-constructible."
+                    ]
+                },
+                "Derived_from": [
+                    "docitem_list_of_strings_base"
+                ]
+            }
+        },
         "sdv.doc.waterloo.docitem_base.docitem_list_of_symbols_base": {
             "signature": {
                 "text": "docitem_list_of_strings_base.__init__(self) -> 'None'",
@@ -10120,11 +10257,17 @@
             "doc_lines": [
                 "MUST represent the pattern of an |term|`Identifier`."
             ],
+            "doc_blocks": [
+                "MUST represent the pattern of an |term|`Identifier`."
+            ],
             "doc_lines_kind": "constant"
         },
         "sdv.doc.waterloo.docitem_base.docitem_list_of_symbols_base.ValuePattern.QUALIFIED_IDENTIFIER": {
             "doc": {},
             "doc_lines": [
+                "MUST represent the pattern of a |term|`Qualified_Identifier`."
+            ],
+            "doc_blocks": [
                 "MUST represent the pattern of a |term|`Qualified_Identifier`."
             ],
             "doc_lines_kind": "constant"
@@ -10261,9 +10404,63 @@
                 ]
             }
         },
+        "sdv.doc.waterloo.docitem_base.docitem_table": {
+            "signature": {
+                "text": "docitem_table.__init__(self) -> 'None'",
+                "parameters": [],
+                "returns": "None"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "class",
+                    "normative_sections": [
+                        "Contract",
+                        "Derived_from"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST represent a structured table consisting of one or more groups."
+                    ],
+                    "constructor": [
+                        "MUST be default-constructible."
+                    ]
+                },
+                "Derived_from": [
+                    "docitem_base"
+                ]
+            }
+        },
+        "sdv.doc.waterloo.docitem_base.docitem_table_group": {
+            "signature": {
+                "text": "docitem_table_group.__init__(self) -> 'None'",
+                "parameters": [],
+                "returns": "None"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "class",
+                    "normative_sections": [
+                        "Contract",
+                        "Derived_from"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST represent one optional title, one header row, and zero or more data rows of a table."
+                    ],
+                    "constructor": [
+                        "MUST be default-constructible."
+                    ]
+                },
+                "Derived_from": [
+                    "docitem_base"
+                ]
+            }
+        },
         "sdv.doc.waterloo.docitem_base.docitem_free_text_entry_base": {
             "signature": {
-                "text": "docitem_list_of_strings_base.__init__(self) -> 'None'",
+                "text": "docitem_list_of_content_blocks_base.__init__(self) -> 'None'",
                 "parameters": [],
                 "returns": "None"
             },
@@ -10288,7 +10485,7 @@
                     ]
                 },
                 "Derived_from": [
-                    "docitem_list_of_strings_base"
+                    "docitem_list_of_content_blocks_base"
                 ],
                 "Public_methods": [
                     "parse"
@@ -10589,79 +10786,6 @@
                 }
             }
         },
-        "sdv.doc.waterloo.docitem_contract.docitem_traits": {
-            "signature": {
-                "text": "docitem_traits.__init__(self) -> 'None'",
-                "parameters": [],
-                "returns": "None"
-            },
-            "doc": {
-                "Preamble": {
-                    "profile": "class",
-                    "normative_sections": [
-                        "Contract",
-                        "Derived_from",
-                        "Public_methods"
-                    ]
-                },
-                "Contract": {
-                    "general": [
-                        "MUST represent the |label|`traits` section, subsection of |label|`Contract`.",
-                        "MUST be able to hold a list of strings."
-                    ],
-                    "constructor": [
-                        "MUST be default-constructible."
-                    ]
-                },
-                "Derived_from": [
-                    "docitem_list_of_symbols_base"
-                ],
-                "Public_methods": [
-                    "parse"
-                ],
-                "Method_overview": {
-                    "parse": [
-                        "Inherited method"
-                    ]
-                }
-            }
-        },
-        "sdv.doc.waterloo.docitem_contract.docitem_traits.parse": {
-            "signature": {
-                "text": "docitem_traits.parse(self, tr: 'tracer', refs: 'DocstringSubtree') -> 'None'",
-                "parameters": [
-                    {
-                        "name": "tr",
-                        "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "tracer",
-                        "default": null
-                    },
-                    {
-                        "name": "refs",
-                        "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "DocstringSubtree",
-                        "default": null
-                    }
-                ],
-                "returns": "None"
-            },
-            "doc": {
-                "Preamble": {
-                    "profile": "inherited_method",
-                    "normative_sections": [
-                        "Contract"
-                    ]
-                },
-                "Contract": {
-                    "general": [
-                        "MUST set rules-on-fail in the tracer and delegate to the base implementation."
-                    ],
-                    "base": [
-                        "sdv.doc.waterloo.docitem.docitem_base.parse"
-                    ]
-                }
-            }
-        },
         "sdv.doc.waterloo.docitem_contract.docitem_constructor": {
             "signature": {
                 "text": "docitem_constructor.__init__(self) -> 'None'",
@@ -10748,6 +10872,100 @@
                     "RuntimeError": [
                         "MUST raise if the items are not strings (no subtrees allowed).",
                         "MUST raise if the items are not identifiers."
+                    ]
+                }
+            }
+        },
+        "sdv.doc.waterloo.docitem_contract.docitem_ensures": {
+            "signature": {
+                "text": "docitem_ensures.__init__(self) -> 'None'",
+                "parameters": [],
+                "returns": "None"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "class",
+                    "normative_sections": [
+                        "Contract",
+                        "Derived_from",
+                        "Public_methods"
+                    ]
+                },
+                "Description": [
+                    "This node represents the |label|`ensures` subsection of |label|`Contract`.",
+                    "The subsection is intended to describe guarantees that hold after a successful call of the documented function or method.",
+                    "The contents are treated as free-form text and are preserved verbatim for rendering and reporting."
+                ],
+                "Contract": {
+                    "general": [
+                        "MUST represent the |label|`ensures` section, subsection of |label|`Contract`.",
+                        "MUST be able to hold a list of free-form text lines."
+                    ],
+                    "constructor": [
+                        "MUST be default-constructible."
+                    ]
+                },
+                "Derived_from": [
+                    "docitem_list_of_strings_base"
+                ],
+                "Public_methods": [
+                    "parse"
+                ],
+                "Method_overview": {
+                    "parse": [
+                        "Parse an |label|`ensures` section."
+                    ]
+                }
+            }
+        },
+        "sdv.doc.waterloo.docitem_contract.docitem_ensures.parse": {
+            "signature": {
+                "text": "docitem_ensures.parse(self, tr: 'tracer', subtree: 'DocstringSubtree') -> 'None'",
+                "parameters": [
+                    {
+                        "name": "tr",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "tracer",
+                        "default": null
+                    },
+                    {
+                        "name": "subtree",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "DocstringSubtree",
+                        "default": null
+                    }
+                ],
+                "returns": "None"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "method",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST parse the content of an |label|`ensures` section."
+                    ]
+                },
+                "Parameters": {
+                    "tr": [
+                        "The tracer for collecting diagnostics."
+                    ],
+                    "subtree": [
+                        "The docstring subtree to parse, a list of strings."
+                    ]
+                },
+                "Returns": [
+                    "MUST return |None|."
+                ],
+                "Raises": {
+                    "RuntimeError": [
+                        "MUST raise if the items are not strings (no subtrees allowed)."
                     ]
                 }
             }
@@ -10841,9 +11059,9 @@
                 }
             }
         },
-        "sdv.doc.waterloo.docitem_contract.docitem_ensures": {
+        "sdv.doc.waterloo.docitem_contract.docitem_invariants": {
             "signature": {
-                "text": "docitem_ensures.__init__(self) -> 'None'",
+                "text": "docitem_invariants.__init__(self) -> 'None'",
                 "parameters": [],
                 "returns": "None"
             },
@@ -10856,15 +11074,10 @@
                         "Public_methods"
                     ]
                 },
-                "Description": [
-                    "This node represents the |label|`ensures` subsection of |label|`Contract`.",
-                    "The subsection is intended to describe guarantees that hold after a successful call of the documented function or method.",
-                    "The contents are treated as free-form text and are preserved verbatim for rendering and reporting."
-                ],
                 "Contract": {
                     "general": [
-                        "MUST represent the |label|`ensures` section, subsection of |label|`Contract`.",
-                        "MUST be able to hold a list of free-form text lines."
+                        "MUST represent the |label|`invariants` section, subsection of |label|`Contract`.",
+                        "MUST be able to hold a list of strings."
                     ],
                     "constructor": [
                         "MUST be default-constructible."
@@ -10878,14 +11091,14 @@
                 ],
                 "Method_overview": {
                     "parse": [
-                        "Parse an |label|`ensures` section."
+                        "Parse a |label|`invariants` section."
                     ]
                 }
             }
         },
-        "sdv.doc.waterloo.docitem_contract.docitem_ensures.parse": {
+        "sdv.doc.waterloo.docitem_contract.docitem_invariants.parse": {
             "signature": {
-                "text": "docitem_ensures.parse(self, tr: 'tracer', subtree: 'DocstringSubtree') -> 'None'",
+                "text": "docitem_invariants.parse(self, tr: 'tracer', subtree: 'DocstringSubtree') -> 'None'",
                 "parameters": [
                     {
                         "name": "tr",
@@ -10914,7 +11127,7 @@
                 },
                 "Contract": {
                     "general": [
-                        "MUST parse the content of an |label|`ensures` section."
+                        "MUST parse the content of an |label|`invariants` section."
                     ]
                 },
                 "Parameters": {
@@ -11029,9 +11242,9 @@
                 }
             }
         },
-        "sdv.doc.waterloo.docitem_contract.docitem_invariants": {
+        "sdv.doc.waterloo.docitem_contract.docitem_traits": {
             "signature": {
-                "text": "docitem_invariants.__init__(self) -> 'None'",
+                "text": "docitem_traits.__init__(self) -> 'None'",
                 "parameters": [],
                 "returns": "None"
             },
@@ -11046,7 +11259,7 @@
                 },
                 "Contract": {
                     "general": [
-                        "MUST represent the |label|`invariants` section, subsection of |label|`Contract`.",
+                        "MUST represent the |label|`traits` section, subsection of |label|`Contract`.",
                         "MUST be able to hold a list of strings."
                     ],
                     "constructor": [
@@ -11054,21 +11267,21 @@
                     ]
                 },
                 "Derived_from": [
-                    "docitem_list_of_strings_base"
+                    "docitem_list_of_symbols_base"
                 ],
                 "Public_methods": [
                     "parse"
                 ],
                 "Method_overview": {
                     "parse": [
-                        "Parse a |label|`invariants` section."
+                        "Inherited method"
                     ]
                 }
             }
         },
-        "sdv.doc.waterloo.docitem_contract.docitem_invariants.parse": {
+        "sdv.doc.waterloo.docitem_contract.docitem_traits.parse": {
             "signature": {
-                "text": "docitem_invariants.parse(self, tr: 'tracer', subtree: 'DocstringSubtree') -> 'None'",
+                "text": "docitem_traits.parse(self, tr: 'tracer', refs: 'DocstringSubtree') -> 'None'",
                 "parameters": [
                     {
                         "name": "tr",
@@ -11077,7 +11290,7 @@
                         "default": null
                     },
                     {
-                        "name": "subtree",
+                        "name": "refs",
                         "kind": "POSITIONAL_OR_KEYWORD",
                         "annotation": "DocstringSubtree",
                         "default": null
@@ -11087,70 +11300,17 @@
             },
             "doc": {
                 "Preamble": {
-                    "profile": "method",
+                    "profile": "inherited_method",
                     "normative_sections": [
-                        "Contract",
-                        "Parameters",
-                        "Returns",
-                        "Raises"
+                        "Contract"
                     ]
                 },
                 "Contract": {
                     "general": [
-                        "MUST parse the content of an |label|`invariants` section."
-                    ]
-                },
-                "Parameters": {
-                    "tr": [
-                        "The tracer for collecting diagnostics."
+                        "MUST set rules-on-fail in the tracer and delegate to the base implementation."
                     ],
-                    "subtree": [
-                        "The docstring subtree to parse, a list of strings."
-                    ]
-                },
-                "Returns": [
-                    "MUST return |None|."
-                ],
-                "Raises": {
-                    "RuntimeError": [
-                        "MUST raise if the items are not strings (no subtrees allowed)."
-                    ]
-                }
-            }
-        },
-        "sdv.doc.waterloo.docitem_sections.docitem_factory_functions": {
-            "signature": {
-                "text": "docitem_factory_functions.__init__(self) -> 'None'",
-                "parameters": [],
-                "returns": "None"
-            },
-            "doc": {
-                "Preamble": {
-                    "profile": "class",
-                    "normative_sections": [
-                        "Contract",
-                        "Derived_from",
-                        "Public_methods"
-                    ]
-                },
-                "Contract": {
-                    "general": [
-                        "MUST represent the content of an entry in section |label|`Factory`.",
-                        "MUST be able to hold a list of strings."
-                    ],
-                    "constructor": [
-                        "MUST be default-constructible."
-                    ]
-                },
-                "Derived_from": [
-                    "docitem_free_text_entry_base"
-                ],
-                "Public_methods": [
-                    "parse"
-                ],
-                "Method_overview": {
-                    "parse": [
-                        "Parse a list of text lines describing the factory function."
+                    "base": [
+                        "sdv.doc.waterloo.docitem.docitem_base.parse"
                     ]
                 }
             }
@@ -11173,14 +11333,14 @@
                 "Contract": {
                     "general": [
                         "MUST represent the content of an entry in section |label|`Class_overview`.",
-                        "MUST be able to hold a list of strings."
+                        "MUST be able to hold free-form text and table blocks."
                     ],
                     "constructor": [
                         "MUST be default-constructible."
                     ]
                 },
                 "Derived_from": [
-                    "docitem_free_text_entry_base"
+                    "docitem_table_content_entry_base"
                 ],
                 "Public_methods": [
                     "parse"
@@ -11192,9 +11352,9 @@
                 }
             }
         },
-        "sdv.doc.waterloo.docitem_sections.docitem_public_types_entry": {
+        "sdv.doc.waterloo.docitem_sections.docitem_definitions_entry": {
             "signature": {
-                "text": "docitem_public_types_entry.__init__(self) -> 'None'",
+                "text": "docitem_definitions_entry.__init__(self) -> 'None'",
                 "parameters": [],
                 "returns": "None"
             },
@@ -11209,29 +11369,29 @@
                 },
                 "Contract": {
                     "general": [
-                        "MUST represent the content of an entry in section |label|`Public_types`.",
-                        "MUST be able to hold a list of strings."
+                        "MUST represent an entry in the |label|`Definitions` section.",
+                        "MUST accept and store a list of strings."
                     ],
                     "constructor": [
                         "MUST be default-constructible."
                     ]
                 },
                 "Derived_from": [
-                    "docitem_free_text_entry_base"
+                    "docitem_table_content_entry_base"
                 ],
                 "Public_methods": [
                     "parse"
                 ],
                 "Method_overview": {
                     "parse": [
-                        "Parse a list of text lines describing the public type."
+                        "Parse the content of a definition entry, including Waterloo table blocks."
                     ]
                 }
             }
         },
-        "sdv.doc.waterloo.docitem_sections.docitem_public_assignables_entry": {
+        "sdv.doc.waterloo.docitem_sections.docitem_factory_functions": {
             "signature": {
-                "text": "docitem_public_assignables_entry.__init__(self) -> 'None'",
+                "text": "docitem_factory_functions.__init__(self) -> 'None'",
                 "parameters": [],
                 "returns": "None"
             },
@@ -11246,22 +11406,96 @@
                 },
                 "Contract": {
                     "general": [
-                        "MUST represent the content of an entry in section |label|`Public_assignables`.",
-                        "MUST be able to hold a list of strings."
+                        "MUST represent the content of an entry in section |label|`Factory`.",
+                        "MUST be able to hold free-form text and Waterloo table blocks."
                     ],
                     "constructor": [
                         "MUST be default-constructible."
                     ]
                 },
                 "Derived_from": [
-                    "docitem_free_text_entry_base"
+                    "docitem_table_content_entry_base"
                 ],
                 "Public_methods": [
                     "parse"
                 ],
                 "Method_overview": {
                     "parse": [
-                        "Parse a list of text lines describing the public assignable."
+                        "Parse free-form text and Waterloo table blocks describing the factory function."
+                    ]
+                }
+            }
+        },
+        "sdv.doc.waterloo.docitem_sections.docitem_function_overview_entry": {
+            "signature": {
+                "text": "docitem_function_overview_entry.__init__(self) -> 'None'",
+                "parameters": [],
+                "returns": "None"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "class",
+                    "normative_sections": [
+                        "Contract",
+                        "Derived_from",
+                        "Public_methods"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST represent the content of an entry in section |label|`Function_overview`.",
+                        "MUST be able to hold free-form text and table blocks."
+                    ],
+                    "constructor": [
+                        "MUST be default-constructible."
+                    ]
+                },
+                "Derived_from": [
+                    "docitem_table_content_entry_base"
+                ],
+                "Public_methods": [
+                    "parse"
+                ],
+                "Method_overview": {
+                    "parse": [
+                        "Parse a list of text lines describing the public function."
+                    ]
+                }
+            }
+        },
+        "sdv.doc.waterloo.docitem_sections.docitem_inherited_defitems": {
+            "signature": {
+                "text": "docitem_inherited_defitems.__init__(self) -> 'None'",
+                "parameters": [],
+                "returns": "None"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "class",
+                    "normative_sections": [
+                        "Contract",
+                        "Derived_from",
+                        "Public_methods"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST represent the special entry in the |label|`Definitions` section.",
+                        "MUST accept and store a list of identifiers."
+                    ],
+                    "constructor": [
+                        "MUST be default-constructible."
+                    ]
+                },
+                "Derived_from": [
+                    "docitem_list_of_symbols_base"
+                ],
+                "Public_methods": [
+                    "parse"
+                ],
+                "Method_overview": {
+                    "parse": [
+                        "Parse the content of an inherited defitem."
                     ]
                 }
             }
@@ -11284,14 +11518,14 @@
                 "Contract": {
                     "general": [
                         "MUST represent the content of an entry in section |label|`Method_overview`.",
-                        "MUST be able to hold a list of strings."
+                        "MUST be able to hold free-form text and table blocks."
                     ],
                     "constructor": [
                         "MUST be default-constructible."
                     ]
                 },
                 "Derived_from": [
-                    "docitem_free_text_entry_base"
+                    "docitem_table_content_entry_base"
                 ],
                 "Public_methods": [
                     "parse"
@@ -11299,6 +11533,43 @@
                 "Method_overview": {
                     "parse": [
                         "Parse a list of text lines describing the public method."
+                    ]
+                }
+            }
+        },
+        "sdv.doc.waterloo.docitem_sections.docitem_notes_entry": {
+            "signature": {
+                "text": "docitem_notes_entry.__init__(self) -> 'None'",
+                "parameters": [],
+                "returns": "None"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "class",
+                    "normative_sections": [
+                        "Contract",
+                        "Derived_from",
+                        "Public_methods"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST represent the content of an entry in section |label|`Notes`.",
+                        "MUST be able to hold free-form text and Waterloo table blocks."
+                    ],
+                    "constructor": [
+                        "MUST be default-constructible."
+                    ]
+                },
+                "Derived_from": [
+                    "docitem_table_content_entry_base"
+                ],
+                "Public_methods": [
+                    "parse"
+                ],
+                "Method_overview": {
+                    "parse": [
+                        "Parse free-form text and Waterloo table blocks of the note."
                     ]
                 }
             }
@@ -11321,58 +11592,21 @@
                 "Contract": {
                     "general": [
                         "MUST represent an parameter entry in the |label|`Parameters` section.",
-                        "MUST accept and store a list of strings."
+                        "MUST accept and store free-form text and Waterloo table blocks."
                     ],
                     "constructor": [
                         "MUST be default-constructible."
                     ]
                 },
                 "Derived_from": [
-                    "docitem_free_text_entry_base"
+                    "docitem_table_content_entry_base"
                 ],
                 "Public_methods": [
                     "parse"
                 ],
                 "Method_overview": {
                     "parse": [
-                        "Parse the content of a parameter entry."
-                    ]
-                }
-            }
-        },
-        "sdv.doc.waterloo.docitem_sections.docitem_raises_entry": {
-            "signature": {
-                "text": "docitem_raises_entry.__init__(self) -> 'None'",
-                "parameters": [],
-                "returns": "None"
-            },
-            "doc": {
-                "Preamble": {
-                    "profile": "class",
-                    "normative_sections": [
-                        "Contract",
-                        "Derived_from",
-                        "Public_methods"
-                    ]
-                },
-                "Contract": {
-                    "general": [
-                        "MUST represent an exception entry in the |label|`Raises` section.",
-                        "MUST accept and store a list of strings."
-                    ],
-                    "constructor": [
-                        "MUST be default-constructible."
-                    ]
-                },
-                "Derived_from": [
-                    "docitem_free_text_entry_base"
-                ],
-                "Public_methods": [
-                    "parse"
-                ],
-                "Method_overview": {
-                    "parse": [
-                        "Parse the content of an exception entry."
+                        "Parse free-form text and Waterloo table blocks of a parameter entry."
                     ]
                 }
             }
@@ -11467,9 +11701,9 @@
                 }
             }
         },
-        "sdv.doc.waterloo.docitem_sections.docitem_definitions_entry": {
+        "sdv.doc.waterloo.docitem_sections.docitem_public_assignables_entry": {
             "signature": {
-                "text": "docitem_definitions_entry.__init__(self) -> 'None'",
+                "text": "docitem_public_assignables_entry.__init__(self) -> 'None'",
                 "parameters": [],
                 "returns": "None"
             },
@@ -11484,29 +11718,29 @@
                 },
                 "Contract": {
                     "general": [
-                        "MUST represent an entry in the |label|`Definitions` section.",
-                        "MUST accept and store a list of strings."
+                        "MUST represent the content of an entry in section |label|`Public_assignables`.",
+                        "MUST be able to hold free-form text and Waterloo table blocks."
                     ],
                     "constructor": [
                         "MUST be default-constructible."
                     ]
                 },
                 "Derived_from": [
-                    "docitem_free_text_entry_base"
+                    "docitem_table_content_entry_base"
                 ],
                 "Public_methods": [
                     "parse"
                 ],
                 "Method_overview": {
                     "parse": [
-                        "Parse the content of an definition entry."
+                        "Parse free-form text and Waterloo table blocks describing the public assignable."
                     ]
                 }
             }
         },
-        "sdv.doc.waterloo.docitem_sections.docitem_function_overview_entry": {
+        "sdv.doc.waterloo.docitem_sections.docitem_public_types_entry": {
             "signature": {
-                "text": "docitem_function_overview_entry.__init__(self) -> 'None'",
+                "text": "docitem_public_types_entry.__init__(self) -> 'None'",
                 "parameters": [],
                 "returns": "None"
             },
@@ -11521,29 +11755,29 @@
                 },
                 "Contract": {
                     "general": [
-                        "MUST represent the content of an entry in section |label|`Function_overview`.",
-                        "MUST be able to hold a list of strings."
+                        "MUST represent the content of an entry in section |label|`Public_types`.",
+                        "MUST be able to hold free-form text and Waterloo table blocks."
                     ],
                     "constructor": [
                         "MUST be default-constructible."
                     ]
                 },
                 "Derived_from": [
-                    "docitem_free_text_entry_base"
+                    "docitem_table_content_entry_base"
                 ],
                 "Public_methods": [
                     "parse"
                 ],
                 "Method_overview": {
                     "parse": [
-                        "Parse a list of text lines describing the public function."
+                        "Parse free-form text and Waterloo table blocks describing the public type."
                     ]
                 }
             }
         },
-        "sdv.doc.waterloo.docitem_sections.docitem_inherited_defitems": {
+        "sdv.doc.waterloo.docitem_sections.docitem_raises_entry": {
             "signature": {
-                "text": "docitem_inherited_defitems.__init__(self) -> 'None'",
+                "text": "docitem_raises_entry.__init__(self) -> 'None'",
                 "parameters": [],
                 "returns": "None"
             },
@@ -11558,22 +11792,22 @@
                 },
                 "Contract": {
                     "general": [
-                        "MUST represent the special entry in the |label|`Definitions` section.",
-                        "MUST accept and store a list of identifiers."
+                        "MUST represent an exception entry in the |label|`Raises` section.",
+                        "MUST accept and store free-form text and Waterloo table blocks."
                     ],
                     "constructor": [
                         "MUST be default-constructible."
                     ]
                 },
                 "Derived_from": [
-                    "docitem_list_of_symbols_base"
+                    "docitem_table_content_entry_base"
                 ],
                 "Public_methods": [
                     "parse"
                 ],
                 "Method_overview": {
                     "parse": [
-                        "Parse the content of an inherited defitem."
+                        "Parse free-form text and Waterloo table blocks of an exception entry."
                     ]
                 }
             }
@@ -11595,65 +11829,28 @@
                 },
                 "Terminology": {
                     "Terminology entry": [
-                        "Describes a docstring subtree consisting of a string valued qualified identifier",
-                        "and a list of free-form description lines: |type|`str, List[str]`"
+                        "Describes a docstring subtree consisting of a human-readable label and",
+                        "free-form text or Waterloo table blocks."
                     ]
                 },
                 "Contract": {
                     "general": [
                         "MUST represent an entry in the |label|`Terminology` section.",
-                        "MUST accept and store a list of strings."
+                        "MUST accept and store free-form text and Waterloo table blocks."
                     ],
                     "constructor": [
                         "MUST be default-constructible."
                     ]
                 },
                 "Derived_from": [
-                    "docitem_free_text_entry_base"
+                    "docitem_table_content_entry_base"
                 ],
                 "Public_methods": [
                     "parse"
                 ],
                 "Method_overview": {
                     "parse": [
-                        "Parse the content of an terminology entry."
-                    ]
-                }
-            }
-        },
-        "sdv.doc.waterloo.docitem_sections.docitem_notes_entry": {
-            "signature": {
-                "text": "docitem_notes_entry.__init__(self) -> 'None'",
-                "parameters": [],
-                "returns": "None"
-            },
-            "doc": {
-                "Preamble": {
-                    "profile": "class",
-                    "normative_sections": [
-                        "Contract",
-                        "Derived_from",
-                        "Public_methods"
-                    ]
-                },
-                "Contract": {
-                    "general": [
-                        "MUST represent the content of an entry in section |label|`Notes`.",
-                        "MUST be able to hold a list of strings."
-                    ],
-                    "constructor": [
-                        "MUST be default-constructible."
-                    ]
-                },
-                "Derived_from": [
-                    "docitem_free_text_entry_base"
-                ],
-                "Public_methods": [
-                    "parse"
-                ],
-                "Method_overview": {
-                    "parse": [
-                        "Parse a list of text lines of the note."
+                        "Parse the content of a terminology entry, including Waterloo table blocks."
                     ]
                 }
             }
@@ -11736,6 +11933,60 @@
                     "RuntimeError": [
                         "MUST raise if prefix contains a mix not representable as |var|`n` repetitions of |var|`INDENT_UNIT`.",
                         "MUST raise if the leading white space characters (tabs or four spaces) at the beginning of the line cannot be described by the indentation scheme passed."
+                    ]
+                }
+            }
+        },
+        "sdv.doc.waterloo.docitem_tokenizer.get_scopes_of_tree": {
+            "signature": {
+                "text": "get_scopes_of_tree(tr: 'tracer', tree: 'DocstringTree') -> 'Scopes'",
+                "parameters": [
+                    {
+                        "name": "tr",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "tracer",
+                        "default": null
+                    },
+                    {
+                        "name": "tree",
+                        "kind": "POSITIONAL_OR_KEYWORD",
+                        "annotation": "DocstringTree",
+                        "default": null
+                    }
+                ],
+                "returns": "Scopes"
+            },
+            "doc": {
+                "Preamble": {
+                    "profile": "function",
+                    "normative_sections": [
+                        "Contract",
+                        "Parameters",
+                        "Returns",
+                        "Raises"
+                    ]
+                },
+                "Contract": {
+                    "general": [
+                        "MUST extract the |label|`Preamble` from the docstring tree.",
+                        "MUST extract the |label|`scope` from the |label|`Preamble`.",
+                        "MUST return the default if |label|`scope` is not present or empty."
+                    ]
+                },
+                "Parameters": {
+                    "tr": [
+                        "Tracer for providing context and collecting warnings"
+                    ],
+                    "tree": [
+                        "The docitem tree to be examined"
+                    ]
+                },
+                "Returns": [
+                    "MUST return the set of scopes found, or the default., which is a set containing a single element |value|`PUBLIC`."
+                ],
+                "Raises": {
+                    "SectionNotFoundError": [
+                        "MUST raise if there is no |label|`Preamble`"
                     ]
                 }
             }
@@ -11886,60 +12137,6 @@
                 }
             }
         },
-        "sdv.doc.waterloo.docitem_tokenizer.get_scopes_of_tree": {
-            "signature": {
-                "text": "get_scopes_of_tree(tr: 'tracer', tree: 'DocstringTree') -> 'Scopes'",
-                "parameters": [
-                    {
-                        "name": "tr",
-                        "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "tracer",
-                        "default": null
-                    },
-                    {
-                        "name": "tree",
-                        "kind": "POSITIONAL_OR_KEYWORD",
-                        "annotation": "DocstringTree",
-                        "default": null
-                    }
-                ],
-                "returns": "Scopes"
-            },
-            "doc": {
-                "Preamble": {
-                    "profile": "function",
-                    "normative_sections": [
-                        "Contract",
-                        "Parameters",
-                        "Returns",
-                        "Raises"
-                    ]
-                },
-                "Contract": {
-                    "general": [
-                        "MUST extract the |label|`Preamble` from the docstring tree.",
-                        "MUST extract the |label|`scope` from the |label|`Preamble`.",
-                        "MUST return the default if |label|`scope` is not present or empty."
-                    ]
-                },
-                "Parameters": {
-                    "tr": [
-                        "Tracer for providing context and collecting warnings"
-                    ],
-                    "tree": [
-                        "The docitem tree to be examined"
-                    ]
-                },
-                "Returns": [
-                    "MUST return the set of scopes found, or the default., which is a set containing a single element |value|`PUBLIC`."
-                ],
-                "Raises": {
-                    "SectionNotFoundError": [
-                        "MUST raise if there is no |label|`Preamble`"
-                    ]
-                }
-            }
-        },
         "sdv.doc.waterloo.docitem_tokenizer.to_string_tree": {
             "signature": {
                 "text": "to_string_tree(tree: 'DocstringSubtree', indent_scheme: 'int' = 0, indent: 'int' = 0) -> 'str'",
@@ -12006,6 +12203,9 @@
         "sdv.doc.waterloo.docitem_convert.WtrlJsonNode_t": {
             "doc": {},
             "doc_lines": [
+                "Type for JSON nodes. This type MUST be public because |func|`to_node_docstring_tree_json` and |func|`to_node_signature_json` are."
+            ],
+            "doc_blocks": [
                 "Type for JSON nodes. This type MUST be public because |func|`to_node_docstring_tree_json` and |func|`to_node_signature_json` are."
             ],
             "annotation": "Dict[str, ForwardRef('WtrlJsonNode_t')] | List[ForwardRef('WtrlJsonNode_t')] | str | int | float | bool | None",
@@ -12365,11 +12565,17 @@
             "doc_lines": [
                 "Supported profile labels for the helper layer."
             ],
+            "doc_blocks": [
+                "Supported profile labels for the helper layer."
+            ],
             "doc_lines_kind": "type"
         },
         "sdv.doc.waterloo.docitem_helper.DocstringSubtree": {
             "doc": {},
             "doc_lines": [
+                "Recursive docstring tree node type."
+            ],
+            "doc_blocks": [
                 "Recursive docstring tree node type."
             ],
             "doc_lines_kind": "type"
@@ -12379,6 +12585,9 @@
             "doc_lines": [
                 "A full docstring tree represented as a list of subtree values."
             ],
+            "doc_blocks": [
+                "A full docstring tree represented as a list of subtree values."
+            ],
             "doc_lines_kind": "type"
         },
         "sdv.doc.waterloo.docitem_helper.AnnotatableObject": {
@@ -12386,11 +12595,17 @@
             "doc_lines": [
                 "Objects that can be annotated by the helper layer."
             ],
+            "doc_blocks": [
+                "Objects that can be annotated by the helper layer."
+            ],
             "doc_lines_kind": "type"
         },
         "sdv.doc.waterloo.docitem_helper.RuleId": {
             "doc": {},
             "doc_lines": [
+                "Rule identifier type alias."
+            ],
+            "doc_blocks": [
                 "Rule identifier type alias."
             ],
             "annotation": "str",
@@ -12401,11 +12616,17 @@
             "doc_lines": [
                 "Tracer origin labels."
             ],
+            "doc_blocks": [
+                "Tracer origin labels."
+            ],
             "doc_lines_kind": "type"
         },
         "sdv.doc.waterloo.docitem_helper.Details": {
             "doc": {},
             "doc_lines": [
+                "Tracer details payload."
+            ],
+            "doc_blocks": [
                 "Tracer details payload."
             ],
             "doc_lines_kind": "type"
@@ -12415,6 +12636,9 @@
             "doc_lines": [
                 "A set of scope values."
             ],
+            "doc_blocks": [
+                "A set of scope values."
+            ],
             "doc_lines_kind": "type"
         },
         "sdv.doc.waterloo.docitem_helper.Documentable": {
@@ -12422,11 +12646,17 @@
             "doc_lines": [
                 "Objects that can be traversed by the helper functions."
             ],
+            "doc_blocks": [
+                "Objects that can be traversed by the helper functions."
+            ],
             "doc_lines_kind": "type"
         },
         "sdv.doc.waterloo.docitem_helper.AstDocNode": {
             "doc": {},
             "doc_lines": [
+                "An AST node type relevant for docstring extraction."
+            ],
+            "doc_blocks": [
                 "An AST node type relevant for docstring extraction."
             ],
             "annotation": "ast.ClassDef | ast.FunctionDef | ast.AsyncFunctionDef",
@@ -12437,11 +12667,17 @@
             "doc_lines": [
                 "Infixes for building anchors, like \"mod\" in \"wtrl-mod-4:spam-4:eggs\"."
             ],
+            "doc_blocks": [
+                "Infixes for building anchors, like \"mod\" in \"wtrl-mod-4:spam-4:eggs\"."
+            ],
             "doc_lines_kind": "type"
         },
         "sdv.doc.waterloo.docitem_helper.SOURCE_DOCSTRING_CACHE": {
             "doc": {},
             "doc_lines": [
+                "A cache for storing source docstrings of objects to avoid redundant retrievals."
+            ],
+            "doc_blocks": [
                 "A cache for storing source docstrings of objects to avoid redundant retrievals."
             ],
             "annotation": "Dict[int, str]",
@@ -12453,12 +12689,19 @@
                 "A cache for storing resolved docstring text by object identity.",
                 "This cache is intentionally public so callers may inspect, clear, or replace it during a process lifetime."
             ],
+            "doc_blocks": [
+                "A cache for storing resolved docstring text by object identity.",
+                "This cache is intentionally public so callers may inspect, clear, or replace it during a process lifetime."
+            ],
             "annotation": "Dict[int, str]",
             "doc_lines_kind": "variable"
         },
         "sdv.doc.waterloo.docitem_helper.RE_RULE_ID": {
             "doc": {},
             "doc_lines": [
+                "Regular expression for rule IDs. Undocumented: RE_RULE_ID_COMPILED, the precompiled version for performance."
+            ],
+            "doc_blocks": [
                 "Regular expression for rule IDs. Undocumented: RE_RULE_ID_COMPILED, the precompiled version for performance."
             ],
             "doc_lines_kind": "constant"
@@ -12468,11 +12711,17 @@
             "doc_lines": [
                 "Regular expression for identifiers. Undocumented: RE_IDENTIFIER_COMPILED, the precompiled version for performance."
             ],
+            "doc_blocks": [
+                "Regular expression for identifiers. Undocumented: RE_IDENTIFIER_COMPILED, the precompiled version for performance."
+            ],
             "doc_lines_kind": "constant"
         },
         "sdv.doc.waterloo.docitem_helper.RE_QUALIFIED_IDENTIFIER": {
             "doc": {},
             "doc_lines": [
+                "Regular expression for qualified identifiers. Undocumented: RE_QUALIFIED_IDENTIFIER_COMPILED, the precompiled version for performance."
+            ],
+            "doc_blocks": [
                 "Regular expression for qualified identifiers. Undocumented: RE_QUALIFIED_IDENTIFIER_COMPILED, the precompiled version for performance."
             ],
             "doc_lines_kind": "constant"
@@ -12482,11 +12731,17 @@
             "doc_lines": [
                 "Regular expression for comma-separated identifiers. Undocumented: RE_CSV_IDENTIFIERS_COMPILED, the precompiled version for performance."
             ],
+            "doc_blocks": [
+                "Regular expression for comma-separated identifiers. Undocumented: RE_CSV_IDENTIFIERS_COMPILED, the precompiled version for performance."
+            ],
             "doc_lines_kind": "constant"
         },
         "sdv.doc.waterloo.docitem_helper.KEYWORDS_OF_NORMATIVITY": {
             "doc": {},
             "doc_lines": [
+                "Canonical Waterloo tokens that make a statement normative."
+            ],
+            "doc_blocks": [
                 "Canonical Waterloo tokens that make a statement normative."
             ],
             "doc_lines_kind": "constant"
@@ -12496,6 +12751,9 @@
             "doc_lines": [
                 "Regular expression for Waterloo markup roles in backtick markup."
             ],
+            "doc_blocks": [
+                "Regular expression for Waterloo markup roles in backtick markup."
+            ],
             "doc_lines_kind": "constant"
         },
         "sdv.doc.waterloo.docitem_helper.RE_WTRL_MARKUP_BACKTICK": {
@@ -12503,11 +12761,18 @@
             "doc_lines": [
                 "Regular expression for matching Waterloo backtick markup with roles. Undocumented: RE_WTRL_MARKUP_BACKTICK_COMPILED, the precompiled version for performance."
             ],
+            "doc_blocks": [
+                "Regular expression for matching Waterloo backtick markup with roles. Undocumented: RE_WTRL_MARKUP_BACKTICK_COMPILED, the precompiled version for performance."
+            ],
             "doc_lines_kind": "constant"
         },
         "sdv.doc.waterloo.docitem_helper.RE_WTRL_ANGLE_HTTPS_REF": {
             "doc": {},
             "doc_lines": [
+                "Regular expression for matching Waterloo angle bracket HTTPS references. Undocumented: RE_WTRL_ANGLE_HTTPS_REF_COMPILED, the precompiled version for performance.",
+                "References consist of two parts: clear text and <link>, optionally separated by whitespace."
+            ],
+            "doc_blocks": [
                 "Regular expression for matching Waterloo angle bracket HTTPS references. Undocumented: RE_WTRL_ANGLE_HTTPS_REF_COMPILED, the precompiled version for performance.",
                 "References consist of two parts: clear text and <link>, optionally separated by whitespace."
             ],
@@ -12519,6 +12784,10 @@
                 "Regular expression for matching Waterloo angle bracket wtrl references. Undocumented: RE_WTRL_ANGLE_WTRL_REF_COMPILED, the precompiled version for performance.",
                 "References consist of two parts: clear text and <link>, optionally separated by whitespace."
             ],
+            "doc_blocks": [
+                "Regular expression for matching Waterloo angle bracket wtrl references. Undocumented: RE_WTRL_ANGLE_WTRL_REF_COMPILED, the precompiled version for performance.",
+                "References consist of two parts: clear text and <link>, optionally separated by whitespace."
+            ],
             "doc_lines_kind": "constant"
         },
         "sdv.doc.waterloo.docitem_helper.RE_WTRL_JSON_SCHEMA_NAME": {
@@ -12526,11 +12795,17 @@
             "doc_lines": [
                 "Regular expression for matching Waterloo JSON Schema filenames. Undocumented: RE_WTRL_JSON_SCHEMA_NAME_COMPILED, the precompiled version for performance."
             ],
+            "doc_blocks": [
+                "Regular expression for matching Waterloo JSON Schema filenames. Undocumented: RE_WTRL_JSON_SCHEMA_NAME_COMPILED, the precompiled version for performance."
+            ],
             "doc_lines_kind": "constant"
         },
         "sdv.doc.waterloo.docitem_helper.RULE_ID_WHITELIST": {
             "doc": {},
             "doc_lines": [
+                "Whitelist reasons for legacy rule identifiers used by the helper layer."
+            ],
+            "doc_blocks": [
                 "Whitelist reasons for legacy rule identifiers used by the helper layer."
             ],
             "annotation": "Final[Dict[str, WhitelistReason]]",
@@ -12541,12 +12816,18 @@
             "doc_lines": [
                 "Canonical subsection ordering for section snippets and expected snippets."
             ],
+            "doc_blocks": [
+                "Canonical subsection ordering for section snippets and expected snippets."
+            ],
             "annotation": "Final[Dict[str, None | Sequence[str]]]",
             "doc_lines_kind": "constant"
         },
         "sdv.doc.waterloo.docitem_helper.CANONICAL_ORDER_OF_PROFILES": {
             "doc": {},
             "doc_lines": [
+                "Canonical profile ordering for CLI help and documentation."
+            ],
+            "doc_blocks": [
                 "Canonical profile ordering for CLI help and documentation."
             ],
             "annotation": "Final[list[Profile_t]]",
@@ -12557,11 +12838,17 @@
             "doc_lines": [
                 "Trait tag mapping for trait labels."
             ],
+            "doc_blocks": [
+                "Trait tag mapping for trait labels."
+            ],
             "doc_lines_kind": "constant"
         },
         "sdv.doc.waterloo.docitem_helper.SCOPE_TAG_MAP": {
             "doc": {},
             "doc_lines": [
+                "Scope tag mapping for visibility selection."
+            ],
+            "doc_blocks": [
                 "Scope tag mapping for visibility selection."
             ],
             "doc_lines_kind": "constant"
@@ -12571,11 +12858,17 @@
             "doc_lines": [
                 "Flavour tag mapping for normativity keyword rendering."
             ],
+            "doc_blocks": [
+                "Flavour tag mapping for normativity keyword rendering."
+            ],
             "doc_lines_kind": "constant"
         },
         "sdv.doc.waterloo.docitem_helper.FORMAT_TAG_MAP": {
             "doc": {},
             "doc_lines": [
+                "Output format tag mapping for string-related output."
+            ],
+            "doc_blocks": [
                 "Output format tag mapping for string-related output."
             ],
             "doc_lines_kind": "constant"
@@ -12585,11 +12878,20 @@
             "doc_lines": [
                 "Status tag mapping for Preamble.status."
             ],
+            "doc_blocks": [
+                "Status tag mapping for Preamble.status."
+            ],
             "doc_lines_kind": "constant"
         },
         "sdv.doc.waterloo.docitem_helper.SECTION_PROPERTIES": {
             "doc": {},
             "doc_lines": [
+                "MUST be a mapping from section and subsection labels to their properties relevant for explanation and validation,",
+                "for example body category, normativity, and profile applicability.",
+                "Informative: This is a carefully distilled machine-readable representation of the relevant rules",
+                "from the documentation standard, but the documentation remains the Single Source of Truth for the standard."
+            ],
+            "doc_blocks": [
                 "MUST be a mapping from section and subsection labels to their properties relevant for explanation and validation,",
                 "for example body category, normativity, and profile applicability.",
                 "Informative: This is a carefully distilled machine-readable representation of the relevant rules",

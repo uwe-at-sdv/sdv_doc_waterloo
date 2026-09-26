@@ -6,6 +6,8 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+import pytest
+
 from pytest_common import DIR_MODULE, run_waterlint
 from sdv.doc.waterloo.docitem_docstring import make_docitem_tree
 from sdv.doc.waterloo.docitem_helper import tracer
@@ -26,10 +28,10 @@ def test_gen_minimal_authoring_json_function_golden_output() -> None:
 	result = _generate("gen-minimal-authoring-json", "docitem_helper.get_obj_name")
 	assert result.returncode == 0, result.stderr
 	expected = {
-		"$schema": "https://sci-d-vis.com/schema/wtrl-authoring-object-json-0.1.0.schema.json",
+		"$schema": "https://sci-d-vis.com/schema/wtrl-authoring-object-json-0.2.0.schema.json",
 		"$id": "urn:waterlint:wtrl-authoring-object-json:docitem_helper.get_obj_name",
 		"__WTRL_CATEGORY__": "wtrl-authoring-object-json",
-		"__WTRL_VERSION__": {"schema": "0.1.0"},
+		"__WTRL_VERSION__": {"schema": "0.2.0"},
 		"qualified_name": "docitem_helper.get_obj_name",
 		"profile": "function",
 		"doc": {
@@ -52,10 +54,10 @@ def test_gen_full_authoring_json_class_golden_output() -> None:
 	result = _generate("gen-full-authoring-json", "docitem_tracer.tracer")
 	assert result.returncode == 0, result.stderr
 	expected = {
-		"$schema": "https://sci-d-vis.com/schema/wtrl-authoring-object-json-0.1.0.schema.json",
+		"$schema": "https://sci-d-vis.com/schema/wtrl-authoring-object-json-0.2.0.schema.json",
 		"$id": "urn:waterlint:wtrl-authoring-object-json:docitem_tracer.tracer",
 		"__WTRL_CATEGORY__": "wtrl-authoring-object-json",
-		"__WTRL_VERSION__": {"schema": "0.1.0"},
+		"__WTRL_VERSION__": {"schema": "0.2.0"},
 		"qualified_name": "docitem_tracer.tracer",
 		"profile": "class",
 		"doc": {
@@ -98,3 +100,19 @@ def test_generated_authoring_json_validates_and_roundtrips_to_waterloo(tmp_path:
 	assert validate_authoring_document(document) == []
 	rendered = render_authoring_document(document)
 	assert get_profile(make_docitem_tree(tracer(), rendered)) == "function"
+
+
+@pytest.mark.parametrize("profile", ["module", "class", "function", "method", "inherited_method"])
+def test_gen_showcase_authoring_json_copies_valid_profile_template(profile: str) -> None:
+	"""Each profile showcase must be copied unchanged and render as its declared profile."""
+	result = run_waterlint("gen-showcase-authoring-json", "--profile", profile, "--out", "@STDOUT")
+	assert result.returncode == 0, result.stderr
+
+	template_name = f"showcase-authoring-{profile.replace('_', '-')}.json"
+	template_path = Path(DIR_MODULE) / "templates" / template_name
+	assert result.stdout == template_path.read_text(encoding="utf-8")
+
+	document = load_authoring_document(json.loads(result.stdout))
+	assert validate_authoring_document(document) == []
+	rendered = render_authoring_document(document)
+	assert get_profile(make_docitem_tree(tracer(), rendered)) == profile
