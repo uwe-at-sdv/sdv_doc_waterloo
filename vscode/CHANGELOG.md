@@ -4,6 +4,7 @@ Format:
 
 - VERSION [YYYY-MM-DD]: Summary.
 
+- 0.4.1 [2026-09-26]:	Try again
 - 0.4.0 [2026-09-24]:	TextMate: Highlighting for tables
 - 0.3.4 [2026-09-16]:	Trying buxfix for object resolution in validate.
 - 0.3.3 [2026-07-29]:	Bugfix TextMate: "Description" in Contract.normative_sections
