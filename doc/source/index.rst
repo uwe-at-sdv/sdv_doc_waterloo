@@ -21,6 +21,7 @@ Waterloo Docstrings
 	_test_freeform.rst
 	_test_tables.rst
 	test_pygments_lexer.rst
+	test_showcase_authoring_json.rst
 	_test_scope.rst
 	legal.rst
 

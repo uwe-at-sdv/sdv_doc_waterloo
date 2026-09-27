@@ -21,6 +21,8 @@ END_TABLE: Final[str] = "|end_table|"
 ROWS: Final[str] = "|rows|"
 TAB: Final[str] = "|tab|"
 TITLE: Final[str] = "|title|"
+CONTROL_TOKENS: Final[frozenset[str]] = frozenset({BEGIN_TABLE, COLUMNS, END_TABLE, ROWS, TITLE})
+LIST_MARKER_PREFIXES: Final[tuple[str, ...]] = ("* ", "+ ", "- ", "# ")
 
 
 # See definition of Control line
@@ -28,9 +30,22 @@ def _is_control_line(line: str, token: str) -> bool:
 	return line.strip() == token
 
 # See TBL-007 and preceeding definitions.
-def _split_cells(line: str) -> list[str]:
+def _validate_cell(tr: tracer, cell: str) -> None:
+	"""Reject textflow tokens that would make a table cell structurally ambiguous."""
+	if cell == "|":
+		raise_parsing_error(tr, "TBL-010", "table cell must not contain the paragraph token '|'")
+	if cell.startswith(LIST_MARKER_PREFIXES):
+		raise_parsing_error(tr, "TBL-010", f"table cell must not start with list marker {cell[:1]!r}")
+	if cell in CONTROL_TOKENS:
+		raise_parsing_error(tr, "TBL-010", f"table cell must not contain control token {cell!r}")
+
+
+def _split_cells(tr: tracer, line: str) -> list[str]:
 	"""Split one physical table row while retaining deliberately empty cells."""
-	return [cell.strip() for cell in line.split(TAB)]
+	cells = [cell.strip() for cell in line.split(TAB)]
+	for cell in cells:
+		_validate_cell(tr, cell)
+	return cells
 
 # Waterloo's tokenizer already skips blank lines, but we leave check and skip
 # here as well since the API-function parse_table_content_blocks() is public
@@ -48,7 +63,7 @@ def _expect_row(tr: tracer, lines: Sequence[str], pos: int, what: str) -> tuple[
 	line = lines[pos]
 	if _is_control_line(line, BEGIN_TABLE) or _is_control_line(line, COLUMNS) or _is_control_line(line, ROWS) or _is_control_line(line, END_TABLE) or _is_control_line(line, TITLE):
 		raise_parsing_error(tr, "TBL-008", f"expected {what}, got control line '{line.strip()}'")
-	return _split_cells(line), pos + 1
+	return _split_cells(tr, line), pos + 1
 
 
 def _parse_table(tr: tracer, lines: Sequence[str], start: int) -> tuple[docitem_table, int]:
@@ -113,7 +128,7 @@ def _parse_table(tr: tracer, lines: Sequence[str], start: int) -> tuple[docitem_
 				break
 			if _is_control_line(lines[pos], BEGIN_TABLE) or _is_control_line(lines[pos], COLUMNS) or _is_control_line(lines[pos], ROWS):
 				raise_parsing_error(tr, "TBL-008", f"unexpected control line '{lines[pos].strip()}' in table rows")
-			row = _split_cells(lines[pos])
+			row = _split_cells(tr, lines[pos])
 			if len(row) != column_count:
 				raise_parsing_error(tr, "TBL-006", f"row has {len(row)} cells, expected {column_count}")
 			rows.append(row)

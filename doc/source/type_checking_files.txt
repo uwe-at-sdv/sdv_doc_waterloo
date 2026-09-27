@@ -33,6 +33,7 @@ sdv/doc/waterloo/docitem_diagnostics.py
 sdv/doc/waterloo/docitem_base.py
 sdv/doc/waterloo/docitem_tables.py
 sdv/doc/waterloo/waterlint_walk.py
+sdv/doc/waterloo/waterlint_gen_showcase_authoring_json.py
 sdv/doc/waterloo/waterlint_generate_common.py
 sdv/doc/waterloo/waterlint_carve.py
 sdv/doc/waterloo/waterlint_explain_subsection.py

@@ -2,6 +2,8 @@
 
 ## Current release history
 
+- 0.25.1 [2026-09-27]:
+  - Documentation: Chapter on Showcases for Authoring JSON; Table cell specification more precise.
 - 0.25.0 [2026-09-26]:
   - Tables in docstring boxes: Pygments, VS Code, HTML, Sphinx
 - 0.24.2 [2026-09-18]:

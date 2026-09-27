@@ -80,6 +80,12 @@ def test_parse_table_content_blocks_supports_multiple_groups_and_multiline_title
 		([
 			"|begin_table|", "|title| Inputs", "|columns|", "A", "|rows|", "|end_table|",
 		], "TBL-004", "expected |columns|"),
+		([
+			"|begin_table|", "|columns|", "* Name |tab| Meaning", "|rows|", "item |tab| value", "|end_table|",
+		], "TBL-010", "list marker"),
+		([
+			"|begin_table|", "|columns|", "Name |tab| Meaning", "|rows|", "item |tab| |begin_table|", "|end_table|",
+		], "TBL-010", "control token"),
 	],
 )
 def test_parse_table_content_blocks_reports_invalid_structure_with_tbl_rule(

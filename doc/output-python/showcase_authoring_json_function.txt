@@ -1,0 +1,72 @@
+Preamble:
+	profile:
+		function
+	normative_sections:
+		Definitions, Contract, Description, Parameters, Returns, Raises
+	scope:
+		public
+Definitions:
+	Level:
+		One supported level of detail.
+Terminology:
+	verbose:
+		A mode that includes explanatory detail in the returned text.
+Contract:
+	general:
+		|Must| return a description for the requested level.
+	requires:
+		|Must| receive a supported |var|`level` value.
+	ensures:
+		|Must| return a non-empty |type|`str`.
+Description:
+	|Must| use the following structured data to explain the level.
+	|
+	* The normal mode returns a concise description.
+	* Verbose mode adds details.
+	+ Nested list entries remain available in Authoring JSON.
+	|
+	|begin_table|
+	|title|
+	Level behavior
+	|columns|
+	Level |tab| Result
+	|rows|
+	basic |tab| Concise text.
+	detailed |tab| Expanded text.
+	|end_table|
+Parameters:
+	level:
+		The requested level.
+		|
+		|begin_table|
+		|columns|
+		Value |tab| Meaning
+		|rows|
+		basic |tab| Select concise output.
+		detailed |tab| Select expanded output.
+		|end_table|
+	verbose:
+		Whether the returned description includes additional detail.
+Returns:
+	A description matching |var|`level`.
+	|
+	|begin_table|
+	|columns|
+	Condition |tab| Returned content
+	|rows|
+	verbose is false |tab| Concise description.
+	verbose is true |tab| Expanded description.
+	|end_table|
+Raises:
+	ValueError:
+		Raised if |var|`level` is unsupported.
+		|
+		|begin_table|
+		|columns|
+		Input |tab| Reason
+		|rows|
+		unknown |tab| No matching level exists.
+		|end_table|
+Notes:
+	Workflow:
+		Edit this document, validate it, and render it as a raw Waterloo docstring.

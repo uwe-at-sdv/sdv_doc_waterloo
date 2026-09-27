@@ -1,0 +1,37 @@
+r"""
+Preamble:
+	profile:
+		method
+	normative_sections:
+		Definitions, Contract, Parameters, Returns, Raises
+	scope:
+		public
+Definitions:
+	Detail:
+		The amount of information included in a description.
+Contract:
+	general:
+		|Must| return a description of this instance.
+	ensures:
+		|Must| not modify the instance state.
+Description:
+	Methods use the same text-block structures as functions.
+	|
+	|begin_table|
+	|columns|
+	detail |tab| Result
+	|rows|
+	false |tab| A concise description.
+	true |tab| An expanded description.
+	|end_table|
+Parameters:
+	detail:
+		Whether to include additional details.
+Returns:
+	A |type|`str` describing this instance.
+Raises:
+Notes:
+	Receiver:
+		The receiver parameter is represented by the method profile and normally needs no
+		Parameters entry.
+"""

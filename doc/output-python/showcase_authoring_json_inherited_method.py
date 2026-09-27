@@ -1,0 +1,30 @@
+r"""
+Preamble:
+	profile:
+		inherited_method
+	normative_sections:
+		Definitions, Contract
+	scope:
+		public
+Definitions:
+	InheritedBehavior:
+		Behavior supplied by a base-class method.
+Contract:
+	general:
+		|Must| retain the behavior of the referenced base method.
+	base:
+		waterloo_authoring_showcase.Base.describe
+Description:
+	An inherited-method document records its base implementation explicitly.
+	|
+	|begin_table|
+	|columns|
+	Source |tab| Behavior
+	|rows|
+	Base.describe |tab| Inherited without local changes.
+	|end_table|
+Notes:
+	Override:
+		Use a method profile rather than inherited_method when the subclass changes the
+		contract.
+"""

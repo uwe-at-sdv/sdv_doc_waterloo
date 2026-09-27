@@ -1,0 +1,61 @@
+r"""
+Preamble:
+	profile:
+		module
+	normative_sections:
+		Definitions, Contract, Public_classes, Public_functions, Public_types,\
+		Public_variables, Public_constants
+	status:
+		stable
+	scope:
+		public
+Definitions:
+	Example:
+		A demonstration class used only by this Authoring JSON showcase.
+Terminology:
+	showcase:
+		A deliberately small document that demonstrates a supported authoring structure.
+Contract:
+	general:
+		|Must| demonstrate the module-level Authoring JSON structures.
+Description:
+	This paragraph is followed by a nested list and a table block.
+	|
+	* A list item may contain nested items.
+	+ Nested items preserve their authoring structure.
+	* Inline roles such as |var|`item` and |type|`Example` remain ordinary text values.
+	|
+	|begin_table|
+	|title|
+	Supported blocks
+	|columns|
+	Block |tab| Purpose
+	|rows|
+	paragraph |tab| Narrative text.
+	list |tab| Ordered free-form points.
+	table |tab| Structured values.
+	|end_table|
+Public_classes:
+	waterloo_authoring_showcase.Example
+Class_overview:
+	Example:
+		A class overview accepts the same free-form blocks as Description.
+Public_functions:
+	waterloo_authoring_showcase.make_example
+Function_overview:
+	make_example:
+		Create an |class|`Example` for demonstration purposes.
+Public_types:
+	Mode_t:
+		A type alias whose values select the desired demonstration mode.
+Public_variables:
+	default_mode:
+		The default |var_type|`default_mode: Mode_t`.
+Public_constants:
+	SHOWCASE_VERSION:
+		The fixed showcase format version.
+Notes:
+	Editing:
+		Replace the qualified identifiers and descriptions with information about the target
+		module.
+"""
