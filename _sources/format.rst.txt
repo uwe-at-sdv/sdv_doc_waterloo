@@ -483,23 +483,25 @@ subsection specifications in section :ref:`common_sections` ff.
 Parsing is successful if and only if the structure of the DocstringTree is
 compatible with those section and subsection requirements.
 
-Inline markup in free-form content
-----------------------------------
+Tokens in free-form content
+---------------------------
 
 This subsection is normative.
 
-Waterloo docstrings are primarily plain text. However, a small set of inline markup tokens is defined to allow
-machine-verifiable references and consistent rendering in target formats (e.g. reST/Sphinx).
+Waterloo docstrings are primarily plain text. They define inline tokens for
+machine-verifiable references and consistent rendering in target formats, and
+textflow tokens for structured rendered output.
 
-Inline markup tokens |may| occur in free-form content lines.
-Inline markup tokens |must_not| occur in:
+Inline tokens |may| occur in free-form content lines. They |must_not| occur in:
 
 	* section labels,
 	* subsection labels,
 	* list entries in sections that are defined as "List-Of-Identifiers" or "List-Of-Qualified-Identifiers".
 
-Tokens
-^^^^^^
+.. _inline_tokens:
+
+Inline tokens
+^^^^^^^^^^^^^
 
 This subsection is normative.
 
@@ -692,7 +694,7 @@ For the following rules, we define:
 
 :wtrl_dfn:`Table block`
 	A contiguous sequence of logical lines in a docstring that is parsed
-	according to rules TBL-001 through TBL-008.
+	according to rules TBL-001 through TBL-010.
 
 :wtrl_dfn:`Control line`
 	A logical line which, after whitespace stripping, contains exactly one of
@@ -709,6 +711,12 @@ For the following rules, we define:
 	:wtrl_lit:`|tab|` splits an :wtrl_term:`Ordinary table row` into :wtrl_dfn:`Table cells`.
 	A row without that token consists of one cell. Empty cells are permitted.
 
+:wtrl_dfn:`Table cell`
+	A possibly empty fragment obtained by splitting an :wtrl_term:`Ordinary table row`
+	on :wtrl_lit:`|tab|` and stripping surrounding whitespace. A :wtrl_lit:`|tab|`
+	separator is not part of either adjacent :wtrl_term:`Table cell`. :wtrl_term:`Table cells`
+	in :wtrl_term:`Header rows` and :wtrl_term:`Data rows` have identical content rules.
+
 :wtrl_dfn:`Table header`
 	A :wtrl_lit:`|columns|` :wtrl_term:`Control line` followed by one :wtrl_term:`Ordinary table row`, called its
 	:wtrl_dfn:`Header row`.
@@ -724,7 +732,7 @@ The following rules apply to Waterloo :wtrl_term:`Table blocks`. Wherever
 rule TBL-001 is referenced, :wtrl_term:`Table blocks` are permitted in addition to the
 free-form text allowed by the surrounding section or subsection.
 
-* [TBL-001] -- A :wtrl_term:`Table block` |must| obey rules TBL-002 through TBL-008.
+* [TBL-001] -- A :wtrl_term:`Table block` |must| obey rules TBL-002 through TBL-010.
 * [TBL-002] -- A :wtrl_term:`Table block` |must| begin with a :wtrl_term:`Control line` containing :wtrl_lit:`|begin_table|` and end with a later :wtrl_term:`Control line` containing :wtrl_lit:`|end_table|`.
 * [TBL-003] -- A :wtrl_term:`Table block` |must| contain one or more :wtrl_term:`Table groups`.
 * [TBL-004] -- Each :wtrl_term:`Table group` |must| consist of an optional :wtrl_term:`Table title`, a :wtrl_term:`Table header`, and a :wtrl_term:`Table body`, in that order.
@@ -732,6 +740,8 @@ free-form text allowed by the surrounding section or subsection.
 * [TBL-006] -- Every later :wtrl_term:`Header row` and every :wtrl_term:`Data row` |must| contain the established number of :wtrl_term:`Table cells`.
 * [TBL-007] -- A cell separator token :wtrl_lit:`|tab|` |must| be interpreted as a cell separator within :wtrl_term:`Header rows` and :wtrl_term:`Data rows`. It |must_not| be interpreted as a cell separator elsewhere.
 * [TBL-008] -- A :wtrl_term:`Control line` |must| occur at a position permitted by the :wtrl_term:`Table block` grammar. It |must_not| occur elsewhere.
+* [TBL-009] -- A :wtrl_term:`Table cell` |may| contain any :ref:`inline_tokens`.
+* [TBL-010] -- A :wtrl_term:`Table cell` |must_not| contain a textflow token: the paragraph token :wtrl_lit:`|`, a list marker :wtrl_lit:`*`, :wtrl_lit:`+`, :wtrl_lit:`-`, or :wtrl_lit:`#` followed by an ASCII space, or a :wtrl_term:`Control line` token.
 
 .. rubric:: Locality principle
 

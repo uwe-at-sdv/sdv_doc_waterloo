@@ -115,6 +115,9 @@ The following :wtrl_cmd:`waterlint` subcommands work with Authoring JSON:
   structure for one Python object.
 * :wtrl_cmd:`gen-full-authoring-json` generates all profile-allowed structure
   that can be derived without inventing list entries or other identifiers.
+* :wtrl_cmd:`gen-showcase-authoring-json` writes a profile-specific, editable
+  Authoring JSON showcase. It demonstrates the supported structures for the
+  selected profile, including text blocks and tables where applicable.
 * :wtrl_cmd:`render-docstring` renders Authoring JSON as raw Waterloo
   docstring content.
 

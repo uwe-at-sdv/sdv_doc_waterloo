@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>16. Test: Showcase Authoring JSON &#8212; Waterloo Docstrings 0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5f771d8e" />
+    <link rel="stylesheet" type="text/css" href="_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=27fed22d" />
+    <link rel="stylesheet" type="text/css" href="_static/common_styles.css?v=9842741a" />
+    <link rel="stylesheet" type="text/css" href="_static/waterloo_base.css?v=f14269ff" />
+    <link rel="stylesheet" type="text/css" href="_static/waterloo_alabaster.css?v=87a04ed2" />
+    <link rel="stylesheet" type="text/css" href="_static/wtrl_doc_custom.css" />
+    <script src="_static/documentation_options.js?v=8dde47fa"></script>
+    <script src="_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <link rel="canonical" href="https://uwe-at-sdv.github.io/sdv_doc_waterloo/test_showcase_authoring_json.html" />
+    <link rel="icon" href="_static/favicon.ico"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="17. Test: Scopes" href="_test_scope.html" />
+    <link rel="prev" title="15. Test: Inline markup" href="test_pygments_lexer.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="test-showcase-authoring-json">
+<span id="chapter-test-showcase-authoring-json"></span><h1><span class="section-number">16. </span>Test: Showcase Authoring JSON<a class="headerlink" href="#test-showcase-authoring-json" title="Link to this heading">¶</a></h1>
+<p>This chapter presents the current profile-specific Waterloo Authoring JSON
+showcases in their rendered docstring form. A showcase is an editable syntax
+reference: it demonstrates the sections and content blocks that an Authoring
+JSON document can use for one profile, including paragraphs, nested lists,
+tables, and profile-specific sections where applicable.</p>
+<p>Generate a showcase with <code class="wtrl_cmd docutils literal notranslate"><span class="pre">waterlint</span></code> before authoring or revising a
+docstring, for example:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">waterlint gen-showcase-authoring-json --profile function --out function-showcase.json</span>
+</pre></div>
+</div>
+<p>The generated JSON is a starting point for learning the format, not a template
+to copy verbatim. Replace its placeholder identifiers, descriptions, and
+normative statements with documentation appropriate for the actual object.
+Use <code class="wtrl_cmd docutils literal notranslate"><span class="pre">validate-json</span></code> to validate the edited Authoring JSON and
+<code class="wtrl_cmd docutils literal notranslate"><span class="pre">render-docstring</span></code> to produce the raw Waterloo docstring.</p>
+<p>This page is intended as feedback for human readers. It makes the currently
+distributed showcases visible in the documentation, so their practical shape
+and coverage can be reviewed without first generating and rendering the JSON
+files locally.</p>
+<section id="profile-module">
+<h2><span class="section-number">16.1. </span>Profile: <code class="wtrl_value docutils literal notranslate"><span class="pre">module</span></code><a class="headerlink" href="#profile-module" title="Link to this heading">¶</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="sa">r</span><span class="sd">"""</span>
+<span class="gh">Preamble:</span>
+<span class="sd">    </span><span class="gu">profile:</span>
+<span class="sd">        </span><span class="no">module</span>
+<span class="sd">    </span><span class="gu">normative_sections:</span>
+<span class="sd">        </span><span class="no">Definitions</span><span class="sd">, </span><span class="no">Contract</span><span class="sd">, </span><span class="no">Public_classes</span><span class="sd">, </span><span class="no">Public_functions</span><span class="sd">, </span><span class="no">Public_types</span><span class="sd">,</span><span class="err">\</span>
+<span class="sd">        </span><span class="no">Public_variables</span><span class="sd">, </span><span class="no">Public_constants</span>
+<span class="sd">    </span><span class="gu">status:</span>
+<span class="sd">        </span><span class="no">stable</span>
+<span class="sd">    </span><span class="gu">scope:</span>
+<span class="sd">        </span><span class="no">public</span>
+<span class="gh">Definitions:</span>
+<span class="sd">    </span><span class="ge">Example:</span>
+<span class="sd">        A demonstration class used only by this Authoring JSON showcase.</span>
+<span class="gh">Terminology:</span>
+<span class="sd">    </span><span class="ge">showcase:</span>
+<span class="sd">        A deliberately small document that demonstrates a supported authoring structure.</span>
+<span class="gh">Contract:</span>
+<span class="sd">    </span><span class="gu">general:</span>
+<span class="sd">        </span><span class="k">|Must|</span><span class="sd"> demonstrate the module-level Authoring JSON structures.</span>
+<span class="gh">Description:</span>
+<span class="sd">    This paragraph is followed by a nested list and a table block.</span>
+<span class="k">    |</span>
+<span class="sd">    </span><span class="k">*</span><span class="sd"> A list item may contain nested items.</span>
+<span class="sd">    </span><span class="k">+</span><span class="sd"> Nested items preserve their authoring structure.</span>
+<span class="sd">    </span><span class="k">*</span><span class="sd"> Inline roles such as </span><span class="k">|var|</span><span class="nv">`item`</span><span class="sd"> and </span><span class="k">|type|</span><span class="nc">`Example`</span><span class="sd"> remain ordinary text values.</span>
+<span class="k">    |</span>
+<span class="sd">    </span><span class="k">|begin_table|</span>
+<span class="sd">    </span><span class="k">|title|</span>
+<span class="sd">    Supported blocks</span>
+<span class="sd">    </span><span class="k">|columns|</span>
+<span class="sd">    Block </span><span class="n n-Comment">|tab|</span><span class="sd"> Purpose</span>
+<span class="sd">    </span><span class="k">|rows|</span>
+<span class="sd">    paragraph </span><span class="n n-Comment">|tab|</span><span class="sd"> Narrative text.</span>
+<span class="sd">    list </span><span class="n n-Comment">|tab|</span><span class="sd"> Ordered free-form points.</span>
+<span class="sd">    table </span><span class="n n-Comment">|tab|</span><span class="sd"> Structured values.</span>
+<span class="sd">    </span><span class="k">|end_table|</span>
+<span class="gh">Public_classes:</span>
+<span class="sd">    </span><span class="nc">waterloo_authoring_showcase.Example</span>
+<span class="gh">Class_overview:</span>
+<span class="sd">    </span><span class="nc">Example:</span>
+<span class="sd">        A class overview accepts the same free-form blocks as Description.</span>
+<span class="gh">Public_functions:</span>
+<span class="sd">    </span><span class="nf">waterloo_authoring_showcase.make_example</span>
+<span class="gh">Function_overview:</span>
+<span class="sd">    </span><span class="nf">make_example:</span>
+<span class="sd">        Create an </span><span class="k">|class|</span><span class="nc">`Example`</span><span class="sd"> for demonstration purposes.</span>
+<span class="gh">Public_types:</span>
+<span class="sd">    </span><span class="nc">Mode_t:</span>
+<span class="sd">        A type alias whose values select the desired demonstration mode.</span>
+<span class="gh">Public_variables:</span>
+<span class="sd">    </span><span class="nv">default_mode:</span>
+<span class="sd">        The default </span><span class="k">|var_type|</span><span class="nc">`default_mode: Mode_t`</span><span class="sd">.</span>
+<span class="gh">Public_constants:</span>
+<span class="sd">    </span><span class="nv">SHOWCASE_VERSION:</span>
+<span class="sd">        The fixed showcase format version.</span>
+<span class="gh">Notes:</span>
+<span class="sd">    </span><span class="gh">Editing:</span>
+<span class="sd">        Replace the qualified identifiers and descriptions with information about the target</span>
+<span class="sd">        module.</span>
+<span class="sd">"""</span>
+</pre></div>
+</div>
+</section>
+<section id="profile-class">
+<h2><span class="section-number">16.2. </span>Profile: <code class="wtrl_value docutils literal notranslate"><span class="pre">class</span></code><a class="headerlink" href="#profile-class" title="Link to this heading">¶</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="sa">r</span><span class="sd">"""</span>
+<span class="gh">Preamble:</span>
+<span class="sd">    </span><span class="gu">profile:</span>
+<span class="sd">        </span><span class="no">class</span>
+<span class="sd">    </span><span class="gu">normative_sections:</span>
+<span class="sd">        </span><span class="no">Definitions</span><span class="sd">, </span><span class="no">Contract</span><span class="sd">, </span><span class="no">Derived_from</span><span class="sd">, </span><span class="no">Factory</span><span class="sd">, </span><span class="no">Public_classes</span><span class="sd">, </span><span class="no">Public_methods</span><span class="sd">,</span><span class="err">\</span>
+<span class="sd">        </span><span class="no">Public_types</span><span class="sd">, </span><span class="no">Public_variables</span><span class="sd">, </span><span class="no">Public_constants</span>
+<span class="sd">    </span><span class="gu">scope:</span>
+<span class="sd">        </span><span class="no">public</span>
+<span class="gh">Definitions:</span>
+<span class="sd">    </span><span class="ge">Example:</span>
+<span class="sd">        A class used to demonstrate class-specific Authoring JSON sections.</span>
+<span class="gh">Contract:</span>
+<span class="sd">    </span><span class="gu">general:</span>
+<span class="sd">        </span><span class="k">|Must|</span><span class="sd"> represent one configurable demonstration object.</span>
+<span class="sd">    </span><span class="gu">constructor:</span>
+<span class="sd">        </span><span class="k">|Must|</span><span class="sd"> accept one </span><span class="k">|var|</span><span class="nv">`mode`</span><span class="sd"> value.</span>
+<span class="sd">    </span><span class="gu">traits:</span>
+<span class="sd">        </span><span class="no">final</span>
+<span class="gh">Description:</span>
+<span class="sd">    Class descriptions can combine prose with structured tables.</span>
+<span class="k">    |</span>
+<span class="sd">    </span><span class="k">|begin_table|</span>
+<span class="sd">    </span><span class="k">|columns|</span>
+<span class="sd">    Mode </span><span class="n n-Comment">|tab|</span><span class="sd"> Effect</span>
+<span class="sd">    </span><span class="k">|rows|</span>
+<span class="sd">    simple </span><span class="n n-Comment">|tab|</span><span class="sd"> Use the compact demonstration.</span>
+<span class="sd">    full </span><span class="n n-Comment">|tab|</span><span class="sd"> Enable every optional feature.</span>
+<span class="sd">    </span><span class="k">|end_table|</span>
+<span class="gh">Derived_from:</span>
+<span class="sd">    </span><span class="nc">waterloo_authoring_showcase.BaseExample</span>
+<span class="gh">Factory:</span>
+<span class="sd">    </span><span class="nf">waterloo_authoring_showcase.Example.from_config:</span>
+<span class="sd">        Create an Example from configuration values.</span>
+<span class="k">        |</span>
+<span class="sd">        </span><span class="k">|begin_table|</span>
+<span class="sd">        </span><span class="k">|columns|</span>
+<span class="sd">        Key </span><span class="n n-Comment">|tab|</span><span class="sd"> Meaning</span>
+<span class="sd">        </span><span class="k">|rows|</span>
+<span class="sd">        mode </span><span class="n n-Comment">|tab|</span><span class="sd"> Selected demonstration mode.</span>
+<span class="sd">        </span><span class="k">|end_table|</span>
+<span class="gh">Public_classes:</span>
+<span class="sd">    </span><span class="nc">waterloo_authoring_showcase.Example.Nested</span>
+<span class="gh">Class_overview:</span>
+<span class="sd">    </span><span class="nc">Nested:</span>
+<span class="sd">        A nested supporting class.</span>
+<span class="gh">Public_methods:</span>
+<span class="sd">    </span><span class="nf">waterloo_authoring_showcase.Example.describe</span>
+<span class="gh">Method_overview:</span>
+<span class="sd">    </span><span class="nf">describe:</span>
+<span class="sd">        Return a human-readable description.</span>
+<span class="gh">Public_types:</span>
+<span class="sd">    </span><span class="nc">State_t:</span>
+<span class="sd">        A type alias for Example state values.</span>
+<span class="gh">Public_variables:</span>
+<span class="sd">    </span><span class="nv">mode:</span>
+<span class="sd">        The active demonstration mode.</span>
+<span class="gh">Public_constants:</span>
+<span class="sd">    </span><span class="nv">DEFAULT_MODE:</span>
+<span class="sd">        The mode selected when configuration omits one.</span>
+<span class="gh">Notes:</span>
+<span class="gh">    Factory:</span>
+<span class="sd">        Factory entries are class-specific and use qualified function identifiers as keys.</span>
+<span class="sd">"""</span>
+</pre></div>
+</div>
+</section>
+<section id="profile-function">
+<h2><span class="section-number">16.3. </span>Profile: <code class="wtrl_value docutils literal notranslate"><span class="pre">function</span></code><a class="headerlink" href="#profile-function" title="Link to this heading">¶</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="sa">r</span><span class="sd">"""</span>
+<span class="gh">Preamble:</span>
+<span class="sd">    </span><span class="gu">profile:</span>
+<span class="sd">        </span><span class="no">function</span>
+<span class="sd">    </span><span class="gu">normative_sections:</span>
+<span class="sd">        </span><span class="no">Definitions</span><span class="sd">, </span><span class="no">Contract</span><span class="sd">, </span><span class="no">Description</span><span class="sd">, </span><span class="no">Parameters</span><span class="sd">, </span><span class="no">Returns</span><span class="sd">, </span><span class="no">Raises</span>
+<span class="sd">    </span><span class="gu">scope:</span>
+<span class="sd">        </span><span class="no">public</span>
+<span class="gh">Definitions:</span>
+<span class="sd">    </span><span class="ge">Level:</span>
+<span class="sd">        One supported level of detail.</span>
+<span class="gh">Terminology:</span>
+<span class="sd">    </span><span class="ge">verbose:</span>
+<span class="sd">        A mode that includes explanatory detail in the returned text.</span>
+<span class="gh">Contract:</span>
+<span class="sd">    </span><span class="gu">general:</span>
+<span class="sd">        </span><span class="k">|Must|</span><span class="sd"> return a description for the requested level.</span>
+<span class="sd">    </span><span class="gu">requires:</span>
+<span class="sd">        </span><span class="k">|Must|</span><span class="sd"> receive a supported </span><span class="k">|var|</span><span class="nv">`level`</span><span class="sd"> value.</span>
+<span class="sd">    </span><span class="gu">ensures:</span>
+<span class="sd">        </span><span class="k">|Must|</span><span class="sd"> return a non-empty </span><span class="k">|type|</span><span class="nc">`str`</span><span class="sd">.</span>
+<span class="gh">Description:</span>
+<span class="sd">    </span><span class="k">|Must|</span><span class="sd"> use the following structured data to explain the level.</span>
+<span class="k">    |</span>
+<span class="sd">    </span><span class="k">*</span><span class="sd"> The normal mode returns a concise description.</span>
+<span class="sd">    </span><span class="k">*</span><span class="sd"> Verbose mode adds details.</span>
+<span class="sd">    </span><span class="k">+</span><span class="sd"> Nested list entries remain available in Authoring JSON.</span>
+<span class="k">    |</span>
+<span class="sd">    </span><span class="k">|begin_table|</span>
+<span class="sd">    </span><span class="k">|title|</span>
+<span class="sd">    Level behavior</span>
+<span class="sd">    </span><span class="k">|columns|</span>
+<span class="sd">    Level </span><span class="n n-Comment">|tab|</span><span class="sd"> Result</span>
+<span class="sd">    </span><span class="k">|rows|</span>
+<span class="sd">    basic </span><span class="n n-Comment">|tab|</span><span class="sd"> Concise text.</span>
+<span class="sd">    detailed </span><span class="n n-Comment">|tab|</span><span class="sd"> Expanded text.</span>
+<span class="sd">    </span><span class="k">|end_table|</span>
+<span class="gh">Parameters:</span>
+<span class="sd">    </span><span class="nv">level:</span>
+<span class="sd">        The requested level.</span>
+<span class="k">        |</span>
+<span class="sd">        </span><span class="k">|begin_table|</span>
+<span class="sd">        </span><span class="k">|columns|</span>
+<span class="sd">        Value </span><span class="n n-Comment">|tab|</span><span class="sd"> Meaning</span>
+<span class="sd">        </span><span class="k">|rows|</span>
+<span class="sd">        basic </span><span class="n n-Comment">|tab|</span><span class="sd"> Select concise output.</span>
+<span class="sd">        detailed </span><span class="n n-Comment">|tab|</span><span class="sd"> Select expanded output.</span>
+<span class="sd">        </span><span class="k">|end_table|</span>
+<span class="sd">    </span><span class="nv">verbose:</span>
+<span class="sd">        Whether the returned description includes additional detail.</span>
+<span class="gh">Returns:</span>
+<span class="sd">    A description matching </span><span class="k">|var|</span><span class="nv">`level`</span><span class="sd">.</span>
+<span class="k">    |</span>
+<span class="sd">    </span><span class="k">|begin_table|</span>
+<span class="sd">    </span><span class="k">|columns|</span>
+<span class="sd">    Condition </span><span class="n n-Comment">|tab|</span><span class="sd"> Returned content</span>
+<span class="sd">    </span><span class="k">|rows|</span>
+<span class="sd">    verbose is false </span><span class="n n-Comment">|tab|</span><span class="sd"> Concise description.</span>
+<span class="sd">    verbose is true </span><span class="n n-Comment">|tab|</span><span class="sd"> Expanded description.</span>
+<span class="sd">    </span><span class="k">|end_table|</span>
+<span class="gh">Raises:</span>
+<span class="sd">    </span><span class="ne">ValueError:</span>
+<span class="sd">        Raised if </span><span class="k">|var|</span><span class="nv">`level`</span><span class="sd"> is unsupported.</span>
+<span class="k">        |</span>
+<span class="sd">        </span><span class="k">|begin_table|</span>
+<span class="sd">        </span><span class="k">|columns|</span>
+<span class="sd">        Input </span><span class="n n-Comment">|tab|</span><span class="sd"> Reason</span>
+<span class="sd">        </span><span class="k">|rows|</span>
+<span class="sd">        unknown </span><span class="n n-Comment">|tab|</span><span class="sd"> No matching level exists.</span>
+<span class="sd">        </span><span class="k">|end_table|</span>
+<span class="gh">Notes:</span>
+<span class="sd">    </span><span class="gh">Workflow:</span>
+<span class="sd">        Edit this document, validate it, and render it as a raw Waterloo docstring.</span>
+<span class="sd">"""</span>
+</pre></div>
+</div>
+</section>
+<section id="profile-method">
+<h2><span class="section-number">16.4. </span>Profile: <code class="wtrl_value docutils literal notranslate"><span class="pre">method</span></code><a class="headerlink" href="#profile-method" title="Link to this heading">¶</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="sa">r</span><span class="sd">"""</span>
+<span class="gh">Preamble:</span>
+<span class="sd">    </span><span class="gu">profile:</span>
+<span class="sd">        </span><span class="no">method</span>
+<span class="sd">    </span><span class="gu">normative_sections:</span>
+<span class="sd">        </span><span class="no">Definitions</span><span class="sd">, </span><span class="no">Contract</span><span class="sd">, </span><span class="no">Parameters</span><span class="sd">, </span><span class="no">Returns</span><span class="sd">, </span><span class="no">Raises</span>
+<span class="sd">    </span><span class="gu">scope:</span>
+<span class="sd">        </span><span class="no">public</span>
+<span class="gh">Definitions:</span>
+<span class="sd">    </span><span class="ge">Detail:</span>
+<span class="sd">        The amount of information included in a description.</span>
+<span class="gh">Contract:</span>
+<span class="sd">    </span><span class="gu">general:</span>
+<span class="sd">        </span><span class="k">|Must|</span><span class="sd"> return a description of this instance.</span>
+<span class="sd">    </span><span class="gu">ensures:</span>
+<span class="sd">        </span><span class="k">|Must|</span><span class="sd"> not modify the instance state.</span>
+<span class="gh">Description:</span>
+<span class="sd">    Methods use the same text-block structures as functions.</span>
+<span class="k">    |</span>
+<span class="sd">    </span><span class="k">|begin_table|</span>
+<span class="sd">    </span><span class="k">|columns|</span>
+<span class="sd">    detail </span><span class="n n-Comment">|tab|</span><span class="sd"> Result</span>
+<span class="sd">    </span><span class="k">|rows|</span>
+<span class="sd">    false </span><span class="n n-Comment">|tab|</span><span class="sd"> A concise description.</span>
+<span class="sd">    true </span><span class="n n-Comment">|tab|</span><span class="sd"> An expanded description.</span>
+<span class="sd">    </span><span class="k">|end_table|</span>
+<span class="gh">Parameters:</span>
+<span class="sd">    </span><span class="nv">detail:</span>
+<span class="sd">        Whether to include additional details.</span>
+<span class="gh">Returns:</span>
+<span class="sd">    A </span><span class="k">|type|</span><span class="nc">`str`</span><span class="sd"> describing this instance.</span>
+<span class="gh">Raises:</span>
+<span class="gh">Notes:</span>
+<span class="sd">    </span><span class="gh">Receiver:</span>
+<span class="sd">        The receiver parameter is represented by the method profile and normally needs no</span>
+<span class="sd">        Parameters entry.</span>
+<span class="sd">"""</span>
+</pre></div>
+</div>
+</section>
+<section id="profile-inherited-method">
+<h2><span class="section-number">16.5. </span>Profile: <code class="wtrl_value docutils literal notranslate"><span class="pre">inherited_method</span></code><a class="headerlink" href="#profile-inherited-method" title="Link to this heading">¶</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="sa">r</span><span class="sd">"""</span>
+<span class="gh">Preamble:</span>
+<span class="sd">    </span><span class="gu">profile:</span>
+<span class="sd">        </span><span class="no">inherited_method</span>
+<span class="sd">    </span><span class="gu">normative_sections:</span>
+<span class="sd">        </span><span class="no">Definitions</span><span class="sd">, </span><span class="no">Contract</span>
+<span class="sd">    </span><span class="gu">scope:</span>
+<span class="sd">        </span><span class="no">public</span>
+<span class="gh">Definitions:</span>
+<span class="sd">    </span><span class="ge">InheritedBehavior:</span>
+<span class="sd">        Behavior supplied by a base-class method.</span>
+<span class="gh">Contract:</span>
+<span class="sd">    </span><span class="gu">general:</span>
+<span class="sd">        </span><span class="k">|Must|</span><span class="sd"> retain the behavior of the referenced base method.</span>
+<span class="sd">    </span><span class="gu">base:</span>
+<span class="sd">        </span><span class="nc">waterloo_authoring_showcase.Base.describe</span>
+<span class="gh">Description:</span>
+<span class="sd">    An inherited-method document records its base implementation explicitly.</span>
+<span class="k">    |</span>
+<span class="sd">    </span><span class="k">|begin_table|</span>
+<span class="sd">    </span><span class="k">|columns|</span>
+<span class="sd">    Source </span><span class="n n-Comment">|tab|</span><span class="sd"> Behavior</span>
+<span class="sd">    </span><span class="k">|rows|</span>
+<span class="sd">    Base.describe </span><span class="n n-Comment">|tab|</span><span class="sd"> Inherited without local changes.</span>
+<span class="sd">    </span><span class="k">|end_table|</span>
+<span class="gh">Notes:</span>
+<span class="sd">    </span><span class="gh">Override:</span>
+<span class="sd">        Use a method profile rather than inherited_method when the subclass changes the</span>
+<span class="sd">        contract.</span>
+<span class="sd">"""</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="index.html">
+    <img class="logo" src="_static/wtrl_logo_color_64x64.png" alt="Logo" />
+    
+  </a>
+</p>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">1. Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="getting_started.html">2. Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples_minimax.html">3. Docstrings - minimal and full examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">4. Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="format.html">5. Docstring format</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tools.html">6. Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="io_layers.html">7. Overview: I/O Layers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="json_io.html">8. The JSON I/O Layer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="html_output_layer.html">9. The HTML Output Layer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mcp.html">10. Model Context Protocol</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reference.html">11. Reference - Rendering Showcase</a></li>
+<li class="toctree-l1"><a class="reference internal" href="faq.html">12. Requests for Rationales</a></li>
+<li class="toctree-l1"><a class="reference internal" href="_test_freeform.html">13. Test: Flow control in freeform sections</a></li>
+<li class="toctree-l1"><a class="reference internal" href="_test_tables.html">14. Test: Tables in freeform and itemized content</a></li>
+<li class="toctree-l1"><a class="reference internal" href="test_pygments_lexer.html">15. Test: Inline markup</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">16. Test: Showcase Authoring JSON</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#profile-module">16.1. Profile: <code class="wtrl_value docutils literal notranslate"><span class="pre">module</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#profile-class">16.2. Profile: <code class="wtrl_value docutils literal notranslate"><span class="pre">class</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#profile-function">16.3. Profile: <code class="wtrl_value docutils literal notranslate"><span class="pre">function</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#profile-method">16.4. Profile: <code class="wtrl_value docutils literal notranslate"><span class="pre">method</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#profile-inherited-method">16.5. Profile: <code class="wtrl_value docutils literal notranslate"><span class="pre">inherited_method</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="_test_scope.html">17. Test: Scopes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="legal.html">18. Legal Notes</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="test_pygments_lexer.html" title="previous chapter"><span class="section-number">15. </span>Test: Inline markup</a></li>
+      <li>Next: <a href="_test_scope.html" title="next chapter"><span class="section-number">17. </span>Test: Scopes</a></li>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2026, Uwe.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 9.1.0</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="_sources/test_showcase_authoring_json.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

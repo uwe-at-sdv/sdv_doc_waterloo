@@ -117,8 +117,8 @@
 <li class="toctree-l2"><a class="reference internal" href="format.html#the-structure-of-waterloo-docstrings">5.6. The structure of Waterloo docstrings</a></li>
 <li class="toctree-l2"><a class="reference internal" href="format.html#conventions">5.7. Conventions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="format.html#building-the-ast">5.8. Building the AST</a></li>
-<li class="toctree-l2"><a class="reference internal" href="format.html#inline-markup-in-free-form-content">5.9. Inline markup in free-form content</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="format.html#tokens">5.9.1. Tokens</a></li>
+<li class="toctree-l2"><a class="reference internal" href="format.html#tokens-in-free-form-content">5.9. Tokens in free-form content</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="format.html#inline-tokens">5.9.1. Inline tokens</a></li>
 <li class="toctree-l3"><a class="reference internal" href="format.html#textflow-tokens">5.9.2. Textflow tokens</a></li>
 <li class="toctree-l3"><a class="reference internal" href="format.html#semantic-role-ref">5.9.3. Semantic role <code class="wtrl_lit docutils literal notranslate"><span class="pre">|ref|</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="format.html#examples">5.9.4. Examples</a></li>
@@ -450,18 +450,26 @@
 <li class="toctree-l2"><a class="reference internal" href="test_pygments_lexer.html#sphinx">15.2. Sphinx</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="_test_scope.html">16. Test: Scopes</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="_test_scope.html#scope-public">16.1. Scope: Public</a></li>
-<li class="toctree-l2"><a class="reference internal" href="_test_scope.html#scope-extension">16.2. Scope: Extension</a></li>
-<li class="toctree-l2"><a class="reference internal" href="_test_scope.html#scope-core">16.3. Scope: Core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="test_showcase_authoring_json.html">16. Test: Showcase Authoring JSON</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="test_showcase_authoring_json.html#profile-module">16.1. Profile: <code class="wtrl_value docutils literal notranslate"><span class="pre">module</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="test_showcase_authoring_json.html#profile-class">16.2. Profile: <code class="wtrl_value docutils literal notranslate"><span class="pre">class</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="test_showcase_authoring_json.html#profile-function">16.3. Profile: <code class="wtrl_value docutils literal notranslate"><span class="pre">function</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="test_showcase_authoring_json.html#profile-method">16.4. Profile: <code class="wtrl_value docutils literal notranslate"><span class="pre">method</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="test_showcase_authoring_json.html#profile-inherited-method">16.5. Profile: <code class="wtrl_value docutils literal notranslate"><span class="pre">inherited_method</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="legal.html">17. Legal Notes</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="legal.html#docker">17.1. Docker</a></li>
-<li class="toctree-l2"><a class="reference internal" href="legal.html#linux">17.2. Linux</a></li>
-<li class="toctree-l2"><a class="reference internal" href="legal.html#windows">17.3. Windows</a></li>
-<li class="toctree-l2"><a class="reference internal" href="legal.html#apple-and-macos">17.4. Apple and macOS</a></li>
-<li class="toctree-l2"><a class="reference internal" href="legal.html#other-names">17.5. Other Names</a></li>
+<li class="toctree-l1"><a class="reference internal" href="_test_scope.html">17. Test: Scopes</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="_test_scope.html#scope-public">17.1. Scope: Public</a></li>
+<li class="toctree-l2"><a class="reference internal" href="_test_scope.html#scope-extension">17.2. Scope: Extension</a></li>
+<li class="toctree-l2"><a class="reference internal" href="_test_scope.html#scope-core">17.3. Scope: Core</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="legal.html">18. Legal Notes</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="legal.html#docker">18.1. Docker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="legal.html#linux">18.2. Linux</a></li>
+<li class="toctree-l2"><a class="reference internal" href="legal.html#windows">18.3. Windows</a></li>
+<li class="toctree-l2"><a class="reference internal" href="legal.html#apple-and-macos">18.4. Apple and macOS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="legal.html#other-names">18.5. Other Names</a></li>
 </ul>
 </li>
 </ul>
@@ -524,8 +532,9 @@
 <li class="toctree-l1"><a class="reference internal" href="_test_freeform.html">13. Test: Flow control in freeform sections</a></li>
 <li class="toctree-l1"><a class="reference internal" href="_test_tables.html">14. Test: Tables in freeform and itemized content</a></li>
 <li class="toctree-l1"><a class="reference internal" href="test_pygments_lexer.html">15. Test: Inline markup</a></li>
-<li class="toctree-l1"><a class="reference internal" href="_test_scope.html">16. Test: Scopes</a></li>
-<li class="toctree-l1"><a class="reference internal" href="legal.html">17. Legal Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="test_showcase_authoring_json.html">16. Test: Showcase Authoring JSON</a></li>
+<li class="toctree-l1"><a class="reference internal" href="_test_scope.html">17. Test: Scopes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="legal.html">18. Legal Notes</a></li>
 </ul>
 
 <div class="relations">

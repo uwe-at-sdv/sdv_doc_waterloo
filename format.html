@@ -435,13 +435,13 @@ subsection specifications in section <a class="reference internal" href="#common
 <p>Parsing is successful if and only if the structure of the DocstringTree is
 compatible with those section and subsection requirements.</p>
 </section>
-<section id="inline-markup-in-free-form-content">
-<h2><span class="section-number">5.9. </span>Inline markup in free-form content<a class="headerlink" href="#inline-markup-in-free-form-content" title="Link to this heading">¶</a></h2>
+<section id="tokens-in-free-form-content">
+<h2><span class="section-number">5.9. </span>Tokens in free-form content<a class="headerlink" href="#tokens-in-free-form-content" title="Link to this heading">¶</a></h2>
 <p>This subsection is normative.</p>
-<p>Waterloo docstrings are primarily plain text. However, a small set of inline markup tokens is defined to allow
-machine-verifiable references and consistent rendering in target formats (e.g. reST/Sphinx).</p>
-<p>Inline markup tokens <span class="wtrl_norm">may</span> occur in free-form content lines.
-Inline markup tokens <span class="wtrl_norm">must not</span> occur in:</p>
+<p>Waterloo docstrings are primarily plain text. They define inline tokens for
+machine-verifiable references and consistent rendering in target formats, and
+textflow tokens for structured rendered output.</p>
+<p>Inline tokens <span class="wtrl_norm">may</span> occur in free-form content lines. They <span class="wtrl_norm">must not</span> occur in:</p>
 <blockquote>
 <div><ul class="simple">
 <li><p>section labels,</p></li>
@@ -449,8 +449,8 @@ Inline markup tokens <span class="wtrl_norm">must not</span> occur in:</p>
 <li><p>list entries in sections that are defined as “List-Of-Identifiers” or “List-Of-Qualified-Identifiers”.</p></li>
 </ul>
 </div></blockquote>
-<section id="tokens">
-<h3><span class="section-number">5.9.1. </span>Tokens<a class="headerlink" href="#tokens" title="Link to this heading">¶</a></h3>
+<section id="inline-tokens">
+<span id="id1"></span><h3><span class="section-number">5.9.1. </span>Inline tokens<a class="headerlink" href="#inline-tokens" title="Link to this heading">¶</a></h3>
 <p>This subsection is normative.</p>
 <p>The set of tokens currently available is:</p>
 <blockquote>
@@ -652,7 +652,7 @@ state whether it applies to Identifiers or to Qualified Identifiers.
 <p>For the following rules, we define:</p>
 <dl class="simple">
 <dt><span class="wtrl_dfn">Table block</span></dt><dd><p>A contiguous sequence of logical lines in a docstring that is parsed
-according to rules TBL-001 through TBL-008.</p>
+according to rules TBL-001 through TBL-010.</p>
 </dd>
 <dt><span class="wtrl_dfn">Control line</span></dt><dd><p>A logical line which, after whitespace stripping, contains exactly one of
 <code class="wtrl_lit docutils literal notranslate"><span class="pre">|begin_table|</span></code>, <code class="wtrl_lit docutils literal notranslate"><span class="pre">|end_table|</span></code>,
@@ -665,6 +665,11 @@ non-control logical lines before the following <code class="wtrl_lit docutils li
 <dt><span class="wtrl_dfn">Ordinary table row</span></dt><dd><p>A logical line used as a header or data row. The token
 <code class="wtrl_lit docutils literal notranslate"><span class="pre">|tab|</span></code> splits an <span class="wtrl_term">Ordinary table row</span> into <span class="wtrl_dfn">Table cells</span>.
 A row without that token consists of one cell. Empty cells are permitted.</p>
+</dd>
+<dt><span class="wtrl_dfn">Table cell</span></dt><dd><p>A possibly empty fragment obtained by splitting an <span class="wtrl_term">Ordinary table row</span>
+on <code class="wtrl_lit docutils literal notranslate"><span class="pre">|tab|</span></code> and stripping surrounding whitespace. A <code class="wtrl_lit docutils literal notranslate"><span class="pre">|tab|</span></code>
+separator is not part of either adjacent <span class="wtrl_term">Table cell</span>. <span class="wtrl_term">Table cells</span>
+in <span class="wtrl_term">Header rows</span> and <span class="wtrl_term">Data rows</span> have identical content rules.</p>
 </dd>
 <dt><span class="wtrl_dfn">Table header</span></dt><dd><p>A <code class="wtrl_lit docutils literal notranslate"><span class="pre">|columns|</span></code> <span class="wtrl_term">Control line</span> followed by one <span class="wtrl_term">Ordinary table row</span>, called its
 <span class="wtrl_dfn">Header row</span>.</p>
@@ -679,7 +684,7 @@ called <span class="wtrl_dfn">Data rows</span>.</p>
 rule TBL-001 is referenced, <span class="wtrl_term">Table blocks</span> are permitted in addition to the
 free-form text allowed by the surrounding section or subsection.</p>
 <ul class="simple">
-<li><p>[TBL-001] – A <span class="wtrl_term">Table block</span> <span class="wtrl_norm">must</span> obey rules TBL-002 through TBL-008.</p></li>
+<li><p>[TBL-001] – A <span class="wtrl_term">Table block</span> <span class="wtrl_norm">must</span> obey rules TBL-002 through TBL-010.</p></li>
 <li><p>[TBL-002] – A <span class="wtrl_term">Table block</span> <span class="wtrl_norm">must</span> begin with a <span class="wtrl_term">Control line</span> containing <code class="wtrl_lit docutils literal notranslate"><span class="pre">|begin_table|</span></code> and end with a later <span class="wtrl_term">Control line</span> containing <code class="wtrl_lit docutils literal notranslate"><span class="pre">|end_table|</span></code>.</p></li>
 <li><p>[TBL-003] – A <span class="wtrl_term">Table block</span> <span class="wtrl_norm">must</span> contain one or more <span class="wtrl_term">Table groups</span>.</p></li>
 <li><p>[TBL-004] – Each <span class="wtrl_term">Table group</span> <span class="wtrl_norm">must</span> consist of an optional <span class="wtrl_term">Table title</span>, a <span class="wtrl_term">Table header</span>, and a <span class="wtrl_term">Table body</span>, in that order.</p></li>
@@ -687,6 +692,8 @@ free-form text allowed by the surrounding section or subsection.</p>
 <li><p>[TBL-006] – Every later <span class="wtrl_term">Header row</span> and every <span class="wtrl_term">Data row</span> <span class="wtrl_norm">must</span> contain the established number of <span class="wtrl_term">Table cells</span>.</p></li>
 <li><p>[TBL-007] – A cell separator token <code class="wtrl_lit docutils literal notranslate"><span class="pre">|tab|</span></code> <span class="wtrl_norm">must</span> be interpreted as a cell separator within <span class="wtrl_term">Header rows</span> and <span class="wtrl_term">Data rows</span>. It <span class="wtrl_norm">must not</span> be interpreted as a cell separator elsewhere.</p></li>
 <li><p>[TBL-008] – A <span class="wtrl_term">Control line</span> <span class="wtrl_norm">must</span> occur at a position permitted by the <span class="wtrl_term">Table block</span> grammar. It <span class="wtrl_norm">must not</span> occur elsewhere.</p></li>
+<li><p>[TBL-009] – A <span class="wtrl_term">Table cell</span> <span class="wtrl_norm">may</span> contain any <a class="reference internal" href="#inline-tokens"><span class="std std-ref">Inline tokens</span></a>.</p></li>
+<li><p>[TBL-010] – A <span class="wtrl_term">Table cell</span> <span class="wtrl_norm">must not</span> contain a textflow token: the paragraph token <code class="wtrl_lit docutils literal notranslate"><span class="pre">|</span></code>, a list marker <code class="wtrl_lit docutils literal notranslate"><span class="pre">*</span></code>, <code class="wtrl_lit docutils literal notranslate"><span class="pre">+</span></code>, <code class="wtrl_lit docutils literal notranslate"><span class="pre">-</span></code>, or <code class="wtrl_lit docutils literal notranslate"><span class="pre">#</span></code> followed by an ASCII space, or a <span class="wtrl_term">Control line</span> token.</p></li>
 </ul>
 <p class="rubric">Locality principle</p>
 <p>The following warning rule applies when a section appears in a docstring but violates the LoII principle.
@@ -2247,8 +2254,8 @@ for automated testing, such as idempotence, non-mutation of inputs, or round-tri
 <li class="toctree-l2"><a class="reference internal" href="#the-structure-of-waterloo-docstrings">5.6. The structure of Waterloo docstrings</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#conventions">5.7. Conventions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#building-the-ast">5.8. Building the AST</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#inline-markup-in-free-form-content">5.9. Inline markup in free-form content</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#tokens">5.9.1. Tokens</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#tokens-in-free-form-content">5.9. Tokens in free-form content</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#inline-tokens">5.9.1. Inline tokens</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#textflow-tokens">5.9.2. Textflow tokens</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#semantic-role-ref">5.9.3. Semantic role <code class="wtrl_lit docutils literal notranslate"><span class="pre">|ref|</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#examples">5.9.4. Examples</a></li>
@@ -2298,8 +2305,9 @@ for automated testing, such as idempotence, non-mutation of inputs, or round-tri
 <li class="toctree-l1"><a class="reference internal" href="_test_freeform.html">13. Test: Flow control in freeform sections</a></li>
 <li class="toctree-l1"><a class="reference internal" href="_test_tables.html">14. Test: Tables in freeform and itemized content</a></li>
 <li class="toctree-l1"><a class="reference internal" href="test_pygments_lexer.html">15. Test: Inline markup</a></li>
-<li class="toctree-l1"><a class="reference internal" href="_test_scope.html">16. Test: Scopes</a></li>
-<li class="toctree-l1"><a class="reference internal" href="legal.html">17. Legal Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="test_showcase_authoring_json.html">16. Test: Showcase Authoring JSON</a></li>
+<li class="toctree-l1"><a class="reference internal" href="_test_scope.html">17. Test: Scopes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="legal.html">18. Legal Notes</a></li>
 </ul>
 
 <div class="relations">
