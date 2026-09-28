@@ -294,16 +294,19 @@ and also, in any order
 	<Section>:
 		<List-Of-Qualified-Identifiers>
 
-In the patterns above, :code:`<Free-Form-Content>` denotes paragraph-capable
-text. It may contain ordinary prose as well as explicitly marked bullet lists
-or enumerations. This form is typically used where explanation, descriptive
-structure, or more flexible text layout is required.
+:wtrl_dfn:`free-form content`
+	Paragraph-capable content consisting of ordinary prose, explicitly marked
+	bullet lists or enumerations, and, where permitted by the surrounding
+	section or subsection, :wtrl_term:`Table blocks`. This form is typically
+	used where explanation, descriptive structure, or more flexible text layout
+	is required.
 
-:code:`<Itemized-Content>` denotes line-oriented content that is interpreted as
-a sequence of individual items. In practice, this form is often used for
-contract-like statements such as obligations, preconditions, postconditions, or
-other entries that are naturally read item by item rather than as connected
-prose.
+:wtrl_dfn:`itemized content`
+	Line-oriented content interpreted as a sequence of individual items and,
+	where permitted by the surrounding section or subsection,
+	:wtrl_term:`Table blocks`. This form is typically used for contract-like
+	statements such as obligations, preconditions, postconditions, or other
+	entries that are naturally read item by item rather than as connected prose.
 
 On the docstring level, both forms are represented as indented text blocks.
 They differ primarily in their intended interpretation and in the way tools and
@@ -483,8 +486,8 @@ subsection specifications in section :ref:`common_sections` ff.
 Parsing is successful if and only if the structure of the DocstringTree is
 compatible with those section and subsection requirements.
 
-Tokens in free-form content
----------------------------
+Content tokens
+--------------
 
 This subsection is normative.
 
@@ -492,7 +495,7 @@ Waterloo docstrings are primarily plain text. They define inline tokens for
 machine-verifiable references and consistent rendering in target formats, and
 textflow tokens for structured rendered output.
 
-Inline tokens |may| occur in free-form content lines. They |must_not| occur in:
+Inline tokens |may| occur in :wtrl_term:`free-form content` and :wtrl_term:`itemized content` lines. They |must_not| occur in:
 
 	* section labels,
 	* subsection labels,
@@ -569,7 +572,8 @@ in native reST form, e.g. :wtrl_lit:`:wtrl_file:\`path/to/file\``.
 Textflow tokens
 ^^^^^^^^^^^^^^^
 
-This subsection is informative.
+This subsection and its rubrics are informative unless denoted otherwise.
+
 It describes the current interpretation used by output layers, but the
 description is not yet intended as a complete normative definition.
 
@@ -583,7 +587,6 @@ A line starting with a single pipe character :wtrl_lit:`|`,
 optionally followed only by whitespace, denotes a paragraph boundary.
 This token is used to visually separate blocks of text into distinct
 paragraphs in the rendered output.
-
 
 .. rubric:: List tokens
 
@@ -606,7 +609,63 @@ The marker :wtrl_lit:`#` denotes an ordered list. In the current
 implementation, ordered lists are rendered using Arabic numerals
 followed by a period.
 
+.. rubric:: Table blocks
 
+This rubric is normative.
+
+For the following rules, we define:
+
+:wtrl_dfn:`Table block`
+	A contiguous sequence of logical lines in a docstring that is parsed
+	according to rules TBL-001 through TBL-010.
+
+:wtrl_dfn:`Control line`
+	A logical line which, after whitespace stripping, contains exactly one of
+	:wtrl_lit:`|begin_table|`, :wtrl_lit:`|end_table|`,
+	:wtrl_lit:`|title|`, :wtrl_lit:`|columns|`, or :wtrl_lit:`|rows|`.
+
+:wtrl_dfn:`Table title`
+	A :wtrl_lit:`|title|` :wtrl_term:`Control line` followed by zero or more
+	non-control logical lines before the following :wtrl_lit:`|columns|`
+	:wtrl_term:`Control line`. The non-control lines are its title text; each
+	|may| contain :ref:`inline_tokens` as specified in TBL-009.
+
+:wtrl_dfn:`Ordinary table row`
+	A logical line used as a header or data row. The token
+	:wtrl_lit:`|tab|` splits an :wtrl_term:`Ordinary table row` into :wtrl_dfn:`Table cells`.
+	A row without that token consists of one cell. Empty cells are permitted.
+
+:wtrl_dfn:`Table cell`
+	A possibly empty fragment obtained by splitting an :wtrl_term:`Ordinary table row`
+	on :wtrl_lit:`|tab|` and stripping surrounding whitespace. A :wtrl_lit:`|tab|`
+	separator is not part of either adjacent :wtrl_term:`Table cell`. :wtrl_term:`Table cells`
+	in :wtrl_term:`Header rows` and :wtrl_term:`Data rows` have identical content rules.
+
+:wtrl_dfn:`Table header`
+	A :wtrl_lit:`|columns|` :wtrl_term:`Control line` followed by one :wtrl_term:`Ordinary table row`, called its
+	:wtrl_dfn:`Header row`.
+
+:wtrl_dfn:`Table body`
+	A :wtrl_lit:`|rows|` :wtrl_term:`Control line` followed by zero or more :wtrl_term:`Ordinary table rows`,
+	called :wtrl_dfn:`Data rows`.
+
+:wtrl_dfn:`Table group`
+	An optional :wtrl_term:`Table title`, a :wtrl_term:`Table header`, and a :wtrl_term:`Table body`, in that order.
+
+The following rules apply to Waterloo :wtrl_term:`Table blocks`. Wherever
+rule TBL-001 is referenced, :wtrl_term:`Table blocks` are permitted in addition to the
+content allowed by the surrounding section or subsection.
+
+* [TBL-001] -- A :wtrl_term:`Table block` |must| obey rules TBL-002 through TBL-010.
+* [TBL-002] -- A :wtrl_term:`Table block` |must| begin with a :wtrl_term:`Control line` containing :wtrl_lit:`|begin_table|` and end with a later :wtrl_term:`Control line` containing :wtrl_lit:`|end_table|`.
+* [TBL-003] -- A :wtrl_term:`Table block` |must| contain one or more :wtrl_term:`Table groups`.
+* [TBL-004] -- Each :wtrl_term:`Table group` |must| consist of an optional :wtrl_term:`Table title`, a :wtrl_term:`Table header`, and a :wtrl_term:`Table body`, in that order.
+* [TBL-005] -- The :wtrl_term:`Header row` of the first :wtrl_term:`Table group` establishes the number of columns of the :wtrl_term:`Table block`.
+* [TBL-006] -- Every later :wtrl_term:`Header row` and every :wtrl_term:`Data row` |must| contain the established number of :wtrl_term:`Table cells`.
+* [TBL-007] -- A cell separator token :wtrl_lit:`|tab|` |must| be interpreted as a cell separator within :wtrl_term:`Header rows` and :wtrl_term:`Data rows`. It |must_not| be interpreted as a cell separator elsewhere.
+* [TBL-008] -- A :wtrl_term:`Control line` |must| occur at a position permitted by the :wtrl_term:`Table block` grammar. It |must_not| occur elsewhere.
+* [TBL-009] -- A :wtrl_term:`Table cell` and each logical line of a :wtrl_term:`Table title` |may| contain any :ref:`inline_tokens`.
+* [TBL-010] -- A :wtrl_term:`Table cell` |must_not| contain a textflow token: the paragraph token :wtrl_lit:`|`, a list marker :wtrl_lit:`*`, :wtrl_lit:`+`, :wtrl_lit:`-`, or :wtrl_lit:`#` followed by an ASCII space, or a :wtrl_term:`Control line` token.
 
 
 
@@ -688,61 +747,6 @@ state whether it applies to Identifiers or to Qualified Identifiers.
 * [LQID-005] -- Tools |must| treat the result as a flat list of [Qualified] Identifiers, without preserving line structure or grouping.
 * [LQID-006] -- If a CSV list is wrapped across multiple physical lines, every non-final physical line |must| end with a comma.
 
-.. rubric:: Table blocks
-
-For the following rules, we define:
-
-:wtrl_dfn:`Table block`
-	A contiguous sequence of logical lines in a docstring that is parsed
-	according to rules TBL-001 through TBL-010.
-
-:wtrl_dfn:`Control line`
-	A logical line which, after whitespace stripping, contains exactly one of
-	:wtrl_lit:`|begin_table|`, :wtrl_lit:`|end_table|`,
-	:wtrl_lit:`|title|`, :wtrl_lit:`|columns|`, or :wtrl_lit:`|rows|`.
-
-:wtrl_dfn:`Table title`
-	A :wtrl_lit:`|title|` :wtrl_term:`Control line` followed by zero or more
-	non-control logical lines before the following :wtrl_lit:`|columns|`
-	:wtrl_term:`Control line`. The non-control lines are its title text.
-
-:wtrl_dfn:`Ordinary table row`
-	A logical line used as a header or data row. The token
-	:wtrl_lit:`|tab|` splits an :wtrl_term:`Ordinary table row` into :wtrl_dfn:`Table cells`.
-	A row without that token consists of one cell. Empty cells are permitted.
-
-:wtrl_dfn:`Table cell`
-	A possibly empty fragment obtained by splitting an :wtrl_term:`Ordinary table row`
-	on :wtrl_lit:`|tab|` and stripping surrounding whitespace. A :wtrl_lit:`|tab|`
-	separator is not part of either adjacent :wtrl_term:`Table cell`. :wtrl_term:`Table cells`
-	in :wtrl_term:`Header rows` and :wtrl_term:`Data rows` have identical content rules.
-
-:wtrl_dfn:`Table header`
-	A :wtrl_lit:`|columns|` :wtrl_term:`Control line` followed by one :wtrl_term:`Ordinary table row`, called its
-	:wtrl_dfn:`Header row`.
-
-:wtrl_dfn:`Table body`
-	A :wtrl_lit:`|rows|` :wtrl_term:`Control line` followed by zero or more :wtrl_term:`Ordinary table rows`,
-	called :wtrl_dfn:`Data rows`.
-
-:wtrl_dfn:`Table group`
-	An optional :wtrl_term:`Table title`, a :wtrl_term:`Table header`, and a :wtrl_term:`Table body`, in that order.
-
-The following rules apply to Waterloo :wtrl_term:`Table blocks`. Wherever
-rule TBL-001 is referenced, :wtrl_term:`Table blocks` are permitted in addition to the
-free-form text allowed by the surrounding section or subsection.
-
-* [TBL-001] -- A :wtrl_term:`Table block` |must| obey rules TBL-002 through TBL-010.
-* [TBL-002] -- A :wtrl_term:`Table block` |must| begin with a :wtrl_term:`Control line` containing :wtrl_lit:`|begin_table|` and end with a later :wtrl_term:`Control line` containing :wtrl_lit:`|end_table|`.
-* [TBL-003] -- A :wtrl_term:`Table block` |must| contain one or more :wtrl_term:`Table groups`.
-* [TBL-004] -- Each :wtrl_term:`Table group` |must| consist of an optional :wtrl_term:`Table title`, a :wtrl_term:`Table header`, and a :wtrl_term:`Table body`, in that order.
-* [TBL-005] -- The :wtrl_term:`Header row` of the first :wtrl_term:`Table group` establishes the number of columns of the :wtrl_term:`Table block`.
-* [TBL-006] -- Every later :wtrl_term:`Header row` and every :wtrl_term:`Data row` |must| contain the established number of :wtrl_term:`Table cells`.
-* [TBL-007] -- A cell separator token :wtrl_lit:`|tab|` |must| be interpreted as a cell separator within :wtrl_term:`Header rows` and :wtrl_term:`Data rows`. It |must_not| be interpreted as a cell separator elsewhere.
-* [TBL-008] -- A :wtrl_term:`Control line` |must| occur at a position permitted by the :wtrl_term:`Table block` grammar. It |must_not| occur elsewhere.
-* [TBL-009] -- A :wtrl_term:`Table cell` |may| contain any :ref:`inline_tokens`.
-* [TBL-010] -- A :wtrl_term:`Table cell` |must_not| contain a textflow token: the paragraph token :wtrl_lit:`|`, a list marker :wtrl_lit:`*`, :wtrl_lit:`+`, :wtrl_lit:`-`, or :wtrl_lit:`#` followed by an ASCII space, or a :wtrl_term:`Control line` token.
-
 .. rubric:: Locality principle
 
 The following warning rule applies when a section appears in a docstring but violates the LoII principle.
@@ -758,7 +762,7 @@ Normativity keyword handling
 
 This section is normative.
 
-The following rules apply to free-form textual content
+The following rules apply to :wtrl_term:`free-form content`
 within normative sections. They ensure that normativity
 keywords are used in a machine-detectable and unambiguous way.
 In the following rules "WS" stands for one or more whitespace characters.
@@ -776,7 +780,7 @@ In the following rules "WS" stands for one or more whitespace characters.
   Informative: The phrase "may not" is ambiguous in English
   and |should| be avoided in normative text.
 
-* [PNB-004] -- Tools |should| warn if free-form textual content of normative
+* [PNB-004] -- Tools |should| warn if :wtrl_term:`free-form content` of normative
   sections and subsections contains :wtrl_value:`must`, :wtrl_value:`Must`,
   :wtrl_value:`should`, :wtrl_value:`Should`, :wtrl_value:`may`, or
   :wtrl_value:`May` outside Normativity Keyword token form and outside
@@ -837,7 +841,7 @@ the preamble and serves as metadata.
      - Not applicable
      - Implied by content kind
    * - :wtrl_label:`Definitions.<item>`
-     - free-form text and table blocks
+     - :wtrl_term:`free-form content`
      - Normative
      - Needs paragraph-capable text
    * - :wtrl_label:`Definitions._inherit`
@@ -845,15 +849,15 @@ the preamble and serves as metadata.
      - Normative
      - Implied by content kind
    * - :wtrl_label:`Terminology.<item>`
-     - free-form text and table blocks
+     - :wtrl_term:`free-form content`
      - Non-normative
      - Needs paragraph-capable text
    * - :wtrl_label:`Contract.general`
-     - itemized text
+     - :wtrl_term:`itemized content`
      - Normative
      - Line-by-line contract
    * - :wtrl_label:`Contract.constructor`
-     - itemized text
+     - :wtrl_term:`itemized content`
      - Normative
      - Line-by-line contract
    * - :wtrl_label:`Contract.base`
@@ -865,19 +869,19 @@ the preamble and serves as metadata.
      - Normative
      - Implied by content kind
    * - :wtrl_label:`Contract.invariants`
-     - itemized text
+     - :wtrl_term:`itemized content`
      - Normative
      - Line-by-line contract
    * - :wtrl_label:`Contract.requires`
-     - itemized text
+     - :wtrl_term:`itemized content`
      - Normative
      - Line-by-line contract
    * - :wtrl_label:`Contract.ensures`
-     - itemized text
+     - :wtrl_term:`itemized content`
      - Normative
      - Line-by-line contract
    * - :wtrl_label:`Description`
-     - free-form text and table blocks
+     - :wtrl_term:`free-form content`
      - Can be both
      - Needs paragraph-capable text
    * - :wtrl_label:`Derived_from`
@@ -885,7 +889,7 @@ the preamble and serves as metadata.
      - Normative
      - Implied by content kind
    * - :wtrl_label:`Factory.<item>`
-     - itemized text and table blocks
+     - :wtrl_term:`itemized content`
      - Normative
      - Line-by-line contract
    * - :wtrl_label:`Public_classes`
@@ -901,43 +905,43 @@ the preamble and serves as metadata.
      - Normative
      - Implied by content kind
    * - :wtrl_label:`Class_overview.<item>`
-     - free-form text and table blocks
+     - :wtrl_term:`free-form content`
      - Non-normative
      - Descriptive text preferred
    * - :wtrl_label:`Method_overview.<item>`
-     - free-form text and table blocks
+     - :wtrl_term:`free-form content`
      - Non-normative
      - Descriptive text preferred
    * - :wtrl_label:`Function_overview.<item>`
-     - free-form text and table blocks
+     - :wtrl_term:`free-form content`
      - Non-normative
      - Descriptive text preferred
    * - :wtrl_label:`Public_types.<item>`
-     - free-form text and table blocks
+     - :wtrl_term:`free-form content`
      - Normative
      - Needs paragraph-capable text
    * - :wtrl_label:`Public_variables.<item>`
-     - free-form text and table blocks
+     - :wtrl_term:`free-form content`
      - Normative
      - Needs paragraph-capable text
    * - :wtrl_label:`Public_constants.<item>`
-     - free-form text and table blocks
+     - :wtrl_term:`free-form content`
      - Normative
      - Needs paragraph-capable text
    * - :wtrl_label:`Parameters.<item>`
-     - free-form text and table blocks
+     - :wtrl_term:`free-form content`
      - Normative
      - Needs paragraph-capable text
    * - :wtrl_label:`Returns`
-     - free-form text and table blocks
+     - :wtrl_term:`free-form content`
      - Normative
      - Needs paragraph-capable text
    * - :wtrl_label:`Raises.<item>`
-     - itemized text and table blocks
+     - :wtrl_term:`itemized content`
      - Normative
      - Line-by-line contract
    * - :wtrl_label:`Notes.<item>`
-     - free-form text and table blocks
+     - :wtrl_term:`free-form content`
      - Non-normative
      - Needs paragraph-capable text
    * - :wtrl_label:`See_also`
@@ -1041,7 +1045,7 @@ For the following section, we define:
 		* [DEF-020] -- Any number of subsections |may| exist.
 		* [DEF-004] -- :wtrl_label:`<DefItem>` |must| match `<Identifier> ( "," <Identifier> )*` with optional whitespace around commas.
 		* [DEF-005] -- In :wtrl_label:`<DefItem>`, the first identifier denotes the :wtrl_term:`Term`; each following identifier denotes a :wtrl_term:`Variation` of that term.
-		* [DEF-006] -- The subsection content |must| consist of free-form text and table blocks as defined in TBL-001.
+		* [DEF-006] -- The subsection content |must| consist of :wtrl_term:`free-form content`, including :wtrl_term:`Table blocks` as defined in TBL-001.
 		* [DEF-009] -- The subsection content |should| not be empty.
 		* [DEF-010] -- :wtrl_label:`<DefItem>` |must_not| be :wtrl_label:`_inherit`.
 	- :wtrl_label:`_inherit:`
@@ -1076,7 +1080,7 @@ For the following section, we define:
 		* [TERM-009] -- Any number of subsections |may| exist
 		* [TERM-005] -- :wtrl_label:`<Term>` |must| be a non-empty human-readable string.
 		* [TERM-006] -- :wtrl_label:`<Term>` stands for the term to be explained informatively.
-		* [TERM-007] -- The subsection content |must| consist of free-form text and table blocks as defined in TBL-001.
+		* [TERM-007] -- The subsection content |must| consist of :wtrl_term:`free-form content`, including :wtrl_term:`Table blocks` as defined in TBL-001.
 		* [TERM-008] -- The subsection content |should| not be empty.
 	- |Rationale|
 
@@ -1087,7 +1091,7 @@ For the following section, we define:
 * :wtrl_label:`Description:`
 	- [DESC-001] -- The section |may| exist.
 	- [DESC-002] -- The section |may| be listed as normative in :wtrl_label:`Preamble.normative_sections`.
-	- [DESC-004] -- The content |may| consist of any number of free-form lines and table blocks as defined in TBL-001.
+	- [DESC-004] -- The content |may| consist of :wtrl_term:`free-form content`, including :wtrl_term:`Table blocks` as defined in TBL-001.
 	- |ObsoleteRules|:
 		* DESC-003 -- Obsolete since 0.5.1; superseded by PRE-013.
 		* DESC-005 -- Obsolete since 0.5.5 (pipe operator as separator); more general approach required.
@@ -1100,7 +1104,7 @@ For the following section, we define:
 	- :wtrl_label:`<Note>:`
 		* [NOTE-008] -- Any number of subsections |may| exist
 		* [NOTE-006] -- :wtrl_label:`<Note>` |must| be a non-empty human-readable string.
-		* [NOTE-007] -- The subsection content |must| consist of free-form text and table blocks as defined in TBL-001.
+		* [NOTE-007] -- The subsection content |must| consist of :wtrl_term:`free-form content`, including :wtrl_term:`Table blocks` as defined in TBL-001.
 		* [NOTE-009] -- The subsection content |should| not be empty.
 	- |LastReview|: 2026-02-23
 * :wtrl_label:`See_also:`
@@ -1157,7 +1161,7 @@ a module docstring |must| have the following structure:
 	- [MCLO-004] -- Each entry in the section |must| have the form of a subsection matching the following pattern:
 	- :wtrl_label:`<Class>:`
 		* [MCLO-005] -- :wtrl_label:`<Class>` |must| match the pattern of an Identifier.
-		* [MCLO-006] -- The subsection content |must| consist of free-form text and table blocks as defined in TBL-001.
+		* [MCLO-006] -- The subsection content |must| consist of :wtrl_term:`free-form content`, including :wtrl_term:`Table blocks` as defined in TBL-001.
 		* [MCLO-007] -- The subsection content is informative and |must_not| contain any Normativity Keyword.
 		* [MCLO-008] -- :wtrl_label:`<Class>` |must| be resolvable relative to the documented module.
 		* [MCLO-009] -- :wtrl_label:`<Class>` |must| refer to a class object.
@@ -1180,7 +1184,7 @@ a module docstring |must| have the following structure:
 	- [MFNO-004] -- Each entry in the section |must| have the form of a subsection matching the following pattern:
 	- :wtrl_label:`<Function>:`
 		* [MFNO-005] -- :wtrl_label:`<Function>` |must| match the pattern of an Identifier.
-		* [MFNO-006] -- The subsection content |must| consist of free-form text and table blocks as defined in TBL-001.
+		* [MFNO-006] -- The subsection content |must| consist of :wtrl_term:`free-form content`, including :wtrl_term:`Table blocks` as defined in TBL-001.
 		* [MFNO-007] -- The content is informative and |must_not| contain any Normativity Keyword.
 		* [MFNO-008] -- :wtrl_label:`<Function>` |must| be resolvable relative to the documented module.
 		* [MFNO-009] -- :wtrl_label:`<Function>` |must| refer to a function object.
@@ -1193,7 +1197,7 @@ a module docstring |must| have the following structure:
 	- [MPTYP-003] -- Each entry in the section |must| have the form of a subsection matching the following pattern:
 	- :wtrl_label:`<Type>:`
 		* [MPTYP-004] -- :wtrl_label:`<Type>` |must| match the pattern of an Identifier.
-		* [MPTYP-006] -- The subsection content |must| consist of free-form text and table blocks as defined in TBL-001.
+		* [MPTYP-006] -- The subsection content |must| consist of :wtrl_term:`free-form content`, including :wtrl_term:`Table blocks` as defined in TBL-001.
 		* [MPTYP-005] -- :wtrl_label:`<Type>` |must| be resolvable relative to the documented module.
 		* [MPTYP-008] -- :wtrl_label:`<Type>` |must| refer to a TypeAlias or NewType.
 	- |ObsoleteRules|
@@ -1205,7 +1209,7 @@ a module docstring |must| have the following structure:
 	- [MPVAR-003] -- Each entry in the section |must| have the form of a subsection matching the following pattern:
 	- :wtrl_label:`<Assignable>:`
 		* [MPVAR-004] -- :wtrl_label:`<Assignable>` |must| match the pattern of an Identifier.
-		* [MPVAR-006] -- The subsection content |must| consist of free-form text and table blocks as defined in TBL-001.
+		* [MPVAR-006] -- The subsection content |must| consist of :wtrl_term:`free-form content`, including :wtrl_term:`Table blocks` as defined in TBL-001.
 		* [MPVAR-005] -- :wtrl_label:`<Assignable>` |must| be resolvable relative to the documented module, either as a runtime attribute or as an annotated variable.
 		* [MPVAR-008] -- :wtrl_label:`<Assignable>` |must| refer to a Named Value.
 		* [MPVAR-009] -- If the object referenced by :wtrl_label:`<Assignable>` is annotated, the annotation |must_not| be wtrl_type:`Final`.
@@ -1218,7 +1222,7 @@ a module docstring |must| have the following structure:
 	- [MPCON-003] -- Each entry in the section |must| have the form of a subsection matching the following pattern:
 	- :wtrl_label:`<Assignable>:`
 		* [MPCON-004] -- :wtrl_label:`<Assignable>` |must| match the pattern of an Identifier.
-		* [MPCON-007] -- The subsection content |must| consist of free-form text and table blocks as defined in TBL-001.
+		* [MPCON-007] -- The subsection content |must| consist of :wtrl_term:`free-form content`, including :wtrl_term:`Table blocks` as defined in TBL-001.
 		* [MPCON-005] -- :wtrl_label:`<Assignable>` |must| be resolvable relative to the documented module.
 		* [MPCON-009] -- :wtrl_label:`<Assignable>` |must| refer to a Named Value.
 		* [MPCON-006] -- If the object referenced by :wtrl_label:`<Assignable>` is annotated, the annotation  |must| be :wtrl_type:`Final`.
@@ -1293,7 +1297,7 @@ a class docstring |must| have the following structure:
 	- [CCLO-004] -- Each entry in the section |must| have the form of a subsection matching the following pattern:
 	- :wtrl_label:`<Class>:`
 		* [CCLO-005] -- :wtrl_label:`<Class>` |must| match the pattern of an Identifier.
-		* [CCLO-006] -- The subsection content |must| consist of free-form text and table blocks as defined in TBL-001.
+		* [CCLO-006] -- The subsection content |must| consist of :wtrl_term:`free-form content`, including :wtrl_term:`Table blocks` as defined in TBL-001.
 		* [CCLO-007] -- The subsection content is informative and |must_not| contain any Normativity Keyword.
 		* [CCLO-008] -- :wtrl_label:`<Class>` |must| be resolvable relative to the documented class.
 		* [CCLO-009] -- :wtrl_label:`<Class>` |must| refer to a class object.
@@ -1316,7 +1320,7 @@ a class docstring |must| have the following structure:
 	- [CMTO-004] -- Each entry in the section |must| have the form of a subsection matching the following pattern:
 	- :wtrl_label:`<Method>:`
 		* [CMTO-005] -- :wtrl_label:`<Method>` |must| match the pattern of an Identifier.
-		* [CMTO-006] -- The subsection content |must| consist of free-form text and table blocks as defined in TBL-001.
+		* [CMTO-006] -- The subsection content |must| consist of :wtrl_term:`free-form content`, including :wtrl_term:`Table blocks` as defined in TBL-001.
 		* [CMTO-007] -- The subsection content is informative and |must_not| contain any Normativity Keyword.
 		* [CMTO-008] -- :wtrl_label:`<Method>` |must| be resolvable relative to the documented class.
 		* [CMTO-009] -- :wtrl_label:`<Method>` |must| refer to a method.
@@ -1329,7 +1333,7 @@ a class docstring |must| have the following structure:
 	- [CPTYP-003] -- Each entry in the section |must| have the form of a subsection matching the following pattern:
 	- :wtrl_label:`<Type>:`
 		* [CPTYP-004] -- :wtrl_label:`<Type>` |must| match the pattern of an Identifier.
-		* [CPTYP-006] -- The subsection content |must| consist of free-form text and table blocks as defined in TBL-001.
+		* [CPTYP-006] -- The subsection content |must| consist of :wtrl_term:`free-form content`, including :wtrl_term:`Table blocks` as defined in TBL-001.
 		* [CPTYP-005] -- :wtrl_label:`<Type>` |must| be resolvable relative to the documented class.
 		* [CPTYP-008] -- :wtrl_label:`<Type>` |must| refer to a TypeAlias or NewType.
 	- |ObsoleteRules|
@@ -1341,7 +1345,7 @@ a class docstring |must| have the following structure:
 	- [CPVAR-003] -- Each entry in the section |must| have the form of a subsection matching the following pattern:
 	- :wtrl_label:`<Assignable>:`
 		* [CPVAR-004] -- :wtrl_label:`<Assignable>` |must| match the pattern of an Identifier.
-		* [CPVAR-006] -- The subsection content |must| consist of free-form text and table blocks as defined in TBL-001.
+		* [CPVAR-006] -- The subsection content |must| consist of :wtrl_term:`free-form content`, including :wtrl_term:`Table blocks` as defined in TBL-001.
 		* [CPVAR-005] -- :wtrl_label:`<Assignable>` |must| be resolvable relative to the documented class, either as a runtime attribute or as an annotated field.
 		* [CPVAR-008] -- :wtrl_label:`<Assignable>` |must| refer to a Named Value.
 		* [CPVAR-009] -- If the object referenced by :wtrl_label:`<Assignable>` is annotated, the annotation |must_not| be wtrl_type:`Final`.
@@ -1354,7 +1358,7 @@ a class docstring |must| have the following structure:
 	- [CPCON-003] -- Each entry in the section |must| have the form of a subsection matching the following pattern:
 	- :wtrl_label:`<Assignable>:`
 		* [CPCON-004] -- :wtrl_label:`<Assignable>` |must| match the pattern of an Identifier.
-		* [CPCON-007] -- The subsection content |must| consist of free-form text and table blocks as defined in TBL-001.
+		* [CPCON-007] -- The subsection content |must| consist of :wtrl_term:`free-form content`, including :wtrl_term:`Table blocks` as defined in TBL-001.
 		* [CPCON-005] -- :wtrl_label:`<Assignable>` |must| be resolvable relative to the documented class.
 		* [CPCON-009] -- :wtrl_label:`<Assignable>` |must| refer to a Named Value.
 		* [CPCON-006] -- If the object referenced by :wtrl_label:`<Assignable>` is annotated, the annotation  |must| be :wtrl_type:`Final`.
@@ -1369,7 +1373,7 @@ a class docstring |must| have the following structure:
 		* [FAC-005] -- :wtrl_label:`<Function>` |must| match the pattern of a Qualified Identifier.
 		* [FAC-008] -- Each :wtrl_label:`<Function>` |must| occur at most once within its enclosing :wtrl_label:`Factory` section.
 		* [FAC-006] -- :wtrl_label:`<Function>` |must| resolve to an existing function.
-		* [FAC-007] -- The content of :wtrl_label:`<Function>` |must| consist of free-form text and table blocks as defined in TBL-001.
+		* [FAC-007] -- The content of :wtrl_label:`<Function>` |must| consist of :wtrl_term:`itemized content`, including :wtrl_term:`Table blocks` as defined in TBL-001.
 	- |ObsoleteRules|:
 		* FAC-002 -- Obsolete since version 0.5.1; superseded by PRE-013.
 		* FAC-003 -- Obsolete since version 0.5.0.
@@ -1405,7 +1409,7 @@ a function or method docstring |must| have the following structure:
 * :wtrl_label:`Contract:`
 	- [CON-027] -- |Must_not| have subsections other than { :wtrl_label:`general`, :wtrl_label:`invariants`, :wtrl_label:`requires`, :wtrl_label:`ensures` }.
 	- For subsections { :wtrl_label:`general`, :wtrl_label:`invariants`, :wtrl_label:`requires`, :wtrl_label:`ensures` } the following rules apply:
-		* [CON-051] -- Tools |must| treat the free-form content as an ordered sequence of logical lines.
+		* [CON-051] -- Tools |must| treat the :wtrl_term:`itemized content` as an ordered sequence of logical lines.
 		* [CON-052] -- Tools |must| store exactly one string item per logical line and |must| preserve the original order.
 	- :wtrl_label:`general:`
 		* [CON-024] -- The subsection |must| exist.
@@ -1413,13 +1417,13 @@ a function or method docstring |must| have the following structure:
 		  whether the function is applicable to a given use case.
 	- :wtrl_label:`invariants:`
 		* [CON-025] -- The subsection |may| exist.
-		* [CON-026] -- The subsection content |must| be free-form text.
+		* [CON-026] -- The subsection content |must| be :wtrl_term:`itemized content`.
 	- :wtrl_label:`requires:`
 		* [CON-047] -- The subsection |may| exist.
-		* [CON-048] -- The subsection content |must| be free-form text.
+		* [CON-048] -- The subsection content |must| be :wtrl_term:`itemized content`.
 	- :wtrl_label:`ensures:`
 		* [CON-049] -- The subsection |may| exist.
-		* [CON-050] -- The subsection content |must| be free-form text.
+		* [CON-050] -- The subsection content |must| be :wtrl_term:`itemized content`.
 	- |ObsoleteRules|
 		* CON-019 -- Obsolete in version 0.5.5; Superseded by CON-001
 		* CON-020 -- Obsolete in version 0.5.5; Superseded by CON-002
@@ -1431,7 +1435,7 @@ a function or method docstring |must| have the following structure:
 	- [PAR-008] -- Each entry in the section |must| have the form of a subsection matching the following pattern:
 	- :wtrl_label:`<Par>:`
 		* [PAR-006] -- :wtrl_label:`<Par>` |must| be an Identifier.
-		* [PAR-007] -- The subsection content |must| consist of free-form text and table blocks as defined in TBL-001.
+		* [PAR-007] -- The subsection content |must| consist of :wtrl_term:`free-form content`, including :wtrl_term:`Table blocks` as defined in TBL-001.
 		* [PAR-004] -- Each parameter in the function's signature |must| be documented by a corresponding :wtrl_label:`<Par>` entry.
 		* [PAR-005] -- Each :wtrl_label:`<Par>` entry |must| correspond to a parameter in the function's signature.
 	- |LastReview|: 2026-02-25
@@ -1463,7 +1467,7 @@ a function or method docstring |must| have the following structure:
 	- :wtrl_label:`<Exception>:`
 		* [RAI-008] -- :wtrl_label:`<Exception>` |must| be a Qualified Identifier.
 		* [RAI-004] -- :wtrl_label:`<Exception>` |must| resolve to an existing (exception) class.
-		* [RAI-005] -- The subsection content |must| consist of free-form text and table blocks as defined in TBL-001.
+		* [RAI-005] -- The subsection content |must| consist of :wtrl_term:`itemized content`, including :wtrl_term:`Table blocks` as defined in TBL-001.
 		* [RAI-006] -- The content |must| explain the circumstances which must or may lead to raising the exception addressed by :wtrl_label:`<Exception>`.
 		* [RAI-007] -- Each entry listed |must| represent a subclass of :wtrl_type:`BaseException`.
 	- |ObsoleteRules|
