@@ -63,6 +63,23 @@ def test_parse_table_content_blocks_supports_multiple_groups_and_multiline_title
 	]
 
 
+def test_parse_table_content_blocks_preserves_inline_markup_in_title() -> None:
+	blocks = parse_table_content_blocks(tracer(), [
+		"|begin_table|",
+		"|title|",
+		"Constants of class |class|`MyClass`",
+		"|columns|",
+		"Name |tab| Value",
+		"|rows|",
+		"MAX_ITEMS |tab| 16",
+		"|end_table|",
+	])
+
+	table = blocks[0]
+	assert not isinstance(table, str)
+	assert table.groups()[0].title() == ["Constants of class |class|`MyClass`"]
+
+
 @pytest.mark.parametrize(
 	"lines, rule_id, text",
 	[

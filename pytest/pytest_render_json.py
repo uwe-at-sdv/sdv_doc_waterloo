@@ -88,7 +88,7 @@ def test_render_json_preserves_mixed_content_blocks_for_tables() -> None:
 						"rows": [["alpha", "|type|`str`", "First value."]],
 					},
 					{
-						"title": ["Output values"],
+						"title": ["Output values for |class|`Result` MUST be serializable."],
 						"header": ["Name", "Type", "Meaning"],
 						"rows": [["beta", "|type|`int`", "Second value."]],
 					},

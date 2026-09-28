@@ -116,3 +116,15 @@ def test_gen_showcase_authoring_json_copies_valid_profile_template(profile: str)
 	assert validate_authoring_document(document) == []
 	rendered = render_authoring_document(document)
 	assert get_profile(make_docitem_tree(tracer(), rendered)) == profile
+
+
+def test_function_showcase_preserves_inline_tokens_in_table_titles_and_cells() -> None:
+	"""The table showcase demonstrates inline markup in titles and cells."""
+	result = run_waterlint("gen-showcase-authoring-json", "--profile", "function", "--out", "@STDOUT")
+	assert result.returncode == 0, result.stderr
+
+	document = load_authoring_document(json.loads(result.stdout))
+	rendered = render_authoring_document(document)
+	assert "Behavior of |var|`level`" in rendered
+	assert "|var|`verbose` is |False| |tab| Concise description." in rendered
+	assert "|var|`verbose` is |True| |tab| Expanded description." in rendered

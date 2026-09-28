@@ -28,7 +28,7 @@ Description:
 	|
 	|begin_table|
 	|title|
-	Level behavior
+	Behavior of |var|`level`
 	|columns|
 	Level |tab| Result
 	|rows|
@@ -55,8 +55,8 @@ Returns:
 	|columns|
 	Condition |tab| Returned content
 	|rows|
-	verbose is false |tab| Concise description.
-	verbose is true |tab| Expanded description.
+	|var|`verbose` is |False| |tab| Concise description.
+	|var|`verbose` is |True| |tab| Expanded description.
 	|end_table|
 Raises:
 	ValueError:

@@ -32,7 +32,7 @@
                 ]}
             ]},
             {"table": {"groups": [{
-                "title": ["Level behavior"],
+                "title": ["Behavior of |var|`level`"],
                 "columns": [{"key": "level", "header": "Level"}, {"key": "result", "header": "Result"}],
                 "rows": [
                     {"cells": {"level": "basic", "result": "Concise text."}},
@@ -58,8 +58,8 @@
             {"table": {"groups": [{
                 "columns": [{"key": "condition", "header": "Condition"}, {"key": "content", "header": "Returned content"}],
                 "rows": [
-                    {"cells": {"condition": "verbose is false", "content": "Concise description."}},
-                    {"cells": {"condition": "verbose is true", "content": "Expanded description."}}
+                    {"cells": {"condition": "|var|`verbose` is |False|", "content": "Concise description."}},
+                    {"cells": {"condition": "|var|`verbose` is |True|", "content": "Expanded description."}}
                 ]
             }]}}
         ],

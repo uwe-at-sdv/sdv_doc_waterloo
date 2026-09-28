@@ -3,7 +3,7 @@ Preamble:
 	profile:
 		module
 	normative_sections:
-		Contract
+		Contract, Description
 Contract:
 	general:
 		|Must| provide a valid table fixture for JSON rendering tests.
@@ -15,7 +15,7 @@ Description:
 	|rows|
 	alpha |tab| |type|`str` |tab| First value.
 	|title|
-	Output values
+	Output values for |class|`Result` |Must| be serializable.
 	|columns|
 	Name |tab| Type |tab| Meaning
 	|rows|

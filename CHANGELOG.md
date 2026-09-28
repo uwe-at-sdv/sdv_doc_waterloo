@@ -2,6 +2,11 @@
 
 ## Current release history
 
+- 0.25.2 [2026-09-27]:
+  - Documentation: restructured format.rst
+  - Definitions for free-form content and itemized content
+  - Inline-tokens in table title now confirmed.
+  - Showcase templates updated.
 - 0.25.1 [2026-09-27]:
   - Documentation: Chapter on Showcases for Authoring JSON; Table cell specification more precise.
 - 0.25.0 [2026-09-26]:
