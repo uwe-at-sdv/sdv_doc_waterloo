@@ -31,17 +31,17 @@
         "sdv.doc.waterloo.docitem_helper.get_source_docstring": [
             "package_gh-pages/doc-examples-python/api_demo_helper_inspect_01.py"
         ],
-        "sdv.doc.waterloo.docitem_helper.tracer": [
+        "sdv.doc.waterloo.docitem_tracer.tracer": [
             "package_gh-pages/doc-examples-python/api_demo_helper_tracer_01.py",
             "package_gh-pages/doc-examples-python/api_demo_helper_rule_on_fail_01.py"
         ],
-        "sdv.doc.waterloo.docitem_helper.tracer.str_by_severity": [
+        "sdv.doc.waterloo.docitem_tracer.tracer.str_by_severity": [
             "package_gh-pages/doc-examples-python/api_demo_helper_tracer_01.py"
         ],
-        "sdv.doc.waterloo.docitem_helper.tracer": [
+        "sdv.doc.waterloo.docitem_tracer.tracer": [
             "package_gh-pages/doc-examples-python/api_demo_helper_tracer_02.py"
         ],
-        "sdv.doc.waterloo.docitem_helper.tracer.build_json": [
+        "sdv.doc.waterloo.docitem_tracer.tracer.build_json": [
             "package_gh-pages/doc-examples-python/api_demo_helper_tracer_02.py"
         ],
         "sdv.doc.waterloo.docitem_helper.build_anchor": [
@@ -100,7 +100,7 @@
         "sdv.doc.waterloo.docitem_helper.warn_validation": [
             "package_gh-pages/doc-examples-python/api_demo_helper_tracer_03.py"
         ],
-        "sdv.doc.waterloo.docitem_helper.traced_section": [
+        "sdv.doc.waterloo.docitem_tracer.traced_section": [
             "package_gh-pages/doc-examples-python/api_demo_helper_tracer_03.py"
         ],
         "sdv.doc.waterloo.docitem_helper.raise_has_no_docstring": [
@@ -133,7 +133,7 @@
         "sdv.doc.waterloo.docitem_helper.is_attr_final": [
             "package_gh-pages/doc-examples-python/api_demo_helper_is_attr_annotated_01.py"
         ],
-        "sdv.doc.waterloo.docitem_helper.rule_on_fail": [
+        "sdv.doc.waterloo.docitem_tracer.rule_on_fail": [
             "package_gh-pages/doc-examples-python/api_demo_helper_rule_on_fail_01.py"
         ]
     }

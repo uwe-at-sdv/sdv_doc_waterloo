@@ -502,7 +502,7 @@ suitable <code class="wtrl_attr docutils literal notranslate"><span class="pre">
 <h3><span class="section-number">1.9.1. </span>Module<a class="headerlink" href="#module" title="Link to this heading">¶</a></h3>
 <p>Let us do an example: In directory <code class="wtrl_file docutils literal notranslate"><span class="pre">doc/examples</span></code> you see a file <code class="wtrl_file docutils literal notranslate"><span class="pre">test_docitem_module.py</span></code>.
 On module level this is equipped with a basic Waterloo docstring:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="sd">"""</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="gh">Preamble:</span>
 <span class="sd">	</span><span class="gu">profile:</span>
 <span class="sd">		</span><span class="no">module</span>
@@ -510,8 +510,8 @@ On module level this is equipped with a basic Waterloo docstring:</p>
 <span class="sd">		</span><span class="no">Contract</span>
 <span class="gh">Contract:</span>
 <span class="sd">	</span><span class="gu">general:</span>
-<span class="sd">		</span><span class="k">|Must|</span><span class="sd"> make a good impression, since it's our first example.</span>
-<span class="sd">"""</span>
+<span class="sd">		</span><span class="k">|Must|</span><span class="sd"> make a good impression, since it&#39;s our first example.</span>
+<span class="sd">&quot;&quot;&quot;</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">MyClass</span><span class="p">:</span>
 	<span class="k">pass</span>
 </pre></div>
@@ -576,7 +576,7 @@ and it must be declared normative.</p></li>
 <h3><span class="section-number">1.9.2. </span>Module and class<a class="headerlink" href="#module-and-class" title="Link to this heading">¶</a></h3>
 <p>In the next example we have a module and a class docstring, and we consider the class as
 part of the public API of the module:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="sd">"""</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="gh">Preamble:</span>
 <span class="sd">	</span><span class="gu">profile:</span>
 <span class="sd">		</span><span class="no">module</span>
@@ -590,9 +590,9 @@ part of the public API of the module:</p>
 <span class="gh">Class_overview:</span>
 <span class="sd">	</span><span class="nc">MyClass:</span>
 <span class="sd">		An empty class</span>
-<span class="sd">"""</span>
+<span class="sd">&quot;&quot;&quot;</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">MyClass</span><span class="p">:</span>
-<span class="w">	</span><span class="sd">"""</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="gh">	Preamble:</span>
 <span class="sd">		</span><span class="gu">profile:</span>
 <span class="sd">			</span><span class="no">class</span>
@@ -603,7 +603,7 @@ part of the public API of the module:</p>
 <span class="sd">			</span><span class="k">|Must|</span><span class="sd"> provide nothing.</span>
 <span class="sd">		</span><span class="gu">constructor:</span>
 <span class="sd">			</span><span class="k">|Must|</span><span class="sd"> be default-constructible.</span>
-<span class="sd">	"""</span>
+<span class="sd">	&quot;&quot;&quot;</span>
 	<span class="k">pass</span>
 </pre></div>
 </div>
@@ -680,7 +680,7 @@ part of the public API of the module:</p>
 <section id="module-class-and-method">
 <h3><span class="section-number">1.9.3. </span>Module, class and method<a class="headerlink" href="#module-class-and-method" title="Link to this heading">¶</a></h3>
 <p>Finally, let us add a method to the class and attach a docstring.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="sd">"""</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="gh">Preamble:</span>
 <span class="sd">	</span><span class="gu">profile:</span>
 <span class="sd">		</span><span class="no">module</span>
@@ -694,9 +694,9 @@ part of the public API of the module:</p>
 <span class="gh">Class_overview:</span>
 <span class="sd">	</span><span class="nc">MyClass:</span>
 <span class="sd">		A simple class</span>
-<span class="sd">"""</span>
+<span class="sd">&quot;&quot;&quot;</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">MyClass</span><span class="p">:</span>
-<span class="w">	</span><span class="sd">"""</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="gh">	Preamble:</span>
 <span class="sd">		</span><span class="gu">profile:</span>
 <span class="sd">			</span><span class="no">class</span>
@@ -712,9 +712,9 @@ part of the public API of the module:</p>
 <span class="gh">	Method_overview:</span>
 <span class="sd">		</span><span class="nf">greeting:</span>
 <span class="sd">			Function which prints a greeting.</span>
-<span class="sd">	"""</span>
+<span class="sd">	&quot;&quot;&quot;</span>
 	<span class="k">def</span><span class="w"> </span><span class="nf">greeting</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">		</span><span class="sd">"""</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="gh">		Preamble:</span>
 <span class="sd">			</span><span class="gu">profile:</span>
 <span class="sd">				</span><span class="no">method</span>
@@ -727,8 +727,8 @@ part of the public API of the module:</p>
 <span class="gh">		Returns:</span>
 <span class="sd">			</span><span class="k">|Must|</span><span class="sd"> return </span><span class="kc">|None|</span>
 <span class="gh">		Raises:</span>
-<span class="sd">		"""</span>
-		<span class="nb">print</span><span class="p">(</span><span class="s2">"Hello world!"</span><span class="p">)</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Hello world!&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>The module, class and method docstrings are rendered by</p>

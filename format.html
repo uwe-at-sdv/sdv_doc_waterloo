@@ -309,10 +309,10 @@ and <span class="wtrl_dfn">SPC4</span>
 The indentation scheme <span class="wtrl_norm">must not</span> be mixed within a single docstring.</p>
 <p>The grammar of the tokenizer in Pseudo-EBNF is:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>(* Possible ways to indent *)
-spc         = "\x20" ;
-tab         = "\x09" ;
-newline     = "\n" | "\r\n" ;
-backslash   = "\x5c" ;
+spc         = &quot;\x20&quot; ;
+tab         = &quot;\x09&quot; ;
+newline     = &quot;\n&quot; | &quot;\r\n&quot; ;
+backslash   = &quot;\x5c&quot; ;
 ws_char     = spc | tab ;
 non_ws_char = ? all characters but spc and tab ? ;
 non_nl_char = ? all characters but newline ? ;
@@ -392,7 +392,7 @@ Informative: This rule serves as a catch-all for unspecified tokenizer errors.</
 </div></blockquote>
 <p>In order to describe the tokenizer state, we define the following type
 (in Python for practical reasons):</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">DocstringTree</span> <span class="o">=</span> <span class="n">List</span><span class="p">[</span> <span class="n">Union</span><span class="p">[</span> <span class="nb">str</span><span class="p">,</span> <span class="s2">"DocstringTree"</span><span class="p">]]</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">DocstringTree</span> <span class="o">=</span> <span class="n">List</span><span class="p">[</span> <span class="n">Union</span><span class="p">[</span> <span class="nb">str</span><span class="p">,</span> <span class="s2">&quot;DocstringTree&quot;</span><span class="p">]]</span>
 </pre></div>
 </div>
 <p>A <span class="wtrl_dfn">DocstringTree</span> is a value of this type.</p>
