@@ -85,6 +85,7 @@ with contextlib.redirect_stdout(sys.stderr):
 	import sdv.doc.waterloo.waterlint_carve as carve
 	import sdv.doc.waterloo.waterlint_common as wl_common
 	import sdv.doc.waterloo.waterlint_authoring as authoring
+	import sdv.doc.waterloo.waterlint_authoring_extract_command as authoring_extract
 	import sdv.doc.waterloo.waterlint_authoring_generate as authoring_gen
 	import sdv.doc.waterloo.waterlint_gen_showcase_authoring_json as gshowcase_authoring
 	import sdv.doc.waterloo.waterlint_gen_full as gfull
@@ -137,6 +138,7 @@ SUBCOMMANDS = (
 	"gen-full",
 	"gen-minimal-authoring-json",
 	"gen-full-authoring-json",
+	"extract-authoring-json",
 	"gen-showcase-authoring-json",
 	"render-docker",
 	"list-schemas",
@@ -1033,6 +1035,7 @@ def validate_json_command(args: argparse.Namespace) -> int:
 	Contract:
 		general:
 			|Must| validate a Waterloo JSON document against the inferred or explicit schema.
+			|Must| apply source-independent semantic validation to Authoring JSON after successful schema validation.
 	Parameters:
 		args:
 			Parsed validate-json command line options.
@@ -1079,6 +1082,14 @@ def validate_json_command(args: argparse.Namespace) -> int:
 			except Exception:
 				doc_category = None
 		_validate_json_against_schema(tr, doc, str(schema_path))
+		if doc_category == "wtrl-authoring-object-json" and not tr.has_errors():
+			authoring_document = authoring.load_authoring_document(cast(dict[str, object], doc))
+			for issue in authoring.validate_authoring_document(authoring_document):
+				details: dict[str, str | list[str]] = {"path": issue.path, "issue": issue.code}
+				if issue.severity == "warning":
+					tr.add_warning("JIDO-001", "tool", issue.message, details)
+				else:
+					tr.add_error("JIDO-001", "tool", issue.message, details)
 		if doc_category == "wtrl-json":
 			_check_toc_pointers_json(tr, doc, "__WTRL_TOC_MODULES__", "JPTR-001")
 			_check_toc_pointers_json(tr, doc, "__WTRL_TOC_CLASSES__", "JPTR-002")
@@ -1163,10 +1174,11 @@ def render_docstring_command(args: argparse.Namespace) -> int:
 
 			document = authoring.load_authoring_document(cast(dict[str, object], raw_document))
 			for issue in authoring.validate_authoring_document(document):
-				tr.add_error(
-					"JIDO-001", "tool", issue.message,
-					{"path": issue.path, "issue": issue.code},
-				)
+				details: dict[str, str | list[str]] = {"path": issue.path, "issue": issue.code}
+				if issue.severity == "warning":
+					tr.add_warning("JIDO-001", "tool", issue.message, details)
+				else:
+					tr.add_error("JIDO-001", "tool", issue.message, details)
 			if tr.has_errors():
 				_emit_tracer(tr, out_diag, out_diag_json)
 				return 1
@@ -2443,6 +2455,7 @@ def _build_parser() -> argparse.ArgumentParser:
 #----- gen-*-authoring-json -----------------------------------#
 	authoring_gen.build_parser(subparsers, parser_parts, "gen-minimal-authoring-json")
 	authoring_gen.build_parser(subparsers, parser_parts, "gen-full-authoring-json")
+	authoring_extract.build_parser(subparsers, parser_parts)
 	gshowcase_authoring.build_parser(subparsers, parser_parts)
 
 #----- gen-example-template-json ------------------------------#
@@ -2531,6 +2544,8 @@ def main(argv: Optional[list[str]] = None) -> int:
 		return authoring_gen.gen_minimal_authoring_json_command(args, __version__)
 	if args.command == "gen-full-authoring-json":
 		return authoring_gen.gen_full_authoring_json_command(args, __version__)
+	if args.command == "extract-authoring-json":
+		return authoring_extract.extract_authoring_json_command(args, __version__)
 	if args.command == "gen-showcase-authoring-json":
 		return gshowcase_authoring.gen_showcase_authoring_json_command(args, __version__)
 	if args.command == "list-schemas":

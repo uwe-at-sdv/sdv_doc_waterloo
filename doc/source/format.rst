@@ -1443,7 +1443,7 @@ a function or method docstring |must| have the following structure:
 	- [RET-001] -- The section |must| exist.
 	- [RET-002] -- The section |must| be listed as normative in :wtrl_label:`Preamble.normative_sections`.
 	- [RET-005] -- The section |must_not| contain subsections.
-	- [RET-003] -- The section |must| explain the return value of the documented function or method.
+	- [RET-003] -- The section |must| explain the return value of the documented function or method and |should| contain at least one non-whitespace text fragment.
 	- [RET-004] -- If the documented function or method is annotated with return type :wtrl_type:`bool`,
 	  section :wtrl_label:`Returns` |should| mention at least one of the tokens
 	  :wtrl_value:`|True|` or :wtrl_value:`|False|`.
@@ -1462,7 +1462,7 @@ a function or method docstring |must| have the following structure:
 * :wtrl_label:`Raises:`
 	- [RAI-001] -- The section |must| exist.
 	- [RAI-002] -- The section |must| be listed as normative in :wtrl_label:`Preamble.normative_sections`.
-	- [RAI-003] -- The section |must| list all exception classes that may be raised under correct and contract-compliant usage.
+	- [RAI-003] -- The section |must| list the exception classes that may be raised under correct and contract-compliant usage, either specifically or through an appropriate documented base class.
 	- [RAI-011] -- Each entry in the section |must| have the form of a subsection matching the following pattern:
 	- :wtrl_label:`<Exception>:`
 		* [RAI-008] -- :wtrl_label:`<Exception>` |must| be a Qualified Identifier.
@@ -1501,7 +1501,7 @@ an inherited method docstring |must| have the following structure:
 		* [CON-040] -- The subsection |must| contain exactly one entry.
 		* [CON-041] -- The entry |must| be a Qualified Identifier.
 		* [CON-042] -- The entry |must| be resolvable to a function or method object.
-		* [CON-043] -- The resolved object |must| be a method of a base class of the documented class.
+		* [CON-043] -- The resolved object |must| be a method of an ancestor class of the documented class.
 		* [CON-044] -- The name of the resolved object |must| equal the name of the documented method.
 		* [CON-045] -- The referenced base method |must| have a valid docstring.
 		* [CON-046] -- Tools |should| check type-level Liskov compatibility against the referenced base method if sufficient type information is available.

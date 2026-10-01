@@ -955,6 +955,8 @@ Raises:
 		"""
 		with rule_on_fail(tr, "RET-005"):
 			super().parse(tr, lines)
+		if not any(item.strip() for item in self.items()):
+			tr.add_warning("RET-003", "validation", "Returns should contain non-whitespace content.")
 
 #===== end section Returns ====================================#
 

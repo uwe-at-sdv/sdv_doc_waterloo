@@ -14,7 +14,7 @@ Contract:
 Public_classes:
 	AuthoringParagraph, AuthoringListItem, AuthoringListBlock, AuthoringTableColumn,
 	AuthoringTableRow, AuthoringTableGroup, AuthoringTableBlock, AuthoringSection,
-	AuthoringDocument, AuthoringSemanticIssue
+	AuthoringDefinitions, AuthoringDocument, AuthoringSemanticIssue
 Public_functions:
 	load_authoring_document, validate_authoring_document, render_authoring_document
 Public_types:
@@ -48,6 +48,7 @@ AuthoringSectionValue_t: TypeAlias = (
 	| Mapping[str, tuple["AuthoringTextBlock_t", ...]]
 	| "AuthoringPreamble"
 	| "AuthoringContract"
+	| "AuthoringDefinitions"
 )
 
 
@@ -125,6 +126,14 @@ class AuthoringContract:
 
 
 @dataclass(frozen=True)
+class AuthoringDefinitions:
+	"""Local definition text blocks and optional terms inherited from the direct module."""
+
+	inherit: tuple[str, ...]
+	entries: Mapping[str, tuple[AuthoringTextBlock_t, ...]]
+
+
+@dataclass(frozen=True)
 class AuthoringSection:
 	"""A top-level Waterloo section with Authoring-JSON-native content."""
 
@@ -158,6 +167,9 @@ class AuthoringSemanticIssue:
 		"profile-section",
 		"preamble-profile-mismatch",
 		"required-section",
+		"contract-subsection-profile",
+		"contract-required-subsection",
+		"definitions-inherit-module",
 		"normative-duplicate",
 		"normative-missing-section",
 		"normative-not-allowed",
@@ -165,11 +177,13 @@ class AuthoringSemanticIssue:
 		"normative-informative-section",
 		"normative-required-section",
 		"normative-keyword-missing-section",
+		"returns-empty",
 		"table-duplicate-column-key",
 		"table-row-cells",
 	]
 	path: str
 	message: str
+	severity: Literal["error", "warning"] = "error"
 
 
 _PREAMBLE_SECTION: Final[str] = "Preamble"
@@ -292,6 +306,19 @@ def _load_section_value(label: str, value: object, path: str) -> AuthoringSectio
 				for index, item in enumerate(_expect_list(raw_value, f"{path}.{key}"))
 			)
 		return AuthoringContract(items)
+	if label == "Definitions":
+		definitions = _expect_mapping(value, path)
+		inherit: tuple[str, ...] = ()
+		entries: dict[str, tuple[AuthoringTextBlock_t, ...]] = {}
+		for key, raw_value in definitions.items():
+			if key == "_inherit":
+				inherit = tuple(
+					_expect_string(item, f"{path}._inherit[{index}]")
+					for index, item in enumerate(_expect_list(raw_value, f"{path}._inherit"))
+				)
+				continue
+			entries[key] = _load_text_blocks(raw_value, f"{path}.{key}")
+		return AuthoringDefinitions(inherit=inherit, entries=entries)
 	if isinstance(value, list):
 		if all(isinstance(item, str) for item in value):
 			return tuple(cast(str, item) for item in value)
@@ -388,6 +415,13 @@ def _iter_texts(value: AuthoringSectionValue_t) -> tuple[str, ...]:
 			else:
 				texts.extend(item)
 		return tuple(texts)
+	if isinstance(value, AuthoringDefinitions):
+		return tuple(
+			text
+			for blocks in value.entries.values()
+			for block in blocks
+			for text in _iter_block_texts(block)
+		)
 	if isinstance(value, Mapping):
 		return tuple(
 			text
@@ -430,12 +464,19 @@ def _has_normativity_keyword(value: AuthoringSectionValue_t) -> bool:
 	return any(keyword in text for text in _iter_texts(value) for keyword in KEYWORDS_OF_NORMATIVITY)
 
 
+def _has_non_whitespace_text(value: AuthoringSectionValue_t) -> bool:
+	"""Return whether a section contains at least one non-whitespace text fragment."""
+	return any(text.strip() for text in _iter_texts(value))
+
+
 def _validate_tables(document: AuthoringDocument) -> list[AuthoringSemanticIssue]:
 	issues: list[AuthoringSemanticIssue] = []
 	for section_label, section in document.sections.items():
 		value = section.value
 		block_groups: tuple[tuple[str | None, tuple[AuthoringTextBlock_t, ...]], ...]
-		if isinstance(value, Mapping):
+		if isinstance(value, AuthoringDefinitions):
+			block_groups = tuple((key, blocks) for key, blocks in value.entries.items())
+		elif isinstance(value, Mapping):
 			block_groups = tuple((key, blocks) for key, blocks in value.items())
 		elif isinstance(value, tuple) and not all(isinstance(item, str) for item in value):
 			block_groups = ((None, cast(tuple[AuthoringTextBlock_t, ...], value)),)
@@ -462,6 +503,59 @@ def _validate_tables(document: AuthoringDocument) -> list[AuthoringSemanticIssue
 								"Table row cells must contain exactly the keys declared by its group columns.",
 							))
 	return issues
+
+
+def _validate_contract_profile(document: AuthoringDocument) -> list[AuthoringSemanticIssue]:
+	"""Defensively enforce Contract subsection profiles for direct Python callers."""
+	section = document.section("Contract")
+	if section is None or not isinstance(section.value, AuthoringContract):
+		return []
+
+	allowed = {
+		label.removeprefix("Contract.")
+		for label, properties in SECTION_PROPERTIES.items()
+		if label.startswith("Contract.") and document.profile in properties["profile"]
+	}
+	required = {
+		label.removeprefix("Contract.")
+		for label, properties in SECTION_PROPERTIES.items()
+		if (
+			label.startswith("Contract.")
+			and document.profile in properties["profile"]
+			and properties["must_exist"] == "yes"
+		)
+	}
+	issues: list[AuthoringSemanticIssue] = []
+	for label in sorted(set(section.value.items) - allowed):
+		issues.append(AuthoringSemanticIssue(
+			"contract-subsection-profile",
+			f"doc.Contract.{label}",
+			f"Contract subsection '{label}' is not allowed for profile '{document.profile}'.",
+		))
+	for label in sorted(required - set(section.value.items)):
+		issues.append(AuthoringSemanticIssue(
+			"contract-required-subsection",
+			"doc.Contract",
+			f"Contract subsection '{label}' is required for profile '{document.profile}'.",
+		))
+	return issues
+
+
+def _validate_definition_inheritance(document: AuthoringDocument) -> list[AuthoringSemanticIssue]:
+	"""Defensively reserve Definitions._inherit for non-module profiles."""
+	section = document.section("Definitions")
+	if (
+		document.profile != "module"
+		or section is None
+		or not isinstance(section.value, AuthoringDefinitions)
+		or not section.value.inherit
+	):
+		return []
+	return [AuthoringSemanticIssue(
+		"definitions-inherit-module",
+		"doc.Definitions._inherit",
+		"Definitions._inherit is not allowed for profile 'module'.",
+	)]
 
 
 def validate_authoring_document(document: AuthoringDocument) -> list[AuthoringSemanticIssue]:
@@ -569,6 +663,21 @@ def validate_authoring_document(document: AuthoringDocument) -> list[AuthoringSe
 				f"Section '{label}' contains a normativity keyword but is not listed in Preamble.normative_sections.",
 			))
 
+	returns = document.section("Returns")
+	if (
+		document.profile in {"function", "method"}
+		and returns is not None
+		and not _has_non_whitespace_text(returns.value)
+	):
+		issues.append(AuthoringSemanticIssue(
+			"returns-empty",
+			"doc.Returns",
+			"Returns should contain non-whitespace content.",
+			"warning",
+		))
+
+	issues.extend(_validate_contract_profile(document))
+	issues.extend(_validate_definition_inheritance(document))
 	issues.extend(_validate_tables(document))
 	return issues
 
@@ -658,13 +767,16 @@ def _append_text_blocks(
 	indent_unit: str,
 	indentation: int,
 	width: int,
+	paragraph_continuation: bool = False,
+	separate_blocks: bool = True,
 ) -> None:
 	for block_index, block in enumerate(blocks):
-		if block_index:
+		if block_index and separate_blocks:
 			lines.append(f"{indent_unit * indentation}|")
 		if isinstance(block, AuthoringParagraph):
 			_append_logical_text(
 				lines, block.text, indent_unit=indent_unit, indentation=indentation, width=width,
+				continuation=paragraph_continuation,
 			)
 		elif isinstance(block, AuthoringListBlock):
 			for item in block.items:
@@ -688,9 +800,7 @@ def _append_table_block(
 ) -> None:
 	prefix = indent_unit * indentation
 	lines.append(f"{prefix}|begin_table|")
-	for group_index, group in enumerate(block.groups):
-		if group_index:
-			lines.append(f"{prefix}|")
+	for group in block.groups:
 		if group.title is not None:
 			lines.append(f"{prefix}|title|")
 			lines.extend(f"{prefix}{title_line}" for title_line in group.title)
@@ -709,11 +819,15 @@ def _append_text_map(
 	indent_unit: str,
 	indentation: int,
 	width: int,
+	paragraph_continuation: bool = False,
+	separate_blocks: bool = True,
 ) -> None:
 	for label, blocks in value.items():
 		lines.append(f"{indent_unit * indentation}{label}:")
 		_append_text_blocks(
 			lines, blocks, indent_unit=indent_unit, indentation=indentation + 1, width=width,
+			paragraph_continuation=paragraph_continuation,
+			separate_blocks=separate_blocks,
 		)
 
 
@@ -765,6 +879,26 @@ def _append_contract(
 				lines, item, indent_unit=indent_unit, indentation=indentation + 1,
 				width=width, continuation=True,
 			)
+
+
+def _append_definitions(
+	lines: list[str],
+	definitions: AuthoringDefinitions,
+	*,
+	indent_unit: str,
+	indentation: int,
+	width: int,
+) -> None:
+	"""Render inherited terms first, followed by the local definition entries."""
+	if definitions.inherit:
+		lines.append(f"{indent_unit * indentation}_inherit:")
+		_append_logical_text(
+			lines, ", ".join(definitions.inherit), indent_unit=indent_unit,
+			indentation=indentation + 1, width=width, continuation=True,
+		)
+	_append_text_map(
+		lines, definitions.entries, indent_unit=indent_unit, indentation=indentation, width=width,
+	)
 
 
 def render_authoring_document(
@@ -832,10 +966,21 @@ def render_authoring_document(
 			_append_preamble(lines, section.value, indent_unit=unit, indentation=indentation + 1, width=width)
 		elif isinstance(section.value, AuthoringContract):
 			_append_contract(lines, section.value, indent_unit=unit, indentation=indentation + 1, width=width)
+		elif isinstance(section.value, AuthoringDefinitions):
+			_append_definitions(
+				lines, section.value, indent_unit=unit, indentation=indentation + 1, width=width,
+			)
 		elif isinstance(section.value, str):
 			_append_logical_text(lines, section.value, indent_unit=unit, indentation=indentation + 1, width=width, continuation=True)
 		elif isinstance(section.value, Mapping):
-			_append_text_map(lines, section.value, indent_unit=unit, indentation=indentation + 1, width=width)
+			statement_content = section_label in {"Raises", "Factory"}
+			_append_text_map(
+				lines, section.value, indent_unit=unit, indentation=indentation + 1, width=width,
+				# These entries become statement bullets in the Sphinx renderer. Keep a
+				# wrapped paragraph as one Waterloo logical line and omit paragraph tokens.
+				paragraph_continuation=statement_content,
+				separate_blocks=not statement_content,
+			)
 		elif all(isinstance(item, str) for item in section.value):
 			_append_logical_text(
 				lines, ", ".join(cast(tuple[str, ...], section.value)),

@@ -1426,31 +1426,38 @@ Notes:
 						"hint": explain_try_self_for_subsection("Contract.base", "inherited_method"),
 					}
 					raise_validation_error(tr,obj,"CON-042",f"Base reference '{base_ref}' is not a function or method.", details)
-				# CON-043: base_obj must belong to a base class of the documented class.
+				# CON-043: base_obj must belong to an ancestor class of the documented class.
 				base_qname = getattr(base_obj, "__qualname__", "")
 				base_owner_name = base_qname.rsplit(".", 1)[0] if "." in base_qname else ""
 				owner_name = getattr(obj, "__qualname__", "")
 				owner_class_name = owner_name.rsplit(".", 1)[0] if "." in owner_name else ""
 				base_owner_cls = None
 				owner_cls = None
-				mod_obj = inspect.getmodule(obj)
-				if base_owner_name and mod_obj:
+				base_mod_obj = inspect.getmodule(base_obj)
+				owner_mod_obj = inspect.getmodule(obj)
+				if base_owner_name and base_mod_obj:
 					try:
-						base_owner_cls = resolve_object(f"{mod_obj.__name__}.{base_owner_name}", obj)[0]
+						base_owner_cls = resolve_object(f"{base_mod_obj.__name__}.{base_owner_name}", base_obj)[0]
 					except Exception:
 						base_owner_cls = None
-				if owner_class_name and mod_obj:
+				if owner_class_name and owner_mod_obj:
 					try:
-						owner_cls = resolve_object(f"{mod_obj.__name__}.{owner_class_name}", obj)[0]
+						owner_cls = resolve_object(f"{owner_mod_obj.__name__}.{owner_class_name}", obj)[0]
 					except Exception:
 						owner_cls = None
-					if base_owner_cls is None or owner_cls is None or not is_obj_class(base_owner_cls) or not is_obj_class(owner_cls) or not issubclass(owner_cls, base_owner_cls):
-						details = {
-							"found": render_identifier_lines("Contract.base", [base_ref]),
-							"expected": render_suggestion("Contract.base", "refer to a base method defined on a base class of the documented class"),
-							"hint": explain_try_self_for_subsection("Contract.base", "inherited_method"),
-						}
-						raise_validation_error(tr,obj,"CON-043",f"Base method '{base_ref}' is not defined on a base class of '{owner_class_name}'.", details)
+				if (
+					base_owner_cls is None
+					or owner_cls is None
+					or not is_obj_class(base_owner_cls)
+					or not is_obj_class(owner_cls)
+					or base_owner_cls not in owner_cls.__mro__[1:]
+				):
+					details = {
+						"found": render_identifier_lines("Contract.base", [base_ref]),
+						"expected": render_suggestion("Contract.base", "refer to a base method defined on a base class of the documented class, including indirect ancestors"),
+						"hint": explain_try_self_for_subsection("Contract.base", "inherited_method"),
+					}
+					raise_validation_error(tr,obj,"CON-043",f"Base method '{base_ref}' is not defined on a base class of '{owner_class_name}' (including indirect ancestors).", details)
 				# CON-044: names must match
 				method_name = getattr(obj, "__name__", None)
 				base_name = getattr(base_obj, "__name__", None)

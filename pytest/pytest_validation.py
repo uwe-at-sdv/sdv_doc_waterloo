@@ -785,6 +785,11 @@ def test_bad_function_returns_ret_002() -> None:
 	_assert_error(result, "RET-002", "not listed as normative")
 
 
+def test_bad_function_returns_ret_003() -> None:
+	result = _run_waterlint_validate_with_basedir("pytest_bad_function_returns_RET.f_RET_003")
+	_assert_warning(result, "RET-003", "non-whitespace content")
+
+
 def test_bad_function_returns_ret_004_warning() -> None:
 	result = _run_waterlint_validate_with_basedir("pytest_bad_function_returns_RET.f_RET_004")
 	_assert_warning(result, "RET-004", "truthy/falsy")
@@ -843,6 +848,13 @@ def test_bad_function_raises_rai_008() -> None:
 def test_inherited_ok_three_levels() -> None:
 	result = _run_waterlint_validate("pytest_good_inheritance.Z.spam")
 	assert result.returncode == 0, f"expected success, got {result.stderr}"
+
+
+def test_inherited_ok_base_in_other_module() -> None:
+	"""CON-043 accepts an ancestor method defined outside the derived module."""
+	result = _run_waterlint_validate("pytest_good_inheritance_cross_module.Y.spam")
+	assert result.returncode == 0, f"expected success, got {result.stderr}"
+
 
 def test_inherited_ok_derived_from_mro() -> None:
 	result = _run_waterlint_validate_with_basedir("test_docitem_derived_from_mro.Y", basedir="doc/examples")

@@ -28,10 +28,10 @@ def test_gen_minimal_authoring_json_function_golden_output() -> None:
 	result = _generate("gen-minimal-authoring-json", "docitem_helper.get_obj_name")
 	assert result.returncode == 0, result.stderr
 	expected = {
-		"$schema": "https://sci-d-vis.com/schema/wtrl-authoring-object-json-0.2.0.schema.json",
+		"$schema": "https://sci-d-vis.com/schema/wtrl-authoring-object-json-0.4.0.schema.json",
 		"$id": "urn:waterlint:wtrl-authoring-object-json:docitem_helper.get_obj_name",
 		"__WTRL_CATEGORY__": "wtrl-authoring-object-json",
-		"__WTRL_VERSION__": {"schema": "0.2.0"},
+		"__WTRL_VERSION__": {"schema": "0.4.0"},
 		"qualified_name": "docitem_helper.get_obj_name",
 		"profile": "function",
 		"doc": {
@@ -54,10 +54,10 @@ def test_gen_full_authoring_json_class_golden_output() -> None:
 	result = _generate("gen-full-authoring-json", "docitem_tracer.tracer")
 	assert result.returncode == 0, result.stderr
 	expected = {
-		"$schema": "https://sci-d-vis.com/schema/wtrl-authoring-object-json-0.2.0.schema.json",
+		"$schema": "https://sci-d-vis.com/schema/wtrl-authoring-object-json-0.4.0.schema.json",
 		"$id": "urn:waterlint:wtrl-authoring-object-json:docitem_tracer.tracer",
 		"__WTRL_CATEGORY__": "wtrl-authoring-object-json",
-		"__WTRL_VERSION__": {"schema": "0.2.0"},
+		"__WTRL_VERSION__": {"schema": "0.4.0"},
 		"qualified_name": "docitem_tracer.tracer",
 		"profile": "class",
 		"doc": {

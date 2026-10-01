@@ -35,6 +35,15 @@ In both cases, an empty list (= empty set) is a normative statement.
 	a populated section documents which exceptional conditions form part of the
 	object's contract.
 
+	A recurring follow-up asks why emptiness itself carries this statement,
+	rather than an explicit marker such as :wtrl_lit:`<none>` or
+	:wtrl_lit:`<empty>`. The empty section is already an unambiguous value of a
+	normative structure, so a marker would only add a redundant synonym in the
+	textual layer -- one that invites typos and near-synonyms
+	(:wtrl_lit:`<none>` vs. :wtrl_lit:`<empty>` vs. :wtrl_lit:`none`) which a
+	structural representation cannot suffer. Waterloo therefore assigns the
+	meaning to the empty section directly and defines no such token.
+
 :wtrl_label:`Consequences`:
 	Omitting the Raises section would make it impossible to distinguish between
 	*"No exceptions were considered"*
@@ -74,7 +83,7 @@ would fit thematically within the :wtrl_label:`Public` sections, and the docstri
 	overview sections are optional. Authors who consider them unnecessary may omit
 	them entirely without affecting the normative documentation.
 
-:wtrl_label:`Consequences`
+:wtrl_label:`Consequences`:
 	Mixing overview sections with :wtrl_label:`Public_*` sections would violate the
 	principle |BinNorm|, which requires informative and normative content
 	to remain clearly separated.
@@ -101,8 +110,8 @@ sections :wtrl_label:`{Variable|Constant|Type}_overview`}?
 	2026-07-25
 
 :wtrl_label:`Related rules`:
-	MPCON-001, MPVAR-001,MPTYP-001
-	CPCON-001, CPVAR-001,CPTYP-001
+	MPCON-001, MPVAR-001, MPTYP-001,
+	CPCON-001, CPVAR-001, CPTYP-001
 
 :wtrl_label:`Rationale`:
 	While modules, classes, functions, and methods each have their own docstring,
@@ -176,3 +185,102 @@ restricted to a flat sequence of text lines, similarly to
 	Nested subsections and arbitrary nested itemisation remain disallowed. Authors
 	must use text lines and, where useful, table rows to express the circumstances
 	required by RAI-006 clearly and completely.
+
+.. _rfr_0005:
+
+.. rubric:: [RFR-0005] -- On the restricted structure of profile :wtrl_value:`inherited_method`
+
+Why does profile :wtrl_value:`inherited_method` permit only a small, fixed set
+of sections and only subsections :wtrl_label:`Contract.general` and
+:wtrl_label:`Contract.base` in its normative contract?
+
+:wtrl_label:`Status`:
+	active
+
+:wtrl_label:`Created`:
+	2026-09-28
+
+:wtrl_label:`Related rules`:
+	DOC-006, PRE-020, CON-035, CON-042, CON-045, SCP-008
+
+:wtrl_label:`Rationale`:
+	The :wtrl_value:`inherited_method` profile represents a narrow specialization
+	of an already documented base method. Its purpose is to connect the derived
+	method to that base method and to record only the information needed to
+	concretize the inherited behavior. The base method remains the authoritative
+	location for the complete callable contract.
+
+	Typically, the derived method retains the same parameters and return contract,
+	subject to ordinary Liskov-substitution compatibility. This is a common case,
+	not a requirement of the profile. The essential condition is that the derived
+	method does not introduce a sufficiently independent public contract to need
+	its own full callable documentation.
+
+	Allowing :wtrl_label:`Parameters`, :wtrl_label:`Returns`, or
+	:wtrl_label:`Raises` here would invite duplicated contract statements and make
+	it unclear whether the base-method contract or the derived-method docstring is
+	authoritative. The restricted profile therefore preserves |SSoT| and |LoII|:
+	the inherited-method docstring identifies and specializes the base contract
+	without reproducing it.
+
+:wtrl_label:`Consequences`:
+	If an overriding method changes its public callable contract, for example by
+	requiring different arguments, promising a materially different result, or
+	introducing distinct exceptional behavior, authors |must| use profile
+	:wtrl_value:`method` rather than :wtrl_value:`inherited_method`. This requires
+	more documentation, but makes the changed contract explicit and local to the
+	method that defines it.
+
+	The profile also presupposes that the base method is itself documented: rule
+	CON-045 requires the method referenced in :wtrl_label:`Contract.base` to have
+	a valid docstring, once CON-042 to CON-044 have resolved it to the
+	corresponding base-class method. A derived method cannot specialize a
+	contract that does not exist. In a chain of overrides this makes
+	documentation proceed from the base toward the leaves: each method is
+	documented as :wtrl_value:`method` -- or itself inherits from an already
+	documented one -- before an override of it may adopt
+	:wtrl_value:`inherited_method`.
+
+.. _rfr_0006:
+
+.. rubric:: [RFR-0006] -- On section :wtrl_label:`Returns` for callables returning :wtrl_value:`None`
+
+Why must a :wtrl_label:`Returns` section be present even for a callable annotated
+to return :wtrl_value:`None`, when the :wtrl_label:`Raises` section of
+:ref:`rfr_0001` may be empty? Both look like a "nothing to document" case.
+
+:wtrl_label:`Status`:
+	active
+
+:wtrl_label:`Created`:
+	2026-09-29
+
+:wtrl_label:`Related rules`:
+	RET-001, RET-003, RET-006,
+	RAI-001
+
+:wtrl_label:`Rationale`:
+	The apparent asymmetry dissolves once each section is read for what it
+	describes. :wtrl_label:`Raises` describes a *set* of exception classes, and
+	the empty set is a meaningful value of that set: an empty section is the
+	normative statement that no exception class belongs to the contract (see
+	:ref:`rfr_0001`).
+
+	:wtrl_label:`Returns` describes *the return value*. A callable annotated to
+	return :wtrl_value:`None` does not return "nothing"; it returns the value
+	:wtrl_value:`|None|`, the sole inhabitant of :wtrl_type:`NoneType`. That is a
+	definite value, not an absent one, so the section always has something to
+	state and is therefore never empty. Rule RET-003 accordingly requires the
+	section to explain the return value, and RET-006 recommends naming the token
+	:wtrl_value:`|None|`.
+
+:wtrl_label:`Consequences`:
+	Documenting :wtrl_value:`|None|` explicitly records a deliberate contract: the
+	callable is used for its side effects, and callers |must_not| rely on a
+	returned value. Omitting the section, which RET-001 forbids, would conflate
+	*"returns None by design"* with *"the return value was not considered"* -- the
+	same distinction :ref:`rfr_0001` preserves for :wtrl_label:`Raises`.
+
+	Both sections thus follow one consistent principle: an empty section is
+	admissible exactly when the empty set is itself the value being documented.
+	This holds for :wtrl_label:`Raises` but not for :wtrl_label:`Returns`.

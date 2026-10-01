@@ -1,8 +1,8 @@
 {
-    "$schema": "https://sci-d-vis.com/schema/wtrl-authoring-object-json-0.2.0.schema.json",
+    "$schema": "https://sci-d-vis.com/schema/wtrl-authoring-object-json-0.4.0.schema.json",
     "$id": "urn:waterlint:wtrl-authoring-object-json:waterloo_authoring_showcase",
     "__WTRL_CATEGORY__": "wtrl-authoring-object-json",
-    "__WTRL_VERSION__": {"schema": "0.2.0"},
+    "__WTRL_VERSION__": {"schema": "0.4.0"},
     "qualified_name": "waterloo_authoring_showcase",
     "profile": "module",
     "doc": {

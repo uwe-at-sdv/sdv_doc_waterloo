@@ -69,12 +69,12 @@ commands report argument and lookup failures through the tracer and honor
 * [JSCH-700] -- Unspecified error during JSON rendering.
 * [JSCH-800] -- Unspecified JSON schema exception.
 
-.. rubric:: Authoring JSON rendering (render-docstring)
+.. rubric:: Authoring JSON processing
 
-* [JIDO-000] -- Unspecified catch-all error while rendering an Authoring JSON document.
+* [JIDO-000] -- Unspecified catch-all error while processing an Authoring JSON document.
 * [JIDO-001] -- The Authoring JSON document is schema-valid but violates source-independent Waterloo semantics.
 * [JIDO-002] -- The input JSON document is not an Authoring JSON document.
-* [JIDO-003] -- An Authoring JSON document cannot be generated, read, rendered, or written.
+* [JIDO-003] -- An Authoring JSON document cannot be generated, extracted, read, rendered, or written.
 
 .. rubric:: JSON TOC pointer consistency
 

@@ -118,6 +118,8 @@ The following :wtrl_cmd:`waterlint` subcommands work with Authoring JSON:
 * :wtrl_cmd:`gen-showcase-authoring-json` writes a profile-specific, editable
   Authoring JSON showcase. It demonstrates the supported structures for the
   selected profile, including text blocks and tables where applicable.
+* :wtrl_cmd:`extract-authoring-json` converts an existing, object-validated
+  Waterloo docstring into its canonical editable Authoring JSON form.
 * :wtrl_cmd:`render-docstring` renders Authoring JSON as raw Waterloo
   docstring content.
 
@@ -138,6 +140,19 @@ In practice, an LLM authors a docstring as follows:
   rendering and target-validation steps. Keeping corrections in the Authoring
   JSON prevents the source docstring and its editable representation from
   drifting apart.
+
+For an existing valid docstring, use :wtrl_cmd:`extract-authoring-json` as the
+first step instead of generating a new skeleton:
+
+.. code-block:: bash
+
+	waterlint extract-authoring-json --basedir src --obj my_package.my_module.my_function --out authoring.json
+
+The command resolves and validates the object before writing anything. Its
+output is canonical semantic content rather than a byte-preserving copy: it
+does not retain source indentation, wrapping, quote delimiters, or equivalent
+physical continuation choices. Rendering the extracted document and extracting
+it again produces the same canonical Authoring JSON.
 
 The :wtrl_lit:`draft_docstring` MCP prompt ("Draft a Waterloo docstring")
 recommends this workflow to LLM clients. The following diagram shows the

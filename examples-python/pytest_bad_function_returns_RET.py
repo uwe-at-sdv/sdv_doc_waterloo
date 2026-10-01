@@ -55,6 +55,24 @@ def f_RET_002() -> None:
 	pass
 
 
+def f_RET_003() -> None:
+	"""
+	Preamble:
+		profile:
+			function
+		normative_sections:
+			Contract, Parameters, Returns, Raises
+	Contract:
+		general:
+			|Must| trigger RET-003.
+	Parameters:
+	Returns:
+	   
+	Raises:
+	"""
+	pass
+
+
 def f_RET_004(flag: bool) -> bool:
 	"""
 	Preamble:

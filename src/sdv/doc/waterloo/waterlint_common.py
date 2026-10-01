@@ -116,7 +116,7 @@ DIAG_TARGET_STDERR: Final[str] = "@STDERR"
 WTRL_JSON_SCHEMA_VERSION = "0.3.0"
 WTRL_EXAMPLE_REFS_JSON_SCHEMA_VERSION = "0.1.1"
 WTRL_WALK_JSON_SCHEMA_VERSION = "0.0.1"
-WTRL_AUTHORING_OBJECT_JSON_SCHEMA_VERSION = "0.2.0"
+WTRL_AUTHORING_OBJECT_JSON_SCHEMA_VERSION = "0.4.0"
 
 WTRL_SCHEMA_URI_BASE = "https://sci-d-vis.com/schema"
 #==============================================================#
@@ -399,14 +399,21 @@ def validate_json_against_schema(
 		path_tokens = list(e.path)
 		schema_path_tokens = list(e.schema_path)
 		if isinstance(e, jsonschema.exceptions.ValidationError):
+			path_pointer = tokens_to_json_pointer(path_tokens)
 			details = {
 				"validator": e.validator,
 				"path": path_tokens,
 				"schema_path": schema_path_tokens,
-				"path_pointer": tokens_to_json_pointer(path_tokens),
+				"path_pointer": path_pointer,
 				"schema_path_pointer": tokens_to_json_pointer(schema_path_tokens),
 			}
-			tr.add_error(rule_id_validation, "tool", "[" + get_obj_fully_qualified_name(e) + "] " + e.message, details)
+			location = path_pointer or "/"
+			tr.add_error(
+				rule_id_validation,
+				"tool",
+				f"JSON Schema validation failed at '{location}': {e.message}",
+				details,
+			)
 		else:
 			tr.add_error(rule_id_fallback, "tool", "[" + get_obj_fully_qualified_name(e) + "] " + e.message, {})
 

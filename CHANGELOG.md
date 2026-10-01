@@ -2,24 +2,30 @@
 
 ## Current release history
 
+- 0.26.1 [2026-09-30]:
+	* Definitions._inherit now well-defined in Authoring-JSON. CON-043 validation improved.
+- 0.26.0 [2026-09-30]:
+	* waterlint extract-authoring-json for editing roundtrips.
+- 0.25.3 [2026-09-28]:
+	* Bugfix rendering multi-group tables.
 - 0.25.2 [2026-09-27]:
-  - Documentation: restructured format.rst
-  - Definitions for free-form content and itemized content
-  - Inline-tokens in table title now confirmed.
-  - Showcase templates updated.
+	* Documentation: restructured format.rst
+	* Definitions for free-form content and itemized content
+	* Inline-tokens in table title now confirmed.
+	* Showcase templates updated.
 - 0.25.1 [2026-09-27]:
-  - Documentation: Chapter on Showcases for Authoring JSON; Table cell specification more precise.
+	* Documentation: Chapter on Showcases for Authoring JSON; Table cell specification more precise.
 - 0.25.0 [2026-09-26]:
-  - Tables in docstring boxes: Pygments, VS Code, HTML, Sphinx
+	* Tables in docstring boxes: Pygments, VS Code, HTML, Sphinx
 - 0.24.2 [2026-09-18]:
-  - Extract types and tracer from docitem_helper
-  - Remove asterisk-imports
+	* Extract types and tracer from docitem_helper
+	* Remove asterisk-imports
 - 0.24.1 [2026-09-17]:
-  - Replaced two raw messages in waterlint by tracer diagnostics.
+	* Replaced two raw messages in waterlint by tracer diagnostics.
 - 0.24.0 [2026-09-14]:
-  - Unify the docitem and waterlint release versions as the sdv.doc.waterloo package version.
-  - Move the release source of truth to `sdv.doc.waterloo.version`.
-  - Merge the former module-local histories below as legacy records.
+	* Unify the docitem and waterlint release versions as the sdv.doc.waterloo package version.
+	* Move the release source of truth to `sdv.doc.waterloo.version`.
+	* Merge the former module-local histories below as legacy records.
 
 ## Legacy: docitem.py release history
 

@@ -77,6 +77,33 @@ def test_authoring_semantics_rejects_section_not_allowed_for_profile() -> None:
 	assert document.profile == "function"
 
 
+@pytest.mark.parametrize("contract_label", ["invariants", "requires", "ensures"])
+def test_authoring_semantics_defensively_rejects_callable_contract_entries_for_classes(
+	contract_label: str,
+) -> None:
+	"""Direct Python callers receive the same profile guard as Schema users."""
+	data = json.loads((FIXTURE_DIR / "valid_class.json").read_text(encoding="utf-8"))
+	data["doc"]["Contract"][contract_label] = ["|Must| be rejected."]
+	issues = validate_authoring_document(load_authoring_document(data))
+	assert any(
+		issue.code == "contract-subsection-profile"
+		and issue.path == f"doc.Contract.{contract_label}"
+		for issue in issues
+	)
+
+
+def test_authoring_semantics_defensively_requires_class_constructor() -> None:
+	"""Direct Python callers retain the profile-specific constructor requirement."""
+	data = json.loads((FIXTURE_DIR / "valid_class.json").read_text(encoding="utf-8"))
+	del data["doc"]["Contract"]["constructor"]
+	issues = validate_authoring_document(load_authoring_document(data))
+	assert any(
+		issue.code == "contract-required-subsection"
+		and issue.path == "doc.Contract"
+		for issue in issues
+	)
+
+
 def test_authoring_semantics_requires_existing_normative_sections() -> None:
 	"""Preamble.normative_sections must not refer to a missing section."""
 	data = json.loads((FIXTURE_DIR / "valid_module.json").read_text(encoding="utf-8"))

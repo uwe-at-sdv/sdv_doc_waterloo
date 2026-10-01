@@ -48,6 +48,6 @@ Contract:
 	general:
 		|Must_not| do anyhing
 	base:
-		pytest_good_inheritance.Y.spam
+		pytest_good_inheritance.X.spam
 		"""
 		pass

@@ -175,7 +175,11 @@ def _validate_generated_document(tr: tracer, document: dict[str, object]) -> boo
 		return False
 	loaded = authoring.load_authoring_document(document)
 	for issue in authoring.validate_authoring_document(loaded):
-		tr.add_error("JIDO-001", "tool", issue.message, {"path": issue.path, "issue": issue.code})
+		details: dict[str, str | list[str]] = {"path": issue.path, "issue": issue.code}
+		if issue.severity == "warning":
+			tr.add_warning("JIDO-001", "tool", issue.message, details)
+		else:
+			tr.add_error("JIDO-001", "tool", issue.message, details)
 	return not tr.has_errors()
 
 
